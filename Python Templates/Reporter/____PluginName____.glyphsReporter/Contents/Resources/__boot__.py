@@ -16,7 +16,7 @@ def _site_packages():
 			paths.append(os.path.join(home, 'Library', 'Python', sys.version[:3], 'site-packages'))
 
 	# Workaround for a misfeature in setuptools: easy_install.pth places
-	# site-packages way to early on sys.path and that breaks py2app bundles.
+	# site-packages way too early on sys.path and that breaks py2app bundles.
 	# NOTE: this hacks into an undocumented feature of setuptools and
 	# might stop to work without warning.
 	sys.__egginsert = len(sys.path)
