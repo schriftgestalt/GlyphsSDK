@@ -1,6 +1,6 @@
 # GlyphsSDK
 
-This is the Plugin SDK for the [Glyphs font editor](http://glyphsapp.com/). There are various kinds of plugins (see below), and there are two ways of writing them, in ObjectiveC or Python. Not all possibilities are available in Python. There is extensive documentation in the code. For more details, look into the Readme files inside the Template subfolders.
+This is the Plugin SDK for the [Glyphs font editor](http://glyphsapp.com/). There are various kinds of plugins (see below), and there are two ways of writing them, in ObjectiveC or Python. There is extensive documentation in the code. For more details, look into the Readme files inside the Template subfolders.
 
 ### .glyphsReporter
 

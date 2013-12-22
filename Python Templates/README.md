@@ -19,3 +19,24 @@ Don’t touch these files and folders:
 ### Installing and debugging
 
 To install it, move it into the Plugins folder inside the Application Support folder of Glyphs (double click the plugin to let Glyphs do that for you). You can edit your code right there, but you need to restart the application for any changes to take effect.
+
+
+### Some resources:
+
+To use .xib files, you need to add IBActions and IBOutlet in the controller class like this:
+```python
+	_theOutlet = objc.IBOutlet()
+```
+
+and 
+```python
+	@objc.IBAction
+	def actionMethod_(self, sender):
+		pass
+```
+
+Then edit the .xib in Xcode and add the .py file by File > Add Files...
+after every change to the .xib, it has to be compiled to an .nib:
+`ibtool Path/to/the/.xib --compile Path/to/the/.nib`
+
+http://blog.adamw523.com/os-x-cocoa-application-python-pyobjc/
