@@ -32,7 +32,7 @@ class ____PluginClassName____ ( NSObject, GlyphsReporterProtocol ):
 		
 	def logToConsole( self, message ):
 		"""
-		The variable message will be passed to Console.app.
+		The variable 'message' will be passed to Console.app.
 		Use self.logToConsole( "bla bla" ) for debugging.
 		"""
 		myLog = "Show %s plugin:\n%s" % ( self.title(), message )
@@ -41,7 +41,7 @@ class ____PluginClassName____ ( NSObject, GlyphsReporterProtocol ):
 	def keyEquivalent( self ):
 		"""
 		The key for the keyboard shortcut. Set modifier keys in modifierMask() further below.
-		Pretty tricky to find a shortcut that is not taken yet, be careful.
+		Pretty tricky to find a shortcut that is not taken yet, so be careful.
 		If you are not sure, use 'return None'. Users can set their own shortcuts in System Prefs.
 		"""
 		return "y"
