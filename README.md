@@ -1,6 +1,6 @@
 # GlyphsSDK
 
-This is the Plugin SDK for the [Glyphs font editor](http://glyphsapp.com/). There are three kinds of plugins: `.glyphsReporter`, `.glyphsPlugin` and `.glyphsTool`. And there are two ways of writing them, in ObjectiveC or Python. There is extensive documentation in the code.
+This is the Plugin SDK for the [Glyphs font editor](http://glyphsapp.com/). There are various kinds of plugins (see below), and there are two ways of writing them, in ObjectiveC or Python. Not all possibilities are available in Python. There is extensive documentation in the code. For more details, look into the Readme files inside the Template subfolders.
 
 ### .glyphsReporter
 
@@ -10,31 +10,17 @@ These plugins add extra View functionality. They usually draw additional items i
 
 These plugins add a new tool in the toolbar. You can place a small PDF as toolbar icon in the `Contents/Resources/` folder. For measurements, take a look at the placeholder image that is already there.
 
+### .glyphsFilter
+
+This is an ObjectiveC plugin that can add functionality in the *Filter* submenu or anywhere else in the UI of Glyphs.
+
+### .glyphsFileFormat
+
+These add additional file formats for the export dialog. ObjectiveC only.
+
 ### .glyphsPlugin
 
 These are all plugins that do not fit any other category.
-
-### Python plugins
-
-Make a copy of the plugin folder structure. The core code must go into `Contents/Resources/____PluginFileName____.py`. Rename the file and copy the filename into the last line of `__boot__.py`. Give `Contents/MacOS/____PluginFileName____` the same name, except for the `.py` suffix.
-
-Make sure to go through these text files and replace the placeholders with quadruple underscores (`____placeholder____`):
-* `Contents/Info.plist`
-* `Contents/Resources/____PluginFileName____.py`
-* `Contents/Resources/__boot__.py`
-
-Don’t touch these files and folders:
-* `Contents/MacOS/python`
-* `Contents/PkgInfo`
-* `Contents/Resources/lib/`
-* `Contents/Resources/site.py`
-* `Contents/Resources/__error__.sh`
-
-To install it, move it into the Plugins folder inside the Application Support folder of Glyphs (double click the plugin to let Glyphs do that for you). You can edit your code right there, but you need to restart the application for any changes to take effect.
-
-### ObjectiveC plugins
-
-Still working on those. Stay tuned.
 
 ### License
 
