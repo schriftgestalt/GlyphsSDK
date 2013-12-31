@@ -16,7 +16,11 @@ This is an ObjectiveC plugin that can add functionality in the *Filter* submenu 
 
 ### .glyphsFileFormat
 
-These add additional file formats for the export dialog. ObjectiveC only.
+These add additional file formats for the export dialog.
+
+### .glyphsPalette
+
+Additions to the Palette (Cmd-Opt-P).
 
 ### .glyphsPlugin
 
