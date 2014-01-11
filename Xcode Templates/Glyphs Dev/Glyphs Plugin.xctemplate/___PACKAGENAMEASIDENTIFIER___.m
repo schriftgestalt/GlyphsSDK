@@ -10,16 +10,15 @@
 
 @implementation ___FILEBASENAMEASIDENTIFIER___
 
-- (id)init {
+- (id) init {
 	self = [super init];
 	if (self) {
 		// do stuff
 	}
 	return self;
 }
-
 - (NSUInteger) interfaceVersion {
-	// to distinguish the API verison the plugin was build for. Return 1.
+	// Distinguishes the API verison the plugin was built for. Return 1.
 	return 1;
 }
 

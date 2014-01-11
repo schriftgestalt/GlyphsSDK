@@ -10,97 +10,88 @@
 
 @implementation ___FILEBASENAMEASIDENTIFIER___
 
-- (id)init {
+- (id) init {
 	self = [super init];
 	NSBundle * thisBundle = [NSBundle bundleForClass:[self class]];
 	if (thisBundle) {
+		// The toolbar icon:
 		_toolBarIcon = [[NSImage alloc] initWithContentsOfFile:[thisBundle pathForImageResource: @"ToolbarIconTemplate"]];
 		[_toolBarIcon setTemplate:YES];
 	}
 	return self;
 }
-
 - (NSUInteger) interfaceVersion {
-	// to distinguish the API verison the plugin was build for. Return 1.
+	// Distinguishes the API verison the plugin was built for. Return 1.
 	return 1;
 }
-
 - (NSUInteger) groupID {
-	// return a number between 50 and 1000 to position the icon in the toolbar.
+	// Return a number between 50 and 1000 to position the icon in the toolbar.
 	return 50;
 }
-
-- (NSString *) title {
+- (NSString*) title {
 	//return the name of the tool as it will appear in the tooltip of in the toolbar.
 	return @"___PACKAGENAME___";
 }
-
-- (NSString *) trigger {
-	// return the key that the user can press to activate the tool. Please make sure to not conflikct with other tools.
+- (NSString*) trigger {
+	// Return the key that the user can press to activate the tool.
+	// Please make sure to not conflict with other tools.
 	return @"h";
 }
-
 - (NSInteger) tempTrigger {
-	// return a modifierMask (e.g NSAlternateKeyMask, NSCommandKeyMask ...)
+	// Return a modifierMask (e.g NSAlternateKeyMask, NSCommandKeyMask ...)
 	return 0;
 }
-
 - (BOOL) willSelectTempTool:(id) tempTool {
-	// this is called if the user presses any modifier key like the cmd key to swith to the select tool. return NO to prevent the tool switching.
+	// This is called when the user presses a modifier key (e.g. the cmd key to swith to the Select Tool).
+	// Return NO to prevent the tool switching.
 	return YES;
 }
-
-- (void) keyDown:(NSEvent *) theEvent {
+- (void) keyDown:(NSEvent*)theEvent {
+	// Called when a key is pressed while the tool is active.
 	NSLog(@"keyDown: %@", theEvent);
 }
-
-- (void) doCommandBySelector: (SEL)aSelector {
+- (void) doCommandBySelector:(SEL)aSelector {
 	NSLog(@"aSelector: %s", sel_getName(aSelector));
 }
-
 - (NSMenu*) defaultContextMenu {
-	NSMenu *theMenu = [[NSMenu alloc] initWithTitle:@"Contextual Menu"];
-	[theMenu addItemWithTitle:@"Foo" action:@selector(foo:) keyEquivalent:@""];
-	[theMenu addItemWithTitle:@"Bar" action:@selector(bar:) keyEquivalent:@""];
+	// Adds items to the context menu.
+	NSMenu * theMenu = [[ NSMenu alloc] initWithTitle:@"Contextual Menu" ];
+	[ theMenu addItemWithTitle:@"Foo" action:@selector(foo:) keyEquivalent:@"" ];
+	[ theMenu addItemWithTitle:@"Bar" action:@selector(bar:) keyEquivalent:@"" ];
 	return theMenu;
 }
-
-- (void) addMenuItemsForEvent:(NSEvent*) theEvent toMenu:(NSMenu*) theMenu {
-	[theMenu insertItemWithTitle:@"Wail" action:@selector(wail:) keyEquivalent:@"" atIndex:[theMenu numberOfItems]-1];
+- (void) addMenuItemsForEvent:(NSEvent*)theEvent toMenu:(NSMenu*)theMenu {
+	// Adds an item to theMenu for theEvent.
+	[ theMenu insertItemWithTitle:@"Wail" action:@selector(wail:) keyEquivalent:@"" atIndex:[theMenu numberOfItems]-1 ];
 }
-
-- (void)mouseDown:(NSEvent *) theEvent {
+- (void) mouseDown:(NSEvent*)theEvent {
+	// Called when the mouse button is clicked.
 	editViewController = [windowController activeEditViewController];
-	//editViewController.graphicView.cursor = [NSCursor closedHandCursor];
+	// editViewController.graphicView.cursor = [NSCursor closedHandCursor];
 	_draggStart = [theEvent locationInWindow];
 }
-
-- (void)mouseDragged:(NSEvent *) theEvent{
+- (void) mouseDragged:(NSEvent*)theEvent {
+	// Called when the mouse is moved with the primary button down.
 	NSPoint Loc = [theEvent locationInWindow];
 	NSLog(@"__mouse dragged to : %@", NSStringFromPoint(Loc));
 }
-
-- (void)mouseUp:(NSEvent *) theEvent{
-	//editViewController.graphicView.cursor = [NSCursor openHandCursor];
+- (void) mouseUp:(NSEvent*)theEvent {
+	// Called when the primary mouse button is released.
+	// editViewController.graphicView.cursor = [NSCursor openHandCursor];
 }
-
 - (void) drawBackground {
-	// draw anything concerning the hole view.
+	// Draw in the background, concerns the complete view.
 }
-
 - (void) drawForeground {
-	// draw anything concerning the hole view.
+	// Draw in the foreground, concerns the complete view.
 }
-
-- (void) drawLayer:(GSLayer *) Layer atPoint:(NSPoint) aPoint asActive:(BOOL) Active attributes:(NSDictionary*) Attributes {
-	// draw anything concerning this particular layer.
-	[editViewController.graphicView drawLayer:Layer atPoint:aPoint asActive:Active attributes: Attributes];
+- (void) drawLayer:(GSLayer*)Layer atPoint:(NSPoint)aPoint asActive:(BOOL)Active attributes:(NSDictionary*)Attributes {
+	// Draw in this particular layer.
+	[ editViewController.graphicView drawLayer:Layer atPoint:aPoint asActive:Active attributes: Attributes ];
 }
-
 - (void) willActivate {
-	//editViewController.graphicView.cursor = [NSCursor openHandCursor];
+	// editViewController.graphicView.cursor = [NSCursor openHandCursor];
 }
-
 - (void) willDeactivate {}
 
 @end

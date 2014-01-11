@@ -19,33 +19,33 @@
 - (id)init {
 	self = [super init];
 	[NSBundle loadNibNamed:@"___FILEBASENAMEASIDENTIFIER___Dialog" owner:self];
-	NSBundle * thisBundle = [NSBundle bundleForClass:[self class]];
-	_toolbarIcon = [[NSImage alloc] initWithContentsOfFile:[thisBundle pathForImageResource: @"___FILEBASENAMEASIDENTIFIER___"]];
+	NSBundle * thisBundle = [ NSBundle bundleForClass:[self class] ];
+	_toolbarIcon = [ [NSImage alloc] initWithContentsOfFile:[thisBundle pathForImageResource:@"___FILEBASENAMEASIDENTIFIER___"] ];
 	return self;
 }
 
 - (NSUInteger) interfaceVersion {
-	// to distinguish the API verison the plugin was build for. Return 1.
+	// Distinguishes the API verison the plugin was built for. Return 1.
 	return 1;
 }
-- (NSString *) title {
-	//return the name of the tool as it will appear in the menu.
+- (NSString*) title {
+	// Return the name of the tool as it will appear in the menu.
 	return @"___PACKAGENAME___";
 }
 - (NSUInteger) groupID {
-	//position in the export panel
+	// Position in the export panel.
 	return 10;
 }
-- (GSFont*) fontFromURL:(NSURL *) URL ofType:(NSString*)typeName error:(NSError**)error {
-	//load the font at URL and return a GSFont object
+- (GSFont*) fontFromURL:(NSURL*)URL ofType:(NSString*)typeName error:(NSError**)error {
+	// Load the font at URL and return a GSFont object.
 	return nil;
 }
-- (BOOL) writeFont:(GSFont *) Font error:(NSError**)error {
-	// write the font to disk. You have to ask for the path yourself. This is called from the export dialog
-	// return YES on sucess, NO otherwise
+- (BOOL) writeFont:(GSFont*)Font error:(NSError**)error {
+	// Write Font to disk. You have to ask for the path yourself. This is called from the export dialog.
+	// Return YES on sucess, NO otherwise.
 }
-- (BOOL) writeFont:(GSFont*) Font toURL:(NSURL*) DestinationURL error:(NSError**) error {
-	// write the font to disk at the location of the DestinationURL.
-	// return YES on sucess, NO otherwise
+- (BOOL) writeFont:(GSFont*)Font toURL:(NSURL*)DestinationURL error:(NSError**)error {
+	// Write Font to DestinationURL.
+	// Return YES on sucess, NO otherwise.
 }
 @end
