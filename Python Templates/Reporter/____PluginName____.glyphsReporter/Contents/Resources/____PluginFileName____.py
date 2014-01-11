@@ -67,6 +67,12 @@ class ____PluginClassName____ ( NSObject, GlyphsReporterProtocol ):
 			myPath.appendBezierPath_( subpath )   # add subpath to myPath
 			myPath.fill()   # fill myPath with the current NSColor
 			myPath.stroke() # stroke myPath with the current NSColor
+		To get an NSBezierPath from a GSPath, use the bezierPath() method:
+			myPath.bezierPath().fill()
+		You can apply that to a full layer at once:
+			if len( myLayer.paths > 0 ):
+				myLayer.bezierPath()       # all closed paths
+				myLayer.openBezierPath()   # all open paths
 		See:
 		https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ApplicationKit/Classes/NSBezierPath_Class/Reference/Reference.html
 		https://developer.apple.com/library/mac/documentation/cocoa/reference/applicationkit/classes/NSColor_Class/Reference/Reference.html

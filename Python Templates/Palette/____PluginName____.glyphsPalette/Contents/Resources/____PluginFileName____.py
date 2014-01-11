@@ -9,17 +9,19 @@ import sys, os, re
 GlyphsPaletteProtocol = objc.protocolNamed( "GlyphsPalette" )
 
 class ____PluginClassName____ ( NSObject, GlyphsPaletteProtocol ):
-	
 	_theView = objc.IBOutlet()
+	
 	def init( self ):
 		"""
 		Do all initializing here.
+		Customize the quadruple underscore items.
+		Change other stuff only if you know what you are doing.
 		"""
 		
-		if NSBundle.loadNibNamed_owner_("____PaletteView____", self):
-			self.logToConsole("Palette.Layers: Error loading Nib!")
+		if NSBundle.loadNibNamed_owner_( "____PaletteView____", self ):
+			self.logToConsole( "Palette.Layers: Error loading Nib!" )
 		
-		s = objc.selector( self.update, signature='v@:' )
+		s = objc.selector( self.update, signature="v@:" )
 		NSNotificationCenter.defaultCenter().addObserver_selector_name_object_( self, s, "GSUpdateInterface", None )
 		NSNotificationCenter.defaultCenter().addObserver_selector_name_object_( self, s, "GSDocumentCloseNotification", None )
 		NSNotificationCenter.defaultCenter().addObserver_selector_name_object_( self, s, "GSDocumentActivateNotification", None )
@@ -35,8 +37,7 @@ class ____PluginClassName____ ( NSObject, GlyphsPaletteProtocol ):
 		
 	def title( self ):
 		"""
-		This is the name as it appears in the menu in combination with 'Show'.
-		E.g. 'return "Nodes"' will make the menu item read "Show Nodes".
+		This is the name as it appears in the Palette section header.
 		"""
 		return "____PluginMenuName____"
 	
@@ -48,42 +49,50 @@ class ____PluginClassName____ ( NSObject, GlyphsPaletteProtocol ):
 	
 	def theView( self ):
 		"""
-		return a NSView to be displayed in the palette.
+		Returns an NSView to be displayed in the palette.
 		"""
 		return self._theView
 	
 	def minHeight( self ):
 		"""
-		the minimal size of the view
+		The minimum height of the view in pixels.
 		"""
 		return 80
 	
 	def maxHeight( self ):
 		"""
-		the maximal size of the view.
-		has to be equal or bigger than minHeight
+		The maximum height of the view in pixels.
+		Must be equal to or bigger than minHeight.
 		"""
 		return 150
 	
 	def currentHeight( self ):
 		"""
-		the current height. Used for storing the current resized state.
+		The current height of the Palette section.
+		Used for storing the current resized state.
 		"""
 		return NSUserDefaults.standardUserDefaults().integerForKey_( "____CFBundleIdentifier____.ViewHeight" )
 	
 	def setCurrentHeight_( self, newHeight ):
+		"""
+		Sets a new height for the Palette section.
+		"""
 		if newHeight >= self.minHeight() and newHeight <= self.maxHeight():
 			NSUserDefaults.standardUserDefaults().setInteger_forKey_( newHeight, "____CFBundleIdentifier____.ViewHeight" )
 	
 	def currentWindowController( self, sender ):
+		"""
+		Returns a window controller object.
+		Use self.currentWindowController()
+		"""
 		windowController = None
 		try:
 			windowController = NSDocumentController.sharedDocumentController().currentDocument().windowController()
-			if not windowController and sender.respondsToSelector_("object"):
-				if sender.object().__class__ == NSClassFromString("GSFont"):
+			if not windowController and sender.respondsToSelector_( "object" ):
+				if sender.object().__class__ == NSClassFromString( "GSFont" ):
 					Font = sender.object()
 					windowController = Font.parent().windowControllers()[0]
-					self.logToConsole("__windowController1", windowController)
+					self.logToConsole( "__windowController1", windowController )
 				else:
 					windowController = sender.object()
 					self.logToConsole( "__windowController2", windowController )
@@ -93,16 +102,18 @@ class ____PluginClassName____ ( NSObject, GlyphsPaletteProtocol ):
 	
 	def update( self, sender ):
 		"""
-		is called from the notificationCenter if the info in the current Glyph window has changed. This might be called quite a lot, so keep the method fast.
+		Called from the notificationCenter if the info in the current Glyph window has changed.
+		This can be called quite a lot, so keep the method fast.
 		"""
 		Layer = None
 		try:
-			windowController = self.currentWindowController(sender)
+			windowController = self.currentWindowController( sender )
 			Layer = windowController.activeLayer()
 		except:
 			pass
 		if Layer:
-			# Do stuff
+			# Do stuff here
+			pass
 	
 	def logToConsole( self, message ):
 		"""

@@ -2,9 +2,7 @@
 
 ### Using the templates
 
-Make a copy of the plugin folder structure. The core code must go into `Contents/Resources/____PluginFileName____.py`. Rename the file and copy the filename into the last line of `__boot__.py`. Give `Contents/MacOS/____PluginFileName____` the same name, except for the `.py` suffix.
-
-Make sure to go through these text files and replace the placeholders with quadruple underscores (`____placeholder____`):
+Make a copy of the plugin folder structure. Make sure to go through these text files and replace the placeholders with quadruple underscores (`____placeholder____`):
 * `Contents/Info.plist`
 * `Contents/Resources/____PluginFileName____.py`
 * `Contents/Resources/__boot__.py`
@@ -15,6 +13,15 @@ Don’t touch these files and folders:
 * `Contents/Resources/lib/`
 * `Contents/Resources/site.py`
 * `Contents/Resources/__error__.sh`
+
+Open `Info.plist` and customize the entries there. Set the version number in `CFBundleVersion` and `CFBundleShortVersionString`, put your name and the year in `NSHumanReadableCopyright`, and `CFBundleIdentifier` should be a reverse domain name without spaces. Re-use `____Developer____` for other projects.
+
+Replace `____PluginFileName____` in `CFBundleExecutable` and `CFBundleVersion` with the name of the file name of `Contents/Resources/____PluginFileName____.py`, ignoring the `.py` extension. We recommend to use a camel-cased file name without spaces. The file and these two entries in `Contents/Info.plist` must carry the exact same name. Additionally, the name, including the `.py` extension must be reflected in the last line of `__boot__.py`.
+
+In `Contents/Info.plist`, replace `____PluginClassName____` with the name of the principal Python class in `Contents/Resources/____PluginFileName____.py`. No spaces, we recommend camel case. These two entries and the name of the class in `____PluginFileName____.py` must be exactly the same.
+
+`Contents/Resources/____PluginFileName____.py` is also where your code goes. Follow the instructions in the comments of the file.
+
 
 ### Installing and debugging
 
@@ -28,7 +35,7 @@ To use .xib files, you need to add IBActions and IBOutlet in the controller clas
 	_theOutlet = objc.IBOutlet()
 ```
 
-and 
+... and:
 ```python
 	@objc.IBAction
 	def actionMethod_(self, sender):

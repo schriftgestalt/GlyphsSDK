@@ -10,6 +10,7 @@ class ____PluginClassName____ ( GSToolSelect ):
 	def init( self ):
 		"""
 		Unless you know what you are doing, leave this as it is.
+		By default, toolbar.pdf will be your tool icon.
 		"""
 		Bundle = NSBundle.bundleForClass_( NSClassFromString( self.className() ) );
 		BundlePath = Bundle.pathForResource_ofType_( "toolbar", "pdf" )
@@ -69,7 +70,7 @@ class ____PluginClassName____ ( GSToolSelect ):
 		Temporary Tool when user presses Cmd key.
 		Should always be GlyphsToolSelect unless you have a better idea.
 		"""
-		return TempTool.__class__.__name__ != "GlyphsToolSelect" 
+		return TempTool.__class__.__name__ != "GlyphsToolSelect"
 		
 	def willActivate( self ):
 		"""

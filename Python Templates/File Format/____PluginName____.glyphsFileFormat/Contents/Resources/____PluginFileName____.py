@@ -38,28 +38,27 @@ class ____PluginClassName____ ( NSObject, GlyphsFileFormatProtocol ):
 	
 	def exportSettingsView():
 		"""
-		return a NSView to be displayed in the export dialog.
+		Return an NSView to be displayed in the export dialog.
 		"""
 		return 
 	
 	def setFont_( self, GSFontObj ):
 		"""
-		The GSFont object is assigned the the plugin prior to the export.
-		
+		The GSFont object is assigned to the plugin prior to the export.
 		This is used to publish the export dialog.
 		"""
-		
 		self.font = GSFontObj
 	
 	def writeFont_error_( self, font, error ):
 		"""
 		Outputs a Font object.
-		
 		This function should ask the user for the place to save the store the font.
 		
 		param: Font The font to export.
 		param: error On return, If the document contents could not be read, a pointer to an error object that encapsulates the reason they could not be read.
-		return (True, None) if the operation was successful; otherwise return a tuple with False and a NSError object that contains info about the problem (False, NSError).
+
+		return (True, None) if the operation was successful;
+		otherwise return a tuple with False and a NSError object that contains info about the problem (False, NSError).
 		"""
 		
 		return ( True, None )
@@ -67,9 +66,9 @@ class ____PluginClassName____ ( NSObject, GlyphsFileFormatProtocol ):
 	def writeFont_toURL_error_( self, font, URL, error ):
 		"""
 		Outputs a Font object to the specified URL.
-		param: Font The font to export.
-		param: URL The URL to save the font to.
-		param: error On return, If the document contents could not be read, a pointer to an error object that encapsulates the reason they could not be read.
+		font: the font to export.
+		URL: the URL to save the font to.
+		error: on return, if the document contents could not be read, a pointer to an error object that encapsulates the reason they could not be read.
 		return ( True, None ) if the operation was successful; otherwise return a tuple with False and a NSError object that contains info about the problem ( False, NSError ).
 		"""
 		
@@ -87,13 +86,12 @@ class ____PluginClassName____ ( NSObject, GlyphsFileFormatProtocol ):
 		font = GSFont()
 		# add some glyphs...
 		return font
-	
-	
+		
 	def logToConsole( self, message ):
 		"""
 		The variable 'message' will be passed to Console.app.
 		Use self.logToConsole( "bla bla" ) for debugging.
 		"""
-		myLog = "Show %s plugin:\n%s" % ( self.title(), message )
+		myLog = "Font format %s:\n%s" % ( self.title(), message )
 		NSLog( myLog )
 	
