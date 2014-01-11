@@ -19,8 +19,7 @@ class ____PluginClassName____ ( NSObject, GlyphsFileFormatProtocol ):
 		
 	def title( self ):
 		"""
-		This is the name as it appears in the menu in combination with 'Show'.
-		E.g. 'return "Nodes"' will make the menu item read "Show Nodes".
+		This is the human-readable name as it appears in the menu.
 		"""
 		return "____PluginMenuName____"
 	
@@ -54,11 +53,14 @@ class ____PluginClassName____ ( NSObject, GlyphsFileFormatProtocol ):
 		Outputs a Font object.
 		This function should ask the user for the place to save the store the font.
 		
-		param: Font The font to export.
-		param: error On return, If the document contents could not be read, a pointer to an error object that encapsulates the reason they could not be read.
-
+		font: The font to export.
+		error: On return, If the document contents could not be read, a pointer to an error object that encapsulates the reason they could not be read.
+		
 		return (True, None) if the operation was successful;
-		otherwise return a tuple with False and a NSError object that contains info about the problem (False, NSError).
+		otherwise return a tuple with False and an NSError object that contains info about the problem (False, NSError).
+		
+		NSError:
+		https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Classes/NSError_Class/Reference/Reference.html
 		"""
 		
 		return ( True, None )
@@ -66,10 +68,16 @@ class ____PluginClassName____ ( NSObject, GlyphsFileFormatProtocol ):
 	def writeFont_toURL_error_( self, font, URL, error ):
 		"""
 		Outputs a Font object to the specified URL.
+		
 		font: the font to export.
 		URL: the URL to save the font to.
 		error: on return, if the document contents could not be read, a pointer to an error object that encapsulates the reason they could not be read.
-		return ( True, None ) if the operation was successful; otherwise return a tuple with False and a NSError object that contains info about the problem ( False, NSError ).
+		
+		return (True, None) if the operation was successful;
+		otherwise return a tuple with False and an NSError object that contains info about the problem (False, NSError).
+		
+		NSError:
+		https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Classes/NSError_Class/Reference/Reference.html
 		"""
 		
 		return ( True, None )
@@ -78,8 +86,9 @@ class ____PluginClassName____ ( NSObject, GlyphsFileFormatProtocol ):
 		"""
 		Reads a Font object from the specified URL.
 		
-		param: URL The URL to read the font from.
-		param: error On return, If the document contents could not be read, a pointer to an error object that encapsulates the reason they could not be read.
+		URL: the URL to read the font from.
+		error: on return, if the document contents could not be read, a pointer to an error object that encapsulates the reason they could not be read.
+		
 		return: The font object, or nil if an error occurred.
 		"""
 		
@@ -94,4 +103,3 @@ class ____PluginClassName____ ( NSObject, GlyphsFileFormatProtocol ):
 		"""
 		myLog = "Font format %s:\n%s" % ( self.title(), message )
 		NSLog( myLog )
-	

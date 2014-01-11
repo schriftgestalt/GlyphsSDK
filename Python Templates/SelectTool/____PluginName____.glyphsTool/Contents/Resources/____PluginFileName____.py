@@ -9,8 +9,8 @@ class ____PluginClassName____ ( GSToolSelect ):
 	
 	def init( self ):
 		"""
-		Unless you know what you are doing, leave this as it is.
 		By default, toolbar.pdf will be your tool icon.
+		Unless you know what you are doing, leave this as it is.
 		"""
 		Bundle = NSBundle.bundleForClass_( NSClassFromString( self.className() ) );
 		BundlePath = Bundle.pathForResource_ofType_( "toolbar", "pdf" )
@@ -19,8 +19,8 @@ class ____PluginClassName____ ( GSToolSelect ):
 		
 	def toolBarIcon( self ):
 		"""
-		Unless you know what you are doing, leave this as it is.
 		Return a instance of NSImage that represents the toolbar icon as established in init().
+		Unless you know what you are doing, leave this as it is.
 		"""
 		return self.tool_bar_image
 		
@@ -77,36 +77,29 @@ class ____PluginClassName____ ( GSToolSelect ):
 		Do stuff when the tool is selected.
 		E.g. show a window, or set a cursor.
 		"""
-		super( GlyphsExpandPathsPreviewTool, self ).willActivate()
+		super( ____PluginClassName____, self ).willActivate()
 		
 	def willDeactivate( self ):
 		"""
 		Do stuff when the tool is deselected.
 		"""
-		super( GlyphsExpandPathsPreviewTool, self ).willDeactivate()
+		super( ____PluginClassName____, self ).willDeactivate()
 		
 	def drawBackgroundForLayer_( self, Layer ):
 		"""
-		Whatever you draw here will be displayed IN FRONT OF the paths while the tool is active.
+		Whatever you draw here will be displayed behind the paths while the tool is active.
 		Use drawForegroundForLayer_() if you want to draw in front of the paths instead.
 		"""
 		try:
-			try:
-				FontMaster = Layer.font().masters[ Layer.associatedMasterId ]
-				Offset = _fontMaster.userData()[ "GSOffsetHorizontal" ].floatValue()
-			except:
-				Offset = 10
-				
+			Offset = 10
+			NSColor.grayColor().set()
 			Path = Layer.bezierPath()
-			if Offset > 0:
-				Path.setLineWidth_(Offset*2)
-				NSColor.grayColor().set()
-				Path.stroke()
+			Path.setLineWidth_( Offset * 2 )
+			Path.stroke()
 		except Exception as e:
 			self.logToConsole( str(e) )
 
 # TODO add all possible draw methods (Tool Draw delegate protocol)
-#
 #	
 #	def _drawLayer_atPoint_asActive_attributes_( self, Layer, aPoint, Active, Attributes ): # GSLayer, NSPoint, BOOL, NSDictionary,
 #

@@ -86,6 +86,7 @@ class ____PluginClassName____ ( NSObject, GlyphsPaletteProtocol ):
 		Use self.currentWindowController()
 		"""
 		windowController = None
+		
 		try:
 			windowController = NSDocumentController.sharedDocumentController().currentDocument().windowController()
 			if not windowController and sender.respondsToSelector_( "object" ):
@@ -98,6 +99,7 @@ class ____PluginClassName____ ( NSObject, GlyphsPaletteProtocol ):
 					self.logToConsole( "__windowController2", windowController )
 		except:
 			pass
+			
 		return windowController
 	
 	def update( self, sender ):
@@ -111,6 +113,7 @@ class ____PluginClassName____ ( NSObject, GlyphsPaletteProtocol ):
 			Layer = windowController.activeLayer()
 		except:
 			pass
+			
 		if Layer:
 			# Do stuff here
 			pass
