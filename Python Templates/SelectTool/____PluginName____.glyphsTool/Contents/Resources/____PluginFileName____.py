@@ -98,26 +98,3 @@ class ____PluginClassName____ ( GSToolSelect ):
 			Path.stroke()
 		except Exception as e:
 			self.logToConsole( str(e) )
-
-# TODO add all possible draw methods (Tool Draw delegate protocol)
-#	
-#	def _drawLayer_atPoint_asActive_attributes_( self, Layer, aPoint, Active, Attributes ): # GSLayer, NSPoint, BOOL, NSDictionary,
-#
-#		"""
-#		This method is called every time the view needs a redraw.
-#		This happens a lot, so try to cache some slow calculations.
-#		There is no easy way to determine if the content of the layer has changed. 
-#		For now, save the output of:
-#			str( Layer.bezierPath() )
-#		and compare in the next run.
-#		"""
-#		self.scale = 1
-#
-#		"""
-#		This will call the parent classes implementation.
-#		In this case it draws the outline, the nodes and the metrics.
-#		If you want to draw your own outline, you can skip this.
-#		"""
-#		super( GlyphsAppSpeedPunkTool, self ).drawLayer_atPoint_asActive_attributes_( Layer, aPoint, Active, Attributes )
-#		
-#
