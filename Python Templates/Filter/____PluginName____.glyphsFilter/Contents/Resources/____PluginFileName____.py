@@ -57,6 +57,7 @@ class ____PluginClassName____ ( GSFilterPlugin ):
 			self.firstValue = 15 # set default value.
 		
 		self.firstValueField.setFloatValue_(self.firstValue)
+		self.process_(None)
 		return None # or if somthing goes wrong, a NSError object with details
 	
 	@objc.IBAction
