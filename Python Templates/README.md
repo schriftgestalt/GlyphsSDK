@@ -27,23 +27,22 @@ In `Contents/Info.plist`, replace `____PluginClassName____` with the name of the
 
 To install it, move it into the Plugins folder inside the Application Support folder of Glyphs (double click the plugin to let Glyphs do that for you). You can edit your code right there, but you need to restart the application for any changes to take effect.
 
+### Adding GUI elements
 
-### Some resources:
-
-To use .xib files, you need to add IBActions and IBOutlet in the controller class like this:
+For GUI elements, you will need to work with Interface Builder (IB). For this, you edit `.xib` files in XCode, and compile them to `.nib` files. To use `.xib` files, you need to add IBActions and IBOutlets in the principal controller class of your `____PluginFileName____.py`, like this:
 ```python
 	_theOutlet = objc.IBOutlet()
 ```
 
-... and:
+... and start the respective UI action method (e.g. an action triggered by a button) with `@objc.IBAction`:
 ```python
 	@objc.IBAction
 	def actionMethod_(self, sender):
 		pass
 ```
 
-Then edit the .xib in Xcode and add the .py file by File > Add Files...
-after every change to the .xib, it has to be compiled to an .nib:
+Then, edit the `.xib` in Xcode and add the .py file by *File > Add Files...* When you are done, and every time the `.xib` file is changed, it has to be compiled to a `.nib` file. Do so with this Terminal command:
 `ibtool Path/to/the/.xib --compile Path/to/the/.nib`
 
+For a quick walkthrough, read:
 http://blog.adamw523.com/os-x-cocoa-application-python-pyobjc/
