@@ -9,12 +9,16 @@ import sys, os, re
 GlyphsFileFormatProtocol = objc.protocolNamed( "GlyphsFileFormat" )
 
 class ____PluginClassName____ ( NSObject, GlyphsFileFormatProtocol ):
-	
+	settings_view = objc.IBOutlet()
 	def init( self ):
 		"""
 		Do all initializing here.
 		"""
 		#Bundle = NSBundle.bundleForClass_( NSClassFromString( self.className() ));
+		NSBundle.loadNibNamed_owner_("____PluginFileName____Dialog", self)
+		thisBundle = NSBundle.bundleForClass_( NSClassFromString( self.className() ) )
+		self.toolbarIcon = NSImage.alloc().initWithContentsOfFile_( thisBundle.pathForImageResource_("ExportIcon") )
+		self.toolbarIcon.setName_("ExportIcon")
 		return self
 		
 	def title( self ):
@@ -35,18 +39,24 @@ class ____PluginClassName____ ( NSObject, GlyphsFileFormatProtocol ):
 		"""
 		return 1
 	
-	def exportSettingsView():
+	def progressWindow( self ):
+		return None
+	
+	def exportSettingsView( self ):
 		"""
-		Return an NSView to be displayed in the export dialog.
+		Return 
 		"""
-		return 
+		return self.settings_view
+	
+	def font(self):
+		return self._font
 	
 	def setFont_( self, GSFontObj ):
 		"""
 		The GSFont object is assigned to the plugin prior to the export.
 		This is used to publish the export dialog.
 		"""
-		self.font = GSFontObj
+		self._font = GSFontObj
 	
 	def writeFont_error_( self, font, error ):
 		"""
@@ -62,7 +72,7 @@ class ____PluginClassName____ ( NSObject, GlyphsFileFormatProtocol ):
 		NSError:
 		https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Classes/NSError_Class/Reference/Reference.html
 		"""
-		
+		print "__writeFont_error_", font
 		return ( True, None )
 	
 	def writeFont_toURL_error_( self, font, URL, error ):
@@ -79,7 +89,7 @@ class ____PluginClassName____ ( NSObject, GlyphsFileFormatProtocol ):
 		NSError:
 		https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Classes/NSError_Class/Reference/Reference.html
 		"""
-		
+		print "__writeFont_toURL_error_", font
 		return ( True, None )
 	
 	def fontFromURL_ofType_error_( self, URL, type, error ):
