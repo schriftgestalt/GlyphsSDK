@@ -50,14 +50,6 @@ class ____PluginClassName____ ( GSToolSelect ):
 		myLog = "%s tool:\n%s" % ( self.title(), message )
 		NSLog( myLog )
 		
-	def keyEquivalent( self ):
-		"""
-		The key for the keyboard shortcut.
-		Pretty tricky to find a shortcut that is not taken yet, so be careful.
-		If you are not sure, use 'return None'. Users can set their own shortcuts in System Prefs.
-		"""
-		return "k"
-		
  	def trigger( self ):
 		"""
 		The key to select the tool with keyboard (like v for the select tool).
