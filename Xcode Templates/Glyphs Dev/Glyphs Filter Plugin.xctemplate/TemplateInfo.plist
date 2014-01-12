@@ -9,7 +9,7 @@
 	<key>Concrete</key>
 	<true/>
 	<key>Description</key>
-	<string>This template builds a Tool Plugin for Glyphs.</string>
+	<string>This template builds a Filter Plugin for Glyphs.</string>
 	<key>SortOrder</key>
 	<integer>3</integer>
 	<key>Ancestors</key>
@@ -28,11 +28,13 @@
 				<key>INSTALL_PATH</key>
 				<string>$(LOCAL_LIBRARY_DIR)/Bundles</string>
 				<key>WRAPPER_EXTENSION</key>
-				<string>glyphsTool</string>
+				<string>glyphsFilter</string>
 				<key>FRAMEWORK_SEARCH_PATHS</key>
 				<string>$(SYSTEM_APPS_DIR)/Glyphs.app/Contents/Frameworks</string>
 				<key>COMBINE_HIDPI_IMAGES</key>
 				<string>YES</string>
+				<key>MACOSX_DEPLOYMENT_TARGET</key>
+				<string>10.6</string>
 			</dict>
 			<key>BuildPhases</key>
 			<array>
@@ -65,7 +67,7 @@
 		<string>___PACKAGENAME___-Info.plist:NSHumanReadableCopyright</string>
 		<string>___PACKAGENAMEASIDENTIFIER___.h</string>
 		<string>___PACKAGENAMEASIDENTIFIER___.m</string>
-		<string>ToolbarIconTemplate.pdf</string>
+		<string>en.lproj/___PACKAGENAMEASIDENTIFIER___Dialog.xib</string>
 		<string>GlyphsCore</string>
 	</array>
 	<key>Definitions</key>
@@ -102,10 +104,10 @@
 			<key>Path</key>
 			<string>___PACKAGENAMEASIDENTIFIER___.m</string>
 		</dict>
-		<key>ToolbarIconTemplate.pdf</key>
+		<key>en.lproj/___PACKAGENAMEASIDENTIFIER___Dialog.xib</key>
 		<dict>
 			<key>Path</key>
-			<string>ToolbarIconTemplate.pdf</string>
+			<string>___PACKAGENAMEASIDENTIFIER___Dialog.xib</string>
 			<key>Group</key>
 			<string>Supporting Files</string>
 		</dict>

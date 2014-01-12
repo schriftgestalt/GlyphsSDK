@@ -17,6 +17,7 @@
 	}
 	return self;
 }
+
 - (NSUInteger) interfaceVersion {
 	// Distinguishes the API verison the plugin was built for. Return 1.
 	return 1;

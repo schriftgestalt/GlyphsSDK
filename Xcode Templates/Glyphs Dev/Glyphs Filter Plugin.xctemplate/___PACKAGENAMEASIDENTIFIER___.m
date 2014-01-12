@@ -6,33 +6,62 @@
 //___COPYRIGHT___
 //
 
-#import "___FILEBASENAME___.h"
+#import "___PACKAGENAMEASIDENTIFIER___.h"
+#import <GlyphsCore/GSFont.h>
+#import <GlyphsCore/GSFontMaster.h>
+#import <GlyphsCore/GSGlyph.h>
+#import <GlyphsCore/GSLayer.h>
+#import <GlyphsCore/GSPath.h>
 
 @implementation ___FILEBASENAMEASIDENTIFIER___
 
-- (id)init {
+- (id) init {
 	self = [super init];
-	[NSBundle loadNibNamed:@"___FILEBASENAMEASIDENTIFIER___Dialog" owner:self];
+	[NSBundle loadNibNamed:@"___PACKAGENAMEASIDENTIFIER___Dialog" owner:self];
 	return self;
 }
+
 - (NSUInteger) interfaceVersion {
 	// Distinguishes the API verison the plugin was built for. Return 1.
 	return 1;
 }
+
 - (NSString*) title {
 	// Return the name of the tool as it will appear in the menu.
 	return @"___PACKAGENAME___";
 }
+
 - (NSString*) actionName {
 	// The title of the button in the filter dialog.
 	return @"___PACKAGENAME___";
 }
+
 - (NSString*) keyEquivalent {
 	// The key together with Cmd+Shift will be the shortcut for the filter.
 	// Return nil if you do not want to set a shortcut.
 	// Users can set their own shortcuts in System Prefs.
 	return nil;
 }
+
+- (NSError*) setup {
+	if ([_fontMaster.userData objectForKey:@"____TheFirstValue____"]) {
+		_firstValue = [[_fontMaster.userData objectForKey:@"____TheFirstValue____"] floatValue];
+	}
+	else {
+		_firstValue = 15; // set default value.
+	}
+	[_firstValueField setFloatValue:_firstValue];
+	return nil;
+}
+
+- (void) processLayer:(GSLayer*)Layer withFirstValue:(CGFloat)FirstValue {
+	// the method should contain all parameters as arguments
+	
+	// do stuff with the Layer.
+	
+	
+}
+
 - (void) processFont:(GSFont*)Font withArguments:(NSArray*)Arguments {
 	// Invoked when called as Custom Parameter in an instance at export.
 	// The Arguments come from the custom parameter in the instance settings. 
@@ -43,12 +72,17 @@
 	}
 	checkSelection = NO;
 	NSString * FontMasterId = [Font fontMasterAtIndex:0].id;
+	BOOL Include = NO;
+	NSSet * Glyphs = getIncludeExcludeGlyphList(Arguments, &Include);
 	for (GSGlyph * Glyph in Font.glyphs) {
+		if (Glyphs && [Glyphs containsObject:Glyph.name] != Include) continue;
+		
 		GSLayer * Layer = [Glyph layerForKey:FontMasterId];
-		[self processLayer:Layer];
+		[self processLayer:Layer withFirstValue:FirstValue];
 	}
 }
-- (void) setFirstValue:(id)sender {
+
+- (IBAction) setFirstValue:(id)sender {
 	// This is only an example for a setter method.
 	// Add methods like this for each option in the dialog.
 	CGFloat FirstValue = [sender floatValue];
@@ -57,6 +91,7 @@
 		[self process:nil];
 	}
 }
+
 - (void) process:(id)sender {
 	int k;
 	for (k = 0; k < [_shadowLayers count]; k++) {
@@ -77,10 +112,11 @@
 				}
 			}
 		}
-		[self processLayer:Layer];
+		[self processLayer:Layer withFirstValue:_firstValue];
 		[Layer clearSelection];
 	}
-	[_fontMaster.userData setObject:[NSNumber numberWithDouble:_radius] forKey:@"GSCornerRadius"];
+	// Safe the value in the FontMaster. But could be saved in UserDefaults, too.
+	[_fontMaster.userData setObject:[NSNumber numberWithDouble:_firstValue] forKey:@"____TheFirstValue____"];
 	[super process:nil];
 }
 

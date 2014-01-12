@@ -33,6 +33,8 @@
 				<string>$(SYSTEM_APPS_DIR)/Glyphs.app/Contents/Frameworks</string>
 				<key>COMBINE_HIDPI_IMAGES</key>
 				<string>YES</string>
+				<key>MACOSX_DEPLOYMENT_TARGET</key>
+				<string>10.6</string>
 			</dict>
 			<key>BuildPhases</key>
 			<array>
@@ -65,7 +67,9 @@
 		<string>___PACKAGENAME___-Info.plist:NSHumanReadableCopyright</string>
 		<string>___PACKAGENAMEASIDENTIFIER___.h</string>
 		<string>___PACKAGENAMEASIDENTIFIER___.m</string>
-		<string>ToolbarIconTemplate.pdf</string>
+		<string>en.lproj/___PACKAGENAMEASIDENTIFIER___Dialog.xib</string>
+		<string>ExportIcon.tif</string>
+		<string>ExportIcon@2x.tif</string>
 		<string>GlyphsCore</string>
 	</array>
 	<key>Definitions</key>
@@ -79,6 +83,17 @@
 &lt;string&gt;${PRODUCT_NAME}&lt;/string&gt;
 &lt;key&gt;CFBundleIconFile&lt;/key&gt;
 &lt;string&gt;&lt;/string&gt;
+&lt;key&gt;CFBundleDocumentTypes&lt;/key&gt;
+&lt;array&gt;
+&lt;dict&gt;
+&lt;key&gt;CFBundleTypeExtensions&lt;/key&gt;
+&lt;array&gt;
+&lt;string&gt;ExportIcon&lt;/string&gt;
+&lt;/array&gt;
+&lt;key&gt;CFBundleTypeRole&lt;/key&gt;
+&lt;string&gt;Editor&lt;/string&gt;
+&lt;/dict&gt;
+&lt;/array&gt;
 &lt;key&gt;CFBundleInfoDictionaryVersion&lt;/key&gt;
 &lt;string&gt;6.0&lt;/string&gt;
 &lt;key&gt;CFBundlePackageType&lt;/key&gt;
@@ -102,10 +117,24 @@
 			<key>Path</key>
 			<string>___PACKAGENAMEASIDENTIFIER___.m</string>
 		</dict>
-		<key>ToolbarIconTemplate.pdf</key>
+		<key>en.lproj/___PACKAGENAMEASIDENTIFIER___Dialog.xib</key>
 		<dict>
 			<key>Path</key>
-			<string>ToolbarIconTemplate.pdf</string>
+			<string>___PACKAGENAMEASIDENTIFIER___Dialog.xib</string>
+			<key>Group</key>
+			<string>Supporting Files</string>
+		</dict>
+		<key>ExportIcon.tif</key>
+		<dict>
+			<key>Path</key>
+			<string>ExportIcon.tif</string>
+			<key>Group</key>
+			<string>Supporting Files</string>
+		</dict>
+		<key>ExportIcon@2x.tif</key>
+		<dict>
+			<key>Path</key>
+			<string>ExportIcon@2x.tif</string>
 			<key>Group</key>
 			<string>Supporting Files</string>
 		</dict>
