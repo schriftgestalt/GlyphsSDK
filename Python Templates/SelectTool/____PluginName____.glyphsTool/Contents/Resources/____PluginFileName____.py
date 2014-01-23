@@ -10,11 +10,12 @@ class ____PluginClassName____ ( GSToolSelect ):
 	def init( self ):
 		"""
 		By default, toolbar.pdf will be your tool icon.
-		Unless you know what you are doing, leave this as it is.
+		Use this for any initializations you need.
 		"""
 		Bundle = NSBundle.bundleForClass_( NSClassFromString( self.className() ) );
-		BundlePath = Bundle.pathForResource_ofType_( "toolbar", "pdf" )
-		self.tool_bar_image = NSImage.alloc().initWithContentsOfFile_( BundlePath )		
+		BundlePath = Bundle.pathForResource_ofType_( "toolbar", "pdf" ) # Set this to the filename and type of your icon.
+		self.tool_bar_image = NSImage.alloc().initWithContentsOfFile_( BundlePath )
+		self.tool_bar_image.setTemplate_( True ) # Makes the icon blend in with the toolbar.
 		return self
 		
 	def toolBarIcon( self ):
@@ -26,19 +27,20 @@ class ____PluginClassName____ ( GSToolSelect ):
 		
 	def title( self ):
 		"""
-		The name of the Tool.
+		The name of the Tool as it appears in the tooltip.
 		"""
 		return "____PluginMenuName____"
 		
 	def interfaceVersion( self ):
 		"""
-		Must return 1.
+		API version, must return 1.
 		"""
 		return 1
 		
 	def groupID( self ):
 		"""
 		Determines the position in the toolbar.
+		Higher values are further to the right.
 		"""
 		return 100
 		
@@ -77,16 +79,16 @@ class ____PluginClassName____ ( GSToolSelect ):
 		"""
 		super( ____PluginClassName____, self ).willDeactivate()
 		
-	def drawBackgroundForLayer_( self, Layer ):
+	def elementAtPoint_atLayer_( currentPoint, activeLayer ):
 		"""
-		Whatever you draw here will be displayed behind the paths while the tool is active.
-		Use drawForegroundForLayer_() if you want to draw in front of the paths instead.
+		Return an element in the vicinity of currentPoint (NSPoint), and it will be captured by the tool.
+		Use Boolean ...
+			distance( currentPoint, referencePoint ) < clickTolerance / Scale )
+		... for determining whether the NSPoint referencePoint is captured or not.
+		Use:
+			myPath.nearestPointOnPath_pathTime_( currentPoint, 0.0 )
+		
 		"""
-		try:
-			Offset = 10
-			NSColor.grayColor().set()
-			Path = Layer.bezierPath()
-			Path.setLineWidth_( Offset * 2 )
-			Path.stroke()
-		except Exception as e:
-			self.logToConsole( str(e) )
+		Scale = self.editViewController().graphicView().scale()
+		clickTolerance = 4.0
+	pass
