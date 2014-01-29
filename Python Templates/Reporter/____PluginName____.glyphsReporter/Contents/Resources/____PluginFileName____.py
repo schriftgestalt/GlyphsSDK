@@ -6,13 +6,20 @@ from Foundation import *
 from AppKit import *
 import sys, os, re
 
+MainBundle = NSBundle.mainBundle()
+path = MainBundle.bundlePath()+"/Contents/Scripts"
+if not path in sys.path:
+	sys.path.append(path)
+
+import GlyphsApp
+
 GlyphsReporterProtocol = objc.protocolNamed( "GlyphsReporter" )
 
 class ____PluginClassName____ ( NSObject, GlyphsReporterProtocol ):
 	
 	def init( self ):
 		"""
-		Unless you know what you are doing, leave this at "return self".
+		Put any initializations you want to make here.
 		"""
 		#Bundle = NSBundle.bundleForClass_( NSClassFromString( self.className() ));
 		return self
@@ -101,9 +108,23 @@ class ____PluginClassName____ ( NSObject, GlyphsReporterProtocol ):
 			pass
 		except Exception as e:
 			self.logToConsole( str(e) )
-			
+	
+	def getScale( self ):
+		"""
+		Returns the current scale factor of the Edit View UI.
+		Divide any scalable size by this value in order to keep the same apparent pixel size.
+		"""
+		try:
+			return self.controller.graphicView().scale()
+		except:
+			self.logToConsole( "Scale defaulting to 1.0" )
+			return 1.0
+	
 	def setController_( self, Controller ):
 		"""
 		Use self.controller as object for the current view controller.
 		"""
-		self.controller = Controller
+		try:
+			self.controller = Controller
+		except Exception as e:
+			self.logToConsole( "Could not set controller" )
