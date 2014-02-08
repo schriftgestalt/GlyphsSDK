@@ -108,6 +108,11 @@ class ____PluginClassName____ ( NSObject, GlyphsReporterProtocol ):
 			pass
 		except Exception as e:
 			self.logToConsole( str(e) )
+	def needsExtraMainOutlineDrawingForInactiveLayer_(self, Layer):
+		"""
+		return False to disable the black outline. Otherwise remove the method.
+		"""
+		return False
 	
 	def getScale( self ):
 		"""
