@@ -18,9 +18,9 @@ Open `Info.plist` and customize the entries there. Set the version number in `CF
 
 Replace `____PluginFileName____` in `CFBundleExecutable` and `CFBundleVersion` with the name of the file name of `Contents/Resources/____PluginFileName____.py`, ignoring the `.py` extension. We recommend to use a camel-cased file name without spaces. The file and these two entries in `Contents/Info.plist` must carry the exact same name. Additionally, the name, including the `.py` extension must be reflected in the last line of `__boot__.py`.
 
-In `Contents/Info.plist`, replace `____PluginClassName____` with the name of the principal Python class in `Contents/Resources/____PluginFileName____.py`. No spaces, we recommend camel case. These two entries and the name of the class in `____PluginFileName____.py` must be exactly the same.
+In `Contents/Info.plist`, replace `____PluginClassName____` with the name of the principal Python class in `Contents/Resources/____PluginFileName____.py`. No spaces, we recommend camelcase. These two entries and the name of the class in `____PluginFileName____.py` must be exactly the same.
 
-`Contents/Resources/____PluginFileName____.py` is also where your code goes. Follow the instructions in the comments of the file.
+`Contents/Resources/____PluginFileName____.py` is also where your code goes. You will find instructions in the comments of the file.
 
 
 ### Installing and debugging
@@ -41,7 +41,7 @@ For GUI elements, you will need to work with Interface Builder (IB). For this, y
 		pass
 ```
 
-Then, edit the `.xib` in Xcode and add the .py file by *File > Add Files...* When you are done, and every time the `.xib` file is changed, it has to be compiled to a `.nib` file. Do so with this Terminal command:
+You will find more detailed help in the comments of the .py file. Then, edit the `.xib` in Xcode and add the .py file by *File > Add Files...* When you are done, and every time the `.xib` file is changed, it has to be compiled to a `.nib` file. Do so with this Terminal command:
 `ibtool Path/to/the/.xib --compile Path/to/the/.nib`
 
 For a quick walkthrough, read:

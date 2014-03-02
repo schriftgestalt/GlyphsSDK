@@ -1,6 +1,22 @@
 # GlyphsSDK
 
-This is the Plugin SDK for the [Glyphs font editor](http://glyphsapp.com/). There are various kinds of plugins (see below), and there are two ways of writing them, in ObjectiveC or Python. There is extensive documentation in the code. For more details, look into the Readme files inside the Template subfolders.
+This is the Plugin SDK for the [Glyphs font editor](http://glyphsapp.com/). There are various kinds of plugins (see below), and there are two ways of writing them, in ObjectiveC or Python. You will find extensive documentation in the code comments. For more details, look into the read-me files inside the template subfolders.
+
+### .glyphsFileFormat
+
+These plugins add additional file formats for the export dialog.
+
+### .glyphsFilter
+
+These plugins that add functionality in the *Filter* submenu of Glyphs. A filter can either have a GUI (dialog window) or none. A filter can also be called as an instance custom parameter.
+
+### .glyphsPalette
+
+These plugins add new sections to the Palette (Window > Palette, Cmd-Opt-P).
+
+### .glyphsPlugin
+
+These are all plugins that do not fit any other category.
 
 ### .glyphsReporter
 
@@ -10,26 +26,9 @@ These plugins add extra View functionality. They usually draw additional items i
 
 These plugins add a new tool in the toolbar. You can place a small PDF as toolbar icon in the `Contents/Resources/` folder. For measurements, take a look at the placeholder image that is already there.
 
-### .glyphsFilter
-
-This is an ObjectiveC plugin that can add functionality in the *Filter* submenu or anywhere else in the UI of Glyphs.
-
-### .glyphsFileFormat
-
-These add additional file formats for the export dialog.
-
-### .glyphsPalette
-
-Additions to the Palette (Cmd-Opt-P).
-
-### .glyphsPlugin
-
-These are all plugins that do not fit any other category.
-
 ### License
 
-Copyright 2013 Georg Seifert (@schriftgestalt).
-Parts of the documentation by Rainer Erich Scheichelbauer (@mekkablue).
+Copyright 2013, 2014 Georg Seifert (@schriftgestalt) and Rainer Erich Scheichelbauer (@mekkablue).
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
