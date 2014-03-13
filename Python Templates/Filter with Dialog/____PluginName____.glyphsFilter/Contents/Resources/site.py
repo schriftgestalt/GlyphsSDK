@@ -1,10 +1,9 @@
 """
 Append module search paths for third-party packages to sys.path.
-
 This is stripped down and customized for use in py2app applications
 """
-
 import sys
+
 # os is actually in the zip, so we need to do this here.
 # we can't call it python24.zip because zlib is not a built-in module (!)
 _libdir = '/lib/python' + sys.version[:3]
@@ -16,7 +15,6 @@ sys.path.append(_parent + '/site-packages.zip')
 # Stuffit decompresses recursively by default, that can mess up py2app bundles,
 # add the uncompressed site-packages to the path to compensate for that.
 sys.path.append(_parent + '/site-packages')
-
 import os
 try:
     basestring
@@ -68,7 +66,7 @@ def addsitedir(sitedir):
         reset = 0
     sitedir, sitedircase = makepath(sitedir)
     if not sitedircase in _dirs_in_sys_path:
-        sys.path.append(sitedir)        # Add path component
+        sys.path.append(sitedir) # Add path component
     try:
         names = os.listdir(sitedir)
     except os.error:
@@ -110,21 +108,16 @@ def addpackage(sitedir, name):
     if reset:
         _dirs_in_sys_path = None
 
-
 #sys.setdefaultencoding('utf-8')
 
-#
 # Run custom site specific code, if available.
-#
 try:
     import sitecustomize
 except ImportError:
     pass
 
-#
 # Remove sys.setdefaultencoding() so that users cannot change the
 # encoding after initialization.  The test for presence is needed when
 # this module is run as a script, because this code is executed twice.
-#
 if hasattr(sys, "setdefaultencoding"):
     del sys.setdefaultencoding

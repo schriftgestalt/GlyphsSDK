@@ -14,7 +14,10 @@ class ____PluginClassName____ ( NSObject, GlyphsFilterProtocol ):
 		"""
 		Do all initializing here.
 		"""
-		return self
+		try:
+			return self
+		except Exception as e:
+			self.logToConsole( "init: %s" % str(e) )
 	
 	def interfaceVersion( self ):
 		"""
@@ -54,7 +57,10 @@ class ____PluginClassName____ ( NSObject, GlyphsFilterProtocol ):
 		"""
 		This is the human-readable name as it appears in the Filter menu.
 		"""
-		return "____PluginMenuName____"
+		try:
+			return "____PluginMenuName____"
+		except Exception as e:
+			self.logToConsole( "title: %s" % str(e) )
 	
 	def keyEquivalent( self ):
 		""" 
@@ -62,7 +68,29 @@ class ____PluginClassName____ ( NSObject, GlyphsFilterProtocol ):
 		Return None if you do not want to set a shortcut.
 		Users can set their own shortcuts in System Prefs.
 		"""
-		return None
+		try:
+			return None
+		except Exception as e:
+			self.logToConsole( "keyEquivalent: %s" % str(e) )
+	
+	def processLayer( self, Layer, selectionCounts ):
+		"""
+		Each layer is processed here.
+		Put your code here.
+		If selectionCounts is True, then apply the code only to the selection.
+		"""
+		try:
+			if selectionCounts == True:
+				selection = Layer.selection()
+				if selection == (): # empty selection
+					selectionCounts = False
+			
+			# Do stuff here.
+			
+			return True
+		except Exception as e:
+			self.logToConsole( "processLayer: %s" % str(e) )
+			return False
 	
 	def runFilterWithLayers_error_( self, Layers, Error ):
 		"""
@@ -73,7 +101,7 @@ class ____PluginClassName____ ( NSObject, GlyphsFilterProtocol ):
 			for k in range(len(Layers)):
 				Layer = Layers[k]
 				Layer.clearSelection()
-				self.processLayer( Layer, False )
+				self.processLayer( Layer, False ) # ignore selection
 		except Exception as e:
 			self.logToConsole( "runFilterWithLayers_error_: %s" % str(e) )
 			
@@ -83,15 +111,16 @@ class ____PluginClassName____ ( NSObject, GlyphsFilterProtocol ):
 		and only one layer is selected.
 		"""
 		try:
-			return self.processLayer( Layer, True )
+			return self.processLayer( Layer, True ) # respect selection
 		except Exception as e:
 			self.logToConsole( "runFilterWithLayer_error_: %s" % str(e) )
+			return False
 	
 	def processFont_withArguments_( self, Font, Arguments ):
 		"""
 		Invoked when called as Custom Parameter in an instance at export.
 		The Arguments come from the custom parameter in the instance settings. 
-		The first item in Arguments is the class-name. After that, it depends on the filter.
+		Item 0 in Arguments is the class-name. The consecutive items should be your filter options.
 		"""
 		try:
 			FontMasterId = Font.fontMasterAtIndex_(0).id
@@ -101,27 +130,10 @@ class ____PluginClassName____ ( NSObject, GlyphsFilterProtocol ):
 		except Exception as e:
 			self.logToConsole( "processFont_withArguments_: %s" % str(e) )
 	
-	def processLayer( self, Layer, selectionCounts ):
-		"""
-		Each layer is processed here.
-		Put your code here.
-		"""
-		try:
-			selection = Layer.selection()
-			if selection == (): # empty selection
-				selectionCounts = False
-			
-			# Do stuff here.
-			
-			return True
-		except Exception as e:
-			self.logToConsole( "processLayer: %s" % str(e) )
-			return False
-	
 	def logToConsole( self, message ):
 		"""
 		The variable 'message' will be passed to Console.app.
 		Use self.logToConsole( "bla bla" ) for debugging.
 		"""
-		myLog = "Filter %s:\n%s" % (self.title(), message )
+		myLog = "Filter %s:\n%s" % ( self.title(), message )
 		NSLog( myLog )
