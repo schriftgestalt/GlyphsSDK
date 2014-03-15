@@ -29,7 +29,7 @@ class ____PluginClassName____ ( NSObject, GlyphsFileFormatProtocol ):
 		
 	def title( self ):
 		"""
-		This is the human-readable name as it appears in the export dialog.
+		This is a human-readable name, necessary for the export dialog.
 		"""
 		try:
 			return "____PluginMenuName____"
@@ -47,12 +47,21 @@ class ____PluginClassName____ ( NSObject, GlyphsFileFormatProtocol ):
 			
 	def toolbarIconName( self ):
 		"""
-		The filename suffix without the dot.
+		The filename of the icon, without the suffix.
 		"""
 		try:
-			return "xxx"
+			return "ExportIcon"
 		except Exception as e:
 			self.logToConsole( "toolbarIconName: %s" % str(e) )
+			
+	def fileExtension( self ):
+		"""
+		Suffix of the filename without the dot.
+		"""
+		try:
+			return "csv"
+		except Exception as e:
+			self.logToConsole( "fileExtension: %s" % str(e) )
 	
 	def groupID( self ):
 		"""
@@ -124,7 +133,7 @@ class ____PluginClassName____ ( NSObject, GlyphsFileFormatProtocol ):
 			# Ask for export destination and write the file:
 			dialogMessage = "Choose export destination"
 			dialogProposedFileName = font.familyName
-			dialogFiletypes = [ self.toolbarIconName() ]
+			dialogFiletypes = [ self.fileExtension() ]
 			filepath = self.saveFileDialog( message = dialogMessage, ProposedFileName = dialogProposedFileName, filetypes = dialogFiletypes )
 			file = open( filepath, "w" )
 			file.write( exportString )
@@ -139,23 +148,21 @@ class ____PluginClassName____ ( NSObject, GlyphsFileFormatProtocol ):
 	def writeFont_toURL_error_( self, font, URL, error ):
 		"""
 		Outputs a Font object to the specified URL.
-		
+		This method is called when the save dialog is invoked by the user.
+		You don't have to make a dialog
 		font: the font to export.
 		URL: the URL to save the font to.
 		error: on return, if the document contents could not be read, a pointer to an error object that encapsulates the reason they could not be read.
-		
-		return (True, None) if the operation was successful;
-		otherwise return a tuple with False and an NSError object that contains info about the problem (False, NSError).
-		
-		NSError:
-		https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Classes/NSError_Class/Reference/Reference.html
 		"""
 		try:
-			print "__writeFont_toURL_error_", font
-			return ( True, None )
+			# Write a file:
+			file = open( URL, "w" )
+			file.write( exportString )
+			file.close()
+			return True
 		except Exception as e:
 			self.logToConsole( "writeFont_toURL_error_: %s" % str(e) )
-			return ( False, error )
+			return False
 	
 	def fontFromURL_ofType_error_( self, URL, fonttype, error ):
 		"""
