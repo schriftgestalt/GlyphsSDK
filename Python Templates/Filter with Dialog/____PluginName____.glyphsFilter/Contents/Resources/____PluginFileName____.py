@@ -72,7 +72,10 @@ class ____PluginClassName____ ( GSFilterPlugin ):
 		Distinguishes the API version the plugin was built for. 
 		Return 1.
 		"""
-		return 1
+		try:
+			return 1
+		except Exception as e:
+			self.logToConsole( "interfaceVersion: %s" % str(e) )
 	
 	def title( self ):
 		"""
@@ -131,20 +134,26 @@ class ____PluginClassName____ ( GSFilterPlugin ):
 		Returns either the stored or default value for the given userDataKey.
 		Assumes a floating point value. For use in self.setup().
 		"""
-		if userDataKey in FontMaster.userData:
-			return FontMaster.userData[userDataKey].floatValue()
-		else:
-			return defaultValue
+		try:
+			if userDataKey in FontMaster.userData:
+				return FontMaster.userData[userDataKey].floatValue()
+			else:
+				return defaultValue
+		except Exception as e:
+			self.logToConsole( "setDefaultFloatValue: %s" % str(e) )
 			
 	def setDefaultIntegerValue( self, userDataKey, defaultValue, FontMaster ):
 		"""
 		Returns either the stored or default value for the given userDataKey.
 		Assumes an integer value. For use in self.setup().
 		"""
-		if userDataKey in FontMaster.userData:
-			return FontMaster.userData[userDataKey].integerValue()
-		else:
-			return defaultValue
+		try:
+			if userDataKey in FontMaster.userData:
+				return FontMaster.userData[userDataKey].integerValue()
+			else:
+				return defaultValue
+		except Exception as e:
+			self.logToConsole( "setDefaultIntegerValue: %s" % str(e) )
 	
 	@objc.IBAction
 	def ____setMyValue____( self, sender ):

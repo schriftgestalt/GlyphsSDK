@@ -79,7 +79,10 @@ class ____PluginClassName____ ( NSObject, GlyphsPaletteProtocol ):
 		Distinguishes the API version the plugin was built for. 
 		Return 1.
 		"""
-		return 1
+		try:
+			return 1
+		except Exception as e:
+			self.logToConsole( "interfaceVersion: %s" % str(e) )
 	
 	def title( self ):
 		"""
