@@ -12,34 +12,48 @@ class ____PluginClassName____ ( NSObject, GlyphsPluginProtocol ):
 	
 	def init( self ):
 		"""
-		Unless you know what you are doing, leave this as it is.
+		Do all initializing here.
 		"""
-		#Bundle = NSBundle.bundleForClass_(NSClassFromString(self.className()));
-		selector = objc.selector( self.advertise, signature="v@:@" )
-		NSNotificationCenter.defaultCenter().addObserver_selector_name_object_( self, selector, "GSDocumentWasSavedSuccessfully", objc.nil() )
-		#print self.title(), "init"
-		return self
+		try:
+			# Bundle = NSBundle.bundleForClass_( NSClassFromString( self.className() ) )
+			selector = objc.selector( self.advertise, signature="v@:@" )
+			NSNotificationCenter.defaultCenter().addObserver_selector_name_object_( self, selector, "GSDocumentWasSavedSuccessfully", objc.nil() )
+			return self
+		except Exception as e:
+			self.logToConsole( "init: %s" % str(e) )
 	
 	def __del__( self ):
 		"""
 		Unless you know what you are doing, leave this as it is.
 		"""
-		NSNotificationCenter.defaultCenter().removeObserver_( self )
+		try:
+			NSNotificationCenter.defaultCenter().removeObserver_( self )
+		except Exception as e:
+			self.logToConsole( "__del__: %s" % str(e) )
 	
 	def title( self ):
 		"""
 		The Title of your Plugin as it appears in in the app menu.
 		"""
-		return "____PluginMenuName____"
+		try:
+			return "____PluginMenuName____"
+		except Exception as e:
+			self.logToConsole( "title: %s" % str(e) )
 		
 	def interfaceVersion( self ):
 		"""
 		Must return 1.
 		"""
-		return 1
+		try:
+			return 1
+		except Exception as e:
+			self.logToConsole( "interfaceVersion: %s" % str(e) )
 	
 	def documentWasSaved( self, sender ):
-		self.logToConsole( "The document: %@ was saved" % sender.object().displayName() )
+		try:
+			self.logToConsole( "The document: %@ was saved" % sender.object().displayName() )
+		except Exception as e:
+			self.logToConsole( "documentWasSaved: %s" % str(e) )
 
 	def logToConsole( self, message ):
 		"""
