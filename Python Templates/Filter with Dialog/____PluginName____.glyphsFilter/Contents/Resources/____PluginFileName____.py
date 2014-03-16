@@ -60,6 +60,7 @@ class ____PluginClassName____ ( GSFilterPlugin ):
 		"""
 		Do all initializing here.
 		This is a good place to call random.seed() if you want to use randomisation.
+		In that case, don't forget to import random at the top of this file.
 		"""
 		try:
 			NSBundle.loadNibNamed_owner_( "____PluginFileName____Dialog", self )
@@ -113,7 +114,6 @@ class ____PluginClassName____ ( GSFilterPlugin ):
 			"""
 			Prepares and pre-fills the dialog fields.
 			"""
-			
 			super( ____PluginClassName____, self ).setup()
 			FontMaster = self.valueForKey_( "fontMaster" )
 			
@@ -176,7 +176,7 @@ class ____PluginClassName____ ( GSFilterPlugin ):
 		"""
 		This is where your code for processing each layer goes.
 		This method is the one eventually called by either the Custom Parameter or Dialog UI.
-		Add method arguments for each Dialog option.
+		Don't call your class variables here, just add a method argument for each Dialog option.
 		"""
 		try:
 			# do stuff with Layer and your arguments
@@ -202,7 +202,7 @@ class ____PluginClassName____ ( GSFilterPlugin ):
 			FontMasterId = Font.fontMasterAtIndex_(0).id
 			for Glyph in Font.glyphs:
 				Layer = Glyph.layerForKey_( FontMasterId )
-				self.processLayerWithValues( Layer, ____myValue____ )
+				self.processLayerWithValues( Layer, ____myValue____ ) # add your class variables here
 		except Exception as e:
 			self.logToConsole( "processFont_withArguments_: %s" % str(e) )
 	
@@ -229,8 +229,7 @@ class ____PluginClassName____ ( GSFilterPlugin ):
 							if ShadowLayer.selection().containsObject_( currShadowNode ):
 								Layer.addSelection_( currLayerPath.nodes[j] )
 								
-				# add your value variables here:
-				self.processLayerWithValues( Layer, self.____myValue____ )
+				self.processLayerWithValues( Layer, self.____myValue____ ) # add your class variables here
 			Layer.clearSelection()
 		
 			# Safe the values in the FontMaster. But could be saved in UserDefaults, too.
