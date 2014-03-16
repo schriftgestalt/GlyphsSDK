@@ -24,7 +24,10 @@ class ____PluginClassName____ ( NSObject, GlyphsFilterProtocol ):
 		Distinguishes the API version the plugin was built for. 
 		Return 1.
 		"""
-		return 1
+		try:
+			return 1
+		except Exception as e:
+			self.logToConsole( "interfaceVersion: %s" % str(e) )
 	
 	def setController_( self, Controller ):
 		"""
