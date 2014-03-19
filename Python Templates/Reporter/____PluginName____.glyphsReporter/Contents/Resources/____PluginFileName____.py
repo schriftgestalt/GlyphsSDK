@@ -26,7 +26,7 @@ class ____PluginClassName____ ( NSObject, GlyphsReporterProtocol ):
 			return self
 		except Exception as e:
 			self.logToConsole( "init: %s" % str(e) )
-
+	
 	def interfaceVersion( self ):
 		"""
 		Distinguishes the API version the plugin was built for. 
@@ -36,7 +36,7 @@ class ____PluginClassName____ ( NSObject, GlyphsReporterProtocol ):
 			return 1
 		except Exception as e:
 			self.logToConsole( "interfaceVersion: %s" % str(e) )
-
+	
 	def title( self ):
 		"""
 		This is the name as it appears in the menu in combination with 'Show'.
@@ -46,7 +46,7 @@ class ____PluginClassName____ ( NSObject, GlyphsReporterProtocol ):
 			return "____PluginMenuName____"
 		except Exception as e:
 			self.logToConsole( "title: %s" % str(e) )
-
+	
 	def keyEquivalent( self ):
 		"""
 		The key for the keyboard shortcut. Set modifier keys in modifierMask() further below.
@@ -57,7 +57,7 @@ class ____PluginClassName____ ( NSObject, GlyphsReporterProtocol ):
 			return "y"
 		except Exception as e:
 			self.logToConsole( "keyEquivalent: %s" % str(e) )
-
+	
 	def modifierMask( self ):
 		"""
 		Use any combination of these to determine the modifier keys for your default shortcut:
@@ -70,7 +70,7 @@ class ____PluginClassName____ ( NSObject, GlyphsReporterProtocol ):
 			return 0
 		except Exception as e:
 			self.logToConsole( "modifierMask: %s" % str(e) )
-
+	
 	def drawForegroundForLayer_( self, Layer ):
 		"""
 		Whatever you draw here will be displayed IN FRONT OF the paths.
@@ -98,7 +98,7 @@ class ____PluginClassName____ ( NSObject, GlyphsReporterProtocol ):
 			NSBezierPath.fillRect_( Rect )
 		except Exception as e:
 			self.logToConsole( str(e) )
-
+	
 	def drawBackgroundForLayer_( self, Layer ):
 		"""
 		Whatever you draw here will be displayed BEHIND the paths.
@@ -107,7 +107,7 @@ class ____PluginClassName____ ( NSObject, GlyphsReporterProtocol ):
 			pass
 		except Exception as e:
 			self.logToConsole( str(e) )
-
+	
 	def drawBackgroundForInactiveLayer_( self, Layer ):
 		"""
 		Whatever you draw here will be displayed behind the paths, but for inactive masters.
@@ -116,7 +116,7 @@ class ____PluginClassName____ ( NSObject, GlyphsReporterProtocol ):
 			pass
 		except Exception as e:
 			self.logToConsole( str(e) )
-
+	
 	def needsExtraMainOutlineDrawingForInactiveLayer_(self, Layer):
 		"""
 		return False to disable the black outline. Otherwise remove the method.
@@ -133,7 +133,7 @@ class ____PluginClassName____ ( NSObject, GlyphsReporterProtocol ):
 		except:
 			self.logToConsole( "Scale defaulting to 1.0" )
 			return 1.0
-
+	
 	def setController_( self, Controller ):
 		"""
 		Use self.controller as object for the current view controller.
@@ -142,7 +142,7 @@ class ____PluginClassName____ ( NSObject, GlyphsReporterProtocol ):
 			self.controller = Controller
 		except Exception as e:
 			self.logToConsole( "Could not set controller" )
-
+	
 	def logToConsole( self, message ):
 		"""
 		The variable 'message' will be passed to Console.app.

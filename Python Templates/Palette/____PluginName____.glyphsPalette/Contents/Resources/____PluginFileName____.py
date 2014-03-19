@@ -6,6 +6,13 @@ from Foundation import *
 from AppKit import *
 import sys, os, re
 
+MainBundle = NSBundle.mainBundle()
+path = MainBundle.bundlePath() + "/Contents/Scripts"
+if not path in sys.path:
+	sys.path.append( path )
+
+import GlyphsApp
+
 """
 	Using Interface Builder (IB):
 	
@@ -184,7 +191,7 @@ class ____PluginClassName____ ( NSObject, GlyphsPaletteProtocol ):
 				pass
 		except Exception as e:
 			self.logToConsole( "update: %s" % str(e) )
-
+	
 	def logToConsole( self, message ):
 		"""
 		The variable 'message' will be passed to Console.app.

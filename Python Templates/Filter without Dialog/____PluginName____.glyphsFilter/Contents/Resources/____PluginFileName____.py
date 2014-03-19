@@ -6,6 +6,13 @@ from Foundation import *
 from AppKit import *
 import sys, os, re
 
+MainBundle = NSBundle.mainBundle()
+path = MainBundle.bundlePath() + "/Contents/Scripts"
+if not path in sys.path:
+	sys.path.append( path )
+
+import GlyphsApp
+
 GlyphsFilterProtocol = objc.protocolNamed( "GlyphsFilter" )
 
 class ____PluginClassName____ ( NSObject, GlyphsFilterProtocol ):

@@ -7,6 +7,13 @@ from AppKit import *
 import sys, os, re, commands
 from types import *
 
+MainBundle = NSBundle.mainBundle()
+path = MainBundle.bundlePath() + "/Contents/Scripts"
+if not path in sys.path:
+	sys.path.append( path )
+
+import GlyphsApp
+
 """
 	Using Interface Builder (IB):
 	
@@ -53,25 +60,24 @@ class ____PluginClassName____ ( NSObject, GlyphsFileFormatProtocol ):
 		Do all initializing here.
 		"""
 		try:
-			#Bundle = NSBundle.bundleForClass_( NSClassFromString( self.className() ));
 			NSBundle.loadNibNamed_owner_( "____PluginFileName____Dialog", self )
 			thisBundle = NSBundle.bundleForClass_( NSClassFromString( self.className() ) )
 			self.toolbarIcon = NSImage.alloc().initWithContentsOfFile_( thisBundle.pathForImageResource_( "ExportIcon" ) )
 			self.toolbarIcon.setName_( "ExportIcon" )
-			return self
 		except Exception as e:
 			self.logToConsole( "init: %s" % str(e) )
+		return self
 	
 	def interfaceVersion( self ):
 		"""
-		Distinguishes the API version the plugin was built for. 
+		Distinguishes the API version the plugin was built for.
 		Return 1.
 		"""
 		try:
 			return 1
 		except Exception as e:
 			self.logToConsole( "interfaceVersion: %s" % str(e) )
-		
+	
 	def title( self ):
 		"""
 		This is a human-readable name, necessary for the export dialog.
@@ -89,7 +95,7 @@ class ____PluginClassName____ ( NSObject, GlyphsFileFormatProtocol ):
 			return "____PluginToolbarTitle____"
 		except Exception as e:
 			self.logToConsole( "toolbarTitle: %s" % str(e) )
-			
+	
 	def toolbarIconName( self ):
 		"""
 		The filename of the icon, without the suffix.
@@ -98,7 +104,7 @@ class ____PluginClassName____ ( NSObject, GlyphsFileFormatProtocol ):
 			return "ExportIcon"
 		except Exception as e:
 			self.logToConsole( "toolbarIconName: %s" % str(e) )
-			
+	
 	def fileExtension( self ):
 		"""
 		Suffix of the filename without the dot.
@@ -152,7 +158,7 @@ class ____PluginClassName____ ( NSObject, GlyphsFileFormatProtocol ):
 	
 	def writeFont_error_( self, font, error ):
 		"""
-		Outputs a Font object. 
+		Outputs a Font object.
 		This method is called when the Next button is pressed in the Export dialog,
 		and should ask the user for the place to store the font.
 		font: The font to export.

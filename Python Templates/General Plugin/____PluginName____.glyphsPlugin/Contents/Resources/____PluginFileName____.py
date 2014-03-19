@@ -6,6 +6,13 @@ from Foundation import *
 from AppKit import *
 import sys, os, re
 
+MainBundle = NSBundle.mainBundle()
+path = MainBundle.bundlePath() + "/Contents/Scripts"
+if not path in sys.path:
+	sys.path.append( path )
+
+import GlyphsApp
+
 GlyphsPluginProtocol = objc.protocolNamed( "GlyphsPlugin" )
 
 class ____PluginClassName____ ( NSObject, GlyphsPluginProtocol ):
@@ -22,7 +29,7 @@ class ____PluginClassName____ ( NSObject, GlyphsPluginProtocol ):
 			return self
 		except Exception as e:
 			self.logToConsole( "init: %s" % str(e) )
-
+	
 	def __del__( self ):
 		"""
 		Remove all observers you added in init().
@@ -41,15 +48,6 @@ class ____PluginClassName____ ( NSObject, GlyphsPluginProtocol ):
 			return 1
 		except Exception as e:
 			self.logToConsole( "interfaceVersion: %s" % str(e) )
-
-	def title( self ):
-		"""
-		The name as it appears in in the app menu.
-		"""
-		try:
-			return "____PluginMenuName____"
-		except Exception as e:
-			self.logToConsole( "title: %s" % str(e) )
 	
 	def documentWasSaved( self, sender ):
 		"""
@@ -66,6 +64,6 @@ class ____PluginClassName____ ( NSObject, GlyphsPluginProtocol ):
 		The variable 'message' will be passed to Console.app.
 		Use self.logToConsole( "bla bla" ) for debugging.
 		"""
-		myLog = "%s plugin:\n%s" % ( self.title(), message )
+		myLog = "%s:\n%s" % ( self.__class__.__name__, message )
 		NSLog( myLog )
 	

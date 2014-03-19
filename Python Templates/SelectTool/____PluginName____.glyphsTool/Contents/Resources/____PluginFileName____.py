@@ -5,6 +5,13 @@ import objc
 from Foundation import *
 from AppKit import *
 
+MainBundle = NSBundle.mainBundle()
+path = MainBundle.bundlePath() + "/Contents/Scripts"
+if not path in sys.path:
+	sys.path.append( path )
+
+import GlyphsApp
+
 class ____PluginClassName____ ( GSToolSelect ):
 	
 	def init( self ):

@@ -6,6 +6,13 @@ from Foundation import *
 from AppKit import *
 import sys, os, re
 
+MainBundle = NSBundle.mainBundle()
+path = MainBundle.bundlePath() + "/Contents/Scripts"
+if not path in sys.path:
+	sys.path.append( path )
+
+import GlyphsApp
+
 """
 	Using Interface Builder (IB):
 	
@@ -42,7 +49,6 @@ import sys, os, re
 	   Check Console.app for error messages to see if everything went right.
 """
 
-# For consistency, start your ____PluginClassName____ with "GlyphsFilter..."
 class ____PluginClassName____ ( GSFilterPlugin ):
 	"""
 	All 'myValue' and 'myValueField' references are just an example.
@@ -189,11 +195,11 @@ class ____PluginClassName____ ( GSFilterPlugin ):
 		try:
 			# Set default values for potential arguments (values), just in case:
 			____myValue____ = 15.0
-
+			
 			# Override defaults with actual values from custom parameter:
 			if len( Arguments ) > 1:
 				____myValue____ = Arguments[1].floatValue()
-
+				
 			# With these values, call your code on every glyph:
 			FontMasterId = Font.fontMasterAtIndex_(0).id
 			for Glyph in Font.glyphs:
