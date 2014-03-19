@@ -123,8 +123,10 @@ class ____PluginClassName____ ( NSObject, GlyphsPaletteProtocol ):
 		"""
 		The current height of the Palette section.
 		Used for storing the current resized state.
+		If you have a fixed height, you can also return the height in pixels
 		"""
 		try:
+			# return 150
 			return NSUserDefaults.standardUserDefaults().integerForKey_( "____CFBundleIdentifier____.ViewHeight" )
 		except Exception as e:
 			self.logToConsole( "currentHeight: %s" % str(e) )
