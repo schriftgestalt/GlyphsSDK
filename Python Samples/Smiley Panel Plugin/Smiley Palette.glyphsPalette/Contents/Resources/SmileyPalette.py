@@ -18,7 +18,7 @@ class SmileyPalette ( NSObject, GlyphsPaletteProtocol ):
 		"""
 		try:
 			if not NSBundle.loadNibNamed_owner_( "SmileyPaletteView", self ):
-				self.logToConsole( "Palette.Layers: Error loading Nib!" )
+				self.logToConsole( "Palette Layers: Error loading Nib!" )
 		
 			s = objc.selector( self.update, signature='v@:' )
 			NSNotificationCenter.defaultCenter().addObserver_selector_name_object_( self, s, "GSUpdateInterface", None )

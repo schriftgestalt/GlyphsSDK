@@ -76,7 +76,7 @@ class ____PluginClassName____ ( GSFilterPlugin ):
 	
 	def title( self ):
 		"""
-		This is the human-readable name as it appears in the menu
+		This is the name as it appears in the menu
 		and in the title of the dialog window.
 		"""
 		try:
