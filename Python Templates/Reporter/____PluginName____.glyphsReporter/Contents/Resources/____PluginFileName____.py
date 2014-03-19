@@ -7,9 +7,9 @@ from AppKit import *
 import sys, os, re
 
 MainBundle = NSBundle.mainBundle()
-path = MainBundle.bundlePath()+"/Contents/Scripts"
+path = MainBundle.bundlePath() + "/Contents/Scripts"
 if not path in sys.path:
-	sys.path.append(path)
+	sys.path.append( path )
 
 import GlyphsApp
 
@@ -27,6 +27,16 @@ class ____PluginClassName____ ( NSObject, GlyphsReporterProtocol ):
 		except Exception as e:
 			self.logToConsole( "init: %s" % str(e) )
 
+	def interfaceVersion( self ):
+		"""
+		Distinguishes the API version the plugin was built for. 
+		Return 1.
+		"""
+		try:
+			return 1
+		except Exception as e:
+			self.logToConsole( "interfaceVersion: %s" % str(e) )
+
 	def title( self ):
 		"""
 		This is the name as it appears in the menu in combination with 'Show'.
@@ -36,15 +46,6 @@ class ____PluginClassName____ ( NSObject, GlyphsReporterProtocol ):
 			return "____PluginMenuName____"
 		except Exception as e:
 			self.logToConsole( "title: %s" % str(e) )
-
-	def interfaceVersion( self ):
-		"""
-		Must return 1.
-		"""
-		try:
-			return 1
-		except Exception as e:
-			self.logToConsole( "interfaceVersion: %s" % str(e) )
 
 	def keyEquivalent( self ):
 		"""
@@ -124,7 +125,7 @@ class ____PluginClassName____ ( NSObject, GlyphsReporterProtocol ):
 	
 	def getScale( self ):
 		"""
-		Returns the current scale factor of the Edit View UI.
+		self.getScale() returns the current scale factor of the Edit View UI.
 		Divide any scalable size by this value in order to keep the same apparent pixel size.
 		"""
 		try:

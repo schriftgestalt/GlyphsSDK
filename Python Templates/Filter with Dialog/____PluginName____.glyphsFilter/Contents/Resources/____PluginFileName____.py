@@ -40,9 +40,6 @@ import sys, os, re
 	   (Replace xxx by the name of your xib/nib)
 	   Please note: Every time the .xib is changed, it has to be recompiled to a .nib.
 	   Check Console.app for error messages to see if everything went right.
-
-	For a quick walkthrough, read:
-	http://blog.adamw523.com/os-x-cocoa-application-python-pyobjc/
 """
 
 # For consistency, start your ____PluginClassName____ with "GlyphsFilter..."
@@ -51,7 +48,6 @@ class ____PluginClassName____ ( GSFilterPlugin ):
 	All 'myValue' and 'myValueField' references are just an example.
 	They correspond to the 'My Value' field in the .xib file.
 	Replace and add your own class variables.
-	For better code readability, please start your class variable names with an underscore, e.g., _myValueField.
 	"""
 	____myValueField____ = objc.IBOutlet()
 	
@@ -118,7 +114,7 @@ class ____PluginClassName____ ( GSFilterPlugin ):
 			FontMaster = self.valueForKey_( "fontMaster" )
 			
 			# These 2 lines look for saved values (the last ones entered),
-			# 15.0 is the sample default value.
+			# 15.0 is a sample default value.
 			# Do this for each value field in your dialog:
 			self.____myValue____ = self.setDefaultFloatValue( "____myValue____", 15.0, FontMaster )
 			self.____myValueField____.setFloatValue_( self.____myValue____ )

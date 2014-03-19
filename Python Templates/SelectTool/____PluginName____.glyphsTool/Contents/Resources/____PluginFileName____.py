@@ -21,16 +21,16 @@ class ____PluginClassName____ ( GSToolSelect ):
 		except Exception as e:
 			self.logToConsole( "init: %s" % str(e) )
 		
-	def toolBarIcon( self ):
+	def interfaceVersion( self ):
 		"""
-		Return a instance of NSImage that represents the toolbar icon as established in init().
-		Unless you know what you are doing, leave this as it is.
+		Distinguishes the API version the plugin was built for. 
+		Return 1.
 		"""
 		try:
-			return self.tool_bar_image
+			return 1
 		except Exception as e:
-			self.logToConsole( "toolBarIcon: %s" % str(e) )
-		
+			self.logToConsole( "interfaceVersion: %s" % str(e) )
+
 	def title( self ):
 		"""
 		The name of the Tool as it appears in the tooltip.
@@ -40,14 +40,15 @@ class ____PluginClassName____ ( GSToolSelect ):
 		except Exception as e:
 			self.logToConsole( "title: %s" % str(e) )
 		
-	def interfaceVersion( self ):
+	def toolBarIcon( self ):
 		"""
-		API version, must return 1.
+		Return a instance of NSImage that represents the toolbar icon as established in init().
+		Unless you know what you are doing, leave this as it is.
 		"""
 		try:
-			return 1
+			return self.tool_bar_image
 		except Exception as e:
-			self.logToConsole( "interfaceVersion: %s" % str(e) )
+			self.logToConsole( "toolBarIcon: %s" % str(e) )
 		
 	def groupID( self ):
 		"""

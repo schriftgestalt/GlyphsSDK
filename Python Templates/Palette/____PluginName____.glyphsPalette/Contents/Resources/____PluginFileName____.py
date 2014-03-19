@@ -40,9 +40,6 @@ import sys, os, re
 	   (Replace xxx by the name of your xib/nib)
 	   Please note: Every time the .xib is changed, it has to be recompiled to a .nib.
 	   Check Console.app for error messages to see if everything went right.
-
-	For a quick walkthrough, read:
-	http://blog.adamw523.com/os-x-cocoa-application-python-pyobjc/
 """
 
 GlyphsPaletteProtocol = objc.protocolNamed( "GlyphsPalette" )

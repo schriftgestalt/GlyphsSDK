@@ -12,6 +12,7 @@ class ____PluginClassName____ ( NSObject, GlyphsPluginProtocol ):
 	
 	def init( self ):
 		"""
+		You can add an observer like in the example.
 		Do all initializing here.
 		"""
 		try:
@@ -21,35 +22,40 @@ class ____PluginClassName____ ( NSObject, GlyphsPluginProtocol ):
 			return self
 		except Exception as e:
 			self.logToConsole( "init: %s" % str(e) )
-	
+
 	def __del__( self ):
 		"""
-		Unless you know what you are doing, leave this as it is.
+		Remove all observers you added in init().
 		"""
 		try:
 			NSNotificationCenter.defaultCenter().removeObserver_( self )
 		except Exception as e:
 			self.logToConsole( "__del__: %s" % str(e) )
 	
-	def title( self ):
-		"""
-		The Title of your Plugin as it appears in in the app menu.
-		"""
-		try:
-			return "____PluginMenuName____"
-		except Exception as e:
-			self.logToConsole( "title: %s" % str(e) )
-		
 	def interfaceVersion( self ):
 		"""
-		Must return 1.
+		Distinguishes the API version the plugin was built for. 
+		Return 1.
 		"""
 		try:
 			return 1
 		except Exception as e:
 			self.logToConsole( "interfaceVersion: %s" % str(e) )
+
+	def title( self ):
+		"""
+		The name as it appears in in the app menu.
+		"""
+		try:
+			return "____PluginMenuName____"
+		except Exception as e:
+			self.logToConsole( "title: %s" % str(e) )
 	
 	def documentWasSaved( self, sender ):
+		"""
+		Called when the font is saved
+		assuming GSDocumentWasSavedSuccessfully was added to the observer
+		"""
 		try:
 			self.logToConsole( "The document: %@ was saved" % sender.object().displayName() )
 		except Exception as e:

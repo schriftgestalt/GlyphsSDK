@@ -1,6 +1,6 @@
 # GlyphsSDK
 
-This is the Plugin SDK for the [Glyphs font editor](http://glyphsapp.com/). There are various kinds of plugins (see below), and there are two ways of writing them, in ObjectiveC or Python. You will find extensive documentation in the code comments. For more details, look into the read-me files inside the template subfolders.
+This is the Plugin SDK for the [Glyphs font editor](http://glyphsapp.com/). There are various kinds of plugins (see below), and there are two ways of writing them, in ObjectiveC (we are still working on the ObjC templates) or in Python. You will find extensive documentation in the code comments. For more details, look into the `README.md` file inside the Templates folder.
 
 ### .glyphsFileFormat
 
@@ -12,7 +12,7 @@ These plugins that add functionality in the *Filter* submenu of Glyphs. A filter
 
 ### .glyphsPalette
 
-These plugins add new sections to the Palette (Window > Palette, Cmd-Opt-P).
+These plugins add new sections to the Palette (*Window > Palette*, Cmd-Opt-P).
 
 ### .glyphsPlugin
 

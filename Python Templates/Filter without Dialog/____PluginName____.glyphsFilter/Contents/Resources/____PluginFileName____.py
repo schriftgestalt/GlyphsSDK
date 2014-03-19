@@ -29,8 +29,18 @@ class ____PluginClassName____ ( NSObject, GlyphsFilterProtocol ):
 		except Exception as e:
 			self.logToConsole( "interfaceVersion: %s" % str(e) )
 	
+	def title( self ):
+		"""
+		This is the human-readable name as it appears in the Filter menu.
+		"""
+		try:
+			return "____PluginMenuName____"
+		except Exception as e:
+			self.logToConsole( "title: %s" % str(e) )
+	
 	def setController_( self, Controller ):
 		"""
+		Sets the controller, you can access it with controller().
 		Do not touch this.
 		"""
 		try:
@@ -56,15 +66,6 @@ class ____PluginClassName____ ( NSObject, GlyphsFilterProtocol ):
 		except Exception as e:
 			self.logToConsole( "setup: %s" % str(e) )
 	
-	def title( self ):
-		"""
-		This is the human-readable name as it appears in the Filter menu.
-		"""
-		try:
-			return "____PluginMenuName____"
-		except Exception as e:
-			self.logToConsole( "title: %s" % str(e) )
-	
 	def keyEquivalent( self ):
 		""" 
 		The key together with Cmd+Shift will be the shortcut for the filter.
@@ -78,8 +79,7 @@ class ____PluginClassName____ ( NSObject, GlyphsFilterProtocol ):
 	
 	def processLayer( self, Layer, selectionCounts ):
 		"""
-		Each layer is processed here.
-		Put your code here.
+		Each layer is eventually processed here. This is where your code goes.
 		If selectionCounts is True, then apply the code only to the selection.
 		"""
 		try:
