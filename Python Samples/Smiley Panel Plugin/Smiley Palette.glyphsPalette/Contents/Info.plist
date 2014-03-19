@@ -5,15 +5,15 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleDisplayName</key>
-	<string>Smily Palette</string>
+	<string>Smiley Palette</string>
 	<key>CFBundleExecutable</key>
-	<string>SmilyPalette</string>
+	<string>SmileyPalette</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.GeorgSeifert.SmilyPalette</string>
+	<string>com.GeorgSeifert.SmileyPalette</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>SmilyPalette</string>
+	<string>SmileyPalette</string>
 	<key>CFBundlePackageType</key>
 	<string>BNDL</string>
 	<key>CFBundleShortVersionString</key>
@@ -31,7 +31,7 @@
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
-	<string>SmilyPalette</string>
+	<string>SmileyPalette</string>
 	<key>PyMainFileNames</key>
 	<array>
 		<string>__boot__</string>

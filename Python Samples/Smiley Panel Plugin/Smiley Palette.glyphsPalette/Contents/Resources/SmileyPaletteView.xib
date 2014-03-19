@@ -2,13 +2,13 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">1080</int>
-		<string key="IBDocument.SystemVersion">13B42</string>
-		<string key="IBDocument.InterfaceBuilderVersion">4514</string>
-		<string key="IBDocument.AppKitVersion">1265</string>
-		<string key="IBDocument.HIToolboxVersion">696.00</string>
+		<string key="IBDocument.SystemVersion">13C64</string>
+		<string key="IBDocument.InterfaceBuilderVersion">5053</string>
+		<string key="IBDocument.AppKitVersion">1265.19</string>
+		<string key="IBDocument.HIToolboxVersion">697.40</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin</string>
-			<string key="NS.object.0">4514</string>
+			<string key="NS.object.0">5053</string>
 		</object>
 		<array key="IBDocument.IntegratedClassDependencies">
 			<string>NSCustomObject</string>
@@ -37,9 +37,9 @@
 				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">268</int>
 				<array class="NSMutableArray" key="NSSubviews">
-					<object class="NSImageView" id="848463071">
+					<object class="NSImageView" id="64139893">
 						<reference key="NSNextResponder" ref="254204213"/>
-						<int key="NSvFlags">268</int>
+						<int key="NSvFlags">256</int>
 						<set class="NSMutableSet" key="NSDragTypes">
 							<string>Apple PDF pasteboard type</string>
 							<string>Apple PICT pasteboard type</string>
@@ -51,20 +51,18 @@
 						<string key="NSFrame">{{54, 18}, {42, 42}}</string>
 						<reference key="NSSuperview" ref="254204213"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
-						<string key="NSHuggingPriority">{251, 251}</string>
 						<bool key="NSEnabled">YES</bool>
-						<object class="NSImageCell" key="NSCell" id="735089553">
+						<object class="NSImageCell" key="NSCell" id="1052161822">
 							<int key="NSCellFlags">0</int>
 							<int key="NSCellFlags2">33554432</int>
 							<object class="NSCustomResource" key="NSContents">
 								<string key="NSClassName">NSImage</string>
-								<string key="NSResourceName">SmilyPaletteImage</string>
+								<string key="NSResourceName">SmileyPaletteImage</string>
 							</object>
 							<int key="NSAlign">0</int>
 							<int key="NSScale">0</int>
 							<int key="NSStyle">0</int>
-							<bool key="NSAnimates">NO</bool>
+							<bool key="NSAnimates">YES</bool>
 						</object>
 						<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
 						<bool key="NSEditable">YES</bool>
@@ -73,7 +71,7 @@
 				<string key="NSFrameSize">{150, 78}</string>
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
-				<reference key="NSNextKeyView" ref="848463071"/>
+				<reference key="NSNextKeyView"/>
 				<string key="NSClassName">NSView</string>
 			</object>
 		</array>
@@ -86,15 +84,15 @@
 						<reference key="source" ref="382216409"/>
 						<reference key="destination" ref="254204213"/>
 					</object>
-					<string key="id">800-k8-1bi</string>
+					<string key="id">Bln-14-zl7</string>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">_theImageView</string>
 						<reference key="source" ref="382216409"/>
-						<reference key="destination" ref="848463071"/>
+						<reference key="destination" ref="64139893"/>
 					</object>
-					<string key="id">U9s-Rw-Y8U</string>
+					<string key="id">6vv-Kt-y1d</string>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -127,22 +125,22 @@
 						<string key="id">1</string>
 						<reference key="object" ref="254204213"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="848463071"/>
+							<reference ref="64139893"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
 					<object class="IBObjectRecord">
-						<string key="id">yMK-pb-w3I</string>
-						<reference key="object" ref="848463071"/>
+						<string key="id">KT2-rw-3cC</string>
+						<reference key="object" ref="64139893"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="735089553"/>
+							<reference ref="1052161822"/>
 						</array>
 						<reference key="parent" ref="254204213"/>
 					</object>
 					<object class="IBObjectRecord">
-						<string key="id">RBg-i5-PFU</string>
-						<reference key="object" ref="735089553"/>
-						<reference key="parent" ref="848463071"/>
+						<string key="id">MHN-EE-qvZ</string>
+						<reference key="object" ref="1052161822"/>
+						<reference key="parent" ref="64139893"/>
 					</object>
 				</array>
 			</object>
@@ -156,11 +154,8 @@
 				<string key="1.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<reference key="1.IBUserGuides" ref="0"/>
 				<boolean value="NO" key="1.showNotes"/>
-				<string key="RBg-i5-PFU.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<boolean value="NO" key="RBg-i5-PFU.showNotes"/>
-				<string key="yMK-pb-w3I.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<reference key="yMK-pb-w3I.IBUserGuides" ref="0"/>
-				<boolean value="NO" key="yMK-pb-w3I.showNotes"/>
+				<string key="KT2-rw-3cC.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="MHN-EE-qvZ.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 			</dictionary>
 			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>
 			<nil key="activeLocalization"/>
@@ -212,8 +207,8 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<object class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-			<string key="NS.key.0">SmilyPaletteImage</string>
-			<string key="NS.object.0">{128, 128}</string>
+			<string key="NS.key.0">SmileyPaletteImage</string>
+			<string key="NS.object.0">{42, 42}</string>
 		</object>
 	</data>
 </archive>
