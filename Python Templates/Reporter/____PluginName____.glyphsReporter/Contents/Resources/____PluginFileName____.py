@@ -97,7 +97,7 @@ class ____PluginClassName____ ( NSObject, GlyphsReporterProtocol ):
 			NSColor.blueColor().set()
 			NSBezierPath.fillRect_( Rect )
 		except Exception as e:
-			self.logToConsole( str(e) )
+			self.logToConsole( "drawForegroundForLayer_: %s" % str(e) )
 	
 	def drawBackgroundForLayer_( self, Layer ):
 		"""
@@ -106,7 +106,7 @@ class ____PluginClassName____ ( NSObject, GlyphsReporterProtocol ):
 		try:
 			pass
 		except Exception as e:
-			self.logToConsole( str(e) )
+			self.logToConsole( "drawBackgroundForLayer_: %s" % str(e) )
 	
 	def drawBackgroundForInactiveLayer_( self, Layer ):
 		"""
@@ -115,11 +115,11 @@ class ____PluginClassName____ ( NSObject, GlyphsReporterProtocol ):
 		try:
 			pass
 		except Exception as e:
-			self.logToConsole( str(e) )
+			self.logToConsole( "drawBackgroundForInactiveLayer_: %s" % str(e) )
 	
-	def needsExtraMainOutlineDrawingForInactiveLayer_(self, Layer):
+	def needsExtraMainOutlineDrawingForInactiveLayer_( self, Layer ):
 		"""
-		return False to disable the black outline. Otherwise remove the method.
+		Return False to disable the black outline. Otherwise remove the method.
 		"""
 		return False
 	
