@@ -41,7 +41,7 @@
 - (NSString*) title {
 	// This is the name as it appears in the menu in combination with 'Show'.
     // E.g. 'return @"Nodes";' will make the menu item read "Show Nodes".
-	return @"___FILENAME___";
+	return @"___PACKAGENAME___";
     
     // or localise it:
     // return NSLocalizedStringFromTableInBundle(@"TITLE", nil, [NSBundle bundleForClass:[self class]], @"DESCRIPTION");
