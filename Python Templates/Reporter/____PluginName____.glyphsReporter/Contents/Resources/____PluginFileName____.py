@@ -117,12 +117,46 @@ class ____PluginClassName____ ( NSObject, GlyphsReporterProtocol ):
 		except Exception as e:
 			self.logToConsole( "drawBackgroundForInactiveLayer_: %s" % str(e) )
 	
+	def drawTextAtPoint( self, text, textPosition, fontSize=9.0, fontColor=NSColor.brownColor() ):
+		"""
+		Use self.drawTextAtPoint( "blabla", myNSPoint ) to display left-aligned text at myNSPoint.
+		"""
+		try:
+			glyphEditView = self.controller.graphicView()
+			currentZoom = self.getScale()
+			fontAttributes = { 
+				NSFontAttributeName: NSFont.labelFontOfSize_( fontSize/currentZoom ),
+				NSForegroundColorAttributeName: fontColor }
+			displayText = NSAttributedString.alloc().initWithString_attributes_( text, fontAttributes )
+			textAlignment = 3 # top left: 6, top center: 7, top right: 8, center left: 3, center center: 4, center right: 5, bottom left: 0, bottom center: 1, bottom right: 2
+			glyphEditView.drawText_atPoint_alignment_( displayText, textPosition, textAlignment )
+		except Exception as e:
+			self.logToConsole( "drawTextAtPoint: %s" % str(e) )
+	
 	def needsExtraMainOutlineDrawingForInactiveLayer_( self, Layer ):
 		"""
 		Return False to disable the black outline. Otherwise remove the method.
 		"""
 		return False
 	
+	def getHandleSize( self ):
+		"""
+		Returns the current handle size as set in user preferences.
+		Use: self.getHandleSize() / self.getScale()
+		to determine the right size for drawing on the canvas.
+		"""
+		try:
+			Selected = NSUserDefaults.standardUserDefaults().integerForKey_( "GSHandleSize" )
+			if Selected == 0:
+				return 5.0
+			elif Selected == 2:
+				return 10.0
+			else:
+				return 7.0 # Regular
+		except Exception as e:
+			self.logToConsole( "getHandleSize: HandleSize defaulting to 7.0. %s" % str(e) )
+			return 7.0
+
 	def getScale( self ):
 		"""
 		self.getScale() returns the current scale factor of the Edit View UI.
