@@ -196,13 +196,26 @@ class ____PluginClassName____ ( GSFilterPlugin ):
 			# Set default values for potential arguments (values), just in case:
 			____myValue____ = 15.0
 			
-			# Override defaults with actual values from custom parameter:
+			# set glyphList (list of glyphs to be processed) to all glyphs in the font
+			glyphList = Font.glyphs
+			
 			if len( Arguments ) > 1:
-				____myValue____ = Arguments[1].floatValue()
+				
+				# change glyphList to include or exclude glyphs
+				if "exclude:" in Arguments[-1]:
+					excludeList = [ n.strip() for n in Arguments.pop(-1).replace("exclude:","").strip().split(",") ]
+					glyphList = [ g for g in glyphList if not g.name in excludeList ]
+				elif "include:" in Arguments[-1]:
+					includeList = [ n.strip() for n in Arguments.pop(-1).replace("include:","").strip().split(",") ]
+					glyphList = [ Font.glyphs[n] for n in includeList ]
+			
+				# Override defaults with actual values from custom parameter:
+				if not "clude:" in Arguments[1]:
+					____myValue____ = Arguments[1].floatValue()
 				
 			# With these values, call your code on every glyph:
 			FontMasterId = Font.fontMasterAtIndex_(0).id
-			for Glyph in Font.glyphs:
+			for Glyph in glyphList:
 				Layer = Glyph.layerForKey_( FontMasterId )
 				self.processLayerWithValues( Layer, ____myValue____ ) # add your class variables here
 		except Exception as e:
