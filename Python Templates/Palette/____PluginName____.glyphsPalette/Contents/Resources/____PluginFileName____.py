@@ -52,7 +52,8 @@ import GlyphsApp
 GlyphsPaletteProtocol = objc.protocolNamed( "GlyphsPalette" )
 
 class ____PluginClassName____ ( NSObject, GlyphsPaletteProtocol ):
-	# Define all your IB outlets for your .xib here:
+	# Define all your IB outlets for your .xib after _theView:
+	_windowController = None
 	_theView = objc.IBOutlet() # Palette view on which you can place UI elements.
 	
 	def init( self ):
@@ -96,6 +97,18 @@ class ____PluginClassName____ ( NSObject, GlyphsPaletteProtocol ):
 			return "____PluginMenuName____"
 		except Exception as e:
 			self.logToConsole( "title: %s" % str(e) )
+	
+	def windowController( self ):
+		try:
+			return self._windowController
+		except Exception as e:
+			self.logToConsole( "windowController: %s" % str(e) )
+	
+	def setWindowController_( self, windowController ):
+		try:
+			self._windowController = windowController
+		except Exception as e:
+			self.logToConsole( "setWindowController_: %s" % str(e) )
 	
 	def theView( self ):
 		"""
