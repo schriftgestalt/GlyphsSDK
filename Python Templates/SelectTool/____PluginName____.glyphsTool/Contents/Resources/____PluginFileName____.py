@@ -106,7 +106,7 @@ class ____PluginClassName____ ( GSToolSelect ):
 		except Exception as e:
 			self.logToConsole( "willDeactivate: %s" % str(e) )
 		
-	def elementAtPoint_atLayer_( currentPoint, activeLayer ):
+	def elementAtPoint_atLayer_( self, currentPoint, activeLayer ):
 		"""
 		Return an element in the vicinity of currentPoint (NSPoint), and it will be captured by the tool.
 		Use Boolean ...
