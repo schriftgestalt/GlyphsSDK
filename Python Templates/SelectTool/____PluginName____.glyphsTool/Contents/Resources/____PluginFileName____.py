@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-import objc
+import objc, sys
 from Foundation import *
 from AppKit import *
 
