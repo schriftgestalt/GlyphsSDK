@@ -122,6 +122,10 @@ class ____PluginClassName____ ( GSToolSelect ):
 		except Exception as e:
 			self.logToConsole( "elementAtPoint_atLayer_: %s" % str(e) )
 	
+	# The following four methods are optional, and only necessary
+	# if you intend to extend the context menu with extra items.
+	# Remove them if you do not want to change the context menu:
+	
 	def defaultContextMenu( self ):
 		"""
 		Sets the default content of the context menu and returns the menu.
@@ -176,7 +180,7 @@ class ____PluginClassName____ ( GSToolSelect ):
 				# newMenuItem.setTarget_( self.overElement ) # method of overElement will be called
 
 				# You can set a tool tip:
-				newMenuItem.setToolTip_( "Moves the anchor a little." ) # Short decription
+				newMenuItem.setToolTip_( "Moves the anchor a little." ) # Short description
 
 				# Add the new item to the menu, pick one:
 				theMenu.insertItem_atIndex_( newMenuItem, 0 ) # adds item at the top of the menu
@@ -210,6 +214,8 @@ class ____PluginClassName____ ( GSToolSelect ):
 	
 	def moveAnchor_( self, sender ):
 		"""
+		Example for a method triggered by a context menu item.
+		Fill in your own method name and code.
 		Invoked from self.addMenuItemsForEvent_toMenu_().
 		- sender contains the NSMenuItem.
 		- self.overElement contains the object clicked upon.
