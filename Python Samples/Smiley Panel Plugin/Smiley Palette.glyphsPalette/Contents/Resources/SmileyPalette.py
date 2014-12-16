@@ -17,6 +17,7 @@ class SmileyPalette ( NSObject, GlyphsPaletteProtocol ):
 		Do all initializing here.
 		"""
 		try:
+			self.controller = None
 			if not NSBundle.loadNibNamed_owner_( "SmileyPaletteView", self ):
 				self.logToConsole( "Palette Layers: Error loading Nib!" )
 		
@@ -34,7 +35,10 @@ class SmileyPalette ( NSObject, GlyphsPaletteProtocol ):
 			return self
 		except Exception as e:
 			self.logToConsole( "init: %s" % str(e) )
-		
+			
+	def __del__(self):
+		NSNotificationCenter.defaultCenter().removeObserver_( self )
+	
 	def title( self ):
 		"""
 		This is the name as it appears in the Palette section header.
@@ -104,6 +108,12 @@ class SmileyPalette ( NSObject, GlyphsPaletteProtocol ):
 				NSUserDefaults.standardUserDefaults().setInteger_forKey_( newHeight, "com.GeorgSeifert.SmileyPalette.ViewHeight" )
 		except Exception as e:
 			self.logToConsole( "setCurrentHeight_: %s" % str(e) )
+
+	def setWindowController_(self, Controller):
+		self.controller = Controller
+	
+	def windowController(self):
+		return self.controller
 	
 	def currentWindowController( self, sender ):
 		"""
@@ -113,7 +123,9 @@ class SmileyPalette ( NSObject, GlyphsPaletteProtocol ):
 		try:
 			windowController = None
 			try:
-				windowController = NSDocumentController.sharedDocumentController().currentDocument().windowController()
+				windowController = self.controller
+				if not windowController:
+					windowController = NSDocumentController.sharedDocumentController().currentDocument().windowController()
 				if not windowController and sender.respondsToSelector_( "object" ):
 					if sender.object().__class__ == NSClassFromString( "GSFont" ):
 						Font = sender.object()
