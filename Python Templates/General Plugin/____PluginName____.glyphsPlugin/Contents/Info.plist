@@ -16,12 +16,18 @@
 	<string>____PluginFileName____</string>
 	<key>CFBundlePackageType</key>
 	<string>BNDL</string>
-	<key>CFBundleShortVersionString</key>
-	<string>0.0.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>CFBundleShortVersionString</key>
 	<string>0.0.0</string>
+	<key>UpdateFeedURL</key>
+	<string>____OnlineUrlToThisPlist____</string>
+	<key>productPageURL</key>
+	<string>____ProductPageURL____</string>
+	<key>productReleaseNotes</key>
+	<string>____LatestReleaseNotes____</string>
 	<key>LSHasLocalizedDisplayName</key>
 	<false/>
 	<key>NSAppleScriptEnabled</key>
