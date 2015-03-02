@@ -110,7 +110,8 @@ class ____PluginClassName____ ( NSObject, GlyphsReporterProtocol ):
 	
 	def drawBackgroundForInactiveLayer_( self, Layer ):
 		"""
-		Whatever you draw here will be displayed behind the paths, but for inactive masters.
+		Whatever you draw here will be displayed behind the paths,
+		but for inactive glyphs in the Edit view.
 		"""
 		try:
 			pass
