@@ -2,7 +2,9 @@
 
 ### Using the templates
 
-Make a copy of the plugin folder structure inside your Plugins folder (see ‘Installing and debugging’ below). Make sure to go through these text files and replace the placeholders with quadruple underscores (`____placeholder____`):
+Copy the template plugin into your Plugins folder, which is located at ~/Library/Application Support/Glyphs/Plugins (see ‘Installing and debugging’ below). And open it in your favorite text editor. It should display the internal folder structure of the plugin.
+
+Make sure to go through the following files and replace all placeholders that have quadruple underscores (like `____placeholder____`):
 * `Contents/Info.plist`
 * `Contents/MacOS/____PluginFileName____` (just needs to be renamed)
 * `Contents/Resources/____PluginFileName____.py`
