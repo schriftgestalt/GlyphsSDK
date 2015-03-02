@@ -1,6 +1,8 @@
 # GlyphsSDK
 
-This is the Plugin SDK for the [Glyphs font editor](http://glyphsapp.com/). There are various kinds of plugins (see below), and there are two ways of writing them, in ObjectiveC (we are still working on the ObjC templates) or in Python. You will find extensive documentation in the code comments. For more details, look into the `README.md` file inside the Templates folder.
+## Plugin SDK
+
+This is the Plugin SDK for the [Glyphs font editor](http://glyphsapp.com/). There are various kinds of plugins (see below), and there are two ways of writing them, in ObjectiveC (we are still working on the ObjC templates) or in Python. You will find extensive documentation in the code comments. For more details and a step-by-step guide, look into the `README.md` file inside the Templates folder.
 
 ### .glyphsFileFormat
 
@@ -25,6 +27,10 @@ These plugins add extra View functionality. They usually draw additional items i
 ### .glyphsTool
 
 These plugins add a new tool in the toolbar. You can place a small PDF as toolbar icon in the `Contents/Resources/` folder. For measurements, take a look at the placeholder image that is already there.
+
+## File Format Description
+
+The file `GlyphsFileFormat.md` contains a description of the Glyphs 1.x file format.
 
 ### License
 
