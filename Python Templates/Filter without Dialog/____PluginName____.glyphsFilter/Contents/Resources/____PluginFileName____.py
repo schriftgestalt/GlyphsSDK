@@ -114,6 +114,16 @@ class ____PluginClassName____ ( NSObject, GlyphsFilterProtocol ):
 				self.processLayer( Layer, False ) # ignore selection
 		except Exception as e:
 			self.logToConsole( "runFilterWithLayers_error_: %s" % str(e) )
+	
+	def runFilterWithLayer_options_error_( self, Layer, Options, Error ):
+		"""
+		Required for compatibility with Glyphs version 702 or later.
+		Leave this as it is.
+		"""
+		try:
+			return self.runFilterWithLayer_error_( self, Layer, Error )
+		except Exception as e:
+			self.logToConsole( "runFilterWithLayer_options_error_: %s" % str(e) )
 			
 	def runFilterWithLayer_error_( self, Layer, Error ):
 		"""
