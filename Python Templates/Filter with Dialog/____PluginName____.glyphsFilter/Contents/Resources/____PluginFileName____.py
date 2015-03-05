@@ -21,15 +21,20 @@ import GlyphsApp
 	- IBActions (GUI->.py): methods in this class, triggered by buttons or other UI elements
 	
 	In order to make the Interface Builder items work, follow these steps:
-	1. Make sure you have your IBOutlets (other than _theView)
-	   defined as class variables at the beginning of this controller class.
+	1. Make sure you have your IBOutlets for all your UI controls defined as class variables
+	   at the beginning of this controller class, e.g.:
+#	      myValueField = objc.IBOutlet()
+	   To keep the oversight, I recommend you name it after the value, and add "Field" to
+	   the end of the name, e.g., myValue -> myValueField.
 	2. Immediately *before* the def statement of a method that is supposed to be triggered
 	   by a UI action (e.g., setMyValue_() triggered by the My Value field), put:
-		@objc.IBAction
+#	      @objc.IBAction
 	   Make sure the method name ends with an underscore, e.g. setValue_(),
 	   otherwise the action will not be able to send its value to the class method.
-	3. Open the .xib file in XCode, and add and arrange interface elements.
-	4. Add this .py file via File > Add Files..., Xcode will recognize IBOutlets and IBACtions
+	3. Open the .xib file in Xcode, and add and arrange interface elements.
+	4. Add this .py file via File > Add Files..., Xcode will recognize IBOutlets and IBActions.
+	   Depending on your Xcode version and settings, the .py file may not be selectable.
+	   In that case, simply add its enclosing folder.
 	5. In the left sidebar, choose Placeholders > File's Owner,
 	   in the right sidebar, open the Identity inspector (3rd icon),
 	   and put the name of this controller class in the Custom Class > Class field
@@ -37,16 +42,31 @@ import GlyphsApp
 	   and choose which outlet shall be linked to the UI element
 	7. IBActions: Ctrl-drag from a UI element (e.g. button) to the File’s Owner in the left sidebar,
 	   and choose the class method the UI element is supposed to trigger.
-	   If you want a stepping field (change the value with up/downarrow),
+	   If you want a stepping field (i.e., change the value with up/downarrow),
 	   then select the Entry Field, and set Identity Inspector > Custom Class to:
-		GSSteppingTextField
+#	      GSSteppingTextField
 	   ... and Attributes Inspector (top right, 4th icon) > Control > State to:
-		Continuous
+#	      Continuous
 	8. Compile the .xib file to a .nib file with this Terminal command:
-		ibtool xxx.xib --compile xxx.nib
-	   (Replace xxx by the name of your xib/nib)
+#	      ibtool xxxDialog.xib --compile xxxDialog.nib
+	   (Replace xxxDialog by the name of your xib/nib)
 	   Please note: Every time the .xib is changed, it has to be recompiled to a .nib.
 	   Check Console.app for error messages to see if everything went right.
+	9. In process_(), the last values entered for every value field are saved in the defaults.
+	   Add a line like this for every value:
+#	      FontMaster.userData[ "myValue" ] = NSNumber.numberWithFloat_( self.myValue )
+	   Likewise, use NSNumber.numberWithInteger_() for integers.
+	10. In setup(), for every outlet, add these two lines. These will restore the last
+	   value entered from the font master defaults, and put it back into the field.
+#	      self.myValue = self.setDefaultFloatValue( "myValue", 15.0, FontMaster )
+#	      self.myValueField.setFloatValue_( self.myValue )
+	   Use setDefaultFloatValue() for float values, and setDefaultIntegerValue() for integers.
+	   Feel free to roll your own setDefault...() methods for other types.
+	11. Do not forget to expand the arguments in processLayerWithValues() if you have multiple
+	   value entry fields in your UI.
+	12. Adjust processFont_withArguments_() accordingly if you want to enable
+	   the triggering of your filter through an instance custom parameter.
+	   Your values will be stored in Arguments[1], Arguments[2], etc.
 """
 
 class ____PluginClassName____ ( GSFilterPlugin ):
@@ -55,7 +75,7 @@ class ____PluginClassName____ ( GSFilterPlugin ):
 	They correspond to the 'My Value' field in the .xib file.
 	Replace and add your own class variables.
 	"""
-	____myValueField____ = objc.IBOutlet()
+	____myValue____Field = objc.IBOutlet()
 	
 	
 	def init( self ):
@@ -123,7 +143,7 @@ class ____PluginClassName____ ( GSFilterPlugin ):
 			# 15.0 is a sample default value.
 			# Do this for each value field in your dialog:
 			self.____myValue____ = self.setDefaultFloatValue( "____myValue____", 15.0, FontMaster )
-			self.____myValueField____.setFloatValue_( self.____myValue____ )
+			self.____myValue____Field.setFloatValue_( self.____myValue____ )
 			
 			self.process_( None )
 			return None
