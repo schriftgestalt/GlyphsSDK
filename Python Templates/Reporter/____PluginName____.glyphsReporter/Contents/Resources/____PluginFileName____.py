@@ -54,7 +54,7 @@ class ____PluginClassName____ ( NSObject, GlyphsReporterProtocol ):
 		If you are not sure, use 'return None'. Users can set their own shortcuts in System Prefs.
 		"""
 		try:
-			return "y"
+			return None
 		except Exception as e:
 			self.logToConsole( "keyEquivalent: %s" % str(e) )
 	
