@@ -132,10 +132,11 @@ class ____PluginClassName____ ( GSFilterPlugin ):
 			self.logToConsole( "keyEquivalent: %s" % str(e) )
 	
 	def setup( self ):
+		"""
+		Prepares and pre-fills the dialog fields
+		with defaults or the last values entered.
+		"""
 		try:
-			"""
-			Prepares and pre-fills the dialog fields.
-			"""
 			super( ____PluginClassName____, self ).setup()
 			FontMaster = self.valueForKey_( "fontMaster" )
 			
