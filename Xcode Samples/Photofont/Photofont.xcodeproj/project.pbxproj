@@ -1,0 +1,490 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		561DF6A315AB10CA00692F1A /* phf@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 561DF6A215AB10C900692F1A /* phf@2x.png */; };
+		5630314A171305CE00A64F84 /* libcrypto.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 569721BB13A108A500118321 /* libcrypto.dylib */; };
+		56692905133F9E8B001EA5CD /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56692904133F9E8B001EA5CD /* Cocoa.framework */; };
+		5669290F133F9E8B001EA5CD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5669290D133F9E8B001EA5CD /* InfoPlist.strings */; };
+		5669292B133F9F82001EA5CD /* GSPhotoFont.m in Sources */ = {isa = PBXBuildFile; fileRef = 56692926133F9F81001EA5CD /* GSPhotoFont.m */; };
+		56692934133F9FBD001EA5CD /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56692904133F9E8B001EA5CD /* Cocoa.framework */; };
+		5669293A133F9FBD001EA5CD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 56692938133F9FBD001EA5CD /* InfoPlist.strings */; };
+		56692945133F9FCE001EA5CD /* GSPhotoFontTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 56692944133F9FCE001EA5CD /* GSPhotoFontTests.m */; };
+		5687138F1A482F300085A6A8 /* GlyphsCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5687138E1A482F300085A6A8 /* GlyphsCore.framework */; };
+		568713921A4831F40085A6A8 /* Photofont.glyphsFileFormat in Install */ = {isa = PBXBuildFile; fileRef = 56692901133F9E8B001EA5CD /* Photofont.glyphsFileFormat */; };
+		5695187F13A1182300BD73D4 /* phf.png in Resources */ = {isa = PBXBuildFile; fileRef = 5695187E13A1182300BD73D4 /* phf.png */; };
+		5695188113A118C600BD73D4 /* ExportSettingsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5669291F133F9F27001EA5CD /* ExportSettingsView.xib */; };
+		569721BC13A108A500118321 /* libcrypto.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 569721BB13A108A500118321 /* libcrypto.dylib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		568713911A4831DA0085A6A8 /* Install */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(USER_LIBRARY_DIR)/Application Support/Glyphs/Plugins";
+			dstSubfolderSpec = 0;
+			files = (
+				568713921A4831F40085A6A8 /* Photofont.glyphsFileFormat in Install */,
+			);
+			name = Install;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		561DF6A215AB10C900692F1A /* phf@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "phf@2x.png"; sourceTree = "<group>"; };
+		563A0782160891D8008FB2F6 /* ja */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ja; path = ja.lproj/ExportSettingsView.xib; sourceTree = "<group>"; };
+		56692901133F9E8B001EA5CD /* Photofont.glyphsFileFormat */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Photofont.glyphsFileFormat; sourceTree = BUILT_PRODUCTS_DIR; };
+		56692904133F9E8B001EA5CD /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		56692907133F9E8B001EA5CD /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		56692908133F9E8B001EA5CD /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		56692909133F9E8B001EA5CD /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		5669290C133F9E8B001EA5CD /* Photofont-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Photofont-Info.plist"; sourceTree = "<group>"; };
+		5669290E133F9E8B001EA5CD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		56692910133F9E8B001EA5CD /* Photofont-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Photofont-Prefix.pch"; sourceTree = "<group>"; };
+		56692920133F9F27001EA5CD /* de */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = de; path = de.lproj/ExportSettingsView.xib; sourceTree = "<group>"; };
+		56692921133F9F27001EA5CD /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ExportSettingsView.xib; sourceTree = "<group>"; };
+		56692922133F9F27001EA5CD /* es */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = es; path = es.lproj/ExportSettingsView.xib; sourceTree = "<group>"; };
+		56692923133F9F27001EA5CD /* fr */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = fr; path = fr.lproj/ExportSettingsView.xib; sourceTree = "<group>"; };
+		56692924133F9F27001EA5CD /* ru */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ru; path = ru.lproj/ExportSettingsView.xib; sourceTree = "<group>"; };
+		56692925133F9F81001EA5CD /* GSPhotoFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSPhotoFont.h; sourceTree = "<group>"; };
+		56692926133F9F81001EA5CD /* GSPhotoFont.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSPhotoFont.m; sourceTree = "<group>"; };
+		56692933133F9FBD001EA5CD /* PhotoFontTest.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PhotoFontTest.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		56692937133F9FBD001EA5CD /* PhotoFontTest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PhotoFontTest-Info.plist"; sourceTree = "<group>"; };
+		56692939133F9FBD001EA5CD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		5669293B133F9FBD001EA5CD /* PhotoFontTest-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PhotoFontTest-Prefix.pch"; sourceTree = "<group>"; };
+		56692943133F9FCE001EA5CD /* GSPhotoFontTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSPhotoFontTests.h; sourceTree = "<group>"; };
+		56692944133F9FCE001EA5CD /* GSPhotoFontTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSPhotoFontTests.m; sourceTree = "<group>"; };
+		5680CAE119A0D2D700E4045F /* debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = debug.xcconfig; sourceTree = "<group>"; };
+		5687138E1A482F300085A6A8 /* GlyphsCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GlyphsCore.framework; path = ../../../../../Applications/Glyphs.app/Contents/Frameworks/GlyphsCore.framework; sourceTree = "<group>"; };
+		5695187E13A1182300BD73D4 /* phf.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = phf.png; sourceTree = "<group>"; };
+		569721BB13A108A500118321 /* libcrypto.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.dylib; path = usr/lib/libcrypto.dylib; sourceTree = SDKROOT; };
+		56D6808E133FB743008DDAA5 /* common.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = common.xcconfig; sourceTree = "<group>"; };
+		BBAE3886818BCEBAF475615F /* cs */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = cs; path = cs.lproj/ExportSettingsView.xib; sourceTree = "<group>"; };
+		CED0AE42B35F3168963ADF91 /* it */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = it; path = it.lproj/ExportSettingsView.xib; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		566928FE133F9E8B001EA5CD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				569721BC13A108A500118321 /* libcrypto.dylib in Frameworks */,
+				56692905133F9E8B001EA5CD /* Cocoa.framework in Frameworks */,
+				5687138F1A482F300085A6A8 /* GlyphsCore.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5669292F133F9FBD001EA5CD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				56692934133F9FBD001EA5CD /* Cocoa.framework in Frameworks */,
+				5630314A171305CE00A64F84 /* libcrypto.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		566928F6133F9E8B001EA5CD = {
+			isa = PBXGroup;
+			children = (
+				56D6808E133FB743008DDAA5 /* common.xcconfig */,
+				5680CAE119A0D2D700E4045F /* debug.xcconfig */,
+				5669290A133F9E8B001EA5CD /* Photofont */,
+				56692935133F9FBD001EA5CD /* PhotoFontTest */,
+				56692903133F9E8B001EA5CD /* Frameworks */,
+				56692902133F9E8B001EA5CD /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		56692902133F9E8B001EA5CD /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				56692901133F9E8B001EA5CD /* Photofont.glyphsFileFormat */,
+				56692933133F9FBD001EA5CD /* PhotoFontTest.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		56692903133F9E8B001EA5CD /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				569721BB13A108A500118321 /* libcrypto.dylib */,
+				5687138E1A482F300085A6A8 /* GlyphsCore.framework */,
+				56692904133F9E8B001EA5CD /* Cocoa.framework */,
+				56692906133F9E8B001EA5CD /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		56692906133F9E8B001EA5CD /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				56692907133F9E8B001EA5CD /* AppKit.framework */,
+				56692908133F9E8B001EA5CD /* CoreData.framework */,
+				56692909133F9E8B001EA5CD /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		5669290A133F9E8B001EA5CD /* Photofont */ = {
+			isa = PBXGroup;
+			children = (
+				56692925133F9F81001EA5CD /* GSPhotoFont.h */,
+				56692926133F9F81001EA5CD /* GSPhotoFont.m */,
+				5669290B133F9E8B001EA5CD /* Supporting Files */,
+			);
+			path = Photofont;
+			sourceTree = "<group>";
+		};
+		5669290B133F9E8B001EA5CD /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				561DF6A215AB10C900692F1A /* phf@2x.png */,
+				5695187E13A1182300BD73D4 /* phf.png */,
+				5669291F133F9F27001EA5CD /* ExportSettingsView.xib */,
+				5669290C133F9E8B001EA5CD /* Photofont-Info.plist */,
+				5669290D133F9E8B001EA5CD /* InfoPlist.strings */,
+				56692910133F9E8B001EA5CD /* Photofont-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		56692935133F9FBD001EA5CD /* PhotoFontTest */ = {
+			isa = PBXGroup;
+			children = (
+				56692943133F9FCE001EA5CD /* GSPhotoFontTests.h */,
+				56692944133F9FCE001EA5CD /* GSPhotoFontTests.m */,
+				56692936133F9FBD001EA5CD /* Supporting Files */,
+			);
+			path = PhotoFontTest;
+			sourceTree = "<group>";
+		};
+		56692936133F9FBD001EA5CD /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				56692937133F9FBD001EA5CD /* PhotoFontTest-Info.plist */,
+				56692938133F9FBD001EA5CD /* InfoPlist.strings */,
+				5669293B133F9FBD001EA5CD /* PhotoFontTest-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		56692900133F9E8B001EA5CD /* Photofont */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 56692913133F9E8B001EA5CD /* Build configuration list for PBXNativeTarget "Photofont" */;
+			buildPhases = (
+				566928FD133F9E8B001EA5CD /* Sources */,
+				566928FE133F9E8B001EA5CD /* Frameworks */,
+				566928FF133F9E8B001EA5CD /* Resources */,
+				568713911A4831DA0085A6A8 /* Install */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Photofont;
+			productName = Photofont;
+			productReference = 56692901133F9E8B001EA5CD /* Photofont.glyphsFileFormat */;
+			productType = "com.apple.product-type.bundle";
+		};
+		56692932133F9FBD001EA5CD /* PhotoFontTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 56692940133F9FBD001EA5CD /* Build configuration list for PBXNativeTarget "PhotoFontTest" */;
+			buildPhases = (
+				5669292E133F9FBD001EA5CD /* Sources */,
+				5669292F133F9FBD001EA5CD /* Frameworks */,
+				56692930133F9FBD001EA5CD /* Resources */,
+				56692931133F9FBD001EA5CD /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PhotoFontTest;
+			productName = PhotoFontTest;
+			productReference = 56692933133F9FBD001EA5CD /* PhotoFontTest.octest */;
+			productType = "com.apple.product-type.bundle.ocunit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		566928F8133F9E8B001EA5CD /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0610;
+				ORGANIZATIONNAME = schriftgestaltung.de;
+			};
+			buildConfigurationList = 566928FB133F9E8B001EA5CD /* Build configuration list for PBXProject "Photofont" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				de,
+				es,
+				fr,
+				ru,
+				ja,
+			);
+			mainGroup = 566928F6133F9E8B001EA5CD;
+			productRefGroup = 56692902133F9E8B001EA5CD /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				56692900133F9E8B001EA5CD /* Photofont */,
+				56692932133F9FBD001EA5CD /* PhotoFontTest */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		566928FF133F9E8B001EA5CD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5695188113A118C600BD73D4 /* ExportSettingsView.xib in Resources */,
+				5669290F133F9E8B001EA5CD /* InfoPlist.strings in Resources */,
+				5695187F13A1182300BD73D4 /* phf.png in Resources */,
+				561DF6A315AB10CA00692F1A /* phf@2x.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		56692930133F9FBD001EA5CD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5669293A133F9FBD001EA5CD /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		56692931133F9FBD001EA5CD /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		566928FD133F9E8B001EA5CD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5669292B133F9F82001EA5CD /* GSPhotoFont.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5669292E133F9FBD001EA5CD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				56692945133F9FCE001EA5CD /* GSPhotoFontTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		5669290D133F9E8B001EA5CD /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5669290E133F9E8B001EA5CD /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		5669291F133F9F27001EA5CD /* ExportSettingsView.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				56692920133F9F27001EA5CD /* de */,
+				56692921133F9F27001EA5CD /* en */,
+				56692922133F9F27001EA5CD /* es */,
+				56692923133F9F27001EA5CD /* fr */,
+				56692924133F9F27001EA5CD /* ru */,
+				CED0AE42B35F3168963ADF91 /* it */,
+				BBAE3886818BCEBAF475615F /* cs */,
+				563A0782160891D8008FB2F6 /* ja */,
+			);
+			name = ExportSettingsView.xib;
+			sourceTree = "<group>";
+		};
+		56692938133F9FBD001EA5CD /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				56692939133F9FBD001EA5CD /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		56692911133F9E8B001EA5CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5680CAE119A0D2D700E4045F /* debug.xcconfig */;
+			buildSettings = {
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+			};
+			name = Debug;
+		};
+		56692912133F9E8B001EA5CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 56D6808E133FB743008DDAA5 /* common.xcconfig */;
+			buildSettings = {
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+			};
+			name = Release;
+		};
+		56692914133F9E8B001EA5CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5680CAE119A0D2D700E4045F /* debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SYSTEM_APPS_DIR)/Glyphs.app/Contents/Frameworks",
+				);
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Photofont/Photofont-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+				INFOPLIST_FILE = "Photofont/Photofont-Info.plist";
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Application Support/Glyphs/Plugins/";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = glyphsFileFormat;
+			};
+			name = Debug;
+		};
+		56692915133F9E8B001EA5CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 56D6808E133FB743008DDAA5 /* common.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SYSTEM_APPS_DIR)/Glyphs.app/Contents/Frameworks",
+				);
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Photofont/Photofont-Prefix.pch";
+				INFOPLIST_FILE = "Photofont/Photofont-Info.plist";
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Application Support/Glyphs/Plugins/";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = glyphsFileFormat;
+			};
+			name = Release;
+		};
+		56692941133F9FBD001EA5CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "PhotoFontTest/PhotoFontTest-Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				INFOPLIST_FILE = "PhotoFontTest/PhotoFontTest-Info.plist";
+				OTHER_LDFLAGS = (
+					"-framework",
+					SenTestingKit,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		56692942133F9FBD001EA5CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "PhotoFontTest/PhotoFontTest-Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				INFOPLIST_FILE = "PhotoFontTest/PhotoFontTest-Info.plist";
+				OTHER_LDFLAGS = (
+					"-framework",
+					SenTestingKit,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		566928FB133F9E8B001EA5CD /* Build configuration list for PBXProject "Photofont" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				56692911133F9E8B001EA5CD /* Debug */,
+				56692912133F9E8B001EA5CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		56692913133F9E8B001EA5CD /* Build configuration list for PBXNativeTarget "Photofont" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				56692914133F9E8B001EA5CD /* Debug */,
+				56692915133F9E8B001EA5CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		56692940133F9FBD001EA5CD /* Build configuration list for PBXNativeTarget "PhotoFontTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				56692941133F9FBD001EA5CD /* Debug */,
+				56692942133F9FBD001EA5CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 566928F8133F9E8B001EA5CD /* Project object */;
+}

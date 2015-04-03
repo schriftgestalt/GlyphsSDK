@@ -1,0 +1,12 @@
+//
+// Prefix header for all source files of the 'Photofont' target in the 'Photofont' project
+//
+
+#ifdef __OBJC__
+	#import <Cocoa/Cocoa.h>
+#endif
+#if DEBUG
+#define	UKLog(args...)			(void)printf("%i %s: %s\n", __LINE__, __PRETTY_FUNCTION__, [[NSString stringWithFormat:args] UTF8String])
+#else
+#define	UKLog(args...)			// stubbed out
+#endif
