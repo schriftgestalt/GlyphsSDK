@@ -1,0 +1,1 @@
+This is a copy of the object wrapper that is shipped with Glyphs2. This is just for reference.
