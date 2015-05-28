@@ -2665,7 +2665,12 @@ GSComponent.transform = property(	lambda self: self.transformStruct(),
 									lambda self, value: self.setTransformStruct_(value))
 '''.. attribute:: transform
 	
+	returns a six number tuple that contrains a transformation matrix: (1, 0, 0, 1, 0, 0) (m11, m12, m21, m22, tX, tY)
+	
 	:type: NSAffineTransformStruct'''
+
+GSComponent.transformation = property(	lambda self: self.transformStruct(),
+									  lambda self, value: self.setTransformStruct_(value))
 
 GSComponent.bounds = property(		lambda self: self.pyobjc_instanceMethods.bounds() )
 '''.. attribute:: bounds
