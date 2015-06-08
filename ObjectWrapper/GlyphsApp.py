@@ -50,15 +50,25 @@ Glyphs = NSApplication.sharedApplication()
 :mod:`GSApplication`
 ===============================================================================
 
-Some usefull methods on application level. The global "Glyphs" object give access to them. e.g. Glyphs.font
+The mothership. Everything starts here.
+
+.. code-block:: python
+
+	print Glyphs
+
+.. code-block:: python
+
+	<Glyphs.app>
+
 	
 .. class:: GSApplication
 
 **Properties**
 
 .. autosummary::
-	fonts
+
 	font
+	fonts
 	defaults
 	boolDefaults
 	intDefaults
@@ -94,8 +104,16 @@ GSApplication.font = property(lambda self: currentFont())
 
 '''.. attribute:: font
 	
-	:return: The active :class:`Font <GSFont>` object or None.
-	:rtype: :class:`GSFont <GSFont>`'''
+	:return: The active :class:`GSFont` object or None.
+	:rtype: :class:`GSFont`
+	
+	.. code-block:: python
+
+		# topmost open font
+		font = Glyphs.font
+
+'''
+
 
 # by Yanone
 def AllFonts():
@@ -108,7 +126,14 @@ GSApplication.fonts = property(lambda self: AllFonts())
 '''.. attribute:: fonts
 	
 	:return: All open :class:`Fonts <GSFont>`.
-	:rtype: list'''
+	:rtype: list of :class:`GSFont` objects
+	
+	.. code-block:: python
+
+		# access all open fonts
+		for font in Glyphs.fonts:
+			# do something
+'''
 
 class DefaultsProxy(Proxy):
 	def __getitem__(self, Key):
@@ -192,7 +217,7 @@ GSApplication.open = OpenFont
 	:param Path: The path where the document is located.
 	:type Path: str
 	:return: The opened document object or None.
-	:rtype: :class:`Font <GSFont>`'''
+	:rtype: :class:`GSFont`'''
 
 def __ShowMacroWindow(self):
 	GSApplication.delegate(self).showMacroWindow()
@@ -496,8 +521,10 @@ class FontFeaturesProxy (Proxy):
 	def __delitem__(self, Key):
 		if type(Key) is int:
 			return self._owner.removeFeatureAtIndex_(Key)
-		else:
-			raise(KeyError)
+		elif type(Key) is str or type(Key) is unicode or type(Key) is objc.pyobjc_unicode:
+			Feature = self._owner.featureForTag_(Key)
+			if Feature is not None:
+				return self._owner.removeFeature_(Feature)
 	def __iter__(self):
 		for index in range(self._owner.countOfFeatures()):
 			yield self._owner.featureAtIndex_(index)
@@ -539,8 +566,10 @@ class FontFeaturePrefixesProxy (Proxy):
 	def __delitem__(self, Key):
 		if type(Key) is int:
 			return self._owner.removeObjectFromFeaturePrefixesAtIndex_(Key)
-		else:
-			raise(KeyError)
+		elif type(Key) is str or type(Key) is unicode or type(Key) is objc.pyobjc_unicode:
+			FeaturePrefix = self._owner.featurePrefixForTag_(Key)
+			if FeaturePrefix is not None:
+				return self._owner.removeFeaturePrefix_(FeaturePrefix)
 	def append(self, Feature):
 		#print "append", Node
 		self._owner.addFeaturePrefix_(Feature)
@@ -873,18 +902,27 @@ GSFont.masters = property(lambda self: FontFontMasterProxy(self),
 						  lambda self, value: self.setFontMasters_(NSMutableArray.arrayWithArray_(value)))
 '''.. attribute:: masters
 	Collection of :class:`GSFontMaster <GSFontMaster>`.
-	:type: list'''
+	:type: list
+	'''
 
 GSFont.instances = property(lambda self: FontInstancesProxy(self),
 							lambda self, value: self.setInstances_(NSMutableArray.arrayWithArray_(value)))
 '''.. attribute:: instances
 	Collection of :class:`GSInstance <GSInstance>`.
-	:type: list'''
+	:type: list
+'''
 
 GSFont.glyphs = property(lambda self: FontGlyphsProxy(self),
 						 lambda self, value: self.setGlyphs_(NSMutableArray.arrayWithArray_(value)))
 '''.. attribute:: glyphs
 	Collection of :class:`GSGlyph <GSGlyph>`. Returns a list, but you may also call glyphs using index or glyph name as key.
+	.. code-block:: python
+		for glyph in font.glyphs:
+			print glyph
+		<GSGlyph "A" with 4 layers>
+		<GSGlyph "B" with 4 layers>
+		<GSGlyph "C" with 4 layers>
+		...
 	.. code-block:: python
 		print font.glyphs['A']
 		<GSGlyph "A" with 4 layers>
@@ -932,7 +970,14 @@ GSFont.versionMinor = property(lambda self: self.valueForKey_("versionMinor"), l
 	:type: int'''
 GSFont.date = property(lambda self: self.valueForKey_("date"), lambda self, value: self.setValue_forKey_(value, "date"))
 '''.. attribute:: date
-	:type: NSDate'''
+	:type: NSDate
+	.. code-block:: python
+		print font.date
+		2015-06-08 09:39:05 +0000
+		
+		# set date to now
+		font.date = NSDate.alloc().initWithTimeIntervalSinceNow_(0)
+'''
 GSFont.familyName = property(lambda self: self.valueForKey_("familyName"), 
 							 lambda self, value: self.setFamilyName_(value))
 '''.. attribute:: familyName
@@ -950,49 +995,55 @@ GSFont.kerning = property(lambda self: self.valueForKey_("kerning"), lambda self
 '''.. attribute:: kerning
 	A multi-level dictionary. The first level's key is the :class:`GSFontMaster <GSFontMaster>`.id (each master has its own kerning), the second level's key is the :class:`GSGlyph <GSGlyph>`.id or class id (@MMK_L_XX), the third level's key is again a glyph id or class id (@MMK_R_XX). The values are the actual kerning values.
 	
-	To set a value, is is better to use the method Font.setKerningForPair(). This ensures a better data integrity (and is faster).
+	To set a value, is is better to use the method :class:`GSFont`.setKerningForPair(). This ensures a better data integrity (and is faster).
 	:type: dict
 '''
 GSFont.userData = property(lambda self: self.pyobjc_instanceMethods.userData(), lambda self, value: self.setUserData_(value))
 '''.. attribute:: userData
-	A dictionary to store user data. Use a unique Key and only use object that can be stored in a Property list (string, list, dict, numbers, NSData) otherwise the date will not be recoverable from the saved file.
-	:type: dict'''
+	A dictionary to store user data. Use a unique key and only use objects that can be stored in a property list (string, list, dict, numbers, NSData) otherwise the dats will not be recoverable from the saved file.
+	:type: dict
+	.. code-block:: python
+		# set value
+		font.userData['rememberToMakeCoffee'] = True
+'''
 GSFont.disablesNiceNames = property(lambda self: self.valueForKey_("disablesNiceNames").boolValue(), lambda self, value: self.setValue_forKey_(value, "disablesNiceNames"))
 '''.. attribute:: disablesNiceNames
 	Corresponds to the "Don't use nice names" setting from the Info dialogue.
 	:type: bool'''
 GSFont.customParameters = property(			lambda self: CustomParametersProxy(self))
 '''.. attribute:: customParameters
-	The custom parameters. You can access them by name or by index.::
+	The custom parameters. List of :class:`GSCustomProperty` objects. You can access them by name or by index.
+	.. code-block:: python
 		
-		cp = GSCustomProperty("Test", "Test2")
-		Font.customParameters.append(cp)
+		# access all parameters
+		for parameter in font.customParameters:
+			print parameter
 		
-	or::
-		
-		Font.customParameters["Test"] = "Test2"
+		# set a parameter
+		font.customParameters['trademark'] = 'ThisFont is a trademark by MyFoundry.com'
 
-	Setting it by name might overwrite an existing property.
+		# delete a parameter
+		del(font.customParameters['trademark'])
 	
 	:type: list, dict'''
 GSFont.gridLength = property(lambda self: self.valueForKey_("gridLength").intValue(), lambda self, value: self.setValue_forKey_(value, "gridLength"))
 '''.. attribute:: gridLength
-	Corresponds to the "Grid spacing" setting from the Info dialogue. When set to 0, point positions may contains float values.
+	Corresponds to the "Grid spacing" setting from the Info dialogue. When set to 0, point positions may contain float values.
 	:type: int'''
 
 GSFont.selectedLayers = property(lambda self: self.parent.selectedLayers())
 '''.. attribute:: selectedLayers
-	Returns a list of all selected Layers in the active Tab.
+	Returns a list of all selected layers in the active tab.
 	:type: list'''
 
 GSFont.selectedFontMaster = property(lambda self: self.parent.selectedFontMaster())
 '''.. attribute:: selectedFontMaster
-	Returns the active Master (selected in the toolbar).
+	Returns the active master (selected in the toolbar).
 	:type: :class:`GSFontMaster <GSFontMaster>`'''
 
 GSFont.masterIndex = property(lambda self: self.parent.masterIndex())
 '''.. attribute:: masterIndex
-	Returns the index of the active Master (selected in the toolbar).
+	Returns the index of the active master (selected in the toolbar).
 	:type: int'''
 
 def __current_Text__(self):
@@ -1034,12 +1085,12 @@ Functions
 
 '''.. function:: disableUpdateInterface()
 	
-	Call this before you do big changes to the font, or to it's glyphs. Make sure that you call Font.enableUpdateInterface() when you are done.
+	Call this before you do big changes to the font, or to its glyphs. Make sure that you call Font.enableUpdateInterface() when you are done.
 	
 	'''
 '''.. function:: enableUpdateInterface()
 	
-	This reenables the interface update. Only makes sense to call if you have disabled it earlier.
+	This re-enables the interface update. Only makes sense to call if you have disabled it earlier.
 	
 	'''
 
@@ -1063,7 +1114,23 @@ GSFont.kerningForPair = kerningForPair
 	:param RightKey: either a glyph name or a class name
 	:type RightKey: str
 	:return: The kerning value
-	:rtype: float'''
+	:rtype: float
+
+	.. code-block:: python
+		
+		# print kerning between w and e for currently selected master
+		font.kerningForPair(font.selectedFontMaster.id, 'w', 'e')
+		-15.0
+
+		# print kerning between group T and group A for currently selected master
+		# ('L' = left side of the pair and 'R' = left side of the pair)
+		font.kerningForPair(font.selectedFontMaster.id, '@MMK_L_T', '@MMK_R_A')
+		-75.0
+
+		# in the same font, kerning between T and A would be zero, because they use group kerning instead.
+		font.kerningForPair(font.selectedFontMaster.id, 'T', 'A')
+		9.22337203685e+18 # (this is the float value for 0, an integer transformation would actually return 0)
+'''
 
 def setKerningForPair(self, FontMasterID, LeftKeringId, RightKerningId, Value):
 	if not LeftKeringId[0] == '@':
@@ -1083,7 +1150,13 @@ GSFont.setKerningForPair = setKerningForPair
 	:param RightKey: either a glyph name or a class name
 	:type RightKey: str
 	:param Value: kerning value
-	:type Value: float'''
+	:type Value: float
+
+	.. code-block:: python
+		# set kerning for group T and group A for currently selected master
+		# ('L' = left side of the pair and 'R' = left side of the pair)
+		font.setKerningForPair(font.selectedFontMaster.id, '@MMK_L_T', '@MMK_R_A', -75)
+'''
 
 def removeKerningForPair(self, FontMasterID, LeftKeringId, RightKerningId):
 	if LeftKeringId[0] != '@':
@@ -1107,7 +1180,14 @@ GSFont.removeKerningForPair = removeKerningForPair
 	:param LeftKey: either a glyph name or a class name
 	:type LeftKey: str
 	:param RightKey: either a glyph name or a class name
-	:type RightKey: str'''
+	:type RightKey: str
+
+	.. code-block:: python
+		# remove kerning for group T and group A for all masters
+		# ('L' = left side of the pair and 'R' = left side of the pair)
+		for master in font.masters:
+			font.removeKerningForPair(master.id, '@MMK_L_T', '@MMK_R_A')
+'''
 
 
 
@@ -1154,8 +1234,8 @@ GSFontMaster.__repr__ = FontMaster__repr__;
 
 .. autosummary::
 
-	name
 	id
+	name
 	weight
 	width
 	weightValue
@@ -1170,7 +1250,7 @@ GSFontMaster.__repr__ = FontMaster__repr__;
 	verticalStems
 	horizontalStems
 	alignmentZones
-	guideLines
+	guides
 	userData
 	customParameters
 
@@ -1183,26 +1263,38 @@ Properties
 GSFontMaster.id = property(lambda self: self.valueForKey_("id"), lambda self, value: self.setId_(value))
 '''.. attribute:: id
 	Used to identify :class:`Layers <GSLayer>` in the Glyph
-	
+
 	see :attr:`GSGlyph.layers <layers>`
+
+	.. code-block:: python
+		# ID of first master
+		print font.masters[0].id
+		3B85FBE0-2D2B-4203-8F3D-7112D42D745E
+		
+		# use this master to access the glyph's corresponding layer
+		print glyph.layers[font.masters[0].id]
+		<GSLayer "Light" (A)>
 	
 	:type: unicode'''
 GSFontMaster.name = property(lambda self: self.valueForKey_("name"), lambda self, value: self.setName_(value))
 '''.. attribute:: name
+	Name of the master. This is a combination of GSFontMaster.weight and GSFontMaster.width and is a human readable identification of each master, e.g. "Bold Condensed".
 	:type: string'''
 GSFontMaster.weight = property(lambda self: self.valueForKey_("weight"), lambda self, value: self.setValue_forKey_(value, "weight"))
 '''.. attribute:: weight
+	Human readable weight name, chosen from list in Font Info. For actual position in interpolation design space, use GSFontMaster.weightValue.
 	:type: string'''
 GSFontMaster.width = property(lambda self: self.valueForKey_("width"), lambda self, value: self.setValue_forKey_(value, "width"))
 '''.. attribute:: width
+	Human readable width name, chosen from list in Font Info. For actual position in interpolation design space, use GSFontMaster.widthValue.
 	:type: string'''
 GSFontMaster.weightValue = property(lambda self: self.valueForKey_("weightValue"), lambda self, value: self.setValue_forKey_(value, "weightValue"))
 '''.. attribute:: weightValue
-	Values for interpolation in design space.
+	Value for interpolation in design space.
 	:type: float'''
 GSFontMaster.widthValue = property(lambda self: self.valueForKey_("widthValue"), lambda self, value: self.setValue_forKey_(value, "widthValue"))
 '''.. attribute:: widthValue
-	Values for interpolation in design space.
+	Value for interpolation in design space.
 	:type: float'''
 GSFontMaster.customName = property(lambda self: self.valueForKey_("custom"), lambda self, value: self.setValue_forKey_(value, "custom"))
 '''.. attribute:: customName
@@ -1210,7 +1302,7 @@ GSFontMaster.customName = property(lambda self: self.valueForKey_("custom"), lam
 	:type: string'''
 GSFontMaster.customValue = property(lambda self: self.valueForKey_("customValue"), lambda self, value: self.setValue_forKey_(value, "customValue"))
 '''.. attribute:: customValue
-	Values for interpolation in design space.'''
+	Value for interpolation in design space.'''
 GSFontMaster.ascender = property(lambda self: self.valueForKey_("ascender"), lambda self, value: self.setValue_forKey_(value, "ascender"))
 '''.. attribute:: ascender
 	:type: float'''
@@ -1228,37 +1320,47 @@ GSFontMaster.italicAngle = property(lambda self: self.valueForKey_("italicAngle"
 	:type: float'''
 GSFontMaster.verticalStems = property(lambda self: self.valueForKey_("verticalStems"), lambda self, value: self.setValue_forKey_(value, "verticalStems"))
 '''.. attribute:: verticalStems
-	The vertical stems. It is a list of numbers. 
+	The vertical stems. This is a list of numbers. 
 	:type: list'''
 GSFontMaster.horizontalStems = property(lambda self: self.valueForKey_("horizontalStems"), lambda self, value: self.setValue_forKey_(value, "horizontalStems"))
 '''.. attribute:: horizontalStems
-	The horizontal stems. It is a list of numbers. 
+	The horizontal stems. This is a list of numbers. 
 	:type: list'''
 GSFontMaster.alignmentZones = property(lambda self: self.valueForKey_("alignmentZones"), lambda self, value: self.setValue_forKey_(value, "alignmentZones"))
 #GSFontMaster.alignmentZones = property(lambda self: self.mutableArrayValueForKey_("alignmentZones"), lambda self, value: self.setValue_forKey_(value, "alignmentZones"))
 '''.. attribute:: alignmentZones
 	Collection of :class:`GSAlignmentZone <GSAlignmentZone>`.
 	:type: list'''
-GSFontMaster.guideLines = property(lambda self: self.valueForKey_("guideLines"), lambda self, value: self.setValue_forKey_(value, "guideLines"))
-'''.. attribute:: guideLines
-	Collection of :class:`GSGuideLine <GSGuideLine>`.
+# new (guidelines at layers are also called just 'guides')
+GSFontMaster.guides = property(lambda self: self.valueForKey_("guideLines"), lambda self, value: self.setValue_forKey_(value, "guideLines"))
+# keep for compatibility
+GSFontMaster.guideLines = GSFontMaster.guides
+'''.. attribute:: guides
+	Collection of :class:`GSGuideLine <GSGuideLine>`. These are the font-wide (actually master-wide) red guidelines. For glyph-level guidelines (attached to the layers) see :attr:`GSLayer`.guides
 	:type: list'''
 GSFontMaster.userData = property(lambda self: self.pyobjc_instanceMethods.userData(), lambda self, value: self.setValue_forKey_(value, "userData"))
 '''.. attribute:: userData
-	A dictionary to store user data. Use a unique Key and only use object that can be stored in a Property list (string, list, dict, numbers, NSData) otherwise the date will not be recoverable from the saved file.
-	:type: dict'''
+	A dictionary to store user data. Use a unique key and only use objects that can be stored in a property list (string, list, dict, numbers, NSData) otherwise the date will not be recoverable from the saved file.
+	:type: dict
+	.. code-block:: python
+		# set value
+		font.masters[0].userData['rememberToMakeTea'] = True
+'''
 GSFontMaster.customParameters = property(lambda self: CustomParametersProxy(self))
 '''.. attribute:: customParameters
-	The custom parameters. You can access them by name or by index.::
+	The custom parameters. List of :class:`GSCustomProperty` objects. You can access them by name or by index.
 	
-		cp = GSCustomProperty("Test", "Test2")
-		master.customParameters.append(cp)
-	
-	or::
-	
-		master.customParameters["Test"] = "Test2"
-	
-	Setting it by name might overwrite an existing property.
+	.. code-block:: python
+		
+		# access all parameters
+		for parameter in font.masters[0].customParameters:
+			print parameter
+		
+		# set a parameter
+		font.masters[0].customParameters['underlinePosition'] = -135
+
+		# delete a parameter
+		del(font.masters[0].customParameters['underlinePosition'])
 	
 	:type: list, dict'''
 
@@ -1285,10 +1387,8 @@ There is no distinction between Blue zones and other Zones. All negative zone (e
 
 The zone for the baseline should have position 0 (zero) and a negative width.
 
-.. class:: GSAlignmentZone
+.. class:: GSAlignmentZone([pos, size])
 
-	GSAlignmentZone([pos, size])
-	
 	:param pos: The position of the zone
 	:param size: The size of the zone
 '''
@@ -1322,17 +1422,17 @@ Properties
 	
 '''
 
-GSAlignmentZone.size = property(lambda self: self.valueForKey_("size"), lambda self, value: self.setSize_(value))
-'''.. attribute:: size
-	
-	:type: int
-'''
 GSAlignmentZone.position = property(lambda self: self.valueForKey_("position"), lambda self, value: self.setPosition_(value))
 '''.. attribute:: position
 	
 	:type: int
 	
 	'''
+GSAlignmentZone.size = property(lambda self: self.valueForKey_("size"), lambda self, value: self.setSize_(value))
+'''.. attribute:: size
+	
+	:type: int
+'''
 
 
 
@@ -1373,7 +1473,10 @@ GSInstance.__repr__ = Instance__repr__;
 
 
 '''
+Properties
+
 .. autosummary::
+
 
 	active
 	name
@@ -1406,24 +1509,27 @@ GSInstance.active = property(lambda self: self.valueForKey_("active").boolValue(
 	:type: bool'''
 GSInstance.name = property(lambda self: self.valueForKey_("name"), lambda self, value: self.setName_(value))
 '''.. attribute:: name
+	Name of instance. Corresponds to the "Style Name" field in the font info. This is used for naming the exported fonts.
 	:type: string'''
 GSInstance.weight = property(lambda self: self.valueForKey_("weightClass"), lambda self, value: self.setValue_forKey_(value, "weightClass"))
 '''.. attribute:: weight
+	Human readable weight name, chosen from list in Font Info. For actual position in interpolation design space, use GSInstance.weightValue.
 	:type: string'''
 GSInstance.width = property(lambda self: self.valueForKey_("widthClass"), lambda self, value: self.setValue_forKey_(value, "widthClass"))
 '''.. attribute:: width
+	Human readable width name, chosen from list in Font Info. For actual position in interpolation design space, use GSInstance.widthValue.
 	:type: string'''
 GSInstance.weightValue = property(lambda self: self.valueForKey_("interpolationWeight"), lambda self, value: self.setValue_forKey_(value, "interpolationWeight"))
 '''.. attribute:: weightValue
-	Values for interpolation in design space.
+	Value for interpolation in design space.
 	:type: float'''
 GSInstance.widthValue = property(lambda self: self.valueForKey_("interpolationWidth"), lambda self, value: self.setValue_forKey_(value, "interpolationWidth"))
 '''.. attribute:: widthValue
-	Values for interpolation in design space.
+	Value for interpolation in design space.
 	:type: float'''
 GSInstance.customValue = property(lambda self: self.valueForKey_("interpolationCustom"), lambda self, value: self.setValue_forKey_(value, "interpolationCustom"))
 '''.. attribute:: customValue
-	Values for interpolation in design space.
+	Value for interpolation in design space.
 	:type: float'''
 GSInstance.isItalic = property(lambda self: self.valueForKey_("isItalic").boolValue(), lambda self, value: self.setValue_forKey_(value, "isItalic"))
 '''.. attribute:: isItalic
@@ -1439,16 +1545,19 @@ GSInstance.linkStyle = property(lambda self: self.valueForKey_("linkStyle"), lam
 	:type: string'''
 GSInstance.customParameters = property(lambda self: CustomParametersProxy(self))
 '''.. attribute:: customParameters
-	The custom parameters. You can access them by name or by index.::
+	The custom parameters. List of :class:`GSCustomProperty` objects. You can access them by name or by index.
 	
-		cp = GSCustomProperty("Test", "Test2")
-		Instance.customParameters.append(cp)
-	
-	or::
-	
-		Instance.customParameters["Test"] = "Test2"
-	
-	Setting it by name might overwrite an existing property.
+	.. code-block:: python
+		
+		# access all parameters
+		for parameter in font.instances[0].customParameters:
+			print parameter
+		
+		# set a parameter
+		font.instances[0].customParameters['hheaLineGap'] = 10
+
+		# delete a parameter
+		del(font.instances[0].customParameters['hheaLineGap'])
 	
 	:type: list, dict'''
 
@@ -1456,15 +1565,14 @@ GSInstance.instanceInterpolations = property(lambda self: self.pyobjc_instanceMe
 '''.. attribute:: instanceInterpolations
 	A dict that contains the interpolation coefficents for each master.
 	This is automatcially updated if you change interpolationWeight, interpolationWidth, interpolationCustom. It contains FontMaster IDs as keys and coeffients for that master as values.
-	Or, you can set it maually if you set manualInterpolation to True. There is no UI for this, so you need to do that with a script.
+	Or, you can set it manually if you set manualInterpolation to True. There is no UI for this, so you need to do that with a script.
 	:type: dict
 	'''
 
 GSInstance.manualInterpolation = property(lambda self: self.valueForKey_("manualInterpolation"), lambda self, value: self.setValue_forKey_(value, "manualInterpolation"))
 '''.. attribute:: manualInterpolation
 	Disables automatic calculation of instanceInterpolations
-	
-	This allowes to manually setting of instanceInterpolations
+	This allowes manual setting of instanceInterpolations.
 	:type: bool
 	'''
 
@@ -1475,11 +1583,11 @@ Functions
 ---------
 
 
-.. function:: generate(Format = "OTF", FontPath = None, AutoHint = True, RemoveOverlap = True, UseSubroutines = True, UseProductionNames = True)
+.. function:: generate([Format, FontPath, AutoHint, RemoveOverlap, UseSubroutines, UseProductionNames])
 	
-	exports the instance
+	Exports the instance.
 	
-	:param str Format: 'OTF' or 'TTF'
+	:param str Format: 'OTF' or 'TTF'. Default: 'OTF'
 	:param str FontPath: The destination path for the final fonts. If None, it uses the default location set in the export dialog
 	:param bool AutoHint: If autohinting should be applied. Default: True
 	:param bool RemoveOverlap: If overlaps should be removed. Default: True
@@ -1549,13 +1657,23 @@ GSInstance.generate = __Instance_Export__
 :mod:`GSCustomProperty`
 ===============================================================================
 
-Implementation of the Custom Property object.
+Implementation of the Custom Property object. It stores a name/value pair.
 
-It stores a name/value pair
-
-.. class:: GSCustomProperty
+You can append GSCustomProperty objects for example to GSFont.customParameters, but this way you may end up with duplicates.
+It is best to access the custom parameters through its dictionary interface like this:
+.. code-block:: python
 	
-	GSCustomProperty([name, value])
+	# access all parameters
+	for parameter in font.customParameters:
+		print parameter
+	
+	# set a parameter
+	font.customParameters['trademark'] = 'ThisFont is a trademark by MyFoundry.com'
+
+	# delete a parameter
+	del(font.customParameters['trademark'])
+
+.. class:: GSCustomProperty([name, value])
 	
 	:param name: The name
 	:param size: The value
@@ -1578,8 +1696,10 @@ GSCustomProperty.__repr__ = CustomProperty__repr__;
 
 
 '''
-	.. autosummary::
-	
+Properties
+
+.. autosummary::
+
 	name
 	value
 	
@@ -1626,11 +1746,23 @@ GSCustomProperty.value = property(lambda self: self.valueForKey_("value"), lambd
 ===============================================================================
 
 Implementation of the class object. It is used to store OpenType classes.
-
-.. class:: GSClass
-
-	GSClass([tag, code])
+.. code-block:: python
 	
+	# add a class
+	font.classes.append(GSClass('uppercaseLetters', 'A B C D E'))
+	
+	# access all classes
+	for class in font.classes:
+		print class.name
+	
+	# access one class
+	print font.classes['uppercaseLetters'].code
+	
+	# delete
+	del(font.classes['uppercaseLetters'])
+
+.. class:: GSClass([tag, code])
+
 	:param tag: The class name
 	:param code: A list of glyph names, separated by space or newline
 
@@ -1666,18 +1798,18 @@ GSClass.__repr__ = Class__repr__;
 GSClass.name = property(lambda self: self.valueForKey_("name"), 
 							 lambda self, value: self.setName_(value))
 '''.. attribute:: name
-	The Class name
+	The class name
 	:type: unicode'''
 GSClass.code = property(lambda self: self.valueForKey_("code"), 
 							 lambda self, value: self.setCode_(value))
 '''.. attribute:: code
-	A String with space separated glyph names.
+	A string with space separated glyph names.
 	:type: unicode
 '''
 GSClass.automatic = property(lambda self: self.valueForKey_("automatic").boolValue(), 
 							 lambda self, value: self.setAutomatic_(value))
 '''.. attribute:: automatic
-	Auto-generate this class
+	Define whether this class should be auto-generated when pressing the 'Update' button in the Font Ínfo.
 	:type: bool
 '''
 
@@ -1698,10 +1830,23 @@ GSClass.automatic = property(lambda self: self.valueForKey_("automatic").boolVal
 ===============================================================================
 	
 Implementation of the featurePrefix object. It is used to store things that need to be outside of a feature like standalone lookups.
-	
-.. class:: GSFeaturePrefix
 
-	GSFeaturePrefix([tag, code])
+.. code-block:: python
+	
+	# add a prefix
+	font.featurePrefixes.append(GSFeaturePrefix('LanguageSystems', 'languagesystem DFLT dflt;\nlanguagesystem latn dflt;'))
+	
+	# access all prefixes
+	for prefix in font.featurePrefixes:
+		print prefix.code
+	
+	# access one prefix
+	print font.featurePrefixes['LanguageSystems'].code
+	
+	# delete
+	del(font.featurePrefixes['LanguageSystems'])
+	
+.. class:: GSFeaturePrefix([tag, code])
 	
 	:param tag: The Prefix name
 	:param code: The feature code in Adobe FDK syntax
@@ -1750,7 +1895,7 @@ GSFeaturePrefix.code = property(lambda self: self.valueForKey_("code"),
 GSFeaturePrefix.automatic = property(lambda self: self.valueForKey_("automatic").boolValue(),
 							 lambda self, value: self.setAutomatic_(value))
 '''.. attribute:: automatic
-	Auto-generate this FeaturePrefix
+	Define whether this should be auto-generated when pressing the 'Update' button in the Font Ínfo.
 	:type: bool
 	'''
 
@@ -1774,11 +1919,24 @@ GSFeaturePrefix.automatic = property(lambda self: self.valueForKey_("automatic")
 :mod:`GSFeature`
 ===============================================================================
 
-.. class:: GSFeature
+Implementation of the feature object. It is used to implement OpenType Features in the Font Info.
 
-	Implementation of the feature object. It is used to implement OpenType Features in the Font Info.
+.. code-block:: python
 	
-	GSFeature([tag, code])
+	# add a feature
+	font.features.append(GSFeature('liga', 'sub f i by fi;'))
+	
+	# access all prefixes
+	for feature in font.features:
+		print feature.code
+	
+	# access one feature
+	print font.features['liga'].code
+	
+	# delete
+	del(font.features['liga'])
+
+.. class:: GSFeature([tag, code])
 	
 	:param tag: The feature name
 	:param code: The feature code in Adobe FDK syntax
@@ -1837,7 +1995,7 @@ GSFeature.code = property(lambda self: self.valueForKey_("code"),
 GSFeature.automatic = property(lambda self: self.valueForKey_("automatic").boolValue(), 
 								 lambda self, value: self.setAutomatic_(value))
 '''.. attribute:: automatic
-	Auto-generate this feature
+	Define whether this feature should be auto-generated when pressing the 'Update' button in the Font Ínfo.
 	:type: bool
 '''
 
@@ -1860,8 +2018,22 @@ Functions
 '''.. function:: update()
 	
 	Calls the automatic feature code generator for this feature.
+	You can use this to update all OpenType features before export.
 	
 	:return: None
+
+.. code-block:: python
+	
+	# first update all features
+	for feature in font.features:
+		if feature.automatic:
+			feature.update()
+	
+	# then export fonts
+	for instance in font.instances:
+		if instance.active:
+			instance.generate()
+	
 '''
 
 
@@ -2274,6 +2446,20 @@ GSLayer.anchors = property(lambda self: LayerAnchorsProxy(self))
 '''.. attribute:: anchors
 	List of :class:`GSAnchor` objects.
 	:type: dict
+
+	.. code-block:: python
+
+		layer = Glyphs.font.selectedLayers[0] # current layer
+
+		# access all anchors:
+		for a in layer.anchors:
+			print a
+
+		# add a new anchor
+		layer.anchors['top'] = GSAnchor()
+
+		# delete anchor
+		del(layer.anchors['top'])
 '''
 
 GSLayer.paths = property(	lambda self: LayerPathsProxy(self),
@@ -2317,8 +2503,19 @@ GSLayer.width = property(	lambda self: self.valueForKey_("width").floatValue(),
 GSLayer.bounds = property(	lambda self: self.pyobjc_instanceMethods.bounds() )
 
 '''.. attribute:: bounds
-	Bounding box as NSRect (origin and size). Read-only.
-	:type: NSRect'''
+	Bounding box as NSRect. Read-only.
+	:type: NSRect
+	
+	.. code-block:: python
+
+		layer = Glyphs.font.selectedLayers[0] # current layer
+
+		# origin
+		print layer.bounds.origin.x, layer.bounds.origin.y
+
+		# size
+		print layer.bounds.size.width, layer.bounds.size.height
+'''
 
 GSLayer.background = property(lambda self: self.pyobjc_instanceMethods.background())
 
@@ -2506,9 +2703,23 @@ GSLayer._invalidateContours = _invalidateContours_
 :mod:`GSAnchor`
 ===============================================================================
 
-.. class:: GSAnchor <GSElement>
+.. class:: GSAnchor
 
 Implementation of the anchor object.
+
+.. code-block:: python
+
+	layer = Glyphs.font.selectedLayers[0] # current layer
+
+	# access all anchors:
+	for a in layer.anchors:
+		print a
+
+	# add a new anchor
+	layer.anchors['top'] = GSAnchor()
+
+	# delete anchor
+	del(layer.anchors['top'])
 
 .. function::GSAnchor([name, pt])
 
@@ -2547,7 +2758,20 @@ GSAnchor.position = property(	lambda self: self.valueForKey_("position").pointVa
 								lambda self, value: self.setPosition_(value))
 '''.. attribute:: position
 	The position of the anchor
-	:type: NSPoint'''
+	:type: NSPoint
+	
+	.. code-block:: python
+	
+		# read position
+		print layer.anchors['top'].position.x, layer.anchors['top'].position.y
+
+		# set position
+		layer.anchors['top'].position = NSPoint(175, 575)
+
+		# increase vertical position by 50 units
+		layer.anchors['top'].position = NSPoint(layer.anchors['top'].position.x, layer.anchors['top'].position.y + 50)
+
+'''
 
 GSAnchor.name = property(		lambda self: self.valueForKey_("name"),
 								lambda self, value: self.setName_(value))
@@ -2560,8 +2784,6 @@ def DrawAnchorWithPen(self, pen):
 	pen.endPath()
 
 GSAnchor.draw = DrawAnchorWithPen
-
-
 
 
 
@@ -2582,14 +2804,27 @@ GSAnchor.draw = DrawAnchorWithPen
 :mod:`GSComponent`
 ===============================================================================
 
-.. class:: GSComponent
+.. class:: GSComponent(glyph [, pos] )
 	
-	Implementation of the component object.
+Implementation of the component object.
 
-	GSComponent(glyph [, pt] )
+	:param glyph: a :class:`GSGlyph` object or the glyph name
+	:param pos: the position of the component as NSPoint
 
-	:param glyph: a glyph object or the glyph name
-	:param pt: the position of the component
+.. code-block:: python
+
+	layer = Glyphs.font.selectedLayers[0] # current layer
+
+	# add component
+	layer.components.append(GSComponent('dieresis'))
+
+	# add component at specific position
+	layer.components.append(GSComponent('dieresis', NSPoint(100, 100)))
+	
+	# delete specific component
+	for i, component in enumerate(layer.components):
+		if component.componentName == 'dieresis':
+			del(layer.components[i])
 
 **Properties**
 
@@ -2657,8 +2892,8 @@ GSComponent.componentName = property(lambda self: self.valueForKey_("componentNa
 
 GSComponent.component = property(	lambda self: self.valueForKey_("component"))
 '''.. attribute:: component
-	The :class:`GSGlyph <GSGlyph>` the component is pointing to. This is read only. Set the componentName to the glyph name.
-	:type: :class:`GSGlyph <GSGlyph>`
+	The :class:`GSGlyph` the component is pointing to. This is read only. In order to change the referenced base glyph, set componentName to the new glyph name.
+	:type: :class:`GSGlyph`
 '''
 
 GSComponent.transform = property(	lambda self: self.transformStruct(),
@@ -2679,11 +2914,15 @@ GSComponent.bounds = property(		lambda self: self.pyobjc_instanceMethods.bounds(
 	
 	:type: NSRect'''
 
-GSComponent.disableAlignment = property(lambda self: self.pyobjc_instanceMethods.disableAlignment(),
+# keep for compatibility:
+GSComponent.disableAlignment = property(lambda self: bool(self.pyobjc_instanceMethods.disableAlignment()),
 									lambda self, value: self.setDisableAlignment_(value))
-'''.. attribute:: disableAlignment
+# new:
+GSComponent.automaticAlignment = property(lambda self: bool(not self.pyobjc_instanceMethods.disableAlignment()),
+									lambda self, value: self.setDisableAlignment_(not value))
+'''.. attribute:: automaticAlignment
 	
-	defines if the component is automatically aligned
+	defines whether the component is automatically aligned
 	
 	:type: bool'''
 
