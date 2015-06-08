@@ -1012,7 +1012,7 @@ GSFont.disablesNiceNames = property(lambda self: self.valueForKey_("disablesNice
 	:type: bool'''
 GSFont.customParameters = property(			lambda self: CustomParametersProxy(self))
 '''.. attribute:: customParameters
-	The custom parameters. List of :class:`GSCustomProperty` objects. You can access them by name or by index.
+	The custom parameters. List of :class:`GSCustomParameter` objects. You can access them by name or by index.
 	.. code-block:: python
 		
 		# access all parameters
@@ -1348,7 +1348,7 @@ GSFontMaster.userData = property(lambda self: self.pyobjc_instanceMethods.userDa
 '''
 GSFontMaster.customParameters = property(lambda self: CustomParametersProxy(self))
 '''.. attribute:: customParameters
-	The custom parameters. List of :class:`GSCustomProperty` objects. You can access them by name or by index.
+	The custom parameters. List of :class:`GSCustomParameter` objects. You can access them by name or by index.
 	
 	.. code-block:: python
 		
@@ -1545,7 +1545,7 @@ GSInstance.linkStyle = property(lambda self: self.valueForKey_("linkStyle"), lam
 	:type: string'''
 GSInstance.customParameters = property(lambda self: CustomParametersProxy(self))
 '''.. attribute:: customParameters
-	The custom parameters. List of :class:`GSCustomProperty` objects. You can access them by name or by index.
+	The custom parameters. List of :class:`GSCustomParameter` objects. You can access them by name or by index.
 	
 	.. code-block:: python
 		
@@ -1645,7 +1645,7 @@ GSInstance.generate = __Instance_Export__
 #
 #
 #
-#           GSCustomProperty
+#           GSCustomParameter
 #
 #
 #
@@ -1654,12 +1654,12 @@ GSInstance.generate = __Instance_Export__
 
 '''
 	
-:mod:`GSCustomProperty`
+:mod:`GSCustomParameter`
 ===============================================================================
 
 Implementation of the Custom Property object. It stores a name/value pair.
 
-You can append GSCustomProperty objects for example to GSFont.customParameters, but this way you may end up with duplicates.
+You can append GSCustomParameter objects for example to GSFont.customParameters, but this way you may end up with duplicates.
 It is best to access the custom parameters through its dictionary interface like this:
 .. code-block:: python
 	
@@ -1673,26 +1673,26 @@ It is best to access the custom parameters through its dictionary interface like
 	# delete a parameter
 	del(font.customParameters['trademark'])
 
-.. class:: GSCustomProperty([name, value])
+.. class:: GSCustomParameter([name, value])
 	
 	:param name: The name
 	:param size: The value
 '''
 
 def CustomProperty__new__(typ, *args, **kwargs):
-	return GSCustomProperty.alloc().init()
+	return GSCustomParameter.alloc().init()
 
-GSCustomProperty.__new__ = CustomProperty__new__;
+GSCustomParameter.__new__ = CustomProperty__new__;
 
 def CustomProperty__init__(self, name, value):
 	self.setName_(name)
 	self.setValue_(value)
 
-GSCustomProperty.__init__ = CustomProperty__init__;
+GSCustomParameter.__init__ = CustomProperty__init__;
 
 def CustomProperty__repr__(self):
-	return "<GSCustomProperty %s = %s>" % (self.name, self.value)
-GSCustomProperty.__repr__ = CustomProperty__repr__;
+	return "<GSCustomParameter %s: %s>" % (self.name, self.value)
+GSCustomParameter.__repr__ = CustomProperty__repr__;
 
 
 '''
@@ -1710,12 +1710,12 @@ Properties
 	
 	'''
 
-GSCustomProperty.name = property(lambda self: self.valueForKey_("name"), lambda self, value: self.setName_(value))
+GSCustomParameter.name = property(lambda self: self.valueForKey_("name"), lambda self, value: self.setName_(value))
 '''.. attribute:: name
 	
 	:type: str
 	'''
-GSCustomProperty.value = property(lambda self: self.valueForKey_("value"), lambda self, value: self.setValue_(value))
+GSCustomParameter.value = property(lambda self: self.valueForKey_("value"), lambda self, value: self.setValue_(value))
 '''.. attribute:: value
 	
 	:type: str, list, dict, int, float
@@ -2175,22 +2175,38 @@ GSGlyph.__repr__ = Glyph__repr__;
 GSGlyph.parent = property(			lambda self: self.valueForKey_("parent"),
 									lambda self, value: self.setParent_(value)) 
 '''.. attribute:: parent
-	Reference to the :class:`Font <GSFont>` object.
+	Reference to the :class:`GSFont` object.
 
 	:type: :class:`GSFont <GSFont>`
 '''
 GSGlyph.layers = property(			lambda self: GlyphLayerProxy(self))
 
 '''.. attribute:: layers
-	The layers of the glyph, collection of :class:`GSLayer <GSLayer>` objects. You can access them either by index or by :attr:`GSFontMaster.id <id>`.
-	
-	To access a layer, use the master ID:
-	.. code-block:: python
-		master = font.masters[0]
-		print glyph.layers[master.id]
-		<GSLayer "Light" (A)>
+	The layers of the glyph, collection of :class:`GSLayer` objects. You can access them either by index or by :attr:`GSFontMaster.id <id>`.
 
 	:type: list, dict
+
+	.. code-block:: python
+
+		# get active glyph
+		glyph = font.selectedLayers[0].parent
+		
+		# access all layers of this glyph
+		for layer in glyph.layers:
+			print layer.name
+			
+		# access layer of currently selected master of active glyph ...
+		layer = glyph.layers[font.selectedFontMaster.id]
+		
+		# ... which is exactly the same as:
+		layer = font.selectedLayers[0]
+	
+		# directly access 'Bold' layer of active glyph
+		for master in font.masters:
+			if master.name == 'Bold':
+				id = master.id
+				break
+		layer = glyph.layers[id]
 '''
 GSGlyph.name = property(			lambda self: self.pyobjc_instanceMethods.name(),
 									lambda self, value: self.setName_(value))
@@ -2268,7 +2284,24 @@ GSGlyph.color =			  property( lambda self: self.valueForKey_("colorIndex"),
 									lambda self, value: self.setColorIndex_(value))
 '''.. attribute:: color
 	Color marking of glyph in UI
-	:type: int'''
+	:type: int
+
+	.. code-block:: python
+
+		glyph.color = 0		# red
+		glyph.color = 1		# orange
+		glyph.color = 2		# brown
+		glyph.color = 3		# yellow
+		glyph.color = 4		# light green
+		glyph.color = 5		# dark green
+		glyph.color = 6		# light blue
+		glyph.color = 7		# dark blue
+		glyph.color = 8		# purple
+		glyph.color = 9		# magenta
+		glyph.color = 10	# light gray
+		glyph.color = 11	# charcoal
+		glyph.color = 9223372036854775807	# not colored, white
+'''
 
 GSGlyph.note =			  property( lambda self: self.valueForKey_("note"), 
 									lambda self, value: self.setNote_(value))
@@ -2291,7 +2324,15 @@ GSGlyph.selected =		property( lambda self: _get_Glyphs_is_selected(self),
 '''.. attribute:: selected
 	Return True if the Glyph is selected in the Font View. 
 	This is different to the property font.selectedLayers as this returns the selection from the active tab.
-	:type: bool'''
+	:type: bool
+
+	.. code-block:: python
+
+		# access all selected glyphs in the Font View
+		for glyph in font.glyphs:
+			if glyph.selected:
+				print glyph
+'''
 
 def __BeginUndo(self):
 	self.undoManager().beginUndoGrouping()
@@ -2918,11 +2959,11 @@ GSComponent.bounds = property(		lambda self: self.pyobjc_instanceMethods.bounds(
 GSComponent.disableAlignment = property(lambda self: bool(self.pyobjc_instanceMethods.disableAlignment()),
 									lambda self, value: self.setDisableAlignment_(value))
 # new:
-GSComponent.automaticAlignment = property(lambda self: bool(not self.pyobjc_instanceMethods.disableAlignment()),
-									lambda self, value: self.setDisableAlignment_(not value))
-'''.. attribute:: automaticAlignment
+GSComponent.automaticAlignment = property(lambda self: bool(self.pyobjc_instanceMethods.disableAlignment()),
+									lambda self, value: self.setDisableAlignment_(value))
+'''.. attribute:: disableAlignment
 	
-	defines whether the component is automatically aligned
+	Defines whether the component is automatically aligned.
 	
 	:type: bool'''
 
@@ -3277,7 +3318,7 @@ def Hint__repr__(self):
 		direction = "horizontal"
 	else:
 		direction = "vertical"
-	if self.type == BottomGhost or self.type == TopGhost:
+	if self.type == BOTTOMGHOST or self.type == TOPGHOST:
 		return "<GSHint %s origin=(%s,%s) type=%s>" % (hintConstants[self.type], self.originNode.position.x, self.originNode.position.y, self.type)
 	elif self.type == Stem:
 		return "<GSHint Stem origin=(%s,%s) target=(%s,%s) %s>" % (self.originNode.position.x, self.originNode.position.y, self.targetNode.position.x, self.targetNode.position.y, direction)
@@ -3297,7 +3338,7 @@ GSHint.targetNode = property(	lambda self: self.valueForKey_("targetNode"),
 '''.. attribute:: targetNode
 	The the second node this hint is attached to. In case of a ghost hint this value will be empty.
 	
-	:type: :class:`GSNode <GSNode>`
+	:type: :class:`GSNode`
 '''
 
 GSHint.otherNode1 = property(	lambda self: self.valueForKey_("otherNode1"),
@@ -3305,14 +3346,14 @@ GSHint.otherNode1 = property(	lambda self: self.valueForKey_("otherNode1"),
 '''.. attribute:: otherNode1
 	A third node this hint is attached to. Used for Interpolation or Diagonal hints.
 	
-	:type: :class:`GSNode <GSNode>`'''
+	:type: :class:`GSNode`'''
 	
 GSHint.otherNode2 = property(	lambda self: self.valueForKey_("otherNode1"),
 								lambda self, value: self.setOtherNode1_(value))
 '''.. attribute:: otherNode2
 	A forth node this hint is attached to. Used for Diagonal hints.
 
-	:type: :class:`GSNode <GSNode>`'''
+	:type: :class:`GSNode`'''
 
 GSHint.type = property(			lambda self: self.valueForKey_("type"),
 								lambda self, value: self.setType_(value))
