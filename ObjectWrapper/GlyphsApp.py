@@ -1926,7 +1926,7 @@ Implementation of the feature object. It is used to implement OpenType Features 
 	# add a feature
 	font.features.append(GSFeature('liga', 'sub f i by fi;'))
 	
-	# access all prefixes
+	# access all features
 	for feature in font.features:
 		print feature.code
 	
