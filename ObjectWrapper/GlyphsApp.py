@@ -976,7 +976,7 @@ GSFont.date = property(lambda self: self.valueForKey_("date"), lambda self, valu
 		2015-06-08 09:39:05 +0000
 		
 		# set date to now
-		font.date = NSDate.alloc().initWithTimeIntervalSinceNow_(0)
+		font.date = NSDate.date()
 '''
 GSFont.familyName = property(lambda self: self.valueForKey_("familyName"), 
 							 lambda self, value: self.setFamilyName_(value))
