@@ -81,6 +81,8 @@ The mothership. Everything starts here.
 	showMacroWindow()
 	clearLog()
 	showGlyphInfoPanelWithSearchString()
+	glyphInfoForName()
+	glyphInfoForUnicode()
 	
 ----------
 Properties
@@ -252,6 +254,34 @@ GSApplication.showGlyphInfoPanelWithSearchString = __showGlyphInfoPanelWithSearc
 	Shows the Glyph Info window with a preset search string
 	
 	:param String: The search term
+	
+	'''
+
+def _glyphInfoForName(self, String):
+	return GSGlyphsInfo.glyphInfoForName_(String)
+
+GSApplication.glyphInfoForName = _glyphInfoForName
+
+'''.. function:: glyphInfoForName(String)
+	
+	Generates :class:`GSGlyphInfo` object for given glyph name.
+	
+	:param String: Glyph name
+	:return: :class:`GSGlyphInfo`
+	
+	'''
+
+def _glyphInfoForUnicode(self, String):
+	return GSGlyphsInfo.glyphInfoForUnicode_(String)
+
+GSApplication.glyphInfoForUnicode = _glyphInfoForUnicode
+
+'''.. function:: glyphInfoForUnicode(Unicode)
+	
+	Generates :class:`GSGlyphInfo` object for given hex unicode.
+	
+	:param String: Hex unicode
+	:return: :class:`GSGlyphInfo`
 	
 	'''
 
@@ -3694,30 +3724,103 @@ This contains valuable information from the glyph database. See :class:`GSGlyphs
 
 .. autosummary::
 
-	niceGlyphNameForName_()
-	glyphInfoForUnicode
-	glyphInfoForName
-
+	name
+	productionName
+	category
+	subCategory
+	components
+	accents
+	anchors
+	unicode
+	unicode2
+	script
 
 ----------
-Functions
+Properties
 ----------
 
-.. function:: glyphInfoForUnicode_(Unicode)
-	
-	Returns :class:`GSGlyphInfo` object for this Unicode.
-	
-	:param Name: Hex Unicode
-	:return: :class:`GSGlyphInfo`
+'''
 
+GSHint.name = property(lambda self: self.pyobjc_instanceMethods.name())
 
-.. function:: glyphInfoForName(Name)
-	
-	Returns :class:`GSGlyphInfo` object for this glyph name.
-	
-	:param Name: A glyph name
-	:return: :class:`GSGlyphInfo`
+'''
+.. attribute:: name
+	Human readable name of glyph ("nice name")
+	:type: unicode
+'''
 
+GSHint.productionName = property(lambda self: self.pyobjc_instanceMethods.production())
+
+'''
+.. attribute:: productionName
+	Production name of glyph. Will return a value only if production name differs from nice name, otherwise None.
+	:type: unicode
+'''
+
+GSHint.category = property(lambda self: self.pyobjc_instanceMethods.category())
+
+'''
+.. attribute:: category
+	This is mostly from the UnicodeData.txt file from unicode.org. Some corrections have been made (Accents, ...)
+	e.g: "Letter", "Number", "Punctuation", "Mark", "Separator", "Symbol", "Other"
+	:type: unicode
+'''
+
+GSHint.subCategory = property(lambda self: self.pyobjc_instanceMethods.subCategory())
+
+'''
+.. attribute:: subCategory
+	This is mostly from the UnicodeData.txt file from unicode.org. Some corrections and additions have been made (Smallcaps, ...)
+	e.g: "Uppercase", "Lowercase", "Smallcaps", "Ligature", "Decimal Digit", ...
+	:type: unicode
+'''
+
+GSHint.components = property(lambda self: self.pyobjc_instanceMethods.components())
+
+'''
+.. attribute:: components
+	This glyph may be composed of the glyphs returned as a list of :class:`GSGlyphInfo` objects.
+	:type: list
+'''
+
+GSHint.accents = property(lambda self: self.pyobjc_instanceMethods.accents())
+
+'''
+.. attribute:: accents
+	This glyph may be combined with these accents, returned as a list of glyph names
+	:type: list
+'''
+
+GSHint.anchors = property(lambda self: self.pyobjc_instanceMethods.anchors())
+
+'''
+.. attribute:: anchors
+	Anchors defined for this glyph, as a list of anchor names
+	:type: list
+'''
+
+GSHint.unicode = property(lambda self: self.pyobjc_instanceMethods.unicode())
+
+'''
+.. attribute:: unicode
+	Unicode value of glyph
+	:type: list
+'''
+
+GSHint.unicode2 = property(lambda self: self.pyobjc_instanceMethods.unicode2())
+
+'''
+.. attribute:: unicode2
+	Second Unicode value of glyph, if defined
+	:type: list
+'''
+
+GSHint.script = property(lambda self: self.pyobjc_instanceMethods.script())
+
+'''
+.. attribute:: script
+	Script of glyph, e.g: "latin", "cyrillic", "greek"
+	:type: unicode
 
 '''
 
