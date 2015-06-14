@@ -6,7 +6,7 @@ from Foundation import *
 import time, math, sys, os
 
 
-__all__ = ["Glyphs", "GetFile", "GSMOVE", "GSLINE", "GSCURVE", "GSOFFCURVE", "GSSHARP", "GSSMOOTH", "TOPGHOST", "STEM", "BOTTOMGHOST", "TTANCHOR", "TTSTEM", "TTALIGN", "TTINTERPOLATE", "TTDIAGONAL", "CORNER", "CAP", "TTDONTROUND", "TTROUND", "TTROUNDUP", "TTROUNDDOWN", "TRIPLE", "divideCurve", "distance", "addPoints", "subtractPoints", "GetFolder", "GetSaveFile", "GetOpenFile", "Message", "newTab"]
+__all__ = ["Glyphs", "GetFile", "GSMOVE", "GSLINE", "GSCURVE", "GSOFFCURVE", "GSSHARP", "GSSMOOTH", "TOPGHOST", "STEM", "BOTTOMGHOST", "TTANCHOR", "TTSTEM", "TTALIGN", "TTINTERPOLATE", "TTDIAGONAL", "CORNER", "CAP", "TTDONTROUND", "TTROUND", "TTROUNDUP", "TTROUNDDOWN", "TRIPLE", "divideCurve", "distance", "addPoints", "subtractPoints", "GetFolder", "GetSaveFile", "GetOpenFile", "Message"]
 
 
 class Proxy(object):
@@ -1163,6 +1163,89 @@ GSFont.currentText = property(lambda self: __current_Text__(self),
 	Unencoded and none ASCII glyphs will use a slash and the glyph name. (e.g: /a.sc). Setting unicode strings works.
 	
 	:type: unicode'''
+
+
+# Tab interaction:
+
+class FontTabsProxy (Proxy):
+	def __getitem__(self, Key):
+		if self._owner.parent:
+			if type(Key) is int:
+				if Key < 0:
+					Key = self.__len__() + Key
+				return self._owner.parent.windowController().tabBarControl().viewControllers()[Key + 1]
+			else:
+				raise(KeyError)
+		else:
+			raise Exception("The font is not connected to a document object")
+	def __setitem__(self, Key, Tab):
+		if type(Key) is int:
+			raise(NotImplementedError)
+		else:
+			raise(KeyError)
+	def __delitem__(self, Key):
+		if type(Key) is int:
+			Tab = self._owner.parent.windowController().tabBarControl().viewControllers()[Key]
+			self._owner.parent.windowController().tabBarControl().closeTabItem_(Tab)
+		else:
+			raise(KeyError)
+	def __iter__(self):
+		for index in range(self.__len__()):
+			yield self.__getitem__(index)
+	def __len__(self):
+		return len(self._owner.parent.windowController().tabBarControl().viewControllers()) - 1
+	def values(self):
+		return self._owner.parent.windowController().tabBarControl().viewControllers()[1:]
+GSFont.tabs = property(lambda self: FontTabsProxy(self))
+
+
+def __GSFont__addTab__(self, tabText = ""):
+	if self.parent:
+		self.parent.windowController().addTabWithString_(tabText)
+
+GSFont.addTab = __GSFont__addTab__
+
+'''.. function:: newTab(tabText)
+	
+	Opens a new tab in the current document window
+	
+	:param tabText: The glyph names need to be separated by '/'
+'''
+
+## GSEditViewController
+
+GSEditViewController.text = property(lambda self: self.graphicView().displayString(),
+									 lambda self, value: self.graphicView().setDisplayString_(value))
+
+def __GSEditViewController_layers__(self):
+	try:
+		return self.parent.windowController().activeEditViewController().graphicView().displayString()
+	except:
+		pass
+	return None
+def __GSEditViewController_set_layers__(self, layers):
+	# if not (type(layers) is type(list) or type(layers) == NSArray):
+	# 	raise ValueError
+	string = NSMutableAttributedString.alloc().init()
+	Font = self.representedObject()
+	for l in layers:
+		if l.className() == "GSLayer":
+			char = Font.characterForGlyph_(l.parent)
+			A = NSAttributedString.alloc().initWithString_attributes_(unichr(char), { "GSLayerIdAttrib" : l.associatedMasterId })
+		elif l.className() == "GSBackgroundLayer":
+			char = Font.characterForGlyph_(l.parent)
+			A = NSAttributedString.alloc().initWithString_attributes_(unichr(char), { "GSLayerIdAttrib" : l.associatedMasterId, "GSShowBackgroundAttrib": True })
+		elif l.className() == "GSControlLayer":
+			char = l.parent().unicodeChar()
+			A = NSAttributedString.alloc().initWithString_(unichr(char))
+		else:
+			raise ValueError
+		string.appendAttributedString_(A)
+	self.graphicView().textStorage().setText_(string)
+
+GSEditViewController.layers = property(lambda self: self.graphicView().layoutManager().cachedGlyphs(),
+							  lambda self, value: __GSEditViewController_set_layers__(self, value))
+
 
 def Font_filepath(self):
 	if self.parent is not None and self.parent.fileURL() is not None:
@@ -4067,17 +4150,6 @@ def Message(title, message, OKButton=None):
 	:param title:
 	:param message:
 	:param OKButton:
-'''
-
-def newTab(tabText):
-	from PyObjCTools.AppHelper import callAfter
-	callAfter(Glyphs.currentDocument.windowController().addTabWithString_, tabText)
-
-'''.. function:: newTab(tabText)
-	
-	Opens a new tab in the current document window
-	
-	:param tabText: The glyphnames need to be seperated by '/'
 '''
 
 
