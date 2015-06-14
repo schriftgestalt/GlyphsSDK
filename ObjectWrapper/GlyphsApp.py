@@ -2241,8 +2241,7 @@ GSGlyph.layers = property(			lambda self: GlyphLayerProxy(self))
 		font.glyphs['a'].layers.append(newLayer)
 
 		# duplicate a layer under a different name
-		import copy
-		newLayer = copy.copy(font.glyphs['a'].layers[0])
+		newLayer = font.glyphs['a'].layers[0].copy()
 		newLayer.name = 'Copy of layer'
 		# FYI, this will still be the old layer ID (in case of duplicating) at this point
 		print newLayer.layerId
@@ -2260,7 +2259,6 @@ GSGlyph.layers = property(			lambda self: GlyphLayerProxy(self))
 		del(font.glyphs['a'].layers[-1])
 
 		# delete currently active layer
-		# (might not show immediately in UI)
 		del(font.glyphs['a'].layers[font.selectedLayers[0].layerId])
 		
 '''
@@ -2292,7 +2290,7 @@ GSGlyph.string =		  property( lambda self: _get_Glyphs_String(self))
 GSGlyph.id = property(				lambda self: str(self.valueForKey_("id")),
 									lambda self, value: self.setId_(value))
 '''.. attribute:: id
-	A unique identifier for each glyph
+	An unique identifier for each glyph
 	:type: unicode'''
 GSGlyph.category = property(		lambda self: self.valueForKey_("category"))
 '''.. attribute:: category
@@ -2572,7 +2570,7 @@ GSLayer.guideLines = property(lambda self: LayerGuideLinesProxy(self),
 
 GSLayer.guides = property(lambda self: LayerGuideLinesProxy(self),
 							  lambda self, value: self.setGuideLines_(NSMutableArray.arrayWithArray_(value)))
-'''.. attribute:: guideLines
+'''.. attribute:: guides
 	List of :class:`GSGuideLine` objects.
 	:type: list
 
@@ -2580,17 +2578,17 @@ GSLayer.guides = property(lambda self: LayerGuideLinesProxy(self),
 
 		layer = Glyphs.font.selectedLayers[0] # current layer
 
-		# access all guidelines
+		# access all guides
 		for guide in layer.guides:
 			print guide
 
 		# add guideline
-		newGuideLine = GSGuideLine()
-		newGuideLine.position = NSPoint(100, 100)
-		newGuideLine.angle = -10.0
-		layer.guides.append(newGuideLine)
+		newGuide = GSGuideLine()
+		newGuide.position = NSPoint(100, 100)
+		newGuide.angle = -10.0
+		layer.guides.append(newGuide)
 
-		# delete guidelines
+		# delete guide
 		del(layer.guides[0])
 '''
 
@@ -2608,14 +2606,10 @@ GSLayer.hints = property(lambda self: LayerHintsProxy(self),
 		for hint in layer.hints:
 			print hint
 
-		# add guideline
-		newGuideLine = GSGuideLine()
-		newGuideLine.position = NSPoint(100, 100)
-		newGuideLine.angle = -10.0
-		layer.guides.append(newGuideLine)
+		## todo: add hint
 
-		# delete guidelines
-		del(layer.guides[0])
+		# delete hint
+		del(layer.hint[0])
 '''
 
 GSLayer.anchors = property(lambda self: LayerAnchorsProxy(self))
@@ -2645,8 +2639,6 @@ GSLayer.paths = property(	lambda self: LayerPathsProxy(self),
 	:type: list
 
 	.. code-block:: python
-
-		layer = Glyphs.font.selectedLayers[0] # current layer
 
 		# access all paths
 		for path in layer.paths:
@@ -2754,8 +2746,6 @@ Functions
 
 	.. code-block:: python
 
-		glyph = Glyphs.font.selectedLayers[0].parent # current glyph
-
 		# sync metrics of all layers of this glyph
 		for layer in glyph.layers:
 			layer.syncMetrics()
@@ -2845,14 +2835,14 @@ GSLayer.intersectionsBetweenPoints = IntersectionsBetweenPoints
 		layer = Glyphs.font.selectedLayers[0] # current layer
 
 		# show all intersections with glyph at y=100
-		intersections = layer.intersectionsBetweenPoints(NSPoint(0, 100), NSPoint(layer.width, 100))
+		intersections = layer.intersectionsBetweenPoints(NSPoint(-1000, 100), NSPoint(layer.width+1000, 100))
 		print intersections
 		
 		# left sidebearing at measurement line
-		print intersections[1].pointValue().x - intersections[0].pointValue().x
+		print intersections[1].pointValue().x
 
 		# right sidebearing at measurement line
-		print intersections[-1].pointValue().x - intersections[-2].pointValue().x
+		print layer.width - intersections[-2].pointValue().x
 '''
 
 
@@ -3140,7 +3130,6 @@ GSComponent.bounds = property(		lambda self: self.pyobjc_instanceMethods.bounds(
 	
 	.. code-block:: python
 
-		layer = Glyphs.font.selectedLayers[0] # current layer
 		component = layer.components[0] # first component
 
 		# origin
@@ -3263,8 +3252,6 @@ GSPath.nodes = property(		lambda self: PathNodesProxy(self),
 	
 	.. code-block:: python
 
-		layer = Glyphs.font.selectedLayers[0] # current layer
-
 		# access all nodes
 		for path in layer.paths:
 			for node in path.nodes:
@@ -3279,7 +3266,6 @@ GSPath.segments = property(		lambda self: self.valueForKey_("segments"),
 	:type: list
 
 	.. code-block:: python
-		layer = Glyphs.font.selectedLayers[0] # current layer
 
 		# access all segments
 		for path in layer.paths:
@@ -3305,7 +3291,6 @@ GSPath.bounds = property(	 lambda self: self.pyobjc_instanceMethods.bounds() )
 
 	.. code-block:: python
 
-		layer = Glyphs.font.selectedLayers[0] # current layer
 		path = layer.paths[0] # first path
 
 		# origin
@@ -3679,7 +3664,6 @@ Methods
 	GetOpenFile()
 	GetSaveFile()
 	Message()
-	newTab()
 	'''
 
 
