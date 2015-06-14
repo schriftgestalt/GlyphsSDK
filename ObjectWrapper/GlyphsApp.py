@@ -120,7 +120,7 @@ The mothership. Everything starts here.
 Properties
 ----------
 '''
-GSApplication.currentDocument = property(lambda self: NSDocumentController.sharedDocumentController().currentDocument())
+GSApplication.currentDocument = property(lambda self: NSApplication.sharedApplication().orderedDocuments()[0])
 
 GSApplication.documents = property(lambda self: AppDocumentProxy(self))
 
