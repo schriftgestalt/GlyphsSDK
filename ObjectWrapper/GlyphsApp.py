@@ -3741,7 +3741,7 @@ Properties
 
 '''
 
-GSHint.name = property(lambda self: self.pyobjc_instanceMethods.name())
+GSGlyphInfo.name = property(lambda self: self.pyobjc_instanceMethods.name())
 
 '''
 .. attribute:: name
@@ -3749,7 +3749,7 @@ GSHint.name = property(lambda self: self.pyobjc_instanceMethods.name())
 	:type: unicode
 '''
 
-GSHint.productionName = property(lambda self: self.pyobjc_instanceMethods.production())
+GSGlyphInfo.productionName = property(lambda self: self.pyobjc_instanceMethods.production())
 
 '''
 .. attribute:: productionName
@@ -3757,7 +3757,7 @@ GSHint.productionName = property(lambda self: self.pyobjc_instanceMethods.produc
 	:type: unicode
 '''
 
-GSHint.category = property(lambda self: self.pyobjc_instanceMethods.category())
+GSGlyphInfo.category = property(lambda self: self.pyobjc_instanceMethods.category())
 
 '''
 .. attribute:: category
@@ -3766,7 +3766,7 @@ GSHint.category = property(lambda self: self.pyobjc_instanceMethods.category())
 	:type: unicode
 '''
 
-GSHint.subCategory = property(lambda self: self.pyobjc_instanceMethods.subCategory())
+GSGlyphInfo.subCategory = property(lambda self: self.pyobjc_instanceMethods.subCategory())
 
 '''
 .. attribute:: subCategory
@@ -3775,7 +3775,7 @@ GSHint.subCategory = property(lambda self: self.pyobjc_instanceMethods.subCatego
 	:type: unicode
 '''
 
-GSHint.components = property(lambda self: self.pyobjc_instanceMethods.components())
+GSGlyphInfo.components = property(lambda self: self.pyobjc_instanceMethods.components())
 
 '''
 .. attribute:: components
@@ -3783,7 +3783,7 @@ GSHint.components = property(lambda self: self.pyobjc_instanceMethods.components
 	:type: list
 '''
 
-GSHint.accents = property(lambda self: self.pyobjc_instanceMethods.accents())
+GSGlyphInfo.accents = property(lambda self: self.pyobjc_instanceMethods.accents())
 
 '''
 .. attribute:: accents
@@ -3791,7 +3791,7 @@ GSHint.accents = property(lambda self: self.pyobjc_instanceMethods.accents())
 	:type: list
 '''
 
-GSHint.anchors = property(lambda self: self.pyobjc_instanceMethods.anchors())
+GSGlyphInfo.anchors = property(lambda self: self.pyobjc_instanceMethods.anchors())
 
 '''
 .. attribute:: anchors
@@ -3799,7 +3799,7 @@ GSHint.anchors = property(lambda self: self.pyobjc_instanceMethods.anchors())
 	:type: list
 '''
 
-GSHint.unicode = property(lambda self: self.pyobjc_instanceMethods.unicode())
+GSGlyphInfo.unicode = property(lambda self: self.pyobjc_instanceMethods.unicode())
 
 '''
 .. attribute:: unicode
@@ -3807,15 +3807,7 @@ GSHint.unicode = property(lambda self: self.pyobjc_instanceMethods.unicode())
 	:type: list
 '''
 
-GSHint.unicode2 = property(lambda self: self.pyobjc_instanceMethods.unicode2())
-
-'''
-.. attribute:: unicode2
-	Second Unicode value of glyph, if defined
-	:type: list
-'''
-
-GSHint.script = property(lambda self: self.pyobjc_instanceMethods.script())
+GSGlyphInfo.script = property(lambda self: self.pyobjc_instanceMethods.script())
 
 '''
 .. attribute:: script
