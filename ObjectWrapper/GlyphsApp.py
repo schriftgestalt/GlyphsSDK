@@ -3672,7 +3672,9 @@ Functions
 def GSGlyphInfo__new__(typ, *args, **kwargs):
 	return GSGlyphInfo.alloc().init()
 GSGlyphInfo.__new__ = GSGlyphInfo__new__;
-
+def GSGlyphInfo__init__(self):
+	pass
+GSGlyphInfo.__init__ = GSGlyphInfo__init__;
 
 def GSGlyphInfo__repr__(self):
 	return "<GSGlyphInfo '%s'>" % (self.name())
