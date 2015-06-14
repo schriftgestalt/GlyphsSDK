@@ -942,8 +942,7 @@ GSFont.glyphs = property(lambda self: FontGlyphsProxy(self),
 		font.glyphs.append(GSGlyph('adieresis'))
 		
 		# Duplicate a glyph under a different name
-		import copy
-		newGlyph = copy.copy(font.glyphs['A'])
+		newGlyph = font.glyphs['A'].copy()
 		newGlyph.name = 'A.alt'
 		font.glyphs.append(newGlyph)
 
