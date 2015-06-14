@@ -954,18 +954,66 @@ GSFont.classes = property(lambda self: FontClassesProxy(self),
 						  lambda self, value: self.setClasses_(NSMutableArray.arrayWithArray_(value)))
 '''.. attribute:: classes
 	Collection of :class:`GSClass <GSClass>` objects, representing OpenType glyph classes.
-	:type: list'''
+	:type: list
+	
+	.. code-block:: python
+	
+		# add a class
+		font.classes.append(GSClass('uppercaseLetters', 'A B C D E'))
+	
+		# access all classes
+		for class in font.classes:
+			print class.name
+	
+		# access one class
+		print font.classes['uppercaseLetters'].code
+	
+		# delete a class
+		del(font.classes['uppercaseLetters'])
+'''
 GSFont.features = property(lambda self: FontFeaturesProxy(self),
 						   lambda self, value: self.setFeatures_(NSMutableArray.arrayWithArray_(value)))
 '''.. attribute:: features
 	Collection of :class:`GSFeature <GSFeature>` objects, representing OpenType features.
-	:type: list'''
+	:type: list
+
+	.. code-block:: python
+	
+		# add a feature
+		font.features.append(GSFeature('liga', 'sub f i by fi;'))
+	
+		# access all features
+		for feature in font.features:
+			print feature.code
+	
+		# access one feature
+		print font.features['liga'].code
+	
+		# delete a feature
+		del(font.features['liga'])
+'''
 
 GSFont.featurePrefixes = property(lambda self: FontFeaturePrefixesProxy(self),
 								  lambda self, value: self.setFeaturePrefixes_(NSMutableArray.arrayWithArray_(value)))
 '''.. attribute:: featurePrefixes
 	Collection of :class:`GSFeaturePrefix <GSFeaturePrefix>` objects, containing stuff that needs to be outside of the OpenType features.
-	:type: list'''
+	:type: list
+
+	.. code-block:: python
+	
+		# add a prefix
+		font.featurePrefixes.append(GSFeaturePrefix('LanguageSystems', 'languagesystem DFLT dflt;'))
+	
+		# access all prefixes
+		for prefix in font.featurePrefixes:
+			print prefix.code
+	
+		# access one prefix
+		print font.featurePrefixes['LanguageSystems'].code
+	
+		# delete
+		del(font.featurePrefixes['LanguageSystems'])
+'''
 
 GSFont.copyright = property(lambda self: self.valueForKey_("copyright"), lambda self, value: self.setValue_forKey_(value, "copyright"))
 '''.. attribute:: copyright
@@ -1013,7 +1061,7 @@ GSFont.note = property(lambda self: self.valueForKey_("note"),
 	:type: unicode'''
 GSFont.kerning = property(lambda self: self.valueForKey_("kerning"), lambda self, value: self.setKerning_(value))
 '''.. attribute:: kerning
-	A multi-level dictionary. The first level's key is the :class:`GSFontMaster <GSFontMaster>`.id (each master has its own kerning), the second level's key is the :class:`GSGlyph <GSGlyph>`.id or class id (@MMK_L_XX), the third level's key is again a glyph id or class id (@MMK_R_XX). The values are the actual kerning values.
+	A multi-level dictionary. The first level's key is the :class:`GSFontMaster`.id (each master has its own kerning), the second level's key is the :class:`GSGlyph <GSGlyph>`.id or class id (@MMK_L_XX), the third level's key is again a glyph id or class id (@MMK_R_XX). The values are the actual kerning values.
 	
 	To set a value, is is better to use the method :class:`GSFont`.setKerningForPair(). This ensures a better data integrity (and is faster).
 	:type: dict
@@ -1766,20 +1814,8 @@ GSCustomParameter.value = property(lambda self: self.valueForKey_("value"), lamb
 ===============================================================================
 
 Implementation of the class object. It is used to store OpenType classes.
-.. code-block:: python
-	
-	# add a class
-	font.classes.append(GSClass('uppercaseLetters', 'A B C D E'))
-	
-	# access all classes
-	for class in font.classes:
-		print class.name
-	
-	# access one class
-	print font.classes['uppercaseLetters'].code
-	
-	# delete
-	del(font.classes['uppercaseLetters'])
+
+For details on how to access them, please look at :class:`GSFont`.classes
 
 .. class:: GSClass([tag, code])
 
@@ -1851,20 +1887,7 @@ GSClass.automatic = property(lambda self: self.valueForKey_("automatic").boolVal
 	
 Implementation of the featurePrefix object. It is used to store things that need to be outside of a feature like standalone lookups.
 
-.. code-block:: python
-	
-	# add a prefix
-	font.featurePrefixes.append(GSFeaturePrefix('LanguageSystems', 'languagesystem DFLT dflt;\nlanguagesystem latn dflt;'))
-	
-	# access all prefixes
-	for prefix in font.featurePrefixes:
-		print prefix.code
-	
-	# access one prefix
-	print font.featurePrefixes['LanguageSystems'].code
-	
-	# delete
-	del(font.featurePrefixes['LanguageSystems'])
+For details on how to access them, please look at :class:`GSFont`.featurePrefixes
 	
 .. class:: GSFeaturePrefix([tag, code])
 	
@@ -1941,20 +1964,7 @@ GSFeaturePrefix.automatic = property(lambda self: self.valueForKey_("automatic")
 
 Implementation of the feature object. It is used to implement OpenType Features in the Font Info.
 
-.. code-block:: python
-	
-	# add a feature
-	font.features.append(GSFeature('liga', 'sub f i by fi;'))
-	
-	# access all features
-	for feature in font.features:
-		print feature.code
-	
-	# access one feature
-	print font.features['liga'].code
-	
-	# delete
-	del(font.features['liga'])
+For details on how to access them, please look at :class:`GSFont`.features
 
 .. class:: GSFeature([tag, code])
 	
@@ -2137,7 +2147,7 @@ GSSubstitution.scriptTag = property(lambda self: self.valueForKey_("scriptTag"),
 
 Implementation of the glyph object.
 
-For details on how to access these glyphs, please see :class:`GSFont.glyphs`.
+For details on how to access these glyphs, please see :class:`GSFont`.glyphs
 
 :param name: The glyph name
 	
@@ -2428,7 +2438,7 @@ GSGlyph.endUndo = __EndUndo
 
 Implementation of the layer object.
 
-For details on how to access these layers, please see :class:`GSGlyph.layers`.
+For details on how to access these layers, please see :class:`GSGlyph`.layers
 
 **Properties**
 
@@ -2945,7 +2955,7 @@ GSLayer._invalidateContours = _invalidateContours_
 
 Implementation of the anchor object.
 
-For details on how to access them, please see :class:`GSLayer.anchors`.
+For details on how to access them, please see :class:`GSLayer`.anchors
 
 .. function::GSAnchor([name, pt])
 
@@ -3034,7 +3044,7 @@ GSAnchor.draw = DrawAnchorWithPen
 	
 Implementation of the component object.
 
-For details on how to access them, please see :class:`GSLayer.components`.
+For details on how to access them, please see :class:`GSLayer`.components
 
 	:param glyph: a :class:`GSGlyph` object or the glyph name
 	:param position: the position of the component as NSPoint
@@ -3106,7 +3116,7 @@ GSComponent.componentName = property(lambda self: self.valueForKey_("componentNa
 
 GSComponent.component = property(	lambda self: self.valueForKey_("component"))
 '''.. attribute:: component
-	The :class:`GSGlyph` the component is pointing to. This is read only. In order to change the referenced base glyph, set :class:`GSComponent.componentName` to the new glyph name.
+	The :class:`GSGlyph` the component is pointing to. This is read only. In order to change the referenced base glyph, set :class:`GSComponent`.componentName to the new glyph name.
 	:type: :class:`GSGlyph`
 '''
 
@@ -3193,7 +3203,7 @@ Functions
 
 Implementation of the path object.
 
-For details on how to access them, please see :class:`GSLayer.paths`.
+For details on how to access them, please see :class:`GSLayer`.paths
 
 If you build a path in code, make sure that the structure is valid. A curve node has to be preceded by two off-curve nodes. And an open path has to start with a line node.
 
@@ -3366,7 +3376,7 @@ GSPath.draw = DrawPathWithPen
 
 Implementation of the node object.
 
-For details on how to access them, please see :class:`GSPath.nodes`.
+For details on how to access them, please see :class:`GSPath`.nodes
 
 
 .. class:: GSNode([pt, type])
@@ -3447,7 +3457,7 @@ GSNode.connection = property(	lambda self: self.valueForKey_("connection"),
 
 Implementation of the guide line object.
 
-For details on how to access them, please see :class:`GSLayer.guides`.
+For details on how to access them, please see :class:`GSLayer`.guides
 
 
 .. class:: GSGuideLine()
@@ -3509,7 +3519,7 @@ GSGuideLine.angle = property(lambda self: self.valueForKey_("angle").floatValue(
 
 Implementation of the hint object.
 
-For details on how to access them, please see :class:`GSLayer.hints`.
+For details on how to access them, please see :class:`GSLayer`.hints
 
 .. class:: GSHint()
 
@@ -3608,46 +3618,114 @@ GSHint.horizontal = property(	lambda self: self.valueForKey_("horizontal").boolV
 
 Implementation of the GSGlyphsInfo object.
 
-.. class:: GSGlyphsInfo()
+This is a so called Singleton and doesn't need to be instantiated. It is available right away like so:
+
+.. code-block:: python
+
+	GSGlyphsInfo.glyphInfoForUnicode('01D1')
+
+
+
+.. class:: GSGlyphsInfo
 
 .. autosummary::
 
-	niceNameForName
-	nameForUnicode
+	glyphInfoForUnicode_()
+	glyphInfoForName_()
+
 
 ----------
-Properties
+Functions
 ----------
+
+.. function:: glyphInfoForUnicode_(Unicode)
+	
+	Returns :class:`GSGlyphInfo` object for this Unicode.
+	
+	:param Name: Hex Unicode
+	:return: :class:`GSGlyphInfo`
+
+
+.. function:: glyphInfoForName_(Name)
+	
+	Returns :class:`GSGlyphInfo` object for this glyph name.
+	
+	:param Name: A glyph name
+	:return: :class:`GSGlyphInfo`
 
 '''
 
 
-def GSGlyphsInfo_niceName(self, Name):
-	return GSGlyphsInfo.niceGlyphNameForName_(Name)
-'''.. function:: niceNameForName(Name)
+
+
+##################################################################################
+#
+#
+#
+#           GSGlyphInfo
+#
+#
+#
+##################################################################################
+
+
+def GSGlyphInfo__new__(typ, *args, **kwargs):
+	return GSGlyphInfo.alloc().init()
+GSGlyphInfo.__new__ = GSGlyphInfo__new__;
+
+
+def GSGlyphInfo__repr__(self):
+	return "<GSGlyphInfo '%s'>" % (self.name())
+GSGlyphInfo.__repr__ = GSGlyphInfo__repr__;
+
+
+'''
+
+:mod:`GSGlyphInfo`
+===============================================================================
+
+Implementation of the GSGlyphInfo object.
+
+This contains valuable information from the glyph database. See :class:`GSGlyphsInfo` for how to create these objects.
+
+.. class:: GSGlyphInfo()
+
+.. autosummary::
+
+	niceGlyphNameForName_()
+	glyphInfoForUnicode
+	glyphInfoForName
+
+
+----------
+Functions
+----------
+
+.. function:: glyphInfoForUnicode_(Unicode)
 	
-	Converts the Name in a readable name. (converts "uni01D1" in "Ocaron")
+	Returns :class:`GSGlyphInfo` object for this Unicode.
+	
+	:param Name: Hex Unicode
+	:return: :class:`GSGlyphInfo`
+
+
+.. function:: glyphInfoForName(Name)
+	
+	Returns :class:`GSGlyphInfo` object for this glyph name.
 	
 	:param Name: A glyph name
-	:return: The converted Name.
-	:rtype: string'''
-
-GSGlyphsInfo.niceNameForName = GSGlyphsInfo_niceName
+	:return: :class:`GSGlyphInfo`
 
 
-def GSGlyphsInfo_nameForUnicode(self, Unicode):
-	GlyphInfo = GSGlyphsInfo.glyphInfoForUnicode_(Unicode)
-	return GlyphInfo.name()
+'''
 
-'''.. function:: nameForUnicode(Name)
-	
-	Converts the Hex Unicode String in a readable name. (converts "01D1" in "Ocaron")
-	
-	:param Name: A unicode as string representation
-	:return: The Name.
-	:rtype: string'''
 
-GSGlyphsInfo.nameForUnicode =  GSGlyphsInfo_nameForUnicode
+
+
+
+
+
+
 
 
 '''
