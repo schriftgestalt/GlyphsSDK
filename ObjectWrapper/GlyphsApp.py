@@ -9,40 +9,6 @@ import time, math, sys, os
 __all__ = ["Glyphs", "GetFile", "GSMOVE", "GSLINE", "GSCURVE", "GSOFFCURVE", "GSSHARP", "GSSMOOTH", "TOPGHOST", "STEM", "BOTTOMGHOST", "TTANCHOR", "TTSTEM", "TTALIGN", "TTINTERPOLATE", "TTDIAGONAL", "CORNER", "CAP", "TTDONTROUND", "TTROUND", "TTROUNDUP", "TTROUNDDOWN", "TRIPLE", "divideCurve", "distance", "addPoints", "subtractPoints", "GetFolder", "GetSaveFile", "GetOpenFile", "Message", "newTab"]
 
 
-def Garbage(length, uppercase = True, lowercase = False, numbers = True, punctuation = False):
-	u"""\
-	Return string containing garbage.
-	"""
-	
-	import random
-	
-	uppercaseparts = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-	lowercaseparts = 'abcdefghijklmnopqrstuvwxyz'
-	numberparts = '0123456789'
-	punctuationparts = '_'
-	
-	pool = ''
-	if uppercase:
-		pool += uppercaseparts
-	if lowercase:
-		pool += lowercaseparts
-	if numbers:
-		pool += numberparts
-	if punctuation:
-		pool += punctuationparts
-	
-	if not pool:
-		pool = lowercaseparts
-	
-	garbage = ''
-	
-	while len(garbage) < length:
-		garbage += random.choice(pool)
-	
-	return garbage
-
-
-
 class Proxy(object):
 	def __init__(self, owner):
 		self._owner = owner
@@ -697,7 +663,7 @@ class GlyphLayerProxy (Proxy):
 	def append(self, Layer):
 		if not Layer.associatedMasterId:
 			Layer.associatedMasterId = self._owner.parent.masters[0].id
-		self._owner.setLayer_forKey_(Layer, Garbage(40))
+		self._owner.setLayer_forKey_(Layer, NSString.UUID())
 
 class LayerComponentsProxy (Proxy):
 	def __getitem__(self, i):
