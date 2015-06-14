@@ -9,6 +9,40 @@ import time, math, sys, os
 __all__ = ["Glyphs", "GetFile", "GSMOVE", "GSLINE", "GSCURVE", "GSOFFCURVE", "GSSHARP", "GSSMOOTH", "TOPGHOST", "STEM", "BOTTOMGHOST", "TTANCHOR", "TTSTEM", "TTALIGN", "TTINTERPOLATE", "TTDIAGONAL", "CORNER", "CAP", "TTDONTROUND", "TTROUND", "TTROUNDUP", "TTROUNDDOWN", "TRIPLE", "divideCurve", "distance", "addPoints", "subtractPoints", "GetFolder", "GetSaveFile", "GetOpenFile", "Message", "newTab"]
 
 
+def Garbage(length, uppercase = True, lowercase = False, numbers = True, punctuation = False):
+	u"""\
+	Return string containing garbage.
+	"""
+	
+	import random
+	
+	uppercaseparts = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+	lowercaseparts = 'abcdefghijklmnopqrstuvwxyz'
+	numberparts = '0123456789'
+	punctuationparts = '_'
+	
+	pool = ''
+	if uppercase:
+		pool += uppercaseparts
+	if lowercase:
+		pool += lowercaseparts
+	if numbers:
+		pool += numberparts
+	if punctuation:
+		pool += punctuationparts
+	
+	if not pool:
+		pool = lowercaseparts
+	
+	garbage = ''
+	
+	while len(garbage) < length:
+		garbage += random.choice(pool)
+	
+	return garbage
+
+
+
 class Proxy(object):
 	def __init__(self, owner):
 		self._owner = owner
@@ -61,7 +95,7 @@ The mothership. Everything starts here.
 	<Glyphs.app>
 
 	
-.. class:: GSApplication
+.. class:: GSApplication()
 
 **Properties**
 
@@ -254,6 +288,10 @@ GSApplication.showGlyphInfoPanelWithSearchString = __showGlyphInfoPanelWithSearc
 	:param String: The search term
 	
 	'''
+
+
+
+
 
 
 
@@ -656,6 +694,10 @@ class GlyphLayerProxy (Proxy):
 		return self._owner.countOfLayers()
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.layers().allValues()
+	def append(self, Layer):
+		if not Layer.associatedMasterId:
+			Layer.associatedMasterId = self._owner.parent.masters[0].id
+		self._owner.setLayer_forKey_(Layer, Garbage(40))
 
 class LayerComponentsProxy (Proxy):
 	def __getitem__(self, i):
@@ -794,7 +836,7 @@ Implementation of the font object. This object is host to the :class:`Masters <G
 
 Also, the :class:`Glyphs <GSGlyph>` are attached to the Font object right here, not one level down to the masters. The different master's glyphs are available as :class:`Layers <GSLayer>` attached to the :class:`Glyph <GSGlyph>` objects which are attached here.
 
-.. class:: GSFont
+.. class:: GSFont()
 
 **Properties**
 
@@ -822,10 +864,11 @@ Also, the :class:`Glyphs <GSGlyph>` are attached to the Font object right here, 
 	gridLength
 	disablesNiceNames
 	customParameters
-	filepath
-	selectedFontMaster
 	selectedLayers
+	selectedFontMaster
+	masterIndex
 	currentText
+	filepath
 
 **Functions**
 
@@ -917,18 +960,30 @@ GSFont.glyphs = property(lambda self: FontGlyphsProxy(self),
 '''.. attribute:: glyphs
 	Collection of :class:`GSGlyph <GSGlyph>`. Returns a list, but you may also call glyphs using index or glyph name as key.
 	.. code-block:: python
+		# Access all glyphs
 		for glyph in font.glyphs:
 			print glyph
 		<GSGlyph "A" with 4 layers>
 		<GSGlyph "B" with 4 layers>
 		<GSGlyph "C" with 4 layers>
 		...
-	.. code-block:: python
+
+		# Access one glyph
 		print font.glyphs['A']
 		<GSGlyph "A" with 4 layers>
-	.. code-block:: python
-		print font.glyphs[20]
-		<GSGlyph "Aacute" with 2 layers>
+		
+		# Add a glyph
+		font.glyphs.append(GSGlyph('adieresis'))
+		
+		# Duplicate a glyph under a different name
+		import copy
+		newGlyph = copy.copy(font.glyphs['A'])
+		newGlyph.name = 'A.alt'
+		font.glyphs.append(newGlyph)
+
+		# Delete a glyph
+		del(font.glyphs['A.alt'])
+
 	:type: list, dict'''
 GSFont.classes = property(lambda self: FontClassesProxy(self),
 						  lambda self, value: self.setClasses_(NSMutableArray.arrayWithArray_(value)))
@@ -1214,7 +1269,7 @@ Implementation of the master object. This corresponds with the "Masters" pane in
 
 In Glyphs.app the glyphs of each master are reachable not here, but as :class:`Layers <GSLayer>` attached to the :class:`Glyphs <GSGlyph>` attached to the :class:`Font <GSFont>` object. See info graphic on top for better understanding.
 
-.. class:: GSFontMaster
+.. class:: GSFontMaster()
 
 '''
 
@@ -1455,7 +1510,7 @@ GSAlignmentZone.size = property(lambda self: self.valueForKey_("size"), lambda s
 
 Implementation of the instance object. This corresponds with the "Instances" pane in the Font Info.
 
-.. class:: GSInstance
+.. class:: GSInstance()
 
 '''
 
@@ -1657,7 +1712,7 @@ GSInstance.generate = __Instance_Export__
 :mod:`GSCustomParameter`
 ===============================================================================
 
-Implementation of the Custom Property object. It stores a name/value pair.
+Implementation of the Custom Parameter object. It stores a name/value pair.
 
 You can append GSCustomParameter objects for example to GSFont.customParameters, but this way you may end up with duplicates.
 It is best to access the custom parameters through its dictionary interface like this:
@@ -1679,20 +1734,20 @@ It is best to access the custom parameters through its dictionary interface like
 	:param size: The value
 '''
 
-def CustomProperty__new__(typ, *args, **kwargs):
+def CustomParameter__new__(typ, *args, **kwargs):
 	return GSCustomParameter.alloc().init()
 
-GSCustomParameter.__new__ = CustomProperty__new__;
+GSCustomParameter.__new__ = CustomParameter__new__;
 
-def CustomProperty__init__(self, name, value):
+def CustomParameter__init__(self, name, value):
 	self.setName_(name)
 	self.setValue_(value)
 
-GSCustomParameter.__init__ = CustomProperty__init__;
+GSCustomParameter.__init__ = CustomParameter__init__;
 
-def CustomProperty__repr__(self):
+def CustomParameter__repr__(self):
 	return "<GSCustomParameter %s: %s>" % (self.name, self.value)
-GSCustomParameter.__repr__ = CustomProperty__repr__;
+GSCustomParameter.__repr__ = CustomParameter__repr__;
 
 
 '''
@@ -2113,13 +2168,13 @@ GSSubstitution.scriptTag = property(lambda self: self.valueForKey_("scriptTag"),
 :mod:`GSGlyph`
 ===============================================================================
 
-.. class:: GSGlyph
+.. class:: GSGlyph([name])
 
-	Implementation of the glyph object.
+Implementation of the glyph object.
 
-	GSGlyph([name])
+For details on how to access these glyphs, please see :class:`GSFont.glyphs`.
 
-	:param name: The glyph name
+:param name: The glyph name
 	
 	
 	
@@ -2182,20 +2237,25 @@ GSGlyph.parent = property(			lambda self: self.valueForKey_("parent"),
 GSGlyph.layers = property(			lambda self: GlyphLayerProxy(self))
 
 '''.. attribute:: layers
-	The layers of the glyph, collection of :class:`GSLayer` objects. You can access them either by index or by :attr:`GSFontMaster.id <id>`.
+	The layers of the glyph, collection of :class:`GSLayer` objects. You can access them either by index or by layer ID, which can be a :attr:`GSFontMaster.id <id>`.
+	The layer IDs are usually a unique string chosen by Glyphs.app and not set manually. They may look like this: 3B85FBE0-2D2B-4203-8F3D-7112D42D745E
 
 	:type: list, dict
 
 	.. code-block:: python
 
-		# get active glyph
-		glyph = font.selectedLayers[0].parent
+		# get active layer
+		layer = font.selectedLayers[0]
+		
+		# get glyph of this layer
+		glyph = layer.parent
 		
 		# access all layers of this glyph
 		for layer in glyph.layers:
 			print layer.name
 			
 		# access layer of currently selected master of active glyph ...
+		# (also use this to access a specific layer of glyphs selected in the Font View)
 		layer = glyph.layers[font.selectedFontMaster.id]
 		
 		# ... which is exactly the same as:
@@ -2207,6 +2267,37 @@ GSGlyph.layers = property(			lambda self: GlyphLayerProxy(self))
 				id = master.id
 				break
 		layer = glyph.layers[id]
+
+		# add a new layer
+		newLayer = GSLayer()
+		newLayer.name = '{125, 100}' # (example for glyph-level intermediate master)
+		# you may set the master ID that this layer will be associated with, otherwise the first master will be used
+		newLayer.associatedMasterId = font.masters[-1].id # attach to last master
+		font.glyphs['a'].layers.append(newLayer)
+
+		# duplicate a layer under a different name
+		import copy
+		newLayer = copy.copy(font.glyphs['a'].layers[0])
+		newLayer.name = 'Copy of layer'
+		# FYI, this will still be the old layer ID (in case of duplicating) at this point
+		print newLayer.layerId
+		font.glyphs['a'].layers.append(newLayer)
+		# FYI, the layer will have been assigned a new layer ID by now, after having been appended
+		print newLayer.layerId
+
+		# replace the second master layer with another layer
+		newLayer = GSLayer()
+		newLayer.layerId = font.masters[1].id # Make sure to sync the master layer ID
+		font.glyphs['a'].layers[font.masters[1].id] = newLayer
+		
+		# delete last layer of glyph
+		# (Also works for master layers. They will be emptied)
+		del(font.glyphs['a'].layers[-1])
+
+		# delete currently active layer
+		# (might not show immediately in UI)
+		del(font.glyphs['a'].layers[font.selectedLayers[0].layerId])
+		
 '''
 GSGlyph.name = property(			lambda self: self.pyobjc_instanceMethods.name(),
 									lambda self, value: self.setName_(value))
@@ -2217,7 +2308,7 @@ GSGlyph.name = property(			lambda self: self.pyobjc_instanceMethods.name(),
 
 GSGlyph.unicode = property(			lambda self: self.pyobjc_instanceMethods.unicode() )
 '''.. attribute:: unicode
-	String with Unicode value of glyph, if encoded.
+	String with the hex Unicode value of glyph, if encoded.
 	Read only.
 	:type: unicode
 '''
@@ -2236,7 +2327,7 @@ GSGlyph.string =		  property( lambda self: _get_Glyphs_String(self))
 GSGlyph.id = property(				lambda self: str(self.valueForKey_("id")),
 									lambda self, value: self.setId_(value))
 '''.. attribute:: id
-	An unique identifier for each glyph
+	A unique identifier for each glyph
 	:type: unicode'''
 GSGlyph.category = property(		lambda self: self.valueForKey_("category"))
 '''.. attribute:: category
@@ -2277,7 +2368,7 @@ GSGlyph.export =		  property( lambda self: self.valueForKey_("export").boolValue
 									lambda self, value: self.setExport_(value))
 
 '''.. attribute:: export
-	Glyphs should export upon font generation
+	Defines whether glyph will export upon font generation
 	:type: bool'''
 
 GSGlyph.color =			  property( lambda self: self.valueForKey_("colorIndex"), 
@@ -2323,7 +2414,7 @@ GSGlyph.selected =		property( lambda self: _get_Glyphs_is_selected(self),
 								  lambda self, value: _set_Glyphs_is_selected(self, value))
 '''.. attribute:: selected
 	Return True if the Glyph is selected in the Font View. 
-	This is different to the property font.selectedLayers as this returns the selection from the active tab.
+	This is different to the property font.selectedLayers which returns the selection from the active tab.
 	:type: bool
 
 	.. code-block:: python
@@ -2370,9 +2461,11 @@ GSGlyph.endUndo = __EndUndo
 :mod:`GSLayer`
 ===============================================================================
 
-.. class:: GSLayer
+.. class:: GSLayer()
 
-Implementation of the layer object
+Implementation of the layer object.
+
+For details on how to access these layers, please see :class:`GSGlyph.layers`.
 
 **Properties**
 
@@ -2435,7 +2528,7 @@ GSLayer.parent = property(			lambda self: self.valueForKey_("parent"),
 GSBackgroundLayer.parent = property(lambda self: self.valueForKey_("parent"),
 									lambda self, value: self.setParent_(value))
 '''.. attribute:: parent
-	Reference to the :class:`Glyph <GSGlyph>` object.
+	Reference to the :class:`Glyph <GSGlyph>` object that this layer is attached to.
 	:type: :class:`GSGlyph <GSGlyph>`
 '''
 
@@ -2448,22 +2541,65 @@ GSLayer.name = property(			lambda self: self.valueForKey_("name"),
 GSLayer.associatedMasterId = property(lambda self: self.valueForKey_("associatedMasterId"),
 									lambda self, value: self.setAssociatedMasterId_(value)) 
 '''.. attribute:: associatedMasterId
-	The ID of the :class:`FontMaster <GSFontMaster>` this layer belongs to.
-	:type: unicode'''
+	The ID of the :class:`FontMaster <GSFontMaster>` this layer belongs to, in case this isn't a master layer. Every layer that isn't a master layer needs to be attached to one master layer.
+	:type: unicode
+
+	.. code-block:: python
+
+		# add a new layer
+		newLayer = GSLayer()
+		newLayer.name = '{125, 100}' # (example for glyph-level intermediate master)
+		# you may set the master ID that this layer will be associated with, otherwise the first master will be used
+		newLayer.associatedMasterId = font.masters[-1].id # attach to last master
+		font.glyphs['a'].layers.append(newLayer)
+
+'''
 GSLayer.layerId = property(lambda self: self.valueForKey_("layerId"),
 									  lambda self, value: self.setLayerId_(value)) 
 '''.. attribute:: layerId
-	The layer key is used to access the layer in the :class:`glyphs <GSGlyph>` layer dictionary.
+	The unique layer ID is used to access the layer in the :class:`glyphs <GSGlyph>` layer dictionary.
 	
 	For master layers this should be the id of the :class:`FontMaster <GSFontMaster>`.
 	It could look like this: "FBCA074D-FCF3-427E-A700-7E318A949AE5"
-	:type: unicode'''
+	:type: unicode
+
+	.. code-block:: python
+
+		# see ID of active layer
+		id = font.selectedLayers[0].layerId
+		print id
+		FBCA074D-FCF3-427E-A700-7E318A949AE5
+		
+		# access a layer by this ID
+		layer = font.glyphs['a'].layers[id]
+		layer = font.glyphs['a'].layers['FBCA074D-FCF3-427E-A700-7E318A949AE5']
+		
+		# for master layers, use ID of masters
+		layer = font.glyphs['a'].layers[font.masters[0].id]
+
+'''
+
 
 GSLayer.components = property(lambda self: LayerComponentsProxy(self),
 							  lambda self, value: self.setComponents_(NSMutableArray.arrayWithArray_(value)))
 '''.. attribute:: components
 	Collection of :class:`GSComponent` objects
 	:type: list
+
+	.. code-block:: python
+
+		layer = Glyphs.font.selectedLayers[0] # current layer
+
+		# add component
+		layer.components.append(GSComponent('dieresis'))
+
+		# add component at specific position
+		layer.components.append(GSComponent('dieresis', NSPoint(100, 100)))
+
+		# delete specific component
+		for i, component in enumerate(layer.components):
+		        if component.componentName == 'dieresis':
+		                del(layer.components[i])
 '''
 
 GSLayer.guideLines = property(lambda self: LayerGuideLinesProxy(self),
@@ -2471,9 +2607,26 @@ GSLayer.guideLines = property(lambda self: LayerGuideLinesProxy(self),
 
 GSLayer.guides = property(lambda self: LayerGuideLinesProxy(self),
 							  lambda self, value: self.setGuideLines_(NSMutableArray.arrayWithArray_(value)))
-'''.. attribute:: guides
+'''.. attribute:: guideLines
 	List of :class:`GSGuideLine` objects.
 	:type: list
+
+	.. code-block:: python
+
+		layer = Glyphs.font.selectedLayers[0] # current layer
+
+		# access all guidelines
+		for guide in layer.guides:
+			print guide
+
+		# add guideline
+		newGuideLine = GSGuideLine()
+		newGuideLine.position = NSPoint(100, 100)
+		newGuideLine.angle = -10.0
+		layer.guides.append(newGuideLine)
+
+		# delete guidelines
+		del(layer.guides[0])
 '''
 
 GSLayer.hints = property(lambda self: LayerHintsProxy(self),
@@ -2481,12 +2634,29 @@ GSLayer.hints = property(lambda self: LayerHintsProxy(self),
 '''.. attribute:: hints
 	List of :class:`GSHint` objects.
 	:type: list
+
+	.. code-block:: python
+
+		layer = Glyphs.font.selectedLayers[0] # current layer
+
+		# access all hints
+		for hint in layer.hints:
+			print hint
+
+		# add guideline
+		newGuideLine = GSGuideLine()
+		newGuideLine.position = NSPoint(100, 100)
+		newGuideLine.angle = -10.0
+		layer.guides.append(newGuideLine)
+
+		# delete guidelines
+		del(layer.guides[0])
 '''
 
 GSLayer.anchors = property(lambda self: LayerAnchorsProxy(self))
 '''.. attribute:: anchors
 	List of :class:`GSAnchor` objects.
-	:type: dict
+	:type: list, dict
 
 	.. code-block:: python
 
@@ -2508,6 +2678,17 @@ GSLayer.paths = property(	lambda self: LayerPathsProxy(self),
 '''.. attribute:: paths
 	List of :class:`GSPath <GSPath>` objects.
 	:type: list
+
+	.. code-block:: python
+
+		layer = Glyphs.font.selectedLayers[0] # current layer
+
+		# access all paths
+		for path in layer.paths:
+			print path
+
+		# delete path
+		del(layer.paths[0])
 '''
 	
 GSLayer.LSB = property(		lambda self: self.valueForKey_("LSB").floatValue(),
@@ -2582,6 +2763,13 @@ Functions
 
 	:rtype: string
 
+	.. code-block:: python
+
+		layer = Glyphs.font.selectedLayers[0] # current layer
+
+		print layer.compareString()
+		oocoocoocoocooc_oocoocoocloocoocoocoocoocoocoocoocooc_
+
 .. function:: connectAllOpenPaths()
 	
 	Closes all open paths when end points are further than 1 unit away from each other.
@@ -2599,24 +2787,63 @@ Functions
 	
 	Take over LSB and RSB from linked glyph.
 
+	.. code-block:: python
+
+		glyph = Glyphs.font.selectedLayers[0].parent # current glyph
+
+		# sync metrics of all layers of this glyph
+		for layer in glyph.layers:
+			layer.syncMetrics()
+
 .. function:: correctPathDirection()
 	
 	Corrects the path direction.
+'''
 
+def RemoveOverlap(self):
+	removeOverlapFilter = NSClassFromString("GlyphsFilterRemoveOverlap").alloc().init()
+	removeOverlapFilter.runFilterWithLayer_error_(self, None)
+GSLayer.removeOverlap = RemoveOverlap
+
+'''
 .. function:: removeOverlap()
 	
 	Joins all contours.
+'''
 
+def BeginChanges(self):
+	self.setDisableUpdates()
+	self.undoManager().beginUndoGrouping()
+GSLayer.beginChanges = BeginChanges
+
+
+'''
 .. function:: beginChanges()
 
 	Call this before you do bigger changes to the Layer.
 	This will increase performance and prevent undo problems.
 	Always call layer.endChanges() if you are finished.
+'''
 
+def EndChanges(self):
+	self.setEnableUpdates()
+	self.undoManager().endUndoGrouping()
+GSLayer.endChanges = EndChanges
+
+
+'''
 .. function:: endChanges()
 
 	Call this if you have called layer.beginChanges before. Make sure to group bot calls properly.
-	
+'''
+
+def CutBetweenPoints(self, Point1, Point2):
+	GlyphsToolOther = NSClassFromString("GlyphsToolOther")
+	GlyphsToolOther.cutPathsInLayer_forPoint_endPoint_(self, Point1, Point2)
+GSLayer.cutBetweenPoints = CutBetweenPoints
+
+
+'''	
 .. function:: cutBetweenPoints(Point1, Point2)
 
 	Cuts all paths that intersect the line from Point1 to Point2
@@ -2624,40 +2851,49 @@ Functions
 	:param Point1: one point
 	:param Point2: the other point
 
-.. function:: intersectionsBetweenPoints(Point1, Point2)
+	.. code-block:: python
 
-	Cuts all paths that intersect the line from Point1 to Point2
-	
-	:param Point1: one point
-	:param Point2: the other point
+		layer = Glyphs.font.selectedLayers[0] # current layer
 
-	available in Glyphs 2, 683
+		# cut glyph in half horizontally at y=100
+		layer.cutBetweenPoints(NSPoint(0, 100), NSPoint(layer.width, 100))
 '''
-
-def RemoveOverlap(self):
-	removeOverlapFilter = NSClassFromString("GlyphsFilterRemoveOverlap").alloc().init()
-	removeOverlapFilter.runFilterWithLayer_error_(self, None)
-
-GSLayer.removeOverlap = RemoveOverlap
-
-def BeginChanges(self):
-	self.setDisableUpdates()
-	self.undoManager().beginUndoGrouping()
-GSLayer.beginChanges = BeginChanges
-
-def EndChanges(self):
-	self.setEnableUpdates()
-	self.undoManager().endUndoGrouping()
-GSLayer.endChanges = EndChanges
-
-def CutBetweenPoints(self, Point1, Point2):
-	GlyphsToolOther = NSClassFromString("GlyphsToolOther")
-	GlyphsToolOther.cutPathsInLayer_forPoint_endPoint_(self, Point1, Point2)
-GSLayer.cutBetweenPoints = CutBetweenPoints
 
 def IntersectionsBetweenPoints(self, Point1, Point2):
 	return self.calculateIntersectionsStartPoint_endPoint_(Point1, Point2)
 GSLayer.intersectionsBetweenPoints = IntersectionsBetweenPoints
+
+
+'''
+.. function:: intersectionsBetweenPoints(Point1, Point2)
+
+	Return all intersection points between a measurement line and the paths in the layer. This is basically identical to the measurement tool in the UI.
+	
+	Normally, the first returned point is the starting point, the last returned point is the end point. Thus, the second point is the first intersection, the second last point is the last intersection. 
+	
+	
+	:param Point1: one point
+	:param Point2: the other point
+
+	.. code-block:: python
+
+		layer = Glyphs.font.selectedLayers[0] # current layer
+
+		# show all intersections with glyph at y=100
+		intersections = layer.intersectionsBetweenPoints(NSPoint(0, 100), NSPoint(layer.width, 100))
+		print intersections
+		
+		# left sidebearing at measurement line
+		print intersections[1].pointValue().x - intersections[0].pointValue().x
+
+		# right sidebearing at measurement line
+		print intersections[-1].pointValue().x - intersections[-2].pointValue().x
+'''
+
+
+
+
+
 
 
 
@@ -2729,6 +2965,12 @@ def _invalidateContours_(self):
 
 GSLayer._invalidateContours = _invalidateContours_
 
+
+
+
+
+
+
 ##################################################################################
 #
 #
@@ -2744,23 +2986,11 @@ GSLayer._invalidateContours = _invalidateContours_
 :mod:`GSAnchor`
 ===============================================================================
 
-.. class:: GSAnchor
+.. class:: GSAnchor()
 
 Implementation of the anchor object.
 
-.. code-block:: python
-
-	layer = Glyphs.font.selectedLayers[0] # current layer
-
-	# access all anchors:
-	for a in layer.anchors:
-		print a
-
-	# add a new anchor
-	layer.anchors['top'] = GSAnchor()
-
-	# delete anchor
-	del(layer.anchors['top'])
+For details on how to access them, please see :class:`GSLayer.anchors`.
 
 .. function::GSAnchor([name, pt])
 
@@ -2845,27 +3075,15 @@ GSAnchor.draw = DrawAnchorWithPen
 :mod:`GSComponent`
 ===============================================================================
 
-.. class:: GSComponent(glyph [, pos] )
+.. class:: GSComponent(glyph [, position])
 	
 Implementation of the component object.
 
+For details on how to access them, please see :class:`GSLayer.components`.
+
 	:param glyph: a :class:`GSGlyph` object or the glyph name
-	:param pos: the position of the component as NSPoint
+	:param position: the position of the component as NSPoint
 
-.. code-block:: python
-
-	layer = Glyphs.font.selectedLayers[0] # current layer
-
-	# add component
-	layer.components.append(GSComponent('dieresis'))
-
-	# add component at specific position
-	layer.components.append(GSComponent('dieresis', NSPoint(100, 100)))
-	
-	# delete specific component
-	for i, component in enumerate(layer.components):
-		if component.componentName == 'dieresis':
-			del(layer.components[i])
 
 **Properties**
 
@@ -2933,7 +3151,7 @@ GSComponent.componentName = property(lambda self: self.valueForKey_("componentNa
 
 GSComponent.component = property(	lambda self: self.valueForKey_("component"))
 '''.. attribute:: component
-	The :class:`GSGlyph` the component is pointing to. This is read only. In order to change the referenced base glyph, set componentName to the new glyph name.
+	The :class:`GSGlyph` the component is pointing to. This is read only. In order to change the referenced base glyph, set :class:`GSComponent.componentName` to the new glyph name.
 	:type: :class:`GSGlyph`
 '''
 
@@ -2953,7 +3171,19 @@ GSComponent.bounds = property(		lambda self: self.pyobjc_instanceMethods.bounds(
 	
 	Bounding box of the component, read only
 	
-	:type: NSRect'''
+	:type: NSRect
+	
+	.. code-block:: python
+
+		layer = Glyphs.font.selectedLayers[0] # current layer
+		component = layer.components[0] # first component
+
+		# origin
+		print component.bounds.origin.x, component.bounds.origin.y
+
+		# size
+		print component.bounds.size.width, component.bounds.size.height
+'''
 
 # keep for compatibility:
 GSComponent.disableAlignment = property(lambda self: bool(self.pyobjc_instanceMethods.disableAlignment()),
@@ -2983,7 +3213,7 @@ Functions
 
 '''.. function:: decompose()
 	
-	Decomposes the component
+	Decomposes the component.
 '''
 
 
@@ -3009,9 +3239,11 @@ Functions
 
 Implementation of the path object.
 
-If you build a path in code, make sure that the structure isvalid. A curve node has the be preceded by two off-curve nodes. And an open path has to start with a line node.
+For details on how to access them, please see :class:`GSLayer.paths`.
 
-.. class:: GSPath
+If you build a path in code, make sure that the structure is valid. A curve node has to be preceded by two off-curve nodes. And an open path has to start with a line node.
+
+.. class:: GSPath()
 
 **Properties**
 
@@ -3062,13 +3294,33 @@ GSPath.nodes = property(		lambda self: PathNodesProxy(self),
 								lambda self, value: self.setNodes_(NSMutableArray.arrayWithArray_(value)))
 '''.. attribute:: nodes
 	A list of :class:`GSNode <GSNode>` objects
-	:type: list'''
+	:type: list
+	
+	.. code-block:: python
+
+		layer = Glyphs.font.selectedLayers[0] # current layer
+
+		# access all nodes
+		for path in layer.paths:
+			for node in path.nodes:
+				print node
+
+	'''
 	
 GSPath.segments = property(		lambda self: self.valueForKey_("segments"),
 						 		lambda self, value: self.setSegments_(value))
 '''.. attribute:: segments
 	A list of segments as NSPoint objects. Two objects represent a line, four represent a curve. Start point of the segment is included.
-	:type: list'''
+	:type: list
+
+	.. code-block:: python
+		layer = Glyphs.font.selectedLayers[0] # current layer
+
+		# access all segments
+		for path in layer.paths:
+			for segment in path.segments:
+				print segment
+'''
 
 GSPath.closed = property(		lambda self: self.valueForKey_("closed").boolValue(),
 						 		lambda self, value: self.setValue_forKey_(value, "closed"))
@@ -3084,7 +3336,19 @@ GSPath.direction = property(		lambda self: self.valueForKey_("direction"))
 GSPath.bounds = property(	 lambda self: self.pyobjc_instanceMethods.bounds() )
 '''.. attribute:: bounds
 	Bounding box of the path, read only
-	:type: NSRect'''
+	:type: NSRect
+
+	.. code-block:: python
+
+		layer = Glyphs.font.selectedLayers[0] # current layer
+		path = layer.paths[0] # first path
+
+		# origin
+		print path.bounds.origin.x, path.bounds.origin.y
+
+		# size
+		print path.bounds.size.width, path.bounds.size.height
+	'''
 
 '''
 
@@ -3151,6 +3415,9 @@ GSPath.draw = DrawPathWithPen
 ===============================================================================
 
 Implementation of the node object.
+
+For details on how to access them, please see :class:`GSPath.nodes`.
+
 
 .. class:: GSNode([pt, type])
 	
@@ -3230,7 +3497,10 @@ GSNode.connection = property(	lambda self: self.valueForKey_("connection"),
 
 Implementation of the guide line object.
 
-.. class:: GSGuideLine
+For details on how to access them, please see :class:`GSLayer.guides`.
+
+
+.. class:: GSGuideLine()
 
 .. autosummary::
 	
@@ -3289,7 +3559,9 @@ GSGuideLine.angle = property(lambda self: self.valueForKey_("angle").floatValue(
 
 Implementation of the hint object.
 
-.. class:: GSHint
+For details on how to access them, please see :class:`GSLayer.hints`.
+
+.. class:: GSHint()
 
 .. autosummary::
 	
@@ -3320,7 +3592,7 @@ def Hint__repr__(self):
 		direction = "vertical"
 	if self.type == BOTTOMGHOST or self.type == TOPGHOST:
 		return "<GSHint %s origin=(%s,%s) type=%s>" % (hintConstants[self.type], self.originNode.position.x, self.originNode.position.y, self.type)
-	elif self.type == Stem:
+	elif self.type == STEM:
 		return "<GSHint Stem origin=(%s,%s) target=(%s,%s) %s>" % (self.originNode.position.x, self.originNode.position.y, self.targetNode.position.x, self.targetNode.position.y, direction)
 	else:
 		return "<GSHint %s %s>" % (hintConstants[self.type], direction)
@@ -3386,12 +3658,12 @@ GSHint.horizontal = property(	lambda self: self.valueForKey_("horizontal").boolV
 
 Implementation of the GSGlyphsInfo object.
 
-.. class:: GSGlyphsInfo
+.. class:: GSGlyphsInfo()
 
 .. autosummary::
 
-niceNameForName
-nameForUnicode
+	niceNameForName
+	nameForUnicode
 
 ----------
 Properties
@@ -3419,7 +3691,7 @@ def GSGlyphsInfo_nameForUnicode(self, Unicode):
 
 '''.. function:: nameForUnicode(Name)
 	
-	Converts the Unicode String in a readable name. (converts "01D1" in "Ocaron")
+	Converts the Hex Unicode String in a readable name. (converts "01D1" in "Ocaron")
 	
 	:param Name: A unicode as string representation
 	:return: The Name.
@@ -3442,6 +3714,7 @@ Methods
 	GetOpenFile()
 	GetSaveFile()
 	Message()
+	newTab()
 	'''
 
 
