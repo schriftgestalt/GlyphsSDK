@@ -2969,9 +2969,35 @@ GSLayer.intersectionsBetweenPoints = IntersectionsBetweenPoints
 '''
 
 
+def ControlLayer__new__(typ, *args, **kwargs):
+	if len(args) > 0:
+		return GSControlLayer.alloc().initWithChar_(args[0])
+	else:
+		return GSControlLayer.alloc().init()
+GSControlLayer.__new__ = ControlLayer__new__;
 
+def ControlLayer__init__(self, args):
+	pass
+GSControlLayer.__init__ = ControlLayer__init__;
 
+def ControlLayer__repr__(self):
+	char = self.parent().unicodeChar()
+	if char == 10:
+		name = "newline"
+	elif char = 129:
+		name = "placeholder"
+	else:
+		name = GSGlyphsInfo.niceGlyphNameForName_("uni%.4X" % self.parent().unicodeChar())
+	return "<%s \"%s\">" % (self.className(), name)
+GSControlLayer.__repr__ = ControlLayer__repr__;
 
+def ControlLayer__newline__():
+	return GSControlLayer(10)
+GSControlLayer.newline = staticmethod(ControlLayer__newline__);
+
+def ControlLayer__placeholder__():
+	return GSControlLayer(129)
+GSControlLayer.placeholder = staticmethod(ControlLayer__placeholder__);
 
 
 
