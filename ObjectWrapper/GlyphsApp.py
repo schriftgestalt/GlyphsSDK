@@ -258,6 +258,8 @@ GSApplication.showGlyphInfoPanelWithSearchString = __showGlyphInfoPanelWithSearc
 	'''
 
 def _glyphInfoForName(self, String):
+	if type(String) is int:
+		String = "%04X" % String
 	return GSGlyphsInfo.glyphInfoForName_(String)
 
 GSApplication.glyphInfoForName = _glyphInfoForName
@@ -1211,21 +1213,22 @@ GSFont.newTab = __GSFont__addTab__
 	
 	:param tabText: The glyph names need to be separated by '/'
 '''
+def __GSFont__currentTab__(self):
+	return self.parent.windowController().activeEditViewController()
+	
+def __GSFont__set_currentTab__(self, TabItem):
+	self.parent.windowController().tabBarControl().selectTabItem_(TabItem)
+GSFont.currentTab = property(lambda self: __GSFont__currentTab__(self),
+							lambda self, value: __GSFont__set_currentTab__(self, value))
 
 ## GSEditViewController
 
 GSEditViewController.text = property(lambda self: self.graphicView().displayString(),
 									 lambda self, value: self.graphicView().setDisplayString_(value))
 
-def __GSEditViewController_layers__(self):
-	try:
-		return self.parent.windowController().activeEditViewController().graphicView().displayString()
-	except:
-		pass
-	return None
 def __GSEditViewController_set_layers__(self, layers):
-	# if not (type(layers) is type(list) or type(layers) == NSArray):
-	# 	raise ValueError
+	if not (type(layers) is list or "objectAtIndex_" in layers.__class__.__dict__):
+		raise ValueError
 	string = NSMutableAttributedString.alloc().init()
 	Font = self.representedObject()
 	for l in layers:
@@ -3816,7 +3819,7 @@ def GSGlyphInfo__init__(self):
 GSGlyphInfo.__init__ = GSGlyphInfo__init__;
 
 def GSGlyphInfo__repr__(self):
-	return "<GSGlyphInfo '%s'>" % (self.name())
+	return "<GSGlyphInfo '%s'>" % (self.name)
 GSGlyphInfo.__repr__ = GSGlyphInfo__repr__;
 
 
