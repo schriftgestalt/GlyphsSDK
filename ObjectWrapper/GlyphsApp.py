@@ -900,6 +900,7 @@ Also, the :class:`Glyphs <GSGlyph>` are attached to the Font object right here, 
 	masterIndex
 	currentText
 	tabs
+	currentTab
 	filepath
 
 **Functions**
@@ -1208,7 +1209,7 @@ GSFont.tabs = property(lambda self: FontTabsProxy(self))
 
 
 '''.. attribute:: tabs
-	List of open edit view tabs in UI.
+	List of open edit view tabs in UI, as list of :class:`GSEditViewController` objects.
 	
 	.. code-block:: python
 		
@@ -1223,14 +1224,21 @@ GSFont.tabs = property(lambda self: FontTabsProxy(self))
 		del(font.tabs[-1])
 	
 	:type: list'''
+
 def __GSFont__currentTab__(self):
 	return self.parent.windowController().activeEditViewController()
 	
 def __GSFont__set_currentTab__(self, TabItem):
 	self.parent.windowController().tabBarControl().selectTabItem_(TabItem)
+
 GSFont.currentTab = property(lambda self: __GSFont__currentTab__(self),
 							lambda self, value: __GSFont__set_currentTab__(self, value))
 
+
+'''.. attribute:: currentTab
+	Active edit view tab.
+	
+	:type: :class:`GSEditViewController`'''
 
 
 def Font_filepath(self):
