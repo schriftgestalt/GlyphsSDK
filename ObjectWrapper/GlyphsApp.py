@@ -2984,7 +2984,7 @@ def ControlLayer__repr__(self):
 	char = self.parent().unicodeChar()
 	if char == 10:
 		name = "newline"
-	elif char = 129:
+	elif char == 129:
 		name = "placeholder"
 	else:
 		name = GSGlyphsInfo.niceGlyphNameForName_("uni%.4X" % self.parent().unicodeChar())
