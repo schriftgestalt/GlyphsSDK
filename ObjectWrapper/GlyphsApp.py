@@ -1203,7 +1203,7 @@ def __GSFont__addTab__(self, tabText = ""):
 	if self.parent:
 		self.parent.windowController().addTabWithString_(tabText)
 
-GSFont.addTab = __GSFont__addTab__
+GSFont.newTab = __GSFont__addTab__
 
 '''.. function:: newTab(tabText)
 	
