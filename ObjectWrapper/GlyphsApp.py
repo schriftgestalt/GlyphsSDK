@@ -815,6 +815,39 @@ class PathNodesProxy (Proxy):
 
 
 
+class FontTabsProxy (Proxy):
+	def __getitem__(self, Key):
+		if self._owner.parent:
+			if type(Key) is int:
+				if Key < 0:
+					Key = self.__len__() + Key
+				return self._owner.parent.windowController().tabBarControl().viewControllers()[Key + 1]
+			else:
+				raise(KeyError)
+		else:
+			raise Exception("The font is not connected to a document object")
+	def __setitem__(self, Key, Tab):
+		if type(Key) is int:
+			raise(NotImplementedError)
+		else:
+			raise(KeyError)
+	def __delitem__(self, Key):
+		if type(Key) is int:
+			Tab = self._owner.parent.windowController().tabBarControl().viewControllers()[Key]
+			self._owner.parent.windowController().tabBarControl().closeTabItem_(Tab)
+		else:
+			raise(KeyError)
+	def __iter__(self):
+		for index in range(self.__len__()):
+			yield self.__getitem__(index)
+	def __len__(self):
+		return len(self._owner.parent.windowController().tabBarControl().viewControllers()) - 1
+	def values(self):
+		return self._owner.parent.windowController().tabBarControl().viewControllers()[1:]
+
+
+
+
 ##################################################################################
 #
 #
@@ -866,6 +899,7 @@ Also, the :class:`Glyphs <GSGlyph>` are attached to the Font object right here, 
 	selectedFontMaster
 	masterIndex
 	currentText
+	tabs
 	filepath
 
 **Functions**
@@ -877,6 +911,7 @@ Also, the :class:`Glyphs <GSGlyph>` are attached to the Font object right here, 
 	kerningForPair()
 	setKerningForPair()
 	removeKerningForPair()
+	newTab()
 
 ----------
 Properties
@@ -1169,50 +1204,25 @@ GSFont.currentText = property(lambda self: __current_Text__(self),
 
 # Tab interaction:
 
-class FontTabsProxy (Proxy):
-	def __getitem__(self, Key):
-		if self._owner.parent:
-			if type(Key) is int:
-				if Key < 0:
-					Key = self.__len__() + Key
-				return self._owner.parent.windowController().tabBarControl().viewControllers()[Key + 1]
-			else:
-				raise(KeyError)
-		else:
-			raise Exception("The font is not connected to a document object")
-	def __setitem__(self, Key, Tab):
-		if type(Key) is int:
-			raise(NotImplementedError)
-		else:
-			raise(KeyError)
-	def __delitem__(self, Key):
-		if type(Key) is int:
-			Tab = self._owner.parent.windowController().tabBarControl().viewControllers()[Key]
-			self._owner.parent.windowController().tabBarControl().closeTabItem_(Tab)
-		else:
-			raise(KeyError)
-	def __iter__(self):
-		for index in range(self.__len__()):
-			yield self.__getitem__(index)
-	def __len__(self):
-		return len(self._owner.parent.windowController().tabBarControl().viewControllers()) - 1
-	def values(self):
-		return self._owner.parent.windowController().tabBarControl().viewControllers()[1:]
 GSFont.tabs = property(lambda self: FontTabsProxy(self))
 
 
-def __GSFont__addTab__(self, tabText = ""):
-	if self.parent:
-		self.parent.windowController().addTabWithString_(tabText)
-
-GSFont.newTab = __GSFont__addTab__
-
-'''.. function:: newTab(tabText)
+'''.. attribute:: tabs
+	List of open edit view tabs in UI.
 	
-	Opens a new tab in the current document window
+	.. code-block:: python
+		
+		# open new tab with text
+		font.newTab('hello')
+		
+		# access all tabs
+		for tab in font.tabs:
+			print tab
+			
+		# close last tab
+		del(font.tabs[-1])
 	
-	:param tabText: The glyph names need to be separated by '/'
-'''
+	:type: list'''
 def __GSFont__currentTab__(self):
 	return self.parent.windowController().activeEditViewController()
 	
@@ -1221,33 +1231,6 @@ def __GSFont__set_currentTab__(self, TabItem):
 GSFont.currentTab = property(lambda self: __GSFont__currentTab__(self),
 							lambda self, value: __GSFont__set_currentTab__(self, value))
 
-## GSEditViewController
-
-GSEditViewController.text = property(lambda self: self.graphicView().displayString(),
-									 lambda self, value: self.graphicView().setDisplayString_(value))
-
-def __GSEditViewController_set_layers__(self, layers):
-	if not (type(layers) is list or "objectAtIndex_" in layers.__class__.__dict__):
-		raise ValueError
-	string = NSMutableAttributedString.alloc().init()
-	Font = self.representedObject()
-	for l in layers:
-		if l.className() == "GSLayer":
-			char = Font.characterForGlyph_(l.parent)
-			A = NSAttributedString.alloc().initWithString_attributes_(unichr(char), { "GSLayerIdAttrib" : l.associatedMasterId })
-		elif l.className() == "GSBackgroundLayer":
-			char = Font.characterForGlyph_(l.parent)
-			A = NSAttributedString.alloc().initWithString_attributes_(unichr(char), { "GSLayerIdAttrib" : l.associatedMasterId, "GSShowBackgroundAttrib": True })
-		elif l.className() == "GSControlLayer":
-			char = l.parent().unicodeChar()
-			A = NSAttributedString.alloc().initWithString_(unichr(char))
-		else:
-			raise ValueError
-		string.appendAttributedString_(A)
-	self.graphicView().textStorage().setText_(string)
-
-GSEditViewController.layers = property(lambda self: self.graphicView().layoutManager().cachedGlyphs(),
-							  lambda self, value: __GSEditViewController_set_layers__(self, value))
 
 
 def Font_filepath(self):
@@ -1373,6 +1356,18 @@ GSFont.removeKerningForPair = removeKerningForPair
 			font.removeKerningForPair(master.id, '@MMK_L_T', '@MMK_R_A')
 '''
 
+def __GSFont__addTab__(self, tabText = ""):
+	if self.parent:
+		self.parent.windowController().addTabWithString_(tabText)
+
+GSFont.newTab = __GSFont__addTab__
+
+'''.. function:: newTab([tabText])
+	
+	Opens a new tab in the current document window, optionally with text
+	
+	:param tabText: Text or glyph names with '/'
+'''
 
 
 
@@ -3740,6 +3735,136 @@ GSHint.horizontal = property(	lambda self: self.valueForKey_("horizontal").boolV
 '''.. attribute:: horizontal
 	True if hint is horizontal, False if vertical.
 	:type: bool'''
+
+
+
+
+##################################################################################
+#
+#
+#
+#           GSEditViewController
+#
+#
+#
+##################################################################################
+
+'''
+
+:mod:`GSEditViewController`
+===============================================================================
+
+Implementation of the GSEditViewController object, which represents edit tabs in the UI.
+
+For details on how to access them, please look at :class:`GSFont`.tabs
+
+
+.. class:: GSEditViewController()
+
+.. autosummary::
+
+	text
+	layers
+
+
+----------
+Properties
+----------
+
+'''
+
+GSEditViewController.text = property(lambda self: self.graphicView().displayString(),
+									 lambda self, value: self.graphicView().setDisplayString_(value))
+
+'''
+
+.. attribute:: text
+	The text of the tab, either as text or glyph names with / , or mixed.
+	
+	:type: Unicode
+
+
+.. attribute:: layers
+	Alternatively, you can set (and read) a list of :class:`GSLayer` objects. These can be any of the layers of a glyph.
+	
+	
+
+	:type: list
+
+	.. code-block:: python
+
+		
+		font.tabs[0].layers = []
+		
+		# display all masters of one glyph next to each other
+		for layer in font.glyphs['a'].layers:
+			font.tabs[0].layers.append(layer)
+	
+'''
+
+
+
+
+def __GSEditViewController__repr__(self):
+	nameString = self.text
+	if len(nameString) > 30:
+		nameString = nameString[:30] + '...'
+	nameString = nameString.replace('\n', ' ')
+	return "<GSEditViewController '%s'>" % (nameString)
+
+GSEditViewController.__repr__ = __GSEditViewController__repr__
+
+def __GSEditViewController_layers__(self):
+	try:
+		return self.parent.windowController().activeEditViewController().graphicView().displayString()
+	except:
+		pass
+	return None
+def __GSEditViewController_set_layers__(self, layers):
+	if not (type(layers) is list or "objectAtIndex_" in layers.__class__.__dict__):
+		raise ValueError
+	string = NSMutableAttributedString.alloc().init()
+	Font = self.representedObject()
+	for l in layers:
+		if l.className() == "GSLayer":
+			char = Font.characterForGlyph_(l.parent)
+			A = NSAttributedString.alloc().initWithString_attributes_(unichr(char), { "GSLayerIdAttrib" : l.associatedMasterId })
+		elif l.className() == "GSBackgroundLayer":
+			char = Font.characterForGlyph_(l.parent)
+			A = NSAttributedString.alloc().initWithString_attributes_(unichr(char), { "GSLayerIdAttrib" : l.associatedMasterId, "GSShowBackgroundAttrib": True })
+		elif l.className() == "GSControlLayer":
+			char = l.parent().unicodeChar()
+			A = NSAttributedString.alloc().initWithString_(unichr(char))
+		else:
+			raise ValueError
+		string.appendAttributedString_(A)
+	self.graphicView().textStorage().setText_(string)
+
+def ____GSEditViewController_set_layers__(self, layers):
+	# if not (type(layers) is type(list) or type(layers) == NSArray):
+	# 	raise ValueError
+	string = NSMutableAttributedString.alloc().init()
+	Font = self.representedObject()
+	for l in layers:
+		if l.className() == "GSLayer":
+			char = Font.characterForGlyph_(l.parent)
+			A = NSAttributedString.alloc().initWithString_attributes_(unichr(char), { "GSLayerIdAttrib" : l.associatedMasterId })
+		elif l.className() == "GSBackgroundLayer":
+			char = Font.characterForGlyph_(l.parent)
+			A = NSAttributedString.alloc().initWithString_attributes_(unichr(char), { "GSLayerIdAttrib" : l.associatedMasterId, "GSShowBackgroundAttrib": True })
+		elif l.className() == "GSControlLayer":
+			char = l.parent().unicodeChar()
+			A = NSAttributedString.alloc().initWithString_(unichr(char))
+		else:
+			raise ValueError
+		string.appendAttributedString_(A)
+	self.graphicView().textStorage().setText_(string)
+
+GSEditViewController.layers = property(lambda self: self.graphicView().layoutManager().cachedGlyphs(),
+							  lambda self, value: __GSEditViewController_set_layers__(self, value))
+
+
+
 
 
 ##################################################################################
