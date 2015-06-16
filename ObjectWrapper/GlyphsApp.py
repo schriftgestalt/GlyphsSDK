@@ -72,6 +72,12 @@ The mothership. Everything starts here.
 	defaults
 	boolDefaults
 	intDefaults
+	scriptAbbrevations
+	scriptSuffixes
+	languageScripts
+	languageData
+	unicodeRanges
+
 	
 **Functions**
 
@@ -83,6 +89,10 @@ The mothership. Everything starts here.
 	showGlyphInfoPanelWithSearchString()
 	glyphInfoForName()
 	glyphInfoForUnicode()
+	niceGlyphName()
+	productionGlyphName()
+	ligatureComponents()
+	
 	
 ----------
 Properties
@@ -194,6 +204,51 @@ GSApplication.intDefaults = property(lambda self: IntDefaultsProxy(self))
 	
 	'''
 
+GSApplication.scriptAbbrevations = property(lambda self: GSGlyphsInfo.scriptAbrevations())
+
+'''.. attribute:: scriptAbbrevations
+	
+	A dictionary with script name to abbreviation mapping, e.g. 'arabic': 'arab'
+	
+	:rtype: dict`
+	'''
+
+GSApplication.scriptSuffixes = property(lambda self: GSGlyphsInfo.scriptSuffixes())
+
+'''.. attribute:: scriptSuffixes
+	
+	A dictionary with glyphs name suffixes for scripts and their respective script names, e.g. 'cy': 'cyrillic'
+	
+	:rtype: dict`
+	'''
+
+GSApplication.languageScripts = property(lambda self: GSGlyphsInfo.languageScripts())
+
+'''.. attribute:: languageScripts
+	
+	A dictionary with language tag to script tag mapping, e.g. 'ENG': 'latn'
+	
+	:rtype: dict`
+	'''
+
+GSApplication.languageData = property(lambda self: GSGlyphsInfo.languageData())
+
+'''.. attribute:: languageData
+	
+	A list of dictionaries with more detailed language informations.
+	
+	:rtype: list`
+	'''
+
+GSApplication.unicodeRanges = property(lambda self: GSGlyphsInfo.unicodeRanges())
+
+'''.. attribute:: unicodeRanges
+	
+	Names of unicode ranges.
+	
+	:rtype: list`
+	'''
+
 
 
 
@@ -285,6 +340,55 @@ GSApplication.glyphInfoForUnicode = _glyphInfoForUnicode
 	:param String: Hex unicode
 	:return: :class:`GSGlyphInfo`
 	
+	'''
+
+def _niceGlyphName(self, String):
+	return GSGlyphsInfo.niceGlyphNameForName_(String)
+GSApplication.niceGlyphName = _niceGlyphName
+
+'''.. function:: niceGlyphName(Name)
+	
+	Converts glyph name to nice, human readable glyph name (e.g. afii10017 or uni0410 to A-cy)
+	
+	:param string: glyph name
+	:return: string
+	
+	'''
+
+def _productionGlyphName(self, String):
+	return GSGlyphsInfo.productionGlyphName_(String)
+GSApplication.productionGlyphName = _productionGlyphName
+
+'''.. function:: productionGlyphName(Name)
+	
+	Converts glyph name to production glyph name (e.g. afii10017 or A-cy to uni0410)
+	
+	:param string: glyph name
+	:return: string
+	
+	'''
+
+def _ligatureComponents(self, String):
+	return GSGlyphsInfo._componentsForLigaName_(String)
+GSApplication.ligatureComponents = _ligatureComponents
+
+'''.. function:: ligatureComponents(String)
+	
+	If defined as a ligature in the glyph database, this function returns a list of glyph names that this ligature could be composed of.
+	
+	:param string: glyph name
+	:return: list
+	
+	.. code-block:: python
+	
+		print Glyphs.ligatureComponents('allah-ar')
+
+		(
+		    "alef-ar",
+		    "lam-ar.init",
+		    "lam-ar.medi",
+		    "heh-ar.fina"
+		)
 	'''
 
 
@@ -1437,6 +1541,8 @@ GSFontMaster.__repr__ = FontMaster__repr__;
 	verticalStems
 	horizontalStems
 	alignmentZones
+	blueValues
+	otherBlues
 	guides
 	userData
 	customParameters
@@ -1518,6 +1624,20 @@ GSFontMaster.alignmentZones = property(lambda self: self.valueForKey_("alignment
 '''.. attribute:: alignmentZones
 	Collection of :class:`GSAlignmentZone <GSAlignmentZone>`.
 	:type: list'''
+
+def FontMaster_blueValues(self):
+	return GSGlyphsInfo.blueValues_(self.alignmentZones)
+GSFontMaster.blueValues = property(lambda self: FontMaster_blueValues(self))
+'''.. attribute:: blueValues
+	PS hinting Blue Values calculated from the master's alignment zones. Read only.
+	:type: list'''
+def FontMaster_otherBlues(self):
+	return GSGlyphsInfo.otherBlues_(self.alignmentZones)
+GSFontMaster.otherBlues = property(lambda self: FontMaster_otherBlues(self))
+'''.. attribute:: otherBlues
+	PS hinting Other Blues calculated from the master's alignment zones. Read only.
+	:type: list'''
+
 # new (guidelines at layers are also called just 'guides')
 GSFontMaster.guides = property(lambda self: self.valueForKey_("guideLines"), lambda self, value: self.setValue_forKey_(value, "guideLines"))
 # keep for compatibility
@@ -2285,6 +2405,7 @@ For details on how to access these glyphs, please see :class:`GSFont`.glyphs
 	category
 	subCategory
 	script
+	glyphInfo
 	leftKerningGroup
 	rightKerningGroup
 	leftMetricsKey
@@ -2300,6 +2421,7 @@ For details on how to access these glyphs, please see :class:`GSFont`.glyphs
 
 	beginUndo()
 	endUndo()
+	updateGlyphInfo()
 
 ----------
 Properties
@@ -2436,6 +2558,13 @@ GSGlyph.script = property(			lambda self: self.valueForKey_("script"))
 	The script of the glyph, e.g. 'latin', 'arabic'.
 	:type: unicode
 '''
+
+GSGlyph.glyphInfo = property(lambda self: GSGlyphsInfo.glyphInfoForGlyph_(self))
+'''.. attribute:: glyphInfo
+	:class:`GSGlyphInfo` object for this glyph with detailed information.
+	:type: :class:`GSGlyphInfo`
+'''
+
 GSGlyph.leftKerningGroup = property(lambda self: self.valueForKey_("leftKerningGroup"), 
 									lambda self, value: self.setLeftKerningGroup_(value))
 '''.. attribute:: leftKerningGroup
@@ -2529,13 +2658,27 @@ GSGlyph.beginUndo = __BeginUndo
 
 def __EndUndo(self):
 	self.undoManager().endUndoGrouping()
-
 GSGlyph.endUndo = __EndUndo
 
 '''.. function:: endUndo()
 	
 	This closes a undo group that was opened by a previous call of Glyph.beginUndo(). Make sure that you call this for each beginUndo() call.
 '''
+
+def __updateGlyphInfo(self):
+	GSGlyphsInfo.updateGlyphInfo_changeName_(self, False)
+GSGlyph.updateGlyphInfo = __updateGlyphInfo
+
+'''.. function:: updateGlyphInfo()
+	
+	Updates all information like name, unicode etc. for this glyph.
+'''
+
+
+
+
+
+
 
 ##################################################################################
 #
@@ -2596,6 +2739,7 @@ For details on how to access these layers, please see :class:`GSGlyph`.layers
 	endChanges
 	cutBetweenPoints
 	intersectionsBetweenPoints
+	addMissingAnchors
 
 ----------
 Properties
@@ -2991,6 +3135,17 @@ GSLayer.intersectionsBetweenPoints = IntersectionsBetweenPoints
 
 		# right sidebearing at measurement line
 		print layer.width - intersections[-2].pointValue().x
+'''
+
+def Layer_addMissingAnchors(self):
+	GSGlyphsInfo.updateAnchor_(self)
+GSLayer.addMissingAnchors = Layer_addMissingAnchors
+
+
+'''
+.. function:: addMissingAnchors()
+
+	Adds missing anchors defined in the glyph database.
 '''
 
 
@@ -3957,7 +4112,7 @@ GSBackgroundImage.scaleWidthToEmUnits = BackgroundImage_scaleWidthToEmUnits
 
 '''.. function:: scaleWidthToEmUnits
 	
-	Scale the image's cropped width to a certain em unit value.
+	Scale the image's cropped width to a certain em unit value, retaining its aspect ratio.
 
 	.. code-block:: python
 
@@ -3973,7 +4128,7 @@ GSBackgroundImage.scaleHeightToEmUnits = BackgroundImage_scaleHeightToEmUnits
 
 '''.. function:: scaleHeightToEmUnits
 	
-	Scale the image's cropped height to a certain em unit value.
+	Scale the image's cropped height to a certain em unit value, retaining its aspect ratio.
 
 	.. code-block:: python
 
@@ -4114,61 +4269,6 @@ GSEditViewController.layers = property(lambda self: self.graphicView().layoutMan
 
 
 
-##################################################################################
-#
-#
-#
-#           GSGlyphsInfo
-#
-#
-#
-##################################################################################
-
-
-'''
-
-:mod:`GSGlyphsInfo`
-===============================================================================
-
-Implementation of the GSGlyphsInfo object.
-
-This is a so called Singleton and doesn't need to be instantiated. It is available right away like so:
-
-.. code-block:: python
-
-	GSGlyphsInfo.glyphInfoForUnicode('01D1')
-
-
-
-.. class:: GSGlyphsInfo
-
-.. autosummary::
-
-	glyphInfoForUnicode_()
-	glyphInfoForName_()
-
-
-----------
-Functions
-----------
-
-.. function:: glyphInfoForUnicode_(Unicode)
-	
-	Returns :class:`GSGlyphInfo` object for this Unicode.
-	
-	:param Name: Hex Unicode
-	:return: :class:`GSGlyphInfo`
-
-
-.. function:: glyphInfoForName_(Name)
-	
-	Returns :class:`GSGlyphInfo` object for this glyph name.
-	
-	:param Name: A glyph name
-	:return: :class:`GSGlyphInfo`
-
-'''
-
 
 
 
@@ -4218,6 +4318,11 @@ This contains valuable information from the glyph database. See :class:`GSGlyphs
 	unicode
 	unicode2
 	script
+	index
+	sortName
+	sortNameKeep
+	desc
+	altNames
 
 ----------
 Properties
@@ -4296,6 +4401,48 @@ GSGlyphInfo.script = property(lambda self: self.pyobjc_instanceMethods.script())
 '''
 .. attribute:: script
 	Script of glyph, e.g: "latin", "cyrillic", "greek"
+	:type: unicode
+
+'''
+
+GSGlyphInfo.index = property(lambda self: self.pyobjc_instanceMethods.index())
+
+'''
+.. attribute:: index
+	Index of glyph in database. Used for sorting in UI.
+	:type: unicode
+
+'''
+
+GSGlyphInfo.sortName = property(lambda self: self.pyobjc_instanceMethods.sortName())
+
+'''
+.. attribute:: sortName
+	Alternative name of glyph used for sorting in UI.
+	:type: unicode
+
+'''
+
+GSGlyphInfo.sortNameKeep = property(lambda self: self.pyobjc_instanceMethods.sortNameKeep())
+
+'''
+.. attribute:: sortNameKeep
+	:type: unicode
+
+'''
+
+GSGlyphInfo.desc = property(lambda self: self.pyobjc_instanceMethods.desc())
+
+'''
+.. attribute:: desc
+	:type: unicode
+
+'''
+
+GSGlyphInfo.altNames = property(lambda self: self.pyobjc_instanceMethods.altNames())
+
+'''
+.. attribute:: altNames
 	:type: unicode
 
 '''
