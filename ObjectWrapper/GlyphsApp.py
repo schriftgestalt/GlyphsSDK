@@ -2703,11 +2703,11 @@ GSGlyph.endUndo = __EndUndo
 	This closes a undo group that was opened by a previous call of Glyph.beginUndo(). Make sure that you call this for each beginUndo() call.
 '''
 
-def __updateGlyphInfo(self):
-	GSGlyphsInfo.updateGlyphInfo_changeName_(self, False)
+def __updateGlyphInfo(self, changeName = True):
+	GSGlyphsInfo.updateGlyphInfo_changeName_(self, True)
 GSGlyph.updateGlyphInfo = __updateGlyphInfo
 
-'''.. function:: updateGlyphInfo()
+'''.. function:: updateGlyphInfo(changeName = True)
 	
 	Updates all information like name, unicode etc. for this glyph.
 '''
