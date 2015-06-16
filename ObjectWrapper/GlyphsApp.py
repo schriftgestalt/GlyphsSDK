@@ -3942,7 +3942,7 @@ Functions
 '''
 
 def BackgroundImage_resetCrop(self):
-	self.crop = NSRect(NSPoint(0, 0), NSPoint(self.image.size().width, self.image.size().height))
+	self.crop = NSRect(NSPoint(0, 0), self.image.size())
 GSBackgroundImage.resetCrop = BackgroundImage_resetCrop
 
 
@@ -3952,7 +3952,7 @@ GSBackgroundImage.resetCrop = BackgroundImage_resetCrop
 '''
 
 def BackgroundImage_scaleWidthToEmUnits(self, value):
-	self.scale = float(value) / float(self.crop.size.width - self.crop.origin.x)
+	self.scale = float(value) / float(self.crop.size.width)
 GSBackgroundImage.scaleWidthToEmUnits = BackgroundImage_scaleWidthToEmUnits
 
 '''.. function:: scaleWidthToEmUnits
@@ -3968,7 +3968,7 @@ GSBackgroundImage.scaleWidthToEmUnits = BackgroundImage_scaleWidthToEmUnits
 '''
 
 def BackgroundImage_scaleHeightToEmUnits(self, value):
-	self.scale = float(value) / float(self.crop.size.height - self.crop.origin.y)
+	self.scale = float(value) / float(self.crop.size.height)
 GSBackgroundImage.scaleHeightToEmUnits = BackgroundImage_scaleHeightToEmUnits
 
 '''.. function:: scaleHeightToEmUnits
