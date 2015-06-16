@@ -144,7 +144,7 @@ GSApplication.fonts = property(lambda self: AllFonts())
 
 		# access all open fonts
 		for font in Glyphs.fonts:
-			# do something
+			print font.familyName
 '''
 
 class DefaultsProxy(Proxy):
