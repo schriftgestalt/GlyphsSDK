@@ -2579,6 +2579,7 @@ For details on how to access these layers, please see :class:`GSGlyph`.layers
 	width
 	bounds
 	background
+	backgroundImage
 
 **Functions**
 
@@ -2829,10 +2830,28 @@ GSLayer.background = property(lambda self: self.pyobjc_instanceMethods.backgroun
 
 '''.. attribute:: background
 	The background layer
-	:type: :class:`GSLayer <GSLayer>`'''
+	:type: :class:`GSLayer <GSLayer>`
 
 '''
 
+GSLayer.backgroundImage = property(lambda self: self.pyobjc_instanceMethods.backgroundImage(),
+									lambda self, value: self.pyobjc_instanceMethods.setBackgroundImage_(value))
+
+'''.. attribute:: backgroundImage
+	The background image
+	:type: :class:`GSBackgroundImage`
+
+	.. code-block:: python
+
+		# set background image
+		layer.backgroundImage = GSBackgroundImage('/path/to/file.jpg')
+
+		# remove background image
+		layer.backgroundImage = None
+'''
+
+
+'''
 ---------
 Functions
 ---------
@@ -3439,7 +3458,7 @@ GSPath.direction = property(		lambda self: self.valueForKey_("direction"))
 	Path direction. -1 for counter clockwise, 1 for clockwise.
 	:type: int'''
 
-GSPath.bounds = property(	 lambda self: self.pyobjc_instanceMethods.bounds() )
+GSPath.bounds = property(	 lambda self: setImageCself.pyobjc_instanceMethods.bounds() )
 '''.. attribute:: bounds
 	Bounding box of the path, read only
 	:type: NSRect
@@ -3743,6 +3762,192 @@ GSHint.horizontal = property(	lambda self: self.valueForKey_("horizontal").boolV
 '''.. attribute:: horizontal
 	True if hint is horizontal, False if vertical.
 	:type: bool'''
+
+
+
+
+##################################################################################
+#
+#
+#
+#           GSBackgroundImage
+#
+#
+#
+##################################################################################
+
+
+'''
+
+:mod:`GSBackgroundImage`
+===============================================================================
+
+Implementation of background image.
+
+For details on how to access it, please see :class:`GSLayer`.backgroundImage
+
+.. class:: GSBackgroundImage([path])
+
+**Properties**
+
+.. autosummary::
+	
+	path
+	image
+	crop
+	locked
+	position
+	scale
+	transform
+	
+**Functions**
+
+.. autosummary::
+
+	resetCrop
+
+----------
+Properties
+----------
+
+	'''
+
+
+def BackgroundImage__new__(typ, *args, **kwargs):
+	return GSBackgroundImage.alloc().init()
+GSBackgroundImage.__new__ = BackgroundImage__new__;
+
+def BackgroundImage__init__(self, path = None):
+	if path:
+		self.setImagePath_(path)
+		self.loadImage()
+GSBackgroundImage.__init__ = BackgroundImage__init__;
+
+def BackgroundImage__repr__(self):
+	return "<GSBackgroundImage '%s'>" % self.imagePath()
+GSBackgroundImage.__repr__ = BackgroundImage__repr__;
+
+def BackgroundImage_setPath(self, path):
+	self.setImagePath_(path)
+	self.loadImage()
+
+GSBackgroundImage.path = property(	lambda self: self.pyobjc_instanceMethods.imagePath(),
+						lambda self, value: BackgroundImage_setPath(self, value))
+
+'''.. attribute:: path
+	Path of image file
+	:type: unicode
+'''
+
+GSBackgroundImage.image = property(	lambda self: self.pyobjc_instanceMethods.image() )
+
+'''.. attribute:: image
+	
+	:class:`NSImage <NSImage>` object of background image, read only (as in: not settable)
+	
+	:type: :class:`NSImage <NSImage>`
+'''
+
+GSBackgroundImage.crop = property(	lambda self: self.pyobjc_instanceMethods.crop(),
+							lambda self, value: self.setCrop_(value)) 
+'''.. attribute:: crop
+	
+	Crop rectangle. This is relative to the image's size in pixels, not the font's em units.
+	
+	:type: :class:`NSRect`
+
+	.. code-block:: python
+
+		# change cropping
+		layer.backgroundImage.crop = NSRect(NSPoint(0, 0), NSPoint(1200, 1200))
+'''
+
+GSBackgroundImage.locked = property(		lambda self: bool(self.pyobjc_instanceMethods.locked()),
+						 		lambda self, value: self.setLocked_(value))
+'''.. attribute:: locked
+	
+	Defines whether image is locked for access in UI.
+	
+	:type: bool
+'''
+
+def BackgroundImage_getPosition(self):
+	return NSPoint(self.transform[4], self.transform[5])
+def BackgroundImage_setPosition(self, pos):
+	self.transform = (self.transform[0], self.transform[1], self.transform[2], self.transform[3], pos.x, pos.y)
+
+GSBackgroundImage.position = property(		lambda self: BackgroundImage_getPosition(self),
+						 		lambda self, value: BackgroundImage_setPosition(self, value))
+
+'''.. attribute:: position
+	
+	Position of image in font's em units.
+	
+	:type: :class:`NSPoint`
+
+	.. code-block:: python
+
+		# change position
+		layer.backgroundImage.position = NSPoint(50, 50)
+'''
+
+def BackgroundImage_getScale(self):
+	return self.transform[0]
+def BackgroundImage_setScale(self, scale):
+	self.transform = (float(scale), self.transform[1], self.transform[2], float(scale), self.transform[4], self.transform[5])
+
+GSBackgroundImage.scale = property(		lambda self: BackgroundImage_getScale(self),
+						 		lambda self, value: BackgroundImage_setScale(self, value))
+
+'''.. attribute:: scale
+	
+	Scale factor of image.
+	
+	This sets the scale factor for x and y scale simultaneously. For separate scale factors, please use the transormation matrix.
+	
+	:type: float
+'''
+
+
+GSBackgroundImage.transform = property(		lambda self: self.pyobjc_instanceMethods.transformStruct(),
+						 		lambda self, value: self.setTransformStruct_(value))
+'''.. attribute:: transform
+	
+	Transformation matrix.
+	
+	:type: :class:`NSAffineTransformStruct`
+
+	.. code-block:: python
+
+		# change transformation
+		layer.backgroundImage.transform = (
+			1.0, # x scale factor
+			0.0, # x skew factor
+			0.0, # y skew factor
+			1.0, # y scale factor
+			0.0, # x position
+			0.0  # y position
+			)
+
+
+----------
+Functions
+----------
+
+
+'''
+
+def BackgroundImage_resetCrop(self):
+	self.crop = NSRect(NSPoint(0, 0), NSPoint(self.image.size().width, self.image.size().height))
+GSBackgroundImage.resetCrop = BackgroundImage_resetCrop
+
+
+'''.. function:: resetCrop
+	
+	Resets the cropping to the image's original dimensions.
+	
+	:type: float
+'''
 
 
 
