@@ -4280,26 +4280,6 @@ def __GSEditViewController_set_layers__(self, layers):
 		string.appendAttributedString_(A)
 	self.graphicView().textStorage().setText_(string)
 
-def ____GSEditViewController_set_layers__(self, layers):
-	# if not (type(layers) is type(list) or type(layers) == NSArray):
-	# 	raise ValueError
-	string = NSMutableAttributedString.alloc().init()
-	Font = self.representedObject()
-	for l in layers:
-		if l.className() == "GSLayer":
-			char = Font.characterForGlyph_(l.parent)
-			A = NSAttributedString.alloc().initWithString_attributes_(unichr(char), { "GSLayerIdAttrib" : l.associatedMasterId })
-		elif l.className() == "GSBackgroundLayer":
-			char = Font.characterForGlyph_(l.parent)
-			A = NSAttributedString.alloc().initWithString_attributes_(unichr(char), { "GSLayerIdAttrib" : l.associatedMasterId, "GSShowBackgroundAttrib": True })
-		elif l.className() == "GSControlLayer":
-			char = l.parent().unicodeChar()
-			A = NSAttributedString.alloc().initWithString_(unichr(char))
-		else:
-			raise ValueError
-		string.appendAttributedString_(A)
-	self.graphicView().textStorage().setText_(string)
-
 GSEditViewController.layers = property(lambda self: self.graphicView().layoutManager().cachedGlyphs(),
 							  lambda self, value: __GSEditViewController_set_layers__(self, value))
 
