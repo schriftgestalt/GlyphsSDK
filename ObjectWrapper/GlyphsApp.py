@@ -3458,7 +3458,7 @@ GSPath.direction = property(		lambda self: self.valueForKey_("direction"))
 	Path direction. -1 for counter clockwise, 1 for clockwise.
 	:type: int'''
 
-GSPath.bounds = property(	 lambda self: setImageCself.pyobjc_instanceMethods.bounds() )
+GSPath.bounds = property(	 lambda self: self.pyobjc_instanceMethods.bounds() )
 '''.. attribute:: bounds
 	Bounding box of the path, read only
 	:type: NSRect
