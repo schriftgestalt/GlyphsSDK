@@ -4361,10 +4361,8 @@ This contains valuable information from the glyph database. See :class:`GSGlyphs
 	sortNameKeep
 	desc
 	altNames
+	desc
 
-----------
-Properties
-----------
 
 '''
 
@@ -4470,10 +4468,10 @@ GSGlyphInfo.sortNameKeep = property(lambda self: self.pyobjc_instanceMethods.sor
 
 '''
 
-GSGlyphInfo.description = property(lambda self: self.pyobjc_instanceMethods.desc())
+GSGlyphInfo.desc = property(lambda self: self.pyobjc_instanceMethods.desc())
 
 '''
-.. attribute:: description
+.. attribute:: desc
 	Unicode description of glyph
 	:type: unicode
 
