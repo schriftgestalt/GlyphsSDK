@@ -2838,7 +2838,7 @@ GSLayer.backgroundImage = property(lambda self: self.pyobjc_instanceMethods.back
 									lambda self, value: self.pyobjc_instanceMethods.setBackgroundImage_(value))
 
 '''.. attribute:: backgroundImage
-	The background image
+	The background image. It will be scaled so that 1 em unit equals 1 of the image's pixels.
 	:type: :class:`GSBackgroundImage`
 
 	.. code-block:: python
@@ -3805,6 +3805,8 @@ For details on how to access it, please see :class:`GSLayer`.backgroundImage
 .. autosummary::
 
 	resetCrop
+	scaleWidthToEmUnits
+	scaleHeightToEmUnits
 
 ----------
 Properties
@@ -3852,7 +3854,7 @@ GSBackgroundImage.crop = property(	lambda self: self.pyobjc_instanceMethods.crop
 							lambda self, value: self.setCrop_(value)) 
 '''.. attribute:: crop
 	
-	Crop rectangle. This is relative to the image's size in pixels, not the font's em units.
+	Crop rectangle. This is relative to the image's size in pixels, not the font's em units (just in case the image is scaled to something other than 100%).
 	
 	:type: :class:`NSRect`
 
@@ -3903,6 +3905,8 @@ GSBackgroundImage.scale = property(		lambda self: BackgroundImage_getScale(self)
 	
 	Scale factor of image.
 	
+	A scale factor of 1.0 (100%) means that 1 em unit equals 1 of the image's pixels.
+	
 	This sets the scale factor for x and y scale simultaneously. For separate scale factors, please use the transormation matrix.
 	
 	:type: float
@@ -3945,10 +3949,40 @@ GSBackgroundImage.resetCrop = BackgroundImage_resetCrop
 '''.. function:: resetCrop
 	
 	Resets the cropping to the image's original dimensions.
-	
-	:type: float
 '''
 
+def BackgroundImage_scaleWidthToEmUnits(self, value):
+	self.scale = float(value) / float(self.crop.size.width - self.crop.origin.x)
+GSBackgroundImage.scaleWidthToEmUnits = BackgroundImage_scaleWidthToEmUnits
+
+'''.. function:: scaleWidthToEmUnits
+	
+	Scale the image's cropped width to a certain em unit value.
+
+	.. code-block:: python
+
+		# fit image in layer's width
+		layer.backgroundImage.scaleWidthToEmUnits(layer.width)
+		
+
+'''
+
+def BackgroundImage_scaleHeightToEmUnits(self, value):
+	self.scale = float(value) / float(self.crop.size.height - self.crop.origin.y)
+GSBackgroundImage.scaleHeightToEmUnits = BackgroundImage_scaleHeightToEmUnits
+
+'''.. function:: scaleHeightToEmUnits
+	
+	Scale the image's cropped height to a certain em unit value.
+
+	.. code-block:: python
+
+		# position image's origin at descender line
+		layer.backgroundImage.position = NSPoint(0, font.masters[0].descender)
+
+		# scale image to UPM value
+		layer.backgroundImage.scaleHeightToEmUnits(font.upm)
+'''
 
 
 
