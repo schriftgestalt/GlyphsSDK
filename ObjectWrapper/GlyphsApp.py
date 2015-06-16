@@ -496,6 +496,8 @@ class FontGlyphsProxy (Proxy):
 			return self._owner.glyphForName_(Key)
 	def __setitem__(self, Key, Glyph):
 		if type(Key) is int:
+			if Key < 0:
+				Key = self.__len__() + Key
 			self._owner.removeGlyph_( self._owner.glyphAtIndex_(Key) )
 			self._owner.addGlyph_(Glyph)
 		else:
@@ -503,6 +505,8 @@ class FontGlyphsProxy (Proxy):
 			self._owner.addGlyph_(Glyph)
 	def __delitem__(self, Key):
 		if type(Key) is int:
+			if Key < 0:
+				Key = self.__len__() + Key
 			self._owner.removeGlyph_( self._owner.glyphAtIndex_(Key) )
 		else:
 			self._owner.removeGlyph_( self._owner.glyphForName_(Key) )
@@ -538,6 +542,8 @@ class FontFontMasterProxy (Proxy):
 			raise(KeyError)
 	def __setitem__(self, Key, FontMaster):
 		if type(Key) is int:
+			if Key < 0:
+				Key = self.__len__() + Key
 			self._owner.replaceFontMasterAtIndex_withFontMaster_(Key, FontMaster)
 		elif type(Key) is str or type(Key) is unicode or type(Key) is objc.pyobjc_unicode:
 			OldFontMaster = self._owner.fontMasterForId_(Key)
@@ -545,6 +551,8 @@ class FontFontMasterProxy (Proxy):
 			return self._owner.addFontMaster_(FontMaster)
 	def __delitem__(self, Key):
 		if type(Key) is int:
+			if Key < 0:
+				Key = self.__len__() + Key
 			return self._owner.removeFontMasterAtIndex_(Key)
 		else:
 			OldFontMaster = self._owner.fontMasterForId_(Key)
@@ -569,9 +577,13 @@ class FontInstancesProxy (Proxy):
 			raise(KeyError)
 	def __setitem__(self, Key, Class):
 		if type(Key) is int:
+			if Key < 0:
+				Key = self.__len__() + Key
 			self._owner.replaceObjectInInstancesAtIndex_withObject_(Key, Class)
 	def __delitem__(self, Key):
 		if type(Key) is int:
+			if Key < 0:
+				Key = self.__len__() + Key
 			return self._owner.removeObjectFromInstancesAtIndex_(Key)
 	def __iter__(self):
 		for index in range(self._owner.countOfInstances()):
@@ -592,6 +604,8 @@ class CustomParametersProxy(Proxy):
 			return self._owner.customValueForKey_(Key)
 	def __setitem__(self, Key, Parameter):
 		if type(Key) is int:
+			if Key < 0:
+				Key = self.__len__() + Key
 			Value = self._owner.objectInCustomParametersAtIndex_(Key)
 			if Value is not None:
 				Value.setValue_(Parameter)
@@ -599,6 +613,8 @@ class CustomParametersProxy(Proxy):
 			self._owner.setCustomParameter_forKey_(Parameter, Key)
 	def __delitem__(self, Key):
 		if type(Key) is int:
+			if Key < 0:
+				Key = self.__len__() + Key
 			self._owner.removeObjectFromCustomParametersAtIndex_(Key)
 		else:
 			self._owner.removeObjectFromCustomParametersForKey_(Key)
@@ -625,9 +641,13 @@ class FontClassesProxy (Proxy):
 		raise(KeyError)
 	def __setitem__(self, Key, Class):
 		if type(Key) is int:
+			if Key < 0:
+				Key = self.__len__() + Key
 			self._owner.replaceObjectInClassesAtIndex_withObject_(Key, Class)
 	def __delitem__(self, Key):
 		if type(Key) is int:
+			if Key < 0:
+				Key = self.__len__() + Key
 			return self._owner.removeObjectFromClassesAtIndex_(Key)
 		elif type(Key) is str or type(Key) is unicode or type(Key) is objc.pyobjc_unicode:
 			Class = self._owner.classForTag_(Key)
@@ -657,9 +677,13 @@ class FontFeaturesProxy (Proxy):
 			raise(KeyError)
 	def __setitem__(self, Key, Feature):
 		if type(Key) is int:
+			if Key < 0:
+				Key = self.__len__() + Key
 			self._owner.replaceFeatureAtIndex_withFeature_(Key, Feature)
 	def __delitem__(self, Key):
 		if type(Key) is int:
+			if Key < 0:
+				Key = self.__len__() + Key
 			return self._owner.removeFeatureAtIndex_(Key)
 		elif type(Key) is str or type(Key) is unicode or type(Key) is objc.pyobjc_unicode:
 			Feature = self._owner.featureForTag_(Key)
@@ -702,9 +726,13 @@ class FontFeaturePrefixesProxy (Proxy):
 			raise(KeyError)
 	def __setitem__(self, Key, Feature):
 		if type(Key) is int:
+			if Key < 0:
+				Key = self.__len__() + Key
 			self._owner.replaceObjectInFeaturePrefixesAtIndex__withObject_(Key, Feature)
 	def __delitem__(self, Key):
 		if type(Key) is int:
+			if Key < 0:
+				Key = self.__len__() + Key
 			return self._owner.removeObjectFromFeaturePrefixesAtIndex_(Key)
 		elif type(Key) is str or type(Key) is unicode or type(Key) is objc.pyobjc_unicode:
 			FeaturePrefix = self._owner.featurePrefixForTag_(Key)
@@ -780,12 +808,16 @@ class GlyphLayerProxy (Proxy):
 				return self._owner.layerForKey_(Key)
 	def __setitem__(self, Key, Layer):
 		if type(Key) is int and self._owner.parent:
+			if Key < 0:
+				Key = self.__len__() + Key
 			FontMaster = self._owner.parent.fontMasterAtIndex_(Key)
 			return self._owner.setLayer_forKey_(Layer, FontMaster.id)
 		else:
 			return self._owner.setLayer_forKey_(Layer, Key)
 	def __delitem__(self, Key):
 		if type(Key) is int and self._owner.parent:
+			if Key < 0:
+				Key = self.__len__() + Key
 			Layer = self.__getitem__(Key)
 			return self._owner.removeLayerForKey_(Layer.layerId)
 		else:
@@ -802,36 +834,36 @@ class GlyphLayerProxy (Proxy):
 		self._owner.setLayer_forKey_(Layer, NSString.UUID())
 
 class LayerComponentsProxy (Proxy):
-	def __getitem__(self, i):
-		return self._owner.componentAtIndex_(i)
-	def __setitem__(self, i, Component):
-		self._owner.setComponent_atIndex_(Component, i)
-	def __delitem__(self, i):
-		self._owner.removeComponentAtIndex_(i)
+	def __getitem__(self, Key):
+		return self._owner.componentAtIndex_(Key)
+	def __setitem__(self, Key, Component):
+		self._owner.setComponent_atIndex_(Component, Key)
+	def __delitem__(self, Key):
+		self._owner.removeComponentAtIndex_(Key)
 	def append(self, Component):
 		self._owner.addComponent_(Component)
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.components()
 
 class LayerGuideLinesProxy (Proxy):
-	def __getitem__(self, i):
-		return self._owner.guideLineAtIndex_(i)
-	def __setitem__(self, i, Component):
-		self._owner.setGuideLine_atIndex_(Component, i)
-	def __delitem__(self, i):
-		self._owner.removeGuideLineAtIndex_(i)
+	def __getitem__(self, Key):
+		return self._owner.guideLineAtIndex_(Key)
+	def __setitem__(self, Key, Component):
+		self._owner.setGuideLine_atIndex_(Component, Key)
+	def __delitem__(self, Key):
+		self._owner.removeGuideLineAtIndex_(Key)
 	def append(self, GuideLine):
 		self._owner.addGuideLine_(GuideLine)
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.guideLines()
 
 class LayerHintsProxy (Proxy):
-	def __getitem__(self, i):
-		return self._owner.hintAtIndex_(i)
-	def __setitem__(self, i, Component):
-		self._owner.setHint_atIndex_(Component, i)
-	def __delitem__(self, i):
-		self._owner.removeObjectFromHintsAtIndex_(i)
+	def __getitem__(self, Key):
+		return self._owner.hintAtIndex_(Key)
+	def __setitem__(self, Key, Component):
+		self._owner.setHint_atIndex_(Component, Key)
+	def __delitem__(self, Key):
+		self._owner.removeObjectFromHintsAtIndex_(Key)
 	def append(self, GuideLine):
 		self._owner.addHint_(GuideLine)
 	def values(self):
@@ -888,8 +920,12 @@ class LayerPathsProxy (Proxy):
 			Key = self._owner.pathCount() + Key
 		return self._owner.pathAtIndex_(Key)
 	def __setitem__(self, i, Path):
+		if Key < 0:
+			Key = self._owner.pathCount() + Key
 		self._owner.setPath_atIndex_(Path, i)
 	def __delitem__(self, i):
+		if Key < 0:
+			Key = self._owner.pathCount() + Key
 		self._owner.removePathAtIndex_(i)
 	def append(self, Path):
 		self._owner.addPath_(Path)
@@ -937,7 +973,9 @@ class FontTabsProxy (Proxy):
 			raise(KeyError)
 	def __delitem__(self, Key):
 		if type(Key) is int:
-			Tab = self._owner.parent.windowController().tabBarControl().viewControllers()[Key]
+			if Key < 0:
+				Key = self.__len__() + Key
+			Tab = self._owner.parent.windowController().tabBarControl().viewControllers()[Key + 1]
 			self._owner.parent.windowController().tabBarControl().closeTabItem_(Tab)
 		else:
 			raise(KeyError)
