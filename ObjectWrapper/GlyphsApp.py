@@ -4198,7 +4198,7 @@ GSEditViewController.text = property(lambda self: self.graphicView().displayStri
 		
 		font.tabs[0].layers = []
 		
-		# display all masters of one glyph next to each other
+		# display all layers of one glyph next to each other
 		for layer in font.glyphs['a'].layers:
 			font.tabs[0].layers.append(layer)
 	
@@ -4427,14 +4427,16 @@ GSGlyphInfo.sortNameKeep = property(lambda self: self.pyobjc_instanceMethods.sor
 
 '''
 .. attribute:: sortNameKeep
+	Alternative name of glyph used for sorting in UI, when using 'keep alternate glyphs together'.
 	:type: unicode
 
 '''
 
-GSGlyphInfo.desc = property(lambda self: self.pyobjc_instanceMethods.desc())
+GSGlyphInfo.description = property(lambda self: self.pyobjc_instanceMethods.desc())
 
 '''
-.. attribute:: desc
+.. attribute:: description
+	Unicode description of glyph
 	:type: unicode
 
 '''
@@ -4443,6 +4445,7 @@ GSGlyphInfo.altNames = property(lambda self: self.pyobjc_instanceMethods.altName
 
 '''
 .. attribute:: altNames
+	Alternative names for glyphs that are not used but should get recognized.
 	:type: unicode
 
 '''
