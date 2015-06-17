@@ -4249,8 +4249,9 @@ def __GSEditViewController__repr__(self):
 	nameString = self.text
 	if len(nameString) > 30:
 		nameString = nameString[:30] + '...'
-	nameString = nameString.replace('\n', ' ')
-	return "<GSEditViewController '%s'>" % (nameString)
+	nameString = nameString.replace('\n', '\\n')
+	import codecs
+	return codecs.encode("<GSEditViewController %s>" % nameString, 'ascii', 'backslashreplace')
 
 GSEditViewController.__repr__ = __GSEditViewController__repr__
 
