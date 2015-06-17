@@ -107,7 +107,7 @@ def Glyphs__repr__(self):
 GSApplication.__repr__ = Glyphs__repr__;
 
 def currentFont():
-	doc = NSDocumentController.sharedDocumentController().currentDocument()
+	doc = NSApplication.sharedApplication().orderedDocuments()[0]
 	if (doc):
 		return doc.font
 
