@@ -857,6 +857,9 @@ class LayerGuideLinesProxy (Proxy):
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.guideLines()
 
+
+
+
 class LayerHintsProxy (Proxy):
 	def __getitem__(self, Key):
 		return self._owner.hintAtIndex_(Key)
@@ -870,6 +873,8 @@ class LayerHintsProxy (Proxy):
 		return self._owner.pyobjc_instanceMethods.hints()
 	
 
+
+
 class LayerAnchorsProxy (Proxy):
 	"""layer.anchors is a dict!!!"""
 	def __getitem__(self, Key):
@@ -877,7 +882,6 @@ class LayerAnchorsProxy (Proxy):
 			return self._owner.anchorForName_(Key)
 		else:
 			raise KeyError
-			return self._owner.pyobjc_instanceMethods.anchors().objectAtIndex_(Key)
 	def __setitem__(self, Key, Anchor):
 		if type(Key) is str or type(Key) is unicode or type(Key) is objc.pyobjc_unicode:
 			Anchor.setName_(Key)
@@ -896,21 +900,22 @@ class LayerAnchorsProxy (Proxy):
 			Value = self._owner.anchorForName_(Key)
 			Items.append((Key, Value))
 		return Items
-	
 	def values(self):
 		if self._owner.pyobjc_instanceMethods.anchors() is not None:
 			return self._owner.pyobjc_instanceMethods.anchors().allValues()
 		else:
 			return [];
-	
 	def keys(self):
 		if self._owner.pyobjc_instanceMethods.anchors() is not None:
 			return self._owner.pyobjc_instanceMethods.anchors().allKeys()
 		else:
 			return []
+	def append(self, Anchor):
+		self._owner.addAnchor_(Anchor)
 	def __len__(self):
 		#print "count"
 		return self._owner.anchorCount()
+
 
 
 
@@ -3148,6 +3153,8 @@ def IntersectionsBetweenPoints(self, Point1, Point2):
 	return self.calculateIntersectionsStartPoint_endPoint_(Point1, Point2)
 GSLayer.intersectionsBetweenPoints = IntersectionsBetweenPoints
 
+NSConcreteValue.x = property(lambda self: self.pointValue().x )
+NSConcreteValue.y = property(lambda self: self.pointValue().y )
 
 '''
 .. function:: intersectionsBetweenPoints(Point1, Point2)
@@ -3165,14 +3172,14 @@ GSLayer.intersectionsBetweenPoints = IntersectionsBetweenPoints
 		layer = Glyphs.font.selectedLayers[0] # current layer
 
 		# show all intersections with glyph at y=100
-		intersections = layer.intersectionsBetweenPoints(NSPoint(-1000, 100), NSPoint(layer.width+1000, 100))
+		intersections = layer.intersectionsBetweenPoints((-1000, 100), (layer.width+1000, 100))
 		print intersections
 		
 		# left sidebearing at measurement line
-		print intersections[1].pointValue().x
+		print intersections[1].x
 
 		# right sidebearing at measurement line
-		print layer.width - intersections[-2].pointValue().x
+		print layer.width - intersections[-2].x
 '''
 
 def Layer_addMissingAnchors(self):
