@@ -3828,13 +3828,14 @@ For details on how to access them, please see :class:`GSLayer`.guides
 
 .. autosummary::
 	
-	position
-	angle
-	
+
 ----------
 Properties
 ----------
-
+	
+	position
+	angle
+	name
 
 	'''
 
@@ -3851,17 +3852,21 @@ def GuideLine__repr__(self):
 	return "<GSGuideLine x=%s y=%s angle=%s>" % (self.position.x, self.position.y, self.angle)
 GSGuideLine.__repr__ = GuideLine__repr__;
 
-GSGuideLine.position = property(			lambda self: self.valueForKey_("position").pointValue(),
+GSGuideLine.position = property(lambda self: self.valueForKey_("position").pointValue(),
 								lambda self, value: self.setPosition_(value))
 '''.. attribute:: position
 	The position of the node.
 	:type: NSPoint'''
-GSGuideLine.angle = property(lambda self: self.valueForKey_("angle").floatValue(),
+GSGuideLine.angle = property(	lambda self: self.valueForKey_("angle").floatValue(),
 								lambda self, value: self.setAngle_(float(value)))
 '''.. attribute:: angle
 	Angle
 	:type: float'''
-
+GSGuideLine.name = property(	lambda self: self.valueForKey_("name"),
+								lambda self, value: self.setName_(value))
+'''.. attribute:: name
+	a optional name
+	:type: unicode'''
 
 
 
