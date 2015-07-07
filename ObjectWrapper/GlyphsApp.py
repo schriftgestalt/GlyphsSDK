@@ -98,7 +98,7 @@ The mothership. Everything starts here.
 Properties
 ----------
 '''
-GSApplication.currentDocument = property(lambda self: NSApplication.sharedApplication().orderedDocuments()[0])
+GSApplication.currentDocument = property(lambda self: NSApplication.sharedApplication().currentFontDocument())
 
 GSApplication.documents = property(lambda self: AppDocumentProxy(self))
 
@@ -107,9 +107,12 @@ def Glyphs__repr__(self):
 GSApplication.__repr__ = Glyphs__repr__;
 
 def currentFont():
-	doc = NSApplication.sharedApplication().orderedDocuments()[0]
-	if (doc):
+	try:
+		doc = NSApplication.sharedApplication().currentFontDocument()
 		return doc.font
+	except:
+		pass
+	return None
 
 # by Yanone
 GSApplication.font = property(lambda self: currentFont())
@@ -871,7 +874,7 @@ class LayerHintsProxy (Proxy):
 		self._owner.addHint_(GuideLine)
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.hints()
-	
+
 
 
 
@@ -3161,7 +3164,7 @@ NSConcreteValue.y = property(lambda self: self.pointValue().y )
 
 	Return all intersection points between a measurement line and the paths in the layer. This is basically identical to the measurement tool in the UI.
 	
-	Normally, the first returned point is the starting point, the last returned point is the end point. Thus, the second point is the first intersection, the second last point is the last intersection. 
+	Normally, the first returned point is the starting point, the last returned point is the end point. Thus, the second point is the first intersection, the second last point is the last intersection.
 	
 	
 	:param Point1: one point
@@ -3827,7 +3830,7 @@ For details on how to access them, please see :class:`GSLayer`.guides
 .. class:: GSGuideLine()
 
 .. autosummary::
-	
+
 
 ----------
 Properties
