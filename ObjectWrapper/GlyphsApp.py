@@ -2611,6 +2611,35 @@ GSGlyph.glyphInfo = property(lambda self: GSGlyphsInfo.glyphInfoForGlyph_(self))
 	:type: :class:`GSGlyphInfo`
 '''
 
+def __GSGlyph_glyphDataEntryString__(self):
+	Unicode = self.unicode
+	if Unicode == None or len(Unicode) < 3:
+		Unicode = ""
+	Decompose = self.layers[0].componentNamesText()
+	if Decompose != None and len(Decompose) > 0:
+		Decompose = "decompose=\"%s\" " % Decompose
+		
+	SubCategory = ""
+	if self.subCategory != "Other":
+		SubCategory = "subCategory=\"%s\" " % self.subCategory
+	Anchors = self.layers[0].anchors.keys()
+	if len(Anchors) > 0:
+		Anchors = "anchors=\"%s\" " % ", ".join(Anchors)
+	else:
+		Anchors = ""
+	GlyphInfo = self.glyphInfo
+	Accents = GlyphInfo.accents
+	if len(Accents) > 0:
+		Accents = "accents=\"%s\"" % ", ".join(Accents)
+	else:
+		Accents = ""
+	Production = Glyphs.productionGlyphName(self.name)
+	if len(Production) > 0:
+		Production = "production=\"%s\"" % Production
+	return "	<glyph unicode=\"%s\" name=\"%s\" %scategory=\"%s\" %sscript=\"%s\" description=\"\" %s%s />" % (Unicode, self.name, Decompose, self.category, SubCategory, self.script, Anchors, Accents)
+
+GSGlyph.glyphDataEntryString = __GSGlyph_glyphDataEntryString__
+
 GSGlyph.leftKerningGroup = property(lambda self: self.valueForKey_("leftKerningGroup"), 
 									lambda self, value: self.setLeftKerningGroup_(value))
 '''.. attribute:: leftKerningGroup
