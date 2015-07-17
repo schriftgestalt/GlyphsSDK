@@ -359,7 +359,7 @@ GSApplication.niceGlyphName = _niceGlyphName
 	'''
 
 def _productionGlyphName(self, String):
-	return GSGlyphsInfo.productionGlyphName_(String)
+	return GSGlyphsInfo.productionGlyphNameForName_(String)
 GSApplication.productionGlyphName = _productionGlyphName
 
 '''.. function:: productionGlyphName(Name)
@@ -923,18 +923,18 @@ class LayerAnchorsProxy (Proxy):
 
 
 class LayerPathsProxy (Proxy):
-	def __getitem__(self, Key):
-		if Key < 0:
-			Key = self._owner.pathCount() + Key
-		return self._owner.pathAtIndex_(Key)
-	def __setitem__(self, i, Path):
-		if Key < 0:
-			Key = self._owner.pathCount() + Key
-		self._owner.setPath_atIndex_(Path, i)
-	def __delitem__(self, i):
-		if Key < 0:
-			Key = self._owner.pathCount() + Key
-		self._owner.removePathAtIndex_(i)
+	def __getitem__(self, idx):
+		if idx < 0:
+			idx = self._owner.pathCount() + idx
+		return self._owner.pathAtIndex_(idx)
+	def __setitem__(self, idx, Path):
+		if idx < 0:
+			idx = self._owner.pathCount() + idx
+		self._owner.setPath_atIndex_(Path, idx)
+	def __delitem__(self, idx):
+		if idx < 0:
+			Key = self._owner.pathCount() + idx
+		self._owner.removePathAtIndex_(idx)
 	def append(self, Path):
 		self._owner.addPath_(Path)
 	def values(self):
@@ -2629,7 +2629,7 @@ def __GSGlyph_glyphDataEntryString__(self):
 		Anchors = ""
 	GlyphInfo = self.glyphInfo
 	Accents = GlyphInfo.accents
-	if len(Accents) > 0:
+	if Accents != None and len(Accents) > 0:
 		Accents = "accents=\"%s\"" % ", ".join(Accents)
 	else:
 		Accents = ""
