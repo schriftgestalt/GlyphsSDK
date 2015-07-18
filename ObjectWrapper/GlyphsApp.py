@@ -21,7 +21,7 @@ class Proxy(object):
 	def __len__(self):
 		Values = self.values()
 		if Values is not None:
-			return len(self.values())
+			return len(Values)
 		return 0
 	def __iter__(self):
 		Values = self.values()
@@ -130,13 +130,9 @@ GSApplication.font = property(lambda self: currentFont())
 '''
 
 
-# by Yanone
-def AllFonts():
-	fonts = []
-	for d in NSDocumentController.sharedDocumentController().documents():
-		fonts.append(d.font)
-	return fonts
-GSApplication.fonts = property(lambda self: AllFonts())
+
+GSApplication.fonts = property(lambda self: AppFontProxy(self))
+
 
 '''.. attribute:: fonts
 	
@@ -148,6 +144,13 @@ GSApplication.fonts = property(lambda self: AllFonts())
 		# access all open fonts
 		for font in Glyphs.fonts:
 			print font.familyName
+			
+		# add a font
+		
+		font = GSFont()
+		font.familyName = "My New Fonts"
+		Glyphs.fonts.append(font)
+		
 '''
 
 class DefaultsProxy(Proxy):
@@ -455,21 +458,42 @@ GSElement.y = property(lambda self: self.pyobjc_instanceMethods.position().y,
 	lambda self, value: self.setPosition_(NSMakePoint(self.x, value)))
 
 
-class AppDocumentProxy (Proxy):
+class AppDocumentProxy(Proxy):
 	"""The list of documents."""
-	#NSDocumentController.sharedDocumentController().documents()
 	def __getitem__(self, Key):
 		if type(Key) is int:
+			Values = self.values()
 			if Key < 0:
-				Key = self.__len__() + Key
-			return NSDocumentController.sharedDocumentController().documents().objectAtIndex_(Key)
+				Key = len(Values) + Key
+			return Values[Key]
 		else:
 			raise(KeyError)
-	def __len____(self):
-		return NSDocumentController.sharedDocumentController().documents().count()
 	def values(self):
-		return NSDocumentController.sharedDocumentController().documents()
+		docs = []
+		for doc in self._owner.orderedDocuments():
+			if doc.isKindOfClass_(NSClassFromString("GSDocument")):
+				docs.append(doc)
+		return docs
 
+class AppFontProxy(Proxy):
+	"""The list of fonts."""
+	def __getitem__(self, Key):
+		if type(Key) is int:
+			Values = self.values()
+			if Key < 0:
+				Key = len(Values) + Key
+			return Values[Key]
+		else:
+			raise(KeyError)
+	def values(self):
+		fonts = []
+		for doc in self._owner.orderedDocuments():
+			if doc.isKindOfClass_(NSClassFromString("GSDocument")):
+				fonts.append(doc.font)
+		return fonts
+	def append(self, font):
+		doc = Glyphs.documentController().openUntitledDocumentAndDisplay_error_(True, None)[0]
+		doc.setFont_(font)
 
 GSDocument.font = property(lambda self: self.valueForKey_("font"),
 						   lambda self, value: self.setFont_(value))
