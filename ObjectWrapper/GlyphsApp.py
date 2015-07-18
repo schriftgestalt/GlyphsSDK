@@ -474,7 +474,7 @@ GSElement.y = property(lambda self: self.pyobjc_instanceMethods.position().y,
 	lambda self, value: self.setPosition_(NSMakePoint(self.x, value)))
 
 
-class AppDocumentProxy(Proxy):
+class AppDocumentProxy (Proxy):
 	"""The list of documents."""
 	def __getitem__(self, Key):
 		if type(Key) is int:
@@ -491,7 +491,7 @@ class AppDocumentProxy(Proxy):
 				docs.append(doc)
 		return docs
 
-class AppFontProxy(Proxy):
+class AppFontProxy (Proxy):
 	"""The list of fonts."""
 	def __getitem__(self, Key):
 		if type(Key) is int:
