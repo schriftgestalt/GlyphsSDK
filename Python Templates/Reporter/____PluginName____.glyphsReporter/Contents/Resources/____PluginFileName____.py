@@ -139,9 +139,19 @@ class ____PluginClassName____ ( NSObject, GlyphsReporterProtocol ):
 		Whatever you draw here will be displayed in the Preview at the bottom.
 		Remove the method or return True if you want to leave the Preview untouched.
 		Return True to leave the Preview as it is and draw on top of it.
-		Return False to disable the Preview and draw your own.
-		In that case, don't forget to add Bezier methods like in drawForegroundForLayer_(),
-		otherwise users will get an empty Preview.
+		Return False to disable the Preview and draw your own. In that case,
+		here is a template:
+		
+		try:
+			# Check for black or white background and set color accordingly:
+			if NSUserDefaults.standardUserDefaults().boolForKey_("GSPreview_Black"):
+				NSColor.whiteColor().set()
+			else:
+				NSColor.blackColor().set()
+			Layer.bezierPath() # Draw stuff
+			return False # Disable the normal Preview
+		except:
+			return True  # Fallback to normal Preview
 		"""
 		return True
 	
