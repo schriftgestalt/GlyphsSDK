@@ -6,7 +6,7 @@ from Foundation import *
 import time, math, sys, os
 
 
-__all__ = ["Glyphs", "GetFile", "GSMOVE", "GSLINE", "GSCURVE", "GSOFFCURVE", "GSSHARP", "GSSMOOTH", "TOPGHOST", "STEM", "BOTTOMGHOST", "TTANCHOR", "TTSTEM", "TTALIGN", "TTINTERPOLATE", "TTDIAGONAL", "CORNER", "CAP", "TTDONTROUND", "TTROUND", "TTROUNDUP", "TTROUNDDOWN", "TRIPLE", "divideCurve", "distance", "addPoints", "subtractPoints", "GetFolder", "GetSaveFile", "GetOpenFile", "Message"]
+__all__ = ["Glyphs", "GetFile", "GSMOVE", "GSLINE", "GSCURVE", "GSOFFCURVE", "GSSHARP", "GSSMOOTH", "TOPGHOST", "STEM", "BOTTOMGHOST", "TTANCHOR", "TTSTEM", "TTALIGN", "TTINTERPOLATE", "TTDIAGONAL", "CORNER", "CAP", "TTDONTROUND", "TTROUND", "TTROUNDUP", "TTROUNDDOWN", "TRIPLE", "DRAWFOREGROUND", "DRAWBACKGROUND", "DRAWINACTIVE", "divideCurve", "distance", "addPoints", "subtractPoints", "GetFolder", "GetSaveFile", "GetOpenFile", "Message"]
 
 
 class Proxy(object):
@@ -397,10 +397,26 @@ GSApplication.ligatureComponents = _ligatureComponents
 		)
 	'''
 
+# available in Glyphs 2 (786)
+def __addCallback__(self, target, operation):
+	GSApplication.delegate().addCallback_forOperation_(target, operation)
+GSApplication.addCallback = __addCallback__
+
+def __removeCallback___(self, target, operation = None):
+	if operation != None:
+		GSApplication.delegate().removeCallback_forOperation_(target, operation)
+	else:
+		GSApplication.delegate().removeCallback_(target)
+GSApplication.removeCallback = __removeCallback___
+
+DRAWFOREGROUND = "DrawForeground"
+DRAWBACKGROUND = "DrawBackground"
+DRAWINACTIVE = "DrawInactive"
 
 
-
-
+def __redraw__(self):
+	NSNotificationCenter.defaultCenter().postNotificationName_object_("GSRedrawEditView", None)
+GSApplication.redraw = __redraw__
 
 
 GSMOVE = 17
