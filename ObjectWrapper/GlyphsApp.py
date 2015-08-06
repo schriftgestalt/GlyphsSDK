@@ -2952,6 +2952,7 @@ GSLayer.components = property(lambda self: LayerComponentsProxy(self),
 		for i, component in enumerate(layer.components):
 		        if component.componentName == 'dieresis':
 		                del(layer.components[i])
+		                break
 '''
 
 GSLayer.guideLines = property(lambda self: LayerGuideLinesProxy(self),
