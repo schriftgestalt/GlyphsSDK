@@ -97,10 +97,10 @@ class ____PluginClassName____ ( NSObject, GlyphsFilterProtocol ):
 			
 			# Do stuff here.
 			
-			return True
+			return (True, None)
 		except Exception as e:
 			self.logToConsole( "processLayer: %s" % str(e) )
-			return False
+			return (False, None)
 	
 	def runFilterWithLayers_error_( self, Layers, Error ):
 		"""
