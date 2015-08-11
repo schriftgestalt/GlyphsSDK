@@ -120,7 +120,7 @@ class ____PluginClassName____ ( NSObject, GlyphsReporterProtocol ):
 		"""
 		try:
 			# Color for INACTIVE GLYPH IN EDIT VIEW
-			if self.controller():
+			if self.controller:
 				# set the drawing color to black:
 				NSColor.blackColor().set()
 
