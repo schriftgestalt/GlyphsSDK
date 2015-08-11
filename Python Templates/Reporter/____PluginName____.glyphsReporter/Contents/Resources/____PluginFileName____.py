@@ -110,13 +110,45 @@ class ____PluginClassName____ ( NSObject, GlyphsReporterProtocol ):
 	
 	def drawBackgroundForInactiveLayer_( self, Layer ):
 		"""
-		Whatever you draw here will be displayed behind the paths,
-		but for inactive glyphs in the Edit view.
+		Whatever you draw here will be displayed behind the paths, but
+		- for inactive glyphs in the EDIT VIEW
+		- and for glyphs in the PREVIEW
+		Please note: If you are using this method, you probably want
+		self.needsExtraMainOutlineDrawingForInactiveLayer_() to return False
+		because otherwise Glyphs will draw the main outline on top of it, and
+		potentially cover up your background drawing.
 		"""
 		try:
-			pass
+			# Color for INACTIVE GLYPH IN EDIT VIEW
+			if self.controller():
+				# set the drawing color to black:
+				NSColor.blackColor().set()
+
+			# Color for GLYPH IN PREVIEW:	
+			else:
+				# check for background color (can be black or white):
+				if NSUserDefaults.standardUserDefaults().boolForKey_("GSPreview_Black"):
+					# set the drawing color to white if preview background is black:
+					NSColor.whiteColor().set()
+				else:
+					# set the drawing color to black if preview background is white:
+					NSColor.blackColor().set()
+
+			Layer.bezierPath().fill() # fill closed paths
+			Layer.openBezierPath().stroke() # draw open paths
 		except Exception as e:
 			self.logToConsole( "drawBackgroundForInactiveLayer_: %s" % str(e) )
+	
+	def needsExtraMainOutlineDrawingForInactiveLayer_( self, Layer ):
+		"""
+		Decides whether inactive glyphs in Edit View and glyphs in Preview should be drawn
+		by Glyphs (‘the main outline drawing’).
+		Return True (or remove the method) to let Glyphs draw the main outline.
+		Return False to prevent Glyphs from drawing the glyph (the main outline 
+		drawing), which is probably what you want if you are drawing the glyph
+		yourself in self.drawBackgroundForInactiveLayer_().
+		"""
+		return True
 	
 	def drawTextAtPoint( self, text, textPosition, fontSize=9.0, fontColor=NSColor.brownColor() ):
 		"""
@@ -133,27 +165,6 @@ class ____PluginClassName____ ( NSObject, GlyphsReporterProtocol ):
 			glyphEditView.drawText_atPoint_alignment_( displayText, textPosition, textAlignment )
 		except Exception as e:
 			self.logToConsole( "drawTextAtPoint: %s" % str(e) )
-	
-	def needsExtraMainOutlineDrawingForInactiveLayer_( self, Layer ):
-		"""
-		Whatever you draw here will be displayed in the Preview at the bottom.
-		Remove the method or return True if you want to leave the Preview untouched.
-		Return True to leave the Preview as it is and draw on top of it.
-		Return False to disable the Preview and draw your own. In that case,
-		here is a template:
-		
-		try:
-			# Check for black or white background and set color accordingly:
-			if NSUserDefaults.standardUserDefaults().boolForKey_("GSPreview_Black"):
-				NSColor.whiteColor().set()
-			else:
-				NSColor.blackColor().set()
-			Layer.bezierPath() # Draw stuff
-			return False # Disable the normal Preview
-		except:
-			return True  # Fallback to normal Preview
-		"""
-		return True
 	
 	def getHandleSize( self ):
 		"""
