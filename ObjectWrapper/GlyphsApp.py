@@ -92,6 +92,7 @@ The mothership. Everything starts here.
 	niceGlyphName()
 	productionGlyphName()
 	ligatureComponents()
+	redraw()
 	
 	
 ----------
@@ -417,6 +418,14 @@ DRAWINACTIVE = "DrawInactive"
 def __redraw__(self):
 	NSNotificationCenter.defaultCenter().postNotificationName_object_("GSRedrawEditView", None)
 GSApplication.redraw = __redraw__
+
+'''.. function:: redraw()
+	
+	Redraws all Edit views and Preview views.
+	
+	'''
+
+
 
 
 GSMOVE = 17
