@@ -29,7 +29,7 @@ Still in `Contents/Info.plist`, replace `____PluginClassName____` with the name 
 
 Again, in `Contents/Info.plist`, replace `____PluginFileName____` in `CFBundleExecutable` and `CFBundleVersion` with the actual file name of `Contents/Resources/____PluginFileName____.py`, ignoring the `.py` extension. Rename `Contents/MacOS/____PluginFileName____` to the same file name, again ignoring the `.py` extension. The files and these two entries in `Contents/Info.plist` must carry the exact same name. We recommend to use a camel-cased file name without spaces.
 
-### Plugin update mechanism
+##### Plugin update mechanism
 
 In `UpdateFeedURL`, replace `____OnlineUrlToThisPlist____` with a deep link to this .plist file. On GitHub, navigate to the file, and use its Raw link. And then, in `productPageURL`, replace `____ProductPageURL____` with a web page URL for the plugin. This can be your GitHub repository page. Finally, in `productReleaseNotes`, don’t forget to replace `____LatestReleaseNotes____` with a short description of your latest changes, e.g., ‘New option X’. This will be displayed when the user checks for updates in the app preferences, and will motivate your users to keep your plugins up to date.
 
