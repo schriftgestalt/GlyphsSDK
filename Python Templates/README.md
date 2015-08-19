@@ -31,7 +31,19 @@ Again, in `Contents/Info.plist`, replace `____PluginFileName____` in `CFBundleEx
 
 ##### Plugin update mechanism
 
-In `UpdateFeedURL`, replace `____OnlineUrlToThisPlist____` with a deep link to this .plist file. On GitHub, navigate to the file, and use its Raw link. And then, in `productPageURL`, replace `____ProductPageURL____` with a web page URL for the plugin. This can be your GitHub repository page. Finally, in `productReleaseNotes`, don’t forget to replace `____LatestReleaseNotes____` with a short description of your latest changes, e.g., ‘New option X’. This will be displayed when the user checks for updates in the app preferences, and will motivate your users to keep your plugins up to date.
+Glyphs provides automatic update checks and notifications (not automatic installation) for installed plugins and will notify users in the user interface when a new version is available. It will check a URL once a day that must contain a xml file very similar (or even identical) to this here Info.plist. This online xml file must contain at least the two fields `CFBundleVersion` and `productPageURL`. `CFBundleVersion` is checked against the installed plugin's version on the user's computer, and when a newer version is detected, the user may click to be directed to the URL given in `productPageURL` in the browser where he can download the new plugin.
+
+In `UpdateFeedURL`, replace `____OnlineUrlToThisPlist____` with a deep link to this .plist file. This file can be your GitHub repository, or elsewhere. In `productPageURL`, replace `____ProductPageURL____` with a web page URL for the plugin. This can be your GitHub repository page or elsewhere. Finally, in `productReleaseNotes`, you may provide a short description of your latest changes, e.g., ‘New option X’. This will be displayed when the user checks for updates in the app preferences, and will motivate your users to keep your plugins up to date.
+
+###### Dynamic version information
+
+If you operate your own software distribution system, like an online shop, you can have your server output this Info.plist with dynamic information about the latest version of the plugin, instead of keeping the online Info.plist manually up to date. Please make sure that the file is delivered in the `application/xml` MIME-type.
+Glyphs will add the attributes `glyphsUniqueID` (an anonymous ID identifiying unique Glyphs installations on people's computer's) and `glyphsVersion` (the Build number of that Glyphs installation) to the update check call (planned but not yet implemented: `pluginVersion` describing the version of your plugin installed within the user's Glyphs installation). You can use this information to keep anonymous track of the number of Glyphs installations out there and their version information and level of adoption.
+
+Automagically (or, as it should), the interface language of Glyphs makes its way into the update check call via the HTTP headers. Therefore, you may choose to provide the `productReleaseNotes` in various languages.
+
+A live example of all of this can be found for Yanone’s Speed Punk, with `productReleaseNotes` provided in English and German: https://yanone.de/buy/?page=versionInformation&product=speedpunkglyphs&format=GlyphsInfoPlist
+
 
 #### Edit the boot file
 
