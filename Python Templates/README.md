@@ -23,13 +23,15 @@ For simplicity’s sake, and if it makes sense for your project, you can keep `_
 
 Open `Contents/Info.plist` and customize the entries there. If you want to make sure your plugin works with the update mechanism built into Glyphs, always update the version numbers: Put a version number in dotted format into `CFBundleShortVersionString` (e.g, 1.2.3), and a release number into `CFBundleVersion` (a simple incremental number, e.g., 12).
 
-Then, in `UpdateFeedURL`, replace `____OnlineUrlToThisPlist____` with a deep link to this .plist file. On GitHub, navigate to the file, and use its Raw link. And then, in `productPageURL`, replace `____ProductPageURL____` with a web page URL for the plugin. This can be your GitHub repository page. Finally, in `productReleaseNotes`, don’t forget to replace `____LatestReleaseNotes____` with a short description of your latest changes, e.g., ‘New option X’. This will be displayed when the user checks for updates in the app preferences, and will motivate your users to keep your plugins up to date.
-
 You will probably re-use `____Developer____` for other projects, so put your name or twitter handle there. Put your name and year in `NSHumanReadableCopyright`. Glyphs will try to parse your name between the copyright and the year number, and display it in the Plugins section of the app preferences. `CFBundleIdentifier` should be a reverse domain name without spaces (e.g., com.myCompany.pluginName). In case you are making a filter with a custom parameter: `NSPrincipalClass` will be the filter trigger for the parameter value (i.e., the identifier before the first semicolon).
 
 Still in `Contents/Info.plist`, replace `____PluginClassName____` with the name of the principal Python class in `Contents/Resources/____PluginFileName____.py`. No spaces, we recommend camelCase. These two entries and the name of the class in `____PluginFileName____.py` must be exactly the same.
 
 Again, in `Contents/Info.plist`, replace `____PluginFileName____` in `CFBundleExecutable` and `CFBundleVersion` with the actual file name of `Contents/Resources/____PluginFileName____.py`, ignoring the `.py` extension. Rename `Contents/MacOS/____PluginFileName____` to the same file name, again ignoring the `.py` extension. The files and these two entries in `Contents/Info.plist` must carry the exact same name. We recommend to use a camel-cased file name without spaces.
+
+### Plugin update mechanism
+
+In `UpdateFeedURL`, replace `____OnlineUrlToThisPlist____` with a deep link to this .plist file. On GitHub, navigate to the file, and use its Raw link. And then, in `productPageURL`, replace `____ProductPageURL____` with a web page URL for the plugin. This can be your GitHub repository page. Finally, in `productReleaseNotes`, don’t forget to replace `____LatestReleaseNotes____` with a short description of your latest changes, e.g., ‘New option X’. This will be displayed when the user checks for updates in the app preferences, and will motivate your users to keep your plugins up to date.
 
 #### Edit the boot file
 
