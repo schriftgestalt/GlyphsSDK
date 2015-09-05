@@ -1,0 +1,1101 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Index &mdash; Glyphs.app Python Scripting API 2.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+		<link rel="top" title="Glyphs.app Python Scripting API 2.0.0 documentation" href="index.html" />
+		<!-- <link media="only screen and (max-device-width: 480px)" href="_static/mobile.css" type="text/css" rel="stylesheet" /> --> 
+  </head>
+  <body role="document">
+	<header class="page-head" role="banner">
+		<div class="wrapper">
+			<nav role="navigation" id="nav" class="page-head__nav">
+				<ul class="nav-site	list-inline">
+					<li class="is-active"><a href="index.html">Python</a></li>
+					<li><a href="Core/index.html">Core</a></li>
+				</ul>
+			</nav>
+			<a href="index.html" class="page-head__logo	page-logo" rel="home" tabindex="1">
+		<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Glyphs-Logo" x="0px" y="0px" viewBox="0 0 205.5 74.9" xml:space="preserve" class="logo	page-logo__image" role="img" title="Glyphs | Create — Produce — Release | Font Editing for Everyone">
+			<title>Glyphs | Create — Produce — Release | Font Editing for Everyone</title>
+
+			<filter id="logo-dropshadow" height="130%">
+				<feGaussianBlur in="SourceAlpha" stdDeviation="0.1"></feGaussianBlur> 
+				<feOffset dx="1" dy="2" result="offsetblur"></feOffset> 
+				<feComponentTransfer>
+					<feFuncA type="linear" slope="0.3"></feFuncA> 
+				</feComponentTransfer>
+				<feMerge>
+					<feMergeNode></feMergeNode> 
+					<feMergeNode in="SourceGraphic"></feMergeNode> 
+				</feMerge>
+			</filter>
+
+			<style type="text/css">
+				.logo .st0, .logo .st1 {fill: currentColor;}
+				.logo .st0 {color: #ffffff;}
+				.logo .st1 {color: #18944a;}
+			</style>
+
+			<g style="filter:url(#logo-dropshadow)">
+				<path class="st0" d="M70.9 57.2H56.5v-2.6h5.5V11.9h-5.4V9.2h8.7v45.3h5.5V57.2z"></path>
+				<path class="st0" d="M101.4 28.1L89.5 60.8C86.9 68 82.7 72.1 73.3 72l-0.2-2.8c6.7-0.1 10.6-2.1 13.4-9.3l0.5-1.3L74.6 28.1H70 v-2.6h13.4v2.6h-5.1l10.3 26.5L98 28.1h-5v-2.6h12.9v2.6H101.4z"></path>
+				<path class="st0" d="M117.3 28.6c2.4-2.1 5.2-3.9 9.6-3.9c7.8 0 12 5.5 12 15.8c0 11.6-5.2 17.3-14.5 17.3c-3 0-5-0.6-6.9-1.3v14.3 h5.5v2.6h-14.4v-2.6h5.5V28.1h-5.4v-2.6h8.1L117.3 28.6L117.3 28.6z M117.5 53.5c2.3 1.2 4.7 1.6 7 1.6c7.1 0 11-4.7 11-14.2 c0-8.6-3.2-13.2-9.1-13.2c-3.7 0-6.6 1.9-8.9 4.2L117.5 53.5L117.5 53.5z"></path>
+				<path class="st0" d="M178.1 57.2h-14.1v-2.6h5.2V35.3c0-4.9-2.1-7.5-6.4-7.5c-3.4 0-6.7 1.6-11.5 5.3v21.4h5.3v2.6h-14.1v-2.6h5.5 V11.9h-5.4V9.2h8.6V30c4.5-3.4 8.2-5.2 12.3-5.2c5.9 0 9 3.4 9 10.1v19.5h5.5V57.2z"></path>
+				<path class="st0" d="M199.2 28.2c-1.8-0.5-3.8-0.8-5.8-0.8c-5 0-7.5 1.5-7.5 4.9c0 8.9 17.8 5.9 17.8 17.6c0 6-4.7 8.2-11 8.2 c-3.8 0-7.8-0.8-10.6-2v-7.6h3V54c2.4 0.8 4.9 1.3 7.6 1.3c5 0 7.8-1.7 7.8-5.5c0-9.3-17.8-6.3-17.8-17.5c0-5.5 4.2-7.7 10.8-7.7 c3.1 0 6.1 0.5 8.8 1.4v7.5h-3v-5.5V28.2z"></path>
+			</g>
+			<g id="G-Outlines" style="filter:url(#logo-dropshadow)">
+				<path class="st0" d="M30.5 59.1c-20.7 0-29.2-7.3-29.2-25.2c0-17.7 8.8-25.3 29.4-25.3c5.9 0 12.1 0.4 17.9 1.3l3 0.4l-1.9 19.2 h1.5v27.4l-2.5 0.5C42.5 58.5 36.7 59.1 30.5 59.1z"></path>
+			</g>
+			<path id="G" class="st1" d="M30.2 38.4c-0.4 0-0.8 0-1.3 0c-2.6 0-3.8-1.4-3.8-4.9c0-3.8 1.6-4.8 8.6-4.8c3.8 0 7.9 0.3 12.9 0.8 L48.2 13c-5.3-0.8-11.3-1.2-17.4-1.2c-19.2 0-26.3 6.2-26.3 22.1c0 16.3 7 22.1 26 22.1c5.3 0 10.9-0.4 17.6-1.7V32.6h-18V38.4z"></path>
+		</svg></a>
+		<h1 class="stage__title">Python</h1>
+		</div>
+	</header>
+
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+        </div>
+      </div>
+
+    <div class="document">
+
+
+
+	<main class="page-body" role="main">
+		<div class="wrapper">
+			<div class="main-navigation navigation-top">
+				<ul>
+					<li><a href="genindex.html">Index</a></li>
+				</ul>
+			</div>
+			<section class="section">
+				<div class="bodywrapper">
+					<div class="body">
+						
+
+<h1 id="index">Index</h1>
+
+<div class="genindex-jumpbox">
+ <a href="#A"><strong>A</strong></a>
+ | <a href="#B"><strong>B</strong></a>
+ | <a href="#C"><strong>C</strong></a>
+ | <a href="#D"><strong>D</strong></a>
+ | <a href="#E"><strong>E</strong></a>
+ | <a href="#F"><strong>F</strong></a>
+ | <a href="#G"><strong>G</strong></a>
+ | <a href="#H"><strong>H</strong></a>
+ | <a href="#I"><strong>I</strong></a>
+ | <a href="#K"><strong>K</strong></a>
+ | <a href="#L"><strong>L</strong></a>
+ | <a href="#M"><strong>M</strong></a>
+ | <a href="#N"><strong>N</strong></a>
+ | <a href="#O"><strong>O</strong></a>
+ | <a href="#P"><strong>P</strong></a>
+ | <a href="#R"><strong>R</strong></a>
+ | <a href="#S"><strong>S</strong></a>
+ | <a href="#T"><strong>T</strong></a>
+ | <a href="#U"><strong>U</strong></a>
+ | <a href="#V"><strong>V</strong></a>
+ | <a href="#W"><strong>W</strong></a>
+ | <a href="#X"><strong>X</strong></a>
+ 
+</div>
+<h2 id="A">A</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="index.html#accents">accents</a>
+  </dt>
+
+      
+  <dt><a href="index.html#active">active</a>
+  </dt>
+
+      
+  <dt><a href="index.html#addMissingAnchors">addMissingAnchors() (built-in function)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#addPoints">addPoints() (built-in function)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#alignmentZones">alignmentZones</a>
+  </dt>
+
+      
+  <dt><a href="index.html#altNames">altNames</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="index.html#anchor">anchor</a>
+  </dt>
+
+      
+  <dt><a href="index.html#anchors">anchors</a>, <a href="index.html#anchors">[1]</a>
+  </dt>
+
+      
+  <dt><a href="index.html#angle">angle</a>
+  </dt>
+
+      
+  <dt><a href="index.html#ascender">ascender</a>
+  </dt>
+
+      
+  <dt><a href="index.html#associatedMasterId">associatedMasterId</a>
+  </dt>
+
+      
+  <dt><a href="index.html#automatic">automatic</a>, <a href="index.html#automatic">[1]</a>, <a href="index.html#automatic">[2]</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
+<h2 id="B">B</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="index.html#background">background</a>
+  </dt>
+
+      
+  <dt><a href="index.html#backgroundImage">backgroundImage</a>
+  </dt>
+
+      
+  <dt><a href="index.html#beginChanges">beginChanges() (built-in function)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#beginUndo">beginUndo() (built-in function)</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="index.html#blueValues">blueValues</a>
+  </dt>
+
+      
+  <dt><a href="index.html#boolDefaults">boolDefaults</a>
+  </dt>
+
+      
+  <dt><a href="index.html#bounds">bounds</a>, <a href="index.html#bounds">[1]</a>, <a href="index.html#bounds">[2]</a>
+  </dt>
+
+      
+  <dt><a href="index.html#BSB">BSB</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
+<h2 id="C">C</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="index.html#capHeight">capHeight</a>
+  </dt>
+
+      
+  <dt><a href="index.html#category">category</a>, <a href="index.html#category">[1]</a>
+  </dt>
+
+      
+  <dt><a href="index.html#classes">classes</a>
+  </dt>
+
+      
+  <dt><a href="index.html#clearLog">clearLog() (built-in function)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#closed">closed</a>
+  </dt>
+
+      
+  <dt><a href="index.html#code">code</a>, <a href="index.html#code">[1]</a>, <a href="index.html#code">[2]</a>
+  </dt>
+
+      
+  <dt><a href="index.html#color">color</a>
+  </dt>
+
+      
+  <dt><a href="index.html#compareString">compareString() (built-in function)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#component">component</a>
+  </dt>
+
+      
+  <dt><a href="index.html#componentName">componentName</a>
+  </dt>
+
+      
+  <dt><a href="index.html#components">components</a>, <a href="index.html#components">[1]</a>
+  </dt>
+
+      
+  <dt><a href="index.html#connectAllOpenPaths">connectAllOpenPaths() (built-in function)</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="index.html#connection">connection</a>
+  </dt>
+
+      
+  <dt><a href="index.html#copyDecomposedLayer">copyDecomposedLayer() (built-in function)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#copyright">copyright</a>
+  </dt>
+
+      
+  <dt><a href="index.html#correctPathDirection">correctPathDirection() (built-in function)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#crop">crop</a>
+  </dt>
+
+      
+  <dt><a href="index.html#currentTab">currentTab</a>
+  </dt>
+
+      
+  <dt><a href="index.html#currentText">currentText</a>
+  </dt>
+
+      
+  <dt><a href="index.html#customName">customName</a>
+  </dt>
+
+      
+  <dt><a href="index.html#customParameters">customParameters</a>, <a href="index.html#customParameters">[1]</a>, <a href="index.html#customParameters">[2]</a>
+  </dt>
+
+      
+  <dt><a href="index.html#customValue">customValue</a>, <a href="index.html#customValue">[1]</a>
+  </dt>
+
+      
+  <dt><a href="index.html#cutBetweenPoints">cutBetweenPoints() (built-in function)</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
+<h2 id="D">D</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="index.html#date">date</a>
+  </dt>
+
+      
+  <dt><a href="index.html#decompose">decompose() (built-in function)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#decomposeComponents">decomposeComponents() (built-in function)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#defaults">defaults</a>
+  </dt>
+
+      
+  <dt><a href="index.html#desc">desc</a>
+  </dt>
+
+      
+  <dt><a href="index.html#descender">descender</a>
+  </dt>
+
+      
+  <dt><a href="index.html#designer">designer</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="index.html#designerURL">designerURL</a>
+  </dt>
+
+      
+  <dt><a href="index.html#direction">direction</a>
+  </dt>
+
+      
+  <dt><a href="index.html#disableAlignment">disableAlignment</a>
+  </dt>
+
+      
+  <dt><a href="index.html#disablesNiceNames">disablesNiceNames</a>
+  </dt>
+
+      
+  <dt><a href="index.html#disableUpdateInterface">disableUpdateInterface() (built-in function)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#distance">distance() (built-in function)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#divideCurve">divideCurve() (built-in function)</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
+<h2 id="E">E</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="index.html#enableUpdateInterface">enableUpdateInterface() (built-in function)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#endChanges">endChanges() (built-in function)</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="index.html#endUndo">endUndo() (built-in function)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#export">export</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
+<h2 id="F">F</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="index.html#familyName">familyName</a>
+  </dt>
+
+      
+  <dt><a href="index.html#featurePrefixes">featurePrefixes</a>
+  </dt>
+
+      
+  <dt><a href="index.html#features">features</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="index.html#filepath">filepath</a>
+  </dt>
+
+      
+  <dt><a href="index.html#font">font</a>
+  </dt>
+
+      
+  <dt><a href="index.html#fonts">fonts</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
+<h2 id="G">G</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="index.html#generate">generate() (built-in function)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#GetFolder">GetFolder() (built-in function)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#GetOpenFile">GetOpenFile() (built-in function)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#GetSaveFile">GetSaveFile() (built-in function)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#glyphInfo">glyphInfo</a>
+  </dt>
+
+      
+  <dt><a href="index.html#glyphInfoForName">glyphInfoForName() (built-in function)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#glyphInfoForUnicode">glyphInfoForUnicode() (built-in function)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#glyphs">glyphs</a>
+  </dt>
+
+      
+  <dt><a href="index.html#gridLength">gridLength</a>
+  </dt>
+
+      
+  <dt><a href="index.html#GSAlignmentZone">GSAlignmentZone (built-in class)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#GSAnchor">GSAnchor (built-in class)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#GSApplication">GSApplication (built-in class)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#GSBackgroundImage">GSBackgroundImage (built-in class)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#GSClass">GSClass (built-in class)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#GSComponent">GSComponent (built-in class)</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="index.html#GSCustomParameter">GSCustomParameter (built-in class)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#GSEditViewController">GSEditViewController (built-in class)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#GSFeature">GSFeature (built-in class)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#GSFeaturePrefix">GSFeaturePrefix (built-in class)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#GSFont">GSFont (built-in class)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#GSFontMaster">GSFontMaster (built-in class)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#GSGlyph">GSGlyph (built-in class)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#GSGlyphInfo">GSGlyphInfo (built-in class)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#GSGuideLine">GSGuideLine (built-in class)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#GSHint">GSHint (built-in class)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#GSInstance">GSInstance (built-in class)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#GSLayer">GSLayer (built-in class)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#GSNode">GSNode (built-in class)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#GSPath">GSPath (built-in class)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#guides">guides</a>, <a href="index.html#guides">[1]</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
+<h2 id="H">H</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="index.html#hints">hints</a>
+  </dt>
+
+      
+  <dt><a href="index.html#horizontal">horizontal</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="index.html#horizontalStems">horizontalStems</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
+<h2 id="I">I</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="index.html#id">id</a>, <a href="index.html#id">[1]</a>
+  </dt>
+
+      
+  <dt><a href="index.html#image">image</a>
+  </dt>
+
+      
+  <dt><a href="index.html#index">index</a>
+  </dt>
+
+      
+  <dt><a href="index.html#instanceInterpolations">instanceInterpolations</a>
+  </dt>
+
+      
+  <dt><a href="index.html#instances">instances</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="index.html#intDefaults">intDefaults</a>
+  </dt>
+
+      
+  <dt><a href="index.html#intersectionsBetweenPoints">intersectionsBetweenPoints() (built-in function)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#isBold">isBold</a>
+  </dt>
+
+      
+  <dt><a href="index.html#isItalic">isItalic</a>
+  </dt>
+
+      
+  <dt><a href="index.html#italicAngle">italicAngle</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
+<h2 id="K">K</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="index.html#kerning">kerning</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="index.html#kerningForPair">kerningForPair() (built-in function)</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
+<h2 id="L">L</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="index.html#languageData">languageData</a>
+  </dt>
+
+      
+  <dt><a href="index.html#languageScripts">languageScripts</a>
+  </dt>
+
+      
+  <dt><a href="index.html#layerId">layerId</a>
+  </dt>
+
+      
+  <dt><a href="index.html#layers">layers</a>, <a href="index.html#layers">[1]</a>
+  </dt>
+
+      
+  <dt><a href="index.html#leftKerningGroup">leftKerningGroup</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="index.html#leftMetricsKey">leftMetricsKey</a>
+  </dt>
+
+      
+  <dt><a href="index.html#ligatureComponents">ligatureComponents() (built-in function)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#linkStyle">linkStyle</a>
+  </dt>
+
+      
+  <dt><a href="index.html#locked">locked</a>
+  </dt>
+
+      
+  <dt><a href="index.html#LSB">LSB</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
+<h2 id="M">M</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="index.html#manualInterpolation">manualInterpolation</a>
+  </dt>
+
+      
+  <dt><a href="index.html#manufacturer">manufacturer</a>
+  </dt>
+
+      
+  <dt><a href="index.html#manufacturerURL">manufacturerURL</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="index.html#masterIndex">masterIndex</a>
+  </dt>
+
+      
+  <dt><a href="index.html#masters">masters</a>
+  </dt>
+
+      
+  <dt><a href="index.html#Message">Message() (built-in function)</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
+<h2 id="N">N</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="index.html#name">name</a>, <a href="index.html#name">[1]</a>, <a href="index.html#name">[2]</a>, <a href="index.html#name">[3]</a>, <a href="index.html#name">[4]</a>, <a href="index.html#name">[5]</a>, <a href="index.html#name">[6]</a>, <a href="index.html#name">[7]</a>, <a href="index.html#name">[8]</a>, <a href="index.html#name">[9]</a>, <a href="index.html#name">[10]</a>
+  </dt>
+
+      
+  <dt><a href="index.html#newTab">newTab() (built-in function)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#niceGlyphName">niceGlyphName() (built-in function)</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="index.html#nodes">nodes</a>
+  </dt>
+
+      
+  <dt><a href="index.html#note">note</a>, <a href="index.html#note">[1]</a>
+  </dt>
+
+      
+  <dt><a href="index.html#notes">notes</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
+<h2 id="O">O</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="index.html#open">open() (built-in function)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#originNode">originNode</a>
+  </dt>
+
+      
+  <dt><a href="index.html#otherBlues">otherBlues</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="index.html#otherNode1">otherNode1</a>
+  </dt>
+
+      
+  <dt><a href="index.html#otherNode2">otherNode2</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
+<h2 id="P">P</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="index.html#parent">parent</a>, <a href="index.html#parent">[1]</a>, <a href="index.html#parent">[2]</a>
+  </dt>
+
+      
+  <dt><a href="index.html#path">path</a>
+  </dt>
+
+      
+  <dt><a href="index.html#paths">paths</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="index.html#position">position</a>, <a href="index.html#position">[1]</a>, <a href="index.html#position">[2]</a>, <a href="index.html#position">[3]</a>, <a href="index.html#position">[4]</a>, <a href="index.html#position">[5]</a>
+  </dt>
+
+      
+  <dt><a href="index.html#productionGlyphName">productionGlyphName() (built-in function)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#productionName">productionName</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
+<h2 id="R">R</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="index.html#redraw">redraw() (built-in function)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#removeKerningForPair">removeKerningForPair() (built-in function)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#removeOverlap">removeOverlap() (built-in function)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#resetCrop">resetCrop() (built-in function)</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="index.html#reverse">reverse() (built-in function)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#rightKerningGroup">rightKerningGroup</a>
+  </dt>
+
+      
+  <dt><a href="index.html#rightMetricsKey">rightMetricsKey</a>
+  </dt>
+
+      
+  <dt><a href="index.html#RSB">RSB</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
+<h2 id="S">S</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="index.html#scale">scale</a>
+  </dt>
+
+      
+  <dt><a href="index.html#scaleHeightToEmUnits">scaleHeightToEmUnits() (built-in function)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#scalePoint">scalePoint() (built-in function)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#scaleWidthToEmUnits">scaleWidthToEmUnits() (built-in function)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#script">script</a>, <a href="index.html#script">[1]</a>
+  </dt>
+
+      
+  <dt><a href="index.html#scriptAbbrevations">scriptAbbrevations</a>
+  </dt>
+
+      
+  <dt><a href="index.html#scriptSuffixes">scriptSuffixes</a>
+  </dt>
+
+      
+  <dt><a href="index.html#segments">segments</a>
+  </dt>
+
+      
+  <dt><a href="index.html#selected">selected</a>
+  </dt>
+
+      
+  <dt><a href="index.html#selectedFontMaster">selectedFontMaster</a>
+  </dt>
+
+      
+  <dt><a href="index.html#selectedLayers">selectedLayers</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="index.html#setKerningForPair">setKerningForPair() (built-in function)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#showGlyphInfoPanelWithSearchString">showGlyphInfoPanelWithSearchString() (built-in function)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#showMacroWindow">showMacroWindow() (built-in function)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#size">size</a>
+  </dt>
+
+      
+  <dt><a href="index.html#sortName">sortName</a>
+  </dt>
+
+      
+  <dt><a href="index.html#sortNameKeep">sortNameKeep</a>
+  </dt>
+
+      
+  <dt><a href="index.html#string">string</a>
+  </dt>
+
+      
+  <dt><a href="index.html#subCategory">subCategory</a>, <a href="index.html#subCategory">[1]</a>
+  </dt>
+
+      
+  <dt><a href="index.html#subtractPoints">subtractPoints() (built-in function)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#syncMetrics">syncMetrics() (built-in function)</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
+<h2 id="T">T</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="index.html#tabs">tabs</a>
+  </dt>
+
+      
+  <dt><a href="index.html#targetNode">targetNode</a>
+  </dt>
+
+      
+  <dt><a href="index.html#text">text</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="index.html#transform">transform</a>, <a href="index.html#transform">[1]</a>
+  </dt>
+
+      
+  <dt><a href="index.html#TSB">TSB</a>
+  </dt>
+
+      
+  <dt><a href="index.html#type">type</a>, <a href="index.html#type">[1]</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
+<h2 id="U">U</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="index.html#unicode">unicode</a>, <a href="index.html#unicode">[1]</a>
+  </dt>
+
+      
+  <dt><a href="index.html#unicodeRanges">unicodeRanges</a>
+  </dt>
+
+      
+  <dt><a href="index.html#update">update() (built-in function)</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="index.html#updateGlyphInfo">updateGlyphInfo() (built-in function)</a>
+  </dt>
+
+      
+  <dt><a href="index.html#upm">upm</a>
+  </dt>
+
+      
+  <dt><a href="index.html#userData">userData</a>, <a href="index.html#userData">[1]</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
+<h2 id="V">V</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="index.html#value">value</a>
+  </dt>
+
+      
+  <dt><a href="index.html#versionMajor">versionMajor</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="index.html#versionMinor">versionMinor</a>
+  </dt>
+
+      
+  <dt><a href="index.html#verticalStems">verticalStems</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
+<h2 id="W">W</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="index.html#weight">weight</a>, <a href="index.html#weight">[1]</a>
+  </dt>
+
+      
+  <dt><a href="index.html#weightValue">weightValue</a>, <a href="index.html#weightValue">[1]</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="index.html#width">width</a>, <a href="index.html#width">[1]</a>, <a href="index.html#width">[2]</a>
+  </dt>
+
+      
+  <dt><a href="index.html#widthValue">widthValue</a>, <a href="index.html#widthValue">[1]</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
+<h2 id="X">X</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="index.html#xHeight">xHeight</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
+
+
+					</div>
+				</div>
+			</div>
+			</section>
+		</div>
+	</main>
+      <div class="clearer"></div>
+    </div>
+
+
+<footer class="page-foot" role="contentinfo">
+  <div class="wrapper">
+		&copy; Copyright 2015, Georg Seifert.
+		Last updated on Sep 05, 2015.
+		Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.4a0+.
+		Index
+	</div>
+  </div>
+</footer>
+  </body>
+</html>

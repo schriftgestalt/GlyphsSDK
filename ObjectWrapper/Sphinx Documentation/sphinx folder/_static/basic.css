@@ -1,0 +1,147 @@
+/*
+* basic.css
+* ~~~~~~~~~
+*
+* Sphinx stylesheet -- basic theme.
+*
+* :copyright: Copyright 2007-2011 by the Sphinx team, see AUTHORS.
+* :license: BSD, see LICENSE for details.
+*
+*/
+
+/* -- main layout ----------------------------------------------------------- */
+
+div.clearer {
+	clear: both;
+}
+
+/* -- relbar ---------------------------------------------------------------- */
+/* -- sidebar --------------------------------------------------------------- */
+img {
+	border: 0;
+}
+
+/* -- search page ----------------------------------------------------------- */
+/* -- index page ------------------------------------------------------------ */
+
+/* -- general index --------------------------------------------------------- */
+
+/* -- general body styles --------------------------------------------------- */
+
+a.headerlink {
+	visibility: hidden;
+}
+
+h1:hover > a.headerlink,
+h2:hover > a.headerlink,
+dt:hover > a.headerlink {
+	visibility: visible;
+}
+div.body td {
+	text-align: left;
+}
+
+.field-list ul {
+	padding-left: 1em;
+}
+
+.first {
+	margin-top: 0 !important;
+}
+/* -- sidebars -------------------------------------------------------------- */
+
+/* -- topics ---------------------------------------------------------------- */
+
+/* -- admonitions ----------------------------------------------------------- */
+/* -- tables ---------------------------------------------------------------- */
+
+table.docutils {
+	border: 0;
+	border-collapse: collapse;
+}
+
+table.docutils td, table.docutils th {
+	padding: 1px 8px 1px 15px;
+	border-top: 0;
+	border-left: 0;
+	border-right: 0;
+	/*    border-bottom: 1px solid #aaa;*/
+	border-bottom: 9px;
+}
+
+table.field-list td, table.field-list th {
+	border: 0 !important;
+	/*	font-size: 12px;*/
+}
+th.field-name {
+	white-space: nowrap;
+}
+
+th {
+	text-align: left;
+	padding-right: 5px;
+}
+
+/* -- other body styles ----------------------------------------------------- */
+dl {
+	margin-bottom: 15px;
+}
+
+dd p {
+	margin-top: 0px;
+}
+
+dd ul, dd table {
+	margin-bottom: 10px;
+}
+
+dd {
+	margin-top: 3px;
+	margin-bottom: 10px;
+	margin-left: 15px;
+}
+
+dt:target {
+	background-color_: #fbe54e;
+}
+.field-list ul {
+	margin: 0;
+	padding-left: 1em;
+
+}
+ul.simple {
+	list-style: none;
+	padding-left:0px;
+}
+
+.field-list p {
+	margin: 0;
+}
+/* -- code displays --------------------------------------------------------- */
+
+pre {
+	font-size:14px;
+	overflow: auto;
+	overflow-y: hidden;  /* fixes display issues on Chrome browsers */
+}
+
+/* -- math display ---------------------------------------------------------- */
+
+p {
+	margin-bottom: 7px;
+	margin-top:2px;
+}
+dl.attribute {
+	margin: 19px 0;
+	
+}
+/* -- printout stylesheet --------------------------------------------------- */
+
+@media print {
+	div.document,
+	div.bodywrapper {
+		margin: 0 !important;
+		width: 100%;
+	}
+
+}

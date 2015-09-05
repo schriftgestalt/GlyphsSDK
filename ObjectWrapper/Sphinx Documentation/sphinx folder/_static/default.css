@@ -1,0 +1,225 @@
+/*
+ * default.css_t
+ * ~~~~~~~~~~~~~
+ *
+ * Sphinx stylesheet -- default theme.
+ *
+ * :copyright: Copyright 2007-2011 by the Sphinx team, see AUTHORS.
+ * :license: BSD, see LICENSE for details.
+ *
+ */
+
+@import url("basic.css");
+@import url("app.css");
+
+
+/* -- page layout ----------------------------------------------------------- */
+
+body {
+	font-family: "Graublau_Sans", sans-serif;
+	font-size: 17px;
+/*	background-color: #0C2909;*/
+	color: #000;
+	margin: 0;
+	padding: 0;
+}
+
+
+/* -- hyperlink styles ------------------------------------------------------ */
+
+a {
+	color: #e53162;;
+	text-decoration: none !important;
+}
+
+div.document a:visited {
+	color: #e53162;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+h2 a, h2 a:visited {
+	color:white;
+}
+
+/* -- body styles ----------------------------------------------------------- */
+div.body h1 {
+	font-family: "Graublau_Slab", sans-serif;
+	font-weight: 500;
+	margin-top: 5em;
+}
+div.body h1 {
+	font-weight: normal;
+	font-family: "Graublau_Slab", serif;
+	font-style: italic;
+	font-weight: 500;
+	background-color: #f6dfe5;
+	padding: 10px;
+	padding-left: 15px
+}
+div.body h2 {
+	font-weight: normal;
+	color: #175447;
+	font-family: "Graublau_Slab", serif;
+	font-style: italic;
+	background-color: #def7f2;
+	font-weight: 500;
+	padding: 5px;
+	padding-left: 10px;
+	margin-top: 2em;
+}
+div.body h1 { font-size: 160%; }
+div.body h2 { font-size: 130%; }
+
+a.headerlink {
+	color: #c60f0f;
+	font-size: 0.8em;
+/*	padding: 0 4px 0 4px;*/
+	text-decoration: none;
+}
+
+a.headerlink:hover {
+	background-color: #c60f0f;
+	color: white;
+}
+
+
+
+
+
+div.sphinxsidebar {
+}
+
+div.sphinxsidebarwrapper {
+	position:fixed;
+	width: 270px;
+	z-index: 2;
+	padding-top: 5px;
+	padding-left: 40px;
+	padding-right: 10px;
+    font-size: .8em;
+}
+
+div.sphinxsidebar ul {
+    padding: 0;
+    color: #ffffff;
+}
+
+div.sphinxsidebar li code {
+    font-weight: bold;
+}
+
+div.sphinxsidebar li li {
+    display: none;
+}
+
+
+table.docutils + p {
+	margin-top: 10px;
+
+}
+
+
+/*
+div.sphinxsidebar h3 {
+    font-family: 'Trebuchet MS', sans-serif;
+    color: #ffffff;
+    font-size: 1.4em;
+    font-weight: normal;
+    margin: 0;
+    padding: 0;
+}
+
+div.sphinxsidebar h3 a {
+    color: #ffffff;
+}
+
+div.sphinxsidebar h4 {
+    font-family: 'Trebuchet MS', sans-serif;
+    color: #ffffff;
+    font-size: 1.3em;
+    font-weight: normal;
+    margin: 5px 0 0 0;
+    padding: 0;
+}
+
+div.sphinxsidebar p {
+    color: #ffffff;
+}
+
+div.sphinxsidebar p.topless {
+    margin: 5px 10px 10px 10px;
+}
+
+div.sphinxsidebar ul {
+    margin: 10px;
+    padding: 0;
+    color: #ffffff;
+}
+
+div.sphinxsidebar a {
+    color: #98dbcc;
+}
+
+div.sphinxsidebar input {
+    border: 1px solid #98dbcc;
+    font-family: sans-serif;
+    font-size: 1em;
+}
+*/
+
+/* mute odd library descritions */
+
+table.docutils td + td {
+	display: none;
+}
+
+
+div.body p, div.body dd, div.body li {
+	text-align: left;
+	line-height: 130%;
+}
+
+pre {
+	padding: 5px;
+	background-color: #eee;
+	color: #333333;
+	line-height: 120%;
+	border: 0px solid #aaa;
+	border-left: none;
+	border-right: none;
+}
+
+code {
+	font-family: OliveGreen;
+}
+
+/* Georg 10.4.13 */
+
+h1 .pre {
+	font-family: "Graublau_Slab", sans-serif;
+}
+pre, .pre {
+	font-family: OliveGreen, monospace;
+}
+tt {
+	font-family: "Graublau_Sans", sans-serif;
+	font-weight: normal !important;
+}
+
+td, th {
+	vertical-align:baseline;
+}
+
+ul.task-list , .main-navigation ul {
+	list-style-type: none;
+	padding-left: 0;
+}
+
+.main-navigation ul > li {
+	display: inline-block;
+	margin-right: 10px;
+}
