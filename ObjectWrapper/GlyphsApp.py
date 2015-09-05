@@ -63,7 +63,7 @@ The mothership. Everything starts here.
 	
 .. class:: GSApplication()
 
-**Properties**
+Properties
 
 .. autosummary::
 
@@ -79,7 +79,7 @@ The mothership. Everything starts here.
 	unicodeRanges
 
 	
-**Functions**
+Functions
 
 .. autosummary::
 
@@ -1068,7 +1068,7 @@ Also, the :class:`Glyphs <GSGlyph>` are attached to the Font object right here, 
 
 .. class:: GSFont()
 
-**Properties**
+Properties
 
 .. autosummary::
 
@@ -1102,7 +1102,7 @@ Also, the :class:`Glyphs <GSGlyph>` are attached to the Font object right here, 
 	currentTab
 	filepath
 
-**Functions**
+Functions
 
 .. autosummary::
 	
@@ -1618,6 +1618,8 @@ GSFontMaster.__repr__ = FontMaster__repr__;
 
 '''
 
+Properties
+
 .. autosummary::
 
 	id
@@ -1812,6 +1814,8 @@ GSAlignmentZone.__repr__ = AlignmentZone__repr__;
 
 
 '''
+Properties
+
 .. autosummary::
 
 	position
@@ -2477,17 +2481,15 @@ GSSubstitution.scriptTag = property(lambda self: self.valueForKey_("scriptTag"),
 :mod:`GSGlyph`
 ===============================================================================
 
-.. class:: GSGlyph([name])
-
 Implementation of the glyph object.
 
 For details on how to access these glyphs, please see :class:`GSFont`.glyphs
 
-:param name: The glyph name
+.. class:: GSGlyph([name])
+
+	:param name: The glyph name
 	
-	
-	
-**Properties**
+Properties
 	
 .. autosummary::
 
@@ -2510,7 +2512,8 @@ For details on how to access these glyphs, please see :class:`GSFont`.glyphs
 	note
 	selected
 	
-**Functions**
+	
+Functions
 
 .. autosummary::
 
@@ -2820,13 +2823,13 @@ GSGlyph.updateGlyphInfo = __updateGlyphInfo
 :mod:`GSLayer`
 ===============================================================================
 
-.. class:: GSLayer()
-
 Implementation of the layer object.
 
 For details on how to access these layers, please see :class:`GSGlyph`.layers
 
-**Properties**
+.. class:: GSLayer()
+
+Properties
 
 .. autosummary::
 	
@@ -2848,22 +2851,22 @@ For details on how to access these layers, please see :class:`GSGlyph`.layers
 	background
 	backgroundImage
 
-**Functions**
+Functions
 
 .. autosummary::
 	
-	decomposeComponents
-	compareString
-	connectAllOpenPaths
-	copyDecomposedLayer
-	syncMetrics
-	correctPathDirection
-	removeOverlap
-	beginChanges
-	endChanges
-	cutBetweenPoints
-	intersectionsBetweenPoints
-	addMissingAnchors
+	decomposeComponents()
+	compareString()
+	connectAllOpenPaths()
+	copyDecomposedLayer()
+	syncMetrics()
+	correctPathDirection()
+	removeOverlap()
+	beginChanges()
+	endChanges()
+	cutBetweenPoints()
+	intersectionsBetweenPoints()
+	addMissingAnchors()
 
 ----------
 Properties
@@ -3397,16 +3400,16 @@ GSLayer._invalidateContours = _invalidateContours_
 :mod:`GSAnchor`
 ===============================================================================
 
-.. class:: GSAnchor()
-
 Implementation of the anchor object.
 
 For details on how to access them, please see :class:`GSLayer`.anchors
 
-.. function::GSAnchor([name, pt])
+.. class:: GSAnchor([name, pt])
 
 	:param name: the name of the anchor
 	:param pt: the position of the anchor
+
+Properties
 
 .. autosummary::
 	
@@ -3486,17 +3489,15 @@ GSAnchor.draw = DrawAnchorWithPen
 :mod:`GSComponent`
 ===============================================================================
 
-.. class:: GSComponent(glyph [, position])
-	
 Implementation of the component object.
-
 For details on how to access them, please see :class:`GSLayer`.components
 
+.. class:: GSComponent(glyph [, position])
+	
 	:param glyph: a :class:`GSGlyph` object or the glyph name
 	:param position: the position of the component as NSPoint
 
-
-**Properties**
+Properties
 
 .. autosummary::
 	
@@ -3506,7 +3507,7 @@ For details on how to access them, please see :class:`GSLayer`.components
 	transform
 	bounds
 	
-**Functions**
+Functions
 
 .. autosummary::
 	
@@ -3667,7 +3668,7 @@ If you build a path in code, make sure that the structure is valid. A curve node
 
 .. class:: GSPath()
 
-**Properties**
+Properties
 
 .. autosummary::
 	
@@ -3678,7 +3679,7 @@ If you build a path in code, make sure that the structure is valid. A curve node
 	direction
 	bounds
 	
-**Functions**
+Functions
 
 .. autosummary::
 	
@@ -3839,8 +3840,10 @@ For details on how to access them, please see :class:`GSPath`.nodes
 
 .. class:: GSNode([pt, type])
 	
-:param pt: The position of the node.
-:param type: The type of the node, GSLINE, GSCURVE or GSOFFCURVE
+	:param pt: The position of the node.
+	:param type: The type of the node, GSLINE, GSCURVE or GSOFFCURVE
+
+Properties
 
 .. autosummary::
 	
@@ -3920,7 +3923,13 @@ For details on how to access them, please see :class:`GSLayer`.guides
 
 .. class:: GSGuideLine()
 
+Properties
+
 .. autosummary::
+	
+	position
+	angle
+	name
 
 
 ----------
@@ -3985,6 +3994,8 @@ Implementation of the hint object.
 For details on how to access them, please see :class:`GSLayer`.hints
 
 .. class:: GSHint()
+
+Properties
 
 .. autosummary::
 	
@@ -4087,7 +4098,9 @@ For details on how to access it, please see :class:`GSLayer`.backgroundImage
 
 .. class:: GSBackgroundImage([path])
 
-**Properties**
+	:param path: Initialize with an image file (optional)
+
+Properties
 
 .. autosummary::
 	
@@ -4099,7 +4112,7 @@ For details on how to access it, please see :class:`GSLayer`.backgroundImage
 	scale
 	transform
 	
-**Functions**
+Functions
 
 .. autosummary::
 
@@ -4307,6 +4320,8 @@ For details on how to access them, please look at :class:`GSFont`.tabs
 
 .. class:: GSEditViewController()
 
+Properties
+
 .. autosummary::
 
 	text
@@ -4431,6 +4446,8 @@ This contains valuable information from the glyph database. See :class:`GSGlyphs
 
 .. class:: GSGlyphInfo()
 
+Properties
+
 .. autosummary::
 
 	name
@@ -4449,6 +4466,11 @@ This contains valuable information from the glyph database. See :class:`GSGlyphs
 	desc
 	altNames
 	desc
+
+
+----------
+Properties
+----------
 
 
 '''
