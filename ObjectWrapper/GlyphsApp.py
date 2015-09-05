@@ -2778,7 +2778,13 @@ def __BeginUndo(self):
 
 GSGlyph.beginUndo = __BeginUndo
 
-'''.. function:: beginUndo()
+'''
+
+---------
+Functions
+---------
+
+.. function:: beginUndo()
 	
 	Call this before you do a longer running change to the glyph. Be extra careful to call Glyph.endUndo() when you are finished.
 '''
