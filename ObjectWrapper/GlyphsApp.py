@@ -453,10 +453,10 @@ TTROUNDDOWN = 2,
 TRIPLE = 128,
 
 #annotations:
-TEXT = 1,
-ARROW = 2,
-CIRCLE = 3,
-PLUS = 4,
+TEXT = 1
+ARROW = 2
+CIRCLE = 3
+PLUS = 4
 MINUS = 5
 
 
@@ -4011,32 +4011,51 @@ GSGuideLine.name = property(	lambda self: self.valueForKey_("name"),
 ##################################################################################
 
 
+GSAnnotation.position = property(lambda self: self.valueForKey_("position").pointValue(),
+								 lambda self, value: self.setPosition_(value))
+'''.. attribute:: position
+	The position of the node.
+	:type: NSPoint'''
 
-
-GSAnnotationType.type = property(lambda self: self.valueForKey_("type").integerValue(),
+GSAnnotation.type = property(lambda self: self.valueForKey_("type").integerValue(),
 								 lambda self, value: self.setType_(value))
 '''.. attribute:: type
 	The type of the annotation.
 	:type: int'''
 	
-GSAnnotationType.text = property(lambda self: self.valueForKey_("text"),
+GSAnnotation.text = property(lambda self: self.valueForKey_("text"),
 								 lambda self, value: self.setText_(value))
 '''.. attribute:: text
 	The content of the annotation. Only useful if type == TEXT
 	:type: unicode'''
 	
-GSAnnotationType.angle = property(lambda self: self.valueForKey_("angle").floatValue(),
+GSAnnotation.angle = property(lambda self: self.valueForKey_("angle").floatValue(),
 								 lambda self, value: self.setAngle_(value))
 '''.. attribute:: angle
 	The angle of the annotation.
 	:type: float'''
 
-GSAnnotationType.width = property(lambda self: self.valueForKey_("width").floatValue(),
+GSAnnotation.width = property(lambda self: self.valueForKey_("width").floatValue(),
 								 lambda self, value: self.setWidth_(value))
 '''.. attribute:: width
 	The width of the annotation.
 	:type: float'''
 
+def Annotation__repr__(self):
+	TypeName = "n/a"
+	print self.type, type(ARROW)
+	if (self.type == TEXT):
+		TypeName = "Text"
+	elif (self.type == ARROW):
+		TypeName = "Arrow"
+	elif (self.type == CIRCLE):
+		TypeName = "Circle"
+	elif (self.type == PLUS):
+		TypeName = "Plus"
+	elif (self.type == MINUS):
+		TypeName = "Minus"
+	return "<%s %s x=%s y=%s>" % (self.className(), TypeName, self.position.x, self.position.y)
+GSAnnotation.__repr__ = Annotation__repr__;
 
 
 
