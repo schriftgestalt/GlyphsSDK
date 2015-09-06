@@ -1,0 +1,47 @@
+div.sphinxsidebarwrapper {
+	position: inherit;
+	width: inherit;
+	z-index: inherit;
+	padding-left: 10px;
+}
+
+.wrapper {
+	margin: inherit;
+}
+
+img {
+	max-width: 100%;
+}
+
+div.body h1 {
+	margin-top: 2em;
+}
+
+code.descname {
+	font-size: 80%;
+}
+
+dd {
+	margin-left: 10px;
+}
+
+a.reference.internal, div.section {
+	display: block;
+	width:100%;
+	height:100%;
+}
+
+.page-head__logo {
+	width: 120px;
+}
+
+.page-logo {
+	position: relative;
+	top: -33px;
+	
+}
+
+.stage__title {
+	position: relative;
+	top: -8px;
+}
