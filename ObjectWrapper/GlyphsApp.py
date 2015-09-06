@@ -400,12 +400,12 @@ GSApplication.ligatureComponents = _ligatureComponents
 
 # available in Glyphs 2 (786)
 def __addCallback__(self, target, operation):
-	GSApplication.delegate(self).addCallback_forOperation_(target, operation)
+	GSApplication.delegate().addCallback_forOperation_(target, operation)
 GSApplication.addCallback = __addCallback__
 
 def __removeCallback___(self, target, operation = None):
 	if operation != None:
-		GSApplication.delegate(self).removeCallback_forOperation_(target, operation)
+		GSApplication.delegate().removeCallback_forOperation_(target, operation)
 	else:
 		GSApplication.delegate().removeCallback_(target)
 GSApplication.removeCallback = __removeCallback___
