@@ -5,6 +5,11 @@
 {%- endblock %}
 {%- set reldelim1 = reldelim1 is not defined and ' &raquo;' or reldelim1 %}
 {%- set reldelim2 = reldelim2 is not defined and ' |' or reldelim2 %}
+
+{% block extrahead %} 
+    <meta name="viewport" content="width=device-width, initial-scale=.7, maximum-scale=1.5, user-scalable=1" />
+{% endblock %}
+
 {%- block linktags %}
 		{%- if hasdoc('about') %}
 		<link rel="author" title="{{ _('About these documents') }}" href="{{ pathto('about') }}" />
@@ -28,7 +33,7 @@
 		{%- if prev %}
 		<link rel="prev" title="{{ prev.title|striptags }}" href="{{ prev.link|e }}" />
 		{%- endif %}
-		<!-- <link media="only screen and (max-device-width: 480px)" href="{{ pathto('_static/mobile.css', 1) }}" type="text/css" rel="stylesheet" /> -->
+		<!--<link media="only screen and (max-width: 600px)" href="{{ pathto('_static/mobile.css', 1) }}" type="text/css" rel="stylesheet" />//-->
 {%- endblock %}
 
 {%- block relbar1 %}
