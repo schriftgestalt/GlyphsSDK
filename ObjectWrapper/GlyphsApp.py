@@ -452,6 +452,14 @@ TTROUNDUP = 1,
 TTROUNDDOWN = 2,
 TRIPLE = 128,
 
+#annotations:
+TEXT = 1,
+ARROW = 2,
+CIRCLE = 3,
+PLUS = 4,
+MINUS = 5
+
+
 # Reverse lookup for __repr__
 nodeConstants = {
 	17: 'GSMOVE',
@@ -909,6 +917,17 @@ class LayerGuideLinesProxy (Proxy):
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.guideLines()
 
+class LayerAnnotationProxy (Proxy):
+	def __getitem__(self, Key):
+		return self._owner.objectInAnnotationsAtIndex_(Key)
+	def __setitem__(self, Key, Annotation):
+		self._owner.insertObject_inAnnotationsAtIndex_(Annotation, Key)
+	def __delitem__(self, Key):
+		self._owner.removeObjectFromAnnotationsAtIndex_(Key)
+	def append(self, Annotation):
+		self._owner.addAnnotation_(Annotation)
+	def values(self):
+		return self._owner.pyobjc_instanceMethods.annotations()
 
 
 
@@ -3000,6 +3019,9 @@ GSLayer.guides = property(lambda self: LayerGuideLinesProxy(self),
 		del(layer.guides[0])
 '''
 
+GSLayer.annotations = property(lambda self: LayerAnnotationProxy(self),
+							   lambda self, value: self.setAnnotations_(NSMutableArray.arrayWithArray_(value)))
+
 GSLayer.hints = property(lambda self: LayerHintsProxy(self),
 						 lambda self, value: self.setHints_(value))
 '''.. attribute:: hints
@@ -3976,6 +3998,45 @@ GSGuideLine.name = property(	lambda self: self.valueForKey_("name"),
 '''.. attribute:: name
 	a optional name
 	:type: unicode'''
+
+
+##################################################################################
+#
+#
+#
+#           GSAnnotation
+#
+#
+#
+##################################################################################
+
+
+
+
+GSAnnotationType.type = property(lambda self: self.valueForKey_("type").integerValue(),
+								 lambda self, value: self.setType_(value))
+'''.. attribute:: type
+	The type of the annotation.
+	:type: int'''
+	
+GSAnnotationType.text = property(lambda self: self.valueForKey_("text"),
+								 lambda self, value: self.setText_(value))
+'''.. attribute:: text
+	The content of the annotation. Only useful if type == TEXT
+	:type: unicode'''
+	
+GSAnnotationType.angle = property(lambda self: self.valueForKey_("angle").floatValue(),
+								 lambda self, value: self.setAngle_(value))
+'''.. attribute:: angle
+	The angle of the annotation.
+	:type: float'''
+
+GSAnnotationType.width = property(lambda self: self.valueForKey_("width").floatValue(),
+								 lambda self, value: self.setWidth_(value))
+'''.. attribute:: width
+	The width of the annotation.
+	:type: float'''
+
 
 
 
