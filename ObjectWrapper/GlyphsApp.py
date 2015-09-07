@@ -1968,6 +1968,42 @@ GSInstance.linkStyle = property(lambda self: self.valueForKey_("linkStyle"), lam
 '''.. attribute:: linkStyle
 	Linked style
 	:type: string'''
+GSInstance.familyName = property(lambda self: self.valueForKey_("familyName"), lambda self, value: self.setCustomParameter_forKey_(value, "familyName"))
+'''.. attribute:: familyName
+	familyName
+	:type: string'''
+GSInstance.preferredFamily = property(lambda self: self.valueForKey_("preferredFamily"), lambda self, value: self.setCustomParameter_forKey_(value, "preferredFamily"))
+'''.. attribute:: preferredFamily
+	preferredFamily
+	:type: string'''
+GSInstance.preferredSubfamilyName = property(lambda self: self.valueForKey_("preferredSubfamilyName"), lambda self, value: self.setCustomParameter_forKey_(value, "preferredSubfamilyName"))
+'''.. attribute:: preferredSubfamilyName
+	preferredSubfamilyName
+	:type: string'''
+GSInstance.windowsFamily = property(lambda self: self.valueForKey_("windowsFamily"), lambda self, value: self.setCustomParameter_forKey_(value, "styleMapFamilyName"))
+'''.. attribute:: windowsFamily
+	windowsFamily
+	:type: string'''
+GSInstance.windowsStyle = property(lambda self: self.valueForKey_("windowsStyle"))
+'''.. attribute:: windowsStyle
+	windowsStyle
+	is computed from "isBold" and "isItalic"
+	!!Readonly
+	:type: string'''
+GSInstance.windowsLinkedToStyle = property(lambda self: self.valueForKey_("windowsLinkedToStyle"))
+'''.. attribute:: windowsLinkedToStyle
+	windowsLinkedToStyle
+	!!Readonly
+	:type: string'''
+GSInstance.fontName = property(lambda self: self.valueForKey_("fontName"), lambda self, value: self.setCustomParameter_forKey_(value, "postscriptFontName"))
+'''.. attribute:: fontName
+	fontName (postscriptFontName)
+	:type: string'''
+GSInstance.fullName = property(lambda self: self.valueForKey_("fullName"), lambda self, value: self.setCustomParameter_forKey_(value, "postscriptFullName"))
+'''.. attribute:: linkStyle
+	fullName (postscriptFullName)
+	:type: string'''
+
 GSInstance.customParameters = property(lambda self: CustomParametersProxy(self))
 '''.. attribute:: customParameters
 	The custom parameters. List of :class:`GSCustomParameter` objects. You can access them by name or by index.
