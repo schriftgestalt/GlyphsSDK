@@ -111,9 +111,12 @@ The function names need to end with an underscore, e.g. `setValue_()`.
 
 All the back and forth relations between the UI and your Python code can be reviewed in the *Connection inspector* (6th icon on the right).
 
+![](_Readme_Images/IB_Connections.png)
+
+
 ##### 4. Compile .xib to .nib
 
-As a last step, you need to compile the .xib file to a .nib file with this Terminal command: `ibtool xxx.xib --compile xxx.nib`.
+As a last step, you need to compile the .xib file to a .nib file with this *Terminal* command: `ibtool xxx.xib --compile xxx.nib`.
 Please note: Every time the .xib is changed, it has to be recompiled to a .nib. 
 
 ##### 5. Troubleshooting and debugging
