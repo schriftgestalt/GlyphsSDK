@@ -105,7 +105,9 @@ The function names need to end with an underscore, e.g. `setValue_()`.
 - Add this .py file via *File > Add Files...* for Xcode to recognize all IBOutlets and IBActions
 - In the left sidebar, choose *Placeholders > File's Owner*, in the right sidebar, open the *Identity inspector* (3rd icon), and put the name of this controller class in the *Custom Class > Class* field
 - The first **IBOutlet**, the main window pane: Ctrl-drag from the *File's Owner* to the window pane (called *Custom View*) either in the graphical arrangement or in the list on the left, then choose `settings_view` from the pop-up list, to establish the connection between the Python variable and the main NSView object
+
 ![](_Readme_Images/IB_DragConnection.png)
+
 - Other **IBOutlets**: Ctrl-drag from the *File's Owner* to a UI element (e.g. text field), and choose which outlet shall be linked to the UI element
 - **IBActions**: Ctrl-drag from a UI element (e.g. button) to the *File’s Owner* in the left sidebar, and choose the function that the UI element is supposed to trigger
 - In the left-side objects side bar choose *Custom View*, and in the right-side pane choose *Attributes inspector* (4th icon), and deactivate *Translate Mask Into Constraints*
