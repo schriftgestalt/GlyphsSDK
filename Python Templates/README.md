@@ -80,11 +80,22 @@ The two sample plugins here that use a UI, `File format` and `Filter with dialog
 
 #### 1. IBOutlets: Make UI elements available to Python 
 
-At the root of the plugin class, you define variables that will later be wired to UI elements. In this example, we want to attach the `NSView` object (the window pane from Interface Builder) to the variable `settings_view`.
+At the root of the plugin class, you define variables that will be linked to UI elements. In this example, we want to attach the `NSView` object (the window pane from Interface Builder) to the variable `settings_view`. (Glyphs then accesses the NSView object found in this variable in the function `exportSettingsView()`.
 
-```
+```python
 class CSVFileExport (NSObject, GlyphsFileFormatProtocol):
 	settings_view = objc.IBOutlet()
+```
+
+#### 2. IBAction: Let UI elements trigger Python functions
+
+Functions to be triggered form the UI get defined by a `@objc.IBAction` just before the function definition.
+
+```python
+	@objc.IBAction
+	def setExportUnicode_(self, sender):
+		self.exportUnicode = sender.intValue()
+		self.updateFeedBackTextField()
 ```
 
 
