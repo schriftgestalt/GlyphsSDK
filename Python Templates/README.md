@@ -78,7 +78,15 @@ Your Python code communicates with the UI through
 
 The two sample plugins here that use a UI, `File format` and `Filter with dialog`, are small functional plugins the make use of both IBOutlets and IBActions.
 
-1. Make sure you have your IBOutlets (like settings_view) defined as class variables at the beginning of this controller class.
+#### 1. IBOutlets: Make UI elements available to Python 
+
+At the root of the plugin class, you define variables that will later be wired to UI elements. In this example, we want to attach the `NSView` object (the window pane from Interface Builder) to the variable `settings_view`.
+
+```
+class CSVFileExport (NSObject, GlyphsFileFormatProtocol):
+	settings_view = objc.IBOutlet()
+```
+
 
 
 For GUI elements, you will need to work with Interface Builder (IB). For this, you edit `.xib` files in XCode, and compile them to `.nib` files. To use `.xib` files, you need to add IBActions and IBOutlets in the principal controller class of your `____PluginFileName____.py`, like this:
