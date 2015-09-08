@@ -78,7 +78,7 @@ Your Python code communicates with the UI through
 
 The two sample plugins here that use a UI, `File format` and `Filter with dialog`, are small functional plugins the make use of both IBOutlets and IBActions.
 
-#### 1. IBOutlets: Make UI elements available to Python 
+##### 1. IBOutlets: Make UI elements available to Python 
 
 At the root of the plugin class, you define variables that will be linked to UI elements. In this example, we want to attach the `NSView` object (the window pane from Interface Builder) to the variable `settings_view`. (Glyphs then accesses the NSView object found in this variable in the function `exportSettingsView()`.
 
@@ -87,9 +87,10 @@ class CSVFileExport (NSObject, GlyphsFileFormatProtocol):
 	settings_view = objc.IBOutlet()
 ```
 
-#### 2. IBAction: Let UI elements trigger Python functions
+##### 2. IBActions: Let UI elements trigger Python functions
 
-Functions to be triggered form the UI get defined by a `@objc.IBAction` just before the function definition.
+Functions to be triggered from the UI get defined by a `@objc.IBAction` just before the function definition.
+The function names need to end with an underscore, e.g. setValue_().
 
 ```python
 	@objc.IBAction
@@ -98,6 +99,12 @@ Functions to be triggered form the UI get defined by a `@objc.IBAction` just bef
 		self.updateFeedBackTextField()
 ```
 
+##### 3. Interface Builder
+
+![](_Readme_Images/IB_Overview.png)
+
+- Open the .xib file in XCode, and add and arrange interface elements.
+- Add this .py file via File > Add Files... for Xcode to recognize all IBOutlets and IBACtions
 
 
 For GUI elements, you will need to work with Interface Builder (IB). For this, you edit `.xib` files in XCode, and compile them to `.nib` files. To use `.xib` files, you need to add IBActions and IBOutlets in the principal controller class of your `____PluginFileName____.py`, like this:
