@@ -111,21 +111,13 @@ The function names need to end with an underscore, e.g. setValue_().
 - IBActions: Ctrl-drag from a UI element (e.g. button) to the File’s Owner in the left sidebar, and choose the class method the UI element is supposed to trigger
 - In the left side objects side choose 'Custom View', and in the right side pane choose 'Attributes inspector' (4th icon), and deactivate 'Translate Mask Into Constraints'
 
+All the back and forth relations between the UI and your Python code can be reviewed in the 'Connection inspector' (6th icon on the right).
 
-For GUI elements, you will need to work with Interface Builder (IB). For this, you edit `.xib` files in XCode, and compile them to `.nib` files. To use `.xib` files, you need to add IBActions and IBOutlets in the principal controller class of your `____PluginFileName____.py`, like this:
-```python
-	_theOutlet = objc.IBOutlet()
-```
+As a last step, you need to compile the .xib file to a .nib file with this Terminal command: `ibtool xxx.xib --compile xxx.nib`.
+Please note: Every time the .xib is changed, it has to be recompiled to a .nib. 
 
-... and start the respective UI action method (e.g., an action triggered by a button) with `@objc.IBAction`:
-```python
-	@objc.IBAction
-	def buttonPressed_( self, sender ):
-		print "The button was pressed!"
-```
+Check Console.app for error messages to see if everything went right.
+You can also output your own debug code to Console.app using the plugin's own `logToConsole()` function.
 
-Then, still in Xcode, add the .py file with *File > Add Files...*. When you are done, and every time the `.xib` file is changed, it has to be compiled to a `.nib` file. Do so with this Terminal command:
-`ibtool xxx.xib --compile xxx.nib`.
-
-If this looks confusing at first, do not worry. You will find detailed step-by-step instructions in the comments of the .py file. And for a quick introduction to using Interface Builder with the PyObjC bridge, read:
+For a quick introduction to using Interface Builder with the PyObjC bridge, read:
 http://blog.adamw523.com/os-x-cocoa-application-python-pyobjc/
