@@ -55,7 +55,7 @@ Rename `Contents/MacOS/____PluginFileName____`. Make sure it is exactly in sync 
 
 ##### Rename and edit the core Python file
 
-`Contents/Resources/____PluginFileName____.py` is where your actual code goes. Rename the file, and open it. You will find extensive step-by-step instructions in the comments. Have fun.
+`Contents/Resources/____PluginFileName____.py` is where your actual code goes. Rename the file and open it.
 
 In the same file, rename the following strings in the source code: `____PluginClassName____`, `____PluginMenuName____`, `____PluginToolbarTitle____`.
 
