@@ -57,6 +57,8 @@ Rename `Contents/MacOS/____PluginFileName____`. Make sure it is exactly in sync 
 
 `Contents/Resources/____PluginFileName____.py` is where your actual code goes. Rename the file, and open it. You will find extensive step-by-step instructions in the comments. Have fun.
 
+In the same file, rename the following strings in the source code: `____PluginClassName____`, `____PluginMenuName____`, `____PluginToolbarTitle____`.
+
 ## Installing and debugging
 
 To install a plugin, move it into the Plugins folder inside the Application Support folder of Glyphs (double click the plugin to let Glyphs do that for you). You can edit your code right there, but you need to restart the application for any changes to take effect.
