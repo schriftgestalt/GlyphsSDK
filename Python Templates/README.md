@@ -66,21 +66,19 @@ Tip: right-click the Glyphs.app Dock icon, force quit it, and restart immediatel
 
 ## Interface Builder: Adding GUI elements
 
-The interaction between your Python script and a graphical user interface (GUI) requires the use of Interface Builder, which is part of Apple’s XCode software development environment. The work with Interface Builder can be a bit daunting, but we’ve written a step-by-step walkthrough here for you that will get you going quickly. After your first completed GUI interaction, the work will feel as all the rest.
+The interaction between your Python script and a graphical user interface (GUI) requires the use of Interface Builder, which is part of Apple’s XCode software development environment. The work with Interface Builder can be a bit daunting, but we’ve written a step-by-step walkthrough here for you that will get you going quickly. After your first completed GUI interaction, using it will become as natural as all the rest.
 
 You open and edit the .xib file in Interface Builder. After you're done, the file gets compiled to a .nib file and this file gets called by the Python code.
 
 Your Python code communicates with the UI through
-- IBOutlets (.py->GUI)
-  Make UI elements available to your Python code. Then your code can change these elements (like the caption of a text field)
-- IBActions (GUI->.py)
-  Call methods in the Python code from actions in the UI (like the click of a button)
+- **IBOutlets** *(.py->GUI)*: Make UI elements available to your Python code. Then your code can change these elements (like the caption of a text field)
+- **IBActions** *(GUI->.py)*: Call methods in the Python code from actions in the UI (like the click of a button)
 
 The two sample plugins here that use a UI, `File format` and `Filter with dialog`, are small functional plugins the make use of both IBOutlets and IBActions.
 
 ##### 1. IBOutlets: Make UI elements available to Python 
 
-At the root of the plugin class, you define variables that will be linked to UI elements. In this example, we want to attach the `NSView` object (the window pane from Interface Builder) to the variable `settings_view`. (Glyphs then accesses the NSView object found in this variable in the function `exportSettingsView()`.
+At the root of the plugin class, you define variables that will be linked to UI elements. In this example, we want to attach the `NSView` object (the Custom View window pane from Interface Builder) to the variable `settings_view`. (Glyphs then accesses the NSView object found in this variable through the function `exportSettingsView()`.
 
 ```python
 class CSVFileExport (NSObject, GlyphsFileFormatProtocol):
@@ -104,17 +102,21 @@ The function names need to end with an underscore, e.g. setValue_().
 ![](_Readme_Images/IB_Overview.png)
 
 - Open the .xib file in XCode, and add and arrange interface elements
-- Add this .py file via File > Add Files... for Xcode to recognize all IBOutlets and IBActions
-- In the left sidebar, choose Placeholders > File's Owner, in the right sidebar, open the Identity inspector (3rd icon), and put the name of this controller class in the Custom Class > Class field
-- IBOutlets, the main window pane: Ctrl-drag from the File's Owner to the window pane (called Custom View) either in the graphical arrangemant or in the list on the left, then choose `settings_view` from the pop-up list, to establish the connection the the main NSView object
-- Other IBOutlets: Ctrl-drag from the File's Owner to a UI element (e.g. text field), and choose which outlet shall be linked to the UI element
-- IBActions: Ctrl-drag from a UI element (e.g. button) to the File’s Owner in the left sidebar, and choose the class method the UI element is supposed to trigger
-- In the left side objects side choose 'Custom View', and in the right side pane choose 'Attributes inspector' (4th icon), and deactivate 'Translate Mask Into Constraints'
+- Add this .py file via *File > Add Files...* for Xcode to recognize all IBOutlets and IBActions
+- In the left sidebar, choose *Placeholders > File's Owner*, in the right sidebar, open the *Identity inspector* (3rd icon), and put the name of this controller class in the *Custom Class > Class* field
+- First IBOutlet, the main window pane: Ctrl-drag from the *File's Owner* to the window pane (called *Custom View*) either in the graphical arrangement or in the list on the left, then choose `settings_view` from the pop-up list, to establish the connection the the main NSView object
+- Other IBOutlets: Ctrl-drag from the *File's Owner* to a UI element (e.g. text field), and choose which outlet shall be linked to the UI element
+- IBActions: Ctrl-drag from a UI element (e.g. button) to the *File’s Owner* in the left sidebar, and choose the function that the UI element is supposed to trigger
+- In the left-side objects side bar choose *Custom View*, and in the right-side pane choose *Attributes inspector* (4th icon), and deactivate *Translate Mask Into Constraints*
 
-All the back and forth relations between the UI and your Python code can be reviewed in the 'Connection inspector' (6th icon on the right).
+All the back and forth relations between the UI and your Python code can be reviewed in the *Connection inspector* (6th icon on the right).
+
+##### 4. Compile .xib to .nib
 
 As a last step, you need to compile the .xib file to a .nib file with this Terminal command: `ibtool xxx.xib --compile xxx.nib`.
 Please note: Every time the .xib is changed, it has to be recompiled to a .nib. 
+
+
 
 Check Console.app for error messages to see if everything went right.
 You can also output your own debug code to Console.app using the plugin's own `logToConsole()` function.
