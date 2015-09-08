@@ -74,11 +74,11 @@ Your Python code communicates with the UI through
 - **IBOutlets** *(.py->GUI)*: Make UI elements available to your Python code. Then your code can change these elements (like the caption of a text field)
 - **IBActions** *(GUI->.py)*: Call methods in the Python code from actions in the UI (like the click of a button)
 
-The two sample plugins here that use a UI, `File format` and `Filter with dialog`, are small functional plugins the make use of both IBOutlets and IBActions.
+The two sample plugins here that use a UI, `File format` and `Filter with dialog`, are small functional plugins that make use of both IBOutlets and IBActions.
 
 ##### 1. IBOutlets: Make UI elements available to Python 
 
-At the root of the plugin class, you define variables that will be linked to UI elements. In this example, we want to attach the `NSView` object (the Custom View window pane from Interface Builder) to the variable `settings_view`. (Glyphs then accesses the NSView object found in this variable through the function `exportSettingsView()`.
+At the root of the plugin class, you define variables that will be linked to UI elements. In this example, we want to attach the `NSView` object (the *Custom View* window pane from Interface Builder) to the variable `settings_view`. (Glyphs then accesses the NSView object found in this variable through the function `exportSettingsView()`.
 
 ```python
 class CSVFileExport (NSObject, GlyphsFileFormatProtocol):
@@ -88,7 +88,7 @@ class CSVFileExport (NSObject, GlyphsFileFormatProtocol):
 ##### 2. IBActions: Let UI elements trigger Python functions
 
 Functions to be triggered from the UI get defined by a `@objc.IBAction` just before the function definition.
-The function names need to end with an underscore, e.g. setValue_().
+The function names need to end with an underscore, e.g. `setValue_()`.
 
 ```python
 	@objc.IBAction
@@ -104,9 +104,9 @@ The function names need to end with an underscore, e.g. setValue_().
 - Open the .xib file in XCode, and add and arrange interface elements
 - Add this .py file via *File > Add Files...* for Xcode to recognize all IBOutlets and IBActions
 - In the left sidebar, choose *Placeholders > File's Owner*, in the right sidebar, open the *Identity inspector* (3rd icon), and put the name of this controller class in the *Custom Class > Class* field
-- First IBOutlet, the main window pane: Ctrl-drag from the *File's Owner* to the window pane (called *Custom View*) either in the graphical arrangement or in the list on the left, then choose `settings_view` from the pop-up list, to establish the connection the the main NSView object
-- Other IBOutlets: Ctrl-drag from the *File's Owner* to a UI element (e.g. text field), and choose which outlet shall be linked to the UI element
-- IBActions: Ctrl-drag from a UI element (e.g. button) to the *File’s Owner* in the left sidebar, and choose the function that the UI element is supposed to trigger
+- The first **IBOutlet**, the main window pane: Ctrl-drag from the *File's Owner* to the window pane (called *Custom View*) either in the graphical arrangement or in the list on the left, then choose `settings_view` from the pop-up list, to establish the connection between the Python variable and the main NSView object
+- Other **IBOutlets**: Ctrl-drag from the *File's Owner* to a UI element (e.g. text field), and choose which outlet shall be linked to the UI element
+- **IBActions**: Ctrl-drag from a UI element (e.g. button) to the *File’s Owner* in the left sidebar, and choose the function that the UI element is supposed to trigger
 - In the left-side objects side bar choose *Custom View*, and in the right-side pane choose *Attributes inspector* (4th icon), and deactivate *Translate Mask Into Constraints*
 
 All the back and forth relations between the UI and your Python code can be reviewed in the *Connection inspector* (6th icon on the right).
@@ -116,10 +116,13 @@ All the back and forth relations between the UI and your Python code can be revi
 As a last step, you need to compile the .xib file to a .nib file with this Terminal command: `ibtool xxx.xib --compile xxx.nib`.
 Please note: Every time the .xib is changed, it has to be recompiled to a .nib. 
 
+##### 5. Troubleshooting and debugging
 
+Check *Console.app* for error messages to see if everything went right.
+You can also output your own debug code to *Console.app* using the plugin's own `logToConsole()` function.
 
-Check Console.app for error messages to see if everything went right.
-You can also output your own debug code to Console.app using the plugin's own `logToConsole()` function.
+##### Further reading
 
-For a quick introduction to using Interface Builder with the PyObjC bridge, read:
-http://blog.adamw523.com/os-x-cocoa-application-python-pyobjc/
+For a quick introduction to using Interface Builder with the PyObjC bridge, read http://blog.adamw523.com/os-x-cocoa-application-python-pyobjc/
+
+For the complete reference for the UI elements, see Apple's AppKit Framework Reference: https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ApplicationKit/ObjC_classic/index.html
