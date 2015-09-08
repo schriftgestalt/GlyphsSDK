@@ -45,15 +45,15 @@ A live example of all of this can be found for Yanone’s Speed Punk, with `prod
 
 ## Further renaming
 
-#### * Edit the boot file
+##### Edit the boot file
 
 In the last line of `Contents/Resources/__boot__.py`, the file name (`____PluginFileName____`), this time *with* the `.py` extension, must be mentioned.
 
-#### * Rename the MacOS executable
+##### Rename the MacOS executable
 
 Rename `Contents/MacOS/____PluginFileName____`. Make sure it is exactly in sync with the `CFBundleExecutable` value in Info.plist, and with the name of the core Python file (except for the .py suffix). See below.
 
-#### * Rename and edit the core Python file
+##### Rename and edit the core Python file
 
 `Contents/Resources/____PluginFileName____.py` is where your actual code goes. Rename the file, and open it. You will find extensive step-by-step instructions in the comments. Have fun.
 
