@@ -1177,7 +1177,19 @@ def Font__close__(self, ignoreChanges=True):
 			self.parent.canCloseDocumentWithDelegate_shouldCloseSelector_contextInfo_(None, None, None)
 GSFont.close = Font__close__
 
+'''.. function:: close()
+	
+	closes the font.
+	:param ignoreChanges: if it should ask to save or not.
+	:type ignoreChanges: bool
+	'''
+
 GSFont.parent = property(lambda self: self.valueForKey_("parent"))
+'''.. attribute:: parent
+	returnes the document.
+	!Readonly
+	:type: NSDocument
+	'''
 
 GSFont.masters = property(lambda self: FontFontMasterProxy(self),
 						  lambda self, value: self.setFontMasters_(NSMutableArray.arrayWithArray_(value)))
