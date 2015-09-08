@@ -64,7 +64,22 @@ To install a plugin, move it into the Plugins folder inside the Application Supp
 
 Tip: right-click the Glyphs.app Dock icon, force quit it, and restart immediately with a click on the Dock icon. This will also immediately re-open any windows (you had open before the force quit) to their last state.
 
-### Adding GUI elements
+## Interface Builder: Adding GUI elements
+
+The interaction between your Python script and a graphical user interface (GUI) requires the use of Interface Builder, which is part of Apple’s XCode software development environment. The work with Interface Builder can be a bit daunting, but we’ve written a step-by-step walkthrough here for you that will get you going quickly. After your first completed GUI interaction, the work will feel as all the rest.
+
+You open and edit the .xib file in Interface Builder. After you're done, the file gets compiled to a .nib file and this file gets called by the Python code.
+
+Your Python code communicates with the UI through
+- IBOutlets (.py->GUI)
+  Make UI elements available to your Python code. Then your code can change these elements (like the caption of a text field)
+- IBActions (GUI->.py)
+  Call methods in the Python code from actions in the UI (like the click of a button)
+
+The two sample plugins here that use a UI, `File format` and `Filter with dialog`, are small functional plugins the make use of both IBOutlets and IBActions.
+
+1. Make sure you have your IBOutlets (like settings_view) defined as class variables at the beginning of this controller class.
+
 
 For GUI elements, you will need to work with Interface Builder (IB). For this, you edit `.xib` files in XCode, and compile them to `.nib` files. To use `.xib` files, you need to add IBActions and IBOutlets in the principal controller class of your `____PluginFileName____.py`, like this:
 ```python
