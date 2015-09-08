@@ -68,9 +68,7 @@ Tip: right-click the Glyphs.app Dock icon, force quit it, and restart immediatel
 
 The interaction between your Python script and a graphical user interface (GUI) requires the use of Interface Builder, which is part of Apple’s XCode software development environment. The work with Interface Builder can be a bit daunting, but we’ve written a step-by-step walkthrough here for you that will get you going quickly. After your first completed GUI interaction, using it will become as natural as all the rest.
 
-You open and edit the .xib file in Interface Builder. After you're done, the file gets compiled to a .nib file and this file gets called by the Python code.
-
-Your Python code communicates with the UI through
+Your Python code communicates with the UI through:
 - **IBOutlets** *(.py->GUI)*: Make UI elements available to your Python code. Then your code can change these elements (like the caption of a text field)
 - **IBActions** *(GUI->.py)*: Call methods in the Python code from actions in the UI (like the click of a button)
 
@@ -110,7 +108,7 @@ The function names need to end with an underscore, e.g. `setValue_()`.
 
 - Other **IBOutlets**: Ctrl-drag from the *File's Owner* to a UI element (e.g. text field), and choose which outlet shall be linked to the UI element
 - **IBActions**: Ctrl-drag from a UI element (e.g. button) to the *File’s Owner* in the left sidebar, and choose the function that the UI element is supposed to trigger
-- In the left-side objects side bar choose *Custom View*, and in the right-side pane choose *Attributes inspector* (4th icon), and deactivate *Translate Mask Into Constraints* (Don't ask, just do it)
+- In the left-side objects side bar choose *Custom View*, and in the right-side pane choose *Attributes inspector* (4th icon), and deactivate *Translate Mask Into Constraints*. Don't ask, just do it.
 
 All the back and forth relations between the UI and your Python code can be reviewed in the *Connection inspector* (6th icon on the right).
 
