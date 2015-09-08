@@ -103,8 +103,13 @@ The function names need to end with an underscore, e.g. setValue_().
 
 ![](_Readme_Images/IB_Overview.png)
 
-- Open the .xib file in XCode, and add and arrange interface elements.
-- Add this .py file via File > Add Files... for Xcode to recognize all IBOutlets and IBACtions
+- Open the .xib file in XCode, and add and arrange interface elements
+- Add this .py file via File > Add Files... for Xcode to recognize all IBOutlets and IBActions
+- In the left sidebar, choose Placeholders > File's Owner, in the right sidebar, open the Identity inspector (3rd icon), and put the name of this controller class in the Custom Class > Class field
+- IBOutlets, the main window pane: Ctrl-drag from the File's Owner to the window pane (called Custom View) either in the graphical arrangemant or in the list on the left, then choose `settings_view` from the pop-up list, to establish the connection the the main NSView object
+- Other IBOutlets: Ctrl-drag from the File's Owner to a UI element (e.g. text field), and choose which outlet shall be linked to the UI element
+- IBActions: Ctrl-drag from a UI element (e.g. button) to the File’s Owner in the left sidebar, and choose the class method the UI element is supposed to trigger
+- In the left side objects side choose 'Custom View', and in the right side pane choose 'Attributes inspector' (4th icon), and deactivate 'Translate Mask Into Constraints'
 
 
 For GUI elements, you will need to work with Interface Builder (IB). For this, you edit `.xib` files in XCode, and compile them to `.nib` files. To use `.xib` files, you need to add IBActions and IBOutlets in the principal controller class of your `____PluginFileName____.py`, like this:
