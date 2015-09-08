@@ -110,7 +110,7 @@ The function names need to end with an underscore, e.g. `setValue_()`.
 
 - Other **IBOutlets**: Ctrl-drag from the *File's Owner* to a UI element (e.g. text field), and choose which outlet shall be linked to the UI element
 - **IBActions**: Ctrl-drag from a UI element (e.g. button) to the *File’s Owner* in the left sidebar, and choose the function that the UI element is supposed to trigger
-- In the left-side objects side bar choose *Custom View*, and in the right-side pane choose *Attributes inspector* (4th icon), and deactivate *Translate Mask Into Constraints*
+- In the left-side objects side bar choose *Custom View*, and in the right-side pane choose *Attributes inspector* (4th icon), and deactivate *Translate Mask Into Constraints* (Don't ask, just do it)
 
 All the back and forth relations between the UI and your Python code can be reviewed in the *Connection inspector* (6th icon on the right).
 
@@ -120,12 +120,12 @@ All the back and forth relations between the UI and your Python code can be revi
 ##### 4. Compile .xib to .nib
 
 As a last step, you need to compile the .xib file to a .nib file with this *Terminal* command: `ibtool xxx.xib --compile xxx.nib`.
-Please note: Every time the .xib is changed, it has to be recompiled to a .nib. 
+Please note: Every time the .xib is changed, it has to be **recompiled** to a .nib. 
 
 ##### 5. Troubleshooting and debugging
 
 Check *Console.app* for error messages to see if everything went right.
-You can also output your own debug code to *Console.app* using the plugin's own `logToConsole()` function.
+You can also output your own debug code to *Console.app* using the plugin's own `self.logToConsole()` function.
 
 ##### Further reading
 
