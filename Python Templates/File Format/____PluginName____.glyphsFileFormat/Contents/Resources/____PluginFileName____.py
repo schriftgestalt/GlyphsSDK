@@ -1,6 +1,20 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+###########################################################################################################
+#
+#
+#	File Format Plugin
+#	Implementation for exporting fonts through the Export dialog
+#
+#	For help on the use of Interface Builder, please read the introduction at
+#	https://github.com/schriftgestalt/GlyphsSDK/tree/master/Python%20Templates
+#
+#
+###########################################################################################################
+
+
+
 import objc
 from Foundation import *
 from AppKit import *
@@ -12,49 +26,49 @@ path = MainBundle.bundlePath() + "/Contents/Scripts"
 if not path in sys.path:
 	sys.path.append( path )
 
-import GlyphsApp
-
-"""
-	Using Interface Builder (IB):
-	
-	Your code communicates with the UI through
-	- IBOutlets (.py->GUI): values available to a UI element (e.g. a string for a text field)
-	- IBActions (GUI->.py): methods in this class, triggered by buttons or other UI elements
-	
-	In order to make the Interface Builder items work, follow these steps:
-	1. Make sure you have your IBOutlets (like settings_view)
-	   defined as class variables at the beginning of this controller class.
-	2. Immediately *before* the def statement of a method that is supposed to be triggered
-	   by a UI action (e.g., setMyValue_() triggered by the My Value field), put:
-		@objc.IBAction
-	   Make sure the method name ends with an underscore, e.g. setValue_(),
-	   otherwise the action will not be able to send its value to the class method.
-	3. Open the .xib file in XCode, and add and arrange interface elements.
-	4. Add this .py file via File > Add Files..., Xcode will recognize IBOutlets and IBACtions
-	5. In the left sidebar, choose Placeholders > File's Owner,
-	   in the right sidebar, open the Identity inspector (3rd icon),
-	   and put the name of this controller class in the Custom Class > Class field
-	6. IBOutlets: Ctrl-drag from the File's Owner to a UI element (e.g. text field),
-	   and choose which outlet shall be linked to the UI element
-	7. IBActions: Ctrl-drag from a UI element (e.g. button) to the File’s Owner in the left sidebar,
-	   and choose the class method the UI element is supposed to trigger.
-	   If you want a stepping field (change the value with up/downarrow),
-	   then select the Entry Field, and set Identity Inspector > Custom Class to:
-		GSSteppingTextField
-	   ... and Attributes Inspector (top right, 4th icon) > Control > State to:
-		Continuous
-	8. Compile the .xib file to a .nib file with this Terminal command:
-		ibtool xxx.xib --compile xxx.nib
-	   (Replace xxx by the name of your xib/nib)
-	   Please note: Every time the .xib is changed, it has to be recompiled to a .nib.
-	   Check Console.app for error messages to see if everything went right.
-"""
-
+from GlyphsApp import *
 GlyphsFileFormatProtocol = objc.protocolNamed( "GlyphsFileFormat" )
 
+
+
+# Preference key names
+# Part of the example. You may delete them
+unicodePref = 'com.test.csvexport.exportUnicode'
+glyphWidthPref = 'com.test.csvexport.exportGlyphWidth'
+
+
+
 class ____PluginClassName____ ( NSObject, GlyphsFileFormatProtocol ):
+	# The NSView object from the User Interface
 	settings_view = objc.IBOutlet()
 	
+	# Example variables. You may delete them
+	feedbackTextField = objc.IBOutlet()
+	unicodeCheckBox = objc.IBOutlet()
+	glyphWidthCheckbox = objc.IBOutlet()
+
+	# Example function. You may delete it
+	@objc.IBAction
+	def setExportUnicode_(self, sender):
+		Glyphs.defaults[unicodePref] = bool(sender.intValue())
+		self.updateFeedBackTextField()
+
+	# Example function. You may delete it
+	@objc.IBAction
+	def setExportGlyphWidth_(self, sender):
+		Glyphs.defaults[glyphWidthPref] = bool(sender.intValue())
+		self.updateFeedBackTextField()
+
+	# Example function. You may delete it
+	def updateFeedBackTextField(self):
+		string = []
+		if Glyphs.defaults[unicodePref]:
+			string.append('Unicodes')
+		if Glyphs.defaults[glyphWidthPref]:
+			string.append('Glyph Width')
+		self.feedbackTextField.setStringValue_(', '.join(string) if len(string) else 'Nothing')
+
+
 	def init( self ):
 		"""
 		Do all initializing here.
@@ -66,6 +80,20 @@ class ____PluginClassName____ ( NSObject, GlyphsFileFormatProtocol ):
 			self.toolbarIcon.setName_( "ExportIcon" )
 		except Exception as e:
 			self.logToConsole( "init: %s" % str(e) )
+
+		# Init user preferences if not existent and set default value
+		if Glyphs.defaults[unicodePref] == None:
+			Glyphs.defaults[unicodePref] = True
+		if Glyphs.defaults[glyphWidthPref] == None:
+			Glyphs.defaults[glyphWidthPref] = True
+
+		# Set initial state of checkboxes according to user variables
+		self.unicodeCheckBox.setState_(Glyphs.defaults[unicodePref])
+		self.glyphWidthCheckbox.setState_(Glyphs.defaults[glyphWidthPref])
+
+		# Update text field. You may delete them
+		self.updateFeedBackTextField()
+
 		return self
 	
 	def interfaceVersion( self ):
@@ -156,73 +184,88 @@ class ____PluginClassName____ ( NSObject, GlyphsFileFormatProtocol ):
 		except Exception as e:
 			self.logToConsole( "setFont_: %s" % str(e) )
 	
+	# Example function. You may delete it
+	def writeCSVFile(self, font, filepath):
+		import csv
+
+		with open(filepath, 'w') as csvfile:
+			fieldnames = ['glyph_name', 'unicode', 'glyph_width']
+			writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+			writer.writeheader()
+			
+			for g in font.glyphs:
+				writeDict = {}
+				writeDict['glyph_name'] = g.name
+				
+				if Glyphs.defaults[unicodePref] == True and g.unicode:
+					writeDict['unicode'] = g.unicode
+
+				if Glyphs.defaults[glyphWidthPref] == True and g.layers[0].width:
+					writeDict['glyph_width'] = g.layers[0].width
+			
+				writer.writerow(writeDict)
+
 	def writeFont_error_( self, font, error ):
 		"""
-		Outputs a Font object.
+		EXPORT dialog
+
 		This method is called when the Next button is pressed in the Export dialog,
-		and should ask the user for the place to store the font.
-		font: The font to export.
-		error: On return, If the document contents could not be read, a pointer to an error object that encapsulates the reason they could not be read.
-		return True if the operation was successful;
+		and should ask the user for the place to store the font (not necessarily, you could choose to hard-wire the destination in the code).
+
+		Parameters:
+		- font: The font object to export
+		- error: PyObjc-Requirement. It is required here in order to return the error object upon export failure. Ignore its existence here.
+		
+		return (True, None) if the export was successful
+		return (False, NSError) if the export failed
 		"""
 		try:
-			# Build up an export string that will later be written to the file:
-			# Don't forget \n at the end
-			exportString = "Font: %s.\n" % font
-			exportString += "....\n"
 			
 			# Ask for export destination and write the file:
 			dialogMessage = "Choose export destination"
 			dialogProposedFileName = font.familyName
 			dialogFiletypes = [ self.fileExtension() ]
 			filepath = self.saveFileDialog( message = dialogMessage, ProposedFileName = dialogProposedFileName, filetypes = dialogFiletypes )
-			file = open( filepath, "w" )
-			file.write( exportString )
-			file.close()
+
+			# Catch cancelled file dialog
+			if filepath:
+				self.writeCSVFile(font, filepath)
+
+
+			# Export successful
+			# Change the condition (True) to your own assessment on whether or not the export succeeded
+			if True:
+				
+				# Use Mac Notification Center
+				notification = NSUserNotification.alloc().init()
+				notification.setTitle_(self.title())
+				notification.setInformativeText_('The export of "%s" was successful.' % (os.path.basename(filepath)))
+				NSUserNotificationCenter.defaultUserNotificationCenter().scheduleNotification_(notification)
+				
+				return (True, None)
 			
-			# return True if successful:
-			return True
+			# Export failed, give reason
+			else:
+				error = NSError.errorWithDomain_code_userInfo_(self.title(), -57, {
+					NSLocalizedDescriptionKey: NSLocalizedString('Export failed', None),
+					NSLocalizedFailureReasonErrorKey: None,
+					NSLocalizedRecoverySuggestionErrorKey: NSLocalizedString('The reason is unclear', None)
+					})
+				return (False, error)
+
+
+		# Python exception, return error message
 		except Exception as e:
 			self.logToConsole( "writeFont_error_: %s" % str(e) )
-			return False
+			error = NSError.errorWithDomain_code_userInfo_(self.title(), -57, {
+				NSLocalizedDescriptionKey: NSLocalizedString('Python exception', None),
+				NSLocalizedFailureReasonErrorKey: None,
+				NSLocalizedRecoverySuggestionErrorKey: NSLocalizedString(str(e), None)
+				})
+
+			return (False, error)
 	
-	def writeFont_toURL_error_( self, font, URL, error ):
-		"""
-		Outputs a Font object to the specified URL.
-		This method is called when the save dialog is invoked by the user.
-		You don't have to make a dialog
-		font: the font to export.
-		URL: the URL to save the font to.
-		error: on return, if the document contents could not be read, a pointer to an error object that encapsulates the reason they could not be read.
-		"""
-		try:
-			# Write a file:
-			file = open( URL, "w" )
-			file.write( exportString )
-			file.close()
-			return True
-		except Exception as e:
-			self.logToConsole( "writeFont_toURL_error_: %s" % str(e) )
-			return False
-	
-	def fontFromURL_ofType_error_( self, URL, fonttype, error ):
-		"""
-		Reads a Font object from the specified URL.
-		
-		URL: the URL to read the font from.
-		error: on return, if the document contents could not be read, a pointer to an error object that encapsulates the reason they could not be read.
-		Return the font object, or None if an error occurred.
-		"""
-		try:
-			# Create a new font object:
-			font = GSFont()
-			# Add glyphs and other info here...
-			pass
-			# Return the font object to be opened in Glyphs:
-			return font
-		except Exception as e:
-			self.logToConsole( "fontFromURL_ofType_error_: %s" % str(e) )
-			return None
 	
 	def saveFileDialog( self, message=None, ProposedFileName=None, filetypes=None ):
 		"""
@@ -253,3 +296,65 @@ class ____PluginClassName____ ( NSObject, GlyphsFileFormatProtocol ):
 		"""
 		myLog = "Font format %s:\n%s" % ( self.title(), message )
 		NSLog( myLog )
+
+
+########################################################################
+#
+#
+#	def writeFont_toURL_error_()
+#	To be implemented in Glyphs in the future
+#	Don't delete, it needs to be present in the plugin already
+#
+#
+########################################################################
+
+
+	def writeFont_toURL_error_( self, font, URL, error ):
+		"""
+		SAVE FONT dialog
+		
+		This method is called when the save dialog is invoked by the user.
+		You don't have to create a file dialog.
+
+		Parameters:
+		- font: the font object to save
+		- URL: the URL (file path) to save the font to
+		- error: on return, if the document contents could not be read, a pointer to an error object that encapsulates the reason they could not be read.
+		"""
+		try:
+			self.writeCSVFile(font, filepath)
+
+			return (True, None)
+		except Exception as e:
+			self.logToConsole( "writeFont_toURL_error_: %s" % str(e) )
+			return (False, e)
+
+
+########################################################################
+#
+#
+#	def fontFromURL_ofType_error_()
+#	Read fonts from files: To be implemented in Glyphs in the future
+#	Don't delete, it needs to be present in the plugin already
+#
+#
+########################################################################
+	
+	def fontFromURL_ofType_error_( self, URL, fonttype, error ):
+		"""
+		Reads a Font object from the specified URL.
+		
+		URL: the URL to read the font from.
+		error: on return, if the document contents could not be read, a pointer to an error object that encapsulates the reason they could not be read.
+		Return the font object, or None if an error occurred.
+		"""
+		try:
+			# Create a new font object:
+			font = GSFont()
+			# Add glyphs and other info here...
+			pass
+			# Return the font object to be opened in Glyphs:
+			return font
+		except Exception as e:
+			self.logToConsole( "fontFromURL_ofType_error_: %s" % str(e) )
+			return None
