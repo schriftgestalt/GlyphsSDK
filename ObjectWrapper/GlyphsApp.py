@@ -1168,6 +1168,13 @@ def Font__save__(self, path=None):
 		raise("Now path set")
 		
 GSFont.save = Font__save__
+'''.. function:: save()
+	
+	saves the font.
+	if no path is given, it saves to the existing location.
+	:param filePath: a file path
+	:type filePath: str
+	'''
 
 def Font__close__(self, ignoreChanges=True):
 	if self.parent:
