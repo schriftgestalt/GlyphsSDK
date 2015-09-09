@@ -1077,6 +1077,7 @@ Properties
 
 .. autosummary::
 
+	parent
 	masters
 	instances
 	glyphs
@@ -1111,6 +1112,8 @@ Functions
 
 .. autosummary::
 	
+	save()
+	close()
 	disableUpdateInterface()
 	enableUpdateInterface()
 	kerningForPair()
@@ -1147,54 +1150,10 @@ def Font__repr__(self):
 	return "<GSFont \"%s\" v%s.%s with %s masters and %s instances>" % (self.familyName, self.versionMajor, self.versionMinor, len(self.masters), len(self.instances))
 GSFont.__repr__ = Font__repr__
 
-def Font__save__(self, path=None):
-	print "__save__", self.parent
-	if self.parent is not None:
-		if path is None:
-			self.parent.saveDocument_(None)
-		else:
-			URL = NSURL.fileURLWithPath_(path)
-			self.parent.writeSafelyToURL_ofType_forSaveOperation_error_(URL, self.parent.typeName, 1, objc.nil)
-	elif path is not None:
-		Doc = GSDocument.alloc().init()
-		Doc.font = self
-		URL = NSURL.fileURLWithPath_(path)
-		if path.endswith('.glyphs'):
-			typeName = "com.schriftgestaltung.glyphs"
-		elif path.endswith('.ufo'):
-			typeName = "org.unifiedfontobject.ufo"
-		print "writeSafelyToURL", Doc.writeSafelyToURL_ofType_forSaveOperation_error_(URL, typeName, 1, objc.nil)
-	else:
-		raise("Now path set")
-		
-GSFont.save = Font__save__
-'''.. function:: save()
-	
-	saves the font.
-	if no path is given, it saves to the existing location.
-	:param filePath: a file path
-	:type filePath: str
-	'''
-
-def Font__close__(self, ignoreChanges=True):
-	if self.parent:
-		if ignoreChanges:
-			self.parent.close()
-		else:
-			self.parent.canCloseDocumentWithDelegate_shouldCloseSelector_contextInfo_(None, None, None)
-GSFont.close = Font__close__
-
-'''.. function:: close()
-	
-	closes the font.
-	:param ignoreChanges: if it should ask to save or not.
-	:type ignoreChanges: bool
-	'''
 
 GSFont.parent = property(lambda self: self.valueForKey_("parent"))
 '''.. attribute:: parent
-	returnes the document.
-	!Readonly
+	Returns the internal NSDocument document. Readonly.
 	:type: NSDocument
 	'''
 
@@ -1479,6 +1438,53 @@ GSFont.filepath = property(lambda self: Font_filepath(self))
 Functions
 ---------
 '''
+
+
+def Font__save__(self, path=None):
+#	print "__save__", self.parent
+	if self.parent is not None:
+		if path is None:
+			self.parent.saveDocument_(None)
+		else:
+			URL = NSURL.fileURLWithPath_(path)
+			self.parent.writeSafelyToURL_ofType_forSaveOperation_error_(URL, self.parent.typeName, 1, objc.nil)
+	elif path is not None:
+		Doc = GSDocument.alloc().init()
+		Doc.font = self
+		URL = NSURL.fileURLWithPath_(path)
+		if path.endswith('.glyphs'):
+			typeName = "com.schriftgestaltung.glyphs"
+		elif path.endswith('.ufo'):
+			typeName = "org.unifiedfontobject.ufo"
+#		print "writeSafelyToURL", Doc.writeSafelyToURL_ofType_forSaveOperation_error_(URL, typeName, 1, objc.nil)
+	else:
+		raise("Now path set")
+		
+GSFont.save = Font__save__
+'''.. function:: save([filePath])
+	
+	Saves the font.
+	if no path is given, it saves to the existing location.
+
+	:param filePath: Optional file path
+	:type filePath: str
+	'''
+
+def Font__close__(self, ignoreChanges=True):
+	if self.parent:
+		if ignoreChanges:
+			self.parent.close()
+		else:
+			self.parent.canCloseDocumentWithDelegate_shouldCloseSelector_contextInfo_(None, None, None)
+GSFont.close = Font__close__
+
+'''.. function:: close([ignoreChanges = False])
+	
+	Closes the font
+
+	:param ignoreChanges: Optional. Ignore changes to the font upon closing
+	:type ignoreChanges: bool
+	'''
 
 
 '''.. function:: disableUpdateInterface()
@@ -1918,6 +1924,14 @@ Properties
 	isItalic
 	isBold
 	linkStyle
+	familyName
+	preferredFamily
+	preferredSubfamilyName
+	windowsFamily
+	windowsStyle
+	windowsLinkedToStyle
+	fontName
+	fullName
 	customParameters
 	instanceInterpolations
 	manualInterpolation
@@ -1992,13 +2006,11 @@ GSInstance.windowsFamily = property(lambda self: self.valueForKey_("windowsFamil
 GSInstance.windowsStyle = property(lambda self: self.valueForKey_("windowsStyle"))
 '''.. attribute:: windowsStyle
 	windowsStyle
-	is computed from "isBold" and "isItalic"
-	!!Readonly
+	This is computed from "isBold" and "isItalic". Readonly.
 	:type: string'''
 GSInstance.windowsLinkedToStyle = property(lambda self: self.valueForKey_("windowsLinkedToStyle"))
 '''.. attribute:: windowsLinkedToStyle
-	windowsLinkedToStyle
-	!!Readonly
+	windowsLinkedToStyle. Readonly.
 	:type: string'''
 GSInstance.fontName = property(lambda self: self.valueForKey_("fontName"), lambda self, value: self.setCustomParameter_forKey_(value, "postscriptFontName"))
 '''.. attribute:: fontName
@@ -2905,6 +2917,7 @@ Properties
 	layerId
 	components
 	guides
+	annotations
 	hints
 	anchors
 	paths
@@ -3062,6 +3075,28 @@ GSLayer.guides = property(lambda self: LayerGuideLinesProxy(self),
 
 GSLayer.annotations = property(lambda self: LayerAnnotationProxy(self),
 							   lambda self, value: self.setAnnotations_(NSMutableArray.arrayWithArray_(value)))
+'''.. attribute:: annotations
+	List of :class:`GSAnnotation` objects.
+	:type: list
+
+	.. code-block:: python
+
+		layer = Glyphs.font.selectedLayers[0] # current layer
+
+		# access all annotations
+		for annotation in layer.annotations:
+			print annotation
+
+		# add new annotation
+		newAnnotation = GSAnnotation()
+		newAnnotation.type = TEXT
+		newAnnotation.text = 'Fuck, this curve is ugly!'
+		layer.annotations.append(newAnnotation)
+
+		# delete annotation
+		del(layer.annotations[0])
+'''
+
 
 GSLayer.hints = property(lambda self: LayerHintsProxy(self),
 						 lambda self, value: self.setHints_(value))
@@ -4005,10 +4040,6 @@ Properties
 Properties
 ----------
 	
-	position
-	angle
-	name
-
 	'''
 
 
@@ -4052,16 +4083,53 @@ GSGuideLine.name = property(	lambda self: self.valueForKey_("name"),
 ##################################################################################
 
 
+'''
+
+:mod:`GSAnnotation`
+===============================================================================
+
+Implementation of the annotation object.
+
+For details on how to access them, please see :class:`GSLayer`.annotations
+
+
+.. class:: GSAnnotation()
+
+Properties
+
+.. autosummary::
+	
+	position
+	type
+	text
+	angle
+	width
+
+----------
+Properties
+----------
+	
+	'''
+
+
 GSAnnotation.position = property(lambda self: self.valueForKey_("position").pointValue(),
 								 lambda self, value: self.setPosition_(value))
 '''.. attribute:: position
-	The position of the node.
+	The position of the annotation.
 	:type: NSPoint'''
 
 GSAnnotation.type = property(lambda self: self.valueForKey_("type").integerValue(),
 								 lambda self, value: self.setType_(value))
 '''.. attribute:: type
 	The type of the annotation.
+	
+	Available constants are:
+	TEXT
+	ARROW
+	CIRCLE
+	PLUS
+	MINUS
+
 	:type: int'''
 	
 GSAnnotation.text = property(lambda self: self.valueForKey_("text"),
