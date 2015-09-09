@@ -170,12 +170,14 @@ GSApplication.defaults = property(lambda self: DefaultsProxy(self))
 	
 	Please be careful with your keys. Use a prefix that uses the reverse domain name. e.g. "com.MyName.foo.bar".
 	
-	use it like this:
-	
 	.. code-block:: python
 	
-		Value = Glyphs.defaults["com.MyName.foo.bar"]
-		Glyphs.defaults["com.MyName.foo.bar"] = NewValue
+		# Check for whether or not a preference exists
+		if Glyphs.defaults["com.MyName.foo.bar"] == None:
+			# do stuff
+
+		value = Glyphs.defaults["com.MyName.foo.bar"]
+		Glyphs.defaults["com.MyName.foo.bar"] = newValue
 	
 	'''
 
