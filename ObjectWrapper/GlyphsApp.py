@@ -70,8 +70,6 @@ Properties
 	font
 	fonts
 	defaults
-	boolDefaults
-	intDefaults
 	scriptAbbrevations
 	scriptSuffixes
 	languageScripts
@@ -166,16 +164,17 @@ GSApplication.defaults = property(lambda self: DefaultsProxy(self))
 
 '''.. attribute:: defaults
 	
-	A dict like object. You can get and set key value pairs.
+	A dict like object for storing preferences. You can get and set key-value pairs.
 	
 	Please be careful with your keys. Use a prefix that uses the reverse domain name. e.g. "com.MyName.foo.bar".
 	
 	.. code-block:: python
 	
-		# Check for whether or not a preference exists
+		# Check for whether or not a preference exists, because has_key() doesn't work in this PyObjC-brigde
 		if Glyphs.defaults["com.MyName.foo.bar"] == None:
 			# do stuff
 
+		# Get and set values
 		value = Glyphs.defaults["com.MyName.foo.bar"]
 		Glyphs.defaults["com.MyName.foo.bar"] = newValue
 	
@@ -190,13 +189,6 @@ class BoolDefaultsProxy(DefaultsProxy):
 
 GSApplication.boolDefaults = property(lambda self: BoolDefaultsProxy(self))
 
-'''.. attribute:: boolDefaults
-	
-	A dict like object. Same as Glyphs.defaults only that value is a bool.
-	
-	Please be careful with your keys. Use a prefix that uses the reverse domain name. e.g. "com.MyName.foo.bar".
-	'''
-
 class IntDefaultsProxy(DefaultsProxy):
 	def __getitem__(self, Key):
 		return NSUserDefaults.standardUserDefaults().integerForKey_(Key)
@@ -204,14 +196,6 @@ class IntDefaultsProxy(DefaultsProxy):
 		NSUserDefaults.standardUserDefaults().setInteger_forKey_(Value, Key)
 
 GSApplication.intDefaults = property(lambda self: IntDefaultsProxy(self))
-
-'''.. attribute:: intDefaults
-	
-	A dict like object. Same as Glyphs.defaults only that value is a int.
-	
-	Please be careful with your keys. Use a prefix that uses the reverse domain name. e.g. "com.MyName.foo.bar".
-	
-	'''
 
 GSApplication.scriptAbbrevations = property(lambda self: GSGlyphsInfo.scriptAbrevations())
 
