@@ -946,7 +946,7 @@ class LayerAnchorsProxy (Proxy):
 		else:
 			raise TypeError
 	def __delitem__(self, Key):
-		print "__del anchor", type(Key)
+#		print "__del anchor", type(Key)
 		if type(Key) is str or type(Key) is unicode or type(Key) is objc.pyobjc_unicode:
 			self._owner.removeAnchorWithName_(Key)
 		else:
@@ -4111,6 +4111,30 @@ Properties
 	
 	'''
 
+def Annotation__new__(typ, *args, **kwargs):
+	return GSGuideLine.alloc().init()
+GSAnnotation.__new__ = Annotation__new__;
+
+def Annotation__init__(self):
+	pass
+GSAnnotation.__init__ = Annotation__init__;
+
+def Annotation__repr__(self):
+	TypeName = "n/a"
+#	print self.type, type(ARROW)
+	if (self.type == TEXT):
+		TypeName = "Text"
+	elif (self.type == ARROW):
+		TypeName = "Arrow"
+	elif (self.type == CIRCLE):
+		TypeName = "Circle"
+	elif (self.type == PLUS):
+		TypeName = "Plus"
+	elif (self.type == MINUS):
+		TypeName = "Minus"
+	return "<%s %s x=%s y=%s>" % (self.className(), TypeName, self.position.x, self.position.y)
+GSAnnotation.__repr__ = Annotation__repr__;
+
 
 GSAnnotation.position = property(lambda self: self.valueForKey_("position").pointValue(),
 								 lambda self, value: self.setPosition_(value))
@@ -4150,21 +4174,6 @@ GSAnnotation.width = property(lambda self: self.valueForKey_("width").floatValue
 	The width of the annotation.
 	:type: float'''
 
-def Annotation__repr__(self):
-	TypeName = "n/a"
-	print self.type, type(ARROW)
-	if (self.type == TEXT):
-		TypeName = "Text"
-	elif (self.type == ARROW):
-		TypeName = "Arrow"
-	elif (self.type == CIRCLE):
-		TypeName = "Circle"
-	elif (self.type == PLUS):
-		TypeName = "Plus"
-	elif (self.type == MINUS):
-		TypeName = "Minus"
-	return "<%s %s x=%s y=%s>" % (self.className(), TypeName, self.position.x, self.position.y)
-GSAnnotation.__repr__ = Annotation__repr__;
 
 
 
