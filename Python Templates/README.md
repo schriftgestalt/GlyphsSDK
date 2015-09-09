@@ -109,7 +109,7 @@ The function names need to end with an underscore, e.g. `setValue_()`.
 
 - Other **IBOutlets**: Ctrl-drag from the *File's Owner* to a UI element (e.g. text field), and choose which outlet shall be linked to the UI element
 - **IBActions**: Ctrl-drag from a UI element (e.g. button) to the *File’s Owner* in the left sidebar, and choose the function that the UI element is supposed to trigger
-- In the left-side objects side bar choose *Custom View*, and in the right-side pane choose *Attributes inspector* (4th icon), and deactivate *Translate Mask Into Constraints*. Don't ask, just do it.
+- **Only for File Format Plugin:** In the left-side objects side bar choose *Custom View*, and in the right-side pane choose *Attributes inspector* (4th icon), and deactivate *Translate Mask Into Constraints*. Don't ask, just do it.
 
 All the back and forth relations between the UI and your Python code can be reviewed in the *Connection inspector* (6th icon on the right).
 
