@@ -17,16 +17,16 @@ GlyphsPluginProtocol = objc.protocolNamed( "GlyphsPlugin" )
 
 class ____PluginClassName____ ( NSObject, GlyphsPluginProtocol ):
 	
-	def init( self ):
+	def loadPlugin( self ):
 		"""
 		You can add an observer like in the example.
 		Do all initializing here.
 		"""
 		try:
 			# Bundle = NSBundle.bundleForClass_( NSClassFromString( self.className() ) )
-			selector = objc.selector( self.advertise, signature="v@:@" )
-			NSNotificationCenter.defaultCenter().addObserver_selector_name_object_( self, selector, "GSDocumentWasSavedSuccessfully", objc.nil() )
-			return self
+			selector = objc.selector( self.documentWasSaved, signature="v@:@" )
+			NSNotificationCenter.defaultCenter().addObserver_selector_name_object_( self, selector, "GSDocumentWasSavedSuccessfully", None )
+			return None
 		except Exception as e:
 			self.logToConsole( "init: %s" % str(e) )
 	
@@ -55,7 +55,7 @@ class ____PluginClassName____ ( NSObject, GlyphsPluginProtocol ):
 		assuming GSDocumentWasSavedSuccessfully was added to the observer
 		"""
 		try:
-			self.logToConsole( "The document: %@ was saved" % sender.object().displayName() )
+			self.logToConsole( "The document: %s was saved" % sender.object().displayName() )
 		except Exception as e:
 			self.logToConsole( "documentWasSaved: %s" % str(e) )
 
