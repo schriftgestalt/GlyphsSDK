@@ -2921,7 +2921,6 @@ Properties
 	hints
 	anchors
 	paths
-	selectedNodes
 	LSB
 	RSB
 	TSB
@@ -3154,16 +3153,6 @@ GSLayer.paths = property(	lambda self: LayerPathsProxy(self),
 		# delete path
 		del(layer.paths[0])
 '''
-
-GSLayer.selectedNodes = property(	lambda self: self.selection())
-
-'''.. attribute:: selectedNodes
-	List of all selected nodes as :class:`GSNode <GSNode>` objects. Read-only.
-	:type: list
-'''
-	
-
-
 
 GSLayer.LSB = property(		lambda self: self.valueForKey_("LSB").floatValue(),
 							lambda self, value: self.setLSB_(float(value)))
@@ -3965,6 +3954,7 @@ Properties
 	position
 	type
 	connection
+	selected
 
 Functions
 
@@ -4013,7 +4003,9 @@ GSNode.connection = property(	lambda self: self.valueForKey_("connection"),
 '''.. attribute:: connection
 	The type of the connection, GSSHARP or GSSMOOTH
 	:type: int
-	
+'''
+
+'''	
 
 ---------
 Functions
