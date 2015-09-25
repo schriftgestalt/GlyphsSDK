@@ -3955,6 +3955,14 @@ Properties
 	type
 	connection
 
+Functions
+
+.. autosummary::
+	
+	makeNodeFirst()
+	toggleConnection()
+
+
 ----------
 Properties
 ----------
@@ -3993,7 +4001,23 @@ GSNode.connection = property(	lambda self: self.valueForKey_("connection"),
 								lambda self, value: self.setConnection_(value))
 '''.. attribute:: connection
 	The type of the connection, GSSHARP or GSSMOOTH
-	:type: int'''
+	:type: int
+	
+
+---------
+Functions
+---------
+
+
+.. function:: makeNodeFirst()
+	
+	Set this node to be the start point of the path
+
+.. function:: toggleConnection()
+	
+	Toggle between sharp or smooth connections
+
+'''
 
 
 
