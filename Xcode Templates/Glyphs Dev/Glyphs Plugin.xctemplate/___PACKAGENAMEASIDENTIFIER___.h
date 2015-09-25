@@ -8,6 +8,8 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface ___FILEBASENAMEASIDENTIFIER___ : NSObject {}
+#import <GlyphsCore/GlyphsPluginProtocol.h>
+
+@interface ___FILEBASENAMEASIDENTIFIER___ : NSObject <GlyphsPlugin> {}
 
 @end

@@ -39,6 +39,15 @@ class ____PluginClassName____ ( NSObject, GlyphsPluginProtocol ):
 		except Exception as e:
 			self.logToConsole( "__del__: %s" % str(e) )
 	
+	def loadPlugin( self ):
+		"""
+		Set up the plugin
+		"""
+		try:
+			pass
+		except Exception as e:
+			self.logToConsole( "__del__: %s" % str(e) )
+	
 	def interfaceVersion( self ):
 		"""
 		Distinguishes the API version the plugin was built for. 

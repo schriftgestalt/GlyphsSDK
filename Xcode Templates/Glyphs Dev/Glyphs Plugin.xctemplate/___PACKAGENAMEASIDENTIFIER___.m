@@ -23,4 +23,8 @@
 	return 1;
 }
 
+- (void) loadPlugin {
+	// Set up stuff
+}
+
 @end
