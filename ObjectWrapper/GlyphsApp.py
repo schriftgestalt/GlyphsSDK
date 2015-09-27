@@ -996,6 +996,13 @@ class LayerPathsProxy (Proxy):
 
 
 
+class LayerSelectionProxy (Proxy):
+	def __getitem__(self, idx):
+		return self._owner.selection(idx)
+	def values(self):
+		return self._owner.pyobjc_instanceMethods.selection()
+
+
 
 class PathNodesProxy (Proxy):
 	def __getitem__(self, i):
@@ -2921,6 +2928,7 @@ Properties
 	hints
 	anchors
 	paths
+	selection
 	LSB
 	RSB
 	TSB
@@ -3152,6 +3160,25 @@ GSLayer.paths = property(	lambda self: LayerPathsProxy(self),
 
 		# delete path
 		del(layer.paths[0])
+'''
+
+GSLayer.selection = property(	lambda self: LayerSelectionProxy(self))
+
+'''.. attribute:: selection
+	List of all selected objects in the glyph. Read only.
+	
+	This list contains **all selected items**, including **nodes**, **anchors** etc.
+	If you want to work specifically with nodes, for instance, you may want to cycle through the nodes (or anchors etc.) and check whether they are present in this list. See example below.
+
+	.. code-block:: python
+
+		# access all selected nodes
+		for path in layer.paths:
+			for node in path.nodes: # (or path.anchors etc.)
+				if node in layer.selection:
+					print node
+	
+	:type: list
 '''
 
 GSLayer.LSB = property(		lambda self: self.valueForKey_("LSB").floatValue(),
