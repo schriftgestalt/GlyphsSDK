@@ -999,7 +999,7 @@ class LayerPathsProxy (Proxy):
 
 class LayerSelectionProxy (Proxy):
 	def __getitem__(self, idx):
-		return self._owner.selection(idx)
+		return self._owner.pyobjc_instanceMethods.selection()[idx]
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.selection()
 
@@ -1061,7 +1061,7 @@ class FontTabsProxy (Proxy):
 # Function shared by all user-selectable elements in a layer (nodes, anchors etc.)
 def ObjectInLayer_selected(self):
 	try:
-		return self in self.parent().parent.selection
+		return self in self.parent().selection
 	except:
 		return False
 
@@ -4071,7 +4071,12 @@ GSNode.connection = property(	lambda self: self.valueForKey_("connection"),
 	:type: int
 '''
 
-GSNode.selected = property(	lambda self: ObjectInLayer_selected(self) )
+def Node_selected(self):
+	try:
+		return self in self.parent().parent.selection
+	except:
+		return False
+GSNode.selected = property(	lambda self: Node_selected(self) )
 '''.. attribute:: selected
 	Returns True when node is selected in the UI.
 	:type: bool
