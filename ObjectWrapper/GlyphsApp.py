@@ -4,6 +4,7 @@ from AppKit import *
 from Foundation import *
 
 import time, math, sys, os
+from sets import Set
 
 
 __all__ = ["Glyphs", "GetFile", "GSMOVE", "GSLINE", "GSCURVE", "GSOFFCURVE", "GSSHARP", "GSSMOOTH", "TOPGHOST", "STEM", "BOTTOMGHOST", "TTANCHOR", "TTSTEM", "TTALIGN", "TTINTERPOLATE", "TTDIAGONAL", "CORNER", "CAP", "TTDONTROUND", "TTROUND", "TTROUNDUP", "TTROUNDDOWN", "TRIPLE", "DRAWFOREGROUND", "DRAWBACKGROUND", "DRAWINACTIVE", "divideCurve", "distance", "addPoints", "subtractPoints", "GetFolder", "GetSaveFile", "GetOpenFile", "Message"]
@@ -1057,6 +1058,14 @@ class FontTabsProxy (Proxy):
 		return self._owner.parent.windowController().tabBarControl().viewControllers()[1:]
 
 
+# Function shared by all user-selectable elements in a layer (nodes, anchors etc.)
+def ObjectInLayer_selected(self):
+	try:
+		return self in self.parent().parent.selection
+	except:
+		return False
+
+
 
 
 ##################################################################################
@@ -2081,6 +2090,7 @@ Functions
 	:return: On success, True, on failure error message.
 	:rtype: bool/list
 '''
+
 
 class _ExporterDelegate_ (NSObject):
 	def init(self):
@@ -3167,16 +3177,15 @@ GSLayer.selection = property(	lambda self: LayerSelectionProxy(self))
 '''.. attribute:: selection
 	List of all selected objects in the glyph. Read only.
 	
-	This list contains **all selected items**, including **nodes**, **anchors** etc.
-	If you want to work specifically with nodes, for instance, you may want to cycle through the nodes (or anchors etc.) and check whether they are present in this list. See example below.
+	This list contains **all selected items**, including **nodes**, **anchors**, **guidelines** etc.
+	If you want to work specifically with nodes, for instance, you may want to cycle through the nodes (or anchors etc.) and check whether they are selected. See example below.
 
 	.. code-block:: python
 
 		# access all selected nodes
 		for path in layer.paths:
 			for node in path.nodes: # (or path.anchors etc.)
-				if node in layer.selection:
-					print node
+				print node.selected
 	
 	:type: list
 '''
@@ -3546,6 +3555,7 @@ Properties
 	
 	position
 	name
+	selected
 	
 
 ----------
@@ -3595,6 +3605,12 @@ GSAnchor.name = property(		lambda self: self.valueForKey_("name"),
 	The name of the anchor
 	:type: unicode'''
 
+GSAnchor.selected = property(	lambda self: ObjectInLayer_selected(self) )
+'''.. attribute:: selected
+	Returns True when anchor is selected in the UI.
+	:type: bool
+'''
+
 def DrawAnchorWithPen(self, pen):
 	pen.moveTo(self.position)
 	pen.endPath()
@@ -3637,6 +3653,9 @@ Properties
 	component
 	transform
 	bounds
+	disableAlignment
+	anchor
+	selected
 	
 Functions
 
@@ -3751,10 +3770,18 @@ GSComponent.anchor = property(lambda self: self.pyobjc_instanceMethods.anchor(),
 
 
 
+GSComponent.selected = property(	lambda self: ObjectInLayer_selected(self) )
+'''.. attribute:: selected
+	Returns True when component is selected in the UI.
+	:type: bool
+'''
+
 def DrawComponentWithPen(self, pen):
 	pen.addComponent(self.componentName, self.transform)
 
 GSComponent.draw = DrawComponentWithPen
+
+
 
 '''
 
@@ -3809,6 +3836,7 @@ Properties
 	closed
 	direction
 	bounds
+	selected
 	
 Functions
 
@@ -3900,7 +3928,18 @@ GSPath.bounds = property(	 lambda self: self.pyobjc_instanceMethods.bounds() )
 		print path.bounds.size.width, path.bounds.size.height
 	'''
 
+def Path_selected(self):
+	return Set(self.nodes) <= Set(self.parent.selection)
+	
+GSPath.selected = property(	 lambda self: Path_selected(self) )
+
+'''.. attribute:: selected
+	Returns True when all nodes in the path are selected in the UI. This includes off-curve points as well.
+	:type: bool'''
+
 '''
+
+
 
 ----------
 Functions
@@ -4032,6 +4071,12 @@ GSNode.connection = property(	lambda self: self.valueForKey_("connection"),
 	:type: int
 '''
 
+GSNode.selected = property(	lambda self: ObjectInLayer_selected(self) )
+'''.. attribute:: selected
+	Returns True when node is selected in the UI.
+	:type: bool
+'''
+
 '''	
 
 ---------
@@ -4088,6 +4133,7 @@ Properties
 	position
 	angle
 	name
+	selected
 
 
 ----------
@@ -4124,6 +4170,11 @@ GSGuideLine.name = property(	lambda self: self.valueForKey_("name"),
 '''.. attribute:: name
 	a optional name
 	:type: unicode'''
+GSGuideLine.selected = property(	lambda self: ObjectInLayer_selected(self) )
+'''.. attribute:: selected
+	Returns True when guideline is selected in the UI.
+	:type: bool
+'''
 
 
 ##################################################################################
@@ -4259,8 +4310,11 @@ Properties
 	
 	originNode
 	targetNode
+	otherNode1
+	otherNode2
 	type
 	horizontal
+	selected
 
 ----------
 Properties
@@ -4331,6 +4385,11 @@ GSHint.horizontal = property(	lambda self: self.valueForKey_("horizontal").boolV
 	True if hint is horizontal, False if vertical.
 	:type: bool'''
 
+GSHint.selected = property(	lambda self: ObjectInLayer_selected(self) )
+'''.. attribute:: selected
+	Returns True when hint is selected in the UI.
+	:type: bool
+'''
 
 
 
