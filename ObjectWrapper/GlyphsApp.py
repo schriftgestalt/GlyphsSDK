@@ -2945,6 +2945,7 @@ Properties
 	BSB
 	width
 	bounds
+	selectionBounds
 	background
 	backgroundImage
 
@@ -3224,7 +3225,7 @@ GSLayer.width = property(	lambda self: self.valueForKey_("width").floatValue(),
 GSLayer.bounds = property(	lambda self: self.pyobjc_instanceMethods.bounds() )
 
 '''.. attribute:: bounds
-	Bounding box as NSRect. Read-only.
+	Bounding box of whole glyph as NSRect. Read-only.
 	:type: NSRect
 	
 	.. code-block:: python
@@ -3236,6 +3237,13 @@ GSLayer.bounds = property(	lambda self: self.pyobjc_instanceMethods.bounds() )
 
 		# size
 		print layer.bounds.size.width, layer.bounds.size.height
+'''
+
+GSLayer.selectionBounds = property(	lambda self: self.pyobjc_instanceMethods.boundsOfSelection() )
+
+'''.. attribute:: selectionBounds
+	Bounding box of the layer's selection (nodes, anchors, components etc). Read-only.
+	:type: NSRect
 '''
 
 GSLayer.background = property(lambda self: self.pyobjc_instanceMethods.background())
