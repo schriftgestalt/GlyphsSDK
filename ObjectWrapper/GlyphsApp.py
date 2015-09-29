@@ -7,7 +7,7 @@ import time, math, sys, os
 from sets import Set
 
 
-__all__ = ["Glyphs", "GetFile", "GSMOVE", "GSLINE", "GSCURVE", "GSOFFCURVE", "GSSHARP", "GSSMOOTH", "TOPGHOST", "STEM", "BOTTOMGHOST", "TTANCHOR", "TTSTEM", "TTALIGN", "TTINTERPOLATE", "TTDIAGONAL", "CORNER", "CAP", "TTDONTROUND", "TTROUND", "TTROUNDUP", "TTROUNDDOWN", "TRIPLE", "DRAWFOREGROUND", "DRAWBACKGROUND", "DRAWINACTIVE", "divideCurve", "distance", "addPoints", "subtractPoints", "GetFolder", "GetSaveFile", "GetOpenFile", "Message"]
+__all__ = ["Glyphs", "GetFile", "GSMOVE", "GSLINE", "GSCURVE", "GSOFFCURVE", "GSSHARP", "GSSMOOTH", "TOPGHOST", "STEM", "BOTTOMGHOST", "TTANCHOR", "TTSTEM", "TTALIGN", "TTINTERPOLATE", "TTDIAGONAL", "CORNER", "CAP", "TTDONTROUND", "TTROUND", "TTROUNDUP", "TTROUNDDOWN", "TRIPLE", "DRAWFOREGROUND", "DRAWBACKGROUND", "DRAWINACTIVE", "TEXT", "ARROW", "CIRCLE", "PLUS", "MINUS", "divideCurve", "distance", "addPoints", "subtractPoints", "GetFolder", "GetSaveFile", "GetOpenFile", "Message"]
 
 
 class Proxy(object):
@@ -947,7 +947,6 @@ class LayerAnchorsProxy (Proxy):
 		else:
 			raise TypeError
 	def __delitem__(self, Key):
-#		print "__del anchor", type(Key)
 		if type(Key) is str or type(Key) is unicode or type(Key) is objc.pyobjc_unicode:
 			self._owner.removeAnchorWithName_(Key)
 		else:
@@ -1148,7 +1147,7 @@ def Font__new__(typ, *args, **kwargs):
 	if len(args) > 0 and (type(args[0]) == type(str) or type(args[0]) == type(unicode)):
 		path = args[0]
 		URL = NSURL.fileURLWithPath_(path)
-		typeName = NSWorksSpace.sharedWorkspace().typeOfFile_error_(path, None)
+		typeName = NSWorkspace.sharedWorkspace().typeOfFile_error_(path, None)
 		Doc = GSDocument.alloc().initWithContentsOfURL_ofType_error_(URL, typeName, None)
 		if Doc is not None:
 			return Doc.font()
@@ -1334,7 +1333,7 @@ GSFont.kerning = property(lambda self: self.valueForKey_("kerning"), lambda self
 '''
 GSFont.userData = property(lambda self: self.pyobjc_instanceMethods.userData(), lambda self, value: self.setUserData_(value))
 '''.. attribute:: userData
-	A dictionary to store user data. Use a unique key and only use objects that can be stored in a property list (string, list, dict, numbers, NSData) otherwise the dats will not be recoverable from the saved file.
+	A dictionary to store user data. Use a unique key and only use objects that can be stored in a property list (string, list, dict, numbers, NSData) otherwise the data will not be recoverable from the saved file.
 	:type: dict
 	.. code-block:: python
 		# set value
@@ -1457,13 +1456,12 @@ Functions
 
 
 def Font__save__(self, path=None):
-#	print "__save__", self.parent
 	if self.parent is not None:
 		if path is None:
 			self.parent.saveDocument_(None)
 		else:
 			URL = NSURL.fileURLWithPath_(path)
-			self.parent.writeSafelyToURL_ofType_forSaveOperation_error_(URL, self.parent.typeName, 1, objc.nil)
+			self.parent.writeSafelyToURL_ofType_forSaveOperation_error_(URL, self.parent.fileType(), 1, objc.nil)
 	elif path is not None:
 		Doc = GSDocument.alloc().init()
 		Doc.font = self
@@ -1472,7 +1470,7 @@ def Font__save__(self, path=None):
 			typeName = "com.schriftgestaltung.glyphs"
 		elif path.endswith('.ufo'):
 			typeName = "org.unifiedfontobject.ufo"
-#		print "writeSafelyToURL", Doc.writeSafelyToURL_ofType_forSaveOperation_error_(URL, typeName, 1, objc.nil)
+		Doc.writeSafelyToURL_ofType_forSaveOperation_error_(URL, typeName, 1, objc.nil)
 	else:
 		raise("Now path set")
 		
@@ -3239,7 +3237,7 @@ GSLayer.bounds = property(	lambda self: self.pyobjc_instanceMethods.bounds() )
 		print layer.bounds.size.width, layer.bounds.size.height
 '''
 
-GSLayer.selectionBounds = property(	lambda self: self.pyobjc_instanceMethods.boundsOfSelection() )
+GSLayer.selectionBounds = property(	lambda self: self.boundsOfSelection() )
 
 '''.. attribute:: selectionBounds
 	Bounding box of the layer's selection (nodes, anchors, components etc). Read-only.
@@ -4058,7 +4056,10 @@ def Node__init__(self, pt = None, type = None):
 GSNode.__init__ = Node__init__;
 
 def Node__repr__(self):
-	return "<GSNode x=%s y=%s %s %s>" % (self.position.x, self.position.y, nodeConstants[self.type], nodeConstants[self.connection])
+	NodeType = nodeConstants[self.type]
+	if self.type != GSOFFCURVE:
+		NodeType += " " + nodeConstants[self.connection]
+	return "<GSNode x=%s y=%s %s>" % (self.position.x, self.position.y, NodeType)
 GSNode.__repr__ = Node__repr__;
 
 GSNode.position = property(			lambda self: self.valueForKey_("position").pointValue(),
@@ -4139,7 +4140,9 @@ For details on how to access them, please see :class:`GSLayer`.guides
 
 .. class:: GSGuideLine()
 
+----------
 Properties
+----------
 
 .. autosummary::
 	
@@ -4148,10 +4151,6 @@ Properties
 	name
 	selected
 
-
-----------
-Properties
-----------
 	
 	'''
 
@@ -4230,7 +4229,7 @@ Properties
 	'''
 
 def Annotation__new__(typ, *args, **kwargs):
-	return GSGuideLine.alloc().init()
+	return GSAnnotation.alloc().init()
 GSAnnotation.__new__ = Annotation__new__;
 
 def Annotation__init__(self):
@@ -4239,7 +4238,6 @@ GSAnnotation.__init__ = Annotation__init__;
 
 def Annotation__repr__(self):
 	TypeName = "n/a"
-#	print self.type, type(ARROW)
 	if (self.type == TEXT):
 		TypeName = "Text"
 	elif (self.type == ARROW):
