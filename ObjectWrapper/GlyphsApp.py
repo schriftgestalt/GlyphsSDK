@@ -477,6 +477,7 @@ GSElement.x = property(lambda self: self.pyobjc_instanceMethods.position().x,
 GSElement.y = property(lambda self: self.pyobjc_instanceMethods.position().y,
 	lambda self, value: self.setPosition_(NSMakePoint(self.x, value)))
 
+GSElement.layer = property(lambda self: self.parent)
 
 class AppDocumentProxy (Proxy):
 	"""The list of documents."""
@@ -1060,7 +1061,7 @@ class FontTabsProxy (Proxy):
 # Function shared by all user-selectable elements in a layer (nodes, anchors etc.)
 def ObjectInLayer_selected(self):
 	try:
-		return self in self.parent().selection
+		return self in self.layer.selection
 	except:
 		return False
 
@@ -1811,6 +1812,23 @@ GSFontMaster.customParameters = property(lambda self: CustomParametersProxy(self
 		del(font.masters[0].customParameters['underlinePosition'])
 	
 	:type: list, dict'''
+
+##################################################################################
+#
+#
+#
+#           GSElement
+#
+#
+#
+##################################################################################
+
+
+GSElement.selected = property(	lambda self: ObjectInLayer_selected(self) )
+'''.. attribute:: selected
+	Returns True when guideline is selected in the UI.
+	:type: bool
+'''
 
 
 ##################################################################################
@@ -3611,7 +3629,7 @@ GSAnchor.name = property(		lambda self: self.valueForKey_("name"),
 	The name of the anchor
 	:type: unicode'''
 
-GSAnchor.selected = property(	lambda self: ObjectInLayer_selected(self) )
+# GSAnchor.selected = property(	lambda self: ObjectInLayer_selected(self) )
 '''.. attribute:: selected
 	Returns True when anchor is selected in the UI.
 	:type: bool
@@ -3776,7 +3794,7 @@ GSComponent.anchor = property(lambda self: self.pyobjc_instanceMethods.anchor(),
 
 
 
-GSComponent.selected = property(	lambda self: ObjectInLayer_selected(self) )
+# GSComponent.selected = property(	lambda self: ObjectInLayer_selected(self) )
 '''.. attribute:: selected
 	Returns True when component is selected in the UI.
 	:type: bool
@@ -4080,12 +4098,14 @@ GSNode.connection = property(	lambda self: self.valueForKey_("connection"),
 	:type: int
 '''
 
-def Node_selected(self):
-	try:
-		return self in self.parent().parent.selection
-	except:
-		return False
-GSNode.selected = property(	lambda self: Node_selected(self) )
+GSNode.layer = property(		lambda self: self.parent.parent)
+
+#def Node_selected(self):
+#	try:
+#		return self in self.parent().parent.selection
+#	except:
+#		return False
+#GSNode.selected = property(	lambda self: Node_selected(self) )
 '''.. attribute:: selected
 	Returns True when node is selected in the UI.
 	:type: bool
@@ -4182,7 +4202,7 @@ GSGuideLine.name = property(	lambda self: self.valueForKey_("name"),
 '''.. attribute:: name
 	a optional name
 	:type: unicode'''
-GSGuideLine.selected = property(	lambda self: ObjectInLayer_selected(self) )
+# GSGuideLine.selected = property(	lambda self: ObjectInLayer_selected(self) )
 '''.. attribute:: selected
 	Returns True when guideline is selected in the UI.
 	:type: bool
@@ -4396,7 +4416,7 @@ GSHint.horizontal = property(	lambda self: self.valueForKey_("horizontal").boolV
 	True if hint is horizontal, False if vertical.
 	:type: bool'''
 
-GSHint.selected = property(	lambda self: ObjectInLayer_selected(self) )
+# GSHint.selected = property(	lambda self: ObjectInLayer_selected(self) )
 '''.. attribute:: selected
 	Returns True when hint is selected in the UI.
 	:type: bool
