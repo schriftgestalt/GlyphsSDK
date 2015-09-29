@@ -276,7 +276,14 @@ class ____PluginClassName____ ( GSFilterPlugin ):
 			super( ____PluginClassName____, self ).process_( sender )
 		except Exception as e:
 			self.logToConsole( "process_: %s" % str(e) )
-			
+	
+	def customParameterString( self ):
+		"""Return the custom parameter string for the gear menu."""
+		try:
+			thisParameter = "____PluginClassName____;%.1f" % ( self.____myValue____ )
+			return thisParameter
+		except Exception as e:
+			self.logToConsole( "customParameterString: %s" % str(e) )
 	
 	def logToConsole( self, message ):
 		"""
