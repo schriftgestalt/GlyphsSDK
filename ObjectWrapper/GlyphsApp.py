@@ -92,6 +92,7 @@ Functions
 	productionGlyphName()
 	ligatureComponents()
 	redraw()
+	showNotification()
 	
 	
 ----------
@@ -412,6 +413,25 @@ GSApplication.redraw = __redraw__
 	
 	'''
 
+def Glyphs_showNotification(self, title, message):
+	notification = NSUserNotification.alloc().init()
+	notification.setTitle_(title)
+	notification.setInformativeText_(message)
+	NSUserNotificationCenter.defaultUserNotificationCenter().scheduleNotification_(notification)
+	
+GSApplication.showNotification = Glyphs_showNotification;
+
+'''.. function:: showNotification(title, message)
+	
+	Shows the user a notification in Mac's Notification Center.
+	
+
+	.. code-block:: python
+	
+		Glyphs.showNotification('Export fonts', 'The export of the fonts was successful.')
+		
+
+	'''
 
 
 
@@ -2105,6 +2125,18 @@ Functions
 	:param bool UseProductionNames: If to use production names. Default: True
 	:return: On success, True, on failure error message.
 	:rtype: bool/list
+
+
+	.. code-block:: python
+		
+		# export all instances as OpenType (.otf) to user's font folder
+
+		exportFolder = '/Users/myself/Library/Fonts'
+		
+		for instance in Glyphs.font.instances:
+			instance.generate(FontPath = exportFolder)
+			
+		Glyphs.showNotification('Export fonts', 'The export of %s was successful.' % (Glyphs.font.familyName))
 '''
 
 
