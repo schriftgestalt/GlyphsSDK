@@ -256,14 +256,26 @@ class ____PluginClassName____ ( GSFilterPlugin ):
 				Layer = Layers[k]
 				Layer.setPaths_( NSMutableArray.alloc().initWithArray_copyItems_( ShadowLayer.pyobjc_instanceMethods.paths(), True ) )
 				Layer.setSelection_( NSMutableArray.array() )
-				if len(ShadowLayer.selection()) > 0 and checkSelection:
-					for i in range(len( ShadowLayer.paths )):
-						currShadowPath = ShadowLayer.paths[i]
-						currLayerPath = Layer.paths[i]
-						for j in range(len(currShadowPath.nodes)):
-							currShadowNode = currShadowPath.nodes[j]
-							if ShadowLayer.selection().containsObject_( currShadowNode ):
-								Layer.addSelection_( currLayerPath.nodes[j] )
+				try:
+					# Glyphs 2.1 and earlier:
+					if len(ShadowLayer.selection()) > 0 and checkSelection:
+						for i in range(len( ShadowLayer.paths )):
+							currShadowPath = ShadowLayer.paths[i]
+							currLayerPath = Layer.paths[i]
+							for j in range(len(currShadowPath.nodes)):
+								currShadowNode = currShadowPath.nodes[j]
+								if ShadowLayer.selection().containsObject_( currShadowNode ):
+									Layer.addSelection_( currLayerPath.nodes[j] )
+				except:
+					# Glyphs 2.2 and later:
+					if len(ShadowLayer.selection) > 0 and checkSelection:
+						for i in range(len( ShadowLayer.paths )):
+							currShadowPath = ShadowLayer.paths[i]
+							currLayerPath = Layer.paths[i]
+							for j in range(len(currShadowPath.nodes)):
+								currShadowNode = currShadowPath.nodes[j]
+								if currShadowNode in ShadowLayer.selection:
+									Layer.addSelection_( currLayerPath.nodes[j] )
 								
 				self.processLayerWithValues( Layer, self.____myValue____ ) # add your class variables here
 			Layer.clearSelection()
