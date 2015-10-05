@@ -162,8 +162,14 @@ class ____PluginClassName____ ( GSToolSelect ):
 			self.overElement = self.elementAtPoint_atLayer_( clickPosition, currentLayer )
 			
 			# If click goes somewhere else, but only one item is selected:
-			if not self.overElement and len( currentLayer.selection() ) == 1:
-				self.overElement = currentLayer.selection()[0]
+			try:
+				# Glyphs 2.1 and earlier:
+				if not self.overElement and len( currentLayer.selection() ) == 1:
+					self.overElement = currentLayer.selection()[0]
+			except:
+				# Glyphs 2.2 and later:
+				if not self.overElement and len( currentLayer.selection ) == 1:
+					self.overElement = currentLayer.selection[0]
 			
 			# Add a contextual menu item:
 			if type( self.overElement ) == GSAnchor: # Check type of selected object
