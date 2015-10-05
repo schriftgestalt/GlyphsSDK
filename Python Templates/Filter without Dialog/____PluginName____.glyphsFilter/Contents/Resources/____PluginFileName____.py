@@ -91,7 +91,11 @@ class ____PluginClassName____ ( NSObject, GlyphsFilterProtocol ):
 		"""
 		try:
 			if selectionCounts == True:
-				selection = Layer.selection()
+				selection = ()
+				try:
+					selection = Layer.selection() # Glyphs v2.1 and earlier
+				except:
+					selection = Layer.selection # Glyphs v2.2 and later
 				if selection == (): # empty selection
 					selectionCounts = False
 			
@@ -134,7 +138,7 @@ class ____PluginClassName____ ( NSObject, GlyphsFilterProtocol ):
 			return self.processLayer( Layer, True ) # respect selection
 		except Exception as e:
 			self.logToConsole( "runFilterWithLayer_error_: %s" % str(e) )
-			return False
+			return (False, None)
 	
 	def processFont_withArguments_( self, Font, Arguments ):
 		"""
