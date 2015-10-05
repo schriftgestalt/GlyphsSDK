@@ -4132,16 +4132,53 @@ GSNode.connection = property(	lambda self: self.valueForKey_("connection"),
 
 GSNode.layer = property(		lambda self: self.parent.parent)
 
-#def Node_selected(self):
-#	try:
-#		return self in self.parent().parent.selection
-#	except:
-#		return False
-#GSNode.selected = property(	lambda self: Node_selected(self) )
+
 '''.. attribute:: selected
 	Returns True when node is selected in the UI.
 	:type: bool
 '''
+
+def __GSNode__index__(self):
+	try:
+		return self.parent.indexOfNode_(self)
+	except:
+		return NSNotFound
+
+GSNode.index = property(	lambda self: __GSNode__index__(self))
+'''.. attribute:: index
+	Returns the index of the node in the containing path or maxint if it is not in a path.
+	:type: int
+	'''
+def __GSNode__nextNode__(self):
+	try:
+		index = self.parent.indexOfNode_(self)
+		if index < len(self.parent.nodes):
+			return self.parent.nodes[index + 1]
+	except:
+		pass
+	return None
+
+GSNode.nextNode = property(	lambda self: __GSNode__nextNode__(self))
+'''.. attribute:: nextNode
+	Returns the next node in the path or None
+	:type: GSNode
+	'''
+
+def __GSNode__prevNode__(self):
+	try:
+		index = self.parent.indexOfNode_(self)
+		if index < len(self.parent.nodes):
+			return self.parent.nodes[index - 1]
+	except:
+		pass
+	return None
+
+GSNode.prevNode = property(	lambda self: __GSNode__prevNode__(self))
+'''.. attribute:: prevNode
+	Returns the previous node in the path
+	:type: GSNode
+	'''
+
 
 '''	
 
@@ -4203,7 +4240,7 @@ Properties
 	name
 	selected
 
-	
+
 	'''
 
 
