@@ -255,7 +255,7 @@ Functions
 
 def OpenFont(self, Path, showInterface=True ):
 	URL = NSURL.fileURLWithPath_(Path)
-	Doc = NSDocumentController.sharedDocumentController().openDocumentWithContentsOfURL_display_error_(URL, showInterface, None)
+	Doc = NSDocumentController.sharedDocumentController().openDocumentWithContentsOfURL_display_error_(URL, showInterface, None)[0]
 	if Doc is not None:
 		return Doc.font
 	return None
