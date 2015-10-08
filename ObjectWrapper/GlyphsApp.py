@@ -1568,7 +1568,7 @@ GSFont.kerningForPair = kerningForPair
 
 		# in the same font, kerning between T and A would be zero, because they use group kerning instead.
 		font.kerningForPair(font.selectedFontMaster.id, 'T', 'A')
-		9.22337203685e+18 # (this is the float value for 0, an integer transformation would actually return 0)
+		9.22337203685e+18 # (this is the maximum number for 64 bit. It is used as an empty value)
 '''
 
 def setKerningForPair(self, FontMasterID, LeftKeringId, RightKerningId, Value):
