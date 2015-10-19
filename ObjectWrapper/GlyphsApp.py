@@ -1019,9 +1019,9 @@ class LayerPathsProxy (Proxy):
 
 class LayerSelectionProxy (Proxy):
 	def __getitem__(self, idx):
-		return self._owner.pyobjc_instanceMethods.selection()[idx]
+		return self._owner.pyobjc_instanceMethods.selection().objectAtIndex_(idx)
 	def values(self):
-		return self._owner.pyobjc_instanceMethods.selection()
+		return self._owner.pyobjc_instanceMethods.selection().array()
 
 
 
