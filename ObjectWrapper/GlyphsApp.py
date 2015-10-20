@@ -3030,7 +3030,7 @@ def Layer__init__(self):
 GSLayer.__init__ = Layer__init__;
 
 def Layer__repr__(self):
-	return "<%s \"%s\" (%s)>" % (self.className(), self.name, self.parent.name)
+	return "<%s \"%s\" (%s)>" % (self.className(), self.name or None, self.parent.name)
 GSLayer.__repr__ = Layer__repr__;
 
 GSLayer.parent = property(			lambda self: self.valueForKey_("parent"),
@@ -3898,7 +3898,7 @@ Functions
 
 .. autosummary::
 	
-	reverse
+	reverse()
 
 ----------
 Properties
