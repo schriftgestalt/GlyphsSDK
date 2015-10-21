@@ -3013,6 +3013,7 @@ Functions
 	cutBetweenPoints()
 	intersectionsBetweenPoints()
 	addMissingAnchors()
+	clearSelection()
 
 ----------
 Properties
@@ -3235,6 +3236,9 @@ GSLayer.selection = property(	lambda self: LayerSelectionProxy(self))
 		for path in layer.paths:
 			for node in path.nodes: # (or path.anchors etc.)
 				print node.selected
+
+		# clear selection
+		layer.clearSelection()
 	
 	:type: list
 '''
@@ -3473,6 +3477,15 @@ GSLayer.addMissingAnchors = Layer_addMissingAnchors
 
 	Adds missing anchors defined in the glyph database.
 '''
+
+
+'''
+.. function:: clearSelection()
+
+	Unselect all selected items in this layer.
+'''
+
+
 
 
 def ControlLayer__new__(typ, *args, **kwargs):
