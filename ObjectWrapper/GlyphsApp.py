@@ -1022,6 +1022,10 @@ class LayerSelectionProxy (Proxy):
 		return self._owner.pyobjc_instanceMethods.selection().objectAtIndex_(idx)
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.selection().array()
+	def append(self, object):
+		self._owner.pyobjc_instanceMethods.addSelection_(object)
+	def remove(self, object):
+		self._owner.pyobjc_instanceMethods.removeObjectFromSelection_(object)
 
 
 
@@ -1085,6 +1089,15 @@ def ObjectInLayer_selected(self):
 	except:
 		return False
 
+def SetObjectInLayer_selected(self, state):
+
+	# Add to selection
+	if state == True and not self in self.layer.selection:
+		self.layer.selection.append(self)
+
+	# Remove
+	elif state == False and self in self.layer.selection:
+		self.layer.selection.remove(self)
 
 
 
@@ -1845,10 +1858,6 @@ GSFontMaster.customParameters = property(lambda self: CustomParametersProxy(self
 
 
 GSElement.selected = property(	lambda self: ObjectInLayer_selected(self) )
-'''.. attribute:: selected
-	Returns True when guideline is selected in the UI.
-	:type: bool
-'''
 
 
 ##################################################################################
@@ -3674,9 +3683,17 @@ GSAnchor.name = property(		lambda self: self.valueForKey_("name"),
 	The name of the anchor
 	:type: unicode'''
 
-# GSAnchor.selected = property(	lambda self: ObjectInLayer_selected(self) )
 '''.. attribute:: selected
-	Returns True when anchor is selected in the UI.
+	Selection state of anchor in UI.
+
+	.. code-block:: python
+	
+		# select anchor
+		layer.anchors[0].selected = True
+
+		# print selection state
+		print layer.anchors[0].selected
+
 	:type: bool
 '''
 
@@ -3839,9 +3856,17 @@ GSComponent.anchor = property(lambda self: self.pyobjc_instanceMethods.anchor(),
 
 
 
-# GSComponent.selected = property(	lambda self: ObjectInLayer_selected(self) )
 '''.. attribute:: selected
-	Returns True when component is selected in the UI.
+	Selection state of component in UI.
+
+	.. code-block:: python
+	
+		# select component
+		layer.components[0].selected = True
+
+		# print selection state
+		print layer.components[0].selected
+
 	:type: bool
 '''
 
@@ -3999,15 +4024,29 @@ GSPath.bounds = property(	 lambda self: self.pyobjc_instanceMethods.bounds() )
 
 def Path_selected(self):
 	return Set(self.nodes) <= Set(self.parent.selection)
-	
-GSPath.selected = property(	 lambda self: Path_selected(self) )
 
+def Path_SetSelected(self, state):
+	for node in self.nodes:
+		node.selected = state
+
+
+GSPath.selected = property(	 lambda self: Path_selected(self), lambda self, value: Path_SetSelected(self, value) )
 '''.. attribute:: selected
-	Returns True when all nodes in the path are selected in the UI. This includes off-curve points as well.
-	:type: bool'''
+	Selection state of path in UI.
 
+	.. code-block:: python
+	
+		# select path
+		layer.paths[0].selected = True
+
+		# print selection state
+		print layer.paths[0].selected
+
+	:type: bool
 '''
 
+
+'''
 
 
 ----------
@@ -4147,7 +4186,16 @@ GSNode.layer = property(		lambda self: self.parent.parent)
 
 
 '''.. attribute:: selected
-	Returns True when node is selected in the UI.
+	Selection state of node in UI.
+
+	.. code-block:: python
+	
+		# select node
+		layer.paths[0].nodes[0].selected = True
+
+		# print selection state
+		print layer.paths[0].nodes[0].selected
+
 	:type: bool
 '''
 
@@ -4284,9 +4332,18 @@ GSGuideLine.name = property(	lambda self: self.valueForKey_("name"),
 '''.. attribute:: name
 	a optional name
 	:type: unicode'''
-# GSGuideLine.selected = property(	lambda self: ObjectInLayer_selected(self) )
+
 '''.. attribute:: selected
-	Returns True when guideline is selected in the UI.
+	Selection state of guideline in UI.
+
+	.. code-block:: python
+	
+		# select guideline
+		layer.guidelines[0].selected = True
+
+		# print selection state
+		print layer.guidelines[0].selected
+
 	:type: bool
 '''
 
@@ -4498,9 +4555,17 @@ GSHint.horizontal = property(	lambda self: self.valueForKey_("horizontal").boolV
 	True if hint is horizontal, False if vertical.
 	:type: bool'''
 
-# GSHint.selected = property(	lambda self: ObjectInLayer_selected(self) )
 '''.. attribute:: selected
-	Returns True when hint is selected in the UI.
+	Selection state of hint in UI.
+
+	.. code-block:: python
+	
+		# select hint
+		layer.hints[0].selected = True
+
+		# print selection state
+		print layer.hints[0].selected
+
 	:type: bool
 '''
 
