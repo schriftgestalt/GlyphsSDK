@@ -76,6 +76,12 @@ Properties
 	languageScripts
 	languageData
 	unicodeRanges
+	editViewWidth
+	handleSize
+	handleSizeInPoints
+	version
+	build
+	
 
 	
 Functions
@@ -244,6 +250,73 @@ GSApplication.unicodeRanges = property(lambda self: GSGlyphsInfo.unicodeRanges()
 	:rtype: list`
 	'''
 
+def Glyphs_setUserDefaults(self, key, value):
+	self.defaults[key] = value
+
+GSApplication.editViewWidth = property(lambda self: self.intDefaults["GSFontViewWidth"], lambda self, value: Glyphs_setUserDefaults(self, "GSFontViewWidth", int(value)))
+'''.. attribute:: editViewWidth
+	Width of glyph edit view. Corresponds to the "Width of editor" setting from the Preferences.
+	
+	:type: int'''
+
+GSApplication.handleSize = property(lambda self: self.intDefaults["GSHandleSize"], lambda self, value: Glyphs_setUserDefaults(self, "GSHandleSize", int(value)))
+'''.. attribute:: handleSize
+	Size of Bezier handles in Glyph Edit View. Possible value are 0–2. Corresponds to the "Handle size" setting from the Preferences.
+	
+	.. code-block:: python
+	
+		Glyphs.handleSize = 0
+		print Glyphs.handleSizeInPoints
+		5.0
+
+		Glyphs.handleSize = 1
+		print Glyphs.handleSizeInPoints
+		7.0
+
+		Glyphs.handleSize = 2
+		print Glyphs.handleSizeInPoints
+		10.0
+
+	:type: int'''
+
+def getHandleSize(self):
+	"""
+	Returns the current handle size as set in user preferences.
+	"""
+	try:
+		Selected = self.handleSize
+		if Selected == 0:
+			return 5.0
+		elif Selected == 2:
+			return 10.0
+		else:
+			return 7.0 # Regular
+	except:
+		return 7.0
+
+GSApplication.handleSizeInPoints = property(lambda self: getHandleSize(self))
+'''.. attribute:: handleSizeInPoints
+	Drawing size (in em units) of Bezier handles in Glyph Edit View. Read only. Use this to draw handles into the Glyph Edit View in plugins in combination with the Edit View's scale.
+	
+	.. code-block:: python
+	
+		# Calculate handle size
+		scaleCorrectedHandleSize = Glyphs.handleSizeInUnits / Glyphs.font.currentTab.scale
+
+		# Draw point in size of handles
+		point = NSPoint(100, 100)
+		NSColor.redColor.set()
+		rect = NSRect((point.x - scaleCorrectedHandleSize * 0.5, point.y - scaleCorrectedHandleSize * 0.5 ), (scaleCorrectedHandleSize, scaleCorrectedHandleSize))
+		bezierPath = NSBezierPath.bezierPathWithOvalInRect_(rect)
+		bezierPath.fill()
+
+	:type: float'''
+
+GSApplication.version = property(lambda self: self.intDefaults["GSHandleSize"], lambda self, value: Glyphs_setUserDefaults(self, "GSHandleSize", int(value)))
+'''.. attribute:: handleSize
+	Drawing size of Bezier handles in glyphs edit view. Possible value are 0–2. Corresponds to the "Handle size" setting from the Preferences.
+	
+	:type: int'''
 
 
 
@@ -1147,6 +1220,8 @@ Properties
 	kerning
 	userData
 	gridLength
+	gridSubDivisions
+	
 	disablesNiceNames
 	customParameters
 	selectedLayers
@@ -1396,6 +1471,10 @@ GSFont.customParameters = property(			lambda self: CustomParametersProxy(self))
 GSFont.gridLength = property(lambda self: self.valueForKey_("gridLength").intValue(), lambda self, value: self.setValue_forKey_(value, "gridLength"))
 '''.. attribute:: gridLength
 	Corresponds to the "Grid spacing" setting from the Info dialogue. When set to 0, point positions may contain float values.
+	:type: int'''
+GSFont.gridSubDivisions = property(lambda self: self.valueForKey_("gridSubDivision").intValue(), lambda self, value: self.setValue_forKey_(value, "gridSubDivision"))
+'''.. attribute:: gridSubDivisions
+	Corresponds to the "Grid sub divisions" setting from the Info dialogue.
 	:type: int'''
 
 GSFont.selectedLayers = property(lambda self: self.parent.selectedLayers())
@@ -3005,6 +3084,7 @@ Properties
 	selectionBounds
 	background
 	backgroundImage
+	bezierPath
 
 Functions
 
@@ -3017,6 +3097,7 @@ Functions
 	syncMetrics()
 	correctPathDirection()
 	removeOverlap()
+	roundCoordinates()
 	beginChanges()
 	endChanges()
 	cutBetweenPoints()
@@ -3040,7 +3121,17 @@ def Layer__init__(self):
 GSLayer.__init__ = Layer__init__;
 
 def Layer__repr__(self):
-	return "<%s \"%s\" (%s)>" % (self.className(), self.name or None, self.parent.name)
+	try:
+		assert self.name
+		name = self.name
+	except:
+		name = 'orphan'
+	try:
+		assert self.parent.name
+		parent = self.parent.name
+	except:
+		parent = 'orphan'
+	return "<%s \"%s\" (%s)>" % (self.className(), name, parent)
 GSLayer.__repr__ = Layer__repr__;
 
 GSLayer.parent = property(			lambda self: self.valueForKey_("parent"),
@@ -3331,6 +3422,20 @@ GSLayer.backgroundImage = property(lambda self: self.pyobjc_instanceMethods.back
 		layer.backgroundImage = None
 '''
 
+GSLayer.bezierPath = property(	 lambda self: self.pyobjc_instanceMethods.bezierPath() )
+'''.. attribute:: bezierPath
+	
+	The layer as an NSBezierPath object. Useful for drawing glyphs in plugins, for instance.
+
+	.. code-block:: python
+	
+		# draw the path into the edit view
+		NSColor.redColor().set()
+		layer.bezierPath.fill()
+
+	:type: NSBezierPath
+'''
+
 
 '''
 ---------
@@ -3393,6 +3498,12 @@ GSLayer.removeOverlap = RemoveOverlap
 .. function:: removeOverlap()
 	
 	Joins all contours.
+'''
+
+'''
+.. function:: roundCoordinates()
+	
+	Round the positions of all coordinates to the grid (size of which is set in the Font Info).
 '''
 
 def BeginChanges(self):
@@ -3931,6 +4042,7 @@ Properties
 	direction
 	bounds
 	selected
+	bezierPath
 	
 Functions
 
@@ -4043,6 +4155,21 @@ GSPath.selected = property(	 lambda self: Path_selected(self), lambda self, valu
 		print layer.paths[0].selected
 
 	:type: bool
+'''
+
+
+GSPath.bezierPath = property(	 lambda self: self.pyobjc_instanceMethods.bezierPath() )
+'''.. attribute:: bezierPath
+	
+	The same path as an NSBezierPath object. Useful for drawing glyphs in plugins, for instance.
+
+	.. code-block:: python
+	
+		# draw the path into the edit view
+		NSColor.redColor().set()
+		layer.paths[0].bezierPath.fill()
+
+	:type: NSBezierPath
 '''
 
 
@@ -4821,6 +4948,7 @@ Properties
 
 	text
 	layers
+	scale
 
 
 ----------
@@ -4831,7 +4959,6 @@ Properties
 
 GSEditViewController.text = property(lambda self: self.graphicView().displayString(),
 									 lambda self, value: self.graphicView().setDisplayString_(value))
-
 '''
 
 .. attribute:: text
@@ -4839,24 +4966,8 @@ GSEditViewController.text = property(lambda self: self.graphicView().displayStri
 	
 	:type: Unicode
 
-
-.. attribute:: layers
-	Alternatively, you can set (and read) a list of :class:`GSLayer` objects. These can be any of the layers of a glyph.
-	
-	
-
-	:type: list
-
-	.. code-block:: python
-
-		
-		font.tabs[0].layers = []
-		
-		# display all layers of one glyph next to each other
-		for layer in font.glyphs['a'].layers:
-			font.tabs[0].layers.append(layer)
-	
 '''
+
 
 
 
@@ -4900,7 +5011,34 @@ def __GSEditViewController_set_layers__(self, layers):
 GSEditViewController.layers = property(lambda self: self.graphicView().layoutManager().cachedGlyphs(),
 							  lambda self, value: __GSEditViewController_set_layers__(self, value))
 
+'''
+.. attribute:: layers
+	Alternatively, you can set (and read) a list of :class:`GSLayer` objects. These can be any of the layers of a glyph.
+	
+	
 
+	:type: list
+
+	.. code-block:: python
+
+		
+		font.tabs[0].layers = []
+		
+		# display all layers of one glyph next to each other
+		for layer in font.glyphs['a'].layers:
+			font.tabs[0].layers.append(layer)
+	
+'''
+
+GSEditViewController.scale = property(lambda self: self.graphicView().scale())
+'''
+
+.. attribute:: scale
+	Scale (zoom factor) of the edit view. Useful for drawing activity in plugins.
+	
+	:type: float
+
+'''
 
 
 
