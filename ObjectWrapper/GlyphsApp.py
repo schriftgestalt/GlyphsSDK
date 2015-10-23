@@ -79,8 +79,6 @@ Properties
 	editViewWidth
 	handleSize
 	handleSizeInPoints
-	version
-	build
 	
 
 	
@@ -311,12 +309,6 @@ GSApplication.handleSizeInPoints = property(lambda self: getHandleSize(self))
 		bezierPath.fill()
 
 	:type: float'''
-
-GSApplication.version = property(lambda self: self.intDefaults["GSHandleSize"], lambda self, value: Glyphs_setUserDefaults(self, "GSHandleSize", int(value)))
-'''.. attribute:: handleSize
-	Drawing size of Bezier handles in glyphs edit view. Possible value are 0–2. Corresponds to the "Handle size" setting from the Preferences.
-	
-	:type: int'''
 
 
 
@@ -2734,8 +2726,10 @@ Properties
 	rightMetricsKey
 	export
 	color
+	colorObject
 	note
 	selected
+	mastersCompatible
 	
 	
 Functions
@@ -2967,10 +2961,28 @@ GSGlyph.color =			  property( lambda self: self.valueForKey_("colorIndex"),
 		glyph.color = 9223372036854775807	# not colored, white
 '''
 
+GSGlyph.colorObject =			  property( lambda self: self.valueForKey_("color") )
+'''.. attribute:: colorObject
+	NSColor object of glyph color, useful for drawing in plugins.
+	:type: NSColor
+
+	.. code-block:: python
+
+		# Set Color
+		glyph.colorObject.set()
+		
+		# Draw layer
+		glyph.layers[0].bezierPath.fill()
+		
+
+'''
+
+
 GSGlyph.note =			  property( lambda self: self.valueForKey_("note"), 
 									lambda self, value: self.setNote_(value))
 '''.. attribute:: note
 	:type: unicode'''
+
 
 def _get_Glyphs_is_selected(self):
 	Doc = self.parent.parent
@@ -2998,16 +3010,32 @@ GSGlyph.selected =		property( lambda self: _get_Glyphs_is_selected(self),
 				print glyph
 '''
 
-def __BeginUndo(self):
-	self.undoManager().beginUndoGrouping()
+GSGlyph.mastersCompatible = property( lambda self: bool(self.pyobjc_instanceMethods.mastersCompatible()))
 
-GSGlyph.beginUndo = __BeginUndo
+'''.. attribute:: mastersCompatible
+	Return True when all layers in this glyph are compatible (same components, anchors, paths etc.)
+	:type: bool
+
+'''
+
+
 
 '''
 
 ---------
 Functions
 ---------
+
+'''
+
+
+
+def __BeginUndo(self):
+	self.undoManager().beginUndoGrouping()
+
+GSGlyph.beginUndo = __BeginUndo
+
+'''
 
 .. function:: beginUndo()
 	
@@ -3098,12 +3126,14 @@ Functions
 	correctPathDirection()
 	removeOverlap()
 	roundCoordinates()
+	addNodesAtExtremes()
 	beginChanges()
 	endChanges()
 	cutBetweenPoints()
 	intersectionsBetweenPoints()
 	addMissingAnchors()
 	clearSelection()
+	clearBackground()
 
 ----------
 Properties
@@ -3506,6 +3536,22 @@ GSLayer.removeOverlap = RemoveOverlap
 	Round the positions of all coordinates to the grid (size of which is set in the Font Info).
 '''
 
+def Layer_addNodesAtExtremes(self, force = False):
+	for path in self.paths:
+		path.addNodesAtExtremes(force)
+
+GSLayer.addNodesAtExtremes = Layer_addNodesAtExtremes
+
+'''
+.. function:: addNodesAtExtremes()
+	
+	Add nodes at layer's extrema, e.g. top, bottom etc.
+'''
+
+
+
+
+
 def BeginChanges(self):
 	self.setDisableUpdates()
 	self.undoManager().beginUndoGrouping()
@@ -3603,6 +3649,12 @@ GSLayer.addMissingAnchors = Layer_addMissingAnchors
 .. function:: clearSelection()
 
 	Unselect all selected items in this layer.
+'''
+
+'''
+.. function:: clearBackground()
+
+	Remove all paths from background layer.
 '''
 
 
@@ -4049,6 +4101,7 @@ Functions
 .. autosummary::
 	
 	reverse()
+	addNodesAtExtremes()
 
 ----------
 Properties
@@ -4217,7 +4270,16 @@ def DrawPathWithPen(self, pen):
 GSPath.draw = DrawPathWithPen
 
 
+def Path_addNodesAtExtremes(self, force = False):
+	self.addExtremes_(force)
 
+GSPath.addNodesAtExtremes = Path_addNodesAtExtremes
+
+'''
+.. function:: addNodesAtExtremes()
+	
+	Add nodes at path's extrema, e.g. top, bottom etc.
+'''
 
 
 
