@@ -3513,7 +3513,7 @@ GSLayer.backgroundImage = property(lambda self: self.pyobjc_instanceMethods.back
 GSLayer.bezierPath = property(	 lambda self: self.pyobjc_instanceMethods.bezierPath() )
 '''.. attribute:: bezierPath
 	
-	The layer as an NSBezierPath object. Useful for drawing glyphs in plugins, for instance.
+	The layer as an NSBezierPath object. Useful for drawing glyphs in plugins.
 
 	.. code-block:: python
 	
@@ -4278,7 +4278,7 @@ GSPath.selected = property(	 lambda self: Path_selected(self), lambda self, valu
 GSPath.bezierPath = property(	 lambda self: self.pyobjc_instanceMethods.bezierPath() )
 '''.. attribute:: bezierPath
 	
-	The same path as an NSBezierPath object. Useful for drawing glyphs in plugins, for instance.
+	The same path as an NSBezierPath object. Useful for drawing glyphs in plugins.
 
 	.. code-block:: python
 	
