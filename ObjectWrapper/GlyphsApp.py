@@ -1526,7 +1526,8 @@ GSFont.selectedFontMaster = property(lambda self: self.parent.selectedFontMaster
 	Returns the active master (selected in the toolbar).
 	:type: :class:`GSFontMaster <GSFontMaster>`'''
 
-GSFont.masterIndex = property(lambda self: self.parent.masterIndex())
+GSFont.masterIndex = property(lambda self: self.parent.masterIndex(),
+							  lambda self, Index: self.parent.windowController().setMasterIndex_(Index % self.countOfFontMasters()))
 '''.. attribute:: masterIndex
 	Returns the index of the active master (selected in the toolbar).
 	:type: int'''
