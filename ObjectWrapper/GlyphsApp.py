@@ -3,7 +3,7 @@
 from AppKit import *
 from Foundation import *
 
-import time, math, sys, os
+import time, math, sys, os, string, re
 from sets import Set
 
 
@@ -79,6 +79,9 @@ Properties
 	editViewWidth
 	handleSize
 	handleSizeInPoints
+	versionString
+	versionNumber
+	buildNumber
 	
 
 	
@@ -293,6 +296,7 @@ def getHandleSize(self):
 		return 7.0
 
 GSApplication.handleSizeInPoints = property(lambda self: getHandleSize(self))
+
 '''.. attribute:: handleSizeInPoints
 	Drawing size (in em units) of Bezier handles in Glyph Edit View. Read only. Use this to draw handles into the Glyph Edit View in plugins in combination with the Edit View's scale.
 	
@@ -310,6 +314,49 @@ GSApplication.handleSizeInPoints = property(lambda self: getHandleSize(self))
 
 	:type: float'''
 
+
+GSApplication.versionString = NSBundle.mainBundle().infoDictionary()["CFBundleShortVersionString"]
+
+'''.. attribute:: versionString
+
+	String containing Glyph.app's version number. May contain letters also, like '2.3b'. To check for a specific version, use .versionNumber below.
+	
+	:type: string'''
+
+
+def Glyphs_FloatVersion(self):
+	m = re.match(r"(\d+)\.(\d+)", self.versionString)
+	return float(str(m.group(1)) + '.' + str(m.group(2)))
+
+GSApplication.versionNumber = property(lambda self: Glyphs_FloatVersion(self))
+
+'''.. attribute:: versionNumber
+
+	Glyph.app's version number. Use this to check for version in your code.
+	
+	.. code-block:: python
+	
+		# Code valid for Glyphs.app v2.1 and above:
+		if Glyphs.versionNumber >= 2.1:
+			# do stuff
+		
+		# Code for older versions
+		else:
+			# do other stuff
+
+
+	:type: float'''
+
+
+GSApplication.buildNumber = int(NSBundle.mainBundle().infoDictionary()["CFBundleVersion"])
+
+'''.. attribute:: buildNumber
+
+	Glyph.app's build number.
+	
+	Especially if you're using Glyphs' preview builds, this number may be more important to you than the version number. The build number increases with every released build and is the most significant evidence of new Glyphs versions, while the version number is artificially chosen and may stay at the same number for some time, until a decision is made to release a new set of features under a new version number.
+	
+	:type: int'''
 
 
 '''
@@ -2971,6 +3018,15 @@ GSGlyph.colorObject =			  property( lambda self: self.valueForKey_("color") )
 		# Set Color
 		glyph.colorObject.set()
 		
+		# Get RGB (and alpha) values (as float numbers 0..1, multiply with 256 if necessary)
+		R, G, B, A = glyph.colorObject.colorUsingColorSpace_(NSColorSpace.genericRGBColorSpace()).getRed_green_blue_alpha_(None, None, None, None)
+
+		print R, G, B
+		0.617805719376 0.958198726177 0.309286683798
+
+		print roun(R * 256), int(G * 256), int(B * 256)
+		158 245 245
+		
 		# Draw layer
 		glyph.layers[0].bezierPath.fill()
 		
@@ -3134,6 +3190,7 @@ Functions
 	addMissingAnchors()
 	clearSelection()
 	clearBackground()
+	swapForegroundWithBackground()
 
 ----------
 Properties
@@ -3657,7 +3714,13 @@ GSLayer.addMissingAnchors = Layer_addMissingAnchors
 	Remove all paths from background layer.
 '''
 
+GSLayer.swapForegroundWithBackground = property(lambda self: self.swapForgroundWithBackground() )
 
+'''
+.. function:: swapForegroundWithBackground()
+
+	Swap Foreground layer with Background layer.
+'''
 
 
 def ControlLayer__new__(typ, *args, **kwargs):
