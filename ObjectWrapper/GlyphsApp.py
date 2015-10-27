@@ -2294,7 +2294,7 @@ def __Instance_Export__(self, Format = "OTF", FontPath = None, AutoHint = True, 
 		FontPath = NSUserDefaults.standardUserDefaults().objectForKey_("OTFExportPath")
 
 	Exporter.setInstallFontURL_(NSURL.fileURLWithPath_(FontPath))
-	# die folgenden Parameter kann man hier direkt setzen oder die werden aus der Instanz ausgelesen.
+	# the following parameters can be set here or directly read from the instance.
 	Exporter.setAutohint_(AutoHint)
 	Exporter.setRemoveOverlap_(RemoveOverlap)
 	Exporter.setUseSubroutines_(UseSubroutines)
