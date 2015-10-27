@@ -1507,7 +1507,7 @@ GSFont.customParameters = property(			lambda self: CustomParametersProxy(self))
 		del(font.customParameters['trademark'])
 	
 	:type: list, dict'''
-GSFont.gridLength = property(lambda self: self.valueForKey_("gridLength").intValue(), lambda self, value: self.setValue_forKey_(value, "gridLength"))
+GSFont.gridLength = property(lambda self: self.valueForKey_("gridLength").intValue())
 '''.. attribute:: gridLength
 	Corresponds to the "Grid spacing" setting from the Info dialogue. When set to 0, point positions may contain float values.
 	:type: int'''
