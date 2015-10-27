@@ -3595,8 +3595,7 @@ GSLayer.removeOverlap = RemoveOverlap
 '''
 
 def Layer_addNodesAtExtremes(self, force = False):
-	for path in self.paths:
-		path.addNodesAtExtremes(force)
+	self.addExtremePoints()
 
 GSLayer.addNodesAtExtremes = Layer_addNodesAtExtremes
 
