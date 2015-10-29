@@ -78,7 +78,6 @@ Properties
 	unicodeRanges
 	editViewWidth
 	handleSize
-	handleSizeInPoints
 	versionString
 	versionNumber
 	buildNumber
@@ -264,46 +263,13 @@ GSApplication.handleSize = property(lambda self: self.intDefaults["GSHandleSize"
 '''.. attribute:: handleSize
 	Size of Bezier handles in Glyph Edit View. Possible value are 0–2. Corresponds to the "Handle size" setting from the Preferences.
 	
-	.. code-block:: python
-	
-		Glyphs.handleSize = 0
-		print Glyphs.handleSizeInPoints
-		5.0
-
-		Glyphs.handleSize = 1
-		print Glyphs.handleSizeInPoints
-		7.0
-
-		Glyphs.handleSize = 2
-		print Glyphs.handleSizeInPoints
-		10.0
-
-	:type: int'''
-
-def getHandleSize(self):
-	"""
-	Returns the current handle size as set in user preferences.
-	"""
-	try:
-		Selected = self.handleSize
-		if Selected == 0:
-			return 5.0
-		elif Selected == 2:
-			return 10.0
-		else:
-			return 7.0 # Regular
-	except:
-		return 7.0
-
-GSApplication.handleSizeInPoints = property(lambda self: getHandleSize(self))
-
-'''.. attribute:: handleSizeInPoints
-	Drawing size (in em units) of Bezier handles in Glyph Edit View. Read only. Use this to draw handles into the Glyph Edit View in plugins in combination with the Edit View's scale.
+	To use the handle size for drawing in plugins, you need to convert the handle size to a point size, and divide by the view's scale factor. See example below.
 	
 	.. code-block:: python
 	
 		# Calculate handle size
-		scaleCorrectedHandleSize = Glyphs.handleSizeInUnits / Glyphs.font.currentTab.scale
+		handSizeInPoints = 5 + Glyphs.handleSize * 2.5 # (= 5.0 or 7.5 or 10.0)
+		scaleCorrectedHandleSize = handSizeInPoints / Glyphs.font.currentTab.scale
 
 		# Draw point in size of handles
 		point = NSPoint(100, 100)
@@ -312,7 +278,7 @@ GSApplication.handleSizeInPoints = property(lambda self: getHandleSize(self))
 		bezierPath = NSBezierPath.bezierPathWithOvalInRect_(rect)
 		bezierPath.fill()
 
-	:type: float'''
+	:type: int'''
 
 
 GSApplication.versionString = NSBundle.mainBundle().infoDictionary()["CFBundleShortVersionString"]
@@ -5163,8 +5129,23 @@ GSEditViewController.scale = property(lambda self: self.graphicView().scale())
 '''
 
 .. attribute:: scale
-	Scale (zoom factor) of the edit view. Useful for drawing activity in plugins.
+	Scale (zoom factor) of the Edit View. Useful for drawing activity in plugins.
 	
+	The scale changes with every zoom step of the Edit View. So if you want to draw objects (e.g. text, stroke thickness etc.) into the Edit View at a constant size relative to the UI (e.g. constant text size on screen), you need to calculate the object's size relative to the scale factor. See example below.
+	
+	.. code-block:: python
+
+		print font.currentTab.scale
+		0.414628537193
+
+		# Calculate text size
+		desiredTextSizeOnScreen = 10 #pt
+		scaleCorrectedTextSize = desiredTextSizeOnScreen / font.currentTab.scale
+		
+		print scaleCorrectedTextSize
+		24.1179733255
+		
+
 	:type: float
 
 '''
