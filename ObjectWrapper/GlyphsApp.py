@@ -1258,9 +1258,9 @@ Properties
 	note
 	kerning
 	userData
-	gridLength
+	grid
 	gridSubDivisions
-	
+	gridLength
 	disablesNiceNames
 	customParameters
 	selectedLayers
@@ -1507,14 +1507,18 @@ GSFont.customParameters = property(			lambda self: CustomParametersProxy(self))
 		del(font.customParameters['trademark'])
 	
 	:type: list, dict'''
-GSFont.gridLength = property(lambda self: self.valueForKey_("gridLength").intValue())
-'''.. attribute:: gridLength
-	Corresponds to the "Grid spacing" setting from the Info dialogue. When set to 0, point positions may contain float values.
+GSFont.grid = property(lambda self: self.valueForKey_("gridMain").intValue(), lambda self, value: self.setValue_forKey_(value, "gridMain"))
+'''.. attribute:: grid
+	Corresponds to the "Grid spacing" setting from the Info dialogue.
 	:type: int'''
 GSFont.gridSubDivisions = property(lambda self: self.valueForKey_("gridSubDivision").intValue(), lambda self, value: self.setValue_forKey_(value, "gridSubDivision"))
 '''.. attribute:: gridSubDivisions
 	Corresponds to the "Grid sub divisions" setting from the Info dialogue.
 	:type: int'''
+GSFont.gridLength = property(lambda self: self.valueForKey_("gridLength").floatValue())
+'''.. attribute:: gridLength
+	Ready calculated size of grid for rounding purposes. Result of division of grid with gridSubDivisions.
+	:type: float'''
 
 GSFont.selectedLayers = property(lambda self: self.parent.selectedLayers())
 '''.. attribute:: selectedLayers
