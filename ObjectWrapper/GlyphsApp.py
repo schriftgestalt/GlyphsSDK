@@ -991,6 +991,27 @@ class LayerComponentsProxy (Proxy):
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.components()
 
+class GlyphSmartComponentAxesProxy (Proxy):
+	def __getitem__(self, Key):
+		if type(Key) is int:
+			if Key < 0:
+				Key = self.__len__() + Key
+		return self._owner.pyobjc_instanceMethods.partsSettings().objectAtIndex_(Key)
+	def __setitem__(self, Key, SmartComponentProperty):
+		if type(Key) is int:
+			if Key < 0:
+				Key = self.__len__() + Key
+		self._owner.pyobjc_instanceMethods.partsSettings().replaceObjectsAtIndex_withObjects_(Key, SmartComponentProperty)
+	def __delitem__(self, Key):
+		if type(Key) is int:
+			if Key < 0:
+				Key = self.__len__() + Key
+		self._owner.pyobjc_instanceMethods.partsSettings().removeObjectAtIndex_(Key)
+	def append(self, SmartComponentProperty):
+		self._owner.pyobjc_instanceMethods.partsSettings().addObject_(SmartComponentProperty)
+	def values(self):
+		return self._owner.pyobjc_instanceMethods.partsSettings()
+
 class LayerGuideLinesProxy (Proxy):
 	def __getitem__(self, Key):
 		return self._owner.guideLineAtIndex_(Key)
@@ -2749,6 +2770,7 @@ Properties
 	selected
 	mastersCompatible
 	userData
+	smartComponentAxes
 	
 	
 Functions
@@ -3055,6 +3077,39 @@ GSGlyph.userData = property(lambda self: self.pyobjc_instanceMethods.userData(),
 		glyph.userData['rememberToMakeCoffee'] = True
 '''
 
+GSGlyph.smartComponentAxes = property(lambda self: GlyphSmartComponentAxesProxy(self))
+'''.. attribute:: smartComponentAxes
+	A list of :class:`GSSmartComponentAxis` objects. 
+
+	These are the axis definitions for the interpolations that take place within the Smart Components. Corresponds to the 'Properties' tab of the glyph's 'Show Smart Glyph Settings' dialog.
+	
+	Also see https://glyphsapp.com/tutorials/smart-components for reference.
+	
+	:type: list
+
+	.. code-block:: python
+
+		
+		# Adding two interpolation axes to the glyph
+
+		axis1 = GSSmartComponentAxis()
+		axis1.name = 'crotchDepth'
+		axis1.topValue = 0
+		axis1.bottomValue = -100
+		g.smartComponentAxes.append(axis1)
+
+		axis2 = GSSmartComponentAxis()
+		axis2.name = 'shoulderWidth'
+		axis2.topValue = 100
+		axis2.bottomValue = 0
+		g.smartComponentAxes.append(axis2)
+
+
+		# Deleting one axis
+		del g.smartComponentAxes[1]
+'''
+
+
 
 '''
 
@@ -3150,6 +3205,7 @@ Properties
 	backgroundImage
 	bezierPath
 	userData
+	smartComponentPoleMapping
 
 Functions
 
@@ -3511,6 +3567,44 @@ GSLayer.userData = property(lambda self: self.pyobjc_instanceMethods.userData(),
 		# set value
 		layer.userData['rememberToMakeCoffee'] = True
 '''
+
+def Layer_smartComponentPoleMapping(self):
+	try:
+		return self.userData["PartSelection"]
+	except:
+		return None
+
+GSLayer.smartComponentPoleMapping = property(lambda self: Layer_smartComponentPoleMapping(self))
+
+'''.. attribute:: smartComponentPoleMapping
+
+	Maps this layer to the poles on the interpolation axes of the Smart Glyph. The dictionary keys are the names of the :class:`GSSmartComponentAxis` objects. The values are 1 for bottom pole and 2 for top pole. Corresponds to the 'Layers' tab of the glyph's 'Show Smart Glyph Settings' dialog.
+	
+	Also see https://glyphsapp.com/tutorials/smart-components for reference.
+
+	:type: dict, int
+
+	.. code-block:: python
+		
+		# Map layers to top and bottom poles:
+		for layer in glyph.layers:
+			
+			# Regular layer
+			if layer.name == 'Regular':
+				layer.smartComponentPoleMapping['crotchDepth'] = 2
+				layer.smartComponentPoleMapping['shoulderWidth'] = 2
+
+			# NarrowShoulder layer
+			elif layer.name == 'NarrowShoulder':
+				layer.smartComponentPoleMapping['crotchDepth'] = 2
+				layer.smartComponentPoleMapping['shoulderWidth'] = 1
+
+			# LowCrotch layer
+			elif layer.name == 'LowCrotch':
+				layer.smartComponentPoleMapping['crotchDepth'] = 1
+				layer.smartComponentPoleMapping['shoulderWidth'] = 2
+'''
+
 
 
 '''
@@ -3956,6 +4050,7 @@ Properties
 	disableAlignment
 	anchor
 	selected
+	smartComponentValues
 	
 Functions
 
@@ -4091,6 +4186,35 @@ GSComponent.draw = DrawComponentWithPen
 
 
 
+GSComponent.smartComponentValues = property(lambda self: self.pieceSettings())
+'''.. attribute:: smartComponentValues
+
+	Dictionary of interpolations values of the Smart Component. Key are the names, values are between the top and the bottom value of the corresponding :class:`GSSmartComponentAxis` objects. Corresponds to the values of the 'Smart Component Settings' dialog. Returns None if the component is not a Smart Component.
+	
+	Also see https://glyphsapp.com/tutorials/smart-components for reference.
+
+	:type: dict, int
+
+	.. code-block:: python
+		
+		# Narrow shoulders of m
+		glyph = font.glyphs['m']
+		glyph.layers[0].components[1].smartComponentValues['shoulderWidth'] = 30 # First shoulder. Index is 1, given that the stem is also a component with index 0
+		glyph.layers[0].components[2].smartComponentValues['shoulderWidth'] = 30 # Second shoulder. Index is 2, given that the stem is also a component with index 0
+
+		# Low crotch of h
+		glyph = font.glyphs['h']
+		glyph.layers[0].components[1].smartComponentValues['crotchDepth'] = -77  # Shoulder. Index is 1, given that the stem is also a component with index 0
+		
+		# Check whether a component is a smart component
+		for component in layer.components:
+			if component.smartComponentValues != None:
+				# do stuff
+'''
+
+
+
+
 '''
 
 
@@ -4105,6 +4229,78 @@ Functions
 	Decomposes the component.
 '''
 
+
+
+
+##################################################################################
+#
+#
+#
+#           GSSmartComponentAxis
+#
+#
+#
+##################################################################################
+
+
+'''
+
+:mod:`GSSmartComponentAxis`
+===============================================================================
+
+Implementation of the Smart Component interpolation axis object.
+For details on how to access them, please see :class:`GSGlyph`.smartComponentAxes
+
+.. class:: GSSmartComponentAxis()
+	
+Properties
+
+.. autosummary::
+	
+	name
+	topValue
+	bottomValue
+
+----------
+Properties
+----------
+
+'''
+
+GSSmartComponentAxis = GSPartProperty
+def SmartComponentProperty__new__(typ, *args, **kwargs):
+	return GSSmartComponentAxis.alloc().init()
+GSSmartComponentAxis.__new__ = SmartComponentProperty__new__
+def SmartComponentProperty__init__(self):
+	pass
+GSSmartComponentAxis.__init__ = SmartComponentProperty__init__;
+def SmartComponentProperty__repr__(self):
+	return "<GSSmartComponentAxis \"%s\">" % (self.name)
+GSSmartComponentAxis.__repr__ = SmartComponentProperty__repr__;
+
+GSSmartComponentAxis.name = property(lambda self: self.valueForKey_("name"),
+						 		lambda self, value: self.setValue_forKey_(value, "name"))
+'''.. attribute:: name
+	Name of the axis. This name will be used to map the Smart Glyph's layers to the poles of the interpolation. See :class:`GSLayer`.smartComponentPoleMapping
+
+	:type: str
+'''
+GSSmartComponentAxis.topValue = property(lambda self: self.valueForKey_("topValue"),
+						 		lambda self, value: self.setValue_forKey_(value, "topValue"))
+'''.. attribute:: topValue
+	
+	Top end (pole) value on interpolation axis.
+
+	:type: int, float
+'''
+GSSmartComponentAxis.bottomValue = property(lambda self: self.valueForKey_("bottomValue"),
+						 		lambda self, value: self.setValue_forKey_(value, "bottomValue"))
+'''.. attribute:: bottomValue
+	
+	Bottom end (pole) value on interpolation axis.
+
+	:type: int, float
+'''
 
 
 
