@@ -1024,8 +1024,8 @@ class LayerHintsProxy (Proxy):
 		self._owner.setHint_atIndex_(Component, Key)
 	def __delitem__(self, Key):
 		self._owner.removeObjectFromHintsAtIndex_(Key)
-	def append(self, GuideLine):
-		self._owner.addHint_(GuideLine)
+	def append(self, Hint):
+		self._owner.addHint_(Hint)
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.hints()
 
@@ -2748,6 +2748,7 @@ Properties
 	note
 	selected
 	mastersCompatible
+	userData
 	
 	
 Functions
@@ -3045,6 +3046,14 @@ GSGlyph.mastersCompatible = property( lambda self: bool(self.pyobjc_instanceMeth
 
 '''
 
+GSGlyph.userData = property(lambda self: self.pyobjc_instanceMethods.userData(), lambda self, value: self.setUserData_(value))
+'''.. attribute:: userData
+	A dictionary to store user data. Use a unique key and only use objects that can be stored in a property list (string, list, dict, numbers, NSData) otherwise the data will not be recoverable from the saved file.
+	:type: dict
+	.. code-block:: python
+		# set value
+		glyph.userData['rememberToMakeCoffee'] = True
+'''
 
 
 '''
@@ -3140,6 +3149,7 @@ Properties
 	background
 	backgroundImage
 	bezierPath
+	userData
 
 Functions
 
@@ -3492,6 +3502,14 @@ GSLayer.bezierPath = property(	 lambda self: self.pyobjc_instanceMethods.bezierP
 		layer.bezierPath.fill()
 
 	:type: NSBezierPath
+'''
+GSLayer.userData = property(lambda self: self.pyobjc_instanceMethods.userData(), lambda self, value: self.setUserData_(value))
+'''.. attribute:: userData
+	A dictionary to store user data. Use a unique key and only use objects that can be stored in a property list (string, list, dict, numbers, NSData) otherwise the data will not be recoverable from the saved file.
+	:type: dict
+	.. code-block:: python
+		# set value
+		layer.userData['rememberToMakeCoffee'] = True
 '''
 
 
