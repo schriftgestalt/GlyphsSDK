@@ -5339,7 +5339,8 @@ GSEditViewController.layers = property(lambda self: self.graphicView().layoutMan
 	
 '''
 
-GSEditViewController.scale = property(lambda self: self.graphicView().scale())
+GSEditViewController.scale = property(lambda self: self.graphicView().valueForKey_("scale"), lambda self, value: self.graphicView().setValue_forKey_(value, "scale"))
+
 '''
 
 .. attribute:: scale
