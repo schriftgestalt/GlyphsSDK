@@ -263,7 +263,7 @@ GSApplication.handleSize = property(lambda self: self.intDefaults["GSHandleSize"
 '''.. attribute:: handleSize
 	Size of Bezier handles in Glyph Edit View. Possible value are 0–2. Corresponds to the "Handle size" setting from the Preferences.
 	
-	To use the handle size for drawing in plugins, you need to convert the handle size to a point size, and divide by the view's scale factor. See example below.
+	To use the handle size for drawing in reporter plugins, you need to convert the handle size to a point size, and divide by the view's scale factor. See example below.
 	
 	.. code-block:: python
 	
