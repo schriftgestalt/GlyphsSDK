@@ -1104,7 +1104,7 @@ class LayerPathsProxy (Proxy):
 	def __setitem__(self, idx, Path):
 		if idx < 0:
 			idx = self._owner.pathCount() + idx
-		self._owner.setPath_atIndex_(Path, idx)
+		self._owner.replacePathAtIndex_withPath_(idx, Path)
 	def __delitem__(self, idx):
 		if idx < 0:
 			Key = self._owner.pathCount() + idx
