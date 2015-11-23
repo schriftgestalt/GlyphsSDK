@@ -3739,15 +3739,15 @@ GSLayer.cutBetweenPoints = CutBetweenPoints
 		layer.cutBetweenPoints(NSPoint(0, 100), NSPoint(layer.width, 100))
 '''
 
-def IntersectionsBetweenPoints(self, Point1, Point2):
-	return self.calculateIntersectionsStartPoint_endPoint_(Point1, Point2)
+def IntersectionsBetweenPoints(self, Point1, Point2, components = False):
+	return self.calculateIntersectionsStartPoint_endPoint_decompose_(Point1, Point2, components)
 GSLayer.intersectionsBetweenPoints = IntersectionsBetweenPoints
 
 NSConcreteValue.x = property(lambda self: self.pointValue().x )
 NSConcreteValue.y = property(lambda self: self.pointValue().y )
 
 '''
-.. function:: intersectionsBetweenPoints(Point1, Point2)
+.. function:: intersectionsBetweenPoints(Point1, Point2, components = False)
 
 	Return all intersection points between a measurement line and the paths in the layer. This is basically identical to the measurement tool in the UI.
 	
@@ -3756,6 +3756,7 @@ NSConcreteValue.y = property(lambda self: self.pointValue().y )
 	
 	:param Point1: one point
 	:param Point2: the other point
+	:param components: if comoponents should be measued. Default: False
 
 	.. code-block:: python
 
