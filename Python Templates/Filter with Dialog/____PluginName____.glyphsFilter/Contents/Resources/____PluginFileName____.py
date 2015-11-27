@@ -278,7 +278,7 @@ class ____PluginClassName____ ( GSFilterPlugin ):
 									Layer.addSelection_( currLayerPath.nodes[j] )
 								
 				self.processLayerWithValues( Layer, self.____myValue____ ) # add your class variables here
-			Layer.clearSelection()
+				Layer.clearSelection()
 		
 			# Safe the values in the FontMaster. But could be saved in UserDefaults, too.
 			FontMaster = self.valueForKey_( "fontMaster" )
