@@ -3763,7 +3763,7 @@ NSConcreteValue.y = property(lambda self: self.pointValue().y )
 	
 	:param Point1: one point
 	:param Point2: the other point
-	:param components: if comoponents should be measued. Default: False
+	:param components: if components should be measured. Default: False
 
 	.. code-block:: python
 
