@@ -7,7 +7,7 @@ import time, math, sys, os, string, re
 from sets import Set
 
 
-__all__ = ["Glyphs", "GetFile", "GSMOVE", "GSLINE", "GSCURVE", "GSOFFCURVE", "GSSHARP", "GSSMOOTH", "TOPGHOST", "STEM", "BOTTOMGHOST", "TTANCHOR", "TTSTEM", "TTALIGN", "TTINTERPOLATE", "TTDIAGONAL", "CORNER", "CAP", "TTDONTROUND", "TTROUND", "TTROUNDUP", "TTROUNDDOWN", "TRIPLE", "DRAWFOREGROUND", "DRAWBACKGROUND", "DRAWINACTIVE", "TEXT", "ARROW", "CIRCLE", "PLUS", "MINUS", "divideCurve", "distance", "addPoints", "subtractPoints", "GetFolder", "GetSaveFile", "GetOpenFile", "Message", "LogToConsole"]
+__all__ = ["Glyphs", "GetFile", "GSMOVE", "GSLINE", "GSCURVE", "GSOFFCURVE", "GSSHARP", "GSSMOOTH", "TAG", "TOPGHOST", "STEM", "BOTTOMGHOST", "TTANCHOR", "TTSTEM", "TTALIGN", "TTINTERPOLATE", "TTDIAGONAL", "CORNER", "CAP", "TTDONTROUND", "TTROUND", "TTROUNDUP", "TTROUNDDOWN", "TRIPLE", "DRAWFOREGROUND", "DRAWBACKGROUND", "DRAWINACTIVE", "TEXT", "ARROW", "CIRCLE", "PLUS", "MINUS", "divideCurve", "distance", "addPoints", "subtractPoints", "GetFolder", "GetSaveFile", "GetOpenFile", "Message", "LogToConsole"]
 
 
 class Proxy(object):
@@ -31,6 +31,10 @@ class Proxy(object):
 				yield element
 	def index(self, Value):
 		return self.values().index(Value)
+	def __copy__(self):
+		return list(self)
+	def __deepcopy__(self, memo):
+		return [x.copy() for x in self.values()]
 
 
 ##################################################################################
@@ -520,6 +524,7 @@ GSOFFCURVE = 65
 GSSHARP = 0
 GSSMOOTH = 100
 
+TAG = -2
 TOPGHOST = -1
 STEM = 0
 BOTTOMGHOST = 1
@@ -555,6 +560,7 @@ nodeConstants = {
 	100: 'GSSMOOTH',
 }
 hintConstants = {
+	-2: 'Tag',
 	-1: 'TopGhost',
 	0: 'Stem',
 	1: 'BottomGhost',
@@ -3522,7 +3528,8 @@ GSLayer.selectionBounds = property(	lambda self: self.boundsOfSelection() )
 	:type: NSRect
 '''
 
-GSLayer.background = property(lambda self: self.pyobjc_instanceMethods.background())
+GSLayer.background = property(	lambda self: self.pyobjc_instanceMethods.background(),
+								lambda self, value: self.setBackground_(value))
 
 '''.. attribute:: background
 	The background layer
@@ -3531,7 +3538,7 @@ GSLayer.background = property(lambda self: self.pyobjc_instanceMethods.backgroun
 '''
 
 GSLayer.backgroundImage = property(lambda self: self.pyobjc_instanceMethods.backgroundImage(),
-									lambda self, value: self.pyobjc_instanceMethods.setBackgroundImage_(value))
+									lambda self, value: self.setBackgroundImage_(value))
 
 '''.. attribute:: backgroundImage
 	The background image. It will be scaled so that 1 em unit equals 1 of the image's pixels.
@@ -4601,7 +4608,7 @@ def Node__repr__(self):
 	return "<GSNode x=%s y=%s %s>" % (self.position.x, self.position.y, NodeType)
 GSNode.__repr__ = Node__repr__;
 
-GSNode.position = property(			lambda self: self.valueForKey_("position").pointValue(),
+GSNode.position = property(		lambda self: self.valueForKey_("position").pointValue(),
 								lambda self, value: self.setPosition_(value))
 '''.. attribute:: position
 	The position of the node.
@@ -4675,6 +4682,26 @@ GSNode.prevNode = property(	lambda self: __GSNode__prevNode__(self))
 '''.. attribute:: prevNode
 	Returns the previous node in the path
 	:type: GSNode
+	'''
+
+
+def __GSNode__get_name(self):
+	try:
+		return self.userData()["name"]
+	except:
+		pass
+	return None
+
+def __GSNode__set_name(self, value):
+	if value is None or type(value) is str or type(value) is unicode or type(value) is objc.pyobjc_unicode:
+		self.setUserData_forKey_(value, "name")
+	else:
+		raise(ValueError)
+	
+GSNode.name = property(__GSNode__get_name, __GSNode__set_name, doc="")
+'''.. attribute:: name
+	Attaches a name to a node
+	:type: unicode
 	'''
 
 
