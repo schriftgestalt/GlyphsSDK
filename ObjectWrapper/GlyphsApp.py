@@ -4573,6 +4573,10 @@ Properties
 	type
 	connection
 	selected
+	index
+	nextNode
+	prevNode
+	name
 
 Functions
 
@@ -4657,7 +4661,9 @@ GSNode.index = property(	lambda self: __GSNode__index__(self))
 def __GSNode__nextNode__(self):
 	try:
 		index = self.parent.indexOfNode_(self)
-		if index < len(self.parent.nodes):
+		if index == (len(self.parent.nodes) - 1):
+			return self.parent.nodes[0]
+		elif index < len(self.parent.nodes):
 			return self.parent.nodes[index + 1]
 	except:
 		pass
@@ -4665,14 +4671,30 @@ def __GSNode__nextNode__(self):
 
 GSNode.nextNode = property(	lambda self: __GSNode__nextNode__(self))
 '''.. attribute:: nextNode
-	Returns the next node in the path or None
+	Returns the next node in the path.
+
+	Please note that this is irregardless of the position of the node in the path and will jump across the path border to the beginning of the path if the current node is the last.
+	
+	If you need to take into consideration the position of the node in the path, use the node’s index attribute and check it against the path length.
+
+	.. code-block:: python
+	
+		print layer.paths[0].nodes[0].nextNode # returns the second node in the path (index 0 + 1)
+		print layer.paths[0].nodes[-1].nextNode # returns the first node in the path (last node >> jumps to beginning of path)
+
+		# check if node is last node in path (with at least two nodes)
+		print layer.paths[0].nodes[0].index == (len(layer.paths[0].nodes) - 1) # returns False for first node
+		print layer.paths[0].nodes[-1].index == (len(layer.paths[0].nodes) - 1) # returns True for last node
+	
 	:type: GSNode
 	'''
 
 def __GSNode__prevNode__(self):
 	try:
 		index = self.parent.indexOfNode_(self)
-		if index < len(self.parent.nodes):
+		if index == 0:
+			return self.parent.nodes[-1]
+		elif index < len(self.parent.nodes):
 			return self.parent.nodes[index - 1]
 	except:
 		pass
@@ -4680,7 +4702,21 @@ def __GSNode__prevNode__(self):
 
 GSNode.prevNode = property(	lambda self: __GSNode__prevNode__(self))
 '''.. attribute:: prevNode
-	Returns the previous node in the path
+	Returns the previous node in the path.
+
+	Please note that this is irregardless of the position of the node in the path and will jump across the path border to the end of the path if the current node is the first.
+	
+	If you need to take into consideration the position of the node in the path, use the node’s index attribute and check it against the path length.
+
+	.. code-block:: python
+	
+		print layer.paths[0].nodes[0].prevNode # returns the last node in the path (first node >> jumps to end of path)
+		print layer.paths[0].nodes[-1].prevNode # returns second last node in the path
+
+		# check if node is first node in path (with at least two nodes)
+		print layer.paths[0].nodes[0].index == 0 # returns True for first node
+		print layer.paths[0].nodes[-1].index == 0 # returns False for last node
+	
 	:type: GSNode
 	'''
 
