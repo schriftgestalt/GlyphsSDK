@@ -101,6 +101,8 @@ Functions
 	niceGlyphName()
 	productionGlyphName()
 	ligatureComponents()
+	addCallback()
+	removeCallback()
 	redraw()
 	showNotification()
 	
@@ -468,21 +470,116 @@ GSApplication.ligatureComponents = _ligatureComponents
 		)
 	'''
 
+##########################################################################################################
+#
+#
+#      Callback section
+#
+#
+
+
+callbackTargets = {}
+
+class callbackHelperClass():
+	def __init__(self, func):
+		self.func = func
+
+	def drawForegroundForLayer_options_(self, Layer, options):
+		if self.func:
+			self.func(Layer, options)
+
+	def drawBackgroundForLayer_options_(self, Layer, options):
+		if self.func:
+			self.func(Layer, options)
+
+	def drawBackgroundForInactiveLayer_options_(self, Layer, options):
+		if self.func:
+			self.func(Layer, options)
+
+
 # available in Glyphs 2 (786)
 def __addCallback__(self, target, operation):
-	GSApplication.delegate().addCallback_forOperation_(target, operation)
+
+	# Remove possible old function by the same name
+	if callbackTargets.has_key(target.__name__):
+		self.removeCallback(target)
+
+	# Add class to callbackTargets dict by the function name
+	callbackTargets[target.__name__] = callbackHelperClass(target)
+
+	# Add to stack	
+	GSApplication.delegate(self).addCallback_forOperation_(callbackTargets[target.__name__], operation)
+
+	# Redraw immediately
+	self.redraw()
+
 GSApplication.addCallback = __addCallback__
 
+'''.. function:: addCallback(function, hook)
+	
+	Add a user-defined function to the glyph window’s drawing operations, in the foreground and background for the active glyph as well as in the inactive glyphs.
+	
+	The function names are used to add/remove the functions to the hooks, so make sure to use unique function names.
+	
+	Your function needs to accept two values: `layer` which will contain the respective :class:`GSLayer` object of the layer we’re dealing with and `info` which is a dictionary and contains the value `Scale` (for the moment).
+	
+	For the hooks use the three defined constants `DRAWFOREGROUND`, `DRAWBACKGROUND`, and `DRAWINACTIVE`.
+	
+	.. code-block:: python
+	
+		def drawGlyphIntoBackground(layer, info):
+
+			# Due to internal Glyphs.app structure, we need to catch and print exceptions
+			# of these callback functions with try/except like so:
+			try:
+				
+				# Your drawing code here
+				NSColor.redColor().set()
+				layer.bezierPath.fill()
+
+			# Error. Print exception.
+			except:
+				import traceback
+				print traceback.format_exc()
+
+		# add your function to the hook
+		Glyphs.addCallback(drawGlyphIntoBackground, DRAWBACKGROUND)
+
+	'''
+
 def __removeCallback___(self, target, operation = None):
-	if operation != None:
-		GSApplication.delegate().removeCallback_forOperation_(target, operation)
-	else:
-		GSApplication.delegate().removeCallback_(target)
+
+	if callbackTargets.has_key(target.__name__):
+		if operation != None:
+			GSApplication.delegate(self).removeCallback_forOperation_(callbackTargets[target.__name__], operation)
+		else:
+			GSApplication.delegate(self).removeCallback_(callbackTargets[target.__name__])
+
+	# Redraw immediately
+	self.redraw()
+
 GSApplication.removeCallback = __removeCallback___
 
-DRAWFOREGROUND = "DrawForeground"
-DRAWBACKGROUND = "DrawBackground"
-DRAWINACTIVE = "DrawInactive"
+'''.. function:: removeCallback(function)
+	
+	Remove the function you’ve previously added.
+	
+	.. code-block:: python
+	
+		# remove your function to the hook
+		Glyphs.removeCallback(drawGlyphIntoBackground)
+
+	'''
+
+
+
+#
+#
+#      // end of Callback section
+#
+#
+##########################################################################################################
+
 
 
 def __redraw__(self):
