@@ -478,6 +478,11 @@ GSApplication.ligatureComponents = _ligatureComponents
 #
 
 
+DRAWFOREGROUND = "DrawForeground"
+DRAWBACKGROUND = "DrawBackground"
+DRAWINACTIVE = "DrawInactive"
+
+
 callbackTargets = {}
 
 class callbackHelperClass():
