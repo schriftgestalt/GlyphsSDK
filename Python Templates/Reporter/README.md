@@ -147,7 +147,7 @@ You can also use `logToConsole()`as described below to print your own debugging 
 Useful: When you open Console.app, filter for message coming from Glyphs.app by typing `glyphs` into its seach field.
 
 
-![](README Pictures/consoleapp.png)
+![](../_Readme_Images/consoleapp.png)
 
 
 #### logToConsole()

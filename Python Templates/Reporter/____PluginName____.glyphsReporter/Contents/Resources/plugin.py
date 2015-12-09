@@ -26,13 +26,14 @@ class ReporterPlugin ( NSObject, GlyphsReporterProtocol ):
 		try:
 			#Bundle = NSBundle.bundleForClass_( NSClassFromString( self.className() ));
 
+			self.lastErrorMessage = ''
+
 			# Default values
 			self.menuName = 'New ReporterPlugin'
 			self.keyboardShortcut = None
 			self.keyboardShortcutModifier = 0 # Set any combination of NSShiftKeyMask | NSControlKeyMask | NSCommandKeyMask | NSAlternateKeyMask
 			self.drawDefaultInactiveLayers = True
 			
-			self.lastErrorMessage = ''
 
 			if hasattr(self, 'loadPlugin'):
 				self.loadPlugin()
@@ -159,7 +160,7 @@ class ReporterPlugin ( NSObject, GlyphsReporterProtocol ):
 				self.lastErrorMessage = message
 #				Glyphs.showNotification('Error in %s' % self.title(), 'Check the Console output for details.')
 		except:
-			self.logError(traceback.format_exc())
+			self.logToConsole(traceback.format_exc())
 	
 	def needsExtraMainOutlineDrawingForInactiveLayer_( self, Layer ):
 		"""
