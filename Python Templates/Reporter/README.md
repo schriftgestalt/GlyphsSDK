@@ -6,9 +6,19 @@ A functional plugin can be as small as this:
 # encoding: utf-8
 
 from plugins import *
+from AppKit import *
 
 class ____PluginClassName____(ReporterPlugin):
-	pass
+	def loadPlugin(self):
+
+		# The name as it will appear in Glyphs’s View menu
+		self.menuName = 'My Plugin'
+
+	def drawForeground(self, layer):
+
+		# Draw a blue rectangle on top of the glyph as big as the glyph’s bounding box
+		NSColor.blueColor().set()
+		NSBezierPath.fillRect_(layer.bounds)
 ```
 
 From there you can add the following methods:
@@ -16,7 +26,7 @@ From there you can add the following methods:
 #### loadPlugin()
 
 This method gets called when the plugin gets initialized upon Glyphs.app start.
-You put all your initialization code here, including the overwriting of attributes that describe the plugin, such as its menu name.
+You put all your initialization code here, including attributes that describe the plugin, such as its menu name.
 
 ```python
 	def loadPlugin(self):
