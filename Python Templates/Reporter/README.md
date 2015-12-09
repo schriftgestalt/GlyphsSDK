@@ -1,4 +1,4 @@
-A reporter plugin get activated in the View menu of Glyphs.app and is designed to draw on top and behind the Edit View, as well as change the drawing behaviour of inactive glyphs and the preview panel.
+A reporter plugin gets activated in the View menu of Glyphs.app and is designed to draw on top and behind the glyphs in the Edit View, as well as change the drawing behaviour of inactive glyphs and the preview panel.
 
 ![](README Pictures/showplugin.png)
 
@@ -53,7 +53,7 @@ You put all your initialization code here, including attributes that describe th
 
 #### drawForeground()
 
-Use this method to draw things on top the glyph outlines in the edit view.
+Use this method to draw things on top the glyph outlines in the Edit View.
 
 ```python
 	def drawForeground(self, layer):
@@ -65,7 +65,7 @@ Use this method to draw things on top the glyph outlines in the edit view.
 
 #### drawBackground()
 
-Use this method to draw things behind the glyph outlines in the edit view.
+Use this method to draw things behind the glyph outlines in the Edit View.
 
 ```python
 	def drawBackground(self, layer):
@@ -77,9 +77,9 @@ Use this method to draw things behind the glyph outlines in the edit view.
 
 #### drawBackgroundForInactiveLayers()
 
-Use this method to replace Glyph.app’s default drawing method for drawing inactive glyphs (the glyphs left and right of the active glyph in the edit view) as well as the glyphs in the edit view.
+Use this method to replace Glyph.app’s default drawing method for drawing inactive glyphs (the glyphs left and right of the active glyph in the Edit View) as well as the glyphs in the Edit View.
 
-If you want to draw the glyphs in the edit view even different that the inactive glyphs, also implement the `drawPreview()` method as described below.
+If you want to draw the glyphs in the Edit View even different that the inactive glyphs, also implement the `drawPreview()` method as described below.
 
 ```python
 	def drawBackgroundForInactiveLayers(self, layer):
@@ -104,6 +104,8 @@ You must implement `drawBackgroundForInactiveLayers()` first and implement `draw
 
 `drawPreview()` cannot be implemented standalone without `drawBackgroundForInactiveLayers()`.
 
+Please note that due to the live interpolation of the preview panel these layers don’t contain components, but only paths.
+
 ```python
 	def drawPreview(self, layer):
 
@@ -111,12 +113,6 @@ You must implement `drawBackgroundForInactiveLayers()` first and implement `draw
 		if layer.paths:
 			NSColor.blueColor().set()
 			layer.bezierPath().fill()
-
-		# Draw components in red
-		if layer.components:
-			NSColor.redColor().set()
-			for component in layer.components:
-				component.bezierPath().fill()
 ```
 
 ## Other useful methods
