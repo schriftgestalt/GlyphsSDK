@@ -1,6 +1,11 @@
+A reporter plugin get activated in the View menu of Glyphs.app and is designed to draw on top and behind the Edit View, as well as change the drawing behaviour of inactive glyphs and the preview panel.
+
+![](README Pictures/showplugin.png)
+
+
 ## User code
 
-A functional plugin can be as small as this:
+A functional plugin can be as small as this (in `Contents/Resources/____PluginFileName____.py`):
 
 ```python
 # encoding: utf-8
@@ -20,6 +25,9 @@ class ____PluginClassName____(ReporterPlugin):
 		NSColor.blueColor().set()
 		NSBezierPath.fillRect_(layer.bounds)
 ```
+
+
+
 
 From there you can add the following methods:
 
