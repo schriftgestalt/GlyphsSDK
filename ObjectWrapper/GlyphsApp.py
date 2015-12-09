@@ -5424,6 +5424,7 @@ Properties
 	text
 	layers
 	scale
+	previewHeight
 
 
 ----------
@@ -5531,7 +5532,24 @@ GSEditViewController.scale = property(lambda self: self.graphicView().valueForKe
 
 '''
 
+def EditViewPreviewHeight(self, height):
+	splitView = self.previewSplitView()
+	Frame = splitView.frame()
+	splitView.setPosition_ofDividerAtIndex_(Frame.size.height - height, 0)
 
+GSEditViewController.previewHeight = property(lambda self: Glyphs.defaults["GSPreviewHeight"], lambda self, value: EditViewPreviewHeight(self, value));
+
+'''
+
+.. attribute:: previewHeight
+
+	Height of the preview panel in the edit view in pixels.
+	
+	Needs to be set to 31 or higher for the preview panel to be visible at all. Will return 1.0 for a closed preview panel or the current size when visible.
+	
+	:type: float
+
+'''
 
 
 
