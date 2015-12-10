@@ -60,7 +60,8 @@ In this method you set all attributes that describe the plugin, such as its name
 
 #### loadPlugin()
 
-Use this method to initialize any code that you need to initialize when the plugin gets loaded upon Glyphs.app start.
+This method gets called when the plugin gets initialized upon Glyphs.app start.
+You put all your initialization code here.
 
 ```python
 	def loadPlugin(self):
@@ -117,30 +118,3 @@ Optional arguments:
 		
 		# Your file writing code goes here...
 ```
-
-## Debugging/errors
-
-Due to the structure of Glyphs, external plugins can’t print to the normal Macro window output. Instead, tracebacks will get printed to Mac’s Console.app.
-
-You can also use `logToConsole()`as described below to print your own debugging messages to Console.app.
-
-Useful: When you open Console.app, filter for message coming from Glyphs.app by typing `glyphs` into its seach field.
-
-
-![](../_Readme_Images/consoleapp.png)
-
-
-#### logToConsole()
-
-
-Mandatory arguments:
-- `message` (A string of text)
-
-```python
-	def drawForeground(self, layer):
-		
-		# Write glyphs’s name to the Console
-		self.logToConsole(layer.parent.name)
-
-```
-

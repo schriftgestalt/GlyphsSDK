@@ -8,7 +8,7 @@ from AppKit import *
 
 class ____PluginClassName____(ReporterPlugin):
 
-	def loadPlugin(self):
+	def settings(self):
 		self.menuName = 'My Plugin'
 		
 	def drawForeground(self, layer):

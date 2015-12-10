@@ -35,6 +35,9 @@ class ReporterPlugin ( NSObject, GlyphsReporterProtocol ):
 			self.drawDefaultInactiveLayers = True
 			
 
+			if hasattr(self, 'settings'):
+				self.settings()
+
 			if hasattr(self, 'loadPlugin'):
 				self.loadPlugin()
 

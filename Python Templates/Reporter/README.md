@@ -14,7 +14,7 @@ from plugins import *
 from AppKit import *
 
 class ____PluginClassName____(ReporterPlugin):
-	def loadPlugin(self):
+	def settings(self):
 
 		# The name as it will appear in Glyphs’s View menu
 		self.menuName = 'My Plugin'
@@ -31,13 +31,13 @@ class ____PluginClassName____(ReporterPlugin):
 
 From there you can add the following methods:
 
-#### loadPlugin()
+#### settings()
 
-This method gets called when the plugin gets initialized upon Glyphs.app start.
-You put all your initialization code here, including attributes that describe the plugin, such as its menu name.
+In this method you set all attributes that describe the plugin, such as its name and icon etc.
+
 
 ```python
-	def loadPlugin(self):
+	def settings(self):
 
 		# The name as it will appear in Glyphs’s View menu
 		self.menuName = 'My Plugin'
@@ -49,6 +49,17 @@ You put all your initialization code here, including attributes that describe th
 		# Set to any combination of:
 		# NSShiftKeyMask | NSControlKeyMask | NSCommandKeyMask | NSAlternateKeyMask
 		self.keyboardShortcutModifier = NSCommandKeyMask | NSShiftKeyMask
+```
+
+#### loadPlugin()
+
+This method gets called when the plugin gets initialized upon Glyphs.app start.
+You put all your initialization code here.
+
+```python
+	def loadPlugin(self):
+
+		# Your init code goes here...
 ```
 
 #### drawForeground()
@@ -115,6 +126,39 @@ Please note that due to the live interpolation of the preview panel these layers
 			layer.bezierPath().fill()
 ```
 
+## Tips on drawing
+
+Glyphs.app uses the Mac’s own Cocoa methods for drawing. These sometimes behave slightly different from other Python objects, and surely they have different names. Here are a few examples:
+
+```python
+	def drawForeground(self, layer):
+
+		# Setting colors:
+		# sets RGBA values between 0.0 and 1.0:
+		NSColor.colorWithCalibratedRed_green_blue_alpha_( 1.0, 1.0, 1.0, 1.0 ).set()
+		
+		# predefined colors: blackColor, blueColor, brownColor, clearColor, cyanColor, darkGrayColor, grayColor, greenColor, lightGrayColor, magentaColor, orangeColor, purpleColor, redColor, whiteColor, yellowColor
+		NSColor.redColor().set() 
+
+
+		# Drawing paths:
+		myPath = NSBezierPath.alloc().init()  # initialize a path object
+		myPath.appendBezierPath_( subpath )   # add subpath
+		myPath.fill()   # fill with the current NSColor (see above)
+		myPath.stroke() # stroke with the current NSColor (see above)
+		
+		# All layers, paths, and components have a .bezierPath() method that
+		# returns that path as a NSBezierPath object that you can use for drawing:
+		# NOTE: This method will be renamed to a .bezierPath attribute very soon!
+		layer.bezierPath().fill()
+		layer.paths[0].bezierPath().fill()
+		layer.components[0].bezierPath().fill()
+		
+
+```
+
+
+
 ## Other useful methods
 
 #### drawTextAtPoint()
@@ -137,30 +181,3 @@ Optional arguments:
 		self.drawTextAtPoint(layer.parent.name, NSPoint(0, 0))
 
 ```
-
-## Debugging/errors
-
-Due to the structure of Glyphs, external plugins can’t print to the normal Macro window output. Instead, tracebacks will get printed to Mac’s Console.app.
-
-You can also use `logToConsole()`as described below to print your own debugging messages to Console.app.
-
-Useful: When you open Console.app, filter for message coming from Glyphs.app by typing `glyphs` into its seach field.
-
-
-![](../_Readme_Images/consoleapp.png)
-
-
-#### logToConsole()
-
-
-Mandatory arguments:
-- `message` (A string of text)
-
-```python
-	def drawForeground(self, layer):
-		
-		# Write glyphs’s name to the Console
-		self.logToConsole(layer.parent.name)
-
-```
-
