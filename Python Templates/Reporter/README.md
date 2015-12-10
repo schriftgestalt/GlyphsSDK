@@ -137,7 +137,9 @@ Glyphs.app uses the Mac’s own Cocoa methods for drawing. These sometimes behav
 		# sets RGBA values between 0.0 and 1.0:
 		NSColor.colorWithCalibratedRed_green_blue_alpha_( 1.0, 1.0, 1.0, 1.0 ).set()
 		
-		# predefined colors: blackColor, blueColor, brownColor, clearColor, cyanColor, darkGrayColor, grayColor, greenColor, lightGrayColor, magentaColor, orangeColor, purpleColor, redColor, whiteColor, yellowColor
+		# predefined colors: blackColor, blueColor, brownColor, clearColor, cyanColor,
+		# darkGrayColor, grayColor, greenColor, lightGrayColor, magentaColor, orangeColor,
+		# purpleColor, redColor, whiteColor, yellowColor
 		NSColor.redColor().set() 
 
 
@@ -149,15 +151,15 @@ Glyphs.app uses the Mac’s own Cocoa methods for drawing. These sometimes behav
 		
 		# All layers, paths, and components have a .bezierPath() method that
 		# returns that path as a NSBezierPath object that you can use for drawing:
-		# NOTE: This method will be renamed to a .bezierPath attribute very soon!
+		# NOTE: This method will be renamed to a .bezierPath attribute very soon!!!
 		layer.bezierPath().fill()
 		layer.paths[0].bezierPath().fill()
 		layer.components[0].bezierPath().fill()
-		
-
 ```
 
-
+For more detailed information make sure to read into the Cocoa documentation:
+https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ApplicationKit/Classes/NSBezierPath_Class/Reference/Reference.html
+https://developer.apple.com/library/mac/documentation/cocoa/reference/applicationkit/classes/NSColor_Class/Reference/Reference.html
 
 ## Other useful methods
 
