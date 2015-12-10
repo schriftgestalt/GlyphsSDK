@@ -3,7 +3,7 @@ A reporter plugin gets activated in the View menu of Glyphs.app and is designed 
 ![](README Pictures/showplugin.png)
 
 
-## User code
+# User code
 
 A functional plugin can be as small as this (in `Contents/Resources/____PluginFileName____.py`):
 
@@ -126,7 +126,7 @@ Please note that due to the live interpolation of the preview panel these layers
 			layer.bezierPath().fill()
 ```
 
-## Tips on drawing
+# Tips on drawing
 
 Glyphs.app uses the Mac’s own Cocoa methods for drawing. These sometimes behave slightly different from other Python objects, and surely they have different names. Here are a few examples:
 
@@ -161,7 +161,7 @@ For more detailed information make sure to read into the Cocoa documentation:
 https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ApplicationKit/Classes/NSBezierPath_Class/Reference/Reference.html
 https://developer.apple.com/library/mac/documentation/cocoa/reference/applicationkit/classes/NSColor_Class/Reference/Reference.html
 
-## Other useful methods
+# Other useful methods
 
 #### drawTextAtPoint()
 

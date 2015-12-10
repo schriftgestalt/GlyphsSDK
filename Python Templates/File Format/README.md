@@ -8,7 +8,7 @@ It makes use of a GUI through Interface Builder. See the description one level u
 
 ![](_Readme_Images/exportdialog.png)
 
-## User code
+# User code
 
 A functional plugin can be as small as this (in `Contents/Resources/____PluginFileName____.py`):
 
@@ -73,8 +73,7 @@ You put all your initialization code here.
 
 Use this method to write the file after the 'Next' button has been clicked in the Export dialog.
 
-Mandatory arguments:
-- `font` (A `GSFont` object of the font we’re dealing with)
+The `font` argument in the method will contain the `GSFont` object we’re dealing with.
 
 Return value:
 This function must return a tuple containing:
@@ -94,7 +93,7 @@ This function must return a tuple containing:
 ```
 
 
-## Other useful methods
+# Other useful methods
 
 #### saveFileDialog()
 
