@@ -128,7 +128,11 @@ Please note that due to the live interpolation of the preview panel these layers
 
 # Tips on drawing
 
-Glyphs.app uses the Mac’s own Cocoa methods for drawing. These sometimes behave slightly different from other Python objects, and surely they have different names. Here are a few examples:
+Glyphs.app uses the Mac’s own Cocoa methods for drawing. These sometimes behave slightly different from other Python objects, and surely they have different names. 
+
+In order to make use of the Cocoa objects, make sure to include them into your Python plugin declaring `from AppKit import *` at the top of the plugin.
+
+Here are a few examples:
 
 ```python
 	def drawForeground(self, layer):
