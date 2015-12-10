@@ -4161,6 +4161,7 @@ Properties
 	anchor
 	selected
 	smartComponentValues
+	bezierPath
 	
 Functions
 
@@ -4322,6 +4323,19 @@ GSComponent.smartComponentValues = property(lambda self: self.pieceSettings())
 				# do stuff
 '''
 
+GSPath.bezierPath = property(	 lambda self: self.pyobjc_instanceMethods.bezierPath() )
+'''.. attribute:: bezierPath
+	
+	The component as an NSBezierPath object. Useful for drawing glyphs in plugins.
+
+	.. code-block:: python
+	
+		# draw the path into the edit view
+		NSColor.redColor().set()
+		layer.components[0].bezierPath.fill()
+
+	:type: NSBezierPath
+'''
 
 
 
