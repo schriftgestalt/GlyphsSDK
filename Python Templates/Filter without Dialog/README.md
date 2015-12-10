@@ -3,7 +3,7 @@ The filter plugin (without dialog) gets called either from the Filter menu, or t
 ![](../_Readme_Images/filterwithoutdialog.png)
 
 This is how you call the filter through Custom Parameters:
-In the font’s Info dialog, for each instance add a `Custom Parameter` called `Filter`. 
+In the font’s Info dialog, for each *instance* add a `Custom Parameter` called `Filter`. 
 
 The value should contain a semicolon-separated list of the following:
 - The plugin name (by its Python class name, so `____PluginClassName____` in the virgin plugin)
@@ -88,8 +88,15 @@ The user has selected several glyphs in the Font View and has clicked on the fil
 The user is exporting a font whose instances contain Custom Parameters that call the plugin.
 `inEditView` will be set to `False` and `customParameters` will contain any custom parameter (other than the plugin name, include and exclude statements) that the user has specified in the parameters. You will need to educate the users of your plugin about what these parameters should look like. The `filter()` method will be called several times according to the results of the include/exclude statements, each time containing a different `layer`.
 
-This means that in the third scenario (Call through Custom Parameters), the plugin actually has a broader functionality through the existence of the custom parameters as opposed to being called through the Filter menu without the possibility of user input that influences the behaviour of the plugin.
-If you need a filter with user input even in the UI, please consider choosing the `Filter with Dialog` plugin that make use of a dialog to gather user input.
+So when no custom parameters are specified, there is technically no difference between the scenarios 2 and 3.
+
+##### Consider a UI dialog?
+
+In the 3rd scenario (Call through Custom Parameters), the plugin actually has a broader functionality through the existence of the custom parameters as opposed to being called through the Filter menu without the possibility of user input that influences the behaviour of the plugin.
+
+If you need a filter with user input even in the UI, please consider choosing the `Filter with dialog` plugin that makes use of a dialog to collect user input.
+
+If you don’t need a dialog and the custom parameters upon font export are sufficient for your case, then your good to go.
 
 
 ```python
