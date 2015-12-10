@@ -88,6 +88,10 @@ The user has selected several glyphs in the Font View and has clicked on the fil
 The user is exporting a font whose instances contain Custom Parameters that call the plugin.
 `inEditView` will be set to `False` and `customParameters` will contain any custom parameter (other than the plugin name, include and exclude statements) that the user has specified in the parameters. You will need to educate the users of your plugin about what these parameters should look like. The `filter()` method will be called several times according to the results of the include/exclude statements, each time containing a different `layer`.
 
+This means that in the third scenario (Call through Custom Parameters), the plugin actually has a broader functionality through the existence of the custom parameters as opposed to being called through the Filter menu without the possibility of user input that influences the behaviour of the plugin.
+If you need a filter with user input even in the UI, please consider choosing the `Filter with Dialog` plugin that make use of a dialog to gather user input.
+
+
 ```python
 	def filter(self, layer, inEditView, customParameters):
 		
