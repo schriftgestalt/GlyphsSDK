@@ -19,10 +19,11 @@ class ____PluginClassName____ ( NSObject, GlyphsPluginProtocol ):
 	
 	def loadPlugin( self ):
 		"""
-		You can add an observer like in the example.
+		Set up the plugin
 		Do all initializing here.
 		"""
 		try:
+			# You can add an observer like in the example.
 			# Bundle = NSBundle.bundleForClass_( NSClassFromString( self.className() ) )
 			selector = objc.selector( self.documentWasSaved, signature="v@:@" )
 			NSNotificationCenter.defaultCenter().addObserver_selector_name_object_( self, selector, "GSDocumentWasSavedSuccessfully", None )
@@ -36,15 +37,6 @@ class ____PluginClassName____ ( NSObject, GlyphsPluginProtocol ):
 		"""
 		try:
 			NSNotificationCenter.defaultCenter().removeObserver_( self )
-		except Exception as e:
-			self.logToConsole( "__del__: %s" % str(e) )
-	
-	def loadPlugin( self ):
-		"""
-		Set up the plugin
-		"""
-		try:
-			pass
 		except Exception as e:
 			self.logToConsole( "__del__: %s" % str(e) )
 	
