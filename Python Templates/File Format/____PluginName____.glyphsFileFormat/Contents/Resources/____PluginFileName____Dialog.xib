@@ -6,9 +6,9 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="____PluginClassName____">
             <connections>
+                <outlet property="dialog" destination="1" id="Ouh-Ly-d56"/>
                 <outlet property="feedbackTextField" destination="Hms-pd-UhP" id="jHT-3J-f6V"/>
                 <outlet property="glyphWidthCheckbox" destination="9ad-G8-V6L" id="uxc-LW-aTX"/>
-                <outlet property="settings_view" destination="1" id="J3Q-tM-wPE"/>
                 <outlet property="unicodeCheckBox" destination="hZN-NZ-5QP" id="gOI-q8-hu7"/>
             </connections>
         </customObject>
