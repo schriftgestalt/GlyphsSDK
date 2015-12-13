@@ -512,7 +512,7 @@ def __addCallback__(self, target, operation):
 	# Add class to callbackTargets dict by the function name
 	callbackTargets[target.__name__] = callbackHelperClass(target)
 
-	# Add to stack	
+	# Add to stack
 	GSApplication.delegate(self).addCallback_forOperation_(callbackTargets[target.__name__], operation)
 
 	# Redraw immediately
