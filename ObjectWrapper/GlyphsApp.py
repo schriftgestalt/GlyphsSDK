@@ -5751,13 +5751,56 @@ GSGlyphInfo.altNames = property(lambda self: self.pyobjc_instanceMethods.altName
 
 '''
 
+def __PathOperator_removeOverlap__(paths):
+	try:
+		Paths = NSMutableArray.arrayWithArray_(paths)
+	except:
+		Paths = NSMutableArray.arrayWithArray_(paths.values())
+	
+	result = GSPathFinder.alloc().init().removeOverlapPaths_error_(Paths, None)
+	if type(result) is not int:
+		print result[1].localizedDescription()
+		return None
+	return Paths
+
+removeOverlap = __PathOperator_removeOverlap__
+
+def __PathOperator_subtractPaths__(paths, subtract):
+	try:
+		Paths = NSMutableArray.arrayWithArray_(paths)
+	except:
+		Paths = NSMutableArray.arrayWithArray_(paths.values())
+	try:
+		Subtract = NSMutableArray.arrayWithArray_(subtract)
+	except:
+		Subtract = NSMutableArray.arrayWithArray_(subtract.values())
+	result = GSPathFinder.alloc().init().subtractPaths_from_error_(Subtract, Paths, None)
+	print result, type(result)
+	if type(result) is not int:
+		print result[1].localizedDescription()
+		return None
+	return Paths
+
+subtractPaths = __PathOperator_subtractPaths__
 
 
+def __PathOperator_intersectPaths__(paths, otherPaths):
+	try:
+		Paths = NSMutableArray.arrayWithArray_(paths)
+	except:
+		Paths = NSMutableArray.arrayWithArray_(paths.values())
+	try:
+		OtherPaths = NSMutableArray.arrayWithArray_(otherPaths)
+	except:
+		OtherPaths = NSMutableArray.arrayWithArray_(otherPaths.values())
+	
+	result = GSPathFinder.alloc().init().intersectPaths_from_error_(Paths, OtherPaths, None)
+	if type(result) is not int:
+		print result[1].localizedDescription()
+		return None
+	return Paths
 
-
-
-
-
+intersectPaths = __PathOperator_intersectPaths__
 
 
 '''
