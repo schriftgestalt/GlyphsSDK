@@ -33,7 +33,7 @@ class FileFormatPlugin ( NSObject, GlyphsFileFormatProtocol ):
 
 			# Settings, default values
 			self.name = 'My File Format'
-			self.dialog = '____PluginFileName____Dialog'
+			self.dialogName = '____PluginFileName____Dialog'
 			self.icon = 'ExportIcon'
 			self.toolbarPosition = 100
 
@@ -41,7 +41,7 @@ class FileFormatPlugin ( NSObject, GlyphsFileFormatProtocol ):
 				self.settings()
 
 
-			NSBundle.loadNibNamed_owner_(self.dialog, self )
+			NSBundle.loadNibNamed_owner_(self.dialogName, self )
 			thisBundle = NSBundle.bundleForClass_( NSClassFromString( self.className() ) )
 			self.toolbarIcon = NSImage.alloc().initWithContentsOfFile_( thisBundle.pathForImageResource_(self.icon) )
 			self.toolbarIcon.setName_(self.icon)

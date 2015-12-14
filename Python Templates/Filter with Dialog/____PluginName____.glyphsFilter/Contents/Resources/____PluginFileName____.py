@@ -1,10 +1,9 @@
-#!/usr/bin/env python
 # encoding: utf-8
 
 import objc
 from Foundation import *
 from AppKit import *
-import sys, os, re
+import sys, os, re, traceback
 
 MainBundle = NSBundle.mainBundle()
 path = MainBundle.bundlePath() + "/Contents/Scripts"
@@ -69,13 +68,18 @@ import GlyphsApp
 	   Your values will be stored in Arguments[1], Arguments[2], etc.
 """
 
-class ____PluginClassName____ ( GSFilterPlugin ):
+#GlyphsFilterProtocol = objc.protocolNamed( "GlyphsFilter" )
+
+#class FilterWithDialog ( NSObject, GlyphsFilterProtocol ):
+
+
+class FilterWithDialog ( GSFilterPlugin ):
 	"""
 	All 'myValue' and 'myValueField' references are just an example.
 	They correspond to the 'My Value' field in the .xib file.
 	Replace and add your own class variables.
 	"""
-	____myValue____Field = objc.IBOutlet()
+	
 	
 	
 	def init( self ):
@@ -84,11 +88,50 @@ class ____PluginClassName____ ( GSFilterPlugin ):
 		This is a good place to call random.seed() if you want to use randomisation.
 		In that case, don't forget to import random at the top of this file.
 		"""
+
 		try:
-			NSBundle.loadNibNamed_owner_( "____PluginFileName____Dialog", self )
+
+			self.menuName = 'My Filter'
+			self.keyboardShortcut = None # With Cmd+Shift
+			self.dialogName = '____PluginFileName____Dialog'
+			self.actionButtonLabel = 'Apply'
+	
+	
+			if hasattr(self, 'settings'):
+				self.settings()
+
+	
+
+#			self._view = self.dialog
+			NSBundle.loadNibNamed_owner_(self.dialogName, self )
+
+		
+#			if hasattr(self, 'loadPlugin'):
+#				self.loadPlugin()
+
+	#			self.setup()
+
 			return self
-		except Exception as e:
-			self.logToConsole( "init: %s" % str(e) )
+
+		except:
+			self.logToConsole(traceback.format_exc())
+	
+	
+	def setup(self):
+		try:
+#
+			super( FilterWithDialog, self ).setup()
+
+			if hasattr(self, 'loadPlugin'):
+				self.loadPlugin()
+
+			self.process_(None)
+
+			return None
+		except:
+			self.logToConsole(traceback.format_exc())
+			
+		
 	
 	def interfaceVersion( self ):
 		"""
@@ -106,7 +149,7 @@ class ____PluginClassName____ ( GSFilterPlugin ):
 		and in the title of the dialog window.
 		"""
 		try:
-			return "____PluginMenuName____"
+			return self.menuName
 		except Exception as e:
 			self.logToConsole( "title: %s" % str(e) )
 	
@@ -116,7 +159,7 @@ class ____PluginClassName____ ( GSFilterPlugin ):
 		Use something descriptive like 'Move', 'Rotate', or at least 'Apply'.
 		"""
 		try:
-			return "____PluginActionName____"
+			return self.actionButtonLabel
 		except Exception as e:
 			self.logToConsole( "actionName: %s" % str(e) )
 	
@@ -127,86 +170,12 @@ class ____PluginClassName____ ( GSFilterPlugin ):
 		Users can set their own shortcuts in System Prefs.
 		"""
 		try:
-			return None
+			return self.keyboardShortcut
 		except Exception as e:
 			self.logToConsole( "keyEquivalent: %s" % str(e) )
 	
-	def setup( self ):
-		"""
-		Prepares and pre-fills the dialog fields
-		with defaults or the last values entered.
-		"""
-		try:
-			super( ____PluginClassName____, self ).setup()
-			FontMaster = self.valueForKey_( "fontMaster" )
-			
-			# These 2 lines look for saved values (the last ones entered),
-			# 15.0 is a sample default value.
-			# Do this for each value field in your dialog:
-			self.____myValue____ = self.setDefaultFloatValue( "____myValue____", 15.0, FontMaster )
-			self.____myValue____Field.setFloatValue_( self.____myValue____ )
-			
-			self.process_( None )
-			return None
-		except Exception as e:
-			self.logToConsole( "setup: %s" % str(e) )
-			# if something goes wrong, you can return an NSError object with details
-	
-	def setDefaultFloatValue( self, userDataKey, defaultValue, FontMaster ):
-		"""
-		Returns either the stored or default value for the given userDataKey.
-		Assumes a floating point value. For use in self.setup().
-		"""
-		try:
-			if userDataKey in FontMaster.userData:
-				return FontMaster.userData[userDataKey].floatValue()
-			else:
-				return defaultValue
-		except Exception as e:
-			self.logToConsole( "setDefaultFloatValue: %s" % str(e) )
-			
-	def setDefaultIntegerValue( self, userDataKey, defaultValue, FontMaster ):
-		"""
-		Returns either the stored or default value for the given userDataKey.
-		Assumes an integer value. For use in self.setup().
-		"""
-		try:
-			if userDataKey in FontMaster.userData:
-				return FontMaster.userData[userDataKey].integerValue()
-			else:
-				return defaultValue
-		except Exception as e:
-			self.logToConsole( "setDefaultIntegerValue: %s" % str(e) )
-	
-	@objc.IBAction
-	def ____setMyValue____( self, sender ):
-		"""
-		Called whenever the corresponding dialog field is changed.
-		Gets the contents of the field and puts it into a class variable.
-		Add methods like this for each option in the dialog.
-		Important: the method name must end with an underscore, e.g., setValue_(),
-		otherwise the dialog action will not be able to connect to it.
-		"""
-		try:
-			____myValue____ = sender.floatValue()
-			if ____myValue____ != self.____myValue____:
-				self.____myValue____ = ____myValue____
-				self.process_( None )
-		except Exception as e:
-			self.logToConsole( "____setMyValue____: %s" % str(e) )
-			
-	def processLayerWithValues( self, Layer, ____myValue____ ):
-		"""
-		This is where your code for processing each layer goes.
-		This method is the one eventually called by either the Custom Parameter or Dialog UI.
-		Don't call your class variables here, just add a method argument for each Dialog option.
-		"""
-		try:
-			# do stuff with Layer and your arguments
-			pass
-		except Exception as e:
-			self.logToConsole( "processLayerWithValues: %s" % str(e) )
-	
+
+
 	def processFont_withArguments_( self, Font, Arguments ):
 		"""
 		Invoked when called as Custom Parameter in an instance at export.
@@ -214,15 +183,33 @@ class ____PluginClassName____ ( GSFilterPlugin ):
 		Item 0 in Arguments is the class-name. The consecutive items should be your filter options.
 		"""
 		try:
-			# Set default values for potential arguments (values), just in case:
-			____myValue____ = 15.0
 			
 			# set glyphList (list of glyphs to be processed) to all glyphs in the font
 			glyphList = Font.glyphs
+
+			# customParameters delivered to filter()
+			customParameters = {}
+			unnamedCustomParameterCount = 0
+			for i in range(1, len(Arguments)):
+				if not 'include' in Arguments[i] and not 'exclude' in Arguments[i]:
+					
+					# if key:value pair
+					if ':' in Arguments[i]:
+						key, value = Arguments[i].split(':')
+					# only value given, no key. make key name
+					else:
+						key = unnamedCustomParameterCount
+						unnamedCustomParameterCount += 1
+						value = Arguments[i]
+					
+					# attempt conversion to float value
+					try:
+						customParameters[key] = float(value)
+					except:
+						customParameters[key] = value
 			
+			# change glyphList to include or exclude glyphs
 			if len( Arguments ) > 1:
-				
-				# change glyphList to include or exclude glyphs
 				if "exclude:" in Arguments[-1]:
 					excludeList = [ n.strip() for n in Arguments.pop(-1).replace("exclude:","").strip().split(",") ]
 					glyphList = [ g for g in glyphList if not g.name in excludeList ]
@@ -230,17 +217,16 @@ class ____PluginClassName____ ( GSFilterPlugin ):
 					includeList = [ n.strip() for n in Arguments.pop(-1).replace("include:","").strip().split(",") ]
 					glyphList = [ Font.glyphs[n] for n in includeList ]
 			
-				# Override defaults with actual values from custom parameter:
-				if not "clude:" in Arguments[1]:
-					____myValue____ = Arguments[1].floatValue()
-				
 			# With these values, call your code on every glyph:
 			FontMasterId = Font.fontMasterAtIndex_(0).id
-			for Glyph in glyphList:
-				Layer = Glyph.layerForKey_( FontMasterId )
-				self.processLayerWithValues( Layer, ____myValue____ ) # add your class variables here
-		except Exception as e:
-			self.logToConsole( "processFont_withArguments_: %s" % str(e) )
+			for thisGlyph in glyphList:
+				Layer = thisGlyph.layerForKey_( FontMasterId )
+
+				if hasattr(self, 'filter'):
+					self.filter( Layer, False, customParameters )
+
+		except:
+			self.logToConsole(traceback.format_exc())
 	
 	def process_( self, sender ):
 		"""
@@ -277,25 +263,18 @@ class ____PluginClassName____ ( GSFilterPlugin ):
 								if currShadowNode in ShadowLayer.selection:
 									Layer.addSelection_( currLayerPath.nodes[j] )
 								
-				self.processLayerWithValues( Layer, self.____myValue____ ) # add your class variables here
+				self.filter( Layer, Glyphs.font.currentTab != None, {} ) # add your class variables here
 				Layer.clearSelection()
 		
 			# Safe the values in the FontMaster. But could be saved in UserDefaults, too.
-			FontMaster = self.valueForKey_( "fontMaster" )
-			FontMaster.userData[ "____myValue____" ] = NSNumber.numberWithInteger_( self.____myValue____ )
+#			FontMaster = self.valueForKey_( "fontMaster" )
+#			FontMaster.userData[ "____myValue____" ] = NSNumber.numberWithInteger_( self.____myValue____ )
 			
 			# call the superclass to trigger the immediate redraw:
-			super( ____PluginClassName____, self ).process_( sender )
-		except Exception as e:
-			self.logToConsole( "process_: %s" % str(e) )
+			super( FilterWithDialog, self ).process_( sender )
+		except:
+			self.logToConsole(traceback.format_exc())
 	
-	def customParameterString( self ):
-		"""Return the custom parameter string for the gear menu."""
-		try:
-			thisParameter = "____PluginClassName____;%.1f" % ( self.____myValue____ )
-			return thisParameter
-		except Exception as e:
-			self.logToConsole( "customParameterString: %s" % str(e) )
 	
 	def logToConsole( self, message ):
 		"""
@@ -304,3 +283,72 @@ class ____PluginClassName____ ( GSFilterPlugin ):
 		"""
 		myLog = "Filter %s:\n%s" % ( self.title(), message )
 		NSLog( myLog )
+
+	def view(self):
+		return self.dialog
+	
+	def preview(self):
+		self.process_( None )
+		
+########################################################################		
+# encoding: utf-8
+
+#from plugin import *
+from AppKit import *
+from GlyphsApp import *
+
+class ____PluginClassName____(FilterWithDialog):
+
+	# Definitions of IBOutlets
+	
+	# The NSView object from the User Interface. Keep this here!
+	dialog = objc.IBOutlet()
+
+	# Text field in dialog
+	myTextField = objc.IBOutlet()
+	
+	def settings(self):
+		self.menuName = 'My Filter'
+
+	# On UI trigger
+	def loadPlugin(self):
+
+		# Set default setting if not present
+		if not Glyphs.defaults['com.myname.myfilter.value']:
+			Glyphs.defaults['com.myname.myfilter.value'] = 15.0
+
+		# Set value of text field
+		self.myTextField.setFloatValue_(Glyphs.defaults['com.myname.myfilter.value'])
+		
+		# Set focus to text field
+		self.myTextField.becomeFirstResponder()
+
+	# Action triggered by UI
+	@objc.IBAction
+	def setValue_( self, sender ):
+
+		# Store value coming in from dialog
+		Glyphs.defaults['com.myname.myfilter.value'] = sender.floatValue()
+
+		# Trigger redraw of preview
+		self.preview()
+
+	# Actual filter
+	def filter(self, layer, inEditView, customParameters):
+		
+		# Called on font export, get value from customParameters
+		if customParameters.has_key('shift'):
+			value = customParameters['shift']
+
+		# Called through UI, use stored value
+		else:
+			value = Glyphs.defaults['com.myname.myfilter.value']
+
+		# Shift all nodes in x and y direction by the value
+		for path in layer.paths:
+			for node in path.nodes:
+				node.position = NSPoint(node.position.x + value, node.position.y + value)
+
+	
+	def customParameterString( self ):
+		return "%s; shift:%s;" % (self.__class__.__name__, Glyphs.defaults['com.myname.myfilter.value'] )

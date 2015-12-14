@@ -1,6 +1,6 @@
-The filter plugin (without dialog) gets called either from the Filter menu, or through Custom Parameters upon font export.
+The filter plugin (with dialog) gets called either from the Filter menu, or through Custom Parameters upon font export.
 
-![](../_Readme_Images/filterwithoutdialog.png)
+![](../_Readme_Images/filterwithdialog.png)
 
 This is how you call the filter through Custom Parameters:
 In the font’s Info dialog, for each *instance* add a `Custom Parameter` called `Filter`. 
@@ -25,15 +25,59 @@ A functional plugin can be as small as this (in `Contents/Resources/____PluginFi
 
 from plugin import *
 from AppKit import *
+from GlyphsApp import *
 
-class ____PluginClassName____(FilterWithoutDialog):
+class ____PluginClassName____(FilterWithDialog):
+
+	# Definitions of IBOutlets
+	
+	# The NSView object from the User Interface. Keep this here!
+	dialog = objc.IBOutlet()
+
+	# Text field in dialog
+	myTextField = objc.IBOutlet()
 	
 	def settings(self):
 		self.menuName = 'My Filter'
 
+	# On UI trigger
+	def loadPlugin(self):
+
+		# Set default setting if not present
+		if not Glyphs.defaults['com.myname.myfilter.value']:
+			Glyphs.defaults['com.myname.myfilter.value'] = 15.0
+
+		# Set value of text field
+		self.myTextField.setFloatValue_(Glyphs.defaults['com.myname.myfilter.value'])
+		
+		# Set focus to text field
+		self.myTextField.becomeFirstResponder()
+
+	# Action triggered by UI
+	@objc.IBAction
+	def setValue_( self, sender ):
+
+		# Store value coming in from dialog
+		Glyphs.defaults['com.myname.myfilter.value'] = sender.floatValue()
+
+		# Trigger redraw of preview
+		self.preview()
+
+	# Actual filter
 	def filter(self, layer, inEditView, customParameters):
 		
-		# Apply your filter code here
+		# Called on font export, get value from customParameters
+		if customParameters.has_key('shift'):
+			value = customParameters['shift']
+
+		# Called through UI, use stored value
+		else:
+			value = Glyphs.defaults['com.myname.myfilter.value']
+
+		# Shift all nodes in x and y direction by the value
+		for path in layer.paths:
+			for node in path.nodes:
+				node.position = NSPoint(node.position.x + value, node.position.y + value)
 ```
 
 
@@ -48,15 +92,22 @@ In this method you set all attributes that describe the plugin, such as its name
 	def settings(self):
 
 		# The name as it will appear in Glyphs’s Filter menu
-		self.menuName = 'My Plugin'
+		self.menuName = 'My Filter'
 
 		# A keyboard shortcut for adctivating/deactivating the plugin (together with Command+Shift)
 		self.keyboardShortcut = 'p'
+
+		# The name of the Interface Builder file containing the UI dialog, without file extension
+		self.dialogName = '____PluginFileName____Dialog'
+
+		# The caption of the action button of the dialog. 'Apply' is the default.
+		self.actionButtonLabel = 'Apply'
+
 ```
 
 #### loadPlugin()
 
-This method gets called when the plugin gets initialized upon Glyphs.app start.
+This method gets called when the plugin gets initialized upon filter menu click (and the dialog gets displayed).
 You put all your initialization code here.
 
 ```python
@@ -92,19 +143,47 @@ The user has selected several glyphs in the Font View and has clicked on the fil
 The user is exporting a font whose instances contain Custom Parameters that call the plugin.
 `inEditView` will be set to `False` and `customParameters` will contain any custom parameter (other than the plugin name, include and exclude statements) that the user has specified in the parameters. You will need to educate the users of your plugin about what these parameters should look like. The `filter()` method will be called several times according to the results of the include/exclude statements, each time containing a different `layer`.
 
-So when no additional custom parameters are specified, there is technically no difference between the scenarios 2 and 3.
-
-##### Consider a UI dialog?
-
-In the 3rd scenario (Call through Custom Parameters), the plugin actually has a broader functionality through the existence of the custom parameters as opposed to being called through the Filter menu without the possibility of user input that influences the behaviour of the plugin.
-
-If you need a filter with user input even in the UI, please consider choosing the `Filter with dialog` plugin that makes use of a dialog to collect user input.
-
-If you don’t need a dialog and the custom parameters upon font export are sufficient for your case, then you’re good to go.
-
-
 ```python
 	def filter(self, layer, inEditView, customParameters):
 		
 		# Apply your filter code here
+```
+
+#### customParameterString()
+
+When this method is implemented, the filter dialog will show a small gear icon in the lower left corner of the dialog. Upon click a menu will appear that will let you copy a string (returned by this method) to the clipboard describing the plugin and the currently chosen values (in the dialog). These are the values needed to define Custom Parameters for the font’s instances to apply the filter on font export. You may paste this string directly into the Custom Parameters field as descibed below:
+
+1. Copy Custom Parameters
+
+![](../_Readme_Images/filterwithdialog_copycustomparameters.png)
+
+2. Paste into Custom Parameters field
+
+![](../_Readme_Images/filterwithdialog_pastecustomparameters.png)
+
+```python
+	def customParameterString( self ):
+
+		# Copy plugin name (by its class name) with a 'shift' value
+		return "%s; shift:%s;" % (self.__class__.__name__, Glyphs.defaults['com.myname.myfilter.value'] )
+```
+
+# Other useful methods
+
+#### preview()
+
+This method will display the original glyph as a background image and apply your custom `filter()` method.
+
+This already happens directly after you activate the filter through the menu, and you should call the `preview()` method each time the user changes the value in the dialog. Therefore, it makes sense to place it whichever method receives the actions from the dialog (`setValue_()` in our example).
+
+```python
+	# Action triggered by UI
+	@objc.IBAction
+	def setValue_( self, sender ):
+		
+		# Store value coming in from dialog
+		Glyphs.defaults['com.myname.myfilter.value'] = sender.floatValue()
+
+		# Trigger redraw of preview
+		self.preview()
 ```

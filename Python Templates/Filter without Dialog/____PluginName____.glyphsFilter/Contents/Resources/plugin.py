@@ -173,10 +173,20 @@ class FilterWithoutDialog ( NSObject, GlyphsFilterProtocol ):
 			
 			# customParameters delivered to filter()
 			customParameters = {}
+			unnamedCustomParameterCount = 0
 			for i in range(1, len(Arguments)):
 				if not 'include' in Arguments[i] and not 'exclude' in Arguments[i]:
-					key, value = Arguments[i].split(':')
+
+					# if key:value pair
+					if ':' in Arguments[i]:
+						key, value = Arguments[i].split(':')
+					# only value given, no key. make key name
+					else:
+						key = unnamedCustomParameterCount
+						unnamedCustomParameterCount += 1
+						value = Arguments[i]
 					
+					# attempt conversion to float value
 					try:
 						customParameters[key] = float(value)
 					except:

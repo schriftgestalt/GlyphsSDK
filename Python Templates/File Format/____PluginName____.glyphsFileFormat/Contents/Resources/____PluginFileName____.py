@@ -29,7 +29,7 @@ class ____PluginClassName____(FileFormatPlugin):
 	
 	# Definitions of IBOutlets
 	
-	# The NSView object from the User Interface. Keep this!
+	# The NSView object from the User Interface. Keep this here!
 	dialog = objc.IBOutlet()
 
 	# Example variables. You may delete them
@@ -40,7 +40,7 @@ class ____PluginClassName____(FileFormatPlugin):
 
 	def settings(self):
 		self.name = 'My CSV Export'
-		self.dialog = '____PluginFileName____Dialog'
+		self.dialogName = '____PluginFileName____Dialog'
 		self.icon = 'ExportIcon'
 		self.toolbarPosition = 100
 
