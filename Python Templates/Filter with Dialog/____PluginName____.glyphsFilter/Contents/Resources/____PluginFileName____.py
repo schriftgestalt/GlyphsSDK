@@ -11,6 +11,7 @@ if not path in sys.path:
 	sys.path.append( path )
 
 import GlyphsApp
+from GlyphsApp import *
 
 """
 	Using Interface Builder (IB):
@@ -289,6 +290,7 @@ class FilterWithDialog ( GSFilterPlugin ):
 	
 	def preview(self):
 		self.process_( None )
+		Glyphs.redraw()
 		
 ########################################################################		
 # encoding: utf-8
