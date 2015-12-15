@@ -30,8 +30,8 @@ class FilterWithoutDialog ( NSObject, GlyphsFilterProtocol ):
 			if hasattr(self, 'settings'):
 				self.settings()
 
-			if hasattr(self, 'loadPlugin'):
-				self.loadPlugin()
+			if hasattr(self, 'start'):
+				self.start()
 
 			return self
 		except Exception as e:

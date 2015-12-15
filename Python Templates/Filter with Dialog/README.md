@@ -41,7 +41,7 @@ class ____PluginClassName____(FilterWithDialog):
 		self.menuName = 'My Filter'
 
 	# On UI trigger
-	def loadPlugin(self):
+	def start(self):
 
 		# Set default setting if not present
 		if not Glyphs.defaults['com.myname.myfilter.value']:
@@ -105,13 +105,13 @@ In this method you set all attributes that describe the plugin, such as its name
 
 ```
 
-#### loadPlugin()
+#### start()
 
 This method gets called when the plugin gets initialized upon filter menu click (and the dialog gets displayed).
 You put all your initialization code here.
 
 ```python
-	def loadPlugin(self):
+	def start(self):
 
 		# Your init code goes here...
 ```
@@ -153,11 +153,11 @@ The user is exporting a font whose instances contain Custom Parameters that call
 
 If this method is implemented, the filter dialog will show a small gear icon in the lower left corner of the dialog. Upon click a menu will appear that will let you copy a string (returned by this method) to the clipboard describing the plugin and the currently chosen values (in the dialog). These are the values needed to define Custom Parameters for the font’s instances to apply the filter on font export. You may paste this string directly into the Custom Parameters field as descibed below:
 
-1. Copy Custom Parameters
+Copy Custom Parameters:
 
 ![](../_Readme_Images/filterwithdialog_copycustomparameters.png)
 
-2. Paste into Custom Parameters field
+Paste into Custom Parameters field:
 
 ![](../_Readme_Images/filterwithdialog_pastecustomparameters.png)
 
@@ -174,7 +174,7 @@ If this method is implemented, the filter dialog will show a small gear icon in 
 
 This method will display the original glyph as a background image and apply your custom `filter()` method.
 
-This already happens directly after you activate the filter through the menu, and you should call the `preview()` method each time the user changes the value in the dialog. Therefore, it makes sense to place it whichever method receives the actions from the dialog (`setValue_()` in our example).
+This already happens directly after you activate the filter through the menu, and you should call the `preview()` method each time the user changes the value in the dialog. Therefore, it makes sense to place it in whichever method receives the actions from the dialog (which is `setValue_()` in the example).
 
 ```python
 	# Action triggered by UI

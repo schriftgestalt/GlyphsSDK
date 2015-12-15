@@ -45,7 +45,7 @@ class ____PluginClassName____(FileFormatPlugin):
 		self.toolbarPosition = 100
 
 
-	def loadPlugin(self):
+	def start(self):
 
 		# Init user preferences if not existent and set default value
 		if Glyphs.defaults[unicodePref] == None:

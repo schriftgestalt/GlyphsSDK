@@ -38,8 +38,8 @@ class ReporterPlugin ( NSObject, GlyphsReporterProtocol ):
 			if hasattr(self, 'settings'):
 				self.settings()
 
-			if hasattr(self, 'loadPlugin'):
-				self.loadPlugin()
+			if hasattr(self, 'start'):
+				self.start()
 
 			return self
 		except:

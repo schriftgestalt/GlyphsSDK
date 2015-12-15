@@ -51,13 +51,13 @@ In this method you set all attributes that describe the plugin, such as its name
 		self.keyboardShortcutModifier = NSCommandKeyMask | NSShiftKeyMask
 ```
 
-#### loadPlugin()
+#### start()
 
 This method gets called when the plugin gets initialized upon Glyphs.app start.
 You put all your initialization code here.
 
 ```python
-	def loadPlugin(self):
+	def start(self):
 
 		# Your init code goes here...
 ```

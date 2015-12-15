@@ -46,8 +46,8 @@ class FileFormatPlugin ( NSObject, GlyphsFileFormatProtocol ):
 			self.toolbarIcon = NSImage.alloc().initWithContentsOfFile_( thisBundle.pathForImageResource_(self.icon) )
 			self.toolbarIcon.setName_(self.icon)
 
-			if hasattr(self, 'loadPlugin'):
-				self.loadPlugin()
+			if hasattr(self, 'start'):
+				self.start()
 
 		except:
 			self.logError(traceback.format_exc())
