@@ -7,7 +7,7 @@ import time, math, sys, os, string, re
 from sets import Set
 
 
-__all__ = ["Glyphs", "GetFile", "GSMOVE", "GSLINE", "GSCURVE", "GSOFFCURVE", "GSSHARP", "GSSMOOTH", "TAG", "TOPGHOST", "STEM", "BOTTOMGHOST", "TTANCHOR", "TTSTEM", "TTALIGN", "TTINTERPOLATE", "TTDIAGONAL", "CORNER", "CAP", "TTDONTROUND", "TTROUND", "TTROUNDUP", "TTROUNDDOWN", "TRIPLE", "DRAWFOREGROUND", "DRAWBACKGROUND", "DRAWINACTIVE", "TEXT", "ARROW", "CIRCLE", "PLUS", "MINUS", "divideCurve", "distance", "addPoints", "subtractPoints", "GetFolder", "GetSaveFile", "GetOpenFile", "Message", "LogToConsole"]
+__all__ = ["Glyphs", "GetFile", "GSMOVE", "GSLINE", "GSCURVE", "GSOFFCURVE", "GSSHARP", "GSSMOOTH", "TAG", "TOPGHOST", "STEM", "BOTTOMGHOST", "TTANCHOR", "TTSTEM", "TTALIGN", "TTINTERPOLATE", "TTDIAGONAL", "CORNER", "CAP", "TTDONTROUND", "TTROUND", "TTROUNDUP", "TTROUNDDOWN", "TRIPLE", "DRAWFOREGROUND", "DRAWBACKGROUND", "DRAWINACTIVE", "DOCUMENTWASSAVED", "TEXT", "ARROW", "CIRCLE", "PLUS", "MINUS", "divideCurve", "distance", "addPoints", "subtractPoints", "GetFolder", "GetSaveFile", "GetOpenFile", "Message", "LogToConsole"]
 
 
 class Proxy(object):
@@ -481,13 +481,17 @@ GSApplication.ligatureComponents = _ligatureComponents
 DRAWFOREGROUND = "DrawForeground"
 DRAWBACKGROUND = "DrawBackground"
 DRAWINACTIVE = "DrawInactive"
+DrawLayerCallbacks = (DRAWFOREGROUND, DRAWBACKGROUND, DRAWINACTIVE)
 
+DOCUMENTWASSAVED = "GSDocumentWasSavedSuccessfully"
+Observers = (DOCUMENTWASSAVED)
 
 callbackTargets = {}
 
 class callbackHelperClass():
-	def __init__(self, func):
+	def __init__(self, func, operation):
 		self.func = func
+		self.operation = operation
 
 	def drawForegroundForLayer_options_(self, Layer, options):
 		if self.func:
@@ -502,31 +506,43 @@ class callbackHelperClass():
 			self.func(Layer, options)
 
 
-# available in Glyphs 2 (786)
 def __addCallback__(self, target, operation):
 
 	# Remove possible old function by the same name
 	if callbackTargets.has_key(target.__name__):
 		self.removeCallback(target)
 
-	# Add class to callbackTargets dict by the function name
-	callbackTargets[target.__name__] = callbackHelperClass(target)
+	# DrawLayerCallbacks
+	if operation in DrawLayerCallbacks:
 
-	# Add to stack
-	GSApplication.delegate(self).addCallback_forOperation_(callbackTargets[target.__name__], operation)
+		# Add class to callbackTargets dict by the function name
+		callbackTargets[target.__name__] = callbackHelperClass(target, operation)
+	
+		# Add to stack
+		GSApplication.delegate(self).addCallback_forOperation_(callbackTargets[target.__name__], operation)
 
-	# Redraw immediately
-	self.redraw()
+		# Redraw immediately
+		self.redraw()
 
+	# Other observers
+	elif operation in Observers:
+
+		# Add class to callbackTargets dict by the function name
+		callbackTargets[target.__name__] = callbackHelperClass(target, operation)
+
+		selector = objc.selector( callbackTargets[target.__name__].func, signature="v@:@" )
+		NSNotificationCenter.defaultCenter().addObserver_selector_name_object_(callbackTargets[target.__name__], selector, operation, None )
+		
+		
 GSApplication.addCallback = __addCallback__
 
-'''.. function:: addCallback(function, hook)
+""".. function:: addCallback(function, hook)
 	
-	Add a user-defined function to the glyph window’s drawing operations, in the foreground and background for the active glyph as well as in the inactive glyphs.
+	Add a user-defined function to the glyph window's drawing operations, in the foreground and background for the active glyph as well as in the inactive glyphs.
 	
 	The function names are used to add/remove the functions to the hooks, so make sure to use unique function names.
 	
-	Your function needs to accept two values: `layer` which will contain the respective :class:`GSLayer` object of the layer we’re dealing with and `info` which is a dictionary and contains the value `Scale` (for the moment).
+	Your function needs to accept two values: `layer` which will contain the respective :class:`GSLayer` object of the layer we're dealing with and `info` which is a dictionary and contains the value `Scale` (for the moment).
 	
 	For the hooks use the three defined constants `DRAWFOREGROUND`, `DRAWBACKGROUND`, and `DRAWINACTIVE`.
 	
@@ -549,32 +565,41 @@ GSApplication.addCallback = __addCallback__
 
 		# add your function to the hook
 		Glyphs.addCallback(drawGlyphIntoBackground, DRAWBACKGROUND)
-
-	'''
+	"""
 
 def __removeCallback___(self, target, operation = None):
 
 	if callbackTargets.has_key(target.__name__):
-		if operation != None:
-			GSApplication.delegate(self).removeCallback_forOperation_(callbackTargets[target.__name__], operation)
-		else:
-			GSApplication.delegate(self).removeCallback_(callbackTargets[target.__name__])
 
-	# Redraw immediately
-	self.redraw()
+		# DrawLayerCallbacks
+		if callbackTargets[target.__name__].operation in DrawLayerCallbacks:
+
+#			if operation != None:
+#				GSApplication.delegate(self).removeCallback_forOperation_(callbackTargets[target.__name__], operation)
+#			else:
+			GSApplication.delegate(self).removeCallback_(callbackTargets[target.__name__])
+			
+			# Redraw immediately
+			self.redraw()
+
+		# Other observers
+		elif callbackTargets[target.__name__].operation in Observers:
+
+			NSNotificationCenter.defaultCenter().removeObserver_(callbackTargets[target.__name__])
+
 
 GSApplication.removeCallback = __removeCallback___
 
-'''.. function:: removeCallback(function)
+""".. function:: removeCallback(function)
 	
-	Remove the function you’ve previously added.
+	Remove the function you've previously added.
 	
 	.. code-block:: python
 	
 		# remove your function to the hook
 		Glyphs.removeCallback(drawGlyphIntoBackground)
 
-	'''
+	"""
 
 
 
