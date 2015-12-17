@@ -1640,9 +1640,23 @@ GSFont.gridLength = property(lambda self: self.pyobjc_instanceMethods.gridLength
 	Ready calculated size of grid for rounding purposes. Result of division of grid with gridSubDivisions.
 	:type: float'''
 
+def Font_selectedGlyphs(self):
+	_glyphs = []
+	for g in self.glyphs:
+		if g.selected:
+			_glyphs.append(g)
+	return _glyphs
+
+GSFont.selection = property(lambda self: Font_selectedGlyphs(self))
+'''.. attribute:: selection
+	Returns a list of all selected glyphs in the Font View.
+	:type: list'''
+
 GSFont.selectedLayers = property(lambda self: self.parent.selectedLayers())
 '''.. attribute:: selectedLayers
 	Returns a list of all selected layers in the active tab.
+	
+	If a glyph is being edited, it will be the only glyph returned in this list. Otherwise the list will contain all glyphs selected with the Text tool.
 	:type: list'''
 
 GSFont.selectedFontMaster = property(lambda self: self.parent.selectedFontMaster())
