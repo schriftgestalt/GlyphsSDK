@@ -95,7 +95,7 @@ This method gets called when Glyphs.app is being quitted.
 You need to unload all callbacks here because Glyphs.app will otherwise crash.
 
 ```python
-	def start(self):
+	def quit(self):
 
 		# Unload callback
 		NSNotificationCenter.defaultCenter().removeObserver_(self)
