@@ -1383,6 +1383,7 @@ Properties
 	gridLength
 	disablesNiceNames
 	customParameters
+	selection
 	selectedLayers
 	selectedFontMaster
 	masterIndex
