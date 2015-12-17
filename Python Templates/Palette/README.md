@@ -41,7 +41,7 @@ class ____PluginClassName____ (PalettePlugin):
 	def quit(self):
 		
 		# Delete callbacks when Glyphs quits, otherwise it'll crash :( 
-		NSNotificationCenter.defaultCenter().removeObserver_(self)```
+		NSNotificationCenter.defaultCenter().removeObserver_(self)
 ```
 
 From there you can add the following methods:
@@ -59,20 +59,6 @@ In this method you set all attributes that describe the plugin, such as its name
 
 		# The name of the Interface Builder file containing the UI dialog, without file extension
 		self.dialogName = '____PaletteView____'
-```
-
-#### start()
-
-This method gets called when the plugin gets initialized upon Glyphs.app start.
-You put all your initialization code here.
-In our example, this would be adding the callbacks.
-
-```python
-	def start(self):
-
-		# Adding a callback for the 'GSUpdateInterface' event
-		s = objc.selector( self.update, signature="v@:" )
-		NSNotificationCenter.defaultCenter().addObserver_selector_name_object_( self, s, "GSUpdateInterface", None )
 ```
 
 #### start()
