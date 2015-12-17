@@ -1652,7 +1652,13 @@ GSFont.selection = property(lambda self: Font_selectedGlyphs(self))
 	Returns a list of all selected glyphs in the Font View.
 	:type: list'''
 
-GSFont.selectedLayers = property(lambda self: self.parent.selectedLayers())
+def Font_selectedLayers(self):
+	if self.currentTab:
+		return self.parent.selectedLayers()
+	else:
+		return ()
+
+GSFont.selectedLayers = property(lambda self: Font_selectedLayers(self))
 '''.. attribute:: selectedLayers
 	Returns a list of all selected layers in the active tab.
 	
