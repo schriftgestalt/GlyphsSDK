@@ -97,8 +97,8 @@
     // [self getScale]; returns the current scale factor of the Edit View UI.
     // Divide any scalable size by this value in order to keep the same apparent pixel size.
     
-    if ([self controller]) {
-        return [[[self controller] graphicView] scale];
+    if (editViewController) {
+        return [[editViewController graphicView] scale];
     } else {
         return 1.0;
     }
