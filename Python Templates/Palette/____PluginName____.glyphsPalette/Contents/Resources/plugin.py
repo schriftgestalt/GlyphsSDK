@@ -27,7 +27,7 @@ import GlyphsApp
 		@objc.IBAction
 	   Make sure the method name ends with an underscore, e.g. setValue_(),
 	   otherwise the action will not be able to send its value to the class method.
-	3. Open the .xib file in XCode, and add and arrange interface elements.
+	3. Open the .xib file in Xcode, and add and arrange interface elements.
 	4. Add this .py file via File > Add Files..., Xcode will recognize IBOutlets and IBACtions
 	5. In the left sidebar, choose Placeholders > File's Owner,
 	   in the right sidebar, open the Identity inspector (3rd icon),
