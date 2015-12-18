@@ -26,13 +26,28 @@
 			<key>SharedSettings</key>
 			<dict>
 				<key>INSTALL_PATH</key>
-				<string>$(LOCAL_LIBRARY_DIR)/Bundles</string>
+				<string>/</string>
 				<key>WRAPPER_EXTENSION</key>
 				<string>glyphsTool</string>
 				<key>FRAMEWORK_SEARCH_PATHS</key>
 				<string>$(SYSTEM_APPS_DIR)/Glyphs.app/Contents/Frameworks</string>
 				<key>COMBINE_HIDPI_IMAGES</key>
 				<string>YES</string>
+			</dict>
+			<key>Configurations</key>
+			<dict>
+				<key>Debug</key>
+				<dict>
+					<key>DSTROOT</key>
+					<string>~/Library/Application Support/Glyphs/Plugins</string>
+					<key>SKIP_INSTALL</key>
+					<string>YES</string>
+				</dict>
+				<key>Release</key>
+				<dict>
+					<key>SKIP_INSTALL</key>
+					<string>NO</string>
+				</dict>
 			</dict>
 			<key>BuildPhases</key>
 			<array>
@@ -56,8 +71,7 @@
 		</dict>
 	</array>
 	<key>Options</key>
-	<array>
-	</array>
+	<array/>
 	<key>Nodes</key>
 	<array>
 		<string>___PACKAGENAME___-Prefix.pch:objC:importCocoa</string>
