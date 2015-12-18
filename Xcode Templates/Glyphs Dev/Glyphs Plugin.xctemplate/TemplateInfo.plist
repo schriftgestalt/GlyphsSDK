@@ -42,6 +42,8 @@
 					<string>~/Library/Application Support/Glyphs/Plugins</string>
 					<key>SKIP_INSTALL</key>
 					<string>YES</string>
+					<key>DEPLOYMENT_LOCATION</key>
+					<string>YES</string>
 				</dict>
 				<key>Release</key>
 				<dict>
