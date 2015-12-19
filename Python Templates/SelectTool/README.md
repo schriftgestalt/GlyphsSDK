@@ -1,9 +1,9 @@
 The Select Tool Plugin creates a replacement for the standard select tool and lets you extend its functionality.
 You can add context menus (that appear on the user’s mouse right-click), both general context menus (they always appear) as well as conditional contaxt menus (they only appear under a certain condition defined in your code).
 
-In it’s naked version, the plugin behaves axactly like the built-in select tool.
+In it’s naked version, the plugin behaves exactly like the built-in select tool.
 
-![](README Pictures/selecttool.png)
+![](..//selecttool.png)
 
 # User code
 
