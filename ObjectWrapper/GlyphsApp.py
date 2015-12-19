@@ -85,6 +85,7 @@ Properties
 	versionString
 	versionNumber
 	buildNumber
+	locale
 	
 
 	
@@ -105,6 +106,7 @@ Functions
 	removeCallback()
 	redraw()
 	showNotification()
+	localize()
 	
 	
 ----------
@@ -329,6 +331,15 @@ GSApplication.buildNumber = int(NSBundle.mainBundle().infoDictionary()["CFBundle
 	Especially if you're using Glyphs' preview builds, this number may be more important to you than the version number. The build number increases with every released build and is the most significant evidence of new Glyphs versions, while the version number is artificially chosen and may stay at the same number for some time, until a decision is made to release a new set of features under a new version number.
 	
 	:type: int'''
+
+GSApplication.locale = 'en'
+
+'''.. attribute:: locale
+
+	Glyph.app's UI language as two-digit ISO 639-1 codes (e.g. 'en', 'de' etc.)
+	
+	:type: string'''
+
 
 
 '''
@@ -641,6 +652,45 @@ GSApplication.showNotification = Glyphs_showNotification;
 		
 
 	'''
+
+
+def Glyphs_localize(self, localization):
+	if type(localization) == str or type(localization) == unicode:
+		return localization
+	elif type(localization) == dict:
+		
+		
+		if localization.has_key(self.locale):
+			return localization[self.locale]
+		else:
+			for priority in ('en', 'de', 'fr'):
+				if localization.has_key(priority):
+					return localization[priority]
+			return localization[localization.keys()[0]]
+	
+GSApplication.localize = Glyphs_localize;
+
+'''.. function:: localize(localization)
+	
+	Return a string in the language of Glyphs.app’s UI locale, which must be supplied as a dictionary using language codes as keys.
+	
+	.. code-block:: python
+	
+		print Glyphs.localize({
+			'en': 'Hello World',
+			'de': 'Hallo Welt',
+			'fr': 'Bonjour tout le monde',
+			'es': 'Hola Mundo',
+		})
+
+		# Given that Glyphs.app’s UI language is set to German, it will print:
+		Hallo Welt
+
+	'''
+
+
+
+
 
 
 
