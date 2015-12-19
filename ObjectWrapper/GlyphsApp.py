@@ -662,6 +662,8 @@ GSApplication.localize = Glyphs_localize;
 	
 	Return a string in the language of Glyphs.app’s UI locale, which must be supplied as a dictionary using language codes as keys.
 	
+	The argument is a dictionary in the `languageCode: translatedString` format.
+	
 	You don’t need to supply strings in all languages that the Glyphs.app UI supports. A subset will do. Just make sure that you add at least an English string to default to next to all your other translated strings.
 	
 	Tip: You can find Glyphs’ localized languages here `Glyphs.defaults["AppleLanguages"]`.
@@ -675,7 +677,9 @@ GSApplication.localize = Glyphs_localize;
 			'es': 'Hola Mundo',
 		})
 
-		# Given that your Mac’s system language is set to German and Glyphs.app UI is set to use localization (change in preferences), it will print:
+		# Given that your Mac’s system language is set to German 
+		# and Glyphs.app UI is set to use localization (change in preferences),
+		# it will print:
 		Hallo Welt
 
 	'''
