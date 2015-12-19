@@ -3,7 +3,7 @@ You can add context menus (that appear on the user’s mouse right-click), both 
 
 In it’s naked version, the plugin behaves exactly like the built-in select tool.
 
-![](..//selecttool.png)
+![](../_Readme_Images/selecttool.png)
 
 # User code
 
