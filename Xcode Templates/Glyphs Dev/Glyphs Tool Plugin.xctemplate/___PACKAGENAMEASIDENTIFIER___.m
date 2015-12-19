@@ -77,7 +77,7 @@
 
 - (void) mouseDown:(NSEvent*)theEvent {
 	// Called when the mouse button is clicked.
-	editViewController = [windowController activeEditViewController];
+	_editViewController = [windowController activeEditViewController];
 	// editViewController.graphicView.cursor = [NSCursor closedHandCursor];
 	_draggStart = [theEvent locationInWindow];
 }
@@ -103,7 +103,7 @@
 
 - (void) drawLayer:(GSLayer*)Layer atPoint:(NSPoint)aPoint asActive:(BOOL)Active attributes:(NSDictionary*)Attributes {
 	// Draw anythin for this particular layer.
-	[ editViewController.graphicView drawLayer:Layer atPoint:aPoint asActive:Active attributes: Attributes ];
+	[_editViewController.graphicView drawLayer:Layer atPoint:aPoint asActive:Active attributes: Attributes ];
 }
 
 - (void) willActivate {
