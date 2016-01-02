@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 
-from plugins import *
+from plugin import *
 from AppKit import *
 
 
