@@ -183,6 +183,25 @@ class ReporterPlugin ( NSObject, GlyphsReporterProtocol ):
 		except:
 			self.logError(traceback.format_exc())
 	
+		
+	def addMenuItemsForEvent_toMenu_(event, contextMenu):
+		'''
+		The event can tell you where the user had clicked.
+		'''
+		if hasattr(self, "contextmenuEntries"):
+			entries = self.contextmenuEntries(event)
+			for entry in entries:
+				try:
+					newMenuItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_(entry[0], entry[1], "")
+					newMenuItem.setTarget_(entry[2])
+					index = int(entry[3])
+					if index >= 0:
+						contextMenu.insertItem_atIndex_(newMenuItem, index)
+					else:
+						contextMenu.addItem_(newMenuItem)
+				except:
+					self.logError(traceback.format_exc())
+	
 	def drawTextAtPoint( self, text, textPosition, fontSize=10.0, fontColor=NSColor.blackColor(), align='bottomleft'):
 		"""
 		Use self.drawTextAtPoint( "blabla", myNSPoint ) to display left-aligned text at myNSPoint.
