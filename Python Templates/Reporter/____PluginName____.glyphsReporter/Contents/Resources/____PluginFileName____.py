@@ -10,6 +10,9 @@ class ____PluginClassName____(ReporterPlugin):
 
 	def settings(self):
 		self.menuName = 'My Plugin'
+		self.generalContextMenus = [
+			["Do Something", self.doSomething],
+		]
 		
 	def drawForeground(self, layer):
 		NSColor.blueColor().set()
@@ -28,13 +31,5 @@ class ____PluginClassName____(ReporterPlugin):
 		NSColor.blueColor().set()
 		layer.bezierPath().fill()
 	
-	def contextmenuEntries(event):
-		'''
-		return a list of tuples
-		(Text, Method Name, target, index)
-		The index in the menu. It might be -1, then the item will be added to the end of the menu.
-		'''
-		return [("Do Something", "doSomething", self, 0)]
-	
 	def doSomething(self):
-		pass
+		print 'Just did something'
