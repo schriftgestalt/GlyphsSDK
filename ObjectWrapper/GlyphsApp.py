@@ -1437,6 +1437,7 @@ Properties
 	tabs
 	currentTab
 	filepath
+	toolIndex
 
 Functions
 
@@ -1791,6 +1792,16 @@ GSFont.filepath = property(lambda self: Font_filepath(self))
 '''.. attribute:: filepath
 	On-disk location of GSFont object.
 	:type: unicode'''
+
+GSFont.toolIndex = property(lambda self: self.parent.windowController().selectedToolIndex(), lambda self, value: self.parent.windowController().setSelectedToolIndex_(value));
+
+'''.. attribute:: toolIndex
+	Index of tool selected in toolbar, starting at 0.
+	:type: integer'''
+
+
+
+
 
 '''
 ---------
@@ -5531,6 +5542,8 @@ Properties
 	layers
 	scale
 	previewHeight
+	cursor
+	selection
 
 
 ----------
@@ -5656,6 +5669,34 @@ GSEditViewController.previewHeight = property(lambda self: Glyphs.defaults["GSPr
 	:type: float
 
 '''
+
+
+GSEditViewController.cursor = property(lambda self: self.contentView().selectedRange().location, lambda self, value: self.contentView().setSelectedRange_(NSRange(value, self.selection)));
+
+'''
+
+.. attribute:: cursor
+
+	Position of text cursor in text, starting with 0.
+	
+	:type: integer
+
+'''
+
+
+
+GSEditViewController.selection = property(lambda self: self.contentView().selectedRange().length, lambda self, value: self.contentView().setSelectedRange_(NSRange(self.cursor, value)));
+
+'''
+
+.. attribute:: selection
+
+	Amount of selected glyphs in text, starting at cursor position (see above).
+	
+	:type: integer
+
+'''
+
 
 
 
