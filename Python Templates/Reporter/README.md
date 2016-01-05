@@ -51,8 +51,10 @@ In this method you set all attributes that describe the plugin, such as its name
 		self.keyboardShortcutModifier = NSCommandKeyMask | NSShiftKeyMask
 
 		# A list of general context menu items described as a list of `name`/`method` pairs.
-		# These context menu items will appear at the top of the menu if no index is given as the third parameter in each set.
-		# Otherwise, -1 will position the menu item at the bottom of the menu, all other integers will position them in that position.
+		# These context menu items will appear at the top of the menu 
+		#   if no index is given as the third parameter in each set.
+		# Otherwise, -1 will position the menu item at the bottom of the menu, 
+		#   all other integers will position them in that position.
 		self.generalContextMenus = [
 			["Context menu at top", self.doSomething],
 			["Context menu at bottom", self.doSomething, -1],
