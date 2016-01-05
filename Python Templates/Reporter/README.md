@@ -136,6 +136,33 @@ Please note that due to the live interpolation of the preview panel these layers
 			layer.bezierPath().fill()
 ```
 
+#### conditionalContextMenus()
+
+Use this method to create and return a list of conditional context menu items.
+These context menu items could be based on the user’s selection of objects in the Edit View and will appear first in the menu.
+
+Return a list of context menu items described as a list of `['name', method]` pairs.
+
+```python
+	def conditionalContextMenus(self):
+
+		# Empty list of context menu items
+		contextMenus = []
+
+		# Execute only if layers are actually selected
+		if Glyphs.font.selectedLayers:
+			layer = Glyphs.font.selectedLayers[0]
+			
+			# Exactly one object is selected and it’s an anchor
+			if len(layer.selection) == 1 and type(layer.selection[0]) == GSAnchor:
+					
+				# Add context menu item
+				contextMenus.append(["Randomly move anchor", self.randomlyMoveAnchor])
+
+		# Return list of context menu items
+		return contextMenus
+```
+
 # Tips on drawing
 
 Glyphs.app uses the Mac’s own Cocoa methods for drawing. These sometimes behave slightly different from other Python objects, and surely they have different names. 

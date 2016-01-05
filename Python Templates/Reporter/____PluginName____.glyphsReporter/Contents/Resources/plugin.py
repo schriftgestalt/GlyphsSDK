@@ -185,9 +185,10 @@ class ReporterPlugin ( NSObject, GlyphsReporterProtocol ):
 		'''
 		The event can tell you where the user had clicked.
 		'''
-		if self.generalContextMenus:
-			for entry in self.generalContextMenus:
-				try:
+		try:
+			
+			if self.generalContextMenus:
+				for entry in self.generalContextMenus:
 					newMenuItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_(entry[0], entry[1], "")
 					newMenuItem.setTarget_(self)
 					
@@ -200,8 +201,18 @@ class ReporterPlugin ( NSObject, GlyphsReporterProtocol ):
 						contextMenu.insertItem_atIndex_(newMenuItem, index)
 					else:
 						contextMenu.addItem_(newMenuItem)
-				except:
-					self.logError(traceback.format_exc())
+
+			if hasattr(self, 'conditionalContextMenus'):
+				contextMenus = self.conditionalContextMenus()
+			
+				if contextMenus:
+					for name, method in contextMenus:
+						newMenuItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_( name, method, "" )
+						newMenuItem.setTarget_( self ) # method of this class will be called
+						contextMenu.insertItem_atIndex_( newMenuItem, 0 ) # adds item at the top of the menu
+
+		except:
+			self.logError(traceback.format_exc())
 	
 	def drawTextAtPoint( self, text, textPosition, fontSize=10.0, fontColor=NSColor.blackColor(), align='bottomleft'):
 		"""
