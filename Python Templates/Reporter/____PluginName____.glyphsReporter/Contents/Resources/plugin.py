@@ -33,6 +33,7 @@ class ReporterPlugin ( NSObject, GlyphsReporterProtocol ):
 			self.keyboardShortcut = None
 			self.keyboardShortcutModifier = 0 # Set any combination of NSShiftKeyMask | NSControlKeyMask | NSCommandKeyMask | NSAlternateKeyMask
 			self.drawDefaultInactiveLayers = True
+			self.generalContextMenus = []
 			
 
 			if hasattr(self, 'settings'):
@@ -180,17 +181,21 @@ class ReporterPlugin ( NSObject, GlyphsReporterProtocol ):
 			self.logError(traceback.format_exc())
 	
 		
-	def addMenuItemsForEvent_toMenu_(event, contextMenu):
+	def addMenuItemsForEvent_toMenu_(self, event, contextMenu):
 		'''
 		The event can tell you where the user had clicked.
 		'''
-		if hasattr(self, "contextmenuEntries"):
-			entries = self.contextmenuEntries(event)
-			for entry in entries:
+		if self.generalContextMenus:
+			for entry in self.generalContextMenus:
 				try:
 					newMenuItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_(entry[0], entry[1], "")
-					newMenuItem.setTarget_(entry[2])
-					index = int(entry[3])
+					newMenuItem.setTarget_(self)
+					
+					if len(entry) == 3:
+						index = int(entry[3])
+					else:
+						index = 0
+						
 					if index >= 0:
 						contextMenu.insertItem_atIndex_(newMenuItem, index)
 					else:
