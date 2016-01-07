@@ -38,7 +38,10 @@ class ____PluginClassName____ (PalettePlugin):
 
 		# We’re in the Font view
 		else:
-			text.append('Selected glyphs: %s' % len(font.selection))
+			try:
+				text.append('Selected glyphs: %s' % len(font.selection))
+			except:
+				pass
 
 		# Send text to dialog to display
 		self.textField.setStringValue_('\n'.join(text))
