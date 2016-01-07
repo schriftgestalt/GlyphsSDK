@@ -13,9 +13,7 @@
 ###########################################################################################################
 
 
-from plugin import *
-from AppKit import *
-
+from GlyphsPlugins import *
 
 
 # Preference key names

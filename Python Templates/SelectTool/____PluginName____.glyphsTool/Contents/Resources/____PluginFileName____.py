@@ -1,8 +1,6 @@
 # encoding: utf-8
 
-from plugin import *
-from GlyphsApp import *
-from AppKit import *
+from GlyphsPlugins import *
 
 class ____PluginClassName____(SelectTool):
 	

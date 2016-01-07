@@ -1,8 +1,6 @@
 # encoding: utf-8
 
-from plugin import *
-from AppKit import *
-from GlyphsApp import *
+from GlyphsPlugins import *
 
 class ____PluginClassName____(FilterWithDialog):
 
