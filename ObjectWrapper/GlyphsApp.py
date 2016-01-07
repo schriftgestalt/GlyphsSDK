@@ -358,7 +358,7 @@ GSApplication.open = OpenFont
 	:rtype: :class:`GSFont`'''
 
 def __ShowMacroWindow(self):
-	GSApplication.delegate(self).showMacroWindow()
+	Glyphs.delegate().showMacroWindow()
 
 GSApplication.showMacroWindow = __ShowMacroWindow
 
@@ -369,7 +369,7 @@ GSApplication.showMacroWindow = __ShowMacroWindow
 '''
 
 def __ClearLog(self):
-	GSApplication.delegate(self).clearConsole()
+	Glyphs.delegate().clearConsole()
 
 GSApplication.clearLog = __ClearLog
 
@@ -381,7 +381,7 @@ GSApplication.clearLog = __ClearLog
 
 
 def __showGlyphInfoPanelWithSearchString__(self, String):
-	GSApplication.delegate(self).showGlyphInfoPanelWithSearchString_(String)
+	Glyphs.delegate().showGlyphInfoPanelWithSearchString_(String)
 
 GSApplication.showGlyphInfoPanelWithSearchString = __showGlyphInfoPanelWithSearchString__
 
@@ -521,7 +521,7 @@ def __addCallback__(self, target, operation):
 		callbackTargets[target.__name__] = callbackHelperClass(target, operation)
 	
 		# Add to stack
-		GSApplication.delegate(self).addCallback_forOperation_(callbackTargets[target.__name__], operation)
+		self.delegate().addCallback_forOperation_(callbackTargets[target.__name__], operation)
 
 		# Redraw immediately
 		self.redraw()
@@ -577,9 +577,9 @@ def __removeCallback___(self, target, operation = None):
 		if callbackTargets[target.__name__].operation in DrawLayerCallbacks:
 
 #			if operation != None:
-#				GSApplication.delegate(self).removeCallback_forOperation_(callbackTargets[target.__name__], operation)
+#				self.delegate().removeCallback_forOperation_(callbackTargets[target.__name__], operation)
 #			else:
-			GSApplication.delegate(self).removeCallback_(callbackTargets[target.__name__])
+			self.delegate().removeCallback_(callbackTargets[target.__name__])
 			
 			# Redraw immediately
 			self.redraw()
