@@ -51,6 +51,7 @@ class Proxy(object):
 Glyphs = NSApplication.sharedApplication()
 
 
+
 '''
 :mod:`GSApplication`
 ===============================================================================
@@ -659,6 +660,8 @@ def Glyphs_localize(self, localization):
 GSApplication.localize = Glyphs_localize;
 
 '''.. function:: localize(localization)
+
+	.. versionadded:: 2.3
 	
 	Return a string in the language of Glyphs.app’s UI locale, which must be supplied as a dictionary using language codes as keys.
 	
@@ -1697,6 +1700,9 @@ def Font_selectedGlyphs(self):
 
 GSFont.selection = property(lambda self: Font_selectedGlyphs(self))
 '''.. attribute:: selection
+
+	.. versionadded:: 2.3
+
 	Returns a list of all selected glyphs in the Font View.
 	:type: list'''
 
@@ -2317,6 +2323,7 @@ Properties
 	customParameters
 	instanceInterpolations
 	manualInterpolation
+	interpolatedFont
 	
 Functions
 	
@@ -2399,7 +2406,7 @@ GSInstance.fontName = property(lambda self: self.valueForKey_("fontName"), lambd
 	fontName (postscriptFontName)
 	:type: string'''
 GSInstance.fullName = property(lambda self: self.valueForKey_("fullName"), lambda self, value: self.setCustomParameter_forKey_(value, "postscriptFullName"))
-'''.. attribute:: linkStyle
+'''.. attribute:: fullName
 	fullName (postscriptFullName)
 	:type: string'''
 
@@ -2434,6 +2441,20 @@ GSInstance.manualInterpolation = property(lambda self: self.valueForKey_("manual
 	Disables automatic calculation of instanceInterpolations
 	This allowes manual setting of instanceInterpolations.
 	:type: bool
+	'''
+
+def Instance_FontObject(self):
+	return self.font().generateInstance_error_(self, None)
+
+GSInstance.interpolatedFont = property(lambda self: Instance_FontObject(self))
+
+'''.. attribute:: interpolatedFont
+
+	.. versionadded:: 2.3
+	
+	Returns a ready interpolated :class:`GSFont` object representing this instance. Other than the source object, this interpolated font will contain only one master and one instance.
+
+	:type: :class:`GSFont`
 	'''
 
 
