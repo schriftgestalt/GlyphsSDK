@@ -5654,8 +5654,8 @@ Properties
 	layers
 	scale
 	previewHeight
-	cursor
-	selection
+	textCursor
+	textRange
 
 
 ----------
