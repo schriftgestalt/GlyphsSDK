@@ -263,12 +263,18 @@ def Glyphs_setUserDefaults(self, key, value):
 
 GSApplication.editViewWidth = property(lambda self: self.intDefaults["GSFontViewWidth"], lambda self, value: Glyphs_setUserDefaults(self, "GSFontViewWidth", int(value)))
 '''.. attribute:: editViewWidth
+
+	.. versionadded:: 2.3
+
 	Width of glyph edit view. Corresponds to the "Width of editor" setting from the Preferences.
 	
 	:type: int'''
 
 GSApplication.handleSize = property(lambda self: self.intDefaults["GSHandleSize"], lambda self, value: Glyphs_setUserDefaults(self, "GSHandleSize", int(value)))
 '''.. attribute:: handleSize
+
+	.. versionadded:: 2.3
+
 	Size of Bezier handles in Glyph Edit View. Possible value are 0–2. Corresponds to the "Handle size" setting from the Preferences.
 	
 	To use the handle size for drawing in reporter plugins, you need to convert the handle size to a point size, and divide by the view's scale factor. See example below.
@@ -293,6 +299,8 @@ GSApplication.versionString = NSBundle.mainBundle().infoDictionary()["CFBundleSh
 
 '''.. attribute:: versionString
 
+	.. versionadded:: 2.3
+
 	String containing Glyph.app's version number. May contain letters also, like '2.3b'. To check for a specific version, use .versionNumber below.
 	
 	:type: string'''
@@ -305,6 +313,8 @@ def Glyphs_FloatVersion(self):
 GSApplication.versionNumber = property(lambda self: Glyphs_FloatVersion(self))
 
 '''.. attribute:: versionNumber
+
+	.. versionadded:: 2.3
 
 	Glyph.app's version number. Use this to check for version in your code.
 	
@@ -325,6 +335,8 @@ GSApplication.versionNumber = property(lambda self: Glyphs_FloatVersion(self))
 GSApplication.buildNumber = int(NSBundle.mainBundle().infoDictionary()["CFBundleVersion"])
 
 '''.. attribute:: buildNumber
+
+	.. versionadded:: 2.3
 
 	Glyph.app's build number.
 	
@@ -540,7 +552,9 @@ def __addCallback__(self, target, operation):
 GSApplication.addCallback = __addCallback__
 
 """.. function:: addCallback(function, hook)
-	
+
+	.. versionadded:: 2.3
+
 	Add a user-defined function to the glyph window's drawing operations, in the foreground and background for the active glyph as well as in the inactive glyphs.
 	
 	The function names are used to add/remove the functions to the hooks, so make sure to use unique function names.
@@ -594,7 +608,9 @@ def __removeCallback___(self, target, operation = None):
 GSApplication.removeCallback = __removeCallback___
 
 """.. function:: removeCallback(function)
-	
+
+	.. versionadded:: 2.3
+
 	Remove the function you've previously added.
 	
 	.. code-block:: python
@@ -1680,10 +1696,16 @@ GSFont.customParameters = property(			lambda self: CustomParametersProxy(self))
 	:type: list, dict'''
 GSFont.grid = property(lambda self: self.pyobjc_instanceMethods.gridMain(), lambda self, value: self.setGridMain_(value))
 '''.. attribute:: grid
+
+	.. versionadded:: 2.3
+
 	Corresponds to the "Grid spacing" setting from the Info dialogue.
 	:type: int'''
 GSFont.gridSubDivisions = property(lambda self: self.pyobjc_instanceMethods.gridSubDivision(), lambda self, value: self.setGridSubDivision_(value))
 '''.. attribute:: gridSubDivisions
+
+	.. versionadded:: 2.3
+
 	Corresponds to the "Grid sub divisions" setting from the Info dialogue.
 	:type: int'''
 GSFont.gridLength = property(lambda self: self.pyobjc_instanceMethods.gridLength())
@@ -1802,6 +1824,9 @@ GSFont.filepath = property(lambda self: Font_filepath(self))
 GSFont.toolIndex = property(lambda self: self.parent.windowController().selectedToolIndex(), lambda self, value: self.parent.windowController().setSelectedToolIndex_(value));
 
 '''.. attribute:: toolIndex
+
+	.. versionadded:: 2.3
+
 	Index of tool selected in toolbar, starting at 0.
 	:type: integer'''
 
@@ -3251,6 +3276,9 @@ GSGlyph.color =			  property( lambda self: self.valueForKey_("colorIndex"),
 
 GSGlyph.colorObject =			  property( lambda self: self.valueForKey_("color") )
 '''.. attribute:: colorObject
+
+	.. versionadded:: 2.3
+
 	NSColor object of glyph color, useful for drawing in plugins.
 	:type: NSColor
 
@@ -3310,6 +3338,9 @@ GSGlyph.selected =		property( lambda self: _get_Glyphs_is_selected(self),
 GSGlyph.mastersCompatible = property( lambda self: bool(self.pyobjc_instanceMethods.mastersCompatible()))
 
 '''.. attribute:: mastersCompatible
+
+	.. versionadded:: 2.3
+
 	Return True when all layers in this glyph are compatible (same components, anchors, paths etc.)
 	:type: bool
 
@@ -3317,6 +3348,9 @@ GSGlyph.mastersCompatible = property( lambda self: bool(self.pyobjc_instanceMeth
 
 GSGlyph.userData = property(lambda self: self.pyobjc_instanceMethods.userData(), lambda self, value: self.setUserData_(value))
 '''.. attribute:: userData
+
+	.. versionadded:: 2.3
+
 	A dictionary to store user data. Use a unique key and only use objects that can be stored in a property list (string, list, dict, numbers, NSData) otherwise the data will not be recoverable from the saved file.
 	:type: dict
 	.. code-block:: python
@@ -3326,6 +3360,9 @@ GSGlyph.userData = property(lambda self: self.pyobjc_instanceMethods.userData(),
 
 GSGlyph.smartComponentAxes = property(lambda self: GlyphSmartComponentAxesProxy(self))
 '''.. attribute:: smartComponentAxes
+
+	.. versionadded:: 2.3
+
 	A list of :class:`GSSmartComponentAxis` objects. 
 
 	These are the axis definitions for the interpolations that take place within the Smart Components. Corresponds to the 'Properties' tab of the glyph's 'Show Smart Glyph Settings' dialog.
@@ -3796,7 +3833,9 @@ GSLayer.backgroundImage = property(lambda self: self.pyobjc_instanceMethods.back
 
 GSLayer.bezierPath = property(	 lambda self: self.pyobjc_instanceMethods.bezierPath() )
 '''.. attribute:: bezierPath
-	
+
+	.. versionadded:: 2.3
+
 	The layer as an NSBezierPath object. Useful for drawing glyphs in plugins.
 
 	.. code-block:: python
@@ -3809,6 +3848,9 @@ GSLayer.bezierPath = property(	 lambda self: self.pyobjc_instanceMethods.bezierP
 '''
 GSLayer.userData = property(lambda self: self.pyobjc_instanceMethods.userData(), lambda self, value: self.setUserData_(value))
 '''.. attribute:: userData
+
+	.. versionadded:: 2.3
+
 	A dictionary to store user data. Use a unique key and only use objects that can be stored in a property list (string, list, dict, numbers, NSData) otherwise the data will not be recoverable from the saved file.
 	:type: dict
 	.. code-block:: python
@@ -3825,6 +3867,8 @@ def Layer_smartComponentPoleMapping(self):
 GSLayer.smartComponentPoleMapping = property(lambda self: Layer_smartComponentPoleMapping(self))
 
 '''.. attribute:: smartComponentPoleMapping
+
+	.. versionadded:: 2.3
 
 	Maps this layer to the poles on the interpolation axes of the Smart Glyph. The dictionary keys are the names of the :class:`GSSmartComponentAxis` objects. The values are 1 for bottom pole and 2 for top pole. Corresponds to the 'Layers' tab of the glyph's 'Show Smart Glyph Settings' dialog.
 	
@@ -3920,7 +3964,9 @@ GSLayer.removeOverlap = RemoveOverlap
 
 '''
 .. function:: roundCoordinates()
-	
+
+	.. versionadded:: 2.3
+
 	Round the positions of all coordinates to the grid (size of which is set in the Font Info).
 '''
 
@@ -3931,7 +3977,9 @@ GSLayer.addNodesAtExtremes = Layer_addNodesAtExtremes
 
 '''
 .. function:: addNodesAtExtremes()
-	
+
+	.. versionadded:: 2.3
+
 	Add nodes at layer's extrema, e.g. top, bottom etc.
 '''
 
@@ -4036,11 +4084,15 @@ GSLayer.addMissingAnchors = Layer_addMissingAnchors
 '''
 .. function:: clearSelection()
 
+	.. versionadded:: 2.3
+
 	Unselect all selected items in this layer.
 '''
 
 '''
 .. function:: clearBackground()
+
+	.. versionadded:: 2.3
 
 	Remove all paths from background layer.
 '''
@@ -4049,6 +4101,8 @@ GSLayer.swapForegroundWithBackground = property(lambda self: self.swapForgroundW
 
 '''
 .. function:: swapForegroundWithBackground()
+
+	.. versionadded:: 2.3
 
 	Swap Foreground layer with Background layer.
 '''
@@ -4439,6 +4493,8 @@ GSComponent.draw = DrawComponentWithPen
 GSComponent.smartComponentValues = property(lambda self: self.pieceSettings())
 '''.. attribute:: smartComponentValues
 
+	.. versionadded:: 2.3
+
 	Dictionary of interpolations values of the Smart Component. Key are the names, values are between the top and the bottom value of the corresponding :class:`GSSmartComponentAxis` objects. Corresponds to the values of the 'Smart Component Settings' dialog. Returns None if the component is not a Smart Component.
 	
 	Also see https://glyphsapp.com/tutorials/smart-components for reference.
@@ -4464,7 +4520,9 @@ GSComponent.smartComponentValues = property(lambda self: self.pieceSettings())
 
 GSPath.bezierPath = property(	 lambda self: self.pyobjc_instanceMethods.bezierPath() )
 '''.. attribute:: bezierPath
-	
+
+	.. versionadded:: 2.3
+
 	The component as an NSBezierPath object. Useful for drawing glyphs in plugins.
 
 	.. code-block:: python
@@ -4513,6 +4571,8 @@ Functions
 
 Implementation of the Smart Component interpolation axis object.
 For details on how to access them, please see :class:`GSGlyph`.smartComponentAxes
+
+.. versionadded:: 2.3
 
 .. class:: GSSmartComponentAxis()
 	
@@ -4723,7 +4783,9 @@ GSPath.selected = property(	 lambda self: Path_selected(self), lambda self, valu
 
 GSPath.bezierPath = property(	 lambda self: self.pyobjc_instanceMethods.bezierPath() )
 '''.. attribute:: bezierPath
-	
+
+	.. versionadded:: 2.3
+
 	The same path as an NSBezierPath object. Useful for drawing glyphs in plugins.
 
 	.. code-block:: python
@@ -4787,7 +4849,9 @@ GSPath.addNodesAtExtremes = Path_addNodesAtExtremes
 
 '''
 .. function:: addNodesAtExtremes()
-	
+
+	.. versionadded:: 2.3
+
 	Add nodes at path's extrema, e.g. top, bottom etc.
 '''
 
@@ -4910,6 +4974,9 @@ def __GSNode__index__(self):
 
 GSNode.index = property(	lambda self: __GSNode__index__(self))
 '''.. attribute:: index
+
+	.. versionadded:: 2.3
+
 	Returns the index of the node in the containing path or maxint if it is not in a path.
 	:type: int
 	'''
@@ -4926,6 +4993,9 @@ def __GSNode__nextNode__(self):
 
 GSNode.nextNode = property(	lambda self: __GSNode__nextNode__(self))
 '''.. attribute:: nextNode
+
+	.. versionadded:: 2.3
+
 	Returns the next node in the path.
 
 	Please note that this is irregardless of the position of the node in the path and will jump across the path border to the beginning of the path if the current node is the last.
@@ -4957,6 +5027,9 @@ def __GSNode__prevNode__(self):
 
 GSNode.prevNode = property(	lambda self: __GSNode__prevNode__(self))
 '''.. attribute:: prevNode
+
+	.. versionadded:: 2.3
+
 	Returns the previous node in the path.
 
 	Please note that this is irregardless of the position of the node in the path and will jump across the path border to the end of the path if the current node is the first.
@@ -4991,6 +5064,9 @@ def __GSNode__set_name(self, value):
 	
 GSNode.name = property(__GSNode__get_name, __GSNode__set_name, doc="")
 '''.. attribute:: name
+
+	.. versionadded:: 2.3
+
 	Attaches a name to a node
 	:type: unicode
 	'''
@@ -5666,6 +5742,9 @@ GSEditViewController.scale = property(lambda self: self.graphicView().valueForKe
 '''
 
 .. attribute:: scale
+
+	.. versionadded:: 2.3
+
 	Scale (zoom factor) of the Edit View. Useful for drawing activity in plugins.
 	
 	The scale changes with every zoom step of the Edit View. So if you want to draw objects (e.g. text, stroke thickness etc.) into the Edit View at a constant size relative to the UI (e.g. constant text size on screen), you need to calculate the object's size relative to the scale factor. See example below.
@@ -5698,6 +5777,8 @@ GSEditViewController.previewHeight = property(lambda self: Glyphs.defaults["GSPr
 
 .. attribute:: previewHeight
 
+	.. versionadded:: 2.3
+
 	Height of the preview panel in the edit view in pixels.
 	
 	Needs to be set to 31 or higher for the preview panel to be visible at all. Will return 1.0 for a closed preview panel or the current size when visible.
@@ -5707,11 +5788,13 @@ GSEditViewController.previewHeight = property(lambda self: Glyphs.defaults["GSPr
 '''
 
 
-GSEditViewController.cursor = property(lambda self: self.contentView().selectedRange().location, lambda self, value: self.contentView().setSelectedRange_(NSRange(value, self.selection)));
+GSEditViewController.textCursor = property(lambda self: self.contentView().selectedRange().location, lambda self, value: self.contentView().setSelectedRange_(NSRange(value, self.selection)));
 
 '''
 
-.. attribute:: cursor
+.. attribute:: textCursor
+
+	.. versionadded:: 2.3
 
 	Position of text cursor in text, starting with 0.
 	
@@ -5721,11 +5804,13 @@ GSEditViewController.cursor = property(lambda self: self.contentView().selectedR
 
 
 
-GSEditViewController.selection = property(lambda self: self.contentView().selectedRange().length, lambda self, value: self.contentView().setSelectedRange_(NSRange(self.cursor, value)));
+GSEditViewController.textRange = property(lambda self: self.contentView().selectedRange().length, lambda self, value: self.contentView().setSelectedRange_(NSRange(self.cursor, value)));
 
 '''
 
-.. attribute:: selection
+.. attribute:: textRange
+
+	.. versionadded:: 2.3
 
 	Amount of selected glyphs in text, starting at cursor position (see above).
 	
