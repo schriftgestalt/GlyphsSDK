@@ -3514,6 +3514,7 @@ Functions
 	clearSelection()
 	clearBackground()
 	swapForegroundWithBackground()
+	reinterpolate()
 
 ----------
 Properties
@@ -4108,6 +4109,28 @@ GSLayer.swapForegroundWithBackground = property(lambda self: self.swapForgroundW
 
 	Swap Foreground layer with Background layer.
 '''
+
+def Layer_replaceLayerWithInterpolation(self):
+
+	self.parent.replaceLayerWithInterpolation_(self)
+
+
+GSLayer.reinterpolate = Layer_replaceLayerWithInterpolation
+
+'''
+.. function:: reinterpolate()
+
+	.. versionadded:: 2.3
+
+	Re-interpolate a layer according the other layers and its interpolation values.
+	
+	Applies to both master layers as well as brace layers and is equivalent to the 'Re-Interpolate' command from the Layers palette.
+	
+'''
+
+
+
+
 
 
 def ControlLayer__new__(typ, *args, **kwargs):
