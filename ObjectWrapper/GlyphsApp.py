@@ -4112,7 +4112,8 @@ GSLayer.swapForegroundWithBackground = property(lambda self: self.swapForgroundW
 
 def Layer_replaceLayerWithInterpolation(self):
 
-	self.parent.replaceLayerWithInterpolation_(self)
+	if self.parent:
+		self.parent.replaceLayerWithInterpolation_(self)
 
 
 GSLayer.reinterpolate = Layer_replaceLayerWithInterpolation
