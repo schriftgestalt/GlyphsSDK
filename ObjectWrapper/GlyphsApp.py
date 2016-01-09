@@ -683,23 +683,25 @@ GSApplication.localize = Glyphs_localize;
 	
 	The argument is a dictionary in the `languageCode: translatedString` format.
 	
-	You don’t need to supply strings in all languages that the Glyphs.app UI supports. A subset will do. Just make sure that you add at least an English string to default to next to all your other translated strings.
+	You don’t need to supply strings in all languages that the Glyphs.app UI supports. A subset will do. Just make sure that you add at least an English string to default to next to all your other translated strings. Also don’t forget to mark strings as unicode strings (`u'öäüß'`) when they contain non-ASCII content for proper encoding, and add a `# encoding: utf-8` to the top of all your .py files.
 	
 	Tip: You can find Glyphs’ localized languages here `Glyphs.defaults["AppleLanguages"]`.
 	
 	.. code-block:: python
 	
+		# encoding: utf-8
+		
 		print Glyphs.localize({
-			'en': 'Hello World',
-			'de': 'Hallo Welt',
-			'fr': 'Bonjour tout le monde',
-			'es': 'Hola Mundo',
+			'en':  'Hello World',
+			'de': u'Hallöle Welt',
+			'fr':  'Bonjour tout le monde',
+			'es':  'Hola Mundo',
 		})
 
 		# Given that your Mac’s system language is set to German 
 		# and Glyphs.app UI is set to use localization (change in preferences),
 		# it will print:
-		Hallo Welt
+		Hallöle Welt
 
 	'''
 
