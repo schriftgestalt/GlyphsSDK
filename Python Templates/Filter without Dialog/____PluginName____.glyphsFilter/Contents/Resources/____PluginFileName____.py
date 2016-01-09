@@ -1,5 +1,17 @@
 # encoding: utf-8
 
+###########################################################################################################
+#
+#
+#	Filter without dialog Plugin
+#
+#	Read the docs:
+#	https://github.com/schriftgestalt/GlyphsSDK/tree/master/Python%20Templates/Filter%20without%20Dialog
+#
+#
+###########################################################################################################
+
+
 from GlyphsPlugins import *
 
 class ____PluginClassName____(FilterWithoutDialog):

@@ -1,5 +1,20 @@
 # encoding: utf-8
 
+###########################################################################################################
+#
+#
+#	Filter with dialog Plugin
+#
+#	Read the docs:
+#	https://github.com/schriftgestalt/GlyphsSDK/tree/master/Python%20Templates/Filter%20with%20Dialog
+#
+#	For help on the use of Interface Builder:
+#	https://github.com/schriftgestalt/GlyphsSDK/tree/master/Python%20Templates
+#
+#
+###########################################################################################################
+
+
 from GlyphsPlugins import *
 
 class ____PluginClassName____(FilterWithDialog):

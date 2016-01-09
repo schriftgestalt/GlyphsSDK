@@ -6,7 +6,10 @@
 #	File Format Plugin
 #	Implementation for exporting fonts through the Export dialog
 #
-#	For help on the use of Interface Builder, please read the introduction at
+#	Read the docs:
+#	https://github.com/schriftgestalt/GlyphsSDK/tree/master/Python%20Templates/File%20Format
+#
+#	For help on the use of Interface Builder:
 #	https://github.com/schriftgestalt/GlyphsSDK/tree/master/Python%20Templates
 #
 #

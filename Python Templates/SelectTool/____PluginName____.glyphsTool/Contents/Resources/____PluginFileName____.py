@@ -1,5 +1,17 @@
 # encoding: utf-8
 
+###########################################################################################################
+#
+#
+#	Select Tool Plugin
+#
+#	Read the docs:
+#	https://github.com/schriftgestalt/GlyphsSDK/tree/master/Python%20Templates/SelectTool
+#
+#
+###########################################################################################################
+
+
 from GlyphsPlugins import *
 
 class ____PluginClassName____(SelectTool):

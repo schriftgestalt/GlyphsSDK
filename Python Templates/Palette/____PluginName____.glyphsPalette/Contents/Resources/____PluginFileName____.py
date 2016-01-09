@@ -1,7 +1,18 @@
 # encoding: utf-8
 
-from GlyphsPlugins import *
+###########################################################################################################
+#
+#
+#	Palette Plugin
+#
+#	Read the docs:
+#	https://github.com/schriftgestalt/GlyphsSDK/tree/master/Python%20Templates/Palette
+#
+#
+###########################################################################################################
 
+
+from GlyphsPlugins import *
 
 class ____PluginClassName____ (PalettePlugin):
 	
