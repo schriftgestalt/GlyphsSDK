@@ -17,13 +17,41 @@ if not path in sys.path:
 
 
 
+class SomeUsefulPluginMethods:
+
+	
+
+	def logToConsole( self, message ):
+		"""
+		The variable 'message' will be passed to Console.app.
+		Use self.logToConsole( "bla bla" ) for debugging.
+		"""
+		myLog = "%s tool:\n%s" % ( self.title(), message )
+		NSLog( myLog )
+
+
+	def logError(self, message):
+		try:
+			if message != self.lastErrorMessage:
+				self.logToConsole(message)
+				self.lastErrorMessage = message
+				Glyphs.showNotification('Error in %s' % self.title(), 'Check the Console output for details.')
+		except:
+			self.logToConsole(traceback.format_exc())
+
+	def __del__(self):
+		try:
+			if hasattr(self, 'quit'):
+				self.quit()
+		except:
+			self.logError(traceback.format_exc())
 
 
 
 
 GlyphsFileFormatProtocol = objc.protocolNamed( "GlyphsFileFormat" )
 
-class FileFormatPlugin ( NSObject, GlyphsFileFormatProtocol ):
+class FileFormatPlugin ( NSObject, GlyphsFileFormatProtocol, SomeUsefulPluginMethods ):
 	
 
 
@@ -218,22 +246,6 @@ class FileFormatPlugin ( NSObject, GlyphsFileFormatProtocol ):
 		except:
 			self.logError(traceback.format_exc())
 		
-	def logToConsole( self, message ):
-		"""
-		The variable 'message' will be passed to Console.app.
-		Use self.logToConsole( "bla bla" ) for debugging.
-		"""
-		myLog = "Font format %s:\n%s" % ( self.title(), message )
-		NSLog( myLog )
-
-	def logError(self, message):
-		try:
-			if message != self.lastErrorMessage:
-				self.logToConsole(message)
-				self.lastErrorMessage = message
-#				Glyphs.showNotification('Error in %s' % self.title(), 'Check the Console output for details.')
-		except:
-			self.logToConsole(traceback.format_exc())
 
 
 ########################################################################
@@ -263,9 +275,8 @@ class FileFormatPlugin ( NSObject, GlyphsFileFormatProtocol ):
 			self.writeCSVFile(font, filepath)
 
 			return (True, None)
-		except Exception as e:
-			self.logToConsole( "writeFont_toURL_error_: %s" % str(e) )
-			return (False, e)
+		except:
+			self.logError(traceback.format_exc())
 
 
 ########################################################################
@@ -293,9 +304,8 @@ class FileFormatPlugin ( NSObject, GlyphsFileFormatProtocol ):
 			pass
 			# Return the font object to be opened in Glyphs:
 			return font
-		except Exception as e:
-			self.logToConsole( "fontFromURL_ofType_error_: %s" % str(e) )
-			return None
+		except:
+			self.logError(traceback.format_exc())
 
 
 
@@ -306,7 +316,7 @@ class FileFormatPlugin ( NSObject, GlyphsFileFormatProtocol ):
 
 
 
-class FilterWithDialog ( GSFilterPlugin ):
+class FilterWithDialog ( GSFilterPlugin, SomeUsefulPluginMethods ):
 	"""
 	All 'myValue' and 'myValueField' references are just an example.
 	They correspond to the 'My Value' field in the .xib file.
@@ -323,6 +333,8 @@ class FilterWithDialog ( GSFilterPlugin ):
 		"""
 
 		try:
+
+			self.lastErrorMessage = ''
 
 			self.menuName = 'My Filter'
 			self.keyboardShortcut = None # With Cmd+Shift
@@ -347,7 +359,7 @@ class FilterWithDialog ( GSFilterPlugin ):
 			return self
 
 		except:
-			self.logToConsole(traceback.format_exc())
+			self.logError(traceback.format_exc())
 	
 	
 	def setup(self):
@@ -362,7 +374,7 @@ class FilterWithDialog ( GSFilterPlugin ):
 
 			return None
 		except:
-			self.logToConsole(traceback.format_exc())
+			self.logError(traceback.format_exc())
 			
 		
 	
@@ -373,8 +385,8 @@ class FilterWithDialog ( GSFilterPlugin ):
 		"""
 		try:
 			return 1
-		except Exception as e:
-			self.logToConsole( "interfaceVersion: %s" % str(e) )
+		except:
+			self.logError(traceback.format_exc())
 	
 	def title( self ):
 		"""
@@ -383,8 +395,8 @@ class FilterWithDialog ( GSFilterPlugin ):
 		"""
 		try:
 			return self.menuName
-		except Exception as e:
-			self.logToConsole( "title: %s" % str(e) )
+		except:
+			self.logError(traceback.format_exc())
 	
 	def actionName( self ):
 		"""
@@ -393,8 +405,8 @@ class FilterWithDialog ( GSFilterPlugin ):
 		"""
 		try:
 			return self.actionButtonLabel
-		except Exception as e:
-			self.logToConsole( "actionName: %s" % str(e) )
+		except:
+			self.logError(traceback.format_exc())
 	
 	def keyEquivalent( self ):
 		""" 
@@ -404,8 +416,8 @@ class FilterWithDialog ( GSFilterPlugin ):
 		"""
 		try:
 			return self.keyboardShortcut
-		except Exception as e:
-			self.logToConsole( "keyEquivalent: %s" % str(e) )
+		except:
+			self.logError(traceback.format_exc())
 	
 
 
@@ -459,7 +471,7 @@ class FilterWithDialog ( GSFilterPlugin ):
 					self.filter( Layer, False, customParameters )
 
 		except:
-			self.logToConsole(traceback.format_exc())
+			self.logError(traceback.format_exc())
 	
 	def process_( self, sender ):
 		"""
@@ -506,17 +518,9 @@ class FilterWithDialog ( GSFilterPlugin ):
 			# call the superclass to trigger the immediate redraw:
 			super( FilterWithDialog, self ).process_( sender )
 		except:
-			self.logToConsole(traceback.format_exc())
+			self.logError(traceback.format_exc())
 	
 	
-	def logToConsole( self, message ):
-		"""
-		The variable 'message' will be passed to Console.app.
-		Use self.logToConsole( "bla bla" ) for debugging.
-		"""
-		myLog = "Filter %s:\n%s" % ( self.title(), message )
-		NSLog( myLog )
-
 	def view(self):
 		return self.dialog
 	
@@ -533,7 +537,7 @@ class FilterWithDialog ( GSFilterPlugin ):
 
 GlyphsFilterWithoutDialogProtocol = objc.protocolNamed( "GlyphsFilter" )
 
-class FilterWithoutDialog ( NSObject, GlyphsFilterWithoutDialogProtocol ):
+class FilterWithoutDialog ( NSObject, GlyphsFilterWithoutDialogProtocol, SomeUsefulPluginMethods ):
 
 	def init( self ):
 		"""
@@ -541,6 +545,7 @@ class FilterWithoutDialog ( NSObject, GlyphsFilterWithoutDialogProtocol ):
 		"""
 		try:
 
+			self.lastErrorMessage = ''
 
 			self.menuName = 'My Filter'
 			self.keyboardShortcut = None
@@ -552,8 +557,8 @@ class FilterWithoutDialog ( NSObject, GlyphsFilterWithoutDialogProtocol ):
 				self.start()
 
 			return self
-		except Exception as e:
-			self.logToConsole( "init: %s" % str(e) )
+		except:
+			self.logError(traceback.format_exc())
 	
 	def interfaceVersion( self ):
 		"""
@@ -562,8 +567,8 @@ class FilterWithoutDialog ( NSObject, GlyphsFilterWithoutDialogProtocol ):
 		"""
 		try:
 			return 1
-		except Exception as e:
-			self.logToConsole( "interfaceVersion: %s" % str(e) )
+		except:
+			self.logError(traceback.format_exc())
 	
 	def title( self ):
 		"""
@@ -571,8 +576,8 @@ class FilterWithoutDialog ( NSObject, GlyphsFilterWithoutDialogProtocol ):
 		"""
 		try:
 			return self.menuName
-		except Exception as e:
-			self.logToConsole( "title: %s" % str(e) )
+		except:
+			self.logError(traceback.format_exc())
 	
 	def setController_( self, Controller ):
 		"""
@@ -581,8 +586,8 @@ class FilterWithoutDialog ( NSObject, GlyphsFilterWithoutDialogProtocol ):
 		"""
 		try:
 			self._controller = Controller
-		except Exception as e:
-			self.logToConsole( "setController_: %s" % str(e) )
+		except:
+			self.logError(traceback.format_exc())
 	
 	def controller( self ):
 		"""
@@ -599,8 +604,8 @@ class FilterWithoutDialog ( NSObject, GlyphsFilterWithoutDialogProtocol ):
 		"""
 		try:
 			return None
-		except Exception as e:
-			self.logToConsole( "setup: %s" % str(e) )
+		except:
+			self.logError(traceback.format_exc())
 	
 	def keyEquivalent( self ):
 		""" 
@@ -610,8 +615,8 @@ class FilterWithoutDialog ( NSObject, GlyphsFilterWithoutDialogProtocol ):
 		"""
 		try:
 			return self.keyboardShortcut
-		except Exception as e:
-			self.logToConsole( "keyEquivalent: %s" % str(e) )
+		except:
+			self.logError(traceback.format_exc())
 	
 	# deprecated --> filter() in user code
 	def __processLayer( self, Layer, selectionCounts ): 
@@ -632,8 +637,8 @@ class FilterWithoutDialog ( NSObject, GlyphsFilterWithoutDialogProtocol ):
 			# Do stuff here.
 			
 			return (True, None)
-		except Exception as e:
-			self.logToConsole( "processLayer: %s" % str(e) )
+		except:
+			self.logError(traceback.format_exc())
 			return (False, None)
 	
 	def runFilterWithLayers_error_( self, Layers, Error ):
@@ -651,8 +656,8 @@ class FilterWithoutDialog ( NSObject, GlyphsFilterWithoutDialogProtocol ):
 					self.filter( Layer, False, {} )
 					
 			return (True, None)
-		except Exception as e:
-			self.logToConsole( "runFilterWithLayers_error_: %s" % str(e) )
+		except:
+			self.logError(traceback.format_exc())
 	
 	def runFilterWithLayer_options_error_( self, Layer, Options, Error ):
 		"""
@@ -661,8 +666,8 @@ class FilterWithoutDialog ( NSObject, GlyphsFilterWithoutDialogProtocol ):
 		"""
 		try:
 			return self.runFilterWithLayer_error_( self, Layer, Error )
-		except Exception as e:
-			self.logToConsole( "runFilterWithLayer_options_error_: %s" % str(e) )
+		except:
+			self.logError(traceback.format_exc())
 			
 	def runFilterWithLayer_error_( self, Layer, Error ):
 		"""
@@ -673,8 +678,8 @@ class FilterWithoutDialog ( NSObject, GlyphsFilterWithoutDialogProtocol ):
 			if hasattr(self, 'filter'):
 				self.filter( Layer, True, {} )
 			return (True, None)
-		except Exception as e:
-			self.logToConsole( "runFilterWithLayer_error_: %s" % str(e) )
+		except:
+			self.logError(traceback.format_exc())
 			return (False, None)
 	
 	def processFont_withArguments_( self, Font, Arguments ):
@@ -727,16 +732,9 @@ class FilterWithoutDialog ( NSObject, GlyphsFilterWithoutDialogProtocol ):
 
 				if hasattr(self, 'filter'):
 					self.filter( Layer, False, customParameters )
-		except Exception as e:
-			self.logToConsole( "processFont_withArguments_: %s" % str(e) )
+		except:
+			self.logError(traceback.format_exc())
 	
-	def logToConsole( self, message ):
-		"""
-		The variable 'message' will be passed to Console.app.
-		Use self.logToConsole( "bla bla" ) for debugging.
-		"""
-		myLog = "Filter %s:\n%s" % ( self.title(), message )
-		NSLog( myLog )
 
 
 
@@ -749,7 +747,7 @@ class FilterWithoutDialog ( NSObject, GlyphsFilterWithoutDialogProtocol ):
 
 GlyphsGeneralPluginProtocol = objc.protocolNamed( "GlyphsPlugin" )
 
-class GeneralPlugin ( NSObject, GlyphsGeneralPluginProtocol ):
+class GeneralPlugin ( NSObject, GlyphsGeneralPluginProtocol, SomeUsefulPluginMethods ):
 	
 	def interfaceVersion( self ):
 		"""
@@ -758,22 +756,18 @@ class GeneralPlugin ( NSObject, GlyphsGeneralPluginProtocol ):
 		"""
 		try:
 			return 1
-		except Exception as e:
-			self.logToConsole( "interfaceVersion: %s" % str(e) )
+		except:
+			self.logError(traceback.format_exc())
 	
-	def logToConsole( self, message ):
-		"""
-		The variable 'message' will be passed to Console.app.
-		Use self.logToConsole( "bla bla" ) for debugging.
-		"""
-		myLog = "%s:\n%s" % ( self.__class__.__name__, message )
-		NSLog( myLog )
-
 	def loadPlugin(self):
-		if hasattr(self, 'start'):
-			self.start()
-		return None
+		try:
+			self.lastErrorMessage = ''
 
+			if hasattr(self, 'start'):
+				self.start()
+			return None
+		except:
+			self.logError(traceback.format_exc())
 
 
 
@@ -781,7 +775,7 @@ class GeneralPlugin ( NSObject, GlyphsGeneralPluginProtocol ):
 
 GlyphsPaletteProtocol = objc.protocolNamed( "GlyphsPalette" )
 
-class PalettePlugin ( NSObject, GlyphsPaletteProtocol ):
+class PalettePlugin ( NSObject, GlyphsPaletteProtocol, SomeUsefulPluginMethods ):
 	# Define all your IB outlets for your .xib after _theView:
 	_windowController = None
 #	_theView = objc.IBOutlet() # Palette view on which you can place UI elements.
@@ -793,6 +787,8 @@ class PalettePlugin ( NSObject, GlyphsPaletteProtocol ):
 		"""
 		try:
 #		if True:
+
+			self.lastErrorMessage = ''
 
 			self.dialogName = '____PaletteView____'
 			self.name = 'My Palette'
@@ -822,7 +818,7 @@ class PalettePlugin ( NSObject, GlyphsPaletteProtocol ):
 		
 			return self
 		except:
-			self.logToConsole(traceback.format_exc())
+			self.logError(traceback.format_exc())
 	
 	def interfaceVersion( self ):
 		"""
@@ -831,8 +827,8 @@ class PalettePlugin ( NSObject, GlyphsPaletteProtocol ):
 		"""
 		try:
 			return 1
-		except Exception as e:
-			self.logToConsole( "interfaceVersion: %s" % str(e) )
+		except:
+			self.logError(traceback.format_exc())
 	
 	def title( self ):
 		"""
@@ -840,20 +836,20 @@ class PalettePlugin ( NSObject, GlyphsPaletteProtocol ):
 		"""
 		try:
 			return self.name
-		except Exception as e:
-			self.logToConsole( "title: %s" % str(e) )
+		except:
+			self.logError(traceback.format_exc())
 	
 	def windowController( self ):
 		try:
 			return self._windowController
-		except Exception as e:
-			self.logToConsole( "windowController: %s" % str(e) )
+		except:
+			self.logError(traceback.format_exc())
 	
 	def setWindowController_( self, windowController ):
 		try:
 			self._windowController = windowController
-		except Exception as e:
-			self.logToConsole( "setWindowController_: %s" % str(e) )
+		except:
+			self.logError(traceback.format_exc())
 	
 	def theView( self ):
 		"""
@@ -862,8 +858,8 @@ class PalettePlugin ( NSObject, GlyphsPaletteProtocol ):
 		"""
 		try:
 			return self.dialog
-		except Exception as e:
-			self.logToConsole( "theView: %s" % str(e) )
+		except:
+			self.logError(traceback.format_exc())
 	
 	def minHeight( self ):
 		"""
@@ -871,8 +867,8 @@ class PalettePlugin ( NSObject, GlyphsPaletteProtocol ):
 		"""
 		try:
 			return self.min
-		except Exception as e:
-			self.logToConsole( "minHeight: %s" % str(e) )
+		except:
+			self.logError(traceback.format_exc())
 	
 	def maxHeight( self ):
 		"""
@@ -881,8 +877,8 @@ class PalettePlugin ( NSObject, GlyphsPaletteProtocol ):
 		"""
 		try:
 			return self.max
-		except Exception as e:
-			self.logToConsole( "maxHeight: %s" % str(e) )
+		except:
+			self.logError(traceback.format_exc())
 	
 	def currentHeight( self ):
 		"""
@@ -893,8 +889,8 @@ class PalettePlugin ( NSObject, GlyphsPaletteProtocol ):
 		try:
 			# return 150
 			return NSUserDefaults.standardUserDefaults().integerForKey_( self.dialogName + ".ViewHeight" )
-		except Exception as e:
-			self.logToConsole( "currentHeight: %s" % str(e) )
+		except:
+			self.logError(traceback.format_exc())
 	
 	def setCurrentHeight_( self, newHeight ):
 		"""
@@ -903,8 +899,8 @@ class PalettePlugin ( NSObject, GlyphsPaletteProtocol ):
 		try:
 			if newHeight >= self.minHeight() and newHeight <= self.maxHeight():
 				NSUserDefaults.standardUserDefaults().setInteger_forKey_( newHeight, self.dialogName + ".ViewHeight" )
-		except Exception as e:
-			self.logToConsole( "setCurrentHeight_: %s" % str(e) )
+		except:
+			self.logError(traceback.format_exc())
 	
 	def currentWindowController( self, sender ):
 		"""
@@ -926,21 +922,11 @@ class PalettePlugin ( NSObject, GlyphsPaletteProtocol ):
 			except:
 				pass
 			return windowController
-		except Exception as e:
-			self.logToConsole( "currentWindowController: %s" % str(e) )
+		except:
+			self.logError(traceback.format_exc())
 	
 	
-	def __del__(self):
-		if hasattr(self, 'quit'):
-			self.quit()
 	
-	def logToConsole( self, message ):
-		"""
-		The variable 'message' will be passed to Console.app.
-		Use self.logToConsole( "bla bla" ) for debugging.
-		"""
-		myLog = "Palette plugin %s:\n%s" % ( self.title(), message )
-		NSLog( myLog )
 
 
 
@@ -948,7 +934,7 @@ class PalettePlugin ( NSObject, GlyphsPaletteProtocol ):
 
 GlyphsReporterProtocol = objc.protocolNamed( "GlyphsReporter" )
 
-class ReporterPlugin ( NSObject, GlyphsReporterProtocol ):
+class ReporterPlugin ( NSObject, GlyphsReporterProtocol, SomeUsefulPluginMethods ):
 	
 	def init( self ):
 		"""
@@ -1088,15 +1074,6 @@ class ReporterPlugin ( NSObject, GlyphsReporterProtocol ):
 		except:
 			self.logError(traceback.format_exc())
 		
-	def logError(self, message):
-		try:
-			if message != self.lastErrorMessage:
-				self.logToConsole(message)
-				self.lastErrorMessage = message
-#				Glyphs.showNotification('Error in %s' % self.title(), 'Check the Console output for details.')
-		except:
-			self.logToConsole(traceback.format_exc())
-	
 	def needsExtraMainOutlineDrawingForInactiveLayer_( self, Layer ):
 		"""
 		Decides whether inactive glyphs in Edit View and glyphs in Preview should be drawn
@@ -1213,13 +1190,6 @@ class ReporterPlugin ( NSObject, GlyphsReporterProtocol ):
 		except Exception as e:
 			self.logToConsole( "Could not set controller" )
 	
-	def logToConsole( self, message ):
-		"""
-		The variable 'message' will be passed to Console.app.
-		Use self.logToConsole( "bla bla" ) for debugging.
-		"""
-		myLog = "Show %s plugin:\n%s" % ( self.title(), message )
-		NSLog( myLog )
 
 
 
@@ -1227,8 +1197,7 @@ class ReporterPlugin ( NSObject, GlyphsReporterProtocol ):
 
 
 
-
-class SelectTool ( GSToolSelect ):
+class SelectTool ( GSToolSelect, SomeUsefulPluginMethods ):
 	
 	def init( self ):
 		"""
@@ -1236,6 +1205,8 @@ class SelectTool ( GSToolSelect ):
 		Use this for any initializations you need.
 		"""
 		try:
+			self.lastErrorMessage = ''
+
 			self.name = 'My Select Tool'
 			self.toolbarPosition = 100
 			self._icon = 'toolbar.pdf'
@@ -1255,7 +1226,7 @@ class SelectTool ( GSToolSelect ):
 
 			return self
 		except:
-			self.logToConsole(traceback.format_exc())
+			self.logError(traceback.format_exc())
 		
 	def interfaceVersion( self ):
 		"""
@@ -1274,7 +1245,7 @@ class SelectTool ( GSToolSelect ):
 		try:
 			return self.name
 		except:
-			self.logToConsole(traceback.format_exc())
+			self.logError(traceback.format_exc())
 		
 	def toolBarIcon( self ):
 		"""
@@ -1284,7 +1255,7 @@ class SelectTool ( GSToolSelect ):
 		try:
 			return self.tool_bar_image
 		except:
-			self.logToConsole(traceback.format_exc())
+			self.logError(traceback.format_exc())
 		
 	def groupID( self ):
 		"""
@@ -1294,7 +1265,7 @@ class SelectTool ( GSToolSelect ):
 		try:
 			return self.toolbarPosition
 		except:
-			self.logToConsole(traceback.format_exc())
+			self.logError(traceback.format_exc())
 		
  	def trigger( self ):
 		"""
@@ -1304,7 +1275,7 @@ class SelectTool ( GSToolSelect ):
 		try:
 			return self.keyboardShortcut
 		except:
-			self.logToConsole(traceback.format_exc())
+			self.logError(traceback.format_exc())
 		
 	def willSelectTempTool_( self, TempTool ):
 		"""
@@ -1314,7 +1285,7 @@ class SelectTool ( GSToolSelect ):
 		try:
 			return TempTool.__class__.__name__ != "GlyphsToolSelect"
 		except:
-			self.logToConsole(traceback.format_exc())
+			self.logError(traceback.format_exc())
 		
 	def willActivate( self ):
 		"""
@@ -1326,7 +1297,7 @@ class SelectTool ( GSToolSelect ):
 			if hasattr(self, 'activate'):
 				self.activate()
 		except:
-			self.logToConsole(traceback.format_exc())
+			self.logError(traceback.format_exc())
 		
 	def willDeactivate( self ):
 		"""
@@ -1337,7 +1308,7 @@ class SelectTool ( GSToolSelect ):
 			if hasattr(self, 'deactivate'):
 				self.deactivate()
 		except:
-			self.logToConsole(traceback.format_exc())
+			self.logError(traceback.format_exc())
 		
 	def elementAtPoint_atLayer_( self, currentPoint, activeLayer ):
 		"""
@@ -1365,7 +1336,7 @@ class SelectTool ( GSToolSelect ):
 					return a
 			
 		except:
-			self.logToConsole(traceback.format_exc())
+			self.logError(traceback.format_exc())
 	
 	# The following four methods are optional, and only necessary
 	# if you intend to extend the context menu with extra items.
@@ -1392,7 +1363,7 @@ class SelectTool ( GSToolSelect ):
 			
 			return theMenu
 		except:
-			self.logToConsole(traceback.format_exc())
+			self.logError(traceback.format_exc())
 			
 	def addMenuItemsForEvent_toMenu_( self, theEvent, theMenu ):
 		"""
@@ -1414,13 +1385,6 @@ class SelectTool ( GSToolSelect ):
 					theMenu.insertItem_atIndex_( newSeparator, 1 )
 								
 		except:
-			self.logToConsole(traceback.format_exc())
+			self.logError(traceback.format_exc())
 	
 		
-	def logToConsole( self, message ):
-		"""
-		The variable 'message' will be passed to Console.app.
-		Use self.logToConsole( "bla bla" ) for debugging.
-		"""
-		myLog = "%s tool:\n%s" % ( self.title(), message )
-		NSLog( myLog )
