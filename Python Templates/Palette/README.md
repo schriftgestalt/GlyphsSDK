@@ -55,7 +55,10 @@ In this method you set all attributes that describe the plugin, such as its name
 	def settings(self):
 
 		# The name as it will appear in the sidebar
+		# You may use a simple string or Glyphs.localize() for localizations (see http://docu.glyphsapp.com#localize)
 		self.name = 'My Palette'
+		# or:
+		self.name = Glyphs.localize({'en': 'My Palette', 'de': 'Mein Palette'})
 
 		# The name of the Interface Builder file containing the UI dialog, without file extension
 		self.dialogName = '____PaletteView____'

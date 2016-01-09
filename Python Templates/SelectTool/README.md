@@ -56,7 +56,10 @@ In this method you set all attributes that describe the plugin, such as its name
 	def settings(self):
 
 		# The name as it will appear in Glyphs’s toolbar as a tooltip
+		# You may use a simple string or Glyphs.localize() for localizations (see http://docu.glyphsapp.com#localize)
 		self.name = 'My Select Tool'
+		# or:
+		self.name = Glyphs.localize({'en': 'My Select Tool', 'de': 'Mein Auswahlwerkzeug'})
 
 		# A keyboard shortcut for adctivating/deactivating the plugin
 		self.keyboardShortcut = 'p'

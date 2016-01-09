@@ -40,7 +40,10 @@ In this method you set all attributes that describe the plugin, such as its name
 	def settings(self):
 
 		# The name as it will appear in Glyphs’s View menu
+		# You may use a simple string or Glyphs.localize() for localizations (see http://docu.glyphsapp.com#localize)
 		self.menuName = 'My Plugin'
+		# or:
+		self.menuName = Glyphs.localize({'en': 'My Plugin', 'de': 'Mein Plugin'})
 
 		# A keyboard shortcut for adctivating/deactivating the plugin
 		self.keyboardShortcut = 'p'

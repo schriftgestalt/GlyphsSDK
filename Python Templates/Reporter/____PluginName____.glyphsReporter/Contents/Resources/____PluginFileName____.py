@@ -17,9 +17,9 @@ from GlyphsPlugins import *
 class ____PluginClassName____(ReporterPlugin):
 
 	def settings(self):
-		self.menuName = 'My Plugin'
+		self.menuName = Glyphs.localize({'en': 'My Plugin', 'de': 'Mein Plugin'})
 		self.generalContextMenus = [
-			["Do Something", self.doSomething],
+			[Glyphs.localize({'en': 'Do something', 'de': 'Tu etwas'}), self.doSomething],
 		]
 		
 	def drawForeground(self, layer):
@@ -55,7 +55,7 @@ class ____PluginClassName____(ReporterPlugin):
 			if len(layer.selection) == 1 and type(layer.selection[0]) == GSAnchor:
 					
 				# Add context menu item
-				contextMenus.append(["Do something else", self.doSomethingElse])
+				contextMenus.append([Glyphs.localize({'en': 'Do something else', 'de': 'Tu etwas anderes'}), self.doSomethingElse])
 
 		# Return list of context menu items
 		return contextMenus

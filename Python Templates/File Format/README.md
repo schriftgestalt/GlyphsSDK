@@ -46,7 +46,10 @@ In this method you set all attributes that describe the plugin, such as its name
 	def settings(self):
 
 		# The name as it will appear in the Export dialog
+		# You may use a simple string or Glyphs.localize() for localizations (see http://docu.glyphsapp.com#localize)
 		self.name = 'My CSV Export'
+		# or:
+		self.name = Glyphs.localize({'en': 'My CSV Export', 'de': 'Mein CSV-Export'})
 
 		# The file name of the Interface Builder .nib file (the dialog) without file extension
 		self.dialog = '____PluginFileName____Dialog'

@@ -17,9 +17,9 @@ from GlyphsPlugins import *
 class ____PluginClassName____(SelectTool):
 	
 	def settings(self):
-		self.name = 'My Select Tool'
+		self.name = Glyphs.localize({'en': 'My Select Tool', 'de': 'Mein Auswahlwerkzeug'})
 		self.generalContextMenus = [
-			["Layer info in Macro Window", self.printInfo],
+			[Glyphs.localize({'en': 'Layer info in Macro window', 'de': 'Ebenen-Infos in Makro-Fenster'}), self.printInfo],
 		]
 
 	def start(self):
@@ -44,7 +44,7 @@ class ____PluginClassName____(SelectTool):
 			if len(layer.selection) == 1 and type(layer.selection[0]) == GSAnchor:
 					
 				# Add context menu item
-				contextMenus.append(["Randomly move anchor", self.randomlyMoveAnchor])
+				contextMenus.append([Glyphs.localize({'en': 'Randomly move anchor', 'de': u'Anker zufällig verschieben'}), self.randomlyMoveAnchor])
 
 		# Return list of context menu items
 		return contextMenus
