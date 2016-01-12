@@ -7,7 +7,7 @@ In it’s naked version, the plugin behaves exactly like the built-in select too
 
 # User code
 
-A functional plugin can be as small as this (in `Contents/Resources/____PluginFileName____.py`):
+A functional plugin can be as small as this (in `Contents/Resources/plugin.py`):
 
 ```python
 # encoding: utf-8

@@ -18,7 +18,7 @@ If neither of the two `include`/`exclude` statements are provided, the Filter wi
 
 # User code
 
-A functional plugin can be as small as this (in `Contents/Resources/____PluginFileName____.py`):
+A functional plugin can be as small as this (in `Contents/Resources/plugin.py`):
 
 ```python
 # encoding: utf-8
@@ -99,7 +99,7 @@ In this method you set all attributes that describe the plugin, such as its name
 		self.keyboardShortcut = 'p'
 
 		# The name of the Interface Builder file containing the UI dialog, without file extension
-		self.dialogName = '____PluginFileName____Dialog'
+		self.dialogName = 'IBDialog'
 
 		# The caption of the action button of the dialog. 'Apply' is the default.
 		self.actionButtonLabel = 'Apply'

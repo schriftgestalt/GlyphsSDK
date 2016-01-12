@@ -8,7 +8,7 @@ Please check our Python API for the callbacks here: [`GSApplication.addCallback(
 
 # User code
 
-A functional plugin can be as small as this (in `Contents/Resources/____PluginFileName____.py`):
+A functional plugin can be as small as this (in `Contents/Resources/plugin.py`):
 
 ```python
 # encoding: utf-8

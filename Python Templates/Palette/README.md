@@ -8,7 +8,7 @@ For displaying information, you would typically use callbacks that tie in with e
 
 # User code
 
-A functional plugin can be as small as this (in `Contents/Resources/____PluginFileName____.py`):
+A functional plugin can be as small as this (in `Contents/Resources/plugin.py`):
 
 ```python
 # encoding: utf-8
@@ -59,7 +59,7 @@ In this method you set all attributes that describe the plugin, such as its name
 		self.name = Glyphs.localize({'en': 'My Palette', 'de': 'Mein Palette'})
 
 		# The name of the Interface Builder file containing the UI dialog, without file extension
-		self.dialogName = '____PaletteView____'
+		self.dialogName = 'IBDialog'
 ```
 
 #### start()

@@ -10,7 +10,7 @@ It makes use of a GUI through Interface Builder. See the description one level u
 
 # User code
 
-A functional plugin can be as small as this (in `Contents/Resources/____PluginFileName____.py`):
+A functional plugin can be as small as this (in `Contents/Resources/plugin.py`):
 
 ```python
 # encoding: utf-8
@@ -23,7 +23,6 @@ class ____PluginClassName____(FileFormatPlugin):
 
 	def settings(self):
 		self.name = 'My CSV Export'
-		self.dialog = '____PluginFileName____Dialog'
 		self.icon = 'ExportIcon'
 
 	def export(self, font):
@@ -51,7 +50,7 @@ In this method you set all attributes that describe the plugin, such as its name
 		self.name = Glyphs.localize({'en': 'My CSV Export', 'de': 'Mein CSV-Export'})
 
 		# The file name of the Interface Builder .nib file (the dialog) without file extension
-		self.dialog = '____PluginFileName____Dialog'
+		self.dialog = 'IBDialog'
 
 		# The file name of the icon file without file extension
 		self.icon = 'ExportIcon'

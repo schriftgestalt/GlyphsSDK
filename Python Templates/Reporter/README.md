@@ -5,7 +5,7 @@ A reporter plugin gets activated in the View menu of Glyphs.app and is designed 
 
 # User code
 
-A functional plugin can be as small as this (in `Contents/Resources/____PluginFileName____.py`):
+A functional plugin can be as small as this (in `Contents/Resources/plugin.py`):
 
 ```python
 # encoding: utf-8
