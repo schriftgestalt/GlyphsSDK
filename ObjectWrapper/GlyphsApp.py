@@ -2508,7 +2508,7 @@ Functions
 
 .. function:: generate([Format, FontPath, AutoHint, RemoveOverlap, UseSubroutines, UseProductionNames])
 	
-	Exports the instance. All paremeters are optional.
+	Exports the instance. All parameters are optional.
 	
 	:param str Format: 'OTF' or 'TTF'. Default: 'OTF'
 	:param str FontPath: The destination path for the final fonts. If None, it uses the default location set in the export dialog
