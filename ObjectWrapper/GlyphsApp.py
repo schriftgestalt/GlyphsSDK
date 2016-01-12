@@ -1731,10 +1731,7 @@ GSFont.selection = property(lambda self: Font_selectedGlyphs(self))
 	:type: list'''
 
 def Font_selectedLayers(self):
-	if self.currentTab:
-		return self.parent.selectedLayers()
-	else:
-		return ()
+	return self.parent.selectedLayers()
 
 GSFont.selectedLayers = property(lambda self: Font_selectedLayers(self))
 '''.. attribute:: selectedLayers
