@@ -65,7 +65,7 @@ class FileFormatPlugin ( NSObject, GlyphsFileFormatProtocol, SomeUsefulPluginMet
 
 			# Settings, default values
 			self.name = 'My File Format'
-			self.dialogName = '____PluginFileName____Dialog'
+			self.dialogName = 'IBdialog'
 			self.icon = 'ExportIcon'
 			self.toolbarPosition = 100
 
@@ -338,7 +338,7 @@ class FilterWithDialog ( GSFilterPlugin, SomeUsefulPluginMethods ):
 
 			self.menuName = 'My Filter'
 			self.keyboardShortcut = None # With Cmd+Shift
-			self.dialogName = '____PluginFileName____Dialog'
+			self.dialogName = 'IBdialog'
 			self.actionButtonLabel = 'Apply'
 	
 	
@@ -790,7 +790,7 @@ class PalettePlugin ( NSObject, GlyphsPaletteProtocol, SomeUsefulPluginMethods )
 
 			self.lastErrorMessage = ''
 
-			self.dialogName = '____PaletteView____'
+			self.dialogName = 'IBdialog'
 			self.name = 'My Palette'
 
 
