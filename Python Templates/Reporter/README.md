@@ -10,8 +10,7 @@ A functional plugin can be as small as this (in `Contents/Resources/____PluginFi
 ```python
 # encoding: utf-8
 
-from plugins import *
-from AppKit import *
+from GlyphsPlugins import *
 
 class ____PluginClassName____(ReporterPlugin):
 	def settings(self):

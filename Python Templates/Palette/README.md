@@ -13,9 +13,7 @@ A functional plugin can be as small as this (in `Contents/Resources/____PluginFi
 ```python
 # encoding: utf-8
 
-from plugin import *
-from AppKit import *
-from GlyphsApp import *
+from GlyphsPlugins import *
 
 class ____PluginClassName____ (PalettePlugin):
 
