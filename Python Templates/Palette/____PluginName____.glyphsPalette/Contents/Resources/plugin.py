@@ -21,7 +21,6 @@ class ____PluginClassName____ (PalettePlugin):
 	
 	def settings(self):
 		self.name = Glyphs.localize({'en': 'My Palette', 'de': 'Meine Palette'})
-		self.dialogName = '____PaletteView____'
 	
 	def start(self):
 

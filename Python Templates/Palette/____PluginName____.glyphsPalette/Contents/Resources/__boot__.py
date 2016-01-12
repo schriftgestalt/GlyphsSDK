@@ -44,4 +44,4 @@ def _run(*scripts):
 		__file__ = path
 		execfile(path, globals(), globals())
 
-_run('____PluginFileName____.py')
+_run('plugin.py')

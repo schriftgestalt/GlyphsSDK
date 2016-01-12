@@ -18,7 +18,7 @@
 	<key>CFBundleDisplayName</key>
 	<string>____PluginName____</string>
 	<key>CFBundleExecutable</key>
-	<string>____PluginFileName____</string>
+	<string>plugin</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.____Developer____.____PluginClassName____</string>
 	<key>CFBundleInfoDictionaryVersion</key>
