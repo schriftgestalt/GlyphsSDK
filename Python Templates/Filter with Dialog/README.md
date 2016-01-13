@@ -1,8 +1,8 @@
 Welcome to Glyphs.app’s plug-in documentation. 
 
-This documentation here covers only a few details of the whole process. If you’re new to the subject, we recommend to start by [reading our tutorial](https://glyphsapp.com/tutorials/plugins), where you will later be asked to return here.
+This documentation here covers only a few details of the whole process. If you are new to the subject, we recommend to start by [reading our tutorial](https://glyphsapp.com/tutorials/plugins), where you will later be asked to return here.
 
-## File With Dialog Plug-in
+## Filter Plug-in with Dialog
 
 The filter plug-in (with dialog) gets called either from the Filter menu, or through Custom Parameters upon font export.
 
@@ -158,7 +158,7 @@ The user is exporting a font whose instances contain Custom Parameters that call
 
 #### customParameterString()
 
-If this method is implemented, the filter dialog will show a small gear icon in the lower left corner of the dialog. Upon click a menu will appear that will let you copy a string (returned by this method) to the clipboard describing the plug-in and the currently chosen values (in the dialog). These are the values needed to define Custom Parameters for the font’s instances to apply the filter on font export. You may paste this string directly into the Custom Parameters field as descibed below:
+If this method is implemented, the filter dialog will show a small gear icon in the lower left corner of the dialog. Upon click a menu will appear that will let you copy a string (returned by this method) to the clipboard describing the plug-in and the currently chosen values (in the dialog). These are the values needed to define Custom Parameters for the font’s instances to apply the filter on font export. You may paste this string directly into the Custom Parameters field as described below:
 
 Copy Custom Parameters:
 

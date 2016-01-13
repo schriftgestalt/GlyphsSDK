@@ -1,6 +1,6 @@
 Welcome to Glyphs.app’s plug-in documentation. 
 
-This documentation here covers only a few details of the whole process. If you’re new to the subject, we recommend to start by [reading our tutorial](https://glyphsapp.com/tutorials/plugins), where you will later be asked to return here.
+This documentation here covers only a few details of the whole process. If you are new to the subject, we recommend to start by [reading our tutorial](https://glyphsapp.com/tutorials/plugins), where you will later be asked to return here.
 
 ## Reporter Plug-in
 
@@ -171,7 +171,7 @@ Return a list of context menu items described as a list of `['name', method]` pa
 		return contextMenus
 ```
 
-# Tips on drawing
+# Tips on Drawing
 
 Glyphs.app uses the Mac’s own Cocoa methods for drawing. These sometimes behave slightly different from other Python objects, and surely they have different names. 
 

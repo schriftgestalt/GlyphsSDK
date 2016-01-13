@@ -1,13 +1,14 @@
 Welcome to Glyphs.app’s plug-in documentation. 
 
-This documentation here covers only a few details of the whole process. If you’re new to the subject, we recommend to start by [reading our tutorial](https://glyphsapp.com/tutorials/plugins), where you will later be asked to return here.
+This documentation here covers only a few details of the whole process. If you are new to the subject, we recommend to start by [reading our tutorial](https://glyphsapp.com/tutorials/plugins), where you will later be asked to return here.
 
 ## Select Tool
 
 The Select Tool Plugin creates a replacement for the standard select tool and lets you extend its functionality.
-You can add context menus (that appear on the user’s mouse right-click), both general context menus (they always appear) as well as conditional contaxt menus (they only appear under a certain condition defined in your code).
 
-In it’s naked version, the plug-in behaves exactly like the built-in select tool.
+You can add context menus (that appear on the user’s mouse right-click), both general context menus (they always appear) as well as conditional context menus (they only appear under a certain condition defined in your code).
+
+In its naked version, the plug-in behaves exactly like the built-in select tool.
 
 ![](../_Readme_Images/selecttool.png)
 

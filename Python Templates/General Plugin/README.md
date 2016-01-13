@@ -1,6 +1,6 @@
 Welcome to Glyphs.app’s plug-in documentation. 
 
-This documentation here covers only a few details of the whole process. If you’re new to the subject, we recommend to start by [reading our tutorial](https://glyphsapp.com/tutorials/plugins), where you will later be asked to return here.
+This documentation here covers only a few details of the whole process. If you are new to the subject, we recommend to start by [reading our tutorial](https://glyphsapp.com/tutorials/plugins), where you will later be asked to return here.
 
 ## General Plug-in
 
@@ -23,5 +23,5 @@ from GlyphsPlugins import *
 
 class ____PluginClassName____(GeneralPlugin):
 	def start(self):
-		# Yor init code goes here
+		# Your init code goes here
 ```
