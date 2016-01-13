@@ -2,7 +2,7 @@ Welcome to Glyphs.app’s plug-in documentation.
 
 This documentation here covers only a few details of the whole process. If you’re new to the subject, we recommend to start by [reading our tutorial](https://glyphsapp.com/tutorials/plugins), where you will later be asked to return here.
 
-## File Without Dialog Plug-in
+## Filter Without Dialog Plug-in
 
 The filter plug-in (without dialog) gets called either from the Filter menu, or through Custom Parameters upon font export.
 
