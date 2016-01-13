@@ -6,7 +6,7 @@ Planned for the future are Save and Open functionalities.
 This sample plugin is functional and exports glyph names, unicodes and glyph width into a simple CSV file.
 It makes use of a GUI through Interface Builder. See the description one level up (https://github.com/schriftgestalt/GlyphsSDK/tree/master/Python%20Templates) on how to use it.
 
-![](_Readme_Images/exportdialog.png)
+![](../_Readme_Images/exportdialog.png)
 
 # User code
 
