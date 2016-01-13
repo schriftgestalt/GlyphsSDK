@@ -1,87 +1,94 @@
+Welcome to Glyphs.app’s plug-in documentation. 
+
+This documentation here covers only a few details of the whole process. If you’re new to the subject, we recommend to start by [reading our tutorial](https://glyphsapp.com/tutorials/plugins), where you will later be asked to return here.
+
 ## Using Python templates
 
-Copy the template plugin into your Plugins folder, which is located at ~/Library/Application Support/Glyphs/Plugins (see ‘Installing and debugging’ below). And open it in your favorite text editor. It should display the internal folder structure of the plugin.
+Copy the skeleton plug-in into Glyphs’ plug-in folder located at `~/Library/Application Support/Glyphs/Plugins` (`~` stands for your user account’s home folder).
 
-Make sure to go through the following files and replace all placeholders that have quadruple underscores (like `____placeholder____`):
+We need to rename a few things in the contained files, so open the package in your contemporary text editor. It should display the internal folder structure of the plug-in in a side-bar for easy access. 
+
+## Edit the files
+
+Replace all placeholders that have quadruple underscores (like `____placeholder____`) in these files:
+
 * `Contents/Info.plist`
-* `Contents/MacOS/____PluginFileName____` (just needs to be renamed)
-* `Contents/Resources/____PluginFileName____.py`
-* `Contents/Resources/__boot__.py`
+* `Contents/Resources/plugin.py`
+* `Contents/Resources/IBdialog.xib` (Only in case that plug-in actually uses a dialog. Don’t forget to re-compile. See the *Interface Builder* section below.)
 
-Do *not* touch these files and folders:
-* `Contents/MacOS/python`
-* `Contents/PkgInfo`
-* `Contents/Resources/lib/`
-* `Contents/Resources/site.py`
-* `Contents/Resources/__error__.sh`
+### Edit `Contents/Info.plist`:
 
-For simplicity’s sake, and if it makes sense for your project, you can keep `____PluginClassName____`, `____PluginFileName____`, and `____PluginName____` the same throughout the whole project.
+These variables will need to be replaced by you:
 
-## Edit Info.plist
+#### Name of plug-in
 
-Open `Contents/Info.plist` and customize the entries there. If you want to make sure your plugin works with the update mechanism built into Glyphs, always update the version numbers: Put a version number in dotted format into `CFBundleShortVersionString` (e.g, 1.2.3), and a release number into `CFBundleVersion` (a simple incremental number, e.g., 12).
+For the plug-in name, we are dealing with two different name variations:
 
-You will probably re-use `____Developer____` for other projects, so put your name or twitter handle there. Put your name and year in `NSHumanReadableCopyright`. Glyphs will try to parse your name between the copyright and the year number, and display it in the Plugins section of the app preferences. `CFBundleIdentifier` should be a reverse domain name without spaces (e.g., com.myCompany.pluginName). In case you are making a filter with a custom parameter: `NSPrincipalClass` will be the filter trigger for the parameter value (i.e., the identifier before the first semicolon).
+* `____PluginName____` is a human readable name that will show up in places such as the *Plugins* tab of Glyphs’ preferences window. This name may contain spaces and Unicode characters.
+* `____PluginClassName____` is the machine readable name of the Python class in your code and needs to be put into a few places. It needs to be unique, as in: You can’t install two plug-ins next to each other that have the same class name. Although I wrote "machine readable", there is one interaction where the user of the plug-in will get to see this class name: Calling Filters through Custom Parameters upon file export. So make it a friendly and unique name. Only ASCII characters and no spaces allowed here. We recommend `camelCaseNames`.
 
-Still in `Contents/Info.plist`, replace `____PluginClassName____` with the name of the principal Python class in `Contents/Resources/____PluginFileName____.py`. No spaces, we recommend camelCase. These two entries and the name of the class in `____PluginFileName____.py` must be exactly the same.
+#### Other meta data
 
-Again, in `Contents/Info.plist`, replace `____PluginFileName____` in `CFBundleExecutable` and `CFBundleVersion` with the actual file name of `Contents/Resources/____PluginFileName____.py`, ignoring the `.py` extension. Rename `Contents/MacOS/____PluginFileName____` to the same file name, again ignoring the `.py` extension. The files and these two entries in `Contents/Info.plist` must carry the exact same name. We recommend to use a camel-cased file name without spaces.
+* `____Developer____` is your name
+* `____Year____` is the release year of your plug-in
 
-##### Plugin update mechanism
+#### Plug-in version and update mechanism
 
-Glyphs provides automatic update checks and notifications (not automatic installation) for installed plugins and will notify users in the user interface when a new version is available. It will once per day (or upon click in the preferences) check a URL that must contain a xml file very similar (or even identical) to this here Info.plist. This online xml file must contain at least the two fields `CFBundleVersion` and `productPageURL`. `CFBundleVersion` is checked against the installed plugin's version on the user's computer, and when a newer version is detected, the user may click to be directed to the URL given in `productPageURL` in the browser where he can download the new plugin.
+Glyphs provides automatic update checks and notifications (not automatic installation) for installed plug-ins and will notify users in the user interface when a new version is available. It will once per day (or upon click in the preferences) check a URL that must contain a xml file very similar (or even identical) to the shipped `Info.plist`. This online xml file must contain at least the two fields `CFBundleVersion` and `productPageURL`.
 
-In `UpdateFeedURL`, replace `____OnlineUrlToThisPlist____` with a deep link to this .plist file. This file can be your GitHub repository, or elsewhere. In `productPageURL`, replace `____ProductPageURL____` with a web page URL for the plugin. This can be your GitHub repository page or elsewhere. Finally, in `productReleaseNotes`, you may provide a short description of your latest changes, e.g., ‘New option X’. This will be displayed when the user checks for updates in the app preferences, and will motivate your users to keep your plugins up to date.
+But even if you don’t want to participate in the automatic update notifications, it is advisable to fill in the version numbers.
+
+> Pro tip: Think ahead and specify at least a URL for automatic update notifications even if it’s way too early for you to implement the update procedure. Glyphs is well capable of handling an error response for that URL until the time has come. Consider: once your plug-in has shipped to users, it’s too late to remedy.
+
+> Simply take this `Info.plist` file, upload it on some server, and place a http link to that file into the `UpdateFeedURL` field of the shipped plug-in’s `Info.plist`. For the time being, leave the version number in `CFBundleVersion` in the online file the same as the shipped file. When the time has come, you’ll fill in the new version number and the `productPageURL` field, and voilà: we have established ourselves an automatic update notification process.
+
+The variables in detail:
+
+* `____BundleVersion____` is a machine-readable version identifier for the plug-in. It must contain either an integer (`15`) or a float (`1.6`) version number. Glyphs will also use this version number to compare the currently installed plug-in to the version number made available online.
+* `____BundleVersionString____` is a human-readable description of the version number. It may contain characters other than numbers and the period, such as more periods or a alpha/beta identifier, like so: `1.6.1a`. it may of course also be identical to *`____BundleVersion____`*.
+* `____OnlineUrlToThisPlist____` is where Glyphs will look online for newer versions of your plug-in. The result must be a `.plist` xml file similar to the shipped `Info.plist` and must contain at least the two fields *`CFBundleVersion`* and *`productPageURL`*.
+* `____ProductPageURL____` is where Glyphs will take the user once he got notified of an existing update and has clicked on the notification. On this page, you should make your new plug-in version available for download, since Glyphs will not automatically install the update (at this point).
+* `____LatestReleaseNotes____` is an optional description of the lastest plug-in version, e.g., *‘New feature X’*. This will be displayed when the user checks for updates in the app preferences, and will motivate your users to keep your plug-ins up to date.
+
 
 ###### Dynamic version information
 
 If you operate your own software distribution system, like an online shop, you can have your server output this Info.plist with dynamic information about the latest version of the plugin, instead of keeping the online Info.plist manually up to date. Please make sure that the file is delivered in the `application/xml` MIME-type.
 
-Glyphs will add the URL parameters `glyphsUniqueID` (an anonymous ID identifiying unique Glyphs installations on people's computer's) and `glyphsVersion` (the Build number of that Glyphs installation) to the update check call (planned but not yet implemented: `pluginVersion` describing the version of your plugin installed within the user's Glyphs installation). You can use this information to keep anonymous track of the number of plugin installations out there and their version information and level of adoption.
+Glyphs will add the URL parameters `glyphsUniqueID` (an anonymous ID identifiying unique Glyphs installations on people's computer's) and `glyphsVersion` (the Build number of that Glyphs installation) to the update check call (planned but not yet implemented: `pluginVersion` describing the version of your plug-in installed within the user's Glyphs installation). You can use this information to keep anonymous track of the number of plugin installations out there and their version information and level of adoption.
 
-Automagically (or, as it should), the interface language of Glyphs makes its way into the update check call via the HTTP headers. Therefore, you may choose to provide the `productReleaseNotes` in various languages.
+The interface language of Glyphs makes its way into the update check call via the HTTP headers. Therefore, you may choose to provide the `productReleaseNotes` dynamically in various languages.
 
-A live example of all of this can be found for Yanone’s Speed Punk, with `productReleaseNotes` provided in English and German (if you click the following link here in your browser, your browser will send the preferred languages via the HTTP headers): https://yanone.de/buy/?page=versionInformation&product=speedpunkglyphs&format=GlyphsInfoPlist
+A live example of all of this can be found for Yanone’s Speed Punk, with `productReleaseNotes` provided in English and German (if you click the following link here in your browser, your browser will send the preferred languages via the HTTP headers identical to how Glyphs would do it): https://yanone.de/buy/?page=versionInformation&product=speedpunkglyphs&format=GlyphsInfoPlist
+### Edit `Contents/Resources/plugin.py`:
 
-## Further renaming
+This is where your own code goes. You need to rename the main class `class ____PluginClassName____(...)` to the above mentioned class name.
 
-##### Edit the boot file
+### Edit `Contents/Resources/IBdialog.xib`:
 
-In the last line of `Contents/Resources/__boot__.py`, the file name (`____PluginFileName____`), this time *with* the `.py` extension, must be mentioned.
+Should your plug-in contain a dialog, you need to likewise rename the pointer `____PluginClassName____` to the principal class. This is quickest done in text editor, but you can (and must) also read through the Interface Builder instructions below and could change the value in XCode/Interface Builder.
 
-##### Rename the MacOS executable
+Don’t forget to re-compile. See the *Interface Builder* section below.
 
-Rename `Contents/MacOS/____PluginFileName____`. Make sure it is exactly in sync with the `CFBundleExecutable` value in Info.plist, and with the name of the core Python file (except for the .py suffix). See below.
-
-##### Rename and edit the core Python file
-
-`Contents/Resources/____PluginFileName____.py` is where your actual code goes. Rename the file and open it.
-
-In the same file, rename the following strings in the source code: `____PluginClassName____`, `____PluginMenuName____`, `____PluginToolbarTitle____`.
-
-## Installing and debugging
-
-To install a plugin, move it into the Plugins folder inside the Application Support folder of Glyphs (double click the plugin to let Glyphs do that for you). You can edit your code right there, but you need to restart the application for any changes to take effect.
-
-Tip: right-click the Glyphs.app Dock icon, force quit it, and restart immediately with a click on the Dock icon. This will also immediately re-open any windows (you had open before the force quit) to their last state.
 
 ## Interface Builder: Adding GUI elements
 
 The interaction between your Python script and a graphical user interface (GUI) requires the use of Interface Builder, which is part of Apple’s XCode software development environment. The work with Interface Builder can be a bit daunting, but we’ve written a step-by-step walkthrough here for you that will get you going quickly. After your first completed GUI interaction, using it will become as natural as all the rest.
 
 Your Python code communicates with the UI through:
+
 - **IBOutlets** *(.py->GUI)*: Make UI elements available to your Python code. Then your code can change these elements (like the caption of a text field)
 - **IBActions** *(GUI->.py)*: Call methods in the Python code from actions in the UI (like the click of a button)
 
-The two sample plugins here that use a UI, `File format` and `Filter with dialog`, are small functional plugins that make use of both IBOutlets and IBActions.
+The sample plug-ins here that use a UI, `File Format`, `Filter With Dialog`, and `Palette`, are small functional plug-ins that make use of both IBOutlets and IBActions.
 
 ##### 1. IBOutlets: Make UI elements available to Python 
 
-At the root of the plugin class, you define variables that will be linked to UI elements. In this example, we want to attach the `NSView` object (the *Custom View* window pane from Interface Builder) to the variable `settings_view`. (Glyphs then accesses the NSView object found in this variable through the function `exportSettingsView()`.
+At the root of the plug-in class, you define variables that will be linked to UI elements. In this example, we want to create a pointer to a text field in the dialog to the variable `textField `.
 
 ```python
-class CSVFileExport (NSObject, GlyphsFileFormatProtocol):
-	settings_view = objc.IBOutlet()
+class CSVFileExport (FileFormatPlugin):
+    textField = objc.IBOutlet() # A text field in the user interface
 ```
 
 ##### 2. IBActions: Let UI elements trigger Python functions
@@ -102,8 +109,8 @@ The function names need to end with an underscore, e.g. `setValue_()`.
 
 - Open the .xib file in XCode, and add and arrange interface elements
 - Add this .py file via *File > Add Files...* for Xcode to recognize all IBOutlets and IBActions
-- In the left sidebar, choose *Placeholders > File's Owner*, in the right sidebar, open the *Identity inspector* (3rd icon), and put the name of this controller class in the *Custom Class > Class* field
-- The first **IBOutlet**, the main window pane: Ctrl-drag from the *File's Owner* to the window pane (called *Custom View*) either in the graphical arrangement or in the list on the left, then choose `settings_view` from the pop-up list, to establish the connection between the Python variable and the main NSView object
+- In the left sidebar, choose *Placeholders > File's Owner*, in the right sidebar, open the *Identity inspector* (3rd icon), and put the name of this controller class in the *Custom Class > Class* field (the above used `____PluginClassName____` variable)
+- The most important **IBOutlet** is the pointer to the the main window pane. It should be set to `dialog`, which is a predefined variable that we use. Should you still want to change it: Ctrl-drag from the *File's Owner* to the window pane (called *Custom View*) either in the graphical arrangement or in the list on the left, then choose `dialog` (or whatever) from the pop-up list, to establish the connection between the Python variable and the main NSView object
 
 ![](_Readme_Images/IB_DragConnection.png)
 
@@ -118,16 +125,23 @@ All the back and forth relations between the UI and your Python code can be revi
 
 ##### 4. Compile .xib to .nib
 
-As a last step, you need to compile the .xib file to a .nib file with this *Terminal* command: `ibtool xxx.xib --compile xxx.nib`.
+As a last step, you need to compile the `.xib` (the user-editable dialog) file to a `.nib` file with this *Terminal* command: `ibtool xxx.xib --compile xxx.nib`.
 Please note: Every time the .xib is changed, it has to be **recompiled** to a .nib. 
 
-##### 5. Troubleshooting and debugging
+For convenience, we provide a droplet app that will accept your `.xib` file so you don’t have to fiddle with the paths in the Terminal. Just drag the `.xib` file (maybe directly from inside your text editor) onto the icon that you may have conveniently placed in your Dock.
 
-Check *Console.app* for error messages to see if everything went right.
-You can also output your own debug code to *Console.app* using the plugin's own `self.logToConsole()` function.
+![](_Readme_Images/dock.png)
 
-##### Further reading
+You’ll find the dropplet .app here in this *Python Templates* folder in the Git repository.
+
+## Further reading
 
 For a quick introduction to using Interface Builder with the PyObjC bridge, read http://blog.adamw523.com/os-x-cocoa-application-python-pyobjc/
 
 For the complete reference for the UI elements, see Apple's AppKit Framework Reference: https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ApplicationKit/ObjC_classic/index.html
+## Troubleshooting and debugging
+
+Check *Console.app* for error messages to see if everything went right.
+You can also output your own debug code to *Console.app* using the plugin's own `self.logToConsole()` function.
+
+> Tip: Enter 'Glyphs' into Console.app’s search field to filter for the relevant messages.

@@ -1,4 +1,10 @@
-The palette plugin will show up as a dialog in Glyphs.app’s sidebar on the right edge of the application window. 
+Welcome to Glyphs.app’s plug-in documentation. 
+
+This documentation here covers only a few details of the whole process. If you’re new to the subject, we recommend to start by [reading our tutorial](https://glyphsapp.com/tutorials/plugins), where you will later be asked to return here.
+
+## Palette Plug-In
+
+The palette plug-in will show up as a dialog in Glyphs.app’s sidebar on the right edge of the application window. 
 
 You may use it to display information about the glyphs or add controls to change them.
 For displaying information, you would typically use callbacks that tie in with events being fired in Glyphs.app, such as the `GSUpdateInterface` event, which gets fired each time anything is being redrawn in the user interface. This can happen quite often, so be careful as to how complicated your code becomes.
@@ -8,7 +14,7 @@ For displaying information, you would typically use callbacks that tie in with e
 
 # User code
 
-A functional plugin can be as small as this (in `Contents/Resources/plugin.py`):
+A functional plug-in can be as small as this (in `Contents/Resources/plugin.py`):
 
 ```python
 # encoding: utf-8
@@ -46,7 +52,7 @@ From there you can add the following methods:
 
 #### settings()
 
-In this method you set all attributes that describe the plugin, such as its name etc.
+In this method you set all attributes that describe the plug-in, such as its name etc.
 
 
 ```python
@@ -64,7 +70,7 @@ In this method you set all attributes that describe the plugin, such as its name
 
 #### start()
 
-This method gets called when the plugin gets initialized upon Glyphs.app start.
+This method gets called when the plug-in gets initialized upon Glyphs.app start.
 You put all your initialization code here.
 In our example, this would be adding the callbacks.
 

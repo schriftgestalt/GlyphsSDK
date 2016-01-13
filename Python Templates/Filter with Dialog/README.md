@@ -1,4 +1,10 @@
-The filter plugin (with dialog) gets called either from the Filter menu, or through Custom Parameters upon font export.
+Welcome to Glyphs.app’s plug-in documentation. 
+
+This documentation here covers only a few details of the whole process. If you’re new to the subject, we recommend to start by [reading our tutorial](https://glyphsapp.com/tutorials/plugins), where you will later be asked to return here.
+
+## File With Dialog Plug-in
+
+The filter plug-in (with dialog) gets called either from the Filter menu, or through Custom Parameters upon font export.
 
 ![](../_Readme_Images/filterwithdialog.png)
 
@@ -6,7 +12,7 @@ This is how you call the filter through Custom Parameters:
 In the font’s Info dialog, for each *instance* add a `Custom Parameter` called `Filter`. 
 
 The value should contain a semicolon-separated list of the following:
-- The plugin name (by its Python class name, so `____PluginClassName____` in the virgin plugin)
+- The plug-in name (by its Python class name, so `____PluginClassName____` in the virgin plug-in)
 - `include`: A list of glyphs to exercise the filter on. Only these glyphs will be used.
 - `exclude`: A list of glyphs to exclude from the filter. All glyphs of the font except those will be used.
 - Any other custom parameter of your choice in the `key:value` format.
@@ -18,7 +24,7 @@ If neither of the two `include`/`exclude` statements are provided, the Filter wi
 
 # User code
 
-A functional plugin can be as small as this (in `Contents/Resources/plugin.py`):
+A functional plug-in can be as small as this (in `Contents/Resources/plugin.py`):
 
 ```python
 # encoding: utf-8
@@ -83,7 +89,7 @@ From there you can add the following methods:
 
 #### settings()
 
-In this method you set all attributes that describe the plugin, such as its name etc.
+In this method you set all attributes that describe the plug-in, such as its name etc.
 
 
 ```python
@@ -95,7 +101,7 @@ In this method you set all attributes that describe the plugin, such as its name
 		# or:
 		self.menuName = Glyphs.localize({'en': 'My Filter', 'de': 'Mein Filter'})
 
-		# A keyboard shortcut for adctivating/deactivating the plugin (together with Command+Shift)
+		# A keyboard shortcut for activating/deactivating the plug-in (together with Command+Shift)
 		self.keyboardShortcut = 'p'
 
 		# The name of the Interface Builder file containing the UI dialog, without file extension
@@ -108,7 +114,7 @@ In this method you set all attributes that describe the plugin, such as its name
 
 #### start()
 
-This method gets called when the plugin gets initialized upon filter menu click (and the dialog gets displayed).
+This method gets called when the plug-in gets initialized upon filter menu click (and the dialog gets displayed).
 You put all your initialization code here.
 
 ```python
@@ -141,8 +147,8 @@ The user has selected several glyphs in the Font View and has clicked on the fil
 
 ##### 3. Call through Custom Parameters upon font export
 
-The user is exporting a font whose instances contain Custom Parameters that call the plugin.
-`inEditView` will be set to `False` and `customParameters` will contain any custom parameter (other than the plugin name, include and exclude statements) that the user has specified in the parameters. You will need to educate the users of your plugin about what these parameters should look like. The `filter()` method will be called several times according to the results of the include/exclude statements, each time containing a different `layer`.
+The user is exporting a font whose instances contain Custom Parameters that call the plug-in.
+`inEditView` will be set to `False` and `customParameters` will contain any custom parameter (other than the plug-in name, include and exclude statements) that the user has specified in the parameters. You will need to educate the users of your plug-in about what these parameters should look like. The `filter()` method will be called several times according to the results of the include/exclude statements, each time containing a different `layer`.
 
 ```python
 	def filter(self, layer, inEditView, customParameters):
@@ -152,7 +158,7 @@ The user is exporting a font whose instances contain Custom Parameters that call
 
 #### customParameterString()
 
-If this method is implemented, the filter dialog will show a small gear icon in the lower left corner of the dialog. Upon click a menu will appear that will let you copy a string (returned by this method) to the clipboard describing the plugin and the currently chosen values (in the dialog). These are the values needed to define Custom Parameters for the font’s instances to apply the filter on font export. You may paste this string directly into the Custom Parameters field as descibed below:
+If this method is implemented, the filter dialog will show a small gear icon in the lower left corner of the dialog. Upon click a menu will appear that will let you copy a string (returned by this method) to the clipboard describing the plug-in and the currently chosen values (in the dialog). These are the values needed to define Custom Parameters for the font’s instances to apply the filter on font export. You may paste this string directly into the Custom Parameters field as descibed below:
 
 Copy Custom Parameters:
 
@@ -165,7 +171,7 @@ Paste into Custom Parameters field:
 ```python
 	def customParameterString( self ):
 
-		# Copy plugin name (by its class name) with a 'shift' value
+		# Copy plug-in name (by its class name) with a 'shift' value
 		return "%s; shift:%s;" % (self.__class__.__name__, Glyphs.defaults['com.myname.myfilter.value'] )
 ```
 

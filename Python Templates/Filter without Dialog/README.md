@@ -1,4 +1,10 @@
-The filter plugin (without dialog) gets called either from the Filter menu, or through Custom Parameters upon font export.
+Welcome to Glyphs.app’s plug-in documentation. 
+
+This documentation here covers only a few details of the whole process. If you’re new to the subject, we recommend to start by [reading our tutorial](https://glyphsapp.com/tutorials/plugins), where you will later be asked to return here.
+
+## File Without Dialog Plug-in
+
+The filter plug-in (without dialog) gets called either from the Filter menu, or through Custom Parameters upon font export.
 
 ![](../_Readme_Images/filterwithoutdialog.png)
 
@@ -6,7 +12,7 @@ This is how you call the filter through Custom Parameters:
 In the font’s Info dialog, for each *instance* add a `Custom Parameter` called `Filter`. 
 
 The value should contain a semicolon-separated list of the following:
-- The plugin name (by its Python class name, so `____PluginClassName____` in the virgin plugin)
+- The plug-in name (by its Python class name, so `____PluginClassName____` in the virgin plug-in)
 - `include`: A list of glyphs to exercise the filter on. Only these glyphs will be used.
 - `exclude`: A list of glyphs to exclude from the filter. All glyphs of the font except those will be used.
 - Any other custom parameter of your choice in the `key:value` format.
@@ -18,7 +24,7 @@ If neither of the two `include`/`exclude` statements are provided, the Filter wi
 
 # User code
 
-A functional plugin can be as small as this (in `Contents/Resources/plugin.py`):
+A functional plug-in can be as small as this (in `Contents/Resources/plugin.py`):
 
 ```python
 # encoding: utf-8
@@ -40,7 +46,7 @@ From there you can add the following methods:
 
 #### settings()
 
-In this method you set all attributes that describe the plugin, such as its name etc.
+In this method you set all attributes that describe the plug-in, such as its name etc.
 
 
 ```python
@@ -52,13 +58,13 @@ In this method you set all attributes that describe the plugin, such as its name
 		# or:
 		self.menuName = Glyphs.localize({'en': 'My Plugin', 'de': 'Mein Plugin'})
 
-		# A keyboard shortcut for adctivating/deactivating the plugin (together with Command+Shift)
+		# A keyboard shortcut for adctivating/deactivating the plug-in (together with Command+Shift)
 		self.keyboardShortcut = 'p'
 ```
 
 #### start()
 
-This method gets called when the plugin gets initialized upon Glyphs.app start.
+This method gets called when the plug-in gets initialized upon Glyphs.app start.
 You put all your initialization code here.
 
 ```python
@@ -91,16 +97,16 @@ The user has selected several glyphs in the Font View and has clicked on the fil
 
 ##### 3. Call through Custom Parameters upon font export
 
-The user is exporting a font whose instances contain Custom Parameters that call the plugin.
-`inEditView` will be set to `False` and `customParameters` will contain any custom parameter (other than the plugin name, include and exclude statements) that the user has specified in the parameters. You will need to educate the users of your plugin about what these parameters should look like. The `filter()` method will be called several times according to the results of the include/exclude statements, each time containing a different `layer`.
+The user is exporting a font whose instances contain Custom Parameters that call the plug-in.
+`inEditView` will be set to `False` and `customParameters` will contain any custom parameter (other than the plug-in name, include and exclude statements) that the user has specified in the parameters. You will need to educate the users of your plug-in about what these parameters should look like. The `filter()` method will be called several times according to the results of the include/exclude statements, each time containing a different `layer`.
 
 So when no additional custom parameters are specified, there is technically no difference between the scenarios 2 and 3.
 
 ##### Consider a UI dialog?
 
-In the 3rd scenario (Call through Custom Parameters), the plugin actually has a broader functionality through the existence of the custom parameters as opposed to being called through the Filter menu without the possibility of user input that influences the behaviour of the plugin.
+In the 3rd scenario (Call through Custom Parameters), the plug-in actually has a broader functionality through the existence of the custom parameters as opposed to being called through the Filter menu without the possibility of user input that influences the behaviour of the plug-in.
 
-If you need a filter with user input even in the UI, please consider choosing the `Filter with dialog` plugin that makes use of a dialog to collect user input.
+If you need a filter with user input even in the UI, please consider choosing the `Filter with dialog` plug-in that makes use of a dialog to collect user input.
 
 If you don’t need a dialog and the custom parameters upon font export are sufficient for your case, then you’re good to go.
 

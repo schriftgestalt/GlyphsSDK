@@ -1,11 +1,17 @@
-A reporter plugin gets activated in the View menu of Glyphs.app and is designed to draw on top and behind the glyphs in the Edit View, as well as change the drawing behaviour of inactive glyphs and the preview panel.
+Welcome to Glyphs.app’s plug-in documentation. 
+
+This documentation here covers only a few details of the whole process. If you’re new to the subject, we recommend to start by [reading our tutorial](https://glyphsapp.com/tutorials/plugins), where you will later be asked to return here.
+
+## Reporter Plug-in
+
+A reporter plug-in gets activated in the View menu of Glyphs.app and is designed to draw on top and behind the glyphs in the Edit View, as well as change the drawing behaviour of inactive glyphs and the preview panel.
 
 ![](README Pictures/showplugin.png)
 
 
 # User code
 
-A functional plugin can be as small as this (in `Contents/Resources/plugin.py`):
+A functional plug-in can be as small as this (in `Contents/Resources/plugin.py`):
 
 ```python
 # encoding: utf-8
@@ -32,7 +38,7 @@ From there you can add the following methods:
 
 #### settings()
 
-In this method you set all attributes that describe the plugin, such as its name and icon etc.
+In this method you set all attributes that describe the plug-in, such as its name and icon etc.
 
 
 ```python
@@ -44,7 +50,7 @@ In this method you set all attributes that describe the plugin, such as its name
 		# or:
 		self.menuName = Glyphs.localize({'en': 'My Plugin', 'de': 'Mein Plugin'})
 
-		# A keyboard shortcut for adctivating/deactivating the plugin
+		# A keyboard shortcut for activating/deactivating the plug-in
 		self.keyboardShortcut = 'p'
 
 		# Modifier keys used for the keyboard shortcut
@@ -65,7 +71,7 @@ In this method you set all attributes that describe the plugin, such as its name
 
 #### start()
 
-This method gets called when the plugin gets initialized upon Glyphs.app start.
+This method gets called when the plug-in gets initialized upon Glyphs.app start.
 You put all your initialization code here.
 
 ```python
@@ -169,7 +175,7 @@ Return a list of context menu items described as a list of `['name', method]` pa
 
 Glyphs.app uses the Mac’s own Cocoa methods for drawing. These sometimes behave slightly different from other Python objects, and surely they have different names. 
 
-In order to make use of the Cocoa objects, make sure to include them into your Python plugin declaring `from AppKit import *` at the top of the plugin.
+In order to make use of the Cocoa objects, make sure to include them into your Python plug-in declaring `from AppKit import *` at the top of the plug-in.
 
 Here are a few examples:
 

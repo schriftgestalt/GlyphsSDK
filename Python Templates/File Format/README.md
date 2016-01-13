@@ -1,16 +1,20 @@
-## File Format Plugin
+Welcome to Glyphs.app’s plug-in documentation. 
 
-At the moment, this plugin provides font export functionality through the Export dialog.
+This documentation here covers only a few details of the whole process. If you’re new to the subject, we recommend to start by [reading our tutorial](https://glyphsapp.com/tutorials/plugins), where you will later be asked to return here.
+
+## File Format Plug-in
+
+At the moment, this plug-in provides font export functionality through the Export dialog.
 Planned for the future are Save and Open functionalities.
 
-This sample plugin is functional and exports glyph names, unicodes and glyph width into a simple CSV file.
+This sample plug-in is functional and exports glyph names, unicodes and glyph width into a simple CSV file.
 It makes use of a GUI through Interface Builder. See the description one level up (https://github.com/schriftgestalt/GlyphsSDK/tree/master/Python%20Templates) on how to use it.
 
 ![](../_Readme_Images/exportdialog.png)
 
 # User code
 
-A functional plugin can be as small as this (in `Contents/Resources/plugin.py`):
+A functional plug-in can be as small as this (in `Contents/Resources/plugin.py`):
 
 ```python
 # encoding: utf-8
@@ -37,7 +41,7 @@ The methods in detail:
 
 #### settings()
 
-In this method you set all attributes that describe the plugin, such as its name and icon etc.
+In this method you set all attributes that describe the plug-in, such as its name and icon etc.
 
 
 ```python
@@ -61,7 +65,7 @@ In this method you set all attributes that describe the plugin, such as its name
 
 #### start()
 
-This method gets called when the plugin gets initialized upon Glyphs.app start.
+This method gets called when the plug-in gets initialized upon Glyphs.app start.
 You put all your initialization code here.
 
 ```python

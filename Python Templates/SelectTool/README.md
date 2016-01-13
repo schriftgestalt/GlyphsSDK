@@ -1,13 +1,19 @@
+Welcome to Glyphs.app’s plug-in documentation. 
+
+This documentation here covers only a few details of the whole process. If you’re new to the subject, we recommend to start by [reading our tutorial](https://glyphsapp.com/tutorials/plugins), where you will later be asked to return here.
+
+## Select Tool
+
 The Select Tool Plugin creates a replacement for the standard select tool and lets you extend its functionality.
 You can add context menus (that appear on the user’s mouse right-click), both general context menus (they always appear) as well as conditional contaxt menus (they only appear under a certain condition defined in your code).
 
-In it’s naked version, the plugin behaves exactly like the built-in select tool.
+In it’s naked version, the plug-in behaves exactly like the built-in select tool.
 
 ![](../_Readme_Images/selecttool.png)
 
 # User code
 
-A functional plugin can be as small as this (in `Contents/Resources/plugin.py`):
+A functional plug-in can be as small as this (in `Contents/Resources/plugin.py`):
 
 ```python
 # encoding: utf-8
@@ -47,7 +53,7 @@ From there you can add the following methods:
 
 #### settings()
 
-In this method you set all attributes that describe the plugin, such as its name and icon etc.
+In this method you set all attributes that describe the plug-in, such as its name and icon etc.
 
 
 ```python
@@ -59,7 +65,7 @@ In this method you set all attributes that describe the plugin, such as its name
 		# or:
 		self.name = Glyphs.localize({'en': 'My Select Tool', 'de': 'Mein Auswahlwerkzeug'})
 
-		# A keyboard shortcut for adctivating/deactivating the plugin
+		# A keyboard shortcut for adctivating/deactivating the plug-in
 		self.keyboardShortcut = 'p'
 
 		# Position of the tool icon in the toolbar
@@ -75,7 +81,7 @@ In this method you set all attributes that describe the plugin, such as its name
 
 #### start()
 
-This method gets called when the plugin gets initialized upon Glyphs.app start.
+This method gets called when the plug-in gets initialized upon Glyphs.app start.
 You put all your initialization code here.
 
 ```python
