@@ -2,13 +2,13 @@ Welcome to Glyphs.app’s plug-in documentation.
 
 This documentation here covers only a few details of the whole process. If you’re new to the subject, we recommend to start by [reading our tutorial](https://glyphsapp.com/tutorials/plugins), where you will later be asked to return here.
 
-## Using Python templates
+## Using the Python Templates
 
 Copy the skeleton plug-in into Glyphs’ plug-in folder located at `~/Library/Application Support/Glyphs/Plugins` (`~` stands for your user account’s home folder).
 
 We need to rename a few things in the contained files, so open the package in your contemporary text editor. It should display the internal folder structure of the plug-in in a side-bar for easy access. 
 
-## Edit the files
+## Edit the Files
 
 Replace all placeholders that have quadruple underscores (like `____placeholder____`) in these files:
 
@@ -55,7 +55,7 @@ The variables in detail:
 
 If you operate your own software distribution system, like an online shop, you can have your server output this Info.plist with dynamic information about the latest version of the plugin, instead of keeping the online Info.plist manually up to date. Please make sure that the file is delivered in the `application/xml` MIME-type.
 
-Glyphs will add the URL parameters `glyphsUniqueID` (an anonymous ID identifiying unique Glyphs installations on people's computer's) and `glyphsVersion` (the Build number of that Glyphs installation) to the update check call (planned but not yet implemented: `pluginVersion` describing the version of your plug-in installed within the user's Glyphs installation). You can use this information to keep anonymous track of the number of plugin installations out there and their version information and level of adoption.
+Glyphs will add the URL parameters `glyphsUniqueID` (an anonymous ID identifying unique Glyphs installations on people's computer's) and `glyphsVersion` (the Build number of that Glyphs installation) to the update check call (planned but not yet implemented: `pluginVersion` describing the version of your plug-in installed within the user's Glyphs installation). You can use this information to keep anonymous track of the number of plugin installations out there and their version information and level of adoption.
 
 The interface language of Glyphs makes its way into the update check call via the HTTP headers. Therefore, you may choose to provide the `productReleaseNotes` dynamically in various languages.
 
@@ -66,14 +66,14 @@ This is where your own code goes. You need to rename the main class `class ____P
 
 ### Edit `Contents/Resources/IBdialog.xib`:
 
-Should your plug-in contain a dialog, you need to likewise rename the pointer `____PluginClassName____` to the principal class. This is quickest done in text editor, but you can (and must) also read through the Interface Builder instructions below and could change the value in XCode/Interface Builder.
+Should your plug-in contain a dialog, you need to likewise rename the pointer `____PluginClassName____` to the principal class. This is quickest done in text editor, but you can (and must) also read through the Interface Builder instructions below and could change the value in Xcode/Interface Builder.
 
 Don’t forget to re-compile. See the *Interface Builder* section below.
 
 
 ## Interface Builder: Adding GUI elements
 
-The interaction between your Python script and a graphical user interface (GUI) requires the use of Interface Builder, which is part of Apple’s XCode software development environment. The work with Interface Builder can be a bit daunting, but we’ve written a step-by-step walkthrough here for you that will get you going quickly. After your first completed GUI interaction, using it will become as natural as all the rest.
+The interaction between your Python script and a graphical user interface (GUI) requires the use of Interface Builder, which is part of Apple’s Xcode software development environment. The work with Interface Builder can be a bit daunting, but we’ve written a step-by-step walkthrough here for you that will get you going quickly. After your first completed GUI interaction, using it will become as natural as all the rest.
 
 Your Python code communicates with the UI through:
 
@@ -107,14 +107,14 @@ The function names need to end with an underscore, e.g. `setValue_()`.
 
 ![](_Readme_Images/IB_Overview.png)
 
-- Open the .xib file in XCode, and add and arrange interface elements
+- Open the .xib file in Xcode, and add and arrange interface elements
 - Add this .py file via *File > Add Files...* for Xcode to recognize all IBOutlets and IBActions
 - In the left sidebar, choose *Placeholders > File's Owner*, in the right sidebar, open the *Identity inspector* (3rd icon), and put the name of this controller class in the *Custom Class > Class* field (the above used `____PluginClassName____` variable)
 - The most important **IBOutlet** is the pointer to the the main window pane. It should be set to `dialog`, which is a predefined variable that we use. Should you still want to change it: Ctrl-drag from the *File's Owner* to the window pane (called *Custom View*) either in the graphical arrangement or in the list on the left, then choose `dialog` (or whatever) from the pop-up list, to establish the connection between the Python variable and the main NSView object
 
 ![](_Readme_Images/IB_DragConnection.png)
 
-- Other **IBOutlets**: Ctrl-drag from the *File's Owner* to a UI element (e.g. text field), and choose which outlet shall be linked to the UI element
+- Other **IBOutlets**: Ctrl-drag from the *File’s Owner* to a UI element (e.g. text field), and choose which outlet shall be linked to the UI element
 - **IBActions**: Ctrl-drag from a UI element (e.g. button) to the *File’s Owner* in the left sidebar, and choose the function that the UI element is supposed to trigger
 - **Only for File Format Plugin:** In the left-side objects side bar choose *Custom View*, and in the right-side pane choose *Attributes inspector* (4th icon), and deactivate *Translate Mask Into Constraints*. Don't ask, just do it.
 
@@ -139,9 +139,10 @@ You’ll find the dropplet .app here in this *Python Templates* folder in the Gi
 For a quick introduction to using Interface Builder with the PyObjC bridge, read http://blog.adamw523.com/os-x-cocoa-application-python-pyobjc/
 
 For the complete reference for the UI elements, see Apple's AppKit Framework Reference: https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ApplicationKit/ObjC_classic/index.html
-## Troubleshooting and debugging
+
+## Troubleshooting and Debugging
 
 Check *Console.app* for error messages to see if everything went right.
-You can also output your own debug code to *Console.app* using the plugin's own `self.logToConsole()` function.
+You can also output your own debug code to *Console.app* using the plugin’s own `self.logToConsole()` function.
 
 > Tip: Enter 'Glyphs' into Console.app’s search field to filter for the relevant messages.

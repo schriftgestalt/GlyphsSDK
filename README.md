@@ -2,7 +2,7 @@
 
 ## Plugin SDK
 
-This is the Plugin SDK for the [Glyphs font editor](http://glyphsapp.com/). There are various kinds of plugins (see below), and there are two ways of writing them, in ObjectiveC (we are still working on the ObjC templates) or in Python. You will find extensive documentation in the code comments. For more details and a step-by-step guide, look into the `README.md` file inside the Templates folder.
+This is the Plugin SDK for the [Glyphs font editor](http://glyphsapp.com/). There are various kinds of plugins (see below), and there are two ways of writing them, in ObjectiveC or in Python. You will find extensive documentation in the readme files and the code comments. But do [start with the tutorial](https://glyphsapp.com/tutorials/plugins). Then, continue with the `README.md` file inside the Templates folder.
 
 ### .glyphsFileFormat
 
@@ -34,7 +34,7 @@ The file `GlyphsFileFormat.md` contains a description of the Glyphs 1.x file for
 
 ### License
 
-Copyright 2013, 2014 Georg Seifert (@schriftgestalt) and Rainer Erich Scheichelbauer (@mekkablue).
+Copyright 2013-2016 Georg Seifert (@schriftgestalt), Jan Gerner (@yanone) and Rainer Erich Scheichelbauer (@mekkablue).
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
