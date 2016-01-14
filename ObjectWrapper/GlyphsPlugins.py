@@ -31,6 +31,12 @@ class SomeUsefulPluginMethods:
 
 
 	def logError(self, message):
+		
+		try:
+			assert self.lastErrorMessage
+		except:
+			self.lastErrorMessage = ''
+		
 		try:
 			if message != self.lastErrorMessage:
 				self.logToConsole(message)
@@ -60,9 +66,6 @@ class FileFormatPlugin ( NSObject, GlyphsFileFormatProtocol, SomeUsefulPluginMet
 		Do all initializing here.
 		"""
 		try:
-
-			self.lastErrorMessage = ''
-
 			# Settings, default values
 			self.name = 'My File Format'
 			self.dialogName = 'IBdialog'
@@ -333,9 +336,6 @@ class FilterWithDialog ( GSFilterPlugin, SomeUsefulPluginMethods ):
 		"""
 
 		try:
-
-			self.lastErrorMessage = ''
-
 			self.menuName = 'My Filter'
 			self.keyboardShortcut = None # With Cmd+Shift
 			self.dialogName = 'IBdialog'
@@ -544,9 +544,6 @@ class FilterWithoutDialog ( NSObject, GlyphsFilterWithoutDialogProtocol, SomeUse
 		Do all initializing here.
 		"""
 		try:
-
-			self.lastErrorMessage = ''
-
 			self.menuName = 'My Filter'
 			self.keyboardShortcut = None
 
@@ -761,8 +758,6 @@ class GeneralPlugin ( NSObject, GlyphsGeneralPluginProtocol, SomeUsefulPluginMet
 	
 	def loadPlugin(self):
 		try:
-			self.lastErrorMessage = ''
-
 			if hasattr(self, 'start'):
 				self.start()
 			return None
@@ -787,9 +782,6 @@ class PalettePlugin ( NSObject, GlyphsPaletteProtocol, SomeUsefulPluginMethods )
 		"""
 		try:
 #		if True:
-
-			self.lastErrorMessage = ''
-
 			self.dialogName = 'IBdialog'
 			self.name = 'My Palette'
 
@@ -942,9 +934,6 @@ class ReporterPlugin ( NSObject, GlyphsReporterProtocol, SomeUsefulPluginMethods
 		"""
 		try:
 			#Bundle = NSBundle.bundleForClass_( NSClassFromString( self.className() ));
-
-			self.lastErrorMessage = ''
-
 			# Default values
 			self.menuName = 'New ReporterPlugin'
 			self.keyboardShortcut = None
@@ -1205,8 +1194,6 @@ class SelectTool ( GSToolSelect, SomeUsefulPluginMethods ):
 		Use this for any initializations you need.
 		"""
 		try:
-			self.lastErrorMessage = ''
-
 			self.name = 'My Select Tool'
 			self.toolbarPosition = 100
 			self._icon = 'toolbar.pdf'
