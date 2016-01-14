@@ -7,8 +7,9 @@ import time, math, sys, os, string, re
 from sets import Set
 
 
-__all__ = ["Glyphs", "GetFile", "GSMOVE", "GSLINE", "GSCURVE", "GSOFFCURVE", "GSSHARP", "GSSMOOTH", "TAG", "TOPGHOST", "STEM", "BOTTOMGHOST", "TTANCHOR", "TTSTEM", "TTALIGN", "TTINTERPOLATE", "TTDIAGONAL", "CORNER", "CAP", "TTDONTROUND", "TTROUND", "TTROUNDUP", "TTROUNDDOWN", "TRIPLE", "DRAWFOREGROUND", "DRAWBACKGROUND", "DRAWINACTIVE", "DOCUMENTWASSAVED", "TEXT", "ARROW", "CIRCLE", "PLUS", "MINUS", "divideCurve", "distance", "addPoints", "subtractPoints", "GetFolder", "GetSaveFile", "GetOpenFile", "Message", "LogToConsole"]
+__all__ = ["Glyphs", "GetFile", "GSMOVE", "GSLINE", "GSCURVE", "GSOFFCURVE", "GSSHARP", "GSSMOOTH", "TAG", "TOPGHOST", "STEM", "BOTTOMGHOST", "TTANCHOR", "TTSTEM", "TTALIGN", "TTINTERPOLATE", "TTDIAGONAL", "CORNER", "CAP", "TTDONTROUND", "TTROUND", "TTROUNDUP", "TTROUNDDOWN", "TRIPLE", "DRAWFOREGROUND", "DRAWBACKGROUND", "DRAWINACTIVE", "DOCUMENTWASSAVED", "TEXT", "ARROW", "CIRCLE", "PLUS", "MINUS", "divideCurve", "distance", "addPoints", "subtractPoints", "GetFolder", "GetSaveFile", "GetOpenFile", "Message", "LogToConsole", "removeOverlap", "subtractPaths", "intersectPaths", "wrapperVersion"]
 
+wrapperVersion = "2.3a"
 
 class Proxy(object):
 	def __init__(self, owner):
