@@ -26,7 +26,7 @@ class SomeUsefulPluginMethods:
 		The variable 'message' will be passed to Console.app.
 		Use self.logToConsole( "bla bla" ) for debugging.
 		"""
-		myLog = "%s tool:\n%s" % ( self.title(), message )
+		myLog = "Traceback from plug-in %s:\n%s" % ( self.title(), message )
 		NSLog( myLog )
 
 
@@ -41,7 +41,7 @@ class SomeUsefulPluginMethods:
 			if message != self.lastErrorMessage:
 				self.logToConsole(message)
 				self.lastErrorMessage = message
-				Glyphs.showNotification('Error in %s' % self.title(), 'Check the Console output for details.')
+				Glyphs.showNotification('Error in plug-in %s' % self.title(), 'Check the Console.app output for details.')
 		except:
 			self.logToConsole(traceback.format_exc())
 
