@@ -33,11 +33,11 @@ class ____PluginClassName____(ReporterPlugin):
 			layer.bezierPath().fill()
 		if layer.components:
 			for component in layer.components:
-				component.bezierPath().fill()
+				component.bezierPath.fill()
 
 	def drawPreview(self, layer):
 		NSColor.blueColor().set()
-		layer.bezierPath().fill()
+		layer.bezierPath.fill()
 	
 	def doSomething(self):
 		print 'Just did something'
