@@ -30,7 +30,7 @@ class ____PluginClassName____(ReporterPlugin):
 	def drawBackgroundForInactiveLayers(self, layer):
 		NSColor.redColor().set()
 		if layer.paths:
-			layer.bezierPath().fill()
+			layer.bezierPath.fill()
 		if layer.components:
 			for component in layer.components:
 				component.bezierPath.fill()
