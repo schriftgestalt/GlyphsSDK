@@ -1095,7 +1095,7 @@ class ReporterPlugin ( NSObject, GlyphsReporterProtocol, SomeUsefulPluginMethods
 		yourself in self.drawBackgroundForInactiveLayer_().
 		"""
 		try:
-			return self.drawDefaultInactiveLayers
+			return not hasattr(self, 'drawBackgroundForInactiveLayers')
 		except:
 			self.logError(traceback.format_exc())
 	
