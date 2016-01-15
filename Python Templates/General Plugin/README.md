@@ -25,3 +25,34 @@ class ____PluginClassName____(GeneralPlugin):
 	def start(self):
 		# Your init code goes here
 ```
+
+From there you can add the following methods:
+
+#### settings()
+
+In this method you set all attributes that describe the plug-in, such as its name etc.
+
+
+```python
+	def settings(self):
+
+		# The name of the plug-in (here mainly used for error messages)
+		# You may use a simple string or Glyphs.localize() for localizations (see http://docu.glyphsapp.com#localize)
+		self.name = 'My General Plugin'
+		# or:
+		self.name = Glyphs.localize({'en': 'My General Plugin', 'de': 'Mein allgemeines Plugin'})
+
+		# A keyboard shortcut for adctivating/deactivating the plug-in (together with Command+Shift)
+		self.keyboardShortcut = 'p'
+```
+
+#### start()
+
+This method gets called when the plug-in gets initialized upon Glyphs.app start.
+You put all your initialization code here.
+
+```python
+	def start(self):
+
+		# Your plugin code goes here...
+```
