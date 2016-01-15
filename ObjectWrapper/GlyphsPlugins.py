@@ -765,12 +765,26 @@ class GeneralPlugin ( NSObject, GlyphsGeneralPluginProtocol, SomeUsefulPluginMet
 	
 	def loadPlugin(self):
 		try:
+			self.name = 'My General Plugin'
+
+			if hasattr(self, 'settings'):
+				self.settings()
+
 			if hasattr(self, 'start'):
 				self.start()
 			return None
 		except:
 			self.logError(traceback.format_exc())
 
+	def title( self ):
+		"""
+		This is the name as it appears in the menu in combination with 'Show'.
+		E.g. 'return "Nodes"' will make the menu item read "Show Nodes".
+		"""
+		try:
+			return self.name
+		except:
+			self.logError(traceback.format_exc())
 
 
 
