@@ -528,6 +528,13 @@ class FilterWithDialog ( GSFilterPlugin, SomeUsefulPluginMethods ):
 		self.process_( None )
 		Glyphs.redraw()
 
+	def customParameterString( self ):
+		try:
+			if hasattr(self, 'generateCustomParameter'):
+				return self.generateCustomParameter()
+		except:
+			self.logError(traceback.format_exc())
+
 
 
 
