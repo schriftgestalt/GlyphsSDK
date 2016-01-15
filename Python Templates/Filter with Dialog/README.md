@@ -156,7 +156,7 @@ The user is exporting a font whose instances contain Custom Parameters that call
 		# Apply your filter code here
 ```
 
-#### customParameterString()
+#### generateCustomParameter()
 
 If this method is implemented, the filter dialog will show a small gear icon in the lower left corner of the dialog. Upon click a menu will appear that will let you copy a string (returned by this method) to the clipboard describing the plug-in and the currently chosen values (in the dialog). These are the values needed to define Custom Parameters for the font’s instances to apply the filter on font export. You may paste this string directly into the Custom Parameters field as described below:
 
@@ -169,7 +169,7 @@ Paste into Custom Parameters field:
 ![](../_Readme_Images/filterwithdialog_pastecustomparameters.png)
 
 ```python
-	def customParameterString( self ):
+	def generateCustomParameter( self ):
 
 		# Copy plug-in name (by its class name) with a 'shift' value
 		return "%s; shift:%s;" % (self.__class__.__name__, Glyphs.defaults['com.myname.myfilter.value'] )
