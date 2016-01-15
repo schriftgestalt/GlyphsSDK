@@ -807,6 +807,9 @@ class PalettePlugin ( NSObject, GlyphsPaletteProtocol, SomeUsefulPluginMethods )
 			self.name = 'My Palette'
 
 
+			if hasattr(self, 'settings'):
+				self.settings()
+
 			if not NSBundle.loadNibNamed_owner_( self.dialogName, self ):
 				self.logToConsole( "Error loading .nib into Palette." )
 		
@@ -817,8 +820,6 @@ class PalettePlugin ( NSObject, GlyphsPaletteProtocol, SomeUsefulPluginMethods )
 			self.min = Frame.size.height
 			self.max = Frame.size.height
 			
-			print Frame.size.height
-
 			if NSUserDefaults.standardUserDefaults().objectForKey_( self.dialogName + ".ViewHeight" ):
 				Frame.size.height = NSUserDefaults.standardUserDefaults().integerForKey_( self.dialogName + ".ViewHeight" )
 				self.theView().setFrame_( Frame )
