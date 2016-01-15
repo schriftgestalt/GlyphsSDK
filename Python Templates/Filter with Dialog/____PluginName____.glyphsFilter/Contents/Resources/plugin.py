@@ -70,5 +70,5 @@ class ____PluginClassName____(FilterWithDialog):
 				node.position = NSPoint(node.position.x + value, node.position.y + value)
 
 	
-	def customParameterString( self ):
+	def generateCustomParameter( self ):
 		return "%s; shift:%s;" % (self.__class__.__name__, Glyphs.defaults['com.myname.myfilter.value'] )
