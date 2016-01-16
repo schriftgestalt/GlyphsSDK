@@ -1831,8 +1831,57 @@ GSFont.toolIndex = property(lambda self: self.parent.windowController().selected
 	:type: integer'''
 
 
+toolClassAbrevations = { # abrevation : className
+	"SelectTool" : "GlyphsToolSelect",
+	"DrawTool" : "GlyphsToolDraw",
+	"OtherTool" : "GlyphsToolOther",
+	"PenTool" : "PenTool",
+	"PrimitivesTool" : "GlyphsToolPrimitives",
+	"RotateTool" : "GlyphsToolRotate",
+	"ScaleTool" : "GlyphsToolScale",
+	"TextTool" : "GlyphsToolText",
+	"AnnotationTool" : "AnnotationTool",
+	"HandTool" : "GlyphsToolHand",
+	"ZoomTool" : "GlyphsToolZoom",
+	"MeasurementTool" : "GlyphsToolMeasurement",
+	"StrokeTool" : "StrokeTool",
+	"TrueTypeTool" : "GlyphsToolTrueTypeInstructor",
+}
 
+toolClassAbrevationsReverse = {}
 
+for key, value in toolClassAbrevations.iteritems():
+	toolClassAbrevationsReverse[value] = key
+
+def __GSFont_tool__(self):
+	toolIndex = self.toolIndex
+	tool =  self.parent.windowController().toolInstances()[toolIndex]
+	toolClassName = tool.className()
+	if toolClassName in toolClassAbrevationsReverse:
+		toolClassName = toolClassAbrevationsReverse[toolClassName]
+	return toolClassName
+
+def __GSFont_setTool__(self, toolName):
+	
+	if toolName in toolClassAbrevations:
+		toolName = toolClassAbrevations[toolName]
+	toolClass = NSClassFromString(toolName)
+	if toolClass:
+		self.parent.windowController().setToolForClass_(toolClass)
+	
+	
+GSFont.tool = property(lambda self: __GSFont_tool__(self), lambda self, value: __GSFont_setTool__(self, value))
+
+def __GSFont_toolsList__(self):
+	tools = []
+	for tool in self.parent.windowController().toolInstances():
+		toolClassName = tool.className()
+		if toolClassName in toolClassAbrevationsReverse:
+			toolClassName = toolClassAbrevationsReverse[toolClassName]
+		tools.append(toolClassName)
+	return tools
+
+GSFont.tools = property(lambda self: __GSFont_toolsList__(self))
 
 '''
 ---------
