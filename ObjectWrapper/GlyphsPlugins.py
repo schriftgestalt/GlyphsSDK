@@ -16,50 +16,28 @@ if not path in sys.path:
 
 
 
+def logToConsole(self, message):
+	"""
+	The variable 'message' will be passed to Console.app.
+	Use self.logToConsole( "bla bla" ) for debugging.
+	"""
+	myLog = "Traceback from plug-in %s:\n%s" % ( self.title(), message )
+	NSLog( myLog )
 
-class ErrorReporting:
-
-	
-
-	def logToConsole( self, message ):
-		"""
-		The variable 'message' will be passed to Console.app.
-		Use self.logToConsole( "bla bla" ) for debugging.
-		"""
-		myLog = "Traceback from plug-in %s:\n%s" % ( self.title(), message )
-		NSLog( myLog )
-
-
-	def logError(self, message):
-		
-		try:
-			assert self.lastErrorMessage
-		except:
-			self.lastErrorMessage = ''
-		
-		try:
-			if message != self.lastErrorMessage:
-				self.logToConsole(message)
-				self.lastErrorMessage = message
-				Glyphs.showNotification('Error in plug-in %s' % self.title(), 'Check the Console.app output for details.')
-		except:
-			self.logToConsole(traceback.format_exc())
-
-	def __del__(self):
-		try:
-			if hasattr(self, 'quit'):
-				self.quit()
-		except:
-			self.logError(traceback.format_exc())
-
-
-
+def logError(self, message):
+	if not hasattr(self, "lastErrorMessage"):
+		self.lastErrorMessage = ''
+	try:
+		if message != self.lastErrorMessage:
+			self.logToConsole(message)
+			self.lastErrorMessage = message
+			#Glyphs.showNotification('Error in plug-in %s' % self.title(), 'Check the Console.app output for details.')
+	except:
+		self.logToConsole(traceback.format_exc())
 
 GlyphsFileFormatProtocol = objc.protocolNamed( "GlyphsFileFormat" )
 
-class FileFormatPlugin ( NSObject, GlyphsFileFormatProtocol, ErrorReporting ):
-	
-
+class FileFormatPlugin (NSObject, GlyphsFileFormatProtocol):
 
 	def init( self ):
 		"""
@@ -209,8 +187,7 @@ class FileFormatPlugin ( NSObject, GlyphsFileFormatProtocol, ErrorReporting ):
 			else:
 				error = NSError.errorWithDomain_code_userInfo_(self.title(), -57, {
 					NSLocalizedDescriptionKey: NSLocalizedString('Export failed', None),
-					NSLocalizedFailureReasonErrorKey: None,
-					NSLocalizedRecoverySuggestionErrorKey: NSLocalizedString(returnMessage, None)
+					NSLocalizedRecoverySuggestionErrorKey: returnMessage
 					})
 				return (False, error)
 
@@ -220,11 +197,11 @@ class FileFormatPlugin ( NSObject, GlyphsFileFormatProtocol, ErrorReporting ):
 			self.logError(traceback.format_exc())
 			error = NSError.errorWithDomain_code_userInfo_(self.title(), -57, {
 				NSLocalizedDescriptionKey: NSLocalizedString('Python exception', None),
-				NSLocalizedFailureReasonErrorKey: None,
-				NSLocalizedRecoverySuggestionErrorKey: NSLocalizedString(str(e), None)
+				NSLocalizedRecoverySuggestionErrorKey: str(e)
 				})
 
 			return (False, error)
+		return True
 	
 	
 	def saveFileDialog( self, title=None, proposedFilename=None, fileTypes=None ):
@@ -311,15 +288,12 @@ class FileFormatPlugin ( NSObject, GlyphsFileFormatProtocol, ErrorReporting ):
 			self.logError(traceback.format_exc())
 
 
+objc.classAddMethods(FileFormatPlugin, [logToConsole])
+objc.classAddMethods(FileFormatPlugin, [logError])
 
 
 
-
-
-
-
-
-class FilterWithDialog ( GSFilterPlugin, ErrorReporting ):
+class FilterWithDialog ( GSFilterPlugin):
 	"""
 	All 'myValue' and 'myValueField' references are just an example.
 	They correspond to the 'My Value' field in the .xib file.
@@ -535,16 +509,13 @@ class FilterWithDialog ( GSFilterPlugin, ErrorReporting ):
 		except:
 			self.logError(traceback.format_exc())
 
-
-
-
-
-
+objc.classAddMethods(FilterWithDialog, [logToConsole])
+objc.classAddMethods(FilterWithDialog, [logError])
 
 
 GlyphsFilterWithoutDialogProtocol = objc.protocolNamed( "GlyphsFilter" )
 
-class FilterWithoutDialog ( NSObject, GlyphsFilterWithoutDialogProtocol, ErrorReporting ):
+class FilterWithoutDialog ( NSObject, GlyphsFilterWithoutDialogProtocol):
 
 	def init( self ):
 		"""
@@ -738,20 +709,14 @@ class FilterWithoutDialog ( NSObject, GlyphsFilterWithoutDialogProtocol, ErrorRe
 					self.filter( Layer, False, customParameters )
 		except:
 			self.logError(traceback.format_exc())
-	
 
-
-
-
-
-
-
-
+objc.classAddMethods(FilterWithoutDialog, [logToConsole])
+objc.classAddMethods(FilterWithoutDialog, [logError])
 
 
 GlyphsGeneralPluginProtocol = objc.protocolNamed( "GlyphsPlugin" )
 
-class GeneralPlugin ( NSObject, GlyphsGeneralPluginProtocol, ErrorReporting ):
+class GeneralPlugin ( NSObject, GlyphsGeneralPluginProtocol):
 	
 	def interfaceVersion( self ):
 		"""
@@ -786,12 +751,13 @@ class GeneralPlugin ( NSObject, GlyphsGeneralPluginProtocol, ErrorReporting ):
 		except:
 			self.logError(traceback.format_exc())
 
-
+objc.classAddMethods(GeneralPlugin, [logToConsole])
+objc.classAddMethods(GeneralPlugin, [logError])
 
 
 GlyphsPaletteProtocol = objc.protocolNamed( "GlyphsPalette" )
 
-class PalettePlugin ( NSObject, GlyphsPaletteProtocol, ErrorReporting ):
+class PalettePlugin ( NSObject, GlyphsPaletteProtocol):
 	# Define all your IB outlets for your .xib after _theView:
 	_windowController = None
 #	_theView = objc.IBOutlet() # Palette view on which you can place UI elements.
@@ -938,17 +904,14 @@ class PalettePlugin ( NSObject, GlyphsPaletteProtocol, ErrorReporting ):
 			return windowController
 		except:
 			self.logError(traceback.format_exc())
-	
-	
-	
 
-
-
+objc.classAddMethods(PalettePlugin, [logToConsole])
+objc.classAddMethods(PalettePlugin, [logError])
 
 
 GlyphsReporterProtocol = objc.protocolNamed( "GlyphsReporter" )
 
-class ReporterPlugin ( NSObject, GlyphsReporterProtocol, ErrorReporting ):
+class ReporterPlugin ( NSObject, GlyphsReporterProtocol):
 	
 	def init( self ):
 		"""
@@ -1200,15 +1163,12 @@ class ReporterPlugin ( NSObject, GlyphsReporterProtocol, ErrorReporting ):
 			self.controller = Controller
 		except Exception as e:
 			self.logToConsole( "Could not set controller" )
-	
+
+objc.classAddMethods(ReporterPlugin, [logToConsole])
+objc.classAddMethods(ReporterPlugin, [logError])
 
 
-
-
-
-
-
-class SelectTool ( GSToolSelect, ErrorReporting ):
+class SelectTool (GSToolSelect):
 	
 	def init( self ):
 		"""
@@ -1395,5 +1355,6 @@ class SelectTool ( GSToolSelect, ErrorReporting ):
 								
 		except:
 			self.logError(traceback.format_exc())
-	
-		
+
+objc.classAddMethods(SelectTool, [logToConsole])
+objc.classAddMethods(SelectTool, [logError])
