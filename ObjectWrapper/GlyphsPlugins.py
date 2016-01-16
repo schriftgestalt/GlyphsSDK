@@ -17,7 +17,7 @@ if not path in sys.path:
 
 
 
-class SomeUsefulPluginMethods:
+class ErrorReporting:
 
 	
 
@@ -57,7 +57,7 @@ class SomeUsefulPluginMethods:
 
 GlyphsFileFormatProtocol = objc.protocolNamed( "GlyphsFileFormat" )
 
-class FileFormatPlugin ( NSObject, GlyphsFileFormatProtocol, SomeUsefulPluginMethods ):
+class FileFormatPlugin ( NSObject, GlyphsFileFormatProtocol, ErrorReporting ):
 	
 
 
@@ -319,7 +319,7 @@ class FileFormatPlugin ( NSObject, GlyphsFileFormatProtocol, SomeUsefulPluginMet
 
 
 
-class FilterWithDialog ( GSFilterPlugin, SomeUsefulPluginMethods ):
+class FilterWithDialog ( GSFilterPlugin, ErrorReporting ):
 	"""
 	All 'myValue' and 'myValueField' references are just an example.
 	They correspond to the 'My Value' field in the .xib file.
@@ -544,7 +544,7 @@ class FilterWithDialog ( GSFilterPlugin, SomeUsefulPluginMethods ):
 
 GlyphsFilterWithoutDialogProtocol = objc.protocolNamed( "GlyphsFilter" )
 
-class FilterWithoutDialog ( NSObject, GlyphsFilterWithoutDialogProtocol, SomeUsefulPluginMethods ):
+class FilterWithoutDialog ( NSObject, GlyphsFilterWithoutDialogProtocol, ErrorReporting ):
 
 	def init( self ):
 		"""
@@ -751,7 +751,7 @@ class FilterWithoutDialog ( NSObject, GlyphsFilterWithoutDialogProtocol, SomeUse
 
 GlyphsGeneralPluginProtocol = objc.protocolNamed( "GlyphsPlugin" )
 
-class GeneralPlugin ( NSObject, GlyphsGeneralPluginProtocol, SomeUsefulPluginMethods ):
+class GeneralPlugin ( NSObject, GlyphsGeneralPluginProtocol, ErrorReporting ):
 	
 	def interfaceVersion( self ):
 		"""
@@ -791,7 +791,7 @@ class GeneralPlugin ( NSObject, GlyphsGeneralPluginProtocol, SomeUsefulPluginMet
 
 GlyphsPaletteProtocol = objc.protocolNamed( "GlyphsPalette" )
 
-class PalettePlugin ( NSObject, GlyphsPaletteProtocol, SomeUsefulPluginMethods ):
+class PalettePlugin ( NSObject, GlyphsPaletteProtocol, ErrorReporting ):
 	# Define all your IB outlets for your .xib after _theView:
 	_windowController = None
 #	_theView = objc.IBOutlet() # Palette view on which you can place UI elements.
@@ -948,7 +948,7 @@ class PalettePlugin ( NSObject, GlyphsPaletteProtocol, SomeUsefulPluginMethods )
 
 GlyphsReporterProtocol = objc.protocolNamed( "GlyphsReporter" )
 
-class ReporterPlugin ( NSObject, GlyphsReporterProtocol, SomeUsefulPluginMethods ):
+class ReporterPlugin ( NSObject, GlyphsReporterProtocol, ErrorReporting ):
 	
 	def init( self ):
 		"""
@@ -1208,7 +1208,7 @@ class ReporterPlugin ( NSObject, GlyphsReporterProtocol, SomeUsefulPluginMethods
 
 
 
-class SelectTool ( GSToolSelect, SomeUsefulPluginMethods ):
+class SelectTool ( GSToolSelect, ErrorReporting ):
 	
 	def init( self ):
 		"""
