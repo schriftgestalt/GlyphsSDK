@@ -202,30 +202,6 @@ class FileFormatPlugin (NSObject, GlyphsFileFormatProtocol):
 
 			return (False, error)
 		return True
-	
-	
-	def saveFileDialog( self, title=None, proposedFilename=None, fileTypes=None ):
-		"""
-		Opens a standard Save File Dialog.
-		"""
-		try:
-			if fileTypes is None:
-				fileTypes = []
-			Panel = NSSavePanel.savePanel().retain()
-			if title is not None:
-				Panel.setTitle_( title )
-			Panel.setCanChooseFiles_( True )
-			Panel.setCanChooseDirectories_( False )
-			Panel.setAllowedFileTypes_( fileTypes )
-			if proposedFilename is not None:
-				Panel.setNameFieldStringValue_( proposedFilename )
-			pressedButton = Panel.runModalForTypes_(fileTypes)
-			if pressedButton == 1: # 1=OK, 0=Cancel
-				return Panel.filename()
-			return None
-		except:
-			self.logError(traceback.format_exc())
-		
 
 
 ########################################################################
