@@ -11,18 +11,16 @@ from GlyphsApp import *
 MainBundle = NSBundle.mainBundle()
 path = MainBundle.bundlePath() + "/Contents/Scripts"
 if not path in sys.path:
-	sys.path.append( path )
-
-
+	sys.path.append(path)
 
 
 def logToConsole(self, message):
 	"""
 	The variable 'message' will be passed to Console.app.
-	Use self.logToConsole( "bla bla" ) for debugging.
+	Use self.logToConsole("bla bla") for debugging.
 	"""
-	myLog = "Traceback from plug-in %s:\n%s" % ( self.title(), message )
-	NSLog( myLog )
+	myLog = "Traceback from plug-in %s:\n%s" % (self.title(), message)
+	NSLog(myLog)
 
 def logError(self, message):
 	if not hasattr(self, "lastErrorMessage"):
@@ -35,11 +33,11 @@ def logError(self, message):
 	except:
 		self.logToConsole(traceback.format_exc())
 
-GlyphsFileFormatProtocol = objc.protocolNamed( "GlyphsFileFormat" )
+GlyphsFileFormatProtocol = objc.protocolNamed("GlyphsFileFormat")
 
 class FileFormatPlugin (NSObject, GlyphsFileFormatProtocol):
 
-	def init( self ):
+	def init(self):
 		"""
 		Do all initializing here.
 		"""
@@ -49,25 +47,24 @@ class FileFormatPlugin (NSObject, GlyphsFileFormatProtocol):
 			self.dialogName = 'IBdialog'
 			self.icon = 'ExportIcon'
 			self.toolbarPosition = 100
-
+			
 			if hasattr(self, 'settings'):
 				self.settings()
-
-
-			NSBundle.loadNibNamed_owner_(self.dialogName, self )
-			thisBundle = NSBundle.bundleForClass_( NSClassFromString( self.className() ) )
-			self.toolbarIcon = NSImage.alloc().initWithContentsOfFile_( thisBundle.pathForImageResource_(self.icon) )
+			
+			NSBundle.loadNibNamed_owner_(self.dialogName, self)
+			thisBundle = NSBundle.bundleForClass_(NSClassFromString(self.className()))
+			self.toolbarIcon = NSImage.alloc().initWithContentsOfFile_(thisBundle.pathForImageResource_(self.icon))
 			self.toolbarIcon.setName_(self.icon)
-
+			
 			if hasattr(self, 'start'):
 				self.start()
-
+			
 		except:
 			self.logError(traceback.format_exc())
 
 		return self
 	
-	def interfaceVersion( self ):
+	def interfaceVersion(self):
 		"""
 		Distinguishes the API version the plugin was built for.
 		Return 1.
@@ -77,7 +74,7 @@ class FileFormatPlugin (NSObject, GlyphsFileFormatProtocol):
 		except:
 			self.logError(traceback.format_exc())
 	
-	def title( self ):
+	def title(self):
 		"""
 		This is the name as it appears in the menu in combination with 'Show'.
 		E.g. 'return "Nodes"' will make the menu item read "Show Nodes".
@@ -87,7 +84,7 @@ class FileFormatPlugin (NSObject, GlyphsFileFormatProtocol):
 		except:
 			self.logError(traceback.format_exc())
 	
-	def toolbarTitle( self ):
+	def toolbarTitle(self):
 		"""
 		Name below the icon in the Export dialog toolbar.
 		"""
@@ -96,7 +93,7 @@ class FileFormatPlugin (NSObject, GlyphsFileFormatProtocol):
 		except:
 			self.logError(traceback.format_exc())
 	
-	def toolbarIconName( self ):
+	def toolbarIconName(self):
 		"""
 		The filename of the icon, without the suffix.
 		"""
@@ -104,9 +101,8 @@ class FileFormatPlugin (NSObject, GlyphsFileFormatProtocol):
 			return self.icon or "ExportIcon"
 		except:
 			self.logError(traceback.format_exc())
-
-
-	def groupID( self ):
+	
+	def groupID(self):
 		"""
 		Determines the position in the Export dialog toolbar.
 		Lower values are further to the left.
@@ -116,13 +112,13 @@ class FileFormatPlugin (NSObject, GlyphsFileFormatProtocol):
 		except:
 			self.logError(traceback.format_exc())
 	
-	def progressWindow( self ):
+	def progressWindow(self):
 		try:
 			return None
 		except:
 			self.logError(traceback.format_exc())
 	
-	def exportSettingsView( self ):
+	def exportSettingsView(self):
 		"""
 		Returns the view to be displayed in the export dialog.
 		Don't touch this.
@@ -132,13 +128,13 @@ class FileFormatPlugin (NSObject, GlyphsFileFormatProtocol):
 		except:
 			self.logError(traceback.format_exc())
 	
-	def font( self ):
+	def font(self):
 		try:
 			return self._font
 		except:
 			self.logError(traceback.format_exc())
 	
-	def setFont_( self, GSFontObj ):
+	def setFont_(self, GSFontObj):
 		"""
 		The GSFont object is assigned to the plugin prior to the export.
 		This is used to publish the export dialog.
@@ -148,8 +144,7 @@ class FileFormatPlugin (NSObject, GlyphsFileFormatProtocol):
 		except:
 			self.logError(traceback.format_exc())
 	
-
-	def writeFont_error_( self, font, error ):
+	def writeFont_error_(self, font, error):
 		"""
 		EXPORT dialog
 
@@ -166,15 +161,12 @@ class FileFormatPlugin (NSObject, GlyphsFileFormatProtocol):
 		try:
 			
 			returnStatus, returnMessage = [False, 'export() is not implemented in the plugin.']
-			
 			if hasattr(self, 'export'):
 				returnStatus, returnMessage = self.export(font)
-
-
+			
 			# Export successful
 			# Change the condition (True) to your own assessment on whether or not the export succeeded
 			if returnStatus == True:
-				
 				# Use Mac Notification Center
 				notification = NSUserNotification.alloc().init()
 				notification.setTitle_(self.title())
@@ -190,8 +182,7 @@ class FileFormatPlugin (NSObject, GlyphsFileFormatProtocol):
 					NSLocalizedRecoverySuggestionErrorKey: returnMessage
 					})
 				return (False, error)
-
-
+		
 		# Python exception, return error message
 		except Exception as e:
 			self.logError(traceback.format_exc())
@@ -199,7 +190,6 @@ class FileFormatPlugin (NSObject, GlyphsFileFormatProtocol):
 				NSLocalizedDescriptionKey: NSLocalizedString('Python exception', None),
 				NSLocalizedRecoverySuggestionErrorKey: str(e)
 				})
-
 			return (False, error)
 		return True
 
@@ -215,7 +205,7 @@ class FileFormatPlugin (NSObject, GlyphsFileFormatProtocol):
 ########################################################################
 
 
-	def writeFont_toURL_error_( self, font, URL, error ):
+	def writeFont_toURL_error_(self, font, URL, error):
 		"""
 		SAVE FONT dialog
 		
@@ -245,7 +235,7 @@ class FileFormatPlugin (NSObject, GlyphsFileFormatProtocol):
 #
 ########################################################################
 	
-	def fontFromURL_ofType_error_( self, URL, fonttype, error ):
+	def fontFromURL_ofType_error_(self, URL, fonttype, error):
 		"""
 		Reads a Font object from the specified URL.
 		
@@ -269,7 +259,7 @@ objc.classAddMethods(FileFormatPlugin, [logError])
 
 
 
-class FilterWithDialog ( GSFilterPlugin):
+class FilterWithDialog (GSFilterPlugin):
 	"""
 	All 'myValue' and 'myValueField' references are just an example.
 	They correspond to the 'My Value' field in the .xib file.
@@ -278,7 +268,7 @@ class FilterWithDialog ( GSFilterPlugin):
 	
 	
 	
-	def init( self ):
+	def init(self):
 		"""
 		Do all initializing here.
 		This is a good place to call random.seed() if you want to use randomisation.
@@ -297,14 +287,14 @@ class FilterWithDialog ( GSFilterPlugin):
 
 	
 
-#			self._view = self.dialog
-			NSBundle.loadNibNamed_owner_(self.dialogName, self )
+			# self._view = self.dialog
+			NSBundle.loadNibNamed_owner_(self.dialogName, self)
 
 		
-#			if hasattr(self, 'start'):
-#				self.start()
+			# if hasattr(self, 'start'):
+			# 	self.start()
 
-	#			self.setup()
+			# 	self.setup()
 
 			return self
 
@@ -314,8 +304,7 @@ class FilterWithDialog ( GSFilterPlugin):
 	
 	def setup(self):
 		try:
-#
-			super( FilterWithDialog, self ).setup()
+			super(FilterWithDialog, self).setup()
 
 			if hasattr(self, 'start'):
 				self.start()
@@ -328,7 +317,7 @@ class FilterWithDialog ( GSFilterPlugin):
 			
 		
 	
-	def interfaceVersion( self ):
+	def interfaceVersion(self):
 		"""
 		Distinguishes the API version the plugin was built for. 
 		Return 1.
@@ -338,7 +327,7 @@ class FilterWithDialog ( GSFilterPlugin):
 		except:
 			self.logError(traceback.format_exc())
 	
-	def title( self ):
+	def title(self):
 		"""
 		This is the name as it appears in the menu
 		and in the title of the dialog window.
@@ -348,7 +337,7 @@ class FilterWithDialog ( GSFilterPlugin):
 		except:
 			self.logError(traceback.format_exc())
 	
-	def actionName( self ):
+	def actionName(self):
 		"""
 		This is the title of the button in the settings dialog.
 		Use something descriptive like 'Move', 'Rotate', or at least 'Apply'.
@@ -358,7 +347,7 @@ class FilterWithDialog ( GSFilterPlugin):
 		except:
 			self.logError(traceback.format_exc())
 	
-	def keyEquivalent( self ):
+	def keyEquivalent(self):
 		""" 
 		The key together with Cmd+Shift will be the shortcut for the filter.
 		Return None if you do not want to set a shortcut.
@@ -371,7 +360,7 @@ class FilterWithDialog ( GSFilterPlugin):
 	
 
 
-	def processFont_withArguments_( self, Font, Arguments ):
+	def processFont_withArguments_(self, Font, Arguments):
 		"""
 		Invoked when called as Custom Parameter in an instance at export.
 		The Arguments come from the custom parameter in the instance settings. 
@@ -404,7 +393,7 @@ class FilterWithDialog ( GSFilterPlugin):
 						customParameters[key] = value
 			
 			# change glyphList to include or exclude glyphs
-			if len( Arguments ) > 1:
+			if len(Arguments) > 1:
 				if "exclude:" in Arguments[-1]:
 					excludeList = [ n.strip() for n in Arguments.pop(-1).replace("exclude:","").strip().split(",") ]
 					glyphList = [ g for g in glyphList if not g.name in excludeList ]
@@ -415,58 +404,58 @@ class FilterWithDialog ( GSFilterPlugin):
 			# With these values, call your code on every glyph:
 			FontMasterId = Font.fontMasterAtIndex_(0).id
 			for thisGlyph in glyphList:
-				Layer = thisGlyph.layerForKey_( FontMasterId )
+				Layer = thisGlyph.layerForKey_(FontMasterId)
 
 				if hasattr(self, 'filter'):
-					self.filter( Layer, False, customParameters )
+					self.filter(Layer, False, customParameters)
 
 		except:
 			self.logError(traceback.format_exc())
 	
-	def process_( self, sender ):
+	def process_(self, sender):
 		"""
 		This method gets called when the user invokes the Dialog.
 		"""
 		try:
 			# Create Preview in Edit View, and save & show original in ShadowLayers:
-			ShadowLayers = self.valueForKey_( "shadowLayers" )
-			Layers = self.valueForKey_( "layers" )
+			ShadowLayers = self.valueForKey_("shadowLayers")
+			Layers = self.valueForKey_("layers")
 			checkSelection = True
-			for k in range(len( ShadowLayers )):
+			for k in range(len(ShadowLayers)):
 				ShadowLayer = ShadowLayers[k]
 				Layer = Layers[k]
-				Layer.setPaths_( NSMutableArray.alloc().initWithArray_copyItems_( ShadowLayer.pyobjc_instanceMethods.paths(), True ) )
-				Layer.setSelection_( NSMutableArray.array() )
+				Layer.setPaths_(NSMutableArray.alloc().initWithArray_copyItems_(ShadowLayer.pyobjc_instanceMethods.paths(), True))
+				Layer.setSelection_(NSMutableArray.array())
 				try:
 					# Glyphs 2.1 and earlier:
 					if len(ShadowLayer.selection()) > 0 and checkSelection:
-						for i in range(len( ShadowLayer.paths )):
+						for i in range(len(ShadowLayer.paths)):
 							currShadowPath = ShadowLayer.paths[i]
 							currLayerPath = Layer.paths[i]
 							for j in range(len(currShadowPath.nodes)):
 								currShadowNode = currShadowPath.nodes[j]
-								if ShadowLayer.selection().containsObject_( currShadowNode ):
-									Layer.addSelection_( currLayerPath.nodes[j] )
+								if ShadowLayer.selection().containsObject_(currShadowNode):
+									Layer.addSelection_(currLayerPath.nodes[j])
 				except:
 					# Glyphs 2.2 and later:
 					if len(ShadowLayer.selection) > 0 and checkSelection:
-						for i in range(len( ShadowLayer.paths )):
+						for i in range(len(ShadowLayer.paths)):
 							currShadowPath = ShadowLayer.paths[i]
 							currLayerPath = Layer.paths[i]
 							for j in range(len(currShadowPath.nodes)):
 								currShadowNode = currShadowPath.nodes[j]
 								if currShadowNode in ShadowLayer.selection:
-									Layer.addSelection_( currLayerPath.nodes[j] )
+									Layer.addSelection_(currLayerPath.nodes[j])
 								
-				self.filter( Layer, Glyphs.font.currentTab != None, {} ) # add your class variables here
+				self.filter(Layer, Glyphs.font.currentTab != None, {}) # add your class variables here
 				Layer.clearSelection()
 		
 			# Safe the values in the FontMaster. But could be saved in UserDefaults, too.
-#			FontMaster = self.valueForKey_( "fontMaster" )
-#			FontMaster.userData[ "____myValue____" ] = NSNumber.numberWithInteger_( self.____myValue____ )
+			# FontMaster = self.valueForKey_("fontMaster")
+			# FontMaster.userData[ "____myValue____" ] = NSNumber.numberWithInteger_(self.____myValue____)
 			
 			# call the superclass to trigger the immediate redraw:
-			super( FilterWithDialog, self ).process_( sender )
+			super(FilterWithDialog, self).process_(sender)
 		except:
 			self.logError(traceback.format_exc())
 	
@@ -475,10 +464,10 @@ class FilterWithDialog ( GSFilterPlugin):
 		return self.dialog
 	
 	def preview(self):
-		self.process_( None )
+		self.process_(None)
 		Glyphs.redraw()
 
-	def customParameterString( self ):
+	def customParameterString(self):
 		try:
 			if hasattr(self, 'generateCustomParameter'):
 				return self.generateCustomParameter()
@@ -489,11 +478,11 @@ objc.classAddMethods(FilterWithDialog, [logToConsole])
 objc.classAddMethods(FilterWithDialog, [logError])
 
 
-GlyphsFilterWithoutDialogProtocol = objc.protocolNamed( "GlyphsFilter" )
+GlyphsFilterWithoutDialogProtocol = objc.protocolNamed("GlyphsFilter")
 
-class FilterWithoutDialog ( NSObject, GlyphsFilterWithoutDialogProtocol):
+class FilterWithoutDialog (NSObject, GlyphsFilterWithoutDialogProtocol):
 
-	def init( self ):
+	def init(self):
 		"""
 		Do all initializing here.
 		"""
@@ -511,7 +500,7 @@ class FilterWithoutDialog ( NSObject, GlyphsFilterWithoutDialogProtocol):
 		except:
 			self.logError(traceback.format_exc())
 	
-	def interfaceVersion( self ):
+	def interfaceVersion(self):
 		"""
 		Distinguishes the API version the plugin was built for. 
 		Return 1.
@@ -521,7 +510,7 @@ class FilterWithoutDialog ( NSObject, GlyphsFilterWithoutDialogProtocol):
 		except:
 			self.logError(traceback.format_exc())
 	
-	def title( self ):
+	def title(self):
 		"""
 		This is the human-readable name as it appears in the Filter menu.
 		"""
@@ -530,7 +519,7 @@ class FilterWithoutDialog ( NSObject, GlyphsFilterWithoutDialogProtocol):
 		except:
 			self.logError(traceback.format_exc())
 	
-	def setController_( self, Controller ):
+	def setController_(self, Controller):
 		"""
 		Sets the controller, you can access it with controller().
 		Do not touch this.
@@ -540,16 +529,16 @@ class FilterWithoutDialog ( NSObject, GlyphsFilterWithoutDialogProtocol):
 		except:
 			self.logError(traceback.format_exc())
 	
-	def controller( self ):
+	def controller(self):
 		"""
 		Do not touch this.
 		"""
 		try:
 			return self._controller
 		except Exception as e:
-			self.logToConsole( "controller: %s" % str(e) )
+			self.logToConsole("controller: %s" % str(e))
 		
-	def setup( self ):
+	def setup(self):
 		"""
 		Do not touch this.
 		"""
@@ -558,7 +547,7 @@ class FilterWithoutDialog ( NSObject, GlyphsFilterWithoutDialogProtocol):
 		except:
 			self.logError(traceback.format_exc())
 	
-	def keyEquivalent( self ):
+	def keyEquivalent(self):
 		""" 
 		The key together with Cmd+Shift will be the shortcut for the filter.
 		Return None if you do not want to set a shortcut.
@@ -570,7 +559,7 @@ class FilterWithoutDialog ( NSObject, GlyphsFilterWithoutDialogProtocol):
 			self.logError(traceback.format_exc())
 	
 	# deprecated --> filter() in user code
-	def __processLayer( self, Layer, selectionCounts ): 
+	def __processLayer(self, Layer, selectionCounts): 
 		"""
 		Each layer is eventually processed here. This is where your code goes.
 		If selectionCounts is True, then apply the code only to the selection.
@@ -592,48 +581,48 @@ class FilterWithoutDialog ( NSObject, GlyphsFilterWithoutDialogProtocol):
 			self.logError(traceback.format_exc())
 			return (False, None)
 	
-	def runFilterWithLayers_error_( self, Layers, Error ):
+	def runFilterWithLayers_error_(self, Layers, Error):
 		"""
 		Invoked when user triggers the filter through the Filter menu
 		and more than one layer is selected.
 		"""
 		try:
-#			print Layers
+			# print Layers
 			for Layer in Layers:
-#				Layer = Layers[k]
-#				Layer.clearSelection()
+				# Layer = Layers[k]
+				# Layer.clearSelection()
 				
 				if hasattr(self, 'filter'):
-					self.filter( Layer, False, {} )
+					self.filter(Layer, False, {})
 					
 			return (True, None)
 		except:
 			self.logError(traceback.format_exc())
 	
-	def runFilterWithLayer_options_error_( self, Layer, Options, Error ):
+	def runFilterWithLayer_options_error_(self, Layer, Options, Error):
 		"""
 		Required for compatibility with Glyphs version 702 or later.
 		Leave this as it is.
 		"""
 		try:
-			return self.runFilterWithLayer_error_( self, Layer, Error )
+			return self.runFilterWithLayer_error_(self, Layer, Error)
 		except:
 			self.logError(traceback.format_exc())
 			
-	def runFilterWithLayer_error_( self, Layer, Error ):
+	def runFilterWithLayer_error_(self, Layer, Error):
 		"""
 		Invoked when user triggers the filter through the Filter menu
 		and only one layer is selected.
 		"""
 		try:
 			if hasattr(self, 'filter'):
-				self.filter( Layer, True, {} )
+				self.filter(Layer, True, {})
 			return (True, None)
 		except:
 			self.logError(traceback.format_exc())
 			return (False, None)
 	
-	def processFont_withArguments_( self, Font, Arguments ):
+	def processFont_withArguments_(self, Font, Arguments):
 		"""
 		Invoked when called as Custom Parameter in an instance at export.
 		The Arguments come from the custom parameter in the instance settings. 
@@ -643,7 +632,7 @@ class FilterWithoutDialog ( NSObject, GlyphsFilterWithoutDialogProtocol):
 			# set glyphList to all glyphs
 			glyphList = Font.glyphs
 			
-#			print Arguments
+			# print Arguments
 			
 			# customParameters delivered to filter()
 			customParameters = {}
@@ -669,7 +658,7 @@ class FilterWithoutDialog ( NSObject, GlyphsFilterWithoutDialogProtocol):
 			
 			
 			# change glyphList to include or exclude glyphs
-			if len( Arguments ) > 1:
+			if len(Arguments) > 1:
 				if "exclude:" in Arguments[-1]:
 					excludeList = [ n.strip() for n in Arguments.pop(-1).replace("exclude:","").strip().split(",") ]
 					glyphList = [ g for g in glyphList if not g.name in excludeList ]
@@ -679,10 +668,10 @@ class FilterWithoutDialog ( NSObject, GlyphsFilterWithoutDialogProtocol):
 			
 			FontMasterId = Font.fontMasterAtIndex_(0).id
 			for thisGlyph in glyphList:
-				Layer = thisGlyph.layerForKey_( FontMasterId )
+				Layer = thisGlyph.layerForKey_(FontMasterId)
 
 				if hasattr(self, 'filter'):
-					self.filter( Layer, False, customParameters )
+					self.filter(Layer, False, customParameters)
 		except:
 			self.logError(traceback.format_exc())
 
@@ -690,11 +679,11 @@ objc.classAddMethods(FilterWithoutDialog, [logToConsole])
 objc.classAddMethods(FilterWithoutDialog, [logError])
 
 
-GlyphsGeneralPluginProtocol = objc.protocolNamed( "GlyphsPlugin" )
+GlyphsGeneralPluginProtocol = objc.protocolNamed("GlyphsPlugin")
 
-class GeneralPlugin ( NSObject, GlyphsGeneralPluginProtocol):
+class GeneralPlugin (NSObject, GlyphsGeneralPluginProtocol):
 	
-	def interfaceVersion( self ):
+	def interfaceVersion(self):
 		"""
 		Distinguishes the API version the plugin was built for. 
 		Return 1.
@@ -717,7 +706,7 @@ class GeneralPlugin ( NSObject, GlyphsGeneralPluginProtocol):
 		except:
 			self.logError(traceback.format_exc())
 
-	def title( self ):
+	def title(self):
 		"""
 		This is the name as it appears in the menu in combination with 'Show'.
 		E.g. 'return "Nodes"' will make the menu item read "Show Nodes".
@@ -731,20 +720,20 @@ objc.classAddMethods(GeneralPlugin, [logToConsole])
 objc.classAddMethods(GeneralPlugin, [logError])
 
 
-GlyphsPaletteProtocol = objc.protocolNamed( "GlyphsPalette" )
+GlyphsPaletteProtocol = objc.protocolNamed("GlyphsPalette")
 
-class PalettePlugin ( NSObject, GlyphsPaletteProtocol):
+class PalettePlugin (NSObject, GlyphsPaletteProtocol):
 	# Define all your IB outlets for your .xib after _theView:
 	_windowController = None
-#	_theView = objc.IBOutlet() # Palette view on which you can place UI elements.
+	# _theView = objc.IBOutlet() # Palette view on which you can place UI elements.
 	
-	def init( self ):
+	def init(self):
 		"""
 		Do all initializing here, and customize the quadruple underscore items.
 		____CFBundleIdentifier____ should be the reverse domain name you specified in Info.plist.
 		"""
 		try:
-#		if True:
+		# if True:
 			self.dialogName = 'IBdialog'
 			self.name = 'My Palette'
 
@@ -752,8 +741,8 @@ class PalettePlugin ( NSObject, GlyphsPaletteProtocol):
 			if hasattr(self, 'settings'):
 				self.settings()
 
-			if not NSBundle.loadNibNamed_owner_( self.dialogName, self ):
-				self.logToConsole( "Error loading .nib into Palette." )
+			if not NSBundle.loadNibNamed_owner_(self.dialogName, self):
+				self.logToConsole("Error loading .nib into Palette.")
 		
 		
 			Frame = self.theView().frame()
@@ -762,9 +751,9 @@ class PalettePlugin ( NSObject, GlyphsPaletteProtocol):
 			self.min = Frame.size.height
 			self.max = Frame.size.height
 			
-			if NSUserDefaults.standardUserDefaults().objectForKey_( self.dialogName + ".ViewHeight" ):
-				Frame.size.height = NSUserDefaults.standardUserDefaults().integerForKey_( self.dialogName + ".ViewHeight" )
-				self.theView().setFrame_( Frame )
+			if NSUserDefaults.standardUserDefaults().objectForKey_(self.dialogName + ".ViewHeight"):
+				Frame.size.height = NSUserDefaults.standardUserDefaults().integerForKey_(self.dialogName + ".ViewHeight")
+				self.theView().setFrame_(Frame)
 
 
 			if hasattr(self, 'start'):
@@ -776,7 +765,7 @@ class PalettePlugin ( NSObject, GlyphsPaletteProtocol):
 		except:
 			self.logError(traceback.format_exc())
 	
-	def interfaceVersion( self ):
+	def interfaceVersion(self):
 		"""
 		Distinguishes the API version the plugin was built for. 
 		Return 1.
@@ -786,7 +775,7 @@ class PalettePlugin ( NSObject, GlyphsPaletteProtocol):
 		except:
 			self.logError(traceback.format_exc())
 	
-	def title( self ):
+	def title(self):
 		"""
 		This is the name as it appears in the Palette section header.
 		"""
@@ -795,19 +784,19 @@ class PalettePlugin ( NSObject, GlyphsPaletteProtocol):
 		except:
 			self.logError(traceback.format_exc())
 	
-	def windowController( self ):
+	def windowController(self):
 		try:
 			return self._windowController
 		except:
 			self.logError(traceback.format_exc())
 	
-	def setWindowController_( self, windowController ):
+	def setWindowController_(self, windowController):
 		try:
 			self._windowController = windowController
 		except:
 			self.logError(traceback.format_exc())
 	
-	def theView( self ):
+	def theView(self):
 		"""
 		Returns an NSView to be displayed in the palette.
 		This is the grey background in the palette, on which you can place UI items.
@@ -817,7 +806,7 @@ class PalettePlugin ( NSObject, GlyphsPaletteProtocol):
 		except:
 			self.logError(traceback.format_exc())
 	
-	def minHeight( self ):
+	def minHeight(self):
 		"""
 		The minimum height of the view in pixels.
 		"""
@@ -826,7 +815,7 @@ class PalettePlugin ( NSObject, GlyphsPaletteProtocol):
 		except:
 			self.logError(traceback.format_exc())
 	
-	def maxHeight( self ):
+	def maxHeight(self):
 		"""
 		The maximum height of the view in pixels.
 		Must be equal to or bigger than minHeight.
@@ -836,7 +825,7 @@ class PalettePlugin ( NSObject, GlyphsPaletteProtocol):
 		except:
 			self.logError(traceback.format_exc())
 	
-	def currentHeight( self ):
+	def currentHeight(self):
 		"""
 		The current height of the Palette section.
 		Used for storing the current resized state.
@@ -844,21 +833,21 @@ class PalettePlugin ( NSObject, GlyphsPaletteProtocol):
 		"""
 		try:
 			# return 150
-			return NSUserDefaults.standardUserDefaults().integerForKey_( self.dialogName + ".ViewHeight" )
+			return NSUserDefaults.standardUserDefaults().integerForKey_(self.dialogName + ".ViewHeight")
 		except:
 			self.logError(traceback.format_exc())
 	
-	def setCurrentHeight_( self, newHeight ):
+	def setCurrentHeight_(self, newHeight):
 		"""
 		Sets a new height for the Palette section.
 		"""
 		try:
 			if newHeight >= self.minHeight() and newHeight <= self.maxHeight():
-				NSUserDefaults.standardUserDefaults().setInteger_forKey_( newHeight, self.dialogName + ".ViewHeight" )
+				NSUserDefaults.standardUserDefaults().setInteger_forKey_(newHeight, self.dialogName + ".ViewHeight")
 		except:
 			self.logError(traceback.format_exc())
 	
-	def currentWindowController( self, sender ):
+	def currentWindowController(self, sender):
 		"""
 		Returns a window controller object.
 		Use self.currentWindowController() to access it.
@@ -867,14 +856,14 @@ class PalettePlugin ( NSObject, GlyphsPaletteProtocol):
 			windowController = None
 			try:
 				windowController = NSDocumentController.sharedDocumentController().currentDocument().windowController()
-				if not windowController and sender.respondsToSelector_( "object" ):
-					if sender.object().__class__ == NSClassFromString( "GSFont" ):
+				if not windowController and sender.respondsToSelector_("object"):
+					if sender.object().__class__ == NSClassFromString("GSFont"):
 						Font = sender.object()
 						windowController = Font.parent().windowControllers()[0]
-						self.logToConsole( "__windowController1", windowController )
+						self.logToConsole("__windowController1", windowController)
 					else:
 						windowController = sender.object()
-						self.logToConsole( "__windowController2", windowController )
+						self.logToConsole("__windowController2", windowController)
 			except:
 				pass
 			return windowController
@@ -885,16 +874,16 @@ objc.classAddMethods(PalettePlugin, [logToConsole])
 objc.classAddMethods(PalettePlugin, [logError])
 
 
-GlyphsReporterProtocol = objc.protocolNamed( "GlyphsReporter" )
+GlyphsReporterProtocol = objc.protocolNamed("GlyphsReporter")
 
-class ReporterPlugin ( NSObject, GlyphsReporterProtocol):
+class ReporterPlugin (NSObject, GlyphsReporterProtocol):
 	
-	def init( self ):
+	def init(self):
 		"""
 		Put any initializations you want to make here.
 		"""
 		try:
-			#Bundle = NSBundle.bundleForClass_( NSClassFromString( self.className() ));
+			#Bundle = NSBundle.bundleForClass_(NSClassFromString(self.className()));
 			# Default values
 			self.menuName = 'New ReporterPlugin'
 			self.keyboardShortcut = None
@@ -913,7 +902,7 @@ class ReporterPlugin ( NSObject, GlyphsReporterProtocol):
 		except:
 			self.logError(traceback.format_exc())
 	
-	def interfaceVersion( self ):
+	def interfaceVersion(self):
 		"""
 		Distinguishes the API version the plugin was built for. 
 		Return 1.
@@ -923,7 +912,7 @@ class ReporterPlugin ( NSObject, GlyphsReporterProtocol):
 		except:
 			self.logError(traceback.format_exc())
 	
-	def title( self ):
+	def title(self):
 		"""
 		This is the name as it appears in the menu in combination with 'Show'.
 		E.g. 'return "Nodes"' will make the menu item read "Show Nodes".
@@ -933,7 +922,7 @@ class ReporterPlugin ( NSObject, GlyphsReporterProtocol):
 		except:
 			self.logError(traceback.format_exc())
 	
-	def keyEquivalent( self ):
+	def keyEquivalent(self):
 		"""
 		The key for the keyboard shortcut. Set modifier keys in modifierMask() further below.
 		Pretty tricky to find a shortcut that is not taken yet, so be careful.
@@ -944,7 +933,7 @@ class ReporterPlugin ( NSObject, GlyphsReporterProtocol):
 		except Exception as e:
 			self.logError(traceback.format_exc())
 	
-	def modifierMask( self ):
+	def modifierMask(self):
 		"""
 		Use any combination of these to determine the modifier keys for your default shortcut:
 			return NSShiftKeyMask | NSControlKeyMask | NSCommandKeyMask | NSAlternateKeyMask
@@ -957,21 +946,21 @@ class ReporterPlugin ( NSObject, GlyphsReporterProtocol):
 		except:
 			self.logError(traceback.format_exc())
 	
-	def drawForegroundForLayer_( self, Layer ):
+	def drawForegroundForLayer_(self, Layer):
 		"""
 		Whatever you draw here will be displayed IN FRONT OF the paths.
 		Setting a color:
-			NSColor.colorWithCalibratedRed_green_blue_alpha_( 1.0, 1.0, 1.0, 1.0 ).set() # sets RGBA values between 0.0 and 1.0
+			NSColor.colorWithCalibratedRed_green_blue_alpha_(1.0, 1.0, 1.0, 1.0).set() # sets RGBA values between 0.0 and 1.0
 			NSColor.redColor().set() # predefined colors: blackColor, blueColor, brownColor, clearColor, cyanColor, darkGrayColor, grayColor, greenColor, lightGrayColor, magentaColor, orangeColor, purpleColor, redColor, whiteColor, yellowColor
 		Drawing a path:
 			myPath = NSBezierPath.alloc().init()  # initialize a path object myPath
-			myPath.appendBezierPath_( subpath )   # add subpath to myPath
+			myPath.appendBezierPath_(subpath)   # add subpath to myPath
 			myPath.fill()   # fill myPath with the current NSColor
 			myPath.stroke() # stroke myPath with the current NSColor
 		To get an NSBezierPath from a GSPath, use the bezierPath() method:
 			myPath.bezierPath().fill()
 		You can apply that to a full layer at once:
-			if len( myLayer.paths > 0 ):
+			if len(myLayer.paths > 0):
 				myLayer.bezierPath()       # all closed paths
 				myLayer.openBezierPath()   # all open paths
 		See:
@@ -985,7 +974,7 @@ class ReporterPlugin ( NSObject, GlyphsReporterProtocol):
 			self.logError(traceback.format_exc())
 
 	
-	def drawBackgroundForLayer_( self, Layer ):
+	def drawBackgroundForLayer_(self, Layer):
 		"""
 		Whatever you draw here will be displayed BEHIND the paths.
 		"""
@@ -996,7 +985,7 @@ class ReporterPlugin ( NSObject, GlyphsReporterProtocol):
 			self.logError(traceback.format_exc())
 		
 	
-	def drawBackgroundForInactiveLayer_( self, Layer ):
+	def drawBackgroundForInactiveLayer_(self, Layer):
 		"""
 		Whatever you draw here will be displayed behind the paths, but
 		- for inactive glyphs in the EDIT VIEW
@@ -1024,7 +1013,7 @@ class ReporterPlugin ( NSObject, GlyphsReporterProtocol):
 		except:
 			self.logError(traceback.format_exc())
 		
-	def needsExtraMainOutlineDrawingForInactiveLayer_( self, Layer ):
+	def needsExtraMainOutlineDrawingForInactiveLayer_(self, Layer):
 		"""
 		Decides whether inactive glyphs in Edit View and glyphs in Preview should be drawn
 		by Glyphs (‘the main outline drawing’).
@@ -1065,16 +1054,16 @@ class ReporterPlugin ( NSObject, GlyphsReporterProtocol):
 			
 				if contextMenus:
 					for name, method in contextMenus:
-						newMenuItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_( name, method, "" )
-						newMenuItem.setTarget_( self ) # method of this class will be called
-						contextMenu.insertItem_atIndex_( newMenuItem, 0 ) # adds item at the top of the menu
+						newMenuItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_(name, method, "")
+						newMenuItem.setTarget_(self) # method of this class will be called
+						contextMenu.insertItem_atIndex_(newMenuItem, 0) # adds item at the top of the menu
 
 		except:
 			self.logError(traceback.format_exc())
 	
-	def drawTextAtPoint( self, text, textPosition, fontSize=10.0, fontColor=NSColor.blackColor(), align='bottomleft'):
+	def drawTextAtPoint(self, text, textPosition, fontSize=10.0, fontColor=NSColor.blackColor(), align='bottomleft'):
 		"""
-		Use self.drawTextAtPoint( "blabla", myNSPoint ) to display left-aligned text at myNSPoint.
+		Use self.drawTextAtPoint("blabla", myNSPoint) to display left-aligned text at myNSPoint.
 		"""
 		try:
 
@@ -1094,22 +1083,22 @@ class ReporterPlugin ( NSObject, GlyphsReporterProtocol):
 			glyphEditView = self.controller.graphicView()
 			currentZoom = self.getScale()
 			fontAttributes = { 
-				NSFontAttributeName: NSFont.labelFontOfSize_( fontSize/currentZoom ),
+				NSFontAttributeName: NSFont.labelFontOfSize_(fontSize/currentZoom),
 				NSForegroundColorAttributeName: fontColor }
-			displayText = NSAttributedString.alloc().initWithString_attributes_( text, fontAttributes )
+			displayText = NSAttributedString.alloc().initWithString_attributes_(text, fontAttributes)
 			textAlignment = alignment[align] # top left: 6, top center: 7, top right: 8, center left: 3, center center: 4, center right: 5, bottom left: 0, bottom center: 1, bottom right: 2
-			glyphEditView.drawText_atPoint_alignment_( displayText, textPosition, textAlignment )
+			glyphEditView.drawText_atPoint_alignment_(displayText, textPosition, textAlignment)
 		except:
 			self.logError(traceback.format_exc())
 	
-	def getHandleSize( self ):
+	def getHandleSize(self):
 		"""
 		Returns the current handle size as set in user preferences.
 		Use: self.getHandleSize() / self.getScale()
 		to determine the right size for drawing on the canvas.
 		"""
 		try:
-			Selected = NSUserDefaults.standardUserDefaults().integerForKey_( "GSHandleSize" )
+			Selected = NSUserDefaults.standardUserDefaults().integerForKey_("GSHandleSize")
 			if Selected == 0:
 				return 5.0
 			elif Selected == 2:
@@ -1120,7 +1109,7 @@ class ReporterPlugin ( NSObject, GlyphsReporterProtocol):
 			self.logError(traceback.format_exc())
 			return 7.0
 
-	def getScale( self ):
+	def getScale(self):
 		"""
 		self.getScale() returns the current scale factor of the Edit View UI.
 		Divide any scalable size by this value in order to keep the same apparent pixel size.
@@ -1131,14 +1120,14 @@ class ReporterPlugin ( NSObject, GlyphsReporterProtocol):
 			self.logError(traceback.format_exc())
 			return 1.0
 	
-	def setController_( self, Controller ):
+	def setController_(self, Controller):
 		"""
 		Use self.controller as object for the current view controller.
 		"""
 		try:
 			self.controller = Controller
 		except Exception as e:
-			self.logToConsole( "Could not set controller" )
+			self.logToConsole("Could not set controller")
 
 objc.classAddMethods(ReporterPlugin, [logToConsole])
 objc.classAddMethods(ReporterPlugin, [logError])
@@ -1146,7 +1135,7 @@ objc.classAddMethods(ReporterPlugin, [logError])
 
 class SelectTool (GSToolSelect):
 	
-	def init( self ):
+	def init(self):
 		"""
 		By default, toolbar.pdf will be your tool icon.
 		Use this for any initializations you need.
@@ -1161,10 +1150,10 @@ class SelectTool (GSToolSelect):
 			if hasattr(self, 'settings'):
 				self.settings()
 			
-			Bundle = NSBundle.bundleForClass_( NSClassFromString( self.className() ) );
-			BundlePath = Bundle.pathForResource_ofType_( os.path.splitext(self._icon)[0], os.path.splitext(self._icon)[1] ) # Set this to the filename and type of your icon.
-			self.tool_bar_image = NSImage.alloc().initWithContentsOfFile_( BundlePath )
-			self.tool_bar_image.setTemplate_( True ) # Makes the icon blend in with the toolbar.
+			Bundle = NSBundle.bundleForClass_(NSClassFromString(self.className()));
+			BundlePath = Bundle.pathForResource_ofType_(os.path.splitext(self._icon)[0], os.path.splitext(self._icon)[1]) # Set this to the filename and type of your icon.
+			self.tool_bar_image = NSImage.alloc().initWithContentsOfFile_(BundlePath)
+			self.tool_bar_image.setTemplate_(True) # Makes the icon blend in with the toolbar.
 
 			if hasattr(self, 'start'):
 				self.start()
@@ -1173,7 +1162,7 @@ class SelectTool (GSToolSelect):
 		except:
 			self.logError(traceback.format_exc())
 		
-	def interfaceVersion( self ):
+	def interfaceVersion(self):
 		"""
 		Distinguishes the API version the plugin was built for. 
 		Return 1.
@@ -1183,7 +1172,7 @@ class SelectTool (GSToolSelect):
 		except:
 			self.logToConsole(traceback.format_exc())
 
-	def title( self ):
+	def title(self):
 		"""
 		The name of the Tool as it appears in the tooltip.
 		"""
@@ -1192,7 +1181,7 @@ class SelectTool (GSToolSelect):
 		except:
 			self.logError(traceback.format_exc())
 		
-	def toolBarIcon( self ):
+	def toolBarIcon(self):
 		"""
 		Return a instance of NSImage that represents the toolbar icon as established in init().
 		Unless you know what you are doing, leave this as it is.
@@ -1202,7 +1191,7 @@ class SelectTool (GSToolSelect):
 		except:
 			self.logError(traceback.format_exc())
 		
-	def groupID( self ):
+	def groupID(self):
 		"""
 		Determines the position in the toolbar.
 		Higher values are further to the right.
@@ -1212,7 +1201,7 @@ class SelectTool (GSToolSelect):
 		except:
 			self.logError(traceback.format_exc())
 		
- 	def trigger( self ):
+ 	def trigger(self):
 		"""
 		The key to select the tool with keyboard (like v for the select tool).
 		Either use trigger() or keyEquivalent(), not both. Remove the method(s) you do not use.
@@ -1222,7 +1211,7 @@ class SelectTool (GSToolSelect):
 		except:
 			self.logError(traceback.format_exc())
 		
-	def willSelectTempTool_( self, TempTool ):
+	def willSelectTempTool_(self, TempTool):
 		"""
 		Temporary Tool when user presses Cmd key.
 		Should always be GlyphsToolSelect unless you have a better idea.
@@ -1232,37 +1221,37 @@ class SelectTool (GSToolSelect):
 		except:
 			self.logError(traceback.format_exc())
 		
-	def willActivate( self ):
+	def willActivate(self):
 		"""
 		Do stuff when the tool is selected.
 		E.g. show a window, or set a cursor.
 		"""
 		try:
-			super( SelectTool, self ).willActivate()
+			super(SelectTool, self).willActivate()
 			if hasattr(self, 'activate'):
 				self.activate()
 		except:
 			self.logError(traceback.format_exc())
 		
-	def willDeactivate( self ):
+	def willDeactivate(self):
 		"""
 		Do stuff when the tool is deselected.
 		"""
 		try:
-			super( SelectTool, self ).willDeactivate()
+			super(SelectTool, self).willDeactivate()
 			if hasattr(self, 'deactivate'):
 				self.deactivate()
 		except:
 			self.logError(traceback.format_exc())
 		
-	def elementAtPoint_atLayer_( self, currentPoint, activeLayer ):
+	def elementAtPoint_atLayer_(self, currentPoint, activeLayer):
 		"""
 		Return an element in the vicinity of currentPoint (NSPoint), and it will be captured by the tool.
 		Use Boolean ...
-			distance( currentPoint, referencePoint ) < clickTolerance / Scale )
+			distance(currentPoint, referencePoint) < clickTolerance / Scale)
 		... for determining whether the NSPoint referencePoint is captured or not.
 		Use:
-			myPath.nearestPointOnPath_pathTime_( currentPoint, 0.0 )
+			myPath.nearestPointOnPath_pathTime_(currentPoint, 0.0)
 		
 		"""
 		return super(SelectTool, self).elementAtPoint_atLayer_(currentPoint, activeLayer)
@@ -1273,11 +1262,11 @@ class SelectTool (GSToolSelect):
 
 			for p in activeLayer.paths:
 				for n in p.nodes:
-					if distance( currentPoint, n.position ) < clickTolerance / Scale:
+					if distance(currentPoint, n.position) < clickTolerance / Scale:
 						return n
 
 			for a in activeLayer.anchors:
-				if distance( currentPoint, a.position ) < clickTolerance / Scale:
+				if distance(currentPoint, a.position) < clickTolerance / Scale:
 					return a
 			
 		except:
@@ -1287,7 +1276,7 @@ class SelectTool (GSToolSelect):
 	# if you intend to extend the context menu with extra items.
 	# Remove them if you do not want to change the context menu:
 	
-	def defaultContextMenu( self ):
+	def defaultContextMenu(self):
 		"""
 		Sets the default content of the context menu and returns the menu.
 		Add menu items that do not depend on the context,
@@ -1300,17 +1289,17 @@ class SelectTool (GSToolSelect):
 			
 			# Add separator at the bottom:
 			newSeparator = NSMenuItem.separatorItem()
-			theMenu.addItem_( newSeparator )
+			theMenu.addItem_(newSeparator)
 			
 			# Add menu items at the bottom:
 			for name, method in self.generalContextMenus:
-				theMenu.addItemWithTitle_action_keyEquivalent_(name, method, "" )
+				theMenu.addItemWithTitle_action_keyEquivalent_(name, method, "")
 			
 			return theMenu
 		except:
 			self.logError(traceback.format_exc())
 			
-	def addMenuItemsForEvent_toMenu_( self, theEvent, theMenu ):
+	def addMenuItemsForEvent_toMenu_(self, theEvent, theMenu):
 		"""
 		Adds menu items to default context menu.
 		Remove this method if you do not want any extra context menu items.
@@ -1322,13 +1311,13 @@ class SelectTool (GSToolSelect):
 			
 				if contextMenus:
 					for name, method in contextMenus:
-						newMenuItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_( name, method, "" )
-						newMenuItem.setTarget_( self ) # method of this class will be called
-						theMenu.insertItem_atIndex_( newMenuItem, 0 ) # adds item at the top of the menu
+						newMenuItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_(name, method, "")
+						newMenuItem.setTarget_(self) # method of this class will be called
+						theMenu.insertItem_atIndex_(newMenuItem, 0) # adds item at the top of the menu
 					
 					newSeparator = NSMenuItem.separatorItem()
-					theMenu.insertItem_atIndex_( newSeparator, 1 )
-								
+					theMenu.insertItem_atIndex_(newSeparator, 1)
+					
 		except:
 			self.logError(traceback.format_exc())
 
