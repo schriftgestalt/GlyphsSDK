@@ -535,8 +535,8 @@ class FilterWithoutDialog (NSObject, GlyphsFilterWithoutDialogProtocol):
 		"""
 		try:
 			return self._controller
-		except Exception as e:
-			self.logToConsole("controller: %s" % str(e))
+		except:
+			self.logError(traceback.format_exc())
 		
 	def setup(self):
 		"""
@@ -1126,8 +1126,8 @@ class ReporterPlugin (NSObject, GlyphsReporterProtocol):
 		"""
 		try:
 			self.controller = Controller
-		except Exception as e:
-			self.logToConsole("Could not set controller")
+		except:
+			self.logError(traceback.format_exc())
 
 objc.classAddMethods(ReporterPlugin, [logToConsole])
 objc.classAddMethods(ReporterPlugin, [logError])
@@ -1170,7 +1170,7 @@ class SelectTool (GSToolSelect):
 		try:
 			return 1
 		except:
-			self.logToConsole(traceback.format_exc())
+			self.logError(traceback.format_exc())
 
 	def title(self):
 		"""
