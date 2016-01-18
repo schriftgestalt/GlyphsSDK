@@ -116,13 +116,13 @@ If you want to draw the glyphs in the Edit View even different that the inactive
 		# Draw outlines in blue
 		if layer.paths:
 			NSColor.blueColor().set()
-			layer.bezierPath().fill()
+			layer.bezierPath.fill()
 
 		# Draw components in red
 		if layer.components:
 			NSColor.redColor().set()
 			for component in layer.components:
-				component.bezierPath().fill()
+				component.bezierPath.fill()
 ```
 
 #### drawPreview()
@@ -141,7 +141,7 @@ Please note that due to the live interpolation of the preview panel these layers
 		# Draw outlines in blue
 		if layer.paths:
 			NSColor.blueColor().set()
-			layer.bezierPath().fill()
+			layer.bezierPath.fill()
 ```
 
 #### conditionalContextMenus()
@@ -198,12 +198,12 @@ Here are a few examples:
 		myPath.fill()   # fill with the current NSColor (see above)
 		myPath.stroke() # stroke with the current NSColor (see above)
 		
-		# All layers, paths, and components have a .bezierPath() method that
+		# All layers, paths, and components have a .bezierPath method that
 		# returns that path as a NSBezierPath object that you can use for drawing:
 		# NOTE: This method will be renamed to a .bezierPath attribute very soon!!!
-		layer.bezierPath().fill()
-		layer.paths[0].bezierPath().fill()
-		layer.components[0].bezierPath().fill()
+		layer.bezierPath.fill()
+		layer.paths[0].bezierPath.fill()
+		layer.components[0].bezierPath.fill()
 ```
 
 For more detailed information make sure to read into the Cocoa documentation:
