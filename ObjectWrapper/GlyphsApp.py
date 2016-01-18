@@ -3242,21 +3242,74 @@ GSGlyph.id = property(				lambda self: str(self.valueForKey_("id")),
 '''.. attribute:: id
 	An unique identifier for each glyph
 	:type: unicode'''
-GSGlyph.category = property(		lambda self: self.valueForKey_("category"))
+GSGlyph.category = property(		lambda self: self.valueForKey_("category"),
+									lambda self, value: self.setCategory_(value))
 '''.. attribute:: category
 	The category of the glyph. e.g. 'Letter', 'Symbol'
+	Setting only works if `storeCategory` is set.
 	:type: unicode
 '''
-GSGlyph.subCategory = property(		lambda self: self.valueForKey_("subCategory"))
+
+GSGlyph.storeCategory = property(	lambda self: self.valueForKey_("storeCategory"),
+									lambda self, value: self.setStoreCategory_(value))
+'''.. attribute:: storeCategory
+	If the category is read/written to file. Makes it possible to have custom glyph data without a GlyphData file
+	:type: bool
+'''
+
+GSGlyph.subCategory = property(		lambda self: self.valueForKey_("subCategory"),
+									lambda self, value: self.setSubCategory_(value)))
 '''.. attribute:: subCategory
 	The subCategory of the glyph. e.g. 'Uppercase', 'Math'
+	Setting only works if `storeSubCategory` is set.
 	:type: unicode
 '''
-GSGlyph.script = property(			lambda self: self.valueForKey_("script"))
+
+GSGlyph.storeSubCategory = property(lambda self: self.valueForKey_("storeSubCategory"),
+									lambda self, value: self.setStoreSubCategory_(value))
+'''.. attribute:: storeSubCategory
+	If the subCategory is read/written to file. Makes it possible to have custom glyph data without a GlyphData file
+	:type: bool
+	
+	.. versionadded:: 2.3
+	
+'''
+
+GSGlyph.script = property(			lambda self: self.valueForKey_("script")
+									lambda self, value: self.setScript_(value))
 '''.. attribute:: script
 	The script of the glyph, e.g. 'latin', 'arabic'.
+	Setting only works if `storeScript` is set.
 	:type: unicode
 '''
+
+GSGlyph.storeScript = property(		lambda self: self.valueForKey_("storeScript"),
+	 								lambda self, value: self.setStoreScript_(value))
+'''.. attribute:: storeScript
+	If the script is read/written to file. Makes it possible to have custom glyph data without a GlyphData file
+	:type: bool
+	
+	.. versionadded:: 2.3
+'''
+
+GSGlyph.productionName = property(	lambda self: self.production(), 
+									lambda self, value: self.setProduction_(value))
+'''.. attribute:: productionName
+	The productionName of the glyph.
+	:type: unicode
+	
+	.. versionadded:: 2.3
+'''
+
+GSGlyph.storeProductionName = property(lambda self: self.valueForKey_("storeScript"), 
+									lambda self, value: self.setStoreProduction_(value))
+'''.. attribute:: storeProductionName
+	If the productionName is read/written to file. Makes it possible to have custom glyph data without a GlyphData file
+	:type: bool
+	
+	.. versionadded:: 2.3
+'''
+
 
 GSGlyph.glyphInfo = property(lambda self: GSGlyphsInfo.glyphInfoForGlyph_(self))
 '''.. attribute:: glyphInfo
