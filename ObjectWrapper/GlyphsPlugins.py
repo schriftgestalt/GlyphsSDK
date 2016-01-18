@@ -27,9 +27,10 @@ def logError(self, message):
 		self.lastErrorMessage = ''
 	try:
 		if message != self.lastErrorMessage:
-			self.logToConsole(message)
+
 			self.lastErrorMessage = message
-			#Glyphs.showNotification('Error in plug-in %s' % self.title(), 'Check the Console.app output for details.')
+			sys.stderr.write(message)
+		
 	except:
 		self.logToConsole(traceback.format_exc())
 
