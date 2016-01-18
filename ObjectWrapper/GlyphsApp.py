@@ -1856,16 +1856,9 @@ def __GSFont_tool__(self):
 
 def __GSFont_setTool__(self, toolName):
 	
-	toolClass = None
-	
-	# Built-in tools
 	if toolName in toolClassAbrevations:
 		toolName = toolClassAbrevations[toolName]
-		toolClass = NSClassFromString(toolName)
-	
-	# Plugins
-	else:
-		toolClass = NSClassFromString(toolName)
+	toolClass = NSClassFromString(toolName)
 
 	if toolClass:
 		self.parent.windowController().setToolForClass_(toolClass)
