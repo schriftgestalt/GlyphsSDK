@@ -1459,7 +1459,8 @@ Properties
 	tabs
 	currentTab
 	filepath
-	toolIndex
+	tool
+	tools
 
 Functions
 
@@ -1823,14 +1824,6 @@ GSFont.filepath = property(lambda self: Font_filepath(self))
 
 GSFont.toolIndex = property(lambda self: self.parent.windowController().selectedToolIndex(), lambda self, value: self.parent.windowController().setSelectedToolIndex_(value));
 
-'''.. attribute:: toolIndex
-
-	.. versionadded:: 2.3
-
-	Index of tool selected in toolbar, starting at 0.
-	:type: integer'''
-
-
 toolClassAbrevations = { # abrevation : className
 	"SelectTool" : "GlyphsToolSelect",
 	"DrawTool" : "GlyphsToolDraw",
@@ -1863,14 +1856,40 @@ def __GSFont_tool__(self):
 
 def __GSFont_setTool__(self, toolName):
 	
+	toolClass = None
+	
+	# Built-in tools
 	if toolName in toolClassAbrevations:
 		toolName = toolClassAbrevations[toolName]
-	toolClass = NSClassFromString(toolName)
+		toolClass = NSClassFromString(toolName)
+	
+	# Plugins
+	else:
+		toolClass = NSClassFromString(toolName)
+
 	if toolClass:
 		self.parent.windowController().setToolForClass_(toolClass)
+	else:
+		sys.stderr.write('No tool found by the name "%s"' % (toolName))
 	
 	
 GSFont.tool = property(lambda self: __GSFont_tool__(self), lambda self, value: __GSFont_setTool__(self, value))
+
+'''.. attribute:: tool
+
+	.. versionadded:: 2.3
+
+	Name of tool selected in toolbar.
+	
+	For available names including third party plug-ins that come in the form of selectable tools, see `GSFont.tools` below.
+	
+	.. code-block:: python
+		
+		font.tool = 'SelectTool' # Built-in tool
+		font.tool = 'GlyphsAppSpeedPunkTool' # Third party plug-in
+
+
+	:type: string'''
 
 def __GSFont_toolsList__(self):
 	tools = []
@@ -1882,6 +1901,14 @@ def __GSFont_toolsList__(self):
 	return tools
 
 GSFont.tools = property(lambda self: __GSFont_toolsList__(self))
+
+'''.. attribute:: tools
+
+	.. versionadded:: 2.3
+
+	Prints a list of available tool names, including third party plug-ins.
+
+	:type: list, string'''
 
 '''
 ---------
