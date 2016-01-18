@@ -30,7 +30,7 @@ def logError(self, message):
 
 			self.lastErrorMessage = message
 			sys.stderr.write(message)
-		
+	
 	except:
 		self.logToConsole(traceback.format_exc())
 
@@ -305,7 +305,7 @@ class FilterWithDialog (GSFilterPlugin):
 	
 	def setup(self):
 		try:
-			super(FilterWithDialog, self).setup()
+			objc.super(FilterWithDialog, self).setup()
 
 			if hasattr(self, 'start'):
 				self.start()
@@ -456,7 +456,7 @@ class FilterWithDialog (GSFilterPlugin):
 			# FontMaster.userData[ "____myValue____" ] = NSNumber.numberWithInteger_(self.____myValue____)
 			
 			# call the superclass to trigger the immediate redraw:
-			super(FilterWithDialog, self).process_(sender)
+			objc.super(FilterWithDialog, self).process_(sender)
 		except:
 			self.logError(traceback.format_exc())
 	
@@ -1228,7 +1228,7 @@ class SelectTool (GSToolSelect):
 		E.g. show a window, or set a cursor.
 		"""
 		try:
-			super(SelectTool, self).willActivate()
+			objc.super(SelectTool, self).willActivate()
 			if hasattr(self, 'activate'):
 				self.activate()
 		except:
@@ -1239,7 +1239,7 @@ class SelectTool (GSToolSelect):
 		Do stuff when the tool is deselected.
 		"""
 		try:
-			super(SelectTool, self).willDeactivate()
+			objc.super(SelectTool, self).willDeactivate()
 			if hasattr(self, 'deactivate'):
 				self.deactivate()
 		except:
@@ -1255,7 +1255,7 @@ class SelectTool (GSToolSelect):
 			myPath.nearestPointOnPath_pathTime_(currentPoint, 0.0)
 		
 		"""
-		return super(SelectTool, self).elementAtPoint_atLayer_(currentPoint, activeLayer)
+		return objc.super(SelectTool, self).elementAtPoint_atLayer_(currentPoint, activeLayer)
 
 		try:
 			Scale = self.editViewController().graphicView().scale()
@@ -1286,7 +1286,7 @@ class SelectTool (GSToolSelect):
 		"""
 		try:
 			# Get the current default context menu:
-			theMenu = super(SelectTool, self).defaultContextMenu()
+			theMenu = objc.super(SelectTool, self).defaultContextMenu()
 			
 			# Add separator at the bottom:
 			newSeparator = NSMenuItem.separatorItem()
