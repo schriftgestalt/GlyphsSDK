@@ -3269,7 +3269,7 @@ GSGlyph.storeCategory = property(	lambda self: self.valueForKey_("storeCategory"
 '''
 
 GSGlyph.subCategory = property(		lambda self: self.valueForKey_("subCategory"),
-									lambda self, value: self.setSubCategory_(value)))
+									lambda self, value: self.setSubCategory_(value))
 '''.. attribute:: subCategory
 	The subCategory of the glyph. e.g. 'Uppercase', 'Math'
 	Setting only works if `storeSubCategory` is set.
@@ -3286,7 +3286,7 @@ GSGlyph.storeSubCategory = property(lambda self: self.valueForKey_("storeSubCate
 	
 '''
 
-GSGlyph.script = property(			lambda self: self.valueForKey_("script")
+GSGlyph.script = property(			lambda self: self.valueForKey_("script"),
 									lambda self, value: self.setScript_(value))
 '''.. attribute:: script
 	The script of the glyph, e.g. 'latin', 'arabic'.
@@ -5082,13 +5082,13 @@ def Node__init__(self, pt = None, type = None):
 GSNode.__init__ = Node__init__;
 
 def Node__repr__(self):
-	NodeType = nodeConstants[self.type]
-	if self.type != GSOFFCURVE:
-		NodeType += " " + nodeConstants[self.connection]
+	NodeType = self.type
+	if self.type != OFFCURVE and self.smooth:
+		NodeType += " smooth"
 	return "<GSNode x=%s y=%s %s>" % (self.position.x, self.position.y, NodeType)
 GSNode.__repr__ = Node__repr__;
 
-GSNode.position = property(		lambda self: self.valueForKey_("position").pointValue(),
+GSNode.position = property(		lambda self: self.pyobjc_instanceMethods.position(),
 								lambda self, value: self.setPosition_(value))
 '''.. attribute:: position
 	The position of the node.
@@ -6540,7 +6540,6 @@ Node types
 	CURVE = "curve"
 		Curve node. Make sure that each curve node is preceded by two off-curve nodes.
 
-	GSOFFCURVE = 65
 	OFFCURVE = "offcurve"
 		Off-cuve node
 
