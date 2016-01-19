@@ -25,6 +25,14 @@ class Proxy(object):
 		if Values is not None:
 			return len(Values)
 		return 0
+	def pop(self, i):
+		print "__pop", i
+		if type(i) == int:
+			node = self[i]
+			del self[i]
+			return node
+		else:
+			raise(KeyError)
 	def __iter__(self):
 		Values = self.values()
 		if Values is not None:
@@ -712,12 +720,23 @@ GSApplication.localize = Glyphs_localize;
 
 
 
-GSMOVE = 17
-GSLINE = 1
-GSCURVE = 35
-GSOFFCURVE = 65
+GSMOVE_ = 17
+GSLINE_ = 1
+GSCURVE_ = 35
+GSOFFCURVE_ = 65
 GSSHARP = 0
 GSSMOOTH = 100
+
+GSMOVE = "move"
+GSLINE = "line"
+GSCURVE = "curve"
+GSQCURVE = "qcurve"
+GSOFFCURVE = "offcurve"
+
+MOVE = "move"
+LINE = "line"
+CURVE = "curve"
+OFFCURVE = "offcurve"
 
 TAG = -2
 TOPGHOST = -1
@@ -746,14 +765,6 @@ MINUS = 5
 
 
 # Reverse lookup for __repr__
-nodeConstants = {
-	17: 'GSMOVE',
-	1: 'GSLINE',
-	35: 'GSCURVE',
-	65: 'GSOFFCURVE',
-	0: 'GSSHARP',
-	100: 'GSSMOOTH',
-}
 hintConstants = {
 	-2: 'Tag',
 	-1: 'TopGhost',
@@ -4963,21 +4974,21 @@ def DrawPathWithPen(self, pen):
 	if self.closed:
 		for i in range(len(self)-1, -1, -1):
 			StartNode = self.nodeAtIndex_(i)
-			if StartNode.type is not GSOFFCURVE:
+			if StartNode.type is not OFFCURVE:
 				pen.moveTo(StartNode.position)
 				break
 	else:
 		for i in range(len(self)):
 			StartNode = self.nodeAtIndex_(i)
-			if StartNode.type is not GSOFFCURVE:
+			if StartNode.type is not OFFCURVE:
 				pen.moveTo(StartNode.position)
 				Start = i + 1
 				break
 	for i in range(Start, len(self), 1):
 		Node = self.nodeAtIndex_(i)
-		if Node.type == GSLINE:
+		if Node.type == LINE:
 			pen.lineTo(Node.position)
-		elif Node.type == GSCURVE:
+		elif Node.type == CURVE:
 			pen.curveTo(self.nodeAtIndex_(i-2).position, self.nodeAtIndex_(i-1).position, Node.position)
 	if self.closed:
 		pen.closePath()
@@ -5028,7 +5039,7 @@ For details on how to access them, please see :class:`GSPath`.nodes
 .. class:: GSNode([pt, type])
 	
 	:param pt: The position of the node.
-	:param type: The type of the node, GSLINE, GSCURVE or GSOFFCURVE
+	:param type: The type of the node, LINE, CURVE or OFFCURVE
 
 Properties
 
@@ -5083,19 +5094,80 @@ GSNode.position = property(		lambda self: self.valueForKey_("position").pointVal
 	The position of the node.
 	:type: NSPoint'''
 
-GSNode.type = property(			lambda self: self.valueForKey_("type"),
-								lambda self, value: self.setType_(value))
+def __GSNode_get_type__(self):
+	GS_Type = self.pyobjc_instanceMethods.type()
+	if GS_Type == GSMOVE_:
+		return MOVE
+	elif GS_Type == GSOFFCURVE_:
+		return OFFCURVE
+	elif GS_Type == GSCURVE_:
+		return CURVE
+	elif GS_Type == GSQCURVE_:
+		return QCURVE
+	else:
+		return LINE
+
+def __GSNode_set_type__(self, value):
+	if value == MOVE:
+		self.setType_(GSLINE_)
+	elif value == LINE:
+		self.setType_(GSLINE_)
+	elif value == OFFCURVE:
+		self.setType_(GSOFFCURVE_)
+	elif value == CURVE:
+		self.setType_(GSCURVE_)
+	elif value == QCURVE:
+		self.setType_(GSQCURVE_)
+
+GSNode.type = property(__GSNode_get_type__, __GSNode_set_type__, doc="")
+
 '''.. attribute:: type
-	The type of the node, GSLINE, GSCURVE or GSOFFCURVE
-	:type: int'''
-GSNode.connection = property(	lambda self: self.valueForKey_("connection"),
-								lambda self, value: self.setConnection_(value))
-'''.. attribute:: connection
-	The type of the connection, GSSHARP or GSSMOOTH
-	:type: int
+	The type of the node, LINE, CURVE or OFFCURVE
+	
+	always comare agains the constants, never agains the actual value.
+	:type: str'''
+
+def __GSNode__get_smooth(self):
+	return self.connection == GSSMOOTH
+
+def __GSNode__set_smooth(self, value):
+	if value is True:
+		self.setConnection_(GSSMOOTH)
+	else:
+		self.setConnection_(GSSHARP)
+
+GSNode.smooth = property(__GSNode__get_smooth, __GSNode__set_smooth, doc="")
+
+'''.. attribute:: smooth
+	If it is a smooth connection or not
+	:type: BOOL
+	
+	.. versionadded:: 2.3
 '''
 
-GSNode.layer = property(		lambda self: self.parent.parent)
+def __GSNode_get_connection(self):
+	GS_Type = self.pyobjc_instanceMethods.connection()
+	if GS_Type == GSSHARP:
+		return GSSHARP
+	else:
+		return GSSMOOTH
+
+def __GSNode_set_connection(self, value):
+	if value == GSSHARP:
+		self.setConnection_(GSSHARP)
+	else:
+		self.setConnection_(GSSMOOTH)
+
+GSNode.connection = property(__GSNode_get_connection, __GSNode_set_connection, doc="")
+'''.. attribute:: connection
+	The type of the connection, SHARP or SMOOTH
+	:type: string
+	
+	.. deprecated:: 2.3
+	   Use :attribute:`smooth` instead.
+'''
+
+GSNode.layer = property(lambda self: self.parent.parent)
 
 
 '''.. attribute:: selected
@@ -5118,7 +5190,7 @@ def __GSNode__index__(self):
 	except:
 		return NSNotFound
 
-GSNode.index = property(	lambda self: __GSNode__index__(self))
+GSNode.index = property(lambda self: __GSNode__index__(self))
 '''.. attribute:: index
 
 	.. versionadded:: 2.3
@@ -6462,13 +6534,14 @@ Constants
 
 Node types
 
-	GSLINE = 1
+	LINE = "line"
 		Line node.
 
-	GSCURVE = 35
+	CURVE = "curve"
 		Curve node. Make sure that each curve node is preceded by two off-curve nodes.
 
 	GSOFFCURVE = 65
+	OFFCURVE = "offcurve"
 		Off-cuve node
 
 Node connection
@@ -6478,7 +6551,9 @@ Node connection
 
 	GSSMOOTH = 100
 		A smooth or tangent node
-
+	.. deprecated:: 2.3
+	   Use :attribute:`smooth` instead.
+	
 Hint types
 
 	TOPGHOST = -1
