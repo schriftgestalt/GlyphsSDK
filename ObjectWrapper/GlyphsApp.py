@@ -6606,7 +6606,7 @@ Node connection
 	GSSMOOTH = 100
 		A smooth or tangent node
 	.. deprecated:: 2.3
-	   Use :attribute:`smooth` instead.
+	   Use attribute `smooth` instead.
 	
 Hint types
 
