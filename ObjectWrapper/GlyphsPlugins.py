@@ -19,24 +19,10 @@ if not path in sys.path:
 #  Helper methods
 
 def LogToConsole_AsClassExtension(self, message):
-	"""
-	The variable 'message' will be passed to Console.app.
-	Use self.logToConsole("bla bla") for debugging.
-	"""
-	myLog = "Traceback from plug-in %s:\n%s" % (self.title(), message)
-	NSLog(myLog)
+	LogToConsole(message, self.title()) # from GlyhsApp.py
 
 def LogError_AsClassExtension(self, message):
-	if not hasattr(self, "lastErrorMessage"):
-		self.lastErrorMessage = ''
-	try:
-		if message != self.lastErrorMessage:
-
-			self.lastErrorMessage = message
-			sys.stderr.write(message)
-	
-	except:
-		self.logToConsole(traceback.format_exc())
+	LogError(message) # from GlyhsApp.py
 
 
 
@@ -46,7 +32,7 @@ def LogError_AsClassExtension(self, message):
 
 ############################################################################################
 
-#  Plug-in wrappers
+#  Plug-in wrapper
 
 
 GlyphsFileFormatProtocol = objc.protocolNamed("GlyphsFileFormat")

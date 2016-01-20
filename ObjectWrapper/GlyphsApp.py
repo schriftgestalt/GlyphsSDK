@@ -3,11 +3,11 @@
 from AppKit import *
 from Foundation import *
 
-import time, math, sys, os, string, re
+import time, math, sys, os, string, re, traceback
 from sets import Set
 
 
-__all__ = ["Glyphs", "GetFile", "GSMOVE", "GSLINE", "GSCURVE", "GSOFFCURVE", "GSSHARP", "GSSMOOTH", "TAG", "TOPGHOST", "STEM", "BOTTOMGHOST", "TTANCHOR", "TTSTEM", "TTALIGN", "TTINTERPOLATE", "TTDIAGONAL", "CORNER", "CAP", "TTDONTROUND", "TTROUND", "TTROUNDUP", "TTROUNDDOWN", "TRIPLE", "DRAWFOREGROUND", "DRAWBACKGROUND", "DRAWINACTIVE", "DOCUMENTWASSAVED", "TEXT", "ARROW", "CIRCLE", "PLUS", "MINUS", "divideCurve", "distance", "addPoints", "subtractPoints", "GetFolder", "GetSaveFile", "GetOpenFile", "Message", "LogToConsole", "removeOverlap", "subtractPaths", "intersectPaths", "wrapperVersion"]
+__all__ = ["Glyphs", "GetFile", "GSMOVE", "GSLINE", "GSCURVE", "GSOFFCURVE", "GSSHARP", "GSSMOOTH", "TAG", "TOPGHOST", "STEM", "BOTTOMGHOST", "TTANCHOR", "TTSTEM", "TTALIGN", "TTINTERPOLATE", "TTDIAGONAL", "CORNER", "CAP", "TTDONTROUND", "TTROUND", "TTROUNDUP", "TTROUNDDOWN", "TRIPLE", "DRAWFOREGROUND", "DRAWBACKGROUND", "DRAWINACTIVE", "DOCUMENTWASSAVED", "TEXT", "ARROW", "CIRCLE", "PLUS", "MINUS", "divideCurve", "distance", "addPoints", "subtractPoints", "GetFolder", "GetSaveFile", "GetOpenFile", "Message", "LogToConsole", "LogError", "removeOverlap", "subtractPaths", "intersectPaths", "wrapperVersion"]
 
 wrapperVersion = "2.3a"
 
@@ -6538,14 +6538,50 @@ def Message(title, message, OKButton=None):
 	:param OKButton:
 '''
 
-def LogToConsole(message):
+def LogToConsole(message, title = None):
 	f = sys._getframe(1)
-	title = "<>"
+	
+	if not title:
+		title = "<>"
+		try:
+			title = f.f_code.co_name + " (line %d)" % f.f_lineno
+		except:
+			pass
+
+	myLog = "Log message from \"%s\":\n%s" % (title, message)
+	NSLog(myLog)
+
+'''.. function:: LogToConsole(message)
+	
+	Write a message to the Mac's Console.app for debugging.
+	
+	:param message:
+'''
+
+
+lastErrorMessage = ''
+def LogError(message):
+	global lastErrorMessage
 	try:
-		title = f.f_code.co_name + " (%d)" % f.f_lineno
+		if message != lastErrorMessage:
+
+			lastErrorMessage = message
+			sys.stderr.write(message)
+	
 	except:
-		pass
-	NSLog("%s: %s" % (title, message))
+		LogToConsole(traceback.format_exc())
+
+'''.. function:: LogError(message)
+	
+	Log an error message and write it to the Macro window’s output (in red).
+	
+	:param message:
+'''
+
+
+
+
+
 
 '''
 Constants
