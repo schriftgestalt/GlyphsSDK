@@ -11,6 +11,39 @@ __all__ = ["Glyphs", "GetFile", "GSMOVE", "GSLINE", "GSCURVE", "GSOFFCURVE", "GS
 
 wrapperVersion = "2.3a"
 
+
+'''
+
+
+Changes in the API
+==================
+
+These are details we’ve decided to change in the API. These changes could possibly break your code, so you need to keep track of them.
+
+Please see :class:`GSApplication`.versionNumber for how to check for Glyphs’ version in your code. It involves a catch.
+
+----------
+Changes in 2.3
+----------
+
+.. attribute:: .bezierPath
+
+We've created a distinct ``.bezierPath`` attribute for various objects (paths, components, etc.) to use to draw in plug-ins, over-writing the previous `.bezierPath()` method (from the Python-ObjC-bridge) by the same name that handed down an `NSBezierPath` object.
+
+Old: ``.bezierPath()``
+
+New: ``.bezierPath``
+
+
+
+
+
+
+
+'''
+
+
+
 class Proxy(object):
 	def __init__(self, owner):
 		self._owner = owner
@@ -326,11 +359,14 @@ GSApplication.versionNumber = property(lambda self: Glyphs_FloatVersion(self))
 	.. versionadded:: 2.3
 
 	Glyph.app's version number. Use this to check for version in your code.
-	
+
+	Here’s a catch: Since we only added this `versionNumber` attribute in Glyphs v2.3, it is not possible to use this attribute to check for versions of Glyphs older than 2.3. We’re deeply sorry for this inconvenience. Development is a slow and painful process.
+	So you must previously check for the existence of the `versionNumber` attribute like so:
+
 	.. code-block:: python
 	
-		# Code valid for Glyphs.app v2.1 and above:
-		if Glyphs.versionNumber >= 2.1:
+		# Code valid for Glyphs.app v2.3 and above:
+		if hasattr(Glyphs, 'versionNumber') and Glyphs.versionNumber >= 2.3:
 			# do stuff
 		
 		# Code for older versions
