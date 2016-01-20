@@ -22,12 +22,12 @@ class ____PluginClassName____(ReporterPlugin):
 			[Glyphs.localize({'en': 'Do something', 'de': 'Tu etwas'}), self.doSomething],
 		]
 		
-	def drawForeground(self, layer):
+	def foreground(self, layer):
 		NSColor.blueColor().set()
 		NSBezierPath.fillRect_(layer.bounds)
 		self.drawTextAtPoint(layer.parent.name, NSPoint(0, 0))
 
-	def drawBackgroundForInactiveLayers(self, layer):
+	def inactiveLayers(self, layer):
 		NSColor.redColor().set()
 		if layer.paths:
 			layer.bezierPath.fill()
@@ -35,9 +35,13 @@ class ____PluginClassName____(ReporterPlugin):
 			for component in layer.components:
 				component.bezierPath.fill()
 
-	def drawPreview(self, layer):
+	def preview(self, layer):
 		NSColor.blueColor().set()
-		layer.bezierPath.fill()
+		if layer.paths:
+			layer.bezierPath.fill()
+		if layer.components:
+			for component in layer.components:
+				component.bezierPath.fill()
 	
 	def doSomething(self):
 		print 'Just did something'

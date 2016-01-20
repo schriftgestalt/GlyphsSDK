@@ -177,11 +177,11 @@ Paste into Custom Parameters field:
 
 # Other useful methods
 
-#### preview()
+#### update()
 
 This method will display the original glyph as a background image and apply your custom `filter()` method.
 
-This already happens directly after you activate the filter through the menu, and you should call the `preview()` method each time the user changes the value in the dialog. Therefore, it makes sense to place it in whichever method receives the actions from the dialog (which is `setValue_()` in the example).
+This already happens directly after you activate the filter through the menu, and you should call the `update()` method each time the user changes the value in the dialog. Therefore, it makes sense to place it in whichever method receives the actions from the dialog (which is `setValue_()` in the example).
 
 ```python
 	# Action triggered by UI
@@ -192,5 +192,5 @@ This already happens directly after you activate the filter through the menu, an
 		Glyphs.defaults['com.myname.myfilter.value'] = sender.floatValue()
 
 		# Trigger redraw of preview
-		self.preview()
+		self.update()
 ```

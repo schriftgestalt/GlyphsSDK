@@ -24,7 +24,7 @@ class ____PluginClassName____(ReporterPlugin):
 		# The name as it will appear in Glyphs’s View menu
 		self.menuName = 'My Plugin'
 
-	def drawForeground(self, layer):
+	def foreground(self, layer):
 
 		# Draw a blue rectangle on top of the glyph as big as the glyph’s bounding box
 		NSColor.blueColor().set()
@@ -80,38 +80,38 @@ You put all your initialization code here.
 		# Your init code goes here...
 ```
 
-#### drawForeground()
+#### foreground()
 
 Use this method to draw things on top the glyph outlines in the Edit View.
 
 ```python
-	def drawForeground(self, layer):
+	def foreground(self, layer):
 
 		# Draw a blue rectangle on top of the glyph as big as the glyph’s bounding box
 		NSColor.blueColor().set()
 		NSBezierPath.fillRect_(layer.bounds)
 ```
 
-#### drawBackground()
+#### background()
 
 Use this method to draw things behind the glyph outlines in the Edit View.
 
 ```python
-	def drawBackground(self, layer):
+	def background(self, layer):
 
 		# Draw a red rectangle on behind the glyph as big as the glyph’s bounding box
 		NSColor.redColor().set()
 		NSBezierPath.fillRect_(layer.bounds)
 ```
 
-#### drawBackgroundForInactiveLayers()
+#### inactiveLayers()
 
 Use this method to replace Glyph.app’s default drawing method for drawing inactive glyphs (the glyphs left and right of the active glyph in the Edit View) as well as the glyphs in the Edit View.
 
-If you want to draw the glyphs in the Edit View even different that the inactive glyphs, also implement the `drawPreview()` method as described below.
+If you want to draw the glyphs in the Edit View even different that the inactive glyphs, also implement the `preview()` method as described below.
 
 ```python
-	def drawBackgroundForInactiveLayers(self, layer):
+	def inactiveLayers(self, layer):
 
 		# Draw outlines in blue
 		if layer.paths:
@@ -125,23 +125,24 @@ If you want to draw the glyphs in the Edit View even different that the inactive
 				component.bezierPath.fill()
 ```
 
-#### drawPreview()
+#### preview()
 
 Use this method to replace Glyph.app’s default drawing method for glyphs in the preview panel.
 
-You must implement `drawBackgroundForInactiveLayers()` first and implement `drawPreview()` only as a deviation from `drawBackgroundForInactiveLayers()`.
+You must implement `inactiveLayers()` first and implement `preview()` only as an addition to `inactiveLayers()`. `preview()` cannot be implemented standalone without `inactiveLayers()`.
 
-`drawPreview()` cannot be implemented standalone without `drawBackgroundForInactiveLayers()`.
-
-Please note that due to the live interpolation of the preview panel these layers don’t contain components, but only paths.
+Please note that when you preview is set to "Show all instances" due to the live interpolation of the preview these layers don’t contain components, but only paths.
 
 ```python
-	def drawPreview(self, layer):
+	def preview(self, layer):
 
-		# Draw outlines in blue
+		# Draw in blue
+		NSColor.blueColor().set()
 		if layer.paths:
-			NSColor.blueColor().set()
 			layer.bezierPath.fill()
+		if layer.components:
+			for component in layer.components:
+				component.bezierPath.fill()
 ```
 
 #### conditionalContextMenus()

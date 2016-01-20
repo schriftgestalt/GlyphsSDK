@@ -473,7 +473,7 @@ class FilterWithDialog (GSFilterPlugin):
 	def view(self):
 		return self.dialog
 	
-	def preview(self):
+	def update(self):
 		self.process_(None)
 		Glyphs.redraw()
 
@@ -1018,8 +1018,8 @@ class ReporterPlugin (NSObject, GlyphsReporterProtocol):
 		https://developer.apple.com/library/mac/documentation/cocoa/reference/applicationkit/classes/NSColor_Class/Reference/Reference.html
 		"""
 		try:
-			if hasattr(self, 'drawForeground'):
-				self.drawForeground(Layer)
+			if hasattr(self, 'foreground'):
+				self.foreground(Layer)
 		except:
 			self.logError(traceback.format_exc())
 
@@ -1029,8 +1029,8 @@ class ReporterPlugin (NSObject, GlyphsReporterProtocol):
 		Whatever you draw here will be displayed BEHIND the paths.
 		"""
 		try:
-			if hasattr(self, 'drawBackground'):
-				self.drawBackground(Layer)
+			if hasattr(self, 'background'):
+				self.background(Layer)
 		except:
 			self.logError(traceback.format_exc())
 		
@@ -1050,15 +1050,15 @@ class ReporterPlugin (NSObject, GlyphsReporterProtocol):
 			assert Glyphs
 
 			if self.controller:
-				if hasattr(self, 'drawBackgroundForInactiveLayers'):
-					self.drawBackgroundForInactiveLayers(Layer)
+				if hasattr(self, 'inactiveLayers'):
+					self.inactiveLayers(Layer)
 				
 
 			else:
-				if hasattr(self, 'drawPreview'):
-					self.drawPreview(Layer)
-				elif hasattr(self, 'drawBackgroundForInactiveLayers'):
-					self.drawBackgroundForInactiveLayers(Layer)
+				if hasattr(self, 'preview'):
+					self.preview(Layer)
+				elif hasattr(self, 'inactiveLayers'):
+					self.inactiveLayers(Layer)
 
 		except:
 			self.logError(traceback.format_exc())
@@ -1073,7 +1073,7 @@ class ReporterPlugin (NSObject, GlyphsReporterProtocol):
 		yourself in self.drawBackgroundForInactiveLayer_().
 		"""
 		try:
-			return not hasattr(self, 'drawBackgroundForInactiveLayers')
+			return not hasattr(self, 'inactiveLayers')
 		except:
 			self.logError(traceback.format_exc())
 	

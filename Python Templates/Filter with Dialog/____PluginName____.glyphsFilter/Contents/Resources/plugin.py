@@ -50,8 +50,8 @@ class ____PluginClassName____(FilterWithDialog):
 		# Store value coming in from dialog
 		Glyphs.defaults['com.myname.myfilter.value'] = sender.floatValue()
 
-		# Trigger redraw of preview
-		self.preview()
+		# Trigger redraw
+		self.update()
 
 	# Actual filter
 	def filter(self, layer, inEditView, customParameters):
