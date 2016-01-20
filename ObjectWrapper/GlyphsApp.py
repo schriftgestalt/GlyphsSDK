@@ -27,15 +27,26 @@ Please see :class:`GSApplication`.versionNumber for how to check for Glyphs’ v
 Changes in 2.3
 ----------
 
-.. attribute:: .bezierPath
+.. attribute:: *.bezierPath
 
-We've created a distinct ``.bezierPath`` attribute for various objects (paths, components, etc.) to use to draw in plug-ins, over-writing the previous `.bezierPath()` method (from the Python-ObjC-bridge) by the same name that handed down an `NSBezierPath` object.
+We've created a distinct ``.bezierPath`` attribute for various objects (paths, components, etc.) to use to draw in plug-ins, over-writing the previous (and never documented) `.bezierPath()` method (from the Python-ObjC-bridge) by the same name that handed down an `NSBezierPath` object.
 
 Old: ``.bezierPath()``
 
 New: ``.bezierPath``
 
 
+----------
+Changes in 2.2
+----------
+
+.. attribute:: GSLayer.selection
+
+We've created a distinct ``.selection`` attribute for the layer object that contains all items (paths, components etc. selected by the user in the UI), over-writing the previous (and never documented) `.selection()` method (from the Python-ObjC-bridge) by the same name that handed down the selection.
+
+Old: ``.selection()``
+
+New: ``.selection``
 
 
 
