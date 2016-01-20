@@ -4694,7 +4694,7 @@ GSComponent.smartComponentValues = property(lambda self: self.pieceSettings())
 				# do stuff
 '''
 
-GSPath.bezierPath = property(	 lambda self: self.pyobjc_instanceMethods.bezierPath() )
+GSComponent.bezierPath = property(	 lambda self: self.pyobjc_instanceMethods.bezierPath() )
 '''.. attribute:: bezierPath
 
 	.. versionadded:: 2.3
