@@ -7,7 +7,8 @@ import time, math, sys, os, string, re, traceback
 from sets import Set
 
 
-__all__ = ["Glyphs", "GetFile", "GSMOVE", "GSLINE", "GSCURVE", "GSOFFCURVE", "GSSHARP", "GSSMOOTH", "TAG", "TOPGHOST", "STEM", "BOTTOMGHOST", "TTANCHOR", "TTSTEM", "TTALIGN", "TTINTERPOLATE", "TTDIAGONAL", "CORNER", "CAP", "TTDONTROUND", "TTROUND", "TTROUNDUP", "TTROUNDDOWN", "TRIPLE", "DRAWFOREGROUND", "DRAWBACKGROUND", "DRAWINACTIVE", "DOCUMENTWASSAVED", "TEXT", "ARROW", "CIRCLE", "PLUS", "MINUS", "divideCurve", "distance", "addPoints", "subtractPoints", "GetFolder", "GetSaveFile", "GetOpenFile", "Message", "LogToConsole", "LogError", "removeOverlap", "subtractPaths", "intersectPaths", "wrapperVersion"]
+__all__ = ["Glyphs", "GetFile", "GSMOVE", "GSLINE", "GSCURVE", "GSOFFCURVE", "GSSHARP", "GSSMOOTH", "TAG", "TOPGHOST", "STEM", "BOTTOMGHOST", "TTANCHOR", "TTSTEM", "TTALIGN", "TTINTERPOLATE", "TTDIAGONAL", "CORNER", "CAP", "TTDONTROUND", "TTROUND", "TTROUNDUP", "TTROUNDDOWN", "TRIPLE", "DRAWFOREGROUND", "DRAWBACKGROUND", "DRAWINACTIVE", "DOCUMENTWASSAVED", "TEXT", "ARROW", "CIRCLE", "PLUS", "MINUS", "divideCurve", "distance", "addPoints", "subtractPoints", "GetFolder", "GetSaveFile", "GetOpenFile", "Message", "LogToConsole", "LogError", "removeOverlap", "subtractPaths", "intersectPaths", "wrapperVersion", "LTR", "RTL", "LTRTTB", "RTLTTB"]
+
 
 wrapperVersion = "2.3a"
 
@@ -5934,6 +5935,7 @@ Properties
 	previewHeight
 	textCursor
 	textRange
+	direction
 
 
 ----------
@@ -6095,6 +6097,35 @@ GSEditViewController.textRange = property(lambda self: self.contentView().select
 	:type: integer
 
 '''
+
+LTR = 0
+RTL = 1
+
+LTRTTB = 3
+RTLTTB = 2
+
+
+GSEditViewController.direction = property(lambda self: self.writingDirection(), lambda self, value: self.setValue_forKey_(value, "writingDirection"));
+
+'''
+
+.. attribute:: direction
+
+	.. versionadded:: 2.3
+
+	Writing direction.
+	
+	Defined constants are: LTR (left to right), RTL (right to left), LTRTTB (left to right, vertical, top to bottom e.g. Mongolian), and RTLTTB (right to left, vertical, top to bottom e.g. Chinese, Japanese, Korean)
+	
+	:type: integer
+
+	.. code-block:: python
+
+		font.currentTab.direction = RTL
+
+'''
+
+
 
 
 
