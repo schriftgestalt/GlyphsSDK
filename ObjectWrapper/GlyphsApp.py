@@ -3621,6 +3621,7 @@ Properties
 	background
 	backgroundImage
 	bezierPath
+	openBezierPath
 	userData
 	smartComponentPoleMapping
 
