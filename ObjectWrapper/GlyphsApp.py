@@ -3257,14 +3257,15 @@ GSGlyph.category = property(		lambda self: self.valueForKey_("category"),
 									lambda self, value: self.setCategory_(value))
 '''.. attribute:: category
 	The category of the glyph. e.g. 'Letter', 'Symbol'
-	Setting only works if `storeCategory` is set.
+	Setting only works if `storeCategory` is set (see below).
 	:type: unicode
 '''
 
 GSGlyph.storeCategory = property(	lambda self: self.valueForKey_("storeCategory"),
 									lambda self, value: self.setStoreCategory_(value))
 '''.. attribute:: storeCategory
-	If the category is read/written to file. Makes it possible to have custom glyph data without a GlyphData file
+	Set to True in order to manipulate the `category` of the glyph (see above).
+	Makes it possible to ship custom glyph data inside a .glyphs file without a separate GlyphData file. Same as Cmd-Alt-i dialog in UI.
 	:type: bool
 '''
 
@@ -3272,14 +3273,15 @@ GSGlyph.subCategory = property(		lambda self: self.valueForKey_("subCategory"),
 									lambda self, value: self.setSubCategory_(value))
 '''.. attribute:: subCategory
 	The subCategory of the glyph. e.g. 'Uppercase', 'Math'
-	Setting only works if `storeSubCategory` is set.
+	Setting only works if `storeSubCategory` is set (see below).
 	:type: unicode
 '''
 
 GSGlyph.storeSubCategory = property(lambda self: self.valueForKey_("storeSubCategory"),
 									lambda self, value: self.setStoreSubCategory_(value))
 '''.. attribute:: storeSubCategory
-	If the subCategory is read/written to file. Makes it possible to have custom glyph data without a GlyphData file
+	Set to True in order to manipulate the `subCategory` of the glyph (see above).
+	Makes it possible to ship custom glyph data inside a .glyphs file without a separate GlyphData file. Same as Cmd-Alt-i dialog in UI.
 	:type: bool
 	
 	.. versionadded:: 2.3
@@ -3290,14 +3292,15 @@ GSGlyph.script = property(			lambda self: self.valueForKey_("script"),
 									lambda self, value: self.setScript_(value))
 '''.. attribute:: script
 	The script of the glyph, e.g. 'latin', 'arabic'.
-	Setting only works if `storeScript` is set.
+	Setting only works if `storeScript` is set (see below).
 	:type: unicode
 '''
 
 GSGlyph.storeScript = property(		lambda self: self.valueForKey_("storeScript"),
 	 								lambda self, value: self.setStoreScript_(value))
 '''.. attribute:: storeScript
-	If the script is read/written to file. Makes it possible to have custom glyph data without a GlyphData file
+	Set to True in order to manipulate the `script` of the glyph (see above).
+	Makes it possible to ship custom glyph data inside a .glyphs file without a separate GlyphData file. Same as Cmd-Alt-i dialog in UI.
 	:type: bool
 	
 	.. versionadded:: 2.3
@@ -3307,6 +3310,7 @@ GSGlyph.productionName = property(	lambda self: self.production(),
 									lambda self, value: self.setProduction_(value))
 '''.. attribute:: productionName
 	The productionName of the glyph.
+	Setting only works if `storeProductionName` is set (see below).
 	:type: unicode
 	
 	.. versionadded:: 2.3
@@ -3315,7 +3319,8 @@ GSGlyph.productionName = property(	lambda self: self.production(),
 GSGlyph.storeProductionName = property(lambda self: self.valueForKey_("storeScript"), 
 									lambda self, value: self.setStoreProduction_(value))
 '''.. attribute:: storeProductionName
-	If the productionName is read/written to file. Makes it possible to have custom glyph data without a GlyphData file
+	Set to True in order to manipulate the `productionName` of the glyph (see above).
+	Makes it possible to ship custom glyph data inside a .glyphs file without a separate GlyphData file. Same as Cmd-Alt-i dialog in UI.
 	:type: bool
 	
 	.. versionadded:: 2.3
