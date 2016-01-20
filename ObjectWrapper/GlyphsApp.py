@@ -5932,10 +5932,11 @@ Properties
 	text
 	layers
 	scale
-	previewHeight
 	textCursor
 	textRange
 	direction
+	previewInstances
+	previewHeight
 
 
 ----------
@@ -6046,27 +6047,6 @@ GSEditViewController.scale = property(lambda self: self.graphicView().valueForKe
 
 '''
 
-def EditViewPreviewHeight(self, height):
-	splitView = self.previewSplitView()
-	Frame = splitView.frame()
-	splitView.setPosition_ofDividerAtIndex_(Frame.size.height - height, 0)
-
-GSEditViewController.previewHeight = property(lambda self: Glyphs.defaults["GSPreviewHeight"], lambda self, value: EditViewPreviewHeight(self, value));
-
-'''
-
-.. attribute:: previewHeight
-
-	.. versionadded:: 2.3
-
-	Height of the preview panel in the edit view in pixels.
-	
-	Needs to be set to 31 or higher for the preview panel to be visible at all. Will return 1.0 for a closed preview panel or the current size when visible.
-	
-	:type: float
-
-'''
-
 
 GSEditViewController.textCursor = property(lambda self: self.contentView().selectedRange().location, lambda self, value: self.contentView().setSelectedRange_(NSRange(value, self.selection)));
 
@@ -6125,8 +6105,79 @@ GSEditViewController.direction = property(lambda self: self.writingDirection(), 
 
 '''
 
+def Get_ShowInPreview(self):
+	
+	value = self.selectedInstance()
+	font = self.representedObject()
+	
+	if value == 0:
+		value = 'live'
+	elif value == len(font.instances) + 2:
+		value = 'all'
+	else:
+		value = font.instances[value - 1]
+	
+	return value
+
+def Set_ShowInPreview(self, value):
+	
+	font = self.representedObject()
+	
+	if value == 'live':
+		self.setValue_forKey_(0, "selectedInstance")
+	elif value == 'all':
+		self.setValue_forKey_(len(font.instances) + 2, "selectedInstance")
+	else:
+		self.setValue_forKey_(font.instances.index(value) + 1, "selectedInstance")
 
 
+GSEditViewController.previewInstances = property(lambda self: Get_ShowInPreview(self), lambda self, value: Set_ShowInPreview(self, value))
+
+'''
+
+.. attribute:: previewInstances
+
+	.. versionadded:: 2.3
+
+	Instances to show in the Preview area.
+	
+	Values are ``'live'`` for the preview of the current content of the Edit View, ``'all'`` for interpolations of all instances of the current glyph, or individual GSInstance objects.
+	
+	:type: string/GSInstance
+
+	.. code-block:: python
+
+		# Live preview of Edit View
+		font.currentTab.previewInstances = 'live'
+
+		# Text of Edit View shown in particular Instance interpolation (last defined instance)
+		font.currentTab.previewInstances = font.instances[-1]
+
+		# All instances of interpolation
+		font.currentTab.previewInstances = 'all'
+
+'''
+
+def EditViewPreviewHeight(self, height):
+	splitView = self.previewSplitView()
+	Frame = splitView.frame()
+	splitView.setPosition_ofDividerAtIndex_(Frame.size.height - height, 0)
+
+GSEditViewController.previewHeight = property(lambda self: Glyphs.defaults["GSPreviewHeight"], lambda self, value: EditViewPreviewHeight(self, value));
+
+'''
+
+.. attribute:: previewHeight
+
+	.. versionadded:: 2.3
+
+	Height of the preview panel in the edit view in pixels.
+	
+	Needs to be set to 31 or higher for the preview panel to be visible at all. Will return 1.0 for a closed preview panel or the current size when visible.
+	
+	:type: float
+
+'''
 
 
 
