@@ -14,7 +14,11 @@ if not path in sys.path:
 	sys.path.append(path)
 
 
-def logToConsole(self, message):
+############################################################################################
+
+#  Helper methods
+
+def LogToConsole_AsClassExtension(self, message):
 	"""
 	The variable 'message' will be passed to Console.app.
 	Use self.logToConsole("bla bla") for debugging.
@@ -22,7 +26,7 @@ def logToConsole(self, message):
 	myLog = "Traceback from plug-in %s:\n%s" % (self.title(), message)
 	NSLog(myLog)
 
-def logError(self, message):
+def LogError_AsClassExtension(self, message):
 	if not hasattr(self, "lastErrorMessage"):
 		self.lastErrorMessage = ''
 	try:
@@ -33,6 +37,17 @@ def logError(self, message):
 	
 	except:
 		self.logToConsole(traceback.format_exc())
+
+
+
+
+
+
+
+############################################################################################
+
+#  Plug-in wrappers
+
 
 GlyphsFileFormatProtocol = objc.protocolNamed("GlyphsFileFormat")
 
@@ -254,9 +269,17 @@ class FileFormatPlugin (NSObject, GlyphsFileFormatProtocol):
 		except:
 			self.logError(traceback.format_exc())
 
+FileFormatPlugin.logToConsole = LogToConsole_AsClassExtension
+FileFormatPlugin.logError = LogError_AsClassExtension
 
-objc.classAddMethods(FileFormatPlugin, [logToConsole])
-objc.classAddMethods(FileFormatPlugin, [logError])
+
+
+
+
+
+
+
+
 
 
 
@@ -475,8 +498,18 @@ class FilterWithDialog (GSFilterPlugin):
 		except:
 			self.logError(traceback.format_exc())
 
-objc.classAddMethods(FilterWithDialog, [logToConsole])
-objc.classAddMethods(FilterWithDialog, [logError])
+FilterWithDialog.logToConsole = LogToConsole_AsClassExtension
+FilterWithDialog.logError = LogError_AsClassExtension
+
+
+
+
+
+
+
+
+
+
 
 
 GlyphsFilterWithoutDialogProtocol = objc.protocolNamed("GlyphsFilter")
@@ -676,8 +709,18 @@ class FilterWithoutDialog (NSObject, GlyphsFilterWithoutDialogProtocol):
 		except:
 			self.logError(traceback.format_exc())
 
-objc.classAddMethods(FilterWithoutDialog, [logToConsole])
-objc.classAddMethods(FilterWithoutDialog, [logError])
+FilterWithoutDialog.logToConsole = LogToConsole_AsClassExtension
+FilterWithoutDialog.logError = LogError_AsClassExtension
+
+
+
+
+
+
+
+
+
+
 
 
 GlyphsGeneralPluginProtocol = objc.protocolNamed("GlyphsPlugin")
@@ -717,8 +760,18 @@ class GeneralPlugin (NSObject, GlyphsGeneralPluginProtocol):
 		except:
 			self.logError(traceback.format_exc())
 
-objc.classAddMethods(GeneralPlugin, [logToConsole])
-objc.classAddMethods(GeneralPlugin, [logError])
+GeneralPlugin.logToConsole = LogToConsole_AsClassExtension
+GeneralPlugin.logError = LogError_AsClassExtension
+
+
+
+
+
+
+
+
+
+
 
 
 GlyphsPaletteProtocol = objc.protocolNamed("GlyphsPalette")
@@ -871,8 +924,18 @@ class PalettePlugin (NSObject, GlyphsPaletteProtocol):
 		except:
 			self.logError(traceback.format_exc())
 
-objc.classAddMethods(PalettePlugin, [logToConsole])
-objc.classAddMethods(PalettePlugin, [logError])
+PalettePlugin.logToConsole = LogToConsole_AsClassExtension
+PalettePlugin.logError = LogError_AsClassExtension
+
+
+
+
+
+
+
+
+
+
 
 
 GlyphsReporterProtocol = objc.protocolNamed("GlyphsReporter")
@@ -1130,8 +1193,18 @@ class ReporterPlugin (NSObject, GlyphsReporterProtocol):
 		except:
 			self.logError(traceback.format_exc())
 
-objc.classAddMethods(ReporterPlugin, [logToConsole])
-objc.classAddMethods(ReporterPlugin, [logError])
+ReporterPlugin.logToConsole = LogToConsole_AsClassExtension
+ReporterPlugin.logError = LogError_AsClassExtension
+
+
+
+
+
+
+
+
+
+
 
 
 class SelectTool (GSToolSelect):
@@ -1322,5 +1395,5 @@ class SelectTool (GSToolSelect):
 		except:
 			self.logError(traceback.format_exc())
 
-objc.classAddMethods(SelectTool, [logToConsole])
-objc.classAddMethods(SelectTool, [logError])
+SelectTool.logToConsole = LogToConsole_AsClassExtension
+SelectTool.logError = LogError_AsClassExtension
