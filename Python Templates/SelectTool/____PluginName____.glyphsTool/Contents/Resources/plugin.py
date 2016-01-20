@@ -28,6 +28,12 @@ class ____PluginClassName____(SelectTool):
 	def activate(self):
 		pass
 
+	def background(self, layer):
+
+		# Draw a red rectangle behind the glyph as big as the glyph’s bounding box
+		NSColor.redColor().set()
+		NSBezierPath.fillRect_(layer.bounds)
+
 	def deactivate(self):
 		pass
 		

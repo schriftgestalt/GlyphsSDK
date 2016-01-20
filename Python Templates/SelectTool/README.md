@@ -111,6 +111,30 @@ This method gets called when the tool gets deactivated through the toolbar (anot
 		# Your code goes here...
 ```
 
+#### foreground()
+
+Use this method to draw things on top the glyph outlines in the Edit View.
+
+```python
+	def foreground(self, layer):
+
+		# Draw a blue rectangle on top of the glyph as big as the glyph’s bounding box
+		NSColor.blueColor().set()
+		NSBezierPath.fillRect_(layer.bounds)
+```
+
+#### background()
+
+Use this method to draw things behind the glyph outlines in the Edit View.
+
+```python
+	def background(self, layer):
+
+		# Draw a red rectangle behind the glyph as big as the glyph’s bounding box
+		NSColor.redColor().set()
+		NSBezierPath.fillRect_(layer.bounds)
+```
+
 #### conditionalContextMenus()
 
 Use this method to create and return a list of conditional context menu items.

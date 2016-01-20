@@ -1381,5 +1381,44 @@ class SelectTool (GSToolSelect):
 		except:
 			self.logError(traceback.format_exc())
 
+	def drawForegroundForLayer_(self, Layer):
+		"""
+		Whatever you draw here will be displayed IN FRONT OF the paths.
+		Setting a color:
+			NSColor.colorWithCalibratedRed_green_blue_alpha_(1.0, 1.0, 1.0, 1.0).set() # sets RGBA values between 0.0 and 1.0
+			NSColor.redColor().set() # predefined colors: blackColor, blueColor, brownColor, clearColor, cyanColor, darkGrayColor, grayColor, greenColor, lightGrayColor, magentaColor, orangeColor, purpleColor, redColor, whiteColor, yellowColor
+		Drawing a path:
+			myPath = NSBezierPath.alloc().init()  # initialize a path object myPath
+			myPath.appendBezierPath_(subpath)   # add subpath to myPath
+			myPath.fill()   # fill myPath with the current NSColor
+			myPath.stroke() # stroke myPath with the current NSColor
+		To get an NSBezierPath from a GSPath, use the bezierPath() method:
+			myPath.bezierPath().fill()
+		You can apply that to a full layer at once:
+			if len(myLayer.paths > 0):
+				myLayer.bezierPath()       # all closed paths
+				myLayer.openBezierPath()   # all open paths
+		See:
+		https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ApplicationKit/Classes/NSBezierPath_Class/Reference/Reference.html
+		https://developer.apple.com/library/mac/documentation/cocoa/reference/applicationkit/classes/NSColor_Class/Reference/Reference.html
+		"""
+		try:
+			if hasattr(self, 'foreground'):
+				self.foreground(Layer)
+		except:
+			self.logError(traceback.format_exc())
+
+	
+	def drawBackgroundForLayer_(self, Layer):
+		"""
+		Whatever you draw here will be displayed BEHIND the paths.
+		"""
+		try:
+			if hasattr(self, 'background'):
+				self.background(Layer)
+		except:
+			self.logError(traceback.format_exc())
+
+
 SelectTool.logToConsole = LogToConsole_AsClassExtension
 SelectTool.logError = LogError_AsClassExtension
