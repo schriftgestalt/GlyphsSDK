@@ -100,9 +100,9 @@ This function must return a tuple containing:
 
 # Other useful methods
 
-#### saveFileDialog()
+#### GetSaveFile()
 
-Dialog to choose export destination.
+Dialog to choose export destination. It is found in the Python API, documented here: http://docu.glyphsapp.com/#GetSaveFile
 
 Optional arguments:
 - `title` (a string for the title of the file dialog)
@@ -118,7 +118,7 @@ Optional arguments:
 		fileTypes = ['csv']
 
 		# Call dialog
-		filepath = self.saveFileDialog(title, proposedFilename, fileTypes)
+		filepath = GetOpenFile(title, proposedFilename, fileTypes)
 		
 		# Your file writing code goes here...
 ```

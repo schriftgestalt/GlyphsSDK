@@ -6441,7 +6441,10 @@ Methods
 	subtractPoints()
 	GetOpenFile()
 	GetSaveFile()
+	GetFolder()
 	Message()
+	LogToConsole()
+	LogError()
 	'''
 
 

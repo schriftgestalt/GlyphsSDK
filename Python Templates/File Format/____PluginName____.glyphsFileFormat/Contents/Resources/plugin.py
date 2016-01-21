@@ -89,7 +89,7 @@ class ____PluginClassName____(FileFormatPlugin):
 		fileTypes = ['csv']
 
 		# Call dialog
-		filepath = self.saveFileDialog(title, proposedFilename, fileTypes)
+		filepath = GetSaveFile(title, proposedFilename, fileTypes)
 
 		if filepath:
 
