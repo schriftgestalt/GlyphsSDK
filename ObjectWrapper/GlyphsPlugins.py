@@ -1021,7 +1021,7 @@ class ReporterPlugin (NSObject, GlyphsReporterProtocol):
 			if hasattr(self, 'foreground'):
 				self.foreground(Layer)
 			
-			objc.super(ReporterPlugin, self).drawForegroundForLayer_(Layer)
+#			objc.super(ReporterPlugin, self).drawForegroundForLayer_(Layer)
 
 		except:
 			self.logError(traceback.format_exc())
@@ -1035,7 +1035,7 @@ class ReporterPlugin (NSObject, GlyphsReporterProtocol):
 			if hasattr(self, 'background'):
 				self.background(Layer)
 
-			objc.super(ReporterPlugin, self).drawBackgroundForLayer_(Layer)
+#			objc.super(ReporterPlugin, self).drawBackgroundForLayer_(Layer)
 		except:
 			self.logError(traceback.format_exc())
 		
@@ -1065,7 +1065,7 @@ class ReporterPlugin (NSObject, GlyphsReporterProtocol):
 				elif hasattr(self, 'inactiveLayers'):
 					self.inactiveLayers(Layer)
 
-			objc.super(ReporterPlugin, self).drawBackgroundForInactiveLayer_(Layer)
+#			objc.super(ReporterPlugin, self).drawBackgroundForInactiveLayer_(Layer)
 
 		except:
 			self.logError(traceback.format_exc())
@@ -1413,7 +1413,7 @@ class SelectTool (GSToolSelect):
 			if hasattr(self, 'foreground'):
 				self.foreground(Layer)
 
-			objc.super(SelectTool, self).drawForegroundForLayer_(Layer)
+#			objc.super(SelectTool, self).drawForegroundForLayer_(Layer)
 		except:
 			self.logError(traceback.format_exc())
 
@@ -1426,7 +1426,7 @@ class SelectTool (GSToolSelect):
 			if hasattr(self, 'background'):
 				self.background(Layer)
 
-			objc.super(SelectTool, self).drawBackgroundForLayer_(Layer)
+#			objc.super(SelectTool, self).drawBackgroundForLayer_(Layer)
 		except:
 			self.logError(traceback.format_exc())
 
