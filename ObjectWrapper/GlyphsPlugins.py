@@ -24,8 +24,35 @@ def LogToConsole_AsClassExtension(self, message):
 def LogError_AsClassExtension(self, message):
 	LogError(message) # from GlyhsApp.py
 
-
-
+def setUpMenuHelper(Menu, Items, defaultTarget):
+	print "setUpMenuHelper 1"
+	if type(Items) == list:
+		print "setUpMenuHelper 2"
+		for entry in Items:
+			newMenuItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_(entry["name"], entry["action"], "")
+			if "target" in entry:
+				newMenuItem.setTarget_(entry["target"])
+			else:
+				newMenuItem.setTarget_(defaultTarget)
+			if "index" in entry:
+				index = int(entry["index"])
+			else:
+				index = -1
+			
+			if "view" in entry:
+				try:
+					view = entry["view"]
+					print "view", isinstance(view, NSView), "--"
+					if isinstance(view, NSView):
+						print "__add view"
+						newMenuItem.setView_(view)
+				except:
+					LogToConsole(traceback.format_exc(), "setUpMenuHelper") # from GlyhsApp.py
+			if index >= 0:
+				Menu.insertItem_atIndex_(newMenuItem, index)
+			else:
+				Menu.addItem_(newMenuItem)
+	
 
 
 
@@ -1092,28 +1119,12 @@ class ReporterPlugin (NSObject, GlyphsReporterProtocol):
 		try:
 			
 			if self.generalContextMenus:
-				for entry in self.generalContextMenus:
-					newMenuItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_(entry[0], entry[1], "")
-					newMenuItem.setTarget_(self)
-					
-					if len(entry) == 3:
-						index = int(entry[3])
-					else:
-						index = 0
-						
-					if index >= 0:
-						contextMenu.insertItem_atIndex_(newMenuItem, index)
-					else:
-						contextMenu.addItem_(newMenuItem)
-
+				setUpMenuHelper(contextMenu, self.generalContextMenus, self)
+			
 			if hasattr(self, 'conditionalContextMenus'):
 				contextMenus = self.conditionalContextMenus()
-			
 				if contextMenus:
-					for name, method in contextMenus:
-						newMenuItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_(name, method, "")
-						newMenuItem.setTarget_(self) # method of this class will be called
-						contextMenu.insertItem_atIndex_(newMenuItem, 0) # adds item at the top of the menu
+					setUpMenuHelper(contextMenu, contextMenus, self)
 
 		except:
 			self.logError(traceback.format_exc())
@@ -1359,8 +1370,7 @@ class SelectTool (GSToolSelect):
 			theMenu.addItem_(newSeparator)
 			
 			# Add menu items at the bottom:
-			for name, method in self.generalContextMenus:
-				theMenu.addItemWithTitle_action_keyEquivalent_(name, method, "")
+			setUpMenuHelper(theMenu, self.generalContextMenus, self)
 			
 			return theMenu
 		except:
@@ -1377,10 +1387,8 @@ class SelectTool (GSToolSelect):
 				contextMenus = self.conditionalContextMenus()
 			
 				if contextMenus:
-					for name, method in contextMenus:
-						newMenuItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_(name, method, "")
-						newMenuItem.setTarget_(self) # method of this class will be called
-						theMenu.insertItem_atIndex_(newMenuItem, 0) # adds item at the top of the menu
+					# Todo: Make sure that the index is 0 for all items
+					setUpMenuHelper(theMenu, contextMenus, self)
 					
 					newSeparator = NSMenuItem.separatorItem()
 					theMenu.insertItem_atIndex_(newSeparator, 1)
