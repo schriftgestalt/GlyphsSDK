@@ -230,3 +230,82 @@ Optional arguments:
 		self.drawTextAtPoint(layer.parent.name, NSPoint(0, 0))
 
 ```
+
+## Dialogs in contextual menus
+
+You may place `NSView` dialogs in the general or conditional context menus for quick access to settings of your tool.
+
+In fact, we highly encourage you to do so, because we want to keep Glyphs’ user interface as beautiful and uncluttered as it is. Many of Glyphs’ users appreciate that. Now, it’s of course your decision to create a floating tool window, but we ask you to trust and follow our ideas on that and hide dialogs from the view of the user that need not be constantly accessible. A right-click with the mouse will then show that dialog in the context menu.
+
+![](../_Readme_Images/contextmenuview.png)
+
+When creating the menu items in the code, instead of handing over *name* and *action* attributes, you hand over just a *view* that contains a reference to the `NSView` object.
+
+As with other dialogs, we have two choices to create them: Use Xcode’s Interface Builder or Tal Leming’s [Vanilla](https://github.com/typesupply/vanilla) library.
+
+### Interface Builder
+
+Create a dialog in Interface Builder like you’ve read about [here](https://github.com/schriftgestalt/GlyphsSDK/tree/master/Python%20Templates). An *IBOutlet* needs to be created at the root of the plug-in class for it (and more for more controls that you want to access from Python), and our class needs an *IBAction* method to receive input from the dialog.
+
+You will find the .xib/.nib files of this example [here](https://github.com/schriftgestalt/GlyphsSDK/tree/master/Python%20Templates/Sample%20dialogs) as `SliderView`. Place them in the `Resources` folder in the plug-in package, where the main `plugin.py` is located.
+
+
+```python
+# encoding: utf-8
+
+from GlyphsPlugins import *
+
+class ____PluginClassName____(SelectTool):
+
+	# The reference to the dialog
+	sliderMenuView = objc.IBOutlet()
+	
+	def settings(self):
+		self.name = 'My Select Tool'
+
+		# Load .nib file from package
+		self.loadNib("SliderView")
+
+		# Define the menu
+		self.generalContextMenus = [
+			{"view": self.sliderMenuView}
+		]
+
+	# Prints the slider’s value
+	@objc.IBAction
+	def slider_(self, sender):
+		print 'Slider value:', sender.floatValue()
+```
+
+### Vanilla
+
+As opposed to Interface Builder, dialogs get created entirely in code only using Vanilla, which might be advantageous for you if Xcode looks too daunting.
+
+We need to create a so called [Group](http://ts-vanilla.readthedocs.org/en/latest/objects/Group.html) that contains a set of objects. Of this group, we can get hold of the wrapped `NSView` object to display in Glyphs. Note that due to Vanilla internals, we have to create a window first, although that window isn’t getting any attention anymore later on. With that window we define the size of the dialog’s view area, and let the group stretch to the far corners of that parent window using `(0, 0, -0, -0)`.
+
+```python
+# encoding: utf-8
+
+from GlyphsPlugins import *
+from vanilla import *
+
+class ____PluginClassName____(SelectTool):
+
+	def settings(self):
+		self.name = 'My Select Tool'
+
+		# Create Vanilla window and group with controls
+		self.sliderMenuView = Window((150, 40))
+		self.sliderMenuView.group = Group((0, 0, -0, -0))
+		self.sliderMenuView.group.text = TextBox((10, 0, -10, -10), self.name)
+		self.sliderMenuView.group.slider = Slider((10, 18, -10, 23), callback=self.sliderCallback)
+
+		# Define the menu
+		self.generalContextMenus = [
+			{"view": self.sliderMenuView.group.getNSView()}
+		]
+
+	# Prints the slider’s value
+	def sliderCallback(self, sender):
+		print 'Slider value:', sender.get()
+```
