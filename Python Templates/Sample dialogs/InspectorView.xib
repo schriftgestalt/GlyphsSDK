@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9531"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="TestSelectTool">
+            <connections>
+                <outlet property="checkBox1" destination="V2z-4R-NCb" id="cFB-or-nHc"/>
+                <outlet property="checkBox2" destination="mBN-TD-JYd" id="IMD-rz-njw"/>
+                <outlet property="inspectorDialog" destination="c22-O7-iKe" id="CKH-tl-QMI"/>
+                <outlet property="inspectorDialogView" destination="c22-O7-iKe" id="PzC-P5-UUN"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="c22-O7-iKe" customClass="GSInspectorView">
+            <rect key="frame" x="0.0" y="0.0" width="119" height="61"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mBN-TD-JYd">
+                    <rect key="frame" x="5" y="4" width="106" height="18"/>
+                    <buttonCell key="cell" type="check" title="Setting Two" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="ZPg-Cv-nEk">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system" size="11"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="checkBox2Receiver:" target="-2" id="TYW-fj-GM0"/>
+                    </connections>
+                </button>
+                <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="V2z-4R-NCb">
+                    <rect key="frame" x="5" y="23" width="106" height="18"/>
+                    <buttonCell key="cell" type="check" title="Setting One" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="9ef-og-V0e">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system" size="11"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="checkBox1Receiver:" target="-2" id="uRw-uY-yP4"/>
+                    </connections>
+                </button>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6IM-Rs-SDj">
+                    <rect key="frame" x="5" y="40" width="113" height="17"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="My Select Tool:" id="HCE-Co-lEc">
+                        <font key="font" metaFont="system" size="11"/>
+                        <color key="textColor" name="disabledControlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+            </subviews>
+            <point key="canvasLocation" x="533.5" y="218.5"/>
+        </customView>
+    </objects>
+</document>

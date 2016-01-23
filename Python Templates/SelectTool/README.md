@@ -240,3 +240,47 @@ class ____PluginClassName____(SelectTool):
 	def sliderCallback(self, sender):
 		print 'Slider value:', sender.get()
 ```
+
+## Dialogs in inspector views
+
+If you must continuously display a dialog with your plug-in and it need not contain many controls, consider using an inspector (the little gray info boxes at the bottom of the Edit View).
+
+The inspector view, if present, needs to be hard-wired to the variable `inspectorDialogView`.
+
+![](../_Readme_Images/inspectorview.png)
+
+### Interface Builder
+
+Create a dialog in Interface Builder like you’ve read about [here](https://github.com/schriftgestalt/GlyphsSDK/tree/master/Python%20Templates). An *IBOutlet* needs to be created at the root of the plug-in class for it (and more for more controls that you want to access from Python), and our class needs an *IBAction* method to receive input from the dialog.
+
+If you want the dialog to blend in with the same gray background, the View needs to be of the `GSInspectorView` class (Identity inspector in Interface Builder)
+
+You will find the .xib/.nib files of this example [here](https://github.com/schriftgestalt/GlyphsSDK/tree/master/Python%20Templates/Sample%20dialogs) as `InspectorView`. Place them in the `Resources` folder in the plug-in package, where the main `plugin.py` is located.
+
+
+```python
+# encoding: utf-8
+
+from GlyphsPlugins import *
+
+class ____PluginClassName____(SelectTool):
+	
+	inspectorDialogView = objc.IBOutlet()
+	checkBox1 = objc.IBOutlet()
+	checkBox2 = objc.IBOutlet()
+	
+	def settings(self):
+		self.name = Glyphs.localize({'en': 'My Select Tool', 'de': 'Mein Auswahlwerkzeug'})
+		
+		# Name of the inspector dialog's .nib file (without .extension)
+		self.inspectorDialog = "InspectorView"
+		
+	@objc.IBAction
+	def checkBox1Receiver_( self, sender ):
+		Message("Action", "You have clicked the checkbox")
+
+	@objc.IBAction
+	def checkBox2Receiver_( self, sender ):
+		Message("Action", "You have clicked the checkbox")
+	
+```

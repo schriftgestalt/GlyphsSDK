@@ -978,7 +978,6 @@ class ReporterPlugin (NSObject, GlyphsReporterProtocol):
 			self.keyboardShortcutModifier = 0 # Set any combination of NSShiftKeyMask | NSControlKeyMask | NSCommandKeyMask | NSAlternateKeyMask
 			self.drawDefaultInactiveLayers = True
 			self.generalContextMenus = []
-			
 
 			if hasattr(self, 'settings'):
 				self.settings()
@@ -1236,14 +1235,26 @@ class SelectTool (GSToolSelect):
 			self._icon = 'toolbar.pdf'
 			self.keyboardShortcut = None
 			self.generalContextMenus = ()
+			self.inspectorDialog = None
 			
+			# Inspector dialog stuff
+			# Initiate self.inspectorDialogView here in case of Vanilla dialog,
+			# where inspectorDialogView is not defined at the class’s root.
+			if not hasattr(self, 'inspectorDialogView'):
+				self.inspectorDialogView = None
+
 			if hasattr(self, 'settings'):
 				self.settings()
+			
+			
+			
+			
 			
 			Bundle = NSBundle.bundleForClass_(NSClassFromString(self.className()));
 			BundlePath = Bundle.pathForResource_ofType_(os.path.splitext(self._icon)[0], os.path.splitext(self._icon)[1]) # Set this to the filename and type of your icon.
 			self.tool_bar_image = NSImage.alloc().initWithContentsOfFile_(BundlePath)
 			self.tool_bar_image.setTemplate_(True) # Makes the icon blend in with the toolbar.
+
 
 			if hasattr(self, 'start'):
 				self.start()
@@ -1251,6 +1262,29 @@ class SelectTool (GSToolSelect):
 			return self
 		except:
 			self.logError(traceback.format_exc())
+
+	def view(self):
+		return self.inspectorDialogView
+
+	def inspectorViewControllers(self):
+		ViewControllers = objc.super(SelectTool, self).inspectorViewControllers()
+		if ViewControllers is None:
+			ViewControllers = []
+		try:
+			
+			# .nib was given in self.inspectorDialog, so load that
+			if self.inspectorDialog:
+				self.loadNib(self.inspectorDialog)
+
+			# self.inspectorDialogView may also be defined witut a .nib,
+			# so it could be a Vanilla dialog
+			if self.inspectorDialogView:
+				ViewControllers.append(self)
+			
+		except:
+			self.logError(traceback.format_exc())
+
+		return ViewControllers
 		
 	def interfaceVersion(self):
 		"""
