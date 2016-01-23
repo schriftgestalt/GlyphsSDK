@@ -1235,7 +1235,6 @@ class SelectTool (GSToolSelect):
 			self._icon = 'toolbar.pdf'
 			self.keyboardShortcut = None
 			self.generalContextMenus = ()
-			self.inspectorDialog = None
 			
 			# Inspector dialog stuff
 			# Initiate self.inspectorDialogView here in case of Vanilla dialog,
@@ -1272,10 +1271,6 @@ class SelectTool (GSToolSelect):
 			ViewControllers = []
 		try:
 			
-			# .nib was given in self.inspectorDialog, so load that
-			if self.inspectorDialog:
-				self.loadNib(self.inspectorDialog)
-
 			# self.inspectorDialogView may also be defined witut a .nib,
 			# so it could be a Vanilla dialog
 			if self.inspectorDialogView:

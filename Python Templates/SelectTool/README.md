@@ -194,7 +194,7 @@ class ____PluginClassName____(SelectTool):
 	def settings(self):
 		self.name = 'My Select Tool'
 
-		# Load .nib file from package
+		# Load .nib file from package (without .extension)
 		self.loadNib("SliderView")
 
 		# Define the menu
@@ -272,8 +272,8 @@ class ____PluginClassName____(SelectTool):
 	def settings(self):
 		self.name = Glyphs.localize({'en': 'My Select Tool', 'de': 'Mein Auswahlwerkzeug'})
 		
-		# Name of the inspector dialog's .nib file (without .extension)
-		self.inspectorDialog = "InspectorView"
+		# Load .nib file from package (without .extension)
+		self.loadNib("InspectorView")
 		
 	@objc.IBAction
 	def checkBox1Receiver_( self, sender ):
