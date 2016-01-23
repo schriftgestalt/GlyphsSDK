@@ -24,11 +24,22 @@ def LogToConsole_AsClassExtension(self, message):
 def LogError_AsClassExtension(self, message):
 	LogError(message) # from GlyhsApp.py
 
+def LoadNib(self, nibname):
+	# Replace "SliderView" with the name of your dialog (without .extension)
+	if not NSBundle.loadNibNamed_owner_(nibname, self):
+		self.logError("Error loading %s.nib." % nibname)
+
 def setUpMenuHelper(Menu, Items, defaultTarget):
 	print "setUpMenuHelper 1"
 	if type(Items) == list:
 		print "setUpMenuHelper 2"
 		for entry in Items:
+
+			if "view" in entry and not "name" in entry:
+				entry["name"] = ""
+			if "view" in entry and not "action" in entry:
+				entry["action"] = None
+
 			newMenuItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_(entry["name"], entry["action"], "")
 			if "target" in entry:
 				newMenuItem.setTarget_(entry["target"])
@@ -52,7 +63,7 @@ def setUpMenuHelper(Menu, Items, defaultTarget):
 				Menu.insertItem_atIndex_(newMenuItem, index)
 			else:
 				Menu.addItem_(newMenuItem)
-	
+		
 
 
 
@@ -1199,6 +1210,7 @@ class ReporterPlugin (NSObject, GlyphsReporterProtocol):
 
 ReporterPlugin.logToConsole = LogToConsole_AsClassExtension
 ReporterPlugin.logError = LogError_AsClassExtension
+ReporterPlugin.loadNib = LoadNib
 
 
 
@@ -1441,3 +1453,4 @@ class SelectTool (GSToolSelect):
 
 SelectTool.logToConsole = LogToConsole_AsClassExtension
 SelectTool.logError = LogError_AsClassExtension
+SelectTool.loadNib = LoadNib
