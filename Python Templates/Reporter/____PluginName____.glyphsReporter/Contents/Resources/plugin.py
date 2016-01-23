@@ -19,7 +19,7 @@ class ____PluginClassName____(ReporterPlugin):
 	def settings(self):
 		self.menuName = Glyphs.localize({'en': 'My Plugin', 'de': 'Mein Plugin'})
 		self.generalContextMenus = [
-			[Glyphs.localize({'en': 'Do something', 'de': 'Tu etwas'}), self.doSomething],
+			{'name': Glyphs.localize({'en': 'Do something', 'de': 'Tu etwas'}), 'action': self.doSomething},
 		]
 		
 	def foreground(self, layer):
@@ -59,7 +59,7 @@ class ____PluginClassName____(ReporterPlugin):
 			if len(layer.selection) == 1 and type(layer.selection[0]) == GSAnchor:
 					
 				# Add context menu item
-				contextMenus.append([Glyphs.localize({'en': 'Do something else', 'de': 'Tu etwas anderes'}), self.doSomethingElse])
+				contextMenus.append({'name': Glyphs.localize({'en': 'Do something else', 'de': 'Tu etwas anderes'}), 'action': self.doSomethingElse})
 
 		# Return list of context menu items
 		return contextMenus

@@ -26,7 +26,7 @@ class ____PluginClassName____(SelectTool):
 	def settings(self):
 		self.name = 'My Select Tool'
 		self.contextMenus = [
-			["Layer info in Macro Window", self.printInfo],
+			{"name": "Layer info in Macro Window", "action": self.printInfo},
 		]
 
 	def printInfo(self):
@@ -72,11 +72,11 @@ In this method you set all attributes that describe the plug-in, such as its nam
 		# Position of the tool icon in the toolbar
 		self.toolbarPosition = 100
 
-		# A list of general context menu items described as a list of `name`/`method` pairs.
-		# These context menu items will always appear at the bottom of the menu
-		# when the user right-clicks into the Edit View.
+		# A list of general context menu items described as a dictionary of following keys:
+		# 'name': the text displayed in the menu
+		# 'action': the method to call
 		self.generalContextMenus = [
-			["Layer info in Macro Window", self.printInfo],
+			{"name": "Layer info in Macro Window", "action": self.printInfo},
 		]
 ```
 
@@ -140,7 +140,7 @@ Use this method to draw things behind the glyph outlines in the Edit View.
 Use this method to create and return a list of conditional context menu items.
 These context menu items could be based on the user’s selection of objects in the Edit View and will appear first in the menu.
 
-Return a list of context menu items described as a list of `['name', method]` pairs.
+Return a list of context menu items described as a dictionary (see `self.generalContextMenus` in `settings()` above)
 
 ```python
 	def conditionalContextMenus(self):
@@ -156,7 +156,7 @@ Return a list of context menu items described as a list of `['name', method]` pa
 			if len(layer.selection) == 1 and type(layer.selection[0]) == GSAnchor:
 					
 				# Add context menu item
-				contextMenus.append(["Randomly move anchor", self.randomlyMoveAnchor])
+				contextMenus.append({"name": "Randomly move anchor", "action": self.randomlyMoveAnchor})
 
 		# Return list of context menu items
 		return contextMenus

@@ -58,14 +58,11 @@ In this method you set all attributes that describe the plug-in, such as its nam
 		# NSShiftKeyMask | NSControlKeyMask | NSCommandKeyMask | NSAlternateKeyMask
 		self.keyboardShortcutModifier = NSCommandKeyMask | NSShiftKeyMask
 
-		# A list of general context menu items described as a list of `name`/`method` pairs.
-		# These context menu items will appear at the top of the menu 
-		#   if no index is given as the third parameter in each set.
-		# Otherwise, -1 will position the menu item at the bottom of the menu, 
-		#   all other integers will position them in that position.
+		# A list of general context menu items described as a dictionary of following keys:
+		# 'name': the text displayed in the menu
+		# 'action': the method to call
 		self.generalContextMenus = [
-			["Context menu at top", self.doSomething],
-			["Context menu at bottom", self.doSomething, -1],
+			{"name": "Layer info in Macro Window", "action": self.printInfo},
 		]
 ```
 
@@ -150,7 +147,7 @@ Please note that when you preview is set to "Show all instances" due to the live
 Use this method to create and return a list of conditional context menu items.
 These context menu items could be based on the user’s selection of objects in the Edit View and will appear first in the menu.
 
-Return a list of context menu items described as a list of `['name', method]` pairs.
+Return a list of context menu items described as a dictionary (see `self.generalContextMenus` in `settings()` above)
 
 ```python
 	def conditionalContextMenus(self):
@@ -166,7 +163,7 @@ Return a list of context menu items described as a list of `['name', method]` pa
 			if len(layer.selection) == 1 and type(layer.selection[0]) == GSAnchor:
 					
 				# Add context menu item
-				contextMenus.append(["Randomly move anchor", self.randomlyMoveAnchor])
+				contextMenus.append({"name": "Randomly move anchor", "action": self.randomlyMoveAnchor})
 
 		# Return list of context menu items
 		return contextMenus
