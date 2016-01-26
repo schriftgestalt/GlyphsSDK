@@ -6144,7 +6144,7 @@ class TabSelectedFeaturesProxy (Proxy):
 
 	def reflow(self):
 		self._owner.graphicView().reflow()
-		Glyphs.redraw()
+		self._owner._updateFeaturePopup()
 
 	
 	def setter(self, values):
