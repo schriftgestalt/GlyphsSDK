@@ -5942,6 +5942,7 @@ Properties
 
 .. autosummary::
 
+	parent
 	text
 	layers
 	scale
@@ -5957,6 +5958,21 @@ Properties
 ----------
 
 '''
+
+
+GSEditViewController.parent = property(lambda self: self.pyobjc_instanceMethods.representedObject())
+
+'''
+
+.. attribute:: parent
+	The :class:`GSFont` object that this tab belongs to.
+	
+	:type: :class:`GSFont`
+
+'''
+
+
+
 
 GSEditViewController.text = property(lambda self: self.graphicView().displayString(),
 									 lambda self, value: self.graphicView().setDisplayString_(value))
@@ -6121,27 +6137,24 @@ GSEditViewController.direction = property(lambda self: self.writingDirection(), 
 def Get_ShowInPreview(self):
 	
 	value = self.selectedInstance()
-	font = self.representedObject()
 	
 	if value == 0:
 		value = 'live'
-	elif value == len(font.instances) + 2:
+	elif value == len(self.parent.instances) + 2:
 		value = 'all'
 	else:
-		value = font.instances[value - 1]
+		value = self.parent.instances[value - 1]
 	
 	return value
 
 def Set_ShowInPreview(self, value):
 	
-	font = self.representedObject()
-	
 	if value == 'live':
 		self.setValue_forKey_(0, "selectedInstance")
 	elif value == 'all':
-		self.setValue_forKey_(len(font.instances) + 2, "selectedInstance")
+		self.setValue_forKey_(len(self.parent.instances) + 2, "selectedInstance")
 	else:
-		self.setValue_forKey_(font.instances.index(value) + 1, "selectedInstance")
+		self.setValue_forKey_(self.parent.instances.index(value) + 1, "selectedInstance")
 
 
 GSEditViewController.previewInstances = property(lambda self: Get_ShowInPreview(self), lambda self, value: Set_ShowInPreview(self, value))
