@@ -1407,6 +1407,8 @@ class PathNodesProxy (Proxy):
 		return self._owner.countOfNodes()
 	def append(self, Node):
 		self._owner.addNode_(Node)
+	def extend(self, objects):
+		self._owner.addNodes_(objects)
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.nodes()
 
