@@ -1393,16 +1393,18 @@ class LayerSelectionProxy (Proxy):
 class PathNodesProxy (Proxy):
 	def __getitem__(self, i):
 		if i < 0:
-			i = len(self.values()) + i
+			i = len(self) + i
 		return self._owner.nodeAtIndex_(i)
 	def __setitem__(self, i, Node):
 		if i < 0:
-			i = len(self.values()) + i
+			i = len(self) + i
 		self._owner.setNode_atIndex_(Node, i)
 	def __delitem__(self, i):
 		if i < 0:
-			i = len(self.values()) + i
+			i = len(self) + i
 		self._owner.removeNodeAtIndex_(i)
+	def __len__(self):
+		return self._owner.countOfNodes()
 	def append(self, Node):
 		self._owner.addNode_(Node)
 	def values(self):
