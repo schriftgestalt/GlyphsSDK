@@ -458,6 +458,11 @@ class FilterWithDialog (GSFilterPlugin):
 					self.filter(Layer, False, customParameters)
 
 		except:
+			
+			# Custom Parameter
+			if len(Arguments) > 1:
+				Message('Error in %s' % self.menuName, "There was an error in %s's filter() method when called through a Custom Parameter upon font export. Check your Macro window output." % self.menuName)
+			
 			self.logError(traceback.format_exc())
 	
 	def process_(self, sender):
@@ -731,6 +736,11 @@ class FilterWithoutDialog (NSObject, GlyphsFilterWithoutDialogProtocol):
 				if hasattr(self, 'filter'):
 					self.filter(Layer, False, customParameters)
 		except:
+
+			# Custom Parameter
+			if len(Arguments) > 1:
+				Message('Error in %s' % self.menuName, "There was an error in %s's filter() method when called through a Custom Parameter upon font export. Check your Macro window output." % self.menuName)
+
 			self.logError(traceback.format_exc())
 
 FilterWithoutDialog.logToConsole = LogToConsole_AsClassExtension
@@ -1483,3 +1493,4 @@ class SelectTool (GSToolSelect):
 SelectTool.logToConsole = LogToConsole_AsClassExtension
 SelectTool.logError = LogError_AsClassExtension
 SelectTool.loadNib = LoadNib
+
