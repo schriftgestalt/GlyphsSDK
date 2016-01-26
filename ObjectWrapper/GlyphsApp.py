@@ -5949,6 +5949,7 @@ Properties
 	textCursor
 	textRange
 	direction
+	features
 	previewInstances
 	previewHeight
 
@@ -6133,6 +6134,78 @@ GSEditViewController.direction = property(lambda self: self.writingDirection(), 
 		font.currentTab.direction = RTL
 
 '''
+
+
+class TabSelectedFeaturesProxy (Proxy):
+
+	def reflow(self):
+		self._owner.graphicView().reflow()
+		Glyphs.redraw()
+
+	
+	def setter(self, values):
+		
+		if type(values) != list:
+			raise TypeError
+		
+		self._owner.pyobjc_instanceMethods.selectedFeatures().removeAllObjects()
+		for feature in values:
+			self.append(feature)
+		
+		self.reflow()
+
+	def hasFeature(self, feature):
+		_hasFeature = False
+		for featureInFont in self._owner.parent.features:
+			if featureInFont.name == feature:
+				_hasFeature = True
+		
+		if _hasFeature == False:
+			LogError('Info: Feature "%s" not in font.\n' % (feature))
+		return _hasFeature
+
+	def append(self, feature):
+		if type(feature) != str:
+			raise TypeError
+
+		if self.hasFeature(feature):
+			self._owner.selectedFeatures().append(feature)
+
+		self.reflow()
+
+	def remove(self, feature):
+		if type(feature) != str:
+			raise TypeError
+
+		try:
+			self._owner.selectedFeatures().remove(feature)
+		except:
+			pass
+
+		self.reflow()
+
+	def values(self):
+		return self._owner.pyobjc_instanceMethods.selectedFeatures()
+
+GSEditViewController.features = property(lambda self: list(TabSelectedFeaturesProxy(self)), lambda self, value: TabSelectedFeaturesProxy(self).setter(value))
+
+'''
+
+.. attribute:: features
+
+	.. versionadded:: 2.3
+
+	List of OpenType features applied to text in Edit View.
+	
+	:type: list
+
+	.. code-block:: python
+
+		font.currentTab.features = ['locl', 'ss01']
+
+'''
+
+
 
 def Get_ShowInPreview(self):
 	
