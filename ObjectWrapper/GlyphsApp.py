@@ -1383,6 +1383,8 @@ class LayerSelectionProxy (Proxy):
 		return self._owner.pyobjc_instanceMethods.selection().array()
 	def append(self, object):
 		self._owner.pyobjc_instanceMethods.addSelection_(object)
+	def extend(self, object):
+		self._owner.pyobjc_instanceMethods.addObjectsFromArrayToSelection_(object)
 	def remove(self, object):
 		self._owner.pyobjc_instanceMethods.removeObjectFromSelection_(object)
 
