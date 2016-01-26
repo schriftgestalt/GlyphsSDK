@@ -6138,23 +6138,23 @@ def Get_ShowInPreview(self):
 	
 	value = self.selectedInstance()
 	
-	if value == 0:
+	if value == -2:
 		value = 'live'
-	elif value == len(self.parent.instances) + 2:
+	elif value == -1:
 		value = 'all'
 	else:
-		value = self.parent.instances[value - 1]
+		value = self.parent.instances[value]
 	
 	return value
 
 def Set_ShowInPreview(self, value):
 	
 	if value == 'live':
-		self.setValue_forKey_(0, "selectedInstance")
+		self.setValue_forKey_(-2, "selectedInstance")
 	elif value == 'all':
-		self.setValue_forKey_(len(self.parent.instances) + 2, "selectedInstance")
+		self.setValue_forKey_(-1, "selectedInstance")
 	else:
-		self.setValue_forKey_(self.parent.instances.index(value) + 1, "selectedInstance")
+		self.setValue_forKey_(self.parent.instances.index(value), "selectedInstance")
 
 
 GSEditViewController.previewInstances = property(lambda self: Get_ShowInPreview(self), lambda self, value: Set_ShowInPreview(self, value))
