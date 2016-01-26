@@ -6187,7 +6187,7 @@ class TabSelectedFeaturesProxy (Proxy):
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.selectedFeatures()
 
-GSEditViewController.features = property(lambda self: list(TabSelectedFeaturesProxy(self)), lambda self, value: TabSelectedFeaturesProxy(self).setter(value))
+GSEditViewController.features = property(lambda self: TabSelectedFeaturesProxy(self), lambda self, value: TabSelectedFeaturesProxy(self).setter(value))
 
 '''
 
