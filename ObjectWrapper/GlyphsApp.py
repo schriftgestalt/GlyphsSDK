@@ -5965,7 +5965,7 @@ Properties
 '''
 
 
-GSEditViewController.parent = property(lambda self: self.pyobjc_instanceMethods.representedObject())
+GSEditViewController.parent = property(lambda self: self.representedObject())
 
 '''
 
