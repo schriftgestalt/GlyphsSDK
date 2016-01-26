@@ -28,7 +28,7 @@ class ____PluginClassName____(FilterWithDialog):
 	myTextField = objc.IBOutlet()
 	
 	def settings(self):
-		self.menuName = Glyphs.localize({'en': 'My Filter', 'de': 'Mein Filter'})
+		self.menuName = Glyphs.localize({'en': u'My Filter', 'de': u'Mein Filter'})
 
 	# On UI trigger
 	def start(self):

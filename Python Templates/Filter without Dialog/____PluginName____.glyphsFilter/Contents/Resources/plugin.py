@@ -17,7 +17,7 @@ from GlyphsPlugins import *
 class ____PluginClassName____(FilterWithoutDialog):
 	
 	def settings(self):
-		self.menuName = Glyphs.localize({'en': 'My Filter', 'de': 'Mein Filter'})
+		self.menuName = Glyphs.localize({'en': u'My Filter', 'de': u'Mein Filter'})
 		self.keyboardShortcut = None # With Cmd+Shift
 
 	def filter(self, layer, inEditView, customParameters):

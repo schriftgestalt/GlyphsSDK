@@ -99,7 +99,7 @@ In this method you set all attributes that describe the plug-in, such as its nam
 		# You may use a simple string or Glyphs.localize() for localizations (see http://docu.glyphsapp.com#localize)
 		self.menuName = 'My Filter'
 		# or:
-		self.menuName = Glyphs.localize({'en': 'My Filter', 'de': 'Mein Filter'})
+		self.menuName = Glyphs.localize({'en': u'My Filter', 'de': u'Mein Filter'})
 
 		# A keyboard shortcut for activating/deactivating the plug-in (together with Command+Shift)
 		self.keyboardShortcut = 'p'

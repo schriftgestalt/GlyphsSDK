@@ -64,7 +64,7 @@ In this method you set all attributes that describe the plug-in, such as its nam
 		# You may use a simple string or Glyphs.localize() for localizations (see http://docu.glyphsapp.com#localize)
 		self.name = 'My Select Tool'
 		# or:
-		self.name = Glyphs.localize({'en': 'My Select Tool', 'de': 'Mein Auswahlwerkzeug'})
+		self.name = Glyphs.localize({'en': u'My Select Tool', 'de': u'Mein Auswahlwerkzeug'})
 
 		# A keyboard shortcut for adctivating/deactivating the plug-in
 		self.keyboardShortcut = 'p'

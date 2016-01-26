@@ -16,7 +16,7 @@ from GlyphsPlugins import *
 
 class ____PluginClassName____(GeneralPlugin):
 	def settings(self):
-		self.name = Glyphs.localize({'en': 'My General Plugin', 'de': 'Mein allgemeines Plugin'})
+		self.name = Glyphs.localize({'en': u'My General Plugin', 'de': u'Mein allgemeines Plugin'})
 
 	def start(self):
 		print 'GeneralPlugin loaded'

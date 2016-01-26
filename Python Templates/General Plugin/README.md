@@ -40,7 +40,7 @@ In this method you set all attributes that describe the plug-in, such as its nam
 		# You may use a simple string or Glyphs.localize() for localizations (see http://docu.glyphsapp.com#localize)
 		self.name = 'My General Plugin'
 		# or:
-		self.name = Glyphs.localize({'en': 'My General Plugin', 'de': 'Mein allgemeines Plugin'})
+		self.name = Glyphs.localize({'en': u'My General Plugin', 'de': u'Mein allgemeines Plugin'})
 
 		# A keyboard shortcut for adctivating/deactivating the plug-in (together with Command+Shift)
 		self.keyboardShortcut = 'p'

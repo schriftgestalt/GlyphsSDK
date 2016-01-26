@@ -20,7 +20,7 @@ class ____PluginClassName____ (PalettePlugin):
 	textField = objc.IBOutlet()
 	
 	def settings(self):
-		self.name = Glyphs.localize({'en': 'My Palette', 'de': 'Meine Palette'})
+		self.name = Glyphs.localize({'en': u'My Palette', 'de': u'Meine Palette'})
 	
 	def start(self):
 

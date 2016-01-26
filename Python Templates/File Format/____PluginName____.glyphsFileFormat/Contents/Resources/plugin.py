@@ -40,7 +40,7 @@ class ____PluginClassName____(FileFormatPlugin):
 
 
 	def settings(self):
-		self.name = Glyphs.localize({'en': 'My CSV Export', 'de': 'Mein CSV-Export'})
+		self.name = Glyphs.localize({'en': u'My CSV Export', 'de': u'Mein CSV-Export'})
 		self.icon = 'ExportIcon'
 		self.toolbarPosition = 100
 
