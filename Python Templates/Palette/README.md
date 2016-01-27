@@ -74,8 +74,8 @@ In this method you set all attributes that describe the plug-in, such as its nam
 		# or:
 		self.name = Glyphs.localize({'en': u'My Palette', 'de': u'Mein Palette'})
 
-		# The name of the Interface Builder file containing the UI dialog, without file extension
-		self.dialogName = 'IBDialog'
+		# Load .nib dialog (with .extension)
+		self.loadNib('IBdialog')
 ```
 
 #### start()
@@ -116,4 +116,48 @@ You need to unload all callbacks here because Glyphs.app will otherwise crash.
 
 		# Unload callback
 		NSNotificationCenter.defaultCenter().removeObserver_(self)
+```
+
+# Use Vanilla for the dialog view
+
+The sample code uses Interface Builder for the dialog, but you may use [Vanilla](https://github.com/typesupply/vanilla) instead. Here is how:
+
+As opposed to Interface Builder, dialogs get created entirely in code only using Vanilla, which might be advantageous for you if Xcode looks too daunting.
+
+We need to create a so called [Group](http://ts-vanilla.readthedocs.org/en/latest/objects/Group.html) that contains a set of objects. Of this group, we can get hold of the wrapped `NSView` object to display in Glyphs. Note that due to Vanilla internals, we have to create a window first, although that window isn’t getting any attention anymore later on, and it must contain a `Group()` of the same size. Note that stretching the `Group` to the far corners of the windows using `(0, 0, -0, -0)` may not work, so explicitly define its size identical to the containing window.
+
+Make sure that the .dialog gets defined in the `settings()` class, not at the class root.
+Also, you may delete the two `IBdialog.xib/.nib` files from the `Resources` folder of the plug-in.
+
+
+```python
+# encoding: utf-8
+
+from GlyphsPlugins import *
+from vanilla import *
+
+class ____PluginClassName____(SelectTool):
+
+	def settings(self):
+		self.name = 'My Select Tool'
+
+		# Create Vanilla window and group with controls
+		width = 150
+		height = 80
+		self.paletteView = Window((width, height))
+		self.paletteView.group = Group((0, 0, width, height))
+		self.paletteView.group.text = TextBox((10, 0, -10, -10), self.name, sizeStyle='small')
+
+		# Set dialog to NSView
+		self.dialog = self.paletteView.group.getNSView()
+
+	def update(self, sender):
+
+		# ...
+		# other code from example update() method goes here
+		# ...
+		
+		# Change value of text field using Vanilla like this:
+		self.paletteView.group.text.set('\n'.join(text))
+
 ```

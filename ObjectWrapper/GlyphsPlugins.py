@@ -822,16 +822,17 @@ class PalettePlugin (NSObject, GlyphsPaletteProtocol):
 		"""
 		try:
 		# if True:
-			self.dialogName = 'IBdialog'
 			self.name = 'My Palette'
 
-
+			# Call settings
 			if hasattr(self, 'settings'):
 				self.settings()
 
-			if not NSBundle.loadNibNamed_owner_(self.dialogName, self):
-				self.logToConsole("Error loading .nib into Palette.")
-		
+			# Dialog stuff
+			# Initiate emtpy self.dialog here in case of Vanilla dialog,
+			# where .dialog is not defined at the class’s root.
+			if not hasattr(self, 'dialog'):
+				self.dialog = None
 		
 			Frame = self.theView().frame()
 
@@ -839,10 +840,9 @@ class PalettePlugin (NSObject, GlyphsPaletteProtocol):
 			self.min = Frame.size.height
 			self.max = Frame.size.height
 			
-			if NSUserDefaults.standardUserDefaults().objectForKey_(self.dialogName + ".ViewHeight"):
-				Frame.size.height = NSUserDefaults.standardUserDefaults().integerForKey_(self.dialogName + ".ViewHeight")
-				self.theView().setFrame_(Frame)
-
+#			if NSUserDefaults.standardUserDefaults().objectForKey_(self.dialogName + ".ViewHeight"):
+#				Frame.size.height = NSUserDefaults.standardUserDefaults().integerForKey_(self.dialogName + ".ViewHeight")
+#				self.theView().setFrame_(Frame)
 
 			if hasattr(self, 'start'):
 				self.start()
@@ -960,6 +960,7 @@ class PalettePlugin (NSObject, GlyphsPaletteProtocol):
 
 PalettePlugin.logToConsole = LogToConsole_AsClassExtension
 PalettePlugin.logError = LogError_AsClassExtension
+PalettePlugin.loadNib = LoadNib
 
 
 
