@@ -281,7 +281,7 @@ class ____PluginClassName____(SelectTool):
 
 As opposed to Interface Builder, dialogs get created entirely in code only using Vanilla, which might be advantageous for you if Xcode looks too daunting.
 
-We need to create a so called [Group](http://ts-vanilla.readthedocs.org/en/latest/objects/Group.html) that contains a set of objects. Of this group, we can get hold of the wrapped `NSView` object to display in Glyphs. Note that due to Vanilla internals, we have to create a window first, although that window isn’t getting any attention anymore later on. With that window we define the size of the dialog’s view area, and let the group stretch to the far corners of that parent window using `(0, 0, -0, -0)`.
+We need to create a so called [Group](http://ts-vanilla.readthedocs.org/en/latest/objects/Group.html) that contains a set of objects. Of this group, we can get hold of the wrapped `NSView` object to display in Glyphs. Note that due to Vanilla internals, we have to create a window first, although that window isn’t getting any attention anymore later on, and it must contain a `Group()` of the same size. Note that stretching the `Group` to the far corners of the windows using `(0, 0, -0, -0)` may not work, so explicitly define its size identical to the containing window.
 
 ```python
 # encoding: utf-8
@@ -295,8 +295,10 @@ class ____PluginClassName____(SelectTool):
 		self.name = 'My Select Tool'
 
 		# Create Vanilla window and group with controls
-		self.sliderMenuView = Window((150, 40))
-		self.sliderMenuView.group = Group((0, 0, -0, -0))
+		viewWidth = 150
+		viewHeight = 40
+		self.sliderMenuView = Window((viewWidth, viewHeight))
+		self.sliderMenuView.group = Group((0, 0, viewWidth, viewHeight))
 		self.sliderMenuView.group.text = TextBox((10, 0, -10, -10), self.name)
 		self.sliderMenuView.group.slider = Slider((10, 18, -10, 23), callback=self.sliderCallback)
 
