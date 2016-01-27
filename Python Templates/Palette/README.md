@@ -41,6 +41,7 @@ class ____PluginClassName____ (PalettePlugin):
 	
 	def settings(self):
 		self.name = 'My Palette'
+		self.loadNib('IBdialog')
 	
 	def start(self):
 
