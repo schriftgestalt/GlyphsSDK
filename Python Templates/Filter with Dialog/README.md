@@ -1,3 +1,13 @@
+### Warning
+
+We’re currently in the process of restructuring the whole Python implementation of our plug-ins. Although we’re pretty far with it, please note that until we have released a stable 2.3 version, the plug-in skeletons might still see minor changes that could break a plug-in of yours currently under development from this code base here.
+
+Please refrain from finishing up and publishing plug-ins based on this code until we have announced the final version 2.3 and monitor code changes to this repository.
+
+January 27th 2016
+
+___
+
 Welcome to Glyphs.app’s plug-in documentation. 
 
 This documentation here covers only a few details of the whole process. If you are new to the subject, we recommend to start by [reading our tutorial](https://glyphsapp.com/tutorials/plugins), where you will later be asked to return here.
