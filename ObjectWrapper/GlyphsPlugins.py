@@ -326,23 +326,17 @@ class FilterWithDialog (GSFilterPlugin):
 		try:
 			self.menuName = 'My Filter'
 			self.keyboardShortcut = None # With Cmd+Shift
-			self.dialogName = 'IBdialog'
 			self.actionButtonLabel = 'Apply'
 	
 	
 			if hasattr(self, 'settings'):
 				self.settings()
 
-	
-
-			# self._view = self.dialog
-			NSBundle.loadNibNamed_owner_(self.dialogName, self)
-
-		
-			# if hasattr(self, 'start'):
-			# 	self.start()
-
-			# 	self.setup()
+			# Dialog stuff
+			# Initiate emtpy self.dialog here in case of Vanilla dialog,
+			# where .dialog is not defined at the class’s root.
+			if not hasattr(self, 'dialog'):
+				self.dialog = None
 
 			return self
 
@@ -529,6 +523,7 @@ class FilterWithDialog (GSFilterPlugin):
 
 FilterWithDialog.logToConsole = LogToConsole_AsClassExtension
 FilterWithDialog.logError = LogError_AsClassExtension
+FilterWithDialog.loadNib = LoadNib
 
 
 

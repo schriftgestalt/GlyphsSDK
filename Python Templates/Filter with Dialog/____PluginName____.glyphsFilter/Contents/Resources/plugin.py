@@ -30,6 +30,9 @@ class ____PluginClassName____(FilterWithDialog):
 	def settings(self):
 		self.menuName = Glyphs.localize({'en': u'My Filter', 'de': u'Mein Filter'})
 
+		# Load dialog from .nib (without .extension)
+		self.loadNib('IBdialog')
+
 	# On UI trigger
 	def start(self):
 

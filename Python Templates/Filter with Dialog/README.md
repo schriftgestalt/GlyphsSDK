@@ -53,6 +53,7 @@ class ____PluginClassName____(FilterWithDialog):
 	
 	def settings(self):
 		self.menuName = 'My Filter'
+		self.loadNib('IBdialog')
 
 	# On UI trigger
 	def start(self):
@@ -114,11 +115,11 @@ In this method you set all attributes that describe the plug-in, such as its nam
 		# A keyboard shortcut for activating/deactivating the plug-in (together with Command+Shift)
 		self.keyboardShortcut = 'p'
 
-		# The name of the Interface Builder file containing the UI dialog, without file extension
-		self.dialogName = 'IBDialog'
-
 		# The caption of the action button of the dialog. 'Apply' is the default.
 		self.actionButtonLabel = 'Apply'
+
+		# Load dialog from .nib (without .extension)
+		self.loadNib('IBdialog')
 
 ```
 
