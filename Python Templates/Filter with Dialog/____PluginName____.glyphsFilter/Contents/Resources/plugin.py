@@ -33,7 +33,7 @@ class ____PluginClassName____(FilterWithDialog):
 		# Load dialog from .nib (without .extension)
 		self.loadNib('IBdialog')
 
-	# On UI trigger
+	# On dialog show
 	def start(self):
 
 		# Set default setting if not present
@@ -65,7 +65,7 @@ class ____PluginClassName____(FilterWithDialog):
 
 		# Called through UI, use stored value
 		else:
-			value = Glyphs.defaults['com.myname.myfilter.value']
+			value = float(Glyphs.defaults['com.myname.myfilter.value'])
 
 		# Shift all nodes in x and y direction by the value
 		for path in layer.paths:
