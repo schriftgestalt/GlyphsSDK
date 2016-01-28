@@ -3443,7 +3443,7 @@ GSGlyph.export =		  property( lambda self: self.valueForKey_("export").boolValue
 	Defines whether glyph will export upon font generation
 	:type: bool'''
 
-GSGlyph.color =			  property( lambda self: self.valueForKey_("colorIndex"), 
+GSGlyph.color =			  property( lambda self: self.colorIndex()), 
 									lambda self, value: self.setColorIndex_(value))
 '''.. attribute:: color
 	Color marking of glyph in UI
@@ -3485,7 +3485,7 @@ GSGlyph.colorObject =			  property( lambda self: self.valueForKey_("color") )
 		print R, G, B
 		0.617805719376 0.958198726177 0.309286683798
 
-		print roun(R * 256), int(G * 256), int(B * 256)
+		print round(R * 256), int(G * 256), int(B * 256)
 		158 245 245
 		
 		# Draw layer
@@ -3791,6 +3791,58 @@ GSLayer.layerId = property(lambda self: self.valueForKey_("layerId"),
 		layer = font.glyphs['a'].layers[font.masters[0].id]
 
 '''
+
+GSLayer.color =			  property( lambda self: self.colorIndex()), 
+									lambda self, value: self.setColorIndex_(value))
+'''.. attribute:: color
+	Color marking of glyph in UI
+	:type: int
+
+	.. code-block:: python
+
+		glyph.color = 0		# red
+		glyph.color = 1		# orange
+		glyph.color = 2		# brown
+		glyph.color = 3		# yellow
+		glyph.color = 4		# light green
+		glyph.color = 5		# dark green
+		glyph.color = 6		# light blue
+		glyph.color = 7		# dark blue
+		glyph.color = 8		# purple
+		glyph.color = 9		# magenta
+		glyph.color = 10	# light gray
+		glyph.color = 11	# charcoal
+		glyph.color = 9223372036854775807	# not colored, white
+'''
+
+GSLayer.colorObject =			  property( lambda self: self.valueForKey_("color") )
+'''.. attribute:: colorObject
+
+	.. versionadded:: 2.3
+
+	NSColor object of layer color, useful for drawing in plugins.
+	:type: NSColor
+
+	.. code-block:: python
+
+		# Set Color
+		layer.colorObject.set()
+		
+		# Get RGB (and alpha) values (as float numbers 0..1, multiply with 256 if necessary)
+		R, G, B, A = layer.colorObject.colorUsingColorSpace_(NSColorSpace.genericRGBColorSpace()).getRed_green_blue_alpha_(None, None, None, None)
+
+		print R, G, B
+		0.617805719376 0.958198726177 0.309286683798
+
+		print round(R * 256), int(G * 256), int(B * 256)
+		158 245 245
+		
+		# Draw layer
+		layer.bezierPath.fill()
+		
+
+'''
+
 
 
 GSLayer.components = property(lambda self: LayerComponentsProxy(self),
