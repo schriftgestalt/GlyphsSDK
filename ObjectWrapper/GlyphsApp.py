@@ -3443,7 +3443,7 @@ GSGlyph.export =		  property( lambda self: self.valueForKey_("export").boolValue
 	Defines whether glyph will export upon font generation
 	:type: bool'''
 
-GSGlyph.color =			  property( lambda self: self.colorIndex()), 
+GSGlyph.color =			  property( lambda self: self.colorIndex(),
 									lambda self, value: self.setColorIndex_(value))
 '''.. attribute:: color
 	Color marking of glyph in UI
@@ -3792,7 +3792,7 @@ GSLayer.layerId = property(lambda self: self.valueForKey_("layerId"),
 
 '''
 
-GSLayer.color =			  property( lambda self: self.colorIndex()), 
+GSLayer.color =			  property( lambda self: self.colorIndex(), 
 									lambda self, value: self.setColorIndex_(value))
 '''.. attribute:: color
 	Color marking of glyph in UI
