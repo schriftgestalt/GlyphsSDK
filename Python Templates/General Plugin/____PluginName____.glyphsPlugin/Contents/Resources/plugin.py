@@ -12,7 +12,7 @@
 ###########################################################################################################
 
 
-from GlyphsPlugins import *
+from GlyphsApp.plugins import *
 
 class ____PluginClassName____(GeneralPlugin):
 	def settings(self):

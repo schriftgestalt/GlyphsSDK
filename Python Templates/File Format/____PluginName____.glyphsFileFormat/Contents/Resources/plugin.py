@@ -16,7 +16,7 @@
 ###########################################################################################################
 
 
-from GlyphsPlugins import *
+from GlyphsApp.plugins import *
 
 
 # Preference key names

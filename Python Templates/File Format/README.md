@@ -29,7 +29,7 @@ A functional plug-in can be as small as this (in `Contents/Resources/plugin.py`)
 ```python
 # encoding: utf-8
 
-from GlyphsPlugins import *
+from GlyphsApp.plugins import *
 
 class ____PluginClassName____(FileFormatPlugin):
 	

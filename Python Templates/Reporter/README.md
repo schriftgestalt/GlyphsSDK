@@ -26,7 +26,7 @@ A functional plug-in can be as small as this (in `Contents/Resources/plugin.py`)
 ```python
 # encoding: utf-8
 
-from GlyphsPlugins import *
+from GlyphsApp.plugins import *
 
 class ____PluginClassName____(ReporterPlugin):
 	def settings(self):
@@ -263,7 +263,7 @@ You will find the .xib/.nib files of this example [here](https://github.com/schr
 ```python
 # encoding: utf-8
 
-from GlyphsPlugins import *
+from GlyphsApp.plugins import *
 
 class ____PluginClassName____(SelectTool):
 
@@ -296,7 +296,7 @@ We need to create a so called [Group](http://ts-vanilla.readthedocs.org/en/lates
 ```python
 # encoding: utf-8
 
-from GlyphsPlugins import *
+from GlyphsApp.plugins import *
 from vanilla import *
 
 class ____PluginClassName____(SelectTool):

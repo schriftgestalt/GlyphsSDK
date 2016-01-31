@@ -29,7 +29,7 @@ A functional plug-in can be as small as this (in `Contents/Resources/plugin.py`)
 ```python
 # encoding: utf-8
 
-from GlyphsPlugins import *
+from GlyphsApp.plugins import *
 
 class ____PluginClassName____ (PalettePlugin):
 
@@ -134,7 +134,7 @@ Also, you may delete the two `IBdialog.xib/.nib` files from the `Resources` fold
 ```python
 # encoding: utf-8
 
-from GlyphsPlugins import *
+from GlyphsApp.plugins import *
 from vanilla import *
 
 class ____PluginClassName____(SelectTool):
