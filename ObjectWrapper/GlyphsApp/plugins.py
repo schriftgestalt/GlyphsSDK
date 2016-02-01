@@ -1083,7 +1083,7 @@ class ReporterPlugin (NSObject, GlyphsReporterProtocol):
 			self.logError(traceback.format_exc())
 		
 	
-	def drawBackgroundForInactiveLayer_(self, Layer):
+	def drawBackgroundForInactiveLayer_options_(self, Layer, options):
 		"""
 		Whatever you draw here will be displayed behind the paths, but
 		- for inactive glyphs in the EDIT VIEW
