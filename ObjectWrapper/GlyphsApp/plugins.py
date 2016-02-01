@@ -84,14 +84,18 @@ class FileFormatPlugin (NSObject, GlyphsFileFormatProtocol):
 		try:
 			# Settings, default values
 			self.name = 'My File Format'
-			self.dialogName = 'IBdialog'
 			self.icon = 'ExportIcon'
 			self.toolbarPosition = 100
 			
 			if hasattr(self, 'settings'):
 				self.settings()
 			
-			NSBundle.loadNibNamed_owner_(self.dialogName, self)
+			# Dialog stuff
+			# Initiate emtpy self.dialog here in case of Vanilla dialog,
+			# where .dialog is not defined at the class’s root.
+			if not hasattr(self, 'dialog'):
+				self.dialog = None
+
 			thisBundle = NSBundle.bundleForClass_(NSClassFromString(self.className()))
 			self.toolbarIcon = NSImage.alloc().initWithContentsOfFile_(thisBundle.pathForImageResource_(self.icon))
 			self.toolbarIcon.setName_(self.icon)
@@ -295,6 +299,7 @@ class FileFormatPlugin (NSObject, GlyphsFileFormatProtocol):
 
 FileFormatPlugin.logToConsole = LogToConsole_AsClassExtension
 FileFormatPlugin.logError = LogError_AsClassExtension
+FileFormatPlugin.loadNib = LoadNib
 
 
 

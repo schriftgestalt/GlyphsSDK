@@ -75,7 +75,7 @@ In this method you set all attributes that describe the plug-in, such as its nam
 		# or:
 		self.name = Glyphs.localize({'en': u'My Palette', 'de': u'Mein Palette'})
 
-		# Load .nib dialog (with .extension)
+		# Load .nib dialog (without .extension)
 		self.loadNib('IBdialog')
 ```
 

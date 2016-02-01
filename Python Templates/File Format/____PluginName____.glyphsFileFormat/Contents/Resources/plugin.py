@@ -44,6 +44,8 @@ class ____PluginClassName____(FileFormatPlugin):
 		self.icon = 'ExportIcon'
 		self.toolbarPosition = 100
 
+        # Load .nib dialog (with .extension)
+        self.loadNib('IBdialog')
 
 	def start(self):
 

@@ -38,6 +38,7 @@ class ____PluginClassName____(FileFormatPlugin):
 	def settings(self):
 		self.name = 'My CSV Export'
 		self.icon = 'ExportIcon'
+		self.loadNib('IBdialog')
 
 	def export(self, font):
 
@@ -63,14 +64,14 @@ In this method you set all attributes that describe the plug-in, such as its nam
 		# or:
 		self.name = Glyphs.localize({'en': u'My CSV Export', 'de': u'Mein CSV-Export'})
 
-		# The file name of the Interface Builder .nib file (the dialog) without file extension
-		self.dialog = 'IBDialog'
-
 		# The file name of the icon file without file extension
 		self.icon = 'ExportIcon'
 
 		# The position of the icon in the Export dialog toolbar
 		self.toolbarPosition = 100
+
+		# Load .nib dialog (without .extension)
+		self.loadNib('IBdialog')
 ```
 
 #### start()
