@@ -41,7 +41,7 @@ class ____PluginClassName____(FilterWithDialog):
 			Glyphs.defaults['com.myname.myfilter.value'] = 15.0
 
 		# Set value of text field
-		self.myTextField.setFloatValue_(Glyphs.defaults['com.myname.myfilter.value'])
+		self.myTextField.setStringValue_(Glyphs.defaults['com.myname.myfilter.value'])
 		
 		# Set focus to text field
 		self.myTextField.becomeFirstResponder()
