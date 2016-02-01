@@ -232,7 +232,7 @@ class FileFormatPlugin (NSObject, GlyphsFileFormatProtocol):
 			self.logError(traceback.format_exc())
 			error = NSError.errorWithDomain_code_userInfo_(self.title(), -57, {
 				NSLocalizedDescriptionKey: NSLocalizedString('Python exception', None),
-				NSLocalizedRecoverySuggestionErrorKey: str(e)
+				NSLocalizedRecoverySuggestionErrorKey: str(e) + '\nCheck Macro window output.'
 				})
 			return (False, error)
 		return True
