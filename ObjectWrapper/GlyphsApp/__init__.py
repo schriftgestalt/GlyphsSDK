@@ -1312,7 +1312,6 @@ class LayerHintsProxy (Proxy):
 
 
 
-
 class LayerAnchorsProxy (Proxy):
 	"""layer.anchors is a dict!!!"""
 	def __getitem__(self, Key):
@@ -1355,7 +1354,6 @@ class LayerAnchorsProxy (Proxy):
 
 
 
-
 class LayerPathsProxy (Proxy):
 	def __getitem__(self, idx):
 		if idx < 0:
@@ -1365,6 +1363,13 @@ class LayerPathsProxy (Proxy):
 		if idx < 0:
 			idx = self._owner.pathCount() + idx
 		self._owner.replacePathAtIndex_withPath_(idx, Path)
+	def setter(self, values):
+		if type(values) == list:
+			self._owner.setPaths_(NSMutableArray.arrayWithArray_(values))
+		elif type(values) == LayerPathsProxy:
+			self._owner.setPaths_(NSMutableArray.arrayWithArray_(list(values)))
+		else:
+			raise TypeError
 	def __delitem__(self, idx):
 		if idx < 0:
 			Key = self._owner.pathCount() + idx
@@ -3961,7 +3966,7 @@ GSLayer.anchors = property(lambda self: LayerAnchorsProxy(self))
 '''
 
 GSLayer.paths = property(	lambda self: LayerPathsProxy(self),
-						 lambda self, value: self.setPaths_(NSMutableArray.arrayWithArray_(value)))
+							lambda self, value: LayerPathsProxy(self).setter(value))
 '''.. attribute:: paths
 	List of :class:`GSPath <GSPath>` objects.
 	:type: list
