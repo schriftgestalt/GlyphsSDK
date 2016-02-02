@@ -6091,7 +6091,7 @@ GSEditViewController.layers = property(lambda self: self.graphicView().layoutMan
 	
 '''
 
-GSEditViewController.scale = property(lambda self: self.graphicView().valueForKey_("scale"), lambda self, value: self.graphicView().setValue_forKey_(value, "scale"))
+GSEditViewController.scale = property(lambda self: self.graphicView().scale(), lambda self, value: self.graphicView().setScale_(value))
 
 '''
 
@@ -6158,7 +6158,7 @@ LTRTTB = 3
 RTLTTB = 2
 
 
-GSEditViewController.direction = property(lambda self: self.writingDirection(), lambda self, value: self.setValue_forKey_(value, "writingDirection"));
+GSEditViewController.direction = property(lambda self: self.writingDirection(), lambda self, value: self.setWritingDirection_(value));
 
 '''
 
@@ -6267,12 +6267,11 @@ def Get_ShowInPreview(self):
 def Set_ShowInPreview(self, value):
 	
 	if value == 'live':
-		self.setValue_forKey_(-2, "selectedInstance")
+		self.setSelectedInstance_(-2)
 	elif value == 'all':
-		self.setValue_forKey_(-1, "selectedInstance")
+		self.setSelectedInstance_(-1)
 	else:
-		self.setValue_forKey_(self.parent.instances.index(value), "selectedInstance")
-
+		self.setSelectedInstance_(self.parent.instances.index(value))
 
 GSEditViewController.previewInstances = property(lambda self: Get_ShowInPreview(self), lambda self, value: Set_ShowInPreview(self, value))
 
