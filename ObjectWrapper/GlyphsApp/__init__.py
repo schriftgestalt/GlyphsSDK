@@ -3703,7 +3703,7 @@ Functions
 	intersectionsBetweenPoints()
 	addMissingAnchors()
 	clearSelection()
-	clearBackground()
+	clear()
 	swapForegroundWithBackground()
 	reinterpolate()
 
@@ -4354,11 +4354,11 @@ GSLayer.addMissingAnchors = Layer_addMissingAnchors
 '''
 
 '''
-.. function:: clearBackground()
+.. function:: clear()
 
 	.. versionadded:: 2.3
 
-	Remove all paths from background layer.
+	Remove all elements from layer.
 '''
 
 GSLayer.swapForegroundWithBackground = property(lambda self: self.swapForgroundWithBackground() )
@@ -4461,19 +4461,6 @@ def DrawPointsWithPen(self, pen):
 
 GSLayer.drawPoints = DrawPointsWithPen
 
-def _Clear_(self, contours=True, components=True, anchors=True, guides=True):
-	"""Clear all items marked as True from the glyph"""
-	if contours:
-		self.setPaths_(NSMutableArray.array())
-	# if components:
-	# 	self.clearComponents()
-	# if anchors:
-	# 	self.clearAnchors()
-	# if guides:
-	# 	self.clearHGuides()
-	# 	self.clearVGuides()
-
-GSLayer.clear = _Clear_
 
 def _getPen_(self):
 	return GSPathPen.alloc().init()
