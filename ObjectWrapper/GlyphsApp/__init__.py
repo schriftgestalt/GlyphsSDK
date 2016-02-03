@@ -3269,6 +3269,10 @@ def Glyph__repr__(self):
 	return "<GSGlyph \"%s\" with %s layers>" % (self.name, len(self.layers))
 GSGlyph.__repr__ = Glyph__repr__;
 
+def Glyph__copy__(self, memo=None):
+	return self.copy()
+GSGlyph.__deepcopy__ = Glyph__copy__
+
 GSGlyph.parent = property(			lambda self: self.valueForKey_("parent"),
 									lambda self, value: self.setParent_(value)) 
 '''.. attribute:: parent
