@@ -1265,8 +1265,17 @@ class GlyphLayerProxy (Proxy):
 		if not Layer.associatedMasterId:
 			Layer.associatedMasterId = self._owner.parent.masters[0].id
 		self._owner.setLayer_forKey_(Layer, NSString.UUID())
-	def setterMethod(self):
-		return self._owner.pyobjc_instanceMethods.setLayers_
+	def setter(self, values):
+		newLayers = NSMutableDictionary.dictionary()
+		if type(values) == list or type(values) == tuple:
+			for layer in values:
+				newLayers[layer.layerId] = layer
+		elif type(values) == type(dict) or isinstance(values, NSDictionary):
+			for (key, layer) in value.items() :
+				newLayers[anchor.name] = anchor
+		else:
+			raise TypeError
+		self._owner.setAnchors_(newAnchors)
 
 class LayerComponentsProxy (Proxy):
 	def __getitem__(self, Key):
@@ -1388,31 +1397,19 @@ class LayerAnchorsProxy (Proxy):
 	def __len__(self):
 		#print "count"
 		return self._owner.anchorCount()
-	def setterMethod(self):
-		return self._owner.pyobjc_instanceMethods.setAnchors_
 
 	def setter(self, values):
-		method = self.setterMethod()
-
-		for anchor in self.values():
-			del anchor
-
-		if type(values) == list:
+		newAnchors = NSMutableDictionary.dictionary()
+		
+		if type(values) == list or type(values) == tuple:
 			for anchor in values:
-				self.append(anchor)
-		elif type(values) == tuple:
-			for anchor in values:
-				self.append(anchor)
-		elif type(values) == type(self):
-			for anchor in list(values):
-				self.append(anchor)
+				newAnchors[anchor.name] = anchor
+		elif type(values) == type(dict) or isinstance(values, NSDictionary):
+			for (key, anchor) in value.items() :
+				newAnchors[anchor.name] = anchor
 		else:
 			raise TypeError
-
-	def _setter(self, values):
-
-		for anchor in values:
-			self.append(anchor)
+		self._owner.setAnchors_(newAnchors)
 
 
 class LayerPathsProxy (Proxy):
@@ -3279,8 +3276,8 @@ GSGlyph.parent = property(			lambda self: self.valueForKey_("parent"),
 
 	:type: :class:`GSFont <GSFont>`
 '''
-GSGlyph.layers = property(	lambda self: GlyphLayerProxy(self))#,
-#							lambda self, value: GlyphLayerProxy(self).setter(value))
+GSGlyph.layers = property(	lambda self: GlyphLayerProxy(self),
+							lambda self, value: GlyphLayerProxy(self).setter(value))
 
 '''.. attribute:: layers
 	The layers of the glyph, collection of :class:`GSLayer` objects. You can access them either by index or by layer ID, which can be a :attr:`GSFontMaster.id <id>`.
@@ -3934,11 +3931,11 @@ GSLayer.components = property(lambda self: LayerComponentsProxy(self),
 		                break
 '''
 
-GSLayer.guideLines = property(lambda self: LayerGuideLinesProxy(self),
-							  lambda self, value: LayerGuideLinesProxy(self).setter(value))
-
 GSLayer.guides = property(lambda self: LayerGuideLinesProxy(self),
 							  lambda self, value: LayerGuideLinesProxy(self).setter(value))
+
+GSLayer.guideLines = GSLayer.guides
+
 '''.. attribute:: guides
 	List of :class:`GSGuideLine` objects.
 	:type: list
@@ -4006,8 +4003,8 @@ GSLayer.hints = property(lambda self: LayerHintsProxy(self),
 		del(layer.hint[0])
 '''
 
-GSLayer.anchors = property(lambda self: LayerAnchorsProxy(self))#,
-#							lambda self, value: LayerAnchorsProxy(self).setter(value))
+GSLayer.anchors = property(lambda self: LayerAnchorsProxy(self),
+							lambda self, value: LayerAnchorsProxy(self).setter(value))
 '''.. attribute:: anchors
 	List of :class:`GSAnchor` objects.
 	:type: list, dict
@@ -4043,7 +4040,7 @@ GSLayer.paths = property(	lambda self: LayerPathsProxy(self),
 		del(layer.paths[0])
 '''
 
-GSLayer.selection = property(	lambda self: LayerSelectionProxy(self))#, lambda self, value: LayerSelectionProxy(self).setter(value))
+GSLayer.selection = property(	lambda self: LayerSelectionProxy(self), lambda self, value: LayerSelectionProxy(self).setter(value))
 
 '''.. attribute:: selection
 	List of all selected objects in the glyph. Read only.
@@ -5042,8 +5039,8 @@ GSPath.parent = property(		lambda self: self.valueForKey_("parent"),
 	:type: :class:`GSLayer <GSLayer>`
 '''
 
-GSPath.nodes = property(		lambda self: PathNodesProxy(self))#,
-#								lambda self, value: PathNodesProxy(self.setter(value)))
+GSPath.nodes = property(		lambda self: PathNodesProxy(self),
+								lambda self, value: PathNodesProxy(self).setter(value))
 '''.. attribute:: nodes
 	A list of :class:`GSNode <GSNode>` objects
 	:type: list
