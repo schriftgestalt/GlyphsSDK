@@ -947,7 +947,7 @@ class FontGlyphsProxy (Proxy):
 	def __len__(self):
 		return self._owner.count()
 	def setterMethod(self):
-		return self._owner.pyobjc_instanceMethods.setGlyphs_
+		return self._owner.setGlyphs_
 
 
 class FontFontMasterProxy (Proxy):
@@ -985,7 +985,7 @@ class FontFontMasterProxy (Proxy):
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.fontMasters()
 	def setterMethod(self):
-		return self._owner.pyobjc_instanceMethods.setFontMasters_
+		return self._owner.setFontMasters_
 	
 
 
@@ -1017,7 +1017,7 @@ class FontInstancesProxy (Proxy):
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.instances()
 	def setterMethod(self):
-		return self._owner.pyobjc_instanceMethods.setInstances_
+		return self._owner.setInstances_
 	
 
 class CustomParametersProxy(Proxy):
@@ -1052,7 +1052,7 @@ class CustomParametersProxy(Proxy):
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.customParameters()
 	def setterMethod(self):
-		return self._owner.pyobjc_instanceMethods.setCustomParameters_
+		return self._owner.setCustomParameters_
 	
 
 class FontClassesProxy (Proxy):
@@ -1090,7 +1090,7 @@ class FontClassesProxy (Proxy):
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.classes()
 	def setterMethod(self):
-		return self._owner.pyobjc_instanceMethods.setClasses_
+		return self._owner.setClasses_
 	
 
 class FontFeaturesProxy (Proxy):
@@ -1140,7 +1140,7 @@ class FontFeaturesProxy (Proxy):
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.features()
 	def setterMethod(self):
-		return self._owner.pyobjc_instanceMethods.setFeatures_
+		return self._owner.setFeatures_
 	
 
 
@@ -1180,7 +1180,7 @@ class FontFeaturePrefixesProxy (Proxy):
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.featurePrefixes()
 	def setterMethod(self):
-		return self._owner.pyobjc_instanceMethods.setfFeaturePrefixes_
+		return self._owner.setfFeaturePrefixes_
 
 
 class LayersIterator:
@@ -1280,7 +1280,7 @@ class LayerComponentsProxy (Proxy):
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.components()
 	def setterMethod(self):
-		return self._owner.pyobjc_instanceMethods.setComponents_
+		return self._owner.setComponents_
 
 class GlyphSmartComponentAxesProxy (Proxy):
 	def __getitem__(self, Key):
@@ -1315,7 +1315,7 @@ class LayerGuideLinesProxy (Proxy):
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.guideLines()
 	def setterMethod(self):
-		return self._owner.pyobjc_instanceMethods.setGuideLines_
+		return self._owner.setGuideLines_
 
 class LayerAnnotationProxy (Proxy):
 	def __getitem__(self, Key):
@@ -1329,7 +1329,7 @@ class LayerAnnotationProxy (Proxy):
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.annotations()
 	def setterMethod(self):
-		return self._owner.pyobjc_instanceMethods.setAnnotations_
+		return self._owner.setAnnotations_
 
 
 
@@ -1345,7 +1345,7 @@ class LayerHintsProxy (Proxy):
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.hints()
 	def setterMethod(self):
-		return self._owner.pyobjc_instanceMethods.setHints_
+		return self._owner.setHints_
 
 
 
@@ -1443,13 +1443,13 @@ class LayerSelectionProxy (Proxy):
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.selection().array()
 	def append(self, object):
-		self._owner.pyobjc_instanceMethods.addSelection_(object)
+		self._owner.addSelection_(object)
 	def extend(self, objects):
-		self._owner.pyobjc_instanceMethods.addObjectsFromArrayToSelection_(objects)
+		self._owner.addObjectsFromArrayToSelection_(objects)
 	def remove(self, object):
-		self._owner.pyobjc_instanceMethods.removeObjectFromSelection_(object)
+		self._owner.removeObjectFromSelection_(object)
 	def setterMethod(self):
-		return self._owner.pyobjc_instanceMethods.setSelection_
+		return self._owner.setSelection_
 
 
 
@@ -1475,7 +1475,7 @@ class PathNodesProxy (Proxy):
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.nodes()
 	def setterMethod(self):
-		return self._owner.pyobjc_instanceMethods.setNodes_
+		return self._owner.setNodes_
 
 
 
