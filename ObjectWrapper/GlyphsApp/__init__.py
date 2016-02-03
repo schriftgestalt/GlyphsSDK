@@ -90,6 +90,18 @@ class Proxy(object):
 	def __deepcopy__(self, memo):
 		return [x.copy() for x in self.values()]
 
+	def setter(self, values):
+		method = self.setterMethod()
+
+		if type(values) == list:
+			method(NSMutableArray.arrayWithArray_(values))
+		elif type(values) == tuple:
+			method(NSMutableArray.arrayWithArray_(list(values)))
+		elif type(values) == type(self):
+			method(NSMutableArray.arrayWithArray_(list(values)))
+		else:
+			raise TypeError
+
 
 ##################################################################################
 #
@@ -934,6 +946,8 @@ class FontGlyphsProxy (Proxy):
 		self._owner.addGlyph_(Glyph)
 	def __len__(self):
 		return self._owner.count()
+	def setterMethod(self):
+		return self._owner.pyobjc_instanceMethods.setGlyphs_
 
 
 class FontFontMasterProxy (Proxy):
@@ -970,6 +984,8 @@ class FontFontMasterProxy (Proxy):
 		return self._owner.countOfFontMasters()
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.fontMasters()
+	def setterMethod(self):
+		return self._owner.pyobjc_instanceMethods.setFontMasters_
 	
 
 
@@ -1000,6 +1016,8 @@ class FontInstancesProxy (Proxy):
 		return self._owner.countOfInstances()
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.instances()
+	def setterMethod(self):
+		return self._owner.pyobjc_instanceMethods.setInstances_
 	
 
 class CustomParametersProxy(Proxy):
@@ -1033,6 +1051,8 @@ class CustomParametersProxy(Proxy):
 		return self._owner.countOfCustomParameters()
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.customParameters()
+	def setterMethod(self):
+		return self._owner.pyobjc_instanceMethods.setCustomParameters_
 	
 
 class FontClassesProxy (Proxy):
@@ -1069,6 +1089,8 @@ class FontClassesProxy (Proxy):
 		return self._owner.countOfClasses()
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.classes()
+	def setterMethod(self):
+		return self._owner.pyobjc_instanceMethods.setClasses_
 	
 
 class FontFeaturesProxy (Proxy):
@@ -1117,6 +1139,8 @@ class FontFeaturesProxy (Proxy):
 		return "".join(LineList)
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.features()
+	def setterMethod(self):
+		return self._owner.pyobjc_instanceMethods.setFeatures_
 	
 
 
@@ -1155,6 +1179,9 @@ class FontFeaturePrefixesProxy (Proxy):
 		return "".join(LineList)
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.featurePrefixes()
+	def setterMethod(self):
+		return self._owner.pyobjc_instanceMethods.setfFeaturePrefixes_
+
 
 class LayersIterator:
 	def __init__(self, owner):
@@ -1238,6 +1265,8 @@ class GlyphLayerProxy (Proxy):
 		if not Layer.associatedMasterId:
 			Layer.associatedMasterId = self._owner.parent.masters[0].id
 		self._owner.setLayer_forKey_(Layer, NSString.UUID())
+	def setterMethod(self):
+		return self._owner.pyobjc_instanceMethods.setLayers_
 
 class LayerComponentsProxy (Proxy):
 	def __getitem__(self, Key):
@@ -1250,6 +1279,8 @@ class LayerComponentsProxy (Proxy):
 		self._owner.addComponent_(Component)
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.components()
+	def setterMethod(self):
+		return self._owner.pyobjc_instanceMethods.setComponents_
 
 class GlyphSmartComponentAxesProxy (Proxy):
 	def __getitem__(self, Key):
@@ -1283,6 +1314,8 @@ class LayerGuideLinesProxy (Proxy):
 		self._owner.addGuideLine_(GuideLine)
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.guideLines()
+	def setterMethod(self):
+		return self._owner.pyobjc_instanceMethods.setGuideLines_
 
 class LayerAnnotationProxy (Proxy):
 	def __getitem__(self, Key):
@@ -1295,6 +1328,8 @@ class LayerAnnotationProxy (Proxy):
 		self._owner.addAnnotation_(Annotation)
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.annotations()
+	def setterMethod(self):
+		return self._owner.pyobjc_instanceMethods.setAnnotations_
 
 
 
@@ -1309,6 +1344,8 @@ class LayerHintsProxy (Proxy):
 		self._owner.addHint_(Hint)
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.hints()
+	def setterMethod(self):
+		return self._owner.pyobjc_instanceMethods.setHints_
 
 
 
@@ -1351,7 +1388,31 @@ class LayerAnchorsProxy (Proxy):
 	def __len__(self):
 		#print "count"
 		return self._owner.anchorCount()
+	def setterMethod(self):
+		return self._owner.pyobjc_instanceMethods.setAnchors_
 
+	def setter(self, values):
+		method = self.setterMethod()
+
+		for anchor in self.values():
+			del anchor
+
+		if type(values) == list:
+			for anchor in values:
+				self.append(anchor)
+		elif type(values) == tuple:
+			for anchor in values:
+				self.append(anchor)
+		elif type(values) == type(self):
+			for anchor in list(values):
+				self.append(anchor)
+		else:
+			raise TypeError
+
+	def _setter(self, values):
+
+		for anchor in values:
+			self.append(anchor)
 
 
 class LayerPathsProxy (Proxy):
@@ -1363,13 +1424,6 @@ class LayerPathsProxy (Proxy):
 		if idx < 0:
 			idx = self._owner.pathCount() + idx
 		self._owner.replacePathAtIndex_withPath_(idx, Path)
-	def setter(self, values):
-		if type(values) == list:
-			self._owner.setPaths_(NSMutableArray.arrayWithArray_(values))
-		elif type(values) == LayerPathsProxy:
-			self._owner.setPaths_(NSMutableArray.arrayWithArray_(list(values)))
-		else:
-			raise TypeError
 	def __delitem__(self, idx):
 		if idx < 0:
 			Key = self._owner.pathCount() + idx
@@ -1378,6 +1432,8 @@ class LayerPathsProxy (Proxy):
 		self._owner.addPath_(Path)
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.paths()
+	def setterMethod(self):
+		return self._owner.setPaths_
 
 
 
@@ -1392,6 +1448,8 @@ class LayerSelectionProxy (Proxy):
 		self._owner.pyobjc_instanceMethods.addObjectsFromArrayToSelection_(objects)
 	def remove(self, object):
 		self._owner.pyobjc_instanceMethods.removeObjectFromSelection_(object)
+	def setterMethod(self):
+		return self._owner.pyobjc_instanceMethods.setSelection_
 
 
 
@@ -1416,6 +1474,8 @@ class PathNodesProxy (Proxy):
 		self._owner.addNodes_(objects)
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.nodes()
+	def setterMethod(self):
+		return self._owner.pyobjc_instanceMethods.setNodes_
 
 
 
@@ -1582,21 +1642,21 @@ GSFont.parent = property(lambda self: self.valueForKey_("parent"))
 	'''
 
 GSFont.masters = property(lambda self: FontFontMasterProxy(self),
-						  lambda self, value: self.setFontMasters_(NSMutableArray.arrayWithArray_(value)))
+						  lambda self, value: FontFontMasterProxy(self).setter(value))
 '''.. attribute:: masters
 	Collection of :class:`GSFontMaster <GSFontMaster>`.
 	:type: list
 	'''
 
 GSFont.instances = property(lambda self: FontInstancesProxy(self),
-							lambda self, value: self.setInstances_(NSMutableArray.arrayWithArray_(value)))
+						  lambda self, value: FontInstancesProxy(self).setter(value))
 '''.. attribute:: instances
 	Collection of :class:`GSInstance <GSInstance>`.
 	:type: list
 '''
 
 GSFont.glyphs = property(lambda self: FontGlyphsProxy(self),
-						 lambda self, value: self.setGlyphs_(NSMutableArray.arrayWithArray_(value)))
+						 lambda self, value: FontGlyphsProxy(self).setter(value))
 '''.. attribute:: glyphs
 	Collection of :class:`GSGlyph <GSGlyph>`. Returns a list, but you may also call glyphs using index or glyph name as key.
 	.. code-block:: python
@@ -1625,7 +1685,7 @@ GSFont.glyphs = property(lambda self: FontGlyphsProxy(self),
 
 	:type: list, dict'''
 GSFont.classes = property(lambda self: FontClassesProxy(self),
-						  lambda self, value: self.setClasses_(NSMutableArray.arrayWithArray_(value)))
+						 lambda self, value: FontClassesProxy(self).setter(value))
 '''.. attribute:: classes
 	Collection of :class:`GSClass <GSClass>` objects, representing OpenType glyph classes.
 	:type: list
@@ -1646,7 +1706,7 @@ GSFont.classes = property(lambda self: FontClassesProxy(self),
 		del(font.classes['uppercaseLetters'])
 '''
 GSFont.features = property(lambda self: FontFeaturesProxy(self),
-						   lambda self, value: self.setFeatures_(NSMutableArray.arrayWithArray_(value)))
+						 lambda self, value: FontFeaturesProxy(self).setter(value))
 '''.. attribute:: features
 	Collection of :class:`GSFeature <GSFeature>` objects, representing OpenType features.
 	:type: list
@@ -1668,7 +1728,7 @@ GSFont.features = property(lambda self: FontFeaturesProxy(self),
 '''
 
 GSFont.featurePrefixes = property(lambda self: FontFeaturePrefixesProxy(self),
-								  lambda self, value: self.setFeaturePrefixes_(NSMutableArray.arrayWithArray_(value)))
+						 lambda self, value: FontFeaturePrefixesProxy(self).setter(value))
 '''.. attribute:: featurePrefixes
 	Collection of :class:`GSFeaturePrefix <GSFeaturePrefix>` objects, containing stuff that needs to be outside of the OpenType features.
 	:type: list
@@ -3219,7 +3279,8 @@ GSGlyph.parent = property(			lambda self: self.valueForKey_("parent"),
 
 	:type: :class:`GSFont <GSFont>`
 '''
-GSGlyph.layers = property(			lambda self: GlyphLayerProxy(self))
+GSGlyph.layers = property(	lambda self: GlyphLayerProxy(self))#,
+#							lambda self, value: GlyphLayerProxy(self).setter(value))
 
 '''.. attribute:: layers
 	The layers of the glyph, collection of :class:`GSLayer` objects. You can access them either by index or by layer ID, which can be a :attr:`GSFontMaster.id <id>`.
@@ -3851,7 +3912,7 @@ GSLayer.colorObject =			  property( lambda self: self.valueForKey_("color") )
 
 
 GSLayer.components = property(lambda self: LayerComponentsProxy(self),
-							  lambda self, value: self.setComponents_(NSMutableArray.arrayWithArray_(value)))
+							  lambda self, value: LayerComponentsProxy(self).setter(value))
 '''.. attribute:: components
 	Collection of :class:`GSComponent` objects
 	:type: list
@@ -3874,10 +3935,10 @@ GSLayer.components = property(lambda self: LayerComponentsProxy(self),
 '''
 
 GSLayer.guideLines = property(lambda self: LayerGuideLinesProxy(self),
-							  lambda self, value: self.setGuideLines_(NSMutableArray.arrayWithArray_(value)))
+							  lambda self, value: LayerGuideLinesProxy(self).setter(value))
 
 GSLayer.guides = property(lambda self: LayerGuideLinesProxy(self),
-							  lambda self, value: self.setGuideLines_(NSMutableArray.arrayWithArray_(value)))
+							  lambda self, value: LayerGuideLinesProxy(self).setter(value))
 '''.. attribute:: guides
 	List of :class:`GSGuideLine` objects.
 	:type: list
@@ -3901,7 +3962,7 @@ GSLayer.guides = property(lambda self: LayerGuideLinesProxy(self),
 '''
 
 GSLayer.annotations = property(lambda self: LayerAnnotationProxy(self),
-							   lambda self, value: self.setAnnotations_(NSMutableArray.arrayWithArray_(value)))
+							  lambda self, value: LayerAnnotationProxy(self).setter(value))
 '''.. attribute:: annotations
 	List of :class:`GSAnnotation` objects.
 	:type: list
@@ -3926,7 +3987,7 @@ GSLayer.annotations = property(lambda self: LayerAnnotationProxy(self),
 
 
 GSLayer.hints = property(lambda self: LayerHintsProxy(self),
-						 lambda self, value: self.setHints_(value))
+						  lambda self, value: LayerHintsProxy(self).setter(value))
 '''.. attribute:: hints
 	List of :class:`GSHint` objects.
 	:type: list
@@ -3945,7 +4006,8 @@ GSLayer.hints = property(lambda self: LayerHintsProxy(self),
 		del(layer.hint[0])
 '''
 
-GSLayer.anchors = property(lambda self: LayerAnchorsProxy(self))
+GSLayer.anchors = property(lambda self: LayerAnchorsProxy(self))#,
+#							lambda self, value: LayerAnchorsProxy(self).setter(value))
 '''.. attribute:: anchors
 	List of :class:`GSAnchor` objects.
 	:type: list, dict
@@ -3981,7 +4043,7 @@ GSLayer.paths = property(	lambda self: LayerPathsProxy(self),
 		del(layer.paths[0])
 '''
 
-GSLayer.selection = property(	lambda self: LayerSelectionProxy(self))
+GSLayer.selection = property(	lambda self: LayerSelectionProxy(self))#, lambda self, value: LayerSelectionProxy(self).setter(value))
 
 '''.. attribute:: selection
 	List of all selected objects in the glyph. Read only.
@@ -4980,8 +5042,8 @@ GSPath.parent = property(		lambda self: self.valueForKey_("parent"),
 	:type: :class:`GSLayer <GSLayer>`
 '''
 
-GSPath.nodes = property(		lambda self: PathNodesProxy(self),
-								lambda self, value: self.setNodes_(NSMutableArray.arrayWithArray_(value)))
+GSPath.nodes = property(		lambda self: PathNodesProxy(self))#,
+#								lambda self, value: PathNodesProxy(self.setter(value)))
 '''.. attribute:: nodes
 	A list of :class:`GSNode <GSNode>` objects
 	:type: list
