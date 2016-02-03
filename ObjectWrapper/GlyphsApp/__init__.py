@@ -5286,8 +5286,6 @@ def __GSNode_get_type__(self):
 		return OFFCURVE
 	elif GS_Type == GSCURVE_:
 		return CURVE
-	elif GS_Type == GSQCURVE_:
-		return QCURVE
 	else:
 		return LINE
 
