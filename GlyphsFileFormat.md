@@ -49,13 +49,19 @@ The XML file contains a dictionary with the following structure. The elements wi
     * layers `list`
         * anchors `list`
             * name `string`: The name of the anchor.
-            * position `string`: format `{X, Y}`.
+            * position `string`: format `{X, Y}`
+        * associatedMasterId `string`: ID of the master the layer is linked to. Not present if it equals layerID, i.e. if the layer is in use as master.
+        * background `dict`: Contains the same children as the layer itself, except for background, layerId and associatedMasterId.
         * components `list`
             * anchor `string`: Should be indicated if connected to an anchor, especially if more than one possibility is available, e.g. in ligatures.
             * name `string`: The name of the linked glyph (i.e., the glyph the component is pointing to).
             * transform `string`: An affine transformation matrix, format: `{m11, m12, m21, m22, tX, tY}`.
-        * associatedMasterId `string`: ID of the master the layer is linked to. Not present if it equals layerID, i.e. if the layer is in use as master.
-        * background `dict`: Contains the same children as the layer itself, except for background, layerId and associatedMasterId. 
+        * guideLines `list`
+            * alignment `string`: If the guide is `right` or `center` aligned. Default: `left`
+            * angle `float`: The angle. If not set defaults to 0°
+            * locked `int`: is always `1`, otherwise the field is not there
+            * showMeasurement `int`: is always `1`, otherwise the field is not there
+            * position `string`: format `{X, Y}`
         * hints `list`
             * horizontal `int`: If set, the hint is horizontal and vertical otherwise
             * type `string`: The type of the hint. Possible value are: TTStem, TopGhost, BottomGhost, Anchor, Align, Interpolate, Diagonal, Tag, Corner, Cap
@@ -72,11 +78,15 @@ The XML file contains a dictionary with the following structure. The elements wi
         * layerId `string`
         * leftMetricsKey `string`
         * rightMetricsKey `string`
-        * name `string`: The name of the layer. Must be unique per glyph, and set to the master name if it is the master layer.
+        * widthMetricsKey `string`
+        * name `string`: The name of the layer. Only stored for none master layers (this is changed in 2.3, before the master names where stored)
         * path `list`
             * closed `bool`: Always set to `1`. If not set, the key is not present at all.
             * nodes `list`: One entry per node. Format: `X Y TYPE [SMOOTH]`, where X and Y are the coordinates as float, and TYPE is either `LINE`, `CURVE` or `OFFCURVE`. After `LINE` and `CURVE`, you can additionally add a `SMOOTH`.
+        * userDate `dict`: A dict with user defined structure
+        * vertWidth `float`: Only stored if other than the default (ascender+descender)
         * width `float`
+        * visible `int`: Always set to `1`. If not set, the key is not present at all.
     * leftKerningGroup `string`
     * leftMetricsKey `string`
     * rightKerningGroup `string`
