@@ -41,6 +41,10 @@ The XML file contains a dictionary with the following structure. The elements wi
     * xHeight `int`
 * glyphs `list`
     * glyphname `string`: Must be unique throughout the font.
+    * production `string`: manually set production name (new in v2.2)
+    * script `string`: manually set script (new in v2.2)
+    * category `string`: manually set category (new in v2.2)
+    * subcategory `string`: manually set subcategory (new in v2.2)
     * lastChange `string`: Format `2014-01-29 14:14:38 +0000`.
     * layers `list`
         * anchors `list`
