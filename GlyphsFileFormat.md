@@ -56,6 +56,19 @@ The XML file contains a dictionary with the following structure. The elements wi
             * transform `string`: An affine transformation matrix, format: `{m11, m12, m21, m22, tX, tY}`.
         * associatedMasterId `string`: ID of the master the layer is linked to. Not present if it equals layerID, i.e. if the layer is in use as master.
         * background `dict`: Contains the same children as the layer itself, except for background, layerId and associatedMasterId. 
+        * hints `list`
+            * horizontal `int`: If set, the hint is horizontal and vertical otherwise
+            * type `string`: The type of the hint. Possible value are: TTStem, TopGhost, BottomGhost, Anchor, Align, Interpolate, Diagonal, Tag, Corner, Cap
+                If there is no type, it defaults to Stem, of Ghost if `target` is set
+            * origin `string`: '{pathIndex, nodeIndex}'
+                
+                TODO: Explain node indexes
+            * target `string`: `{pathIndex, nodeIndex}`, `up` or `down`
+            * other1 `string`: `{pathIndex, nodeIndex}` for TT Institutions that need more than two nodes (Interpolation, Diagonal)
+            * other2 `string`: `{pathIndex, nodeIndex}` for TT Institutions that need more than three nodes (Diagonal)
+            * scale `string`: `{scaleX, scaleY}` Only used for caps and corners
+            * stem `int`: if a stem is manually set
+            * options `int`: a bitfield for options
         * layerId `string`
         * leftMetricsKey `string`
         * rightMetricsKey `string`
