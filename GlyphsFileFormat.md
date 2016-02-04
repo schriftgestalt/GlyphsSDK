@@ -1,5 +1,10 @@
-# Glyphs File Format, Version 1
+# Glyphs File Format, Version 2
 Glyphs stores data using the Apple property list (plist) format. It saves its files in plaintext format, because it saves a lot of space, but the XML-based flavour is also supported. So, the files can be viewed and edited with any text editor. Open an existing `.glyphs` file to see how it works.
+
+## Changes:
+### 4. Feb. 2016:
+- added hints
+- updated and added a few field in layers
 
 ## Top Level Elements
 The XML file contains a dictionary with the following structure. The elements with child elements are usually a `list` of `dict` elements.
