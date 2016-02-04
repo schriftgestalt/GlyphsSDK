@@ -234,6 +234,35 @@ GSApplication.fonts = property(lambda self: AppFontProxy(self))
 		
 '''
 
+GSApplication.reporters = property(lambda self: self.delegate().reporterInstances().allValues())
+
+'''.. attribute:: reporters
+	TODO: Add documentation and examples
+	
+	.. code-block:: python
+		print Glyphs.reporters
+		Glyphs.activateReporter(Glyphs.reporters[1])
+'''
+
+def __GSApplication_activateReporter__(self, Reporter):
+	self.delegate().activateReporter_(Reporter)
+
+GSApplication.activateReporter = __GSApplication_activateReporter__
+
+'''.. attribute:: activateReporter
+	TODO: Add documentation and examples
+'''
+
+def __GSApplication_deactivateReporter__(self, Reporter):
+	self.delegate().deactivateReporter_(Reporter)
+
+GSApplication.deactivateReporter = __GSApplication_deactivateReporter__
+
+'''.. attribute:: deactivateReporter
+	TODO: Add documentation and examples
+'''
+
+
 class DefaultsProxy(Proxy):
 	def __getitem__(self, Key):
 		return NSUserDefaults.standardUserDefaults().objectForKey_(Key)
