@@ -34,12 +34,12 @@ def setUpMenuHelper(Menu, Items, defaultTarget):
 	if type(Items) == list:
 		print "setUpMenuHelper 2"
 		for entry in Items:
-
+			
 			if "view" in entry and not "name" in entry:
 				entry["name"] = ""
 			if "view" in entry and not "action" in entry:
 				entry["action"] = None
-
+			
 			newMenuItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_(entry["name"], entry["action"], "")
 			if "target" in entry:
 				newMenuItem.setTarget_(entry["target"])
@@ -95,17 +95,17 @@ class FileFormatPlugin (NSObject, GlyphsFileFormatProtocol):
 			# where .dialog is not defined at the class’s root.
 			if not hasattr(self, 'dialog'):
 				self.dialog = None
-
+			
 			thisBundle = NSBundle.bundleForClass_(NSClassFromString(self.className()))
 			self.toolbarIcon = NSImage.alloc().initWithContentsOfFile_(thisBundle.pathForImageResource_(self.icon))
 			self.toolbarIcon.setName_(self.icon)
 			
 			if hasattr(self, 'start'):
 				self.start()
-			
+		
 		except:
 			self.logError(traceback.format_exc())
-
+		
 		return self
 	
 	def interfaceVersion(self):
@@ -191,10 +191,10 @@ class FileFormatPlugin (NSObject, GlyphsFileFormatProtocol):
 	def writeFont_error_(self, font, error):
 		"""
 		EXPORT dialog
-
+		
 		This method is called when the Next button is pressed in the Export dialog,
 		and should ask the user for the place to store the font (not necessarily, you could choose to hard-wire the destination in the code).
-
+		
 		Parameters:
 		- font: The font object to export
 		- error: PyObjc-Requirement. It is required here in order to return the error object upon export failure. Ignore its existence here.
@@ -255,7 +255,7 @@ class FileFormatPlugin (NSObject, GlyphsFileFormatProtocol):
 		
 		This method is called when the save dialog is invoked by the user.
 		You don't have to create a file dialog.
-
+		
 		Parameters:
 		- font: the font object to save
 		- URL: the URL (file path) to save the font to
@@ -263,7 +263,7 @@ class FileFormatPlugin (NSObject, GlyphsFileFormatProtocol):
 		"""
 		try:
 			self.writeCSVFile(font, filepath)
-
+			
 			return (True, None)
 		except:
 			self.logError(traceback.format_exc())
@@ -278,7 +278,8 @@ class FileFormatPlugin (NSObject, GlyphsFileFormatProtocol):
 #
 #
 ########################################################################
-	
+
+
 	def fontFromURL_ofType_error_(self, URL, fonttype, error):
 		"""
 		Reads a Font object from the specified URL.
@@ -319,50 +320,44 @@ class FilterWithDialog (GSFilterPlugin):
 	Replace and add your own class variables.
 	"""
 	
-	
-	
 	def init(self):
 		"""
 		Do all initializing here.
 		This is a good place to call random.seed() if you want to use randomisation.
 		In that case, don't forget to import random at the top of this file.
 		"""
-
+		
 		try:
 			self.menuName = 'My Filter'
 			self.keyboardShortcut = None # With Cmd+Shift
 			self.actionButtonLabel = 'Apply'
-	
-	
+			
 			if hasattr(self, 'settings'):
 				self.settings()
-
+			
 			# Dialog stuff
 			# Initiate emtpy self.dialog here in case of Vanilla dialog,
 			# where .dialog is not defined at the class’s root.
 			if not hasattr(self, 'dialog'):
 				self.dialog = None
-
+			
 			return self
-
+		
 		except:
 			self.logError(traceback.format_exc())
-	
 	
 	def setup(self):
 		try:
 			objc.super(FilterWithDialog, self).setup()
-
+			
 			if hasattr(self, 'start'):
 				self.start()
-
+			
 			self.process_(None)
-
+			
 			return None
 		except:
 			self.logError(traceback.format_exc())
-			
-		
 	
 	def interfaceVersion(self):
 		"""
@@ -405,8 +400,6 @@ class FilterWithDialog (GSFilterPlugin):
 		except:
 			self.logError(traceback.format_exc())
 	
-
-
 	def processFont_withArguments_(self, Font, Arguments):
 		"""
 		Invoked when called as Custom Parameter in an instance at export.
@@ -417,7 +410,7 @@ class FilterWithDialog (GSFilterPlugin):
 			
 			# set glyphList (list of glyphs to be processed) to all glyphs in the font
 			glyphList = Font.glyphs
-
+			
 			# customParameters delivered to filter()
 			customParameters = {}
 			unnamedCustomParameterCount = 0
@@ -452,10 +445,10 @@ class FilterWithDialog (GSFilterPlugin):
 			FontMasterId = Font.fontMasterAtIndex_(0).id
 			for thisGlyph in glyphList:
 				Layer = thisGlyph.layerForKey_(FontMasterId)
-
+				
 				if hasattr(self, 'filter'):
 					self.filter(Layer, False, customParameters)
-
+		
 		except:
 			
 			# Custom Parameter
@@ -498,10 +491,10 @@ class FilterWithDialog (GSFilterPlugin):
 								currShadowNode = currShadowPath.nodes[j]
 								if currShadowNode in ShadowLayer.selection:
 									Layer.addSelection_(currLayerPath.nodes[j])
-								
+				
 				self.filter(Layer, Glyphs.font.currentTab != None, {}) # add your class variables here
 				Layer.clearSelection()
-		
+			
 			# Safe the values in the FontMaster. But could be saved in UserDefaults, too.
 			# FontMaster = self.valueForKey_("fontMaster")
 			# FontMaster.userData[ "____myValue____" ] = NSNumber.numberWithInteger_(self.____myValue____)
@@ -511,14 +504,13 @@ class FilterWithDialog (GSFilterPlugin):
 		except:
 			self.logError(traceback.format_exc())
 	
-	
 	def view(self):
 		return self.dialog
 	
 	def update(self):
 		self.process_(None)
 		Glyphs.redraw()
-
+	
 	def customParameterString(self):
 		try:
 			if hasattr(self, 'generateCustomParameter'):
@@ -552,13 +544,13 @@ class FilterWithoutDialog (NSObject, GlyphsFilterWithoutDialogProtocol):
 		try:
 			self.menuName = 'My Filter'
 			self.keyboardShortcut = None
-
+			
 			if hasattr(self, 'settings'):
 				self.settings()
-
+			
 			if hasattr(self, 'start'):
 				self.start()
-
+			
 			return self
 		except:
 			self.logError(traceback.format_exc())
@@ -600,7 +592,7 @@ class FilterWithoutDialog (NSObject, GlyphsFilterWithoutDialogProtocol):
 			return self._controller
 		except:
 			self.logError(traceback.format_exc())
-		
+	
 	def setup(self):
 		"""
 		Do not touch this.
@@ -671,7 +663,7 @@ class FilterWithoutDialog (NSObject, GlyphsFilterWithoutDialogProtocol):
 			return self.runFilterWithLayer_error_(self, Layer, Error)
 		except:
 			self.logError(traceback.format_exc())
-			
+	
 	def runFilterWithLayer_error_(self, Layer, Error):
 		"""
 		Invoked when user triggers the filter through the Filter menu
@@ -702,7 +694,7 @@ class FilterWithoutDialog (NSObject, GlyphsFilterWithoutDialogProtocol):
 			unnamedCustomParameterCount = 0
 			for i in range(1, len(Arguments)):
 				if not 'include' in Arguments[i] and not 'exclude' in Arguments[i]:
-
+					
 					# if key:value pair
 					if ':' in Arguments[i]:
 						key, value = Arguments[i].split(':')
@@ -719,7 +711,6 @@ class FilterWithoutDialog (NSObject, GlyphsFilterWithoutDialogProtocol):
 						customParameters[key] = value
 			
 			
-			
 			# change glyphList to include or exclude glyphs
 			if len(Arguments) > 1:
 				if "exclude:" in Arguments[-1]:
@@ -732,11 +723,11 @@ class FilterWithoutDialog (NSObject, GlyphsFilterWithoutDialogProtocol):
 			FontMasterId = Font.fontMasterAtIndex_(0).id
 			for thisGlyph in glyphList:
 				Layer = thisGlyph.layerForKey_(FontMasterId)
-
+				
 				if hasattr(self, 'filter'):
 					self.filter(Layer, False, customParameters)
 		except:
-
+			
 			# Custom Parameter
 			if len(Arguments) > 1:
 				Message('Error in %s' % self.menuName, "There was an error in %s's filter() method when called through a Custom Parameter upon font export. Check your Macro window output." % self.menuName)
@@ -774,16 +765,16 @@ class GeneralPlugin (NSObject, GlyphsGeneralPluginProtocol):
 	def loadPlugin(self):
 		try:
 			self.name = 'My General Plugin'
-
+			
 			if hasattr(self, 'settings'):
 				self.settings()
-
+			
 			if hasattr(self, 'start'):
 				self.start()
 			return None
 		except:
 			self.logError(traceback.format_exc())
-
+	
 	def title(self):
 		"""
 		This is the name as it appears in the menu in combination with 'Show'.
@@ -823,19 +814,19 @@ class PalettePlugin (NSObject, GlyphsPaletteProtocol):
 		try:
 		# if True:
 			self.name = 'My Palette'
-
+			
 			# Call settings
 			if hasattr(self, 'settings'):
 				self.settings()
-
+			
 			# Dialog stuff
 			# Initiate emtpy self.dialog here in case of Vanilla dialog,
 			# where .dialog is not defined at the class’s root.
 			if not hasattr(self, 'dialog'):
 				self.dialog = None
-		
+			
 			Frame = self.theView().frame()
-
+			
 			# Set minimum and maximum height to height of Frame
 			self.min = Frame.size.height
 			self.max = Frame.size.height
@@ -843,12 +834,10 @@ class PalettePlugin (NSObject, GlyphsPaletteProtocol):
 #			if NSUserDefaults.standardUserDefaults().objectForKey_(self.dialogName + ".ViewHeight"):
 #				Frame.size.height = NSUserDefaults.standardUserDefaults().integerForKey_(self.dialogName + ".ViewHeight")
 #				self.theView().setFrame_(Frame)
-
+			
 			if hasattr(self, 'start'):
 				self.start()
-
-
-		
+			
 			return self
 		except:
 			self.logError(traceback.format_exc())
@@ -1068,12 +1057,8 @@ class ReporterPlugin (NSObject, GlyphsReporterProtocol):
 		try:
 			if hasattr(self, 'foreground'):
 				self.foreground(Layer)
-			
-#			objc.super(ReporterPlugin, self).drawForegroundForLayer_(Layer)
-
 		except:
 			self.logError(traceback.format_exc())
-
 	
 	def drawBackgroundForLayer_(self, Layer):
 		"""
@@ -1082,11 +1067,9 @@ class ReporterPlugin (NSObject, GlyphsReporterProtocol):
 		try:
 			if hasattr(self, 'background'):
 				self.background(Layer)
-
-#			objc.super(ReporterPlugin, self).drawBackgroundForLayer_(Layer)
 		except:
 			self.logError(traceback.format_exc())
-		
+	
 	
 	def drawBackgroundForInactiveLayer_options_(self, Layer, options):
 		"""
@@ -1098,26 +1081,23 @@ class ReporterPlugin (NSObject, GlyphsReporterProtocol):
 		because otherwise Glyphs will draw the main outline on top of it, and
 		potentially cover up your background drawing.
 		"""
-
+		
 		try:
 			assert Glyphs
-
+			
 			if self.controller:
 				if hasattr(self, 'inactiveLayers'):
 					self.inactiveLayers(Layer)
-				
-
+			
 			else:
 				if hasattr(self, 'preview'):
 					self.preview(Layer)
 				elif hasattr(self, 'inactiveLayers'):
 					self.inactiveLayers(Layer)
-
-#			objc.super(ReporterPlugin, self).drawBackgroundForInactiveLayer_(Layer)
-
+		
 		except:
 			self.logError(traceback.format_exc())
-		
+	
 	def needsExtraMainOutlineDrawingForInactiveLayer_(self, Layer):
 		"""
 		Decides whether inactive glyphs in Edit View and glyphs in Preview should be drawn
@@ -1132,7 +1112,6 @@ class ReporterPlugin (NSObject, GlyphsReporterProtocol):
 		except:
 			self.logError(traceback.format_exc())
 	
-		
 	def addMenuItemsForEvent_toMenu_(self, event, contextMenu):
 		'''
 		The event can tell you where the user had clicked.
@@ -1146,7 +1125,7 @@ class ReporterPlugin (NSObject, GlyphsReporterProtocol):
 				contextMenus = self.conditionalContextMenus()
 				if contextMenus:
 					setUpMenuHelper(contextMenu, contextMenus, self)
-
+		
 		except:
 			self.logError(traceback.format_exc())
 	
@@ -1155,7 +1134,7 @@ class ReporterPlugin (NSObject, GlyphsReporterProtocol):
 		Use self.drawTextAtPoint("blabla", myNSPoint) to display left-aligned text at myNSPoint.
 		"""
 		try:
-
+			
 			alignment = {
 				'topleft': 6, 
 				'topcenter': 7, 
@@ -1167,8 +1146,7 @@ class ReporterPlugin (NSObject, GlyphsReporterProtocol):
 				'bottomcenter': 1, 
 				'bottomright': 2
 				}
-
-
+			
 			glyphEditView = self.controller.graphicView()
 			currentZoom = self.getScale()
 			fontAttributes = { 
@@ -1197,7 +1175,7 @@ class ReporterPlugin (NSObject, GlyphsReporterProtocol):
 		except:
 			self.logError(traceback.format_exc())
 			return 7.0
-
+	
 	def getScale(self):
 		"""
 		self.getScale() returns the current scale factor of the Edit View UI.
@@ -1252,7 +1230,7 @@ class SelectTool (GSToolSelect):
 			# where inspectorDialogView is not defined at the class’s root.
 			if not hasattr(self, 'inspectorDialogView'):
 				self.inspectorDialogView = None
-
+			
 			if hasattr(self, 'settings'):
 				self.settings()
 			
@@ -1260,33 +1238,32 @@ class SelectTool (GSToolSelect):
 			BundlePath = Bundle.pathForResource_ofType_(os.path.splitext(self._icon)[0], os.path.splitext(self._icon)[1]) # Set this to the filename and type of your icon.
 			self.tool_bar_image = NSImage.alloc().initWithContentsOfFile_(BundlePath)
 			self.tool_bar_image.setTemplate_(True) # Makes the icon blend in with the toolbar.
-
+			
 			if hasattr(self, 'start'):
 				self.start()
-
+			
 			return self
 		except:
 			self.logError(traceback.format_exc())
 
 	def view(self):
 		return self.inspectorDialogView
-
+	
 	def inspectorViewControllers(self):
 		ViewControllers = objc.super(SelectTool, self).inspectorViewControllers()
 		if ViewControllers is None:
 			ViewControllers = []
 		try:
-			
 			# self.inspectorDialogView may also be defined witut a .nib,
 			# so it could be a Vanilla dialog
 			if self.inspectorDialogView:
 				ViewControllers.append(self)
-			
+		
 		except:
 			self.logError(traceback.format_exc())
-
-		return ViewControllers
 		
+		return ViewControllers
+	
 	def interfaceVersion(self):
 		"""
 		Distinguishes the API version the plugin was built for. 
@@ -1296,7 +1273,7 @@ class SelectTool (GSToolSelect):
 			return 1
 		except:
 			self.logError(traceback.format_exc())
-
+	
 	def title(self):
 		"""
 		The name of the Tool as it appears in the tooltip.
@@ -1305,7 +1282,7 @@ class SelectTool (GSToolSelect):
 			return self.name
 		except:
 			self.logError(traceback.format_exc())
-		
+	
 	def toolBarIcon(self):
 		"""
 		Return a instance of NSImage that represents the toolbar icon as established in init().
@@ -1315,7 +1292,7 @@ class SelectTool (GSToolSelect):
 			return self.tool_bar_image
 		except:
 			self.logError(traceback.format_exc())
-		
+	
 	def groupID(self):
 		"""
 		Determines the position in the toolbar.
@@ -1325,7 +1302,7 @@ class SelectTool (GSToolSelect):
 			return self.toolbarPosition
 		except:
 			self.logError(traceback.format_exc())
-		
+	
  	def trigger(self):
 		"""
 		The key to select the tool with keyboard (like v for the select tool).
@@ -1335,7 +1312,7 @@ class SelectTool (GSToolSelect):
 			return self.keyboardShortcut
 		except:
 			self.logError(traceback.format_exc())
-		
+	
 	def willSelectTempTool_(self, TempTool):
 		"""
 		Temporary Tool when user presses Cmd key.
@@ -1345,7 +1322,7 @@ class SelectTool (GSToolSelect):
 			return TempTool.__class__.__name__ != "GlyphsToolSelect"
 		except:
 			self.logError(traceback.format_exc())
-		
+	
 	def willActivate(self):
 		"""
 		Do stuff when the tool is selected.
@@ -1357,7 +1334,7 @@ class SelectTool (GSToolSelect):
 				self.activate()
 		except:
 			self.logError(traceback.format_exc())
-		
+	
 	def willDeactivate(self):
 		"""
 		Do stuff when the tool is deselected.
@@ -1368,7 +1345,7 @@ class SelectTool (GSToolSelect):
 				self.deactivate()
 		except:
 			self.logError(traceback.format_exc())
-		
+	
 	def elementAtPoint_atLayer_(self, currentPoint, activeLayer):
 		"""
 		Return an element in the vicinity of currentPoint (NSPoint), and it will be captured by the tool.
@@ -1380,20 +1357,20 @@ class SelectTool (GSToolSelect):
 		
 		"""
 		return objc.super(SelectTool, self).elementAtPoint_atLayer_(currentPoint, activeLayer)
-
+		
 		try:
 			Scale = self.editViewController().graphicView().scale()
 			clickTolerance = 4.0
-
+			
 			for p in activeLayer.paths:
 				for n in p.nodes:
 					if distance(currentPoint, n.position) < clickTolerance / Scale:
 						return n
-
+			
 			for a in activeLayer.anchors:
 				if distance(currentPoint, a.position) < clickTolerance / Scale:
 					return a
-			
+		
 		except:
 			self.logError(traceback.format_exc())
 	
@@ -1422,7 +1399,7 @@ class SelectTool (GSToolSelect):
 			return theMenu
 		except:
 			self.logError(traceback.format_exc())
-			
+	
 	def addMenuItemsForEvent_toMenu_(self, theEvent, theMenu):
 		"""
 		Adds menu items to default context menu.
@@ -1439,10 +1416,10 @@ class SelectTool (GSToolSelect):
 					
 					newSeparator = NSMenuItem.separatorItem()
 					theMenu.insertItem_atIndex_(newSeparator, 1)
-					
+		
 		except:
 			self.logError(traceback.format_exc())
-
+	
 	def drawForegroundForLayer_(self, Layer):
 		"""
 		Whatever you draw here will be displayed IN FRONT OF the paths.
@@ -1467,11 +1444,8 @@ class SelectTool (GSToolSelect):
 		try:
 			if hasattr(self, 'foreground'):
 				self.foreground(Layer)
-
-#			objc.super(SelectTool, self).drawForegroundForLayer_(Layer)
 		except:
 			self.logError(traceback.format_exc())
-
 	
 	def drawBackgroundForLayer_(self, Layer):
 		"""
@@ -1480,8 +1454,6 @@ class SelectTool (GSToolSelect):
 		try:
 			if hasattr(self, 'background'):
 				self.background(Layer)
-
-#			objc.super(SelectTool, self).drawBackgroundForLayer_(Layer)
 		except:
 			self.logError(traceback.format_exc())
 
