@@ -1060,6 +1060,16 @@ class ReporterPlugin (NSObject, GlyphsReporterProtocol):
 		except:
 			self.logError(traceback.format_exc())
 	
+	def drawForegroundWithOptions_(self, options):
+		"""
+		Whatever you draw here will be displayed IN FRONT OF the paths. The difference to drawForegroundForLayer_options_() is that you need to deal with the scaling and current layer yourself.
+		"""
+		try:
+			if hasattr(self, 'foregroundFlat'):
+				self.foregroundFlat(options)
+		except:
+			self.logError(traceback.format_exc())
+	
 	def drawBackgroundForLayer_(self, Layer):
 		"""
 		Whatever you draw here will be displayed BEHIND the paths.
@@ -1070,6 +1080,15 @@ class ReporterPlugin (NSObject, GlyphsReporterProtocol):
 		except:
 			self.logError(traceback.format_exc())
 	
+	def drawBackgroundWithOptions_(self, options):
+		"""
+		Whatever you draw here will be displayed BEHIND the paths. The difference to drawBackgroundForLayer_options_() is that you need to deal with the scaling and current layer yourself.
+		"""
+		try:
+			if hasattr(self, 'backgroundFlat'):
+				self.backgroundFlat(options)
+		except:
+			self.logError(traceback.format_exc())
 	
 	def drawBackgroundForInactiveLayer_options_(self, Layer, options):
 		"""
