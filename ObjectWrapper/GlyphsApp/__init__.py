@@ -141,6 +141,7 @@ Properties
 
 	font
 	fonts
+	reporters
 	defaults
 	scriptAbbrevations
 	scriptSuffixes
@@ -173,7 +174,8 @@ Functions
 	redraw()
 	showNotification()
 	localize()
-	
+	activateReporter()
+	deactivateReporter()
 	
 ----------
 Properties
@@ -237,29 +239,25 @@ GSApplication.fonts = property(lambda self: AppFontProxy(self))
 GSApplication.reporters = property(lambda self: self.delegate().reporterInstances().allValues())
 
 '''.. attribute:: reporters
-	TODO: Add documentation and examples
+	
+	.. versionadded:: 2.3
+
+	List of reporter plug-ins currently available (same as bottom section in the 'View' menu). These are the actual objects. You can get hold of their names using `object.__class__.__name__`.
+	
+	Also see :class:`GSApplication`.activateReporter() and :class:`GSApplication`.deactivateReporter() methods below to activate/deactivate them.
 	
 	.. code-block:: python
+
+		# List of all reporter plug-ins
 		print Glyphs.reporters
-		Glyphs.activateReporter(Glyphs.reporters[1])
-'''
 
-def __GSApplication_activateReporter__(self, Reporter):
-	self.delegate().activateReporter_(Reporter)
+		# Individual plug-in class names
+		for reporter in Glyphs.reporters:
+			print reporter.__class__.__name__
 
-GSApplication.activateReporter = __GSApplication_activateReporter__
-
-'''.. attribute:: activateReporter
-	TODO: Add documentation and examples
-'''
-
-def __GSApplication_deactivateReporter__(self, Reporter):
-	self.delegate().deactivateReporter_(Reporter)
-
-GSApplication.deactivateReporter = __GSApplication_deactivateReporter__
-
-'''.. attribute:: deactivateReporter
-	TODO: Add documentation and examples
+		# Activate a plugin
+		Glyphs.activateReporter(Glyphs.reporters[0]) # by object
+		Glyphs.activateReporter('GlyphsMasterCompatibility') # by class name
 '''
 
 
@@ -804,6 +802,52 @@ GSApplication.localize = Glyphs_localize;
 	'''
 
 
+def __GSApplication_activateReporter__(self, Reporter):
+	
+	if type(Reporter) == str:
+		for r in self.reporters:
+			if r.__class__.__name__ == Reporter:
+				Reporter = r
+				break
+		
+	self.delegate().activateReporter_(Reporter)
+
+GSApplication.activateReporter = __GSApplication_activateReporter__
+
+'''.. function:: activateReporter(reporter)
+	
+	.. versionadded:: 2.3
+
+	Activate a reporter plug-in by its object (see Glyphs.reporters) or class name.
+
+	.. code-block:: python
+	
+		Glyphs.activateReporter('GlyphsMasterCompatibility')
+
+'''
+
+def __GSApplication_deactivateReporter__(self, Reporter):
+
+	if type(Reporter) == str:
+		for r in self.reporters:
+			if r.__class__.__name__ == Reporter:
+				Reporter = r
+				break
+
+	self.delegate().deactivateReporter_(Reporter)
+
+GSApplication.deactivateReporter = __GSApplication_deactivateReporter__
+
+'''.. function:: deactivateReporter(reporter)
+
+	.. versionadded:: 2.3
+
+	Deactivate a reporter plug-in by its object (see Glyphs.reporters) or class name.
+
+	.. code-block:: python
+	
+		Glyphs.deactivateReporter('GlyphsMasterCompatibility')
+'''
 
 
 
