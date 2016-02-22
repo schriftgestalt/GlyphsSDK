@@ -7,7 +7,7 @@ import time, math, sys, os, string, re, traceback
 from sets import Set
 
 
-__all__ = ["Glyphs", "GetFile", "GSMOVE", "GSLINE", "GSCURVE", "GSOFFCURVE", "GSSHARP", "GSSMOOTH", "TAG", "TOPGHOST", "STEM", "BOTTOMGHOST", "TTANCHOR", "TTSTEM", "TTALIGN", "TTINTERPOLATE", "TTDIAGONAL", "CORNER", "CAP", "TTDONTROUND", "TTROUND", "TTROUNDUP", "TTROUNDDOWN", "TRIPLE", "DRAWFOREGROUND", "DRAWBACKGROUND", "DRAWINACTIVE", "DOCUMENTWASSAVED", "TEXT", "ARROW", "CIRCLE", "PLUS", "MINUS", "divideCurve", "distance", "addPoints", "subtractPoints", "GetFolder", "GetSaveFile", "GetOpenFile", "Message", "LogToConsole", "LogError", "removeOverlap", "subtractPaths", "intersectPaths", "wrapperVersion", "LTR", "RTL", "LTRTTB", "RTLTTB"]
+__all__ = ["Glyphs", "GetFile", "GSMOVE", "GSLINE", "GSCURVE", "GSOFFCURVE", "GSSHARP", "GSSMOOTH", "TAG", "TOPGHOST", "STEM", "BOTTOMGHOST", "TTANCHOR", "TTSTEM", "TTALIGN", "TTINTERPOLATE", "TTDIAGONAL", "CORNER", "CAP", "TTDONTROUND", "TTROUND", "TTROUNDUP", "TTROUNDDOWN", "TRIPLE", "DRAWFOREGROUND", "DRAWBACKGROUND", "DRAWINACTIVE", "DOCUMENTWASSAVED", "TEXT", "ARROW", "CIRCLE", "PLUS", "MINUS", "divideCurve", "distance", "addPoints", "subtractPoints", "GetFolder", "GetSaveFile", "GetOpenFile", "Message", "LogToConsole", "LogError", "removeOverlap", "subtractPaths", "intersectPaths", "wrapperVersion", "LTR", "RTL", "LTRTTB", "RTLTTB", "GSTopLeft", "GSTopCenter", "GSTopRight", "GSCenterLeft", "GSCenterCenter", "GSCenterRight", "GSBottomLeft", "GSBottomCenter", "GSBottomRight"]
 
 
 wrapperVersion = "2.3a"
@@ -241,6 +241,25 @@ GSApplication.reporters = property(lambda self: self.delegate().reporterInstance
 '''.. attribute:: reporters
 	
 	.. versionadded:: 2.3
+	.. code-block:: python
+		print Glyphs.reporters
+		Glyphs.activateReporter(Glyphs.reporters[1])
+'''
+
+GSApplication.activeReporters = property(lambda self: self.delegate().activeReporters())
+
+'''.. attribute:: activeReporters
+	TODO: Add documentation and examples
+	
+	.. code-block:: python
+		print Glyphs.reporters
+		Glyphs.activateReporter(Glyphs.reporters[1])
+'''
+
+def __GSApplication_activateReporter__(self, Reporter):
+	self.delegate().activateReporter_(Reporter)
+
+GSApplication.activateReporter = __GSApplication_activateReporter__
 
 	List of reporter plug-ins currently available (same as bottom section in the 'View' menu). These are the actual objects. You can get hold of their names using `object.__class__.__name__`.
 	
@@ -912,6 +931,16 @@ hintConstants = {
 	17: 'Cap',
 }
 
+
+GSTopLeft = 6
+GSTopCenter = 7
+GSTopRight = 8
+GSCenterLeft = 3
+GSCenterCenter = 4
+GSCenterRight = 5
+GSBottomLeft = 0
+GSBottomCenter = 1
+GSBottomRight = 2
 
 
 GSElement.x = property(lambda self: self.pyobjc_instanceMethods.position().x,
@@ -3521,7 +3550,7 @@ GSGlyph.storeProductionName = property(lambda self: self.valueForKey_("storeScri
 '''
 
 
-GSGlyph.glyphInfo = property(lambda self: GSGlyphsInfo.glyphInfoForGlyph_(self))
+GSGlyph.glyphInfo = property(lambda self: self.parent.glyphsInfo().glyphInfoForGlyph_(self))
 '''.. attribute:: glyphInfo
 	:class:`GSGlyphInfo` object for this glyph with detailed information.
 	:type: :class:`GSGlyphInfo`
@@ -4818,6 +4847,49 @@ GSComponent.position = property(	lambda self: self.valueForKey_("position").poin
 '''.. attribute:: position
 	The Position of the component.
 	:type: NSPoint'''
+	
+def GSComponent_getScale(self):
+	(x, y, r) = self.getScaleX_scaleY_rotation_(None, None, None)
+	return (x, y)
+
+def GSComponent_setScale(self, scale):
+	(x, y, r) = self.getScaleX_scaleY_rotation_(None, None, None)
+	if type(scale) == tuple:
+		self.setScaleX_scaleY_rotation_(scale[0], scale[1], r)
+	elif type(scale) == int or type(scale) == float:
+		self.setScaleX_scaleY_rotation_(scale, scale, r)
+
+GSComponent.scale = property(		lambda self: GSComponent_getScale(self),
+									lambda self, value: GSComponent_setScale(self, value))
+
+'''.. attribute:: scale
+	
+	Scale factor of image.
+	
+	A scale factor of 1.0 (100%) means that 1 em unit equals 1 of the image's pixels.
+	
+	This sets the scale factor for x and y scale simultaneously. For separate scale factors, please use the transformation matrix.
+	
+	:type: float or tuple
+'''
+
+def GSComponent_getRotation(self):
+	(x, y, rotation) = self.getScaleX_scaleY_rotation_(None, None, None)
+	return rotation
+
+def GSComponent_setRotation(self, rotation):
+	(x, y, r) = self.getScaleX_scaleY_rotation_(None, None, None)
+	self.setScaleX_scaleY_rotation_(x, y, rotation)
+
+GSComponent.rotation = property(	lambda self: GSComponent_getRotation(self),
+									lambda self, value: GSComponent_setRotation(self, value))
+
+'''.. attribute:: rotation
+	
+	Rotation angle of component.
+	
+	:type: float
+'''
 
 GSComponent.componentName = property(lambda self: self.valueForKey_("componentName"),
 									lambda self, value: self.setComponentName_(value))
@@ -5332,11 +5404,17 @@ def Node__new__(typ, *args, **kwargs):
 	return GSNode.alloc().init()
 GSNode.__new__ = Node__new__;
 
-def Node__init__(self, pt = None, type = None):
+def Node__init__(self, pt = None, x = None, y = None, type = None, name = None, pointType = None):
+	if type is None and pointType is not None:
+		type = pointType
 	if pt:
 		self.setPosition_(pt)
+	elif x is not None and y is not None:
+		self.setPosition_((x, y))
 	if type:
-		self.setType_(type)
+		self.type = type
+	if name:
+		self.name = name
 GSNode.__init__ = Node__init__;
 
 def Node__repr__(self):
@@ -6006,12 +6084,18 @@ GSBackgroundImage.position = property(		lambda self: BackgroundImage_getPosition
 '''
 
 def BackgroundImage_getScale(self):
-	return self.transform[0]
+	(x, y, r) = self.getScaleX_scaleY_rotation_(None, None, None)
+	return (x, y)
+
 def BackgroundImage_setScale(self, scale):
-	self.transform = (float(scale), self.transform[1], self.transform[2], float(scale), self.transform[4], self.transform[5])
+	(x, y, r) = self.getScaleX_scaleY_rotation_(None, None, None)
+	if type(scale) == tuple:
+		self.setScaleX_scaleY_rotation_(scale[0], scale[1], r)
+	elif type(scale) == int or type(scale) == float:
+		self.setScaleX_scaleY_rotation_(scale, scale, r)
 
 GSBackgroundImage.scale = property(		lambda self: BackgroundImage_getScale(self),
-						 		lambda self, value: BackgroundImage_setScale(self, value))
+										lambda self, value: BackgroundImage_setScale(self, value))
 
 '''.. attribute:: scale
 	
@@ -6019,14 +6103,31 @@ GSBackgroundImage.scale = property(		lambda self: BackgroundImage_getScale(self)
 	
 	A scale factor of 1.0 (100%) means that 1 em unit equals 1 of the image's pixels.
 	
-	This sets the scale factor for x and y scale simultaneously. For separate scale factors, please use the transormation matrix.
+	This sets the scale factor for x and y scale simultaneously. For separate scale factors, please use the transformation matrix.
+	
+	:type: float or tuple
+'''
+
+def BackgroundImage_getRotation(self):
+	(x, y, rotation) = self.getScaleX_scaleY_rotation_(None, None, None)
+	return rotation
+
+def BackgroundImage_setRotation(self, rotation):
+	(x, y, r) = self.getScaleX_scaleY_rotation_(None, None, None)
+	self.setScaleX_scaleY_rotation_(x, y, rotation)
+
+GSBackgroundImage.rotation = property(	lambda self: BackgroundImage_getRotation(self),
+										lambda self, value: BackgroundImage_setRotation(self, value))
+
+'''.. attribute:: rotation
+	
+	Rotation angle of image.
 	
 	:type: float
 '''
 
-
-GSBackgroundImage.transform = property(		lambda self: self.pyobjc_instanceMethods.transformStruct(),
-						 		lambda self, value: self.setTransformStruct_(value))
+GSBackgroundImage.transform = property(	lambda self: self.pyobjc_instanceMethods.transformStruct(),
+										lambda self, value: self.setTransformStruct_(value))
 '''.. attribute:: transform
 	
 	Transformation matrix.
@@ -6645,6 +6746,18 @@ GSGlyphInfo.altNames = property(lambda self: self.pyobjc_instanceMethods.altName
 	:type: unicode
 
 '''
+
+def __GSPathPen_moveTo__(self, pt):
+	self.moveTo_(pt)
+GSPathPen.moveTo = __GSPathPen_moveTo__
+
+def __GSPathPen_lineTo__(self, pt):
+	self.lineTo_(pt)
+GSPathPen.lineTo = __GSPathPen_lineTo__
+
+def __GSPathPen_curveTo__(self, off1, off2, pt):
+	self.curveTo_off1_off2_(pt, off1, off2)
+GSPathPen.curveTo = __GSPathPen_curveTo__
 
 def __PathOperator_removeOverlap__(paths):
 	try:
