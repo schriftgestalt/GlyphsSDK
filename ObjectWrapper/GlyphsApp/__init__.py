@@ -3867,6 +3867,7 @@ Functions
 	clear()
 	swapForegroundWithBackground()
 	reinterpolate()
+	applyTransform()
 
 ----------
 Properties
@@ -4409,7 +4410,16 @@ GSLayer.addNodesAtExtremes = Layer_addNodesAtExtremes
 	Add nodes at layer's extrema, e.g. top, bottom etc.
 '''
 
+def __GSLayer_applyTransform__(self, transformStruct):
+	Transform = NSAffineTransform.transform()
+	Transform.setTransformStruct_(transformStruct)
+	self.transform_checkForSelection_doComponents_(Transform, False, True)
 
+GSLayer.applyTransform = __GSLayer_applyTransform__
+'''.. function:: applyTransform
+
+	TODO: add examples
+'''
 
 
 
@@ -4796,8 +4806,8 @@ Functions
 
 .. autosummary::
 	
-	decompose
-
+	decompose()
+	applyTransform()
 	
 ----------
 Properties
@@ -4905,6 +4915,24 @@ GSComponent.transform = property(	lambda self: self.transformStruct(),
 
 GSComponent.transformation = property(	lambda self: self.transformStruct(),
 									  lambda self, value: self.setTransformStruct_(value))
+
+def __CGSomponent_applyTransform__(self, transformStruct):
+	transform = self.transform
+	print "__transform", transform
+	oldTransform = NSAffineTransform.transform()
+	oldTransform.setTransformStruct_(transform)
+	newTransform = NSAffineTransform.transform()
+	newTransform.setTransformStruct_(transformStruct)
+	oldTransform.appendTransform_(newTransform)
+	self.setTransformStruct_(oldTransform.transformStruct())
+	
+GSComponent.applyTransform = __CGSomponent_applyTransform__
+
+'''.. function:: applyTransform
+
+	TODO: add examples
+'''
+
 
 GSComponent.bounds = property(		lambda self: self.pyobjc_instanceMethods.bounds() )
 '''.. attribute:: bounds
@@ -5151,7 +5179,8 @@ Functions
 	
 	reverse()
 	addNodesAtExtremes()
-
+	applyTransform()
+	
 ----------
 Properties
 ----------
@@ -5335,7 +5364,18 @@ GSPath.addNodesAtExtremes = Path_addNodesAtExtremes
 '''
 
 
+def __CGPath_applyTransform__(self, transformStruct):
+	Transform = NSAffineTransform.transform()
+	Transform.setTransformStruct_(transformStruct)
+	for node in self.nodes:
+		node.position = Transform.transformPoint_(node.positionPrecise())
+	
+GSPath.applyTransform = __CGPath_applyTransform__
 
+'''.. function:: applyTransform
+
+	TODO: add examples
+'''
 
 
 ##################################################################################
