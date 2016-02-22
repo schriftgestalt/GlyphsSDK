@@ -261,6 +261,7 @@ def __GSApplication_activateReporter__(self, Reporter):
 
 GSApplication.activateReporter = __GSApplication_activateReporter__
 
+'''
 	List of reporter plug-ins currently available (same as bottom section in the 'View' menu). These are the actual objects. You can get hold of their names using `object.__class__.__name__`.
 	
 	Also see :class:`GSApplication`.activateReporter() and :class:`GSApplication`.deactivateReporter() methods below to activate/deactivate them.
