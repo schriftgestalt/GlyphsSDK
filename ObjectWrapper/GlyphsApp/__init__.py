@@ -142,6 +142,7 @@ Properties
 	font
 	fonts
 	reporters
+	activeReporters
 	defaults
 	scriptAbbrevations
 	scriptSuffixes
@@ -241,28 +242,8 @@ GSApplication.reporters = property(lambda self: self.delegate().reporterInstance
 '''.. attribute:: reporters
 	
 	.. versionadded:: 2.3
-	.. code-block:: python
-		print Glyphs.reporters
-		Glyphs.activateReporter(Glyphs.reporters[1])
-'''
 
-GSApplication.activeReporters = property(lambda self: self.delegate().activeReporters())
-
-'''.. attribute:: activeReporters
-	TODO: Add documentation and examples
-	
-	.. code-block:: python
-		print Glyphs.reporters
-		Glyphs.activateReporter(Glyphs.reporters[1])
-'''
-
-def __GSApplication_activateReporter__(self, Reporter):
-	self.delegate().activateReporter_(Reporter)
-
-GSApplication.activateReporter = __GSApplication_activateReporter__
-
-'''
-	List of reporter plug-ins currently available (same as bottom section in the 'View' menu). These are the actual objects. You can get hold of their names using `object.__class__.__name__`.
+	List of available reporter plug-ins (same as bottom section in the 'View' menu). These are the actual objects. You can get hold of their names using `object.__class__.__name__`.
 	
 	Also see :class:`GSApplication`.activateReporter() and :class:`GSApplication`.deactivateReporter() methods below to activate/deactivate them.
 	
@@ -279,6 +260,16 @@ GSApplication.activateReporter = __GSApplication_activateReporter__
 		Glyphs.activateReporter(Glyphs.reporters[0]) # by object
 		Glyphs.activateReporter('GlyphsMasterCompatibility') # by class name
 '''
+
+GSApplication.activeReporters = property(lambda self: self.delegate().activeReporters())
+
+'''.. attribute:: activeReporters
+
+	.. versionadded:: 2.3
+
+	List of activated reporter plug-ins.
+'''
+
 
 
 class DefaultsProxy(Proxy):
