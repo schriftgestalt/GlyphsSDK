@@ -1033,7 +1033,7 @@ class ReporterPlugin (NSObject, GlyphsReporterProtocol):
 		except:
 			self.logError(traceback.format_exc())
 	
-	def drawForegroundForLayer_(self, Layer):
+	def drawForegroundForLayer_options_(self, Layer, options):
 		"""
 		Whatever you draw here will be displayed IN FRONT OF the paths.
 		Setting a color:
@@ -1055,6 +1055,7 @@ class ReporterPlugin (NSObject, GlyphsReporterProtocol):
 		https://developer.apple.com/library/mac/documentation/cocoa/reference/applicationkit/classes/NSColor_Class/Reference/Reference.html
 		"""
 		try:
+			self._scale = options["Scale"]
 			if hasattr(self, 'foreground'):
 				self.foreground(Layer)
 		except:
@@ -1063,18 +1064,28 @@ class ReporterPlugin (NSObject, GlyphsReporterProtocol):
 	def drawForegroundWithOptions_(self, options):
 		"""
 		Whatever you draw here will be displayed IN FRONT OF the paths. The difference to drawForegroundForLayer_options_() is that you need to deal with the scaling and current layer yourself.
+		
+		examples::
+			layer = self.controller.graphicView().activeLayer()
+			layerPosition = self.controller.graphicView().activePosition()
+			scale = options["Scale"]
+			allLayers = self.controller.graphicView().layoutManager().cachedGlyphs()
+			indexOfActiveLayer = self.controller.graphicView().activeIndex()
+			selectionRange = self.controller.graphicView().selectedRange()
 		"""
 		try:
+			self._scale = options["Scale"]
 			if hasattr(self, 'foregroundFlat'):
-				self.foregroundFlat(options)
+				self.foregroundFlat()
 		except:
 			self.logError(traceback.format_exc())
 	
-	def drawBackgroundForLayer_(self, Layer):
+	def drawBackgroundForLayer_options_(self, Layer, options):
 		"""
 		Whatever you draw here will be displayed BEHIND the paths.
 		"""
 		try:
+			self._scale = options["Scale"]
 			if hasattr(self, 'background'):
 				self.background(Layer)
 		except:
@@ -1085,8 +1096,9 @@ class ReporterPlugin (NSObject, GlyphsReporterProtocol):
 		Whatever you draw here will be displayed BEHIND the paths. The difference to drawBackgroundForLayer_options_() is that you need to deal with the scaling and current layer yourself.
 		"""
 		try:
+			self._scale = options["Scale"]
 			if hasattr(self, 'backgroundFlat'):
-				self.backgroundFlat(options)
+				self.backgroundFlat()
 		except:
 			self.logError(traceback.format_exc())
 	
@@ -1102,6 +1114,7 @@ class ReporterPlugin (NSObject, GlyphsReporterProtocol):
 		"""
 		
 		try:
+			self._scale = options["Scale"]
 			assert Glyphs
 			
 			if self.controller:
@@ -1200,11 +1213,19 @@ class ReporterPlugin (NSObject, GlyphsReporterProtocol):
 		self.getScale() returns the current scale factor of the Edit View UI.
 		Divide any scalable size by this value in order to keep the same apparent pixel size.
 		"""
+		return self._scale
+	
+	def activeLayer(self):
 		try:
-			return self.controller.graphicView().scale()
+			return self.controller.graphicView().activeLayer()
 		except:
 			self.logError(traceback.format_exc())
-			return 1.0
+	
+	def activePosition(self):
+		try:
+			return self.controller.graphicView().activePosition()
+		except:
+			self.logError(traceback.format_exc())
 	
 	def setController_(self, Controller):
 		"""
