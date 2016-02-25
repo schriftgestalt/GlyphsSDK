@@ -369,6 +369,10 @@ GSApplication.unicodeRanges = property(lambda self: GSGlyphsInfo.unicodeRanges()
 def Glyphs_setUserDefaults(self, key, value):
 	self.defaults[key] = value
 
+
+def NSStr(string):
+	return NSString.stringWithString_(string)
+
 GSApplication.editViewWidth = property(lambda self: self.intDefaults["GSFontViewWidth"], lambda self, value: Glyphs_setUserDefaults(self, "GSFontViewWidth", int(value)))
 '''.. attribute:: editViewWidth
 
@@ -3329,6 +3333,7 @@ Properties
 	rightKerningGroup
 	leftMetricsKey
 	rightMetricsKey
+	widthMetricsKey
 	export
 	color
 	colorObject
@@ -3582,24 +3587,29 @@ def __GSGlyph_glyphDataEntryString__(self):
 GSGlyph.glyphDataEntryString = __GSGlyph_glyphDataEntryString__
 
 GSGlyph.leftKerningGroup = property(lambda self: self.valueForKey_("leftKerningGroup"), 
-									lambda self, value: self.setLeftKerningGroup_(value))
+									lambda self, value: self.setLeftKerningGroup_(NSStr(value)))
 '''.. attribute:: leftKerningGroup
 	The leftKerningGroup of the glyph. All glyphs with the same text in the kerning group end up in the same kerning class.
 	:type: unicode'''
 GSGlyph.rightKerningGroup = property(lambda self: self.valueForKey_("rightKerningGroup"), 
-									lambda self, value: self.setRightKerningGroup_(value))
+									lambda self, value: self.setRightKerningGroup_(NSStr(value)))
 '''.. attribute:: rightKerningGroup
 	The rightKerningGroup of the glyph. All glyphs with the same text in the kerning group end up in the same kerning class.
 	:type: unicode'''
 GSGlyph.leftMetricsKey =  property(	lambda self: self.valueForKey_("leftMetricsKey"), 
-									lambda self, value: self.setLeftMetricsKey_(value))
+									lambda self, value: self.setLeftMetricsKey_(NSStr(value)))
 '''.. attribute:: leftMetricsKey
-	The leftMetricsKey of the glyph. This is a reference to another glyph by name. It is used to synchronize the metrics with the linked glyph.
+	The leftMetricsKey of the glyph. This is a reference to another glyph by name or formula. It is used to synchronize the metrics with the linked glyph.
 	:type: unicode'''
 GSGlyph.rightMetricsKey = property(	lambda self: self.valueForKey_("rightMetricsKey"), 
-									lambda self, value: self.setRightMetricsKey_(value))
+									lambda self, value: self.setRightMetricsKey_(NSStr(value)))
 '''.. attribute:: rightMetricsKey
-	The rightMetricsKey of the glyph. This is a reference to another glyph by name. It is used to synchronize the metrics with the linked glyph.
+	The rightMetricsKey of the glyph. This is a reference to another glyph by name or formula. It is used to synchronize the metrics with the linked glyph.
+	:type: unicode'''
+GSGlyph.widthMetricsKey = property(	lambda self: self.valueForKey_("widthMetricsKey"), 
+									lambda self, value: self.setWidthMetricsKey_(NSStr(value)))
+'''.. attribute:: widthMetricsKey
+	The widthMetricsKey of the glyph. This is a reference to another glyph by name or formula. It is used to synchronize the metrics with the linked glyph.
 	:type: unicode'''
 GSGlyph.export =		  property( lambda self: self.valueForKey_("export").boolValue(), 
 									lambda self, value: self.setExport_(value))
@@ -3840,6 +3850,9 @@ Properties
 	TSB
 	BSB
 	width
+	leftMetricsKey
+	rightMetricsKey
+	widthMetricsKey
 	bounds
 	selectionBounds
 	background
@@ -4194,6 +4207,22 @@ GSLayer.width = property(	lambda self: self.valueForKey_("width").floatValue(),
 '''.. attribute:: width
 	Glyph width
 	:type: float'''
+
+GSLayer.leftMetricsKey =  property(	lambda self: self.valueForKey_("leftMetricsKey"), 
+									lambda self, value: self.setLeftMetricsKey_(NSStr(value)))
+'''.. attribute:: leftMetricsKey
+	The leftMetricsKey of the layer. This is a reference to another glyph by name or formula. It is used to synchronize the metrics with the linked glyph.
+	:type: unicode'''
+GSLayer.rightMetricsKey = property(	lambda self: self.valueForKey_("rightMetricsKey"), 
+									lambda self, value: self.setRightMetricsKey_(NSStr(value)))
+'''.. attribute:: rightMetricsKey
+	The rightMetricsKey of the layer. This is a reference to another glyph by name or formula. It is used to synchronize the metrics with the linked glyph.
+	:type: unicode'''
+GSLayer.widthMetricsKey = property(	lambda self: self.valueForKey_("widthMetricsKey"), 
+									lambda self, value: self.setWidthMetricsKey_(NSStr(value)))
+'''.. attribute:: widthMetricsKey
+	The widthMetricsKey of the layer. This is a reference to another glyph by name or formula. It is used to synchronize the metrics with the linked glyph.
+	:type: unicode'''
 
 GSLayer.bounds = property(	lambda self: self.pyobjc_instanceMethods.bounds() )
 
