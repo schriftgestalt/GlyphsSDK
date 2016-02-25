@@ -1513,15 +1513,15 @@ class LayerAnchorsProxy (Proxy):
 class LayerPathsProxy (Proxy):
 	def __getitem__(self, idx):
 		if idx < 0:
-			idx = self._owner.pathCount() + idx
+			idx = self._owner.countOfPaths() + idx
 		return self._owner.pathAtIndex_(idx)
 	def __setitem__(self, idx, Path):
 		if idx < 0:
-			idx = self._owner.pathCount() + idx
+			idx = self._owner.countOfPaths() + idx
 		self._owner.replacePathAtIndex_withPath_(idx, Path)
 	def __delitem__(self, idx):
 		if idx < 0:
-			Key = self._owner.pathCount() + idx
+			Key = self._owner.countOfPaths() + idx
 		self._owner.removePathAtIndex_(idx)
 	def append(self, Path):
 		self._owner.addPath_(Path)
