@@ -4361,7 +4361,7 @@ GSLayer.smartComponentPoleMapping = property(lambda self: Layer_smartComponentPo
 def Layer_viewCoordinates(self):
 	
 	return NSRect(
-		Glyphs.font.currentTab.graphicView().activePosition(),
+		NSPoint(0, -1 * (Glyphs.font.currentTab.graphicView().glyphFrame().size.height + Glyphs.font.currentTab.graphicView().activePosition().y)),
 		Glyphs.font.currentTab.graphicView().glyphFrame().size,
 	)
 
@@ -4371,9 +4371,9 @@ GSLayer.viewCoordinates = property(lambda self: Layer_viewCoordinates(self))
 
 	.. versionadded:: 2.3
 
-	Coordinates describing the position and size of the active layer in the Edit View in screen pixel coordinate (view coordinate) values.
+	Coordinates describing the position and size of the active layer in the Edit View in screen pixel coordinate (view coordinate) values. Since the Edit View plane’s origin is always identical to the glyph’s origin, both origin coordinates are (0,0).
 	
-	The NSRect’s origin value describes the position of the glyph’s origin ((0,0) in EM units) relative to the Edit View’s origin which is at the top-left corner of the glyph (ascender height). Since the glyph’s origin is below the glyph’s top-left corner, the y coordinate here will always be negative.
+	The NSRect’s origin value describes the position of the lower left corner of the glyph (at the descender) in view coordinate values.
 	
 	The NSRect’s size value describes the width and height of the active layer in view coordinate values.
 
@@ -6466,7 +6466,16 @@ GSEditViewController.scale = property(lambda self: self.graphicView().scale(), l
 
 '''
 
-GSEditViewController.viewPort = property(lambda self: self.graphicView().visibleRect())
+
+def EditViewController_viewPort(self):
+	rect = self.graphicView().visibleRect()
+	rect.origin.y -= self.graphicView().activePosition().y
+	return rect
+
+GSEditViewController.viewPort = property(lambda self: EditViewController_viewPort(self))
+
+
+
 
 '''
 
@@ -6476,11 +6485,11 @@ GSEditViewController.viewPort = property(lambda self: self.graphicView().visible
 
 	The visible area of the Edit View in screen pixel coordinates (view coordinates). 
 	
-	The NSRect’s origin value describes the lower left corner of the visible area, in values relative to the top-left corner of the active layer (ascender height), which serves as the origin of the Edit View in view coordinates. To get from this top-left corner to the glyph’s origin (0,0) please use the origin’s y value obtained from :class:`GSLayer`.viewCoordinates.
+	The NSRect’s origin value describes the lower left corner of the visible area, in values relative to the origin of the active layer (0,0), which also serves as the origin of the view plane.
 	
 	The NSRect’s size value describes the width and height of the visible area.
 
-	When using drawing methods such as the view-coordinate-relative method in the Reporter Plugin, these are the coordinates to use, as the methods also draws relative to the top-left corner of the glyph.
+	When using drawing methods such as the view-coordinate-relative method in the Reporter Plugin, these are the coordinates to use.
 	
 	Make sure to also check out the attribute :class:`GSLayer`.viewCoordinates for the position and size of the active layer in the view port.
 	
