@@ -3861,6 +3861,7 @@ Properties
 	openBezierPath
 	userData
 	smartComponentPoleMapping
+	viewCoordinates
 
 Functions
 
@@ -4356,6 +4357,45 @@ GSLayer.smartComponentPoleMapping = property(lambda self: Layer_smartComponentPo
 				layer.smartComponentPoleMapping['crotchDepth'] = 1
 				layer.smartComponentPoleMapping['shoulderWidth'] = 2
 '''
+
+def Layer_viewCoordinates(self):
+	
+	return NSRect(
+		Glyphs.font.currentTab.graphicView().activePosition(),
+		Glyphs.font.currentTab.graphicView().glyphFrame().size,
+	)
+
+GSLayer.viewCoordinates = property(lambda self: Layer_viewCoordinates(self))
+
+'''.. attribute:: viewCoordinates
+
+	.. versionadded:: 2.3
+
+	Coordinates describing the position and size of the active layer in the Edit View in screen pixel coordinate (view coordinate) values.
+	
+	The NSRect’s origin value describes the position of the glyph’s origin ((0,0) in EM units) relative to the Edit View’s origin which is at the top-left corner of the glyph (ascender height). Since the glyph’s origin is below the glyph’s top-left corner, the y coordinate here will always be negative.
+	
+	The NSRect’s size value describes the width and height of the active layer in view coordinate values.
+
+	:type: NSRect
+
+	.. code-block:: python
+
+		# Common values of active layer translated to view coordinates:
+		
+		# Ascender
+		y = 0
+
+		# Base line
+		y = layer.viewCoordinates.origin.y # is already a negative number
+
+		# Descender
+		y = -1 * layer.viewCoordinates.size.height # needs to be turned negative
+
+
+'''
+
+
 
 
 
@@ -6294,6 +6334,7 @@ Properties
 	text
 	layers
 	scale
+	viewPort
 	textCursor
 	textRange
 	direction
@@ -6422,6 +6463,49 @@ GSEditViewController.scale = property(lambda self: self.graphicView().scale(), l
 		
 
 	:type: float
+
+'''
+
+GSEditViewController.viewPort = property(lambda self: self.graphicView().visibleRect())
+
+'''
+
+.. attribute:: viewPort
+
+	.. versionadded:: 2.3
+
+	The visible area of the Edit View in screen pixel coordinates (view coordinates). 
+	
+	The NSRect’s origin value describes the lower left corner of the visible area, in values relative to the top-left corner of the active layer (ascender height), which serves as the origin of the Edit View in view coordinates. To get from this top-left corner to the glyph’s origin (0,0) please use the origin’s y value obtained from :class:`GSLayer`.viewCoordinates.
+	
+	The NSRect’s size value describes the width and height of the visible area.
+
+	When using drawing methods such as the view-coordinate-relative method in the Reporter Plugin, these are the coordinates to use, as the methods also draws relative to the top-left corner of the glyph.
+	
+	Make sure to also check out the attribute :class:`GSLayer`.viewCoordinates for the position and size of the active layer in the view port.
+	
+	.. code-block:: python
+
+		# The far corners of the Edit View:
+
+		# Lower left corner of the screen
+		x = font.currentTab.viewPort.origin.x
+		y = font.currentTab.viewPort.origin.y
+
+		# Top left corner of the screen
+		x = font.currentTab.viewPort.origin.x
+		y = font.currentTab.viewPort.origin.y + font.currentTab.viewPort.size.height
+
+		# Top right corner of the screen
+		x = font.currentTab.viewPort.origin.x + font.currentTab.viewPort.size.width
+		y = font.currentTab.viewPort.origin.y + font.currentTab.viewPort.size.height
+
+		# Bottom right corner of the screen
+		x = font.currentTab.viewPort.origin.x + font.currentTab.viewPort.size.width
+		y = font.currentTab.viewPort.origin.y
+		
+
+	:type: NSRect
 
 '''
 
