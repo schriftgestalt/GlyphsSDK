@@ -1076,7 +1076,18 @@ class ReporterPlugin (NSObject, GlyphsReporterProtocol):
 		try:
 			self._scale = options["Scale"]
 			if hasattr(self, 'foregroundFlat'):
+
+				# Save graphics state and apply view plane origin transformation
+				NSGraphicsContext.saveGraphicsState()
+				a = NSAffineTransform.alloc().init()
+				a.translateXBy_yBy_(0, Glyphs.font.currentTab.graphicView().activePosition().y)
+				a.concat()
+
 				self.foregroundFlat()
+
+				# Restore graphics state
+				NSGraphicsContext.restoreGraphicsState()
+
 		except:
 			self.logError(traceback.format_exc())
 	
@@ -1098,7 +1109,18 @@ class ReporterPlugin (NSObject, GlyphsReporterProtocol):
 		try:
 			self._scale = options["Scale"]
 			if hasattr(self, 'backgroundFlat'):
+
+				# Save graphics state and apply view plane origin transformation
+				NSGraphicsContext.saveGraphicsState()
+				a = NSAffineTransform.alloc().init()
+				a.translateXBy_yBy_(0, Glyphs.font.currentTab.graphicView().activePosition().y)
+				a.concat()
+
 				self.backgroundFlat()
+
+				# Restore graphics state
+				NSGraphicsContext.restoreGraphicsState()
+
 		except:
 			self.logError(traceback.format_exc())
 	
