@@ -103,6 +103,8 @@ class Proxy(object):
 			method(NSMutableArray.arrayWithArray_(list(values)))
 		elif type(values) == type(self):
 			method(NSMutableArray.arrayWithArray_(list(values)))
+		elif values == None:
+			method(NSMutableArray.array())
 		else:
 			raise TypeError
 
