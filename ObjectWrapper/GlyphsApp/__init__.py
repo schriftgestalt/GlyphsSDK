@@ -2550,7 +2550,7 @@ GSAlignmentZone.__init__ = AlignmentZone__init__;
 
 def AlignmentZone__repr__(self):
 	#return "<GSAlignmentZone pos %s size %s>" % (self.position, self.size)
-	return "<GSAlignmentZone pos %s size %s>" % (self.position(), self.size())
+	return "<GSAlignmentZone pos %s size %s>" % (self.position, self.size)
 GSAlignmentZone.__repr__ = AlignmentZone__repr__;
 
 
