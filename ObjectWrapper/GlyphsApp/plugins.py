@@ -91,7 +91,7 @@ class FileFormatPlugin (NSObject, GlyphsFileFormatProtocol):
 				self.settings()
 			
 			# Dialog stuff
-			# Initiate emtpy self.dialog here in case of Vanilla dialog,
+			# Initiate empty self.dialog here in case of Vanilla dialog,
 			# where .dialog is not defined at the class’s root.
 			if not hasattr(self, 'dialog'):
 				self.dialog = None
