@@ -1075,9 +1075,9 @@ class ReporterPlugin (NSObject, GlyphsReporterProtocol):
 		"""
 		try:
 			self._scale = options["Scale"]
-			if hasattr(self, 'foregroundFlat'):
+			if hasattr(self, 'foregroundInViewCoords'):
 
-				self.foregroundFlat()
+				self.foregroundInViewCoords(Glyphs.font.selectedLayers[0])
 
 		except:
 			self.logError(traceback.format_exc())
@@ -1099,9 +1099,9 @@ class ReporterPlugin (NSObject, GlyphsReporterProtocol):
 		"""
 		try:
 			self._scale = options["Scale"]
-			if hasattr(self, 'backgroundFlat'):
+			if hasattr(self, 'backgroundInViewCoords'):
 
-				self.backgroundFlat()
+				self.backgroundInViewCoords(Glyphs.font.selectedLayers[0])
 
 		except:
 			self.logError(traceback.format_exc())

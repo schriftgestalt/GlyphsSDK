@@ -152,6 +152,40 @@ Please note that when you preview is set to "Show all instances" due to the live
 				component.bezierPath.fill()
 ```
 
+#### foregroundInViewCoords()
+
+Use this method to draw things on top of the glyph outlines in the Edit View.
+
+The difference to the `foreground()` method above is that all coordinates that you use for drawing here are view coordinates that correspond to screen pixels and are relative to all visible glyph’s bounding box, whereas the `foreground()` method uses em units relative to the active glyph’s origin (0,0) as values.
+
+So you can use this method to position things in the Edit View that are not directly related to individual glyphs, like positioning text into a corner of the Edit View. Note that you need to multiply text sizes with the `scale` factor, as seen in the example below.
+
+See the GSEditViewController attributes `viewPort`, `bounds`, and `selectedLayerOrigin` in the [Python API Docu](http://docu.glyphsapp.com/#gseditviewcontroller) for further information.
+
+```python
+	def foregroundInViewCoords(self, layer):
+
+		tab = Glyphs.font.currentTab
+
+		# Draw a blue rectangle all across the Edit View's visible area
+		NSColor.blueColor().set()
+		NSBezierPath.strokeRect_(Glyphs.font.currentTab.viewPort)
+
+		# Draw a red rectangle across all the glyphs' bounding box
+		NSColor.redColor().set()
+		NSBezierPath.strokeRect_(Glyphs.font.currentTab.bounds)
+
+		# Text 'here' at active glyphs' origin
+		self.drawTextAtPoint('here', tab.selectedLayerOrigin, 10 * tab.scale)
+
+		# Text 'corner' in top-left corner of Edit View
+		self.drawTextAtPoint('corner', tab.viewPort.origin, 10 * tab.scale)
+```
+
+#### backgroundInViewCoords()
+
+Same as above, into the background behind the glyphs.
+
 #### conditionalContextMenus()
 
 Use this method to create and return a list of conditional context menu items.
