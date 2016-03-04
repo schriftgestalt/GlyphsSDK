@@ -3863,7 +3863,6 @@ Properties
 	openBezierPath
 	userData
 	smartComponentPoleMapping
-	viewCoordinates
 
 Functions
 
@@ -4360,42 +4359,6 @@ GSLayer.smartComponentPoleMapping = property(lambda self: Layer_smartComponentPo
 				layer.smartComponentPoleMapping['shoulderWidth'] = 2
 '''
 
-def Layer_viewCoordinates(self):
-	
-	return NSRect(
-		NSPoint(0, -1 * (Glyphs.font.currentTab.graphicView().glyphFrame().size.height + Glyphs.font.currentTab.graphicView().activePosition().y)),
-		Glyphs.font.currentTab.graphicView().glyphFrame().size,
-	)
-
-GSLayer.viewCoordinates = property(lambda self: Layer_viewCoordinates(self))
-
-'''.. attribute:: viewCoordinates
-
-	.. versionadded:: 2.3
-
-	Coordinates describing the position and size of the active layer in the Edit View in screen pixel coordinate (view coordinate) values. Since the Edit View plane’s origin is always identical to the glyph’s origin, both origin coordinates are (0,0).
-	
-	The NSRect’s origin value describes the position of the lower left corner of the glyph (at the descender) in view coordinate values.
-	
-	The NSRect’s size value describes the width and height of the active layer in view coordinate values.
-
-	:type: NSRect
-
-	.. code-block:: python
-
-		# Common values of active layer translated to view coordinates:
-		
-		# Ascender
-		y = 0
-
-		# Base line
-		y = layer.viewCoordinates.origin.y # is already a negative number
-
-		# Descender
-		y = -1 * layer.viewCoordinates.size.height # needs to be turned negative
-
-
-'''
 
 
 
@@ -6337,6 +6300,8 @@ Properties
 	layers
 	scale
 	viewPort
+	bounds
+	selectedLayerOrigin
 	textCursor
 	textRange
 	direction
@@ -6469,14 +6434,7 @@ GSEditViewController.scale = property(lambda self: self.graphicView().scale(), l
 '''
 
 
-def EditViewController_viewPort(self):
-	rect = self.graphicView().visibleRect()
-	rect.origin.y -= self.graphicView().activePosition().y
-	return rect
-
-GSEditViewController.viewPort = property(lambda self: EditViewController_viewPort(self))
-
-
+GSEditViewController.viewPort = property(lambda self: self.graphicView().visibleRect())
 
 
 '''
@@ -6487,13 +6445,13 @@ GSEditViewController.viewPort = property(lambda self: EditViewController_viewPor
 
 	The visible area of the Edit View in screen pixel coordinates (view coordinates). 
 	
-	The NSRect’s origin value describes the lower left corner of the visible area, in values relative to the origin of the active layer (0,0), which also serves as the origin of the view plane.
+	The NSRect’s origin value describes the top-left corner (top-right for RTL, both at ascender height) of the combined glyphs’ bounding box (see `.bounds` below), which also serves as the origin of the view plane.
 	
 	The NSRect’s size value describes the width and height of the visible area.
 
-	When using drawing methods such as the view-coordinate-relative method in the Reporter Plugin, these are the coordinates to use.
+	When using drawing methods such as the view-coordinate-relative method in the Reporter Plugin, use these coordinates.
 	
-	Make sure to also check out the attribute :class:`GSLayer`.viewCoordinates for the position and size of the active layer in the view port.
+	If you want to reach from the view plane’s origin to the 
 	
 	.. code-block:: python
 
@@ -6519,6 +6477,35 @@ GSEditViewController.viewPort = property(lambda self: EditViewController_viewPor
 	:type: NSRect
 
 '''
+
+
+GSEditViewController.bounds = property(lambda self: self.graphicView().glyphFrame())
+
+'''.. attribute:: bounds
+
+	.. versionadded:: 2.3
+
+	Bounding box of all glyphs in the Edit View in view coordinate values. 
+
+	:type: NSRect
+
+'''
+
+GSEditViewController.selectedLayerOrigin = property(lambda self: self.graphicView().activePosition())
+
+'''.. attribute:: activeLayerOrigin
+
+	.. versionadded:: 2.3
+
+	Position of the active layer’s origin (0,0) relative to the origin of the view plane (see `.bounds` above), in view coordinates.
+
+	:type: NSPoint
+
+'''
+
+
+
+
 
 
 GSEditViewController.textCursor = property(lambda self: self.contentView().selectedRange().location, lambda self, value: self.contentView().setSelectedRange_(NSRange(value, self.selection)));
