@@ -6536,7 +6536,7 @@ GSEditViewController.bounds = property(lambda self: self.graphicView().glyphFram
 
 GSEditViewController.selectedLayerOrigin = property(lambda self: self.graphicView().activePosition())
 
-'''.. attribute:: activeLayerOrigin
+'''.. attribute:: selectedLayerOrigin
 
 	.. versionadded:: 2.3
 
