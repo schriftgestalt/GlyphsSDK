@@ -4115,7 +4115,10 @@ GSLayer.hints = property(lambda self: LayerHintsProxy(self),
 		for hint in layer.hints:
 			print hint
 
-		## todo: add hint
+		# add a new hint
+		newHint = GSHint()
+		# change behaviour of hint here, like its attachment nodes
+		layer.hints.append(newHint)
 
 		# delete hint
 		del(layer.hint[0])
@@ -4454,9 +4457,23 @@ def __GSLayer_applyTransform__(self, transformStruct):
 	self.transform_checkForSelection_doComponents_(Transform, False, True)
 
 GSLayer.applyTransform = __GSLayer_applyTransform__
+
 '''.. function:: applyTransform
 
-	TODO: add examples
+	Apply a transformation matrix to the layer.
+
+	.. code-block:: python
+
+		layer = Glyphs.font.selectedLayers[0] # current layer
+
+		layer.applyTransform(NSAffineTransformStruct(
+					0.5, # x scale factor
+					0.0, # x skew factor
+					0.0, # y skew factor
+					0.5, # y scale factor
+					0.0, # x position
+					0.0  # y position
+					))
 '''
 
 
@@ -4947,7 +4964,7 @@ GSComponent.transform = property(	lambda self: self.transformStruct(),
 									lambda self, value: self.setTransformStruct_(value))
 '''.. attribute:: transform
 	
-	returns a six number tuple that contrains a transformation matrix: (1, 0, 0, 1, 0, 0) (m11, m12, m21, m22, tX, tY)
+	Returns a six number tuple that contrains a transformation matrix: (1, 0, 0, 1, 0, 0) (m11, m12, m21, m22, tX, tY)
 	
 	:type: NSAffineTransformStruct'''
 
@@ -4968,7 +4985,20 @@ GSComponent.applyTransform = __CGSomponent_applyTransform__
 
 '''.. function:: applyTransform
 
-	TODO: add examples
+	Apply a transformation matrix to the component.
+
+	.. code-block:: python
+
+		component = layer.components[0]
+
+		component.applyTransform(NSAffineTransformStruct(
+					0.5, # x scale factor
+					0.0, # x skew factor
+					0.0, # y skew factor
+					0.5, # y scale factor
+					0.0, # x position
+					0.0  # y position
+					))
 '''
 
 
@@ -5412,7 +5442,20 @@ GSPath.applyTransform = __CGPath_applyTransform__
 
 '''.. function:: applyTransform
 
-	TODO: add examples
+	Apply a transformation matrix to the path.
+
+	.. code-block:: python
+
+		path = layer.paths[0]
+
+		path.applyTransform(NSAffineTransformStruct(
+					0.5, # x scale factor
+					0.0, # x skew factor
+					0.0, # y skew factor
+					0.5, # y scale factor
+					0.0, # x position
+					0.0  # y position
+					))
 '''
 
 
