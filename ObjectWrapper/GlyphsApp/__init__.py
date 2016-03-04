@@ -5479,7 +5479,7 @@ Implementation of the node object.
 For details on how to access them, please see :class:`GSPath`.nodes
 
 
-.. class:: GSNode([pt, type])
+.. class:: GSNode([pt, type = type])
 	
 	:param pt: The position of the node.
 	:param type: The type of the node, LINE, CURVE or OFFCURVE
@@ -5517,7 +5517,7 @@ def Node__new__(typ, *args, **kwargs):
 	return GSNode.alloc().init()
 GSNode.__new__ = Node__new__;
 
-def Node__init__(self, pt = None, x = None, y = None, type = None, name = None, pointType = None):
+def Node__init__(self, pt = None, type = None, x = None, y = None, name = None, pointType = None):
 	if type is None and pointType is not None:
 		type = pointType
 	if pt:
