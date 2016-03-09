@@ -4588,8 +4588,6 @@ GSLayer.addMissingAnchors = Layer_addMissingAnchors
 	Remove all elements from layer.
 '''
 
-GSLayer.swapForegroundWithBackground = property(lambda self: self.swapForgroundWithBackground() )
-
 '''
 .. function:: swapForegroundWithBackground()
 
