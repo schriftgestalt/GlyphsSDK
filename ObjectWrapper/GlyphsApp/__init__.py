@@ -3456,10 +3456,10 @@ GSGlyph.name = property(			lambda self: self.pyobjc_instanceMethods.name(),
 	:type: unicode
 '''
 
-GSGlyph.unicode = property(			lambda self: self.pyobjc_instanceMethods.unicode() )
+GSGlyph.unicode = property(			lambda self: self.pyobjc_instanceMethods.unicode(),
+									lambda self, value: self.setUnicode_(value))
 '''.. attribute:: unicode
 	String with the hex Unicode value of glyph, if encoded.
-	Read only.
 	:type: unicode
 '''
 
