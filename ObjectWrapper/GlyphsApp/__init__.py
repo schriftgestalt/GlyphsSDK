@@ -3344,6 +3344,7 @@ Properties
 	mastersCompatible
 	userData
 	smartComponentAxes
+	lastChange
 	
 	
 Functions
@@ -3760,6 +3761,17 @@ GSGlyph.smartComponentAxes = property(lambda self: GlyphSmartComponentAxesProxy(
 
 		# Deleting one axis
 		del g.smartComponentAxes[1]
+'''
+
+GSGlyph.lastChange = property(lambda self: int(self.pyobjc_instanceMethods.lastChange().timeIntervalSince1970()))
+
+'''.. attribute:: lastChange
+
+	.. versionadded:: 2.3
+
+	Change date when glyph was last changed as UNIX timestamp.
+	
+	Check Python’s `time` module for how to use the timestamp.
 '''
 
 
