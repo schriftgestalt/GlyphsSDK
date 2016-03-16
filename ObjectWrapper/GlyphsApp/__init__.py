@@ -498,11 +498,6 @@ GSApplication.showMacroWindow = __ShowMacroWindow
 
 '''
 
-def __ClearLog(self):
-	Glyphs.delegate().clearConsole()
-
-GSApplication.clearLog = __ClearLog
-
 '''.. function:: clearLog
 	
 	Deletes the content of the console in the macro window
