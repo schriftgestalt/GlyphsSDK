@@ -518,10 +518,12 @@ GSApplication.showGlyphInfoPanelWithSearchString = __showGlyphInfoPanelWithSearc
 	
 	'''
 
-def _glyphInfoForName(self, String):
+def _glyphInfoForName(self, String, font=None):
 	if type(String) is int:
-		String = "%04X" % String
-	return GSGlyphsInfo.glyphInfoForName_(String)
+		return self.glyphInfoForUnicode(String)
+	if font is not None:
+		return font.glyphsInfo().glyphInfoForName_(String)
+	return GSGlyphsInfo.sharedManager().glyphInfoForName_(String)
 
 GSApplication.glyphInfoForName = _glyphInfoForName
 
@@ -530,12 +532,17 @@ GSApplication.glyphInfoForName = _glyphInfoForName
 	Generates :class:`GSGlyphInfo` object for given glyph name.
 	
 	:param String: Glyph name
+	:param font: if you add a font, and the font has a local glyph info, it will be used instead of the global info data.
 	:return: :class:`GSGlyphInfo`
 	
 	'''
 
-def _glyphInfoForUnicode(self, String):
-	return GSGlyphsInfo.glyphInfoForUnicode_(String)
+def _glyphInfoForUnicode(self, String, font=None):
+	if type(String) is int:
+		String = "%04X" % String
+	if font is not None:
+		return font.glyphsInfo().glyphInfoForUnicode_(String)
+	return GSGlyphsInfo.sharedManager().glyphInfoForUnicode_(String)
 
 GSApplication.glyphInfoForUnicode = _glyphInfoForUnicode
 
@@ -544,12 +551,15 @@ GSApplication.glyphInfoForUnicode = _glyphInfoForUnicode
 	Generates :class:`GSGlyphInfo` object for given hex unicode.
 	
 	:param String: Hex unicode
+	:param font: if you add a font, and the font has a local glyph info, it will be used instead of the global info data.
 	:return: :class:`GSGlyphInfo`
 	
 	'''
 
-def _niceGlyphName(self, String):
-	return GSGlyphsInfo.niceGlyphNameForName_(String)
+def _niceGlyphName(self, String, font=None):
+	if font is not None:
+		return font.glyphsInfo().niceGlyphNameForName_(String)
+	return GSGlyphsInfo.sharedManager().niceGlyphNameForName_(String)
 GSApplication.niceGlyphName = _niceGlyphName
 
 '''.. function:: niceGlyphName(Name)
@@ -557,12 +567,15 @@ GSApplication.niceGlyphName = _niceGlyphName
 	Converts glyph name to nice, human readable glyph name (e.g. afii10017 or uni0410 to A-cy)
 	
 	:param string: glyph name
+	:param font: if you add a font, and the font has a local glyph info, it will be used instead of the global info data.
 	:return: string
 	
 	'''
 
-def _productionGlyphName(self, String):
-	return GSGlyphsInfo.productionGlyphNameForName_(String)
+def _productionGlyphName(self, String, font=None):
+	if font is not None:
+		return font.glyphsInfo().productionGlyphNameForName_(String)
+	return GSGlyphsInfo.sharedManager().productionGlyphNameForName_(String)
 GSApplication.productionGlyphName = _productionGlyphName
 
 '''.. function:: productionGlyphName(Name)
@@ -570,12 +583,15 @@ GSApplication.productionGlyphName = _productionGlyphName
 	Converts glyph name to production glyph name (e.g. afii10017 or A-cy to uni0410)
 	
 	:param string: glyph name
+	:param font: if you add a font, and the font has a local glyph info, it will be used instead of the global info data.
 	:return: string
 	
 	'''
 
-def _ligatureComponents(self, String):
-	return GSGlyphsInfo._componentsForLigaName_(String)
+def _ligatureComponents(self, String, font=None):
+	if font is not None:
+		return font.glyphsInfo()._componentsForLigaName_(String)
+	return GSGlyphsInfo.sharedManager()._componentsForLigaName_(String)
 GSApplication.ligatureComponents = _ligatureComponents
 
 '''.. function:: ligatureComponents(String)
@@ -583,6 +599,7 @@ GSApplication.ligatureComponents = _ligatureComponents
 	If defined as a ligature in the glyph database, this function returns a list of glyph names that this ligature could be composed of.
 	
 	:param string: glyph name
+	:param font: if you add a font, and the font has a local glyph info, it will be used instead of the global info data.
 	:return: list
 	
 	.. code-block:: python
@@ -3803,7 +3820,10 @@ GSGlyph.endUndo = __EndUndo
 '''
 
 def __updateGlyphInfo(self, changeName = True):
-	GSGlyphsInfo.updateGlyphInfo_changeName_(self, True)
+	if self.parent is not None:
+		self.parent.glyphsInfo().updateGlyphInfo_changeName_(self, True)
+	else:
+		GSGlyphsInfo.sharedManager().updateGlyphInfo_changeName_(self, True)
 GSGlyph.updateGlyphInfo = __updateGlyphInfo
 
 '''.. function:: updateGlyphInfo(changeName = True)
@@ -4568,7 +4588,7 @@ NSConcreteValue.y = property(lambda self: self.pointValue().y )
 '''
 
 def Layer_addMissingAnchors(self):
-	GSGlyphsInfo.updateAnchor_(self)
+	GSGlyphsInfo.sharedManager().updateAnchor_(self)
 GSLayer.addMissingAnchors = Layer_addMissingAnchors
 
 
@@ -4645,7 +4665,7 @@ def ControlLayer__repr__(self):
 	elif char == 129:
 		name = "placeholder"
 	else:
-		name = GSGlyphsInfo.niceGlyphNameForName_("uni%.4X" % self.parent().unicodeChar())
+		name = GSGlyphsInfo.sharedManager().niceGlyphNameForName_("uni%.4X" % self.parent().unicodeChar())
 	return "<%s \"%s\">" % (self.className(), name)
 GSControlLayer.__repr__ = ControlLayer__repr__;
 
