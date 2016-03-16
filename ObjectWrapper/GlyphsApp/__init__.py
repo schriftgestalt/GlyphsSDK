@@ -6076,8 +6076,8 @@ GSHint.otherNode1 = property(	lambda self: self.valueForKey_("otherNode1"),
 	
 	:type: :class:`GSNode`'''
 	
-GSHint.otherNode2 = property(	lambda self: self.valueForKey_("otherNode1"),
-								lambda self, value: self.setOtherNode1_(value))
+GSHint.otherNode2 = property(	lambda self: self.valueForKey_("otherNode2"),
+								lambda self, value: self.setOtherNode2_(value))
 '''.. attribute:: otherNode2
 	A forth node this hint is attached to. Used for Diagonal hints.
 
