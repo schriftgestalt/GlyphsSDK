@@ -4835,12 +4835,20 @@ GSAnchor.name = property(		lambda self: self.valueForKey_("name"),
 '''
 
 def DrawAnchorWithPen(self, pen):
-	pen.moveTo(self.position)
-	pen.endPath()
+	if hasattr(pen, addAnchor):
+		pen.addAnchor(self.name, (self.x, self.y))
+	else:
+		pen.moveTo(self.position)
+		pen.endPath()
 
 GSAnchor.draw = DrawAnchorWithPen
 
-
+def __GSAnchor_drawPoints__(self, pen):
+	"""draw the object with a point pen"""
+	pen.beginPath()
+	pen.addPoint((self.x, self.y), segmentType="move", smooth=False, name=self.name)
+	pen.endPath()
+GSAnchor.drawPoints = __GSAnchor_drawPoints__
 
 
 ##################################################################################
@@ -5087,8 +5095,7 @@ def DrawComponentWithPen(self, pen):
 	pen.addComponent(self.componentName, self.transform)
 
 GSComponent.draw = DrawComponentWithPen
-
-
+GSComponent.drawPoints = DrawComponentWithPen
 
 GSComponent.smartComponentValues = property(lambda self: self.pieceSettings())
 '''.. attribute:: smartComponentValues
@@ -5441,6 +5448,18 @@ def DrawPathWithPen(self, pen):
 	return
 
 GSPath.draw = DrawPathWithPen
+
+
+def __GSPath__drawPoints__(self, pen):
+	'''draw the object with a fontTools pen'''
+	
+	pen.beginPath()
+	for i in range(len(self)):
+		Node = self.nodeAtIndex_(i)
+		pen.addPoint(Node.position, segmentType=Node.type, smooth=Node.smooth)
+	pen.endPath()
+
+GSPath.drawPoints = __GSPath__drawPoints__
 
 
 def Path_addNodesAtExtremes(self, force = False):
