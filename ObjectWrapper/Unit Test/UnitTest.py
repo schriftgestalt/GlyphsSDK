@@ -27,7 +27,7 @@ def testInteger(intObject, assertType = True):
 	assert intObject == oldValue + 1
 	intObject = oldValue
 
-def GSApplication():
+def testGSApplication():
 
 	# Main object
 	assert Glyphs
@@ -121,5 +121,6 @@ def GSApplication():
 	
 	
 def unitTest():
+	testGSApplication()
 
 	GSApplication()
