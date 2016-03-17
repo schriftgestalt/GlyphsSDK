@@ -2035,7 +2035,7 @@ GSFont.tabs = property(lambda self: FontTabsProxy(self))
 			print tab
 			
 		# close last tab
-		del(font.tabs[-1])
+		font.tabs[-1].close()
 	
 	:type: list'''
 
