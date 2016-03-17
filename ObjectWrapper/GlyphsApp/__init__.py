@@ -283,6 +283,8 @@ class DefaultsProxy(Proxy):
 		return NSUserDefaults.standardUserDefaults().objectForKey_(Key)
 	def __setitem__(self, Key, Value):
 		NSUserDefaults.standardUserDefaults().setObject_forKey_(Value, Key)
+	def __delitem__(self, Key):
+		NSUserDefaults.standardUserDefaults().removeObjectForKey_(Key)
 	def __repr__(self):
 		return "<Userdefaults>"
 
@@ -303,6 +305,10 @@ GSApplication.defaults = property(lambda self: DefaultsProxy(self))
 		# Get and set values
 		value = Glyphs.defaults["com.MyName.foo.bar"]
 		Glyphs.defaults["com.MyName.foo.bar"] = newValue
+		
+		# Remove value
+		# This will restore the default value
+		del(Glyphs.defaults["com.MyName.foo.bar"])
 	
 	'''
 
