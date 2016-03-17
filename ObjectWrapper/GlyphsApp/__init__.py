@@ -498,7 +498,7 @@ GSApplication.showMacroWindow = __ShowMacroWindow
 
 '''
 
-'''.. function:: clearLog
+'''.. function:: clearLog()
 	
 	Deletes the content of the console in the macro window
 	
@@ -6396,6 +6396,12 @@ Properties
 	previewInstances
 	previewHeight
 
+Functions
+
+.. autosummary::
+
+	close()
+
 
 ----------
 Properties
@@ -6796,6 +6802,35 @@ GSEditViewController.previewHeight = property(lambda self: Glyphs.defaults["GSPr
 '''
 
 
+
+'''
+
+
+
+----------
+Functions
+----------
+
+'''
+
+def Close_Tab(self):
+	
+	for i, tab in enumerate(self.parent.tabs):
+		if tab == self:
+			break
+		print i, tab == self
+
+	del self.parent.tabs[i]
+
+GSEditViewController.close = Close_Tab
+
+'''
+
+.. function:: close()
+	
+	Close this tab.
+	
+'''
 
 
 ##################################################################################
