@@ -2784,7 +2784,7 @@ GSInstance.instanceInterpolations = property(lambda self: self.pyobjc_instanceMe
 	:type: dict
 	'''
 
-GSInstance.manualInterpolation = property(lambda self: self.valueForKey_("manualInterpolation"), lambda self, value: self.setValue_forKey_(value, "manualInterpolation"))
+GSInstance.manualInterpolation = property(lambda self: bool(self.valueForKey_("manualInterpolation")), lambda self, value: self.setValue_forKey_(value, "manualInterpolation"))
 '''.. attribute:: manualInterpolation
 	Disables automatic calculation of instanceInterpolations
 	This allowes manual setting of instanceInterpolations.
