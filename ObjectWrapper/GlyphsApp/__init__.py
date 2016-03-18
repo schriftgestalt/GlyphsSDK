@@ -3512,7 +3512,7 @@ GSGlyph.category = property(		lambda self: self.valueForKey_("category"),
 	:type: unicode
 '''
 
-GSGlyph.storeCategory = property(	lambda self: self.valueForKey_("storeCategory"),
+GSGlyph.storeCategory = property(	lambda self: bool(self.valueForKey_("storeCategory")),
 									lambda self, value: self.setStoreCategory_(value))
 '''.. attribute:: storeCategory
 	Set to True in order to manipulate the `category` of the glyph (see above).
@@ -3528,7 +3528,7 @@ GSGlyph.subCategory = property(		lambda self: self.valueForKey_("subCategory"),
 	:type: unicode
 '''
 
-GSGlyph.storeSubCategory = property(lambda self: self.valueForKey_("storeSubCategory"),
+GSGlyph.storeSubCategory = property(lambda self: bool(self.valueForKey_("storeSubCategory")),
 									lambda self, value: self.setStoreSubCategory_(value))
 '''.. attribute:: storeSubCategory
 	Set to True in order to manipulate the `subCategory` of the glyph (see above).
@@ -3547,7 +3547,7 @@ GSGlyph.script = property(			lambda self: self.valueForKey_("script"),
 	:type: unicode
 '''
 
-GSGlyph.storeScript = property(		lambda self: self.valueForKey_("storeScript"),
+GSGlyph.storeScript = property(		lambda self: bool(self.valueForKey_("storeScript")),
 	 								lambda self, value: self.setStoreScript_(value))
 '''.. attribute:: storeScript
 	Set to True in order to manipulate the `script` of the glyph (see above).
@@ -3567,7 +3567,7 @@ GSGlyph.productionName = property(	lambda self: self.production(),
 	.. versionadded:: 2.3
 '''
 
-GSGlyph.storeProductionName = property(lambda self: self.valueForKey_("storeScript"), 
+GSGlyph.storeProductionName = property(lambda self: bool(self.valueForKey_("storeScript")), 
 									lambda self, value: self.setStoreProduction_(value))
 '''.. attribute:: storeProductionName
 	Set to True in order to manipulate the `productionName` of the glyph (see above).
