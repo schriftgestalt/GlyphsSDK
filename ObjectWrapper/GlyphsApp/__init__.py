@@ -2467,7 +2467,7 @@ GSFontMaster.horizontalStems = property(lambda self: self.valueForKey_("horizont
 	.. code-block:: python
 		
 		# Set stems
-		font.masters[0].verticalStems = [10, 11, 20]
+		font.masters[0].horizontalStems = [10, 11, 20]
 '''
 GSFontMaster.alignmentZones = property(lambda self: self.valueForKey_("alignmentZones"), lambda self, value: self.setValue_forKey_(value, "alignmentZones"))
 #GSFontMaster.alignmentZones = property(lambda self: self.mutableArrayValueForKey_("alignmentZones"), lambda self, value: self.setValue_forKey_(value, "alignmentZones"))

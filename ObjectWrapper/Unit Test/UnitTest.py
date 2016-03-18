@@ -12,6 +12,10 @@ import os, time
 def testString(stringObject, assertType = True):
 	if assertType:
 		assert str(stringObject)
+	oldValue = stringObject
+	stringObject = 'a'
+	assert stringObject == 'a'
+	stringObject = oldValue
 
 def testDict(dictObject, assertType = True):
 	if assertType:
@@ -34,6 +38,14 @@ def testInteger(intObject, assertType = True):
 	assert intObject == oldValue + 1
 	intObject = oldValue
 
+def testFloat(floatObject, assertType = True):
+	if assertType:
+		assert type(float(floatObject)) == float
+	oldValue = floatObject
+	floatObject = .5
+	assert floatObject == .5
+	floatObject = oldValue
+
 def testUnicode(unicodeObject, assertType = True):
 	if assertType:
 		assert unicode(unicodeObject)
@@ -54,9 +66,6 @@ def testGSApplication():
 
 	# Main object
 	assert Glyphs
-
-	# Clear Log
-	Glyphs.clearLog()
 
 	# close all fonts
 	for font in Glyphs.fonts:
@@ -310,8 +319,87 @@ def testGSFont():
 	
 	
 
+def testGSFontMaster():
+	
+	master = Glyphs.font.masters[0]
+	
+	# GSFontMaster.id
+	assert unicode(master.id)
+	
+	# GSFontMaster.name
+	assert str(master.name)
 
+	# GSFontMaster.weight
+	assert str(master.weight)
+
+	# GSFontMaster.width
+	assert str(master.width)
+	
+	# GSFontMaster.weightValue
+	testFloat(master.weightValue)
+	
+	# GSFontMaster.widthValue
+	testFloat(master.widthValue)
+
+	# GSFontMaster.customName
+	testString(master.customName)
+
+	# GSFontMaster.customValue
+	testFloat(master.customValue)
+
+	# GSFontMaster.ascender
+	testFloat(master.ascender)
+
+	# GSFontMaster.capHeight
+	testFloat(master.capHeight)
+
+	# GSFontMaster.xHeight
+	testFloat(master.xHeight)
+
+	# GSFontMaster.descender
+	testFloat(master.descender)
+
+	# GSFontMaster.italicAngle
+	testFloat(master.italicAngle)
+	
+	# GSFontMaster.verticalStems
+	oldStems = master.verticalStems
+	master.verticalStems = [10, 15, 20]
+	assert len(list(master.verticalStems)) == 3
+	master.verticalStems = oldStems
+
+	# GSFontMaster.horizontalStems
+	oldStems = master.horizontalStems
+	master.horizontalStems = [10, 15, 20]
+	assert len(list(master.horizontalStems)) == 3
+	master.horizontalStems = oldStems
+
+	# GSFontMaster.alignmentZones
+	assert type(list(master.alignmentZones)) == list
+
+	# GSFontMaster.blueValues
+	assert type(list(master.blueValues)) == list
+
+	# GSFontMaster.otherBlues
+	assert type(list(master.otherBlues)) == list
+
+	# GSFontMaster.guides
+	assert type(list(master.guides)) == list
+
+	# GSFontMaster.userData
+	testDict(master.userData)
+
+	# GSFontMaster.customParameters
+	master.customParameters['trademark'] = 'ThisFont is a trademark by MyFoundry.com'
+	assert len(list(master.customParameters)) >= 1
+	del(master.customParameters['trademark'])
+	
+	
 def unitTest():
+
+	# Clear Log
+	Glyphs.clearLog()
 
 	testGSApplication()
 	testGSFont()
+	testGSFontMaster()
