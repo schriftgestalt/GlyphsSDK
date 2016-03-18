@@ -2685,7 +2685,7 @@ Properties
 
 '''
 
-GSInstance.active = property(lambda self: self.pyobjc_instanceMethods.active(), lambda self, value: self.setValue_forKey_(value, "active"))
+GSInstance.active = property(lambda self: bool(self.pyobjc_instanceMethods.active()), lambda self, value: self.setValue_forKey_(value, "active"))
 '''.. attribute:: active
 	:type: bool'''
 GSInstance.name = property(lambda self: self.valueForKey_("name"), lambda self, value: self.setName_(value))
