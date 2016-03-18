@@ -3502,7 +3502,8 @@ GSGlyph.id = property(				lambda self: str(self.valueForKey_("id")),
 									lambda self, value: self.setId_(value))
 '''.. attribute:: id
 	An unique identifier for each glyph
-	:type: unicode'''
+	:type: string'''
+
 GSGlyph.category = property(		lambda self: self.valueForKey_("category"),
 									lambda self, value: self.setCategory_(value))
 '''.. attribute:: category
