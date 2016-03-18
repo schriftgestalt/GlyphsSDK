@@ -1383,7 +1383,7 @@ class GlyphLayerProxy (Proxy):
 		self._owner.setLayer_forKey_(Layer, NSString.UUID())
 	def setter(self, values):
 		newLayers = NSMutableDictionary.dictionary()
-		if type(values) == list or type(values) == tuple:
+		if type(values) == list or type(values) == tuple or type(values) == type(self):
 			for layer in values:
 				newLayers[layer.layerId] = layer
 		elif type(values) == type(dict) or isinstance(values, NSDictionary):
@@ -1391,7 +1391,7 @@ class GlyphLayerProxy (Proxy):
 				newLayers[anchor.name] = anchor
 		else:
 			raise TypeError
-		self._owner.setAnchors_(newAnchors)
+		self._owner.setLayers_(newLayers)
 
 class LayerComponentsProxy (Proxy):
 	def __getitem__(self, Key):
