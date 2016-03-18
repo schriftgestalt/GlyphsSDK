@@ -393,6 +393,16 @@ def testGSFontMaster():
 	master.customParameters['trademark'] = 'ThisFont is a trademark by MyFoundry.com'
 	assert len(list(master.customParameters)) >= 1
 	del(master.customParameters['trademark'])
+
+
+def testGSAlignmentZone():
+
+	master = Glyphs.font.masters[0]
+
+	master.alignmentZones.append(GlyphsApp.GSAlignmentZone(100, 10))
+	assert master.alignmentZones[-1].position == 100
+	assert master.alignmentZones[-1].size == 10
+	del master.alignmentZones[-1]
 	
 	
 def unitTest():
@@ -403,3 +413,4 @@ def unitTest():
 	testGSApplication()
 	testGSFont()
 	testGSFontMaster()
+	testGSAlignmentZone()
