@@ -2453,12 +2453,22 @@ GSFontMaster.italicAngle = property(lambda self: self.valueForKey_("italicAngle"
 	:type: float'''
 GSFontMaster.verticalStems = property(lambda self: self.valueForKey_("verticalStems"), lambda self, value: self.setValue_forKey_(value, "verticalStems"))
 '''.. attribute:: verticalStems
-	The vertical stems. This is a list of numbers. 
-	:type: list'''
+	The vertical stems. This is a list of numbers. For the time being, this can be set only as an entire list at once.
+	:type: list
+	.. code-block:: python
+		
+		# Set stems
+		font.masters[0].verticalStems = [10, 11, 20]
+'''
 GSFontMaster.horizontalStems = property(lambda self: self.valueForKey_("horizontalStems"), lambda self, value: self.setValue_forKey_(value, "horizontalStems"))
 '''.. attribute:: horizontalStems
-	The horizontal stems. This is a list of numbers. 
-	:type: list'''
+	The horizontal stems. This is a list of numbers.  For the time being, this can be set only as an entire list at once.
+	:type: list
+	.. code-block:: python
+		
+		# Set stems
+		font.masters[0].verticalStems = [10, 11, 20]
+'''
 GSFontMaster.alignmentZones = property(lambda self: self.valueForKey_("alignmentZones"), lambda self, value: self.setValue_forKey_(value, "alignmentZones"))
 #GSFontMaster.alignmentZones = property(lambda self: self.mutableArrayValueForKey_("alignmentZones"), lambda self, value: self.setValue_forKey_(value, "alignmentZones"))
 '''.. attribute:: alignmentZones
