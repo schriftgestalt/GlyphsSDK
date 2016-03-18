@@ -11,7 +11,7 @@ import os, time
 
 def testString(stringObject, assertType = True):
 	if assertType:
-		assert str(stringObject)
+		assert type(str(stringObject)) == str
 	oldValue = stringObject
 	stringObject = 'a'
 	assert stringObject == 'a'
@@ -404,6 +404,75 @@ def testGSAlignmentZone():
 	assert master.alignmentZones[-1].size == 10
 	del master.alignmentZones[-1]
 	
+def testGSInstance():
+	
+	instance = Glyphs.font.instances[0]
+	
+	# GSInstance.active
+	testBool(instance.active)
+
+	# GSInstance.name
+	testString(instance.name)
+
+	# GSInstance.weight
+	assert str(instance.weight)
+
+	# GSInstance.width
+	assert str(instance.width)
+
+	# GSInstance.weightValue
+	testFloat(instance.weightValue)
+	
+	# GSInstance.widthValue
+	testFloat(instance.widthValue)
+
+	# GSInstance.customValue
+	testFloat(instance.customValue)
+
+	# GSInstance.isItalic
+	testBool(instance.isItalic)
+
+	# GSInstance.isBold
+	testBool(instance.isBold)
+
+	# GSInstance.linkStyle
+	testString(instance.linkStyle)
+
+	# GSInstance.familyName
+	testString(instance.familyName)
+
+	# GSInstance.preferredFamily
+	testString(instance.preferredFamily)
+
+	# GSInstance.preferredSubfamilyName
+	testString(instance.preferredSubfamilyName)
+
+	# GSInstance.windowsFamily
+	testString(instance.windowsFamily)
+
+	# GSInstance.windowsStyle
+	assert str(instance.windowsStyle)
+
+	# GSInstance.windowsLinkedToStyle
+	assert str(instance.windowsLinkedToStyle)
+
+	# GSInstance.fontName
+	testString(instance.fontName)
+
+	# GSInstance.fullName
+	testString(instance.fullName)
+
+	# GSInstance.customParameters
+	instance.customParameters['trademark'] = 'ThisFont is a trademark by MyFoundry.com'
+	assert len(list(instance.customParameters)) >= 1
+	del(instance.customParameters['trademark'])
+
+	# GSInstance.instanceInterpolations
+	assert type(dict(instance.instanceInterpolations)) == dict
+
+	# GSInstance.manualInterpolation
+	testBool(instance.manualInterpolation)
+	
 	
 def unitTest():
 
@@ -414,3 +483,5 @@ def unitTest():
 	testGSFont()
 	testGSFontMaster()
 	testGSAlignmentZone()
+	testGSInstance()
+
