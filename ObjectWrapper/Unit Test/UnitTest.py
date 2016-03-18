@@ -473,15 +473,23 @@ def testGSInstance():
 	# GSInstance.manualInterpolation
 	testBool(instance.manualInterpolation)
 	
+	# GSInstance.interpolatedFont
+	assert type(instance.interpolatedFont) == type(Glyphs.font)
+
+
+	## Methods
+
+	# GSInstance.generate()
+	assert instance.generate(FontPath = os.path.join(os.path.dirname(__file__), 'Glyphs Unit Test Sans.otf')) == True
 	
 def unitTest():
 
 	# Clear Log
 	Glyphs.clearLog()
 
-	testGSApplication()
-	testGSFont()
-	testGSFontMaster()
-	testGSAlignmentZone()
+#	testGSApplication()
+#	testGSFont()
+#	testGSFontMaster()
+#	testGSAlignmentZone()
 	testGSInstance()
 
