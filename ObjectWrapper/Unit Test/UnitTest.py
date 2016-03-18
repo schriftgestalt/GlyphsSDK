@@ -19,7 +19,7 @@ def testString(stringObject, assertType = True):
 
 def testDict(dictObject, assertType = True):
 	if assertType:
-		assert dict(dictObject)
+		assert type(dict(dictObject)) == dict
 	var1 = 'abc'
 	var2 = 'def'
 	dictObject['uniTestValue'] = var1
@@ -31,11 +31,8 @@ def testInteger(intObject, assertType = True):
 	if assertType:
 		assert type(int(intObject)) == int
 	oldValue = intObject
-	try:
-		intObject += 1
-	except:
-		intObject = 1
-	assert intObject == oldValue + 1
+	intObject = 1
+	assert intObject == 1
 	intObject = oldValue
 
 def testFloat(floatObject, assertType = True):
@@ -481,15 +478,137 @@ def testGSInstance():
 
 	# GSInstance.generate()
 	assert instance.generate(FontPath = os.path.join(os.path.dirname(__file__), 'Glyphs Unit Test Sans.otf')) == True
+
+
+def testGSGlyph():
+
+	glyph = GlyphsApp.GSGlyph()
+	glyph.name = 'test'
+	Glyphs.font.glyphs.append(glyph)
+
+	# GSGlyph.parent
+	assert glyph.parent == Glyphs.font
+	
+	# GSGlyph.layers
+	glyph.layers = Glyphs.font.glyphs['a'].layers
+
+	# GSGlyph.name
+	testUnicode(glyph.name)
+
+	# GSGlyph.unicode
+	testUnicode(glyph.unicode)
+
+	# GSGlyph.string
+	if glyph.unicode:
+		assert type(glyph.string) == unicode
+
+	# GSGlyph.id
+	assert type(glyph.id) == str
+
+	# GSGlyph.category
+	assert type(glyph.category) == unicode or type(glyph.category) == type(None)
+
+	# GSGlyph.storeCategory
+	testBool(glyph.storeCategory)
+
+	# GSGlyph.subCategory
+	assert type(glyph.subCategory) == unicode or type(glyph.subCategory) == type(None)
+
+	# GSGlyph.storeSubCategory
+	testBool(glyph.storeSubCategory)
+
+	# GSGlyph.script
+	assert type(glyph.script) == unicode or type(glyph.script) == type(None)
+
+	# GSGlyph.storeScript
+	testBool(glyph.storeScript)
+
+	# GSGlyph.productionName
+	assert type(glyph.productionName) == unicode or type(glyph.productionName) == type(None)
+
+	# GSGlyph.storeProductionName
+	testBool(glyph.storeProductionName)
+
+	# GSGlyph.glyphInfo
+	assert glyph.glyphInfo or glyph.glyphInfo == None
+
+	# GSGlyph.leftKerningGroup
+	testUnicode(glyph.leftKerningGroup)
+
+	# GSGlyph.rightKerningGroup
+	testUnicode(glyph.rightKerningGroup)
+
+	# GSGlyph.leftMetricsKey
+	testUnicode(glyph.leftMetricsKey)
+
+	# GSGlyph.rightMetricsKey
+	testUnicode(glyph.rightMetricsKey)
+
+	# GSGlyph.widthMetricsKey
+	testUnicode(glyph.widthMetricsKey)
+
+	# GSGlyph.export
+	testBool(glyph.export)
+
+	# GSGlyph.color
+	testInteger(glyph.color)
+
+	# GSGlyph.colorObject
+	a = glyph.colorObject
+	
+	# GSGlyph.note
+	testUnicode(glyph.note)
+	
+	# GSGlyph.selected
+	testBool(glyph.selected)
+	
+	# GSGlyph.mastersCompatible
+	assert type(glyph.mastersCompatible) == bool
+
+	# GSGlyph.userData
+	testDict(glyph.userData)
+
+	# GSGlyph.smartComponentAxes
+	assert type(list(glyph.smartComponentAxes)) == list
+
+	# GSGlyph.lastChange
+	assert int(glyph.lastChange)
+	
+
+	## Methods
+	glyph.beginUndo()
+	glyph.endUndo()
+	glyph.updateGlyphInfo()
+
+
+	# Delete glyph
+	del Glyphs.font.glyphs['test']
+	
+
+
+
+	
 	
 def unitTest():
+
+#	from GlyphsApp import Glyphs
 
 	# Clear Log
 	Glyphs.clearLog()
 
-#	testGSApplication()
-#	testGSFont()
-#	testGSFontMaster()
-#	testGSAlignmentZone()
+	testGSApplication()
+	testGSFont()
+	testGSFontMaster()
+	testGSAlignmentZone()
 	testGSInstance()
+###	testGSCustomParameter() # Skip, because they have already been tested in three of the above methods
+###	testGSClass() # Skip, because this has already been tested in testGSFont()
+###	testGSFeaturePrefix() # Skip, because this has already been tested in testGSFont()
+###	testGSFeature() # Skip, because this has already been tested in testGSFont()
+	testGSGlyph()
 
+	# Macro window
+	Glyphs.showMacroWindow()
+	
+	print 'Finished all tests without errors.'
+	
