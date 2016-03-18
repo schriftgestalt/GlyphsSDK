@@ -2434,7 +2434,8 @@ GSFontMaster.customName = property(lambda self: self.valueForKey_("custom"), lam
 	:type: string'''
 GSFontMaster.customValue = property(lambda self: self.valueForKey_("customValue"), lambda self, value: self.setValue_forKey_(value, "customValue"))
 '''.. attribute:: customValue
-	Value for interpolation in design space.'''
+	Value for interpolation in design space.
+	:type: float'''
 GSFontMaster.ascender = property(lambda self: self.valueForKey_("ascender"), lambda self, value: self.setValue_forKey_(value, "ascender"))
 '''.. attribute:: ascender
 	:type: float'''
