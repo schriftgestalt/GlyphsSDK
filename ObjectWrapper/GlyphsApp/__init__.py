@@ -3988,6 +3988,7 @@ GSLayer.associatedMasterId = property(lambda self: self.valueForKey_("associated
 		# add a new layer
 		newLayer = GSLayer()
 		newLayer.name = '{125, 100}' # (example for glyph-level intermediate master)
+
 		# you may set the master ID that this layer will be associated with, otherwise the first master will be used
 		newLayer.associatedMasterId = font.masters[-1].id # attach to last master
 		font.glyphs['a'].layers.append(newLayer)
@@ -4166,7 +4167,7 @@ GSLayer.hints = property(lambda self: LayerHintsProxy(self),
 		layer.hints.append(newHint)
 
 		# delete hint
-		del(layer.hint[0])
+		del(layer.hints[0])
 '''
 
 GSLayer.anchors = property(lambda self: LayerAnchorsProxy(self),
