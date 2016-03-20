@@ -6165,6 +6165,7 @@ Properties
 	position
 	scale
 	transform
+	alpha
 	
 Functions
 
@@ -6237,6 +6238,19 @@ GSBackgroundImage.locked = property(		lambda self: bool(self.pyobjc_instanceMeth
 	Defines whether image is locked for access in UI.
 	
 	:type: bool
+'''
+
+GSBackgroundImage.alpha = property(		lambda self: bool(self.pyobjc_instanceMethods.alpha()),
+						 		lambda self, value: self.setAlpha_(value))
+'''.. attribute:: alpha
+	
+	.. versionadded:: 2.3
+		
+	Defines the transparence of the image in the edit view. Default is 50%, possible values are 10–100.
+	
+	To reset it to default, set it to anything other then the allowed values. 
+	
+	:type: int
 '''
 
 def BackgroundImage_getPosition(self):
