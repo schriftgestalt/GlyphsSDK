@@ -475,7 +475,7 @@ Functions
 ---------
 '''
 
-def OpenFont(self, Path, showInterface=True ):
+def OpenFont(self, Path, showInterface=True):
 	URL = NSURL.fileURLWithPath_(Path)
 	Doc = NSDocumentController.sharedDocumentController().openDocumentWithContentsOfURL_display_error_(URL, showInterface, None)[0]
 	if Doc is not None:
@@ -2501,7 +2501,7 @@ GSFontMaster.guideLines = GSFontMaster.guides
 '''.. attribute:: guides
 	Collection of :class:`GSGuideLine <GSGuideLine>`. These are the font-wide (actually master-wide) red guidelines. For glyph-level guidelines (attached to the layers) see :attr:`GSLayer`.guides
 	:type: list'''
-GSFontMaster.userData = property(lambda self: self.pyobjc_instanceMethods.userData(), lambda self, value: self.setValue_forKey_(value, "userData"))
+GSFontMaster.userData = property(lambda self: self.pyobjc_instanceMethods.userData(), lambda self, value: self.setUserData_(value))
 '''.. attribute:: userData
 	A dictionary to store user data. Use a unique key and only use objects that can be stored in a property list (string, list, dict, numbers, NSData) otherwise the date will not be recoverable from the saved file.
 	:type: dict
