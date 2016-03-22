@@ -4909,7 +4909,7 @@ Properties
 	component
 	transform
 	bounds
-	disableAlignment
+	automaticAlignment
 	anchor
 	selected
 	smartComponentValues
@@ -5082,9 +5082,9 @@ GSComponent.bounds = property(		lambda self: self.pyobjc_instanceMethods.bounds(
 GSComponent.disableAlignment = property(lambda self: bool(self.pyobjc_instanceMethods.disableAlignment()),
 									lambda self, value: self.setDisableAlignment_(value))
 # new:
-GSComponent.automaticAlignment = property(lambda self: bool(self.pyobjc_instanceMethods.disableAlignment()),
-									lambda self, value: self.setDisableAlignment_(value))
-'''.. attribute:: disableAlignment
+GSComponent.automaticAlignment = property(lambda self: not bool(self.pyobjc_instanceMethods.disableAlignment()),
+									lambda self, value: self.setDisableAlignment_(not bool(value)))
+'''.. attribute:: automaticAlignment
 	
 	Defines whether the component is automatically aligned.
 	
