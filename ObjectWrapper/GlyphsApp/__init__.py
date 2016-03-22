@@ -4907,6 +4907,7 @@ Properties
 	position
 	componentName
 	component
+	layer
 	transform
 	bounds
 	automaticAlignment
@@ -5016,6 +5017,16 @@ GSComponent.component = property(	lambda self: self.valueForKey_("component"))
 '''.. attribute:: component
 	The :class:`GSGlyph` the component is pointing to. This is read only. In order to change the referenced base glyph, set :class:`GSComponent`.componentName to the new glyph name.
 	:type: :class:`GSGlyph`
+'''
+
+GSComponent.layer = property(	lambda self: self.valueForKey_("component").layers[self.parent().associatedMasterId])
+'''.. attribute:: layer
+
+	.. versionadded:: 2.3
+
+	The :class:`GSLayer` the component is pointing to. This is read only. In order to change the referenced base glyph, set :class:`GSComponent`.componentName to the new glyph name.
+
+	:type: :class:`GSLayer`
 '''
 
 GSComponent.transform = property(	lambda self: self.transformStruct(),
