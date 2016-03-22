@@ -10,6 +10,7 @@ import GlyphsApp
 from GlyphsApp import *
 import os, time
 
+PathToTestFile = "/Users/georg/Programmierung/GlyphsSDK/ObjectWrapper/Unit Test/Glyphs Unit Test Sans.glyphs"
 
 class GlyphsAppTests(unittest.TestCase):
 	
@@ -64,11 +65,8 @@ class GlyphsAppTests(unittest.TestCase):
 		boolObject = oldValue
 	
 	def setUp(self):
-		Glyphs.open("/Users/georg/Programmierung/GlyphsSDK/ObjectWrapper/Unit Test/Glyphs Unit Test Sans.glyphs")
-	
-	def tearDown(self):
-		if Glyphs.font is not None:
-			Glyphs.font.close()
+		if Glyphs.font is None:
+			Glyphs.open(PathToTestFile)
 	
 	def test_GSApplication(self):
 		
@@ -80,7 +78,7 @@ class GlyphsAppTests(unittest.TestCase):
 			font.close()
 		
 		# open font
-		Glyphs.open("/Users/georg/Programmierung/GlyphsSDK/ObjectWrapper/Unit Test/Glyphs Unit Test Sans.glyphs")
+		Glyphs.open(PathToTestFile)
 		
 		# Macro window
 		Glyphs.showMacroWindow()
