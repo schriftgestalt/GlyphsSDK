@@ -1401,10 +1401,16 @@ class GlyphLayerProxy (Proxy):
 
 class LayerComponentsProxy (Proxy):
 	def __getitem__(self, Key):
+		if Key < 0:
+			Key = self.__len__() + Key
 		return self._owner.componentAtIndex_(Key)
 	def __setitem__(self, Key, Component):
+		if Key < 0:
+			Key = self.__len__() + Key
 		self._owner.setComponent_atIndex_(Component, Key)
 	def __delitem__(self, Key):
+		if Key < 0:
+			Key = self.__len__() + Key
 		self._owner.removeComponentAtIndex_(Key)
 	def append(self, Component):
 		self._owner.addComponent_(Component)
