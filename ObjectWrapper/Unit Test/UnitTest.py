@@ -600,4 +600,4 @@ class GlyphsAppTests(unittest.TestCase):
 sys.argv = ["GlyphsAppTests"]
 
 if __name__ == '__main__':
-	unittest.main()
+	unittest.main(exit=False)
