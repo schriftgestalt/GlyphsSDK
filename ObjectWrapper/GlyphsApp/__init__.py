@@ -969,7 +969,7 @@ GSElement.x = property(lambda self: self.pyobjc_instanceMethods.position().x,
 GSElement.y = property(lambda self: self.pyobjc_instanceMethods.position().y,
 	lambda self, value: self.setPosition_(NSMakePoint(self.x, value)))
 
-GSElement.layer = property(lambda self: self.parent)
+GSElement.layer = property(lambda self: self.parent())
 
 class AppDocumentProxy (Proxy):
 	"""The list of documents."""
@@ -2544,7 +2544,7 @@ GSFontMaster.customParameters = property(lambda self: CustomParametersProxy(self
 ##################################################################################
 
 
-GSElement.selected = property(	lambda self: ObjectInLayer_selected(self) )
+GSElement.selected = property(	lambda self: ObjectInLayer_selected(self), lambda self, value: SetObjectInLayer_selected(self, value) )
 
 
 ##################################################################################
@@ -5694,7 +5694,7 @@ GSNode.connection = property(__GSNode_get_connection, __GSNode_set_connection, d
 	   Use :attribute:`smooth` instead.
 '''
 
-GSNode.layer = property(lambda self: self.parent.parent)
+GSNode.layer = property(lambda self: self.parent().parent)
 
 
 '''.. attribute:: selected
