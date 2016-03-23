@@ -10,17 +10,18 @@ import GlyphsApp
 from GlyphsApp import *
 import os, time
 
-PathToTestFile = "/Users/georg/Programmierung/GlyphsSDK/ObjectWrapper/Unit Test/Glyphs Unit Test Sans.glyphs"
+PathToTestFile = os.path.join(os.path.dirname(__file__), 'Glyphs Unit Test Sans.glyphs')
 
 class GlyphsAppTests(unittest.TestCase):
 	
-	def assertString(self, stringObject, assertType = True):
+	def assertString(self, stringObject, assertType = True, readOnly = False):
 		if assertType:
 			self.assertIsInstance(str(stringObject), str)
-		oldValue = stringObject
-		stringObject = 'a'
-		self.assertEqual(stringObject, 'a')
-		stringObject = oldValue
+		if readOnly == False:
+			oldValue = stringObject
+			stringObject = 'a'
+			self.assertEqual(stringObject, 'a')
+			stringObject = oldValue
 	
 	def assertDict(self, dictObject, assertType = True):
 		if assertType:
@@ -32,41 +33,47 @@ class GlyphsAppTests(unittest.TestCase):
 		dictObject['uniTestValue'] = var2
 		self.assertEqual(dictObject['uniTestValue'], var2)
 	
-	def assertInteger(self, intObject, assertType = True):
+	def assertInteger(self, intObject, assertType = True, readOnly = False):
 		if assertType:
 			assert type(int(intObject)) == int
-		oldValue = intObject
-		intObject = 1
-		self.assertEqual(intObject, 1)
-		intObject = oldValue
+		if readOnly == False:
+			oldValue = intObject
+			intObject = 1
+			self.assertEqual(intObject, 1)
+			intObject = oldValue
 	
-	def assertFloat(self, floatObject, assertType = True):
+	def assertFloat(self, floatObject, assertType = True, readOnly = False):
 		if assertType:
 			self.assertIsInstance(float(floatObject), float)
-		oldValue = floatObject
-		floatObject = .5
-		self.assertEqual(floatObject, .5)
-		floatObject = oldValue
+		if readOnly == False:
+			oldValue = floatObject
+			floatObject = .5
+			self.assertEqual(floatObject, .5)
+			floatObject = oldValue
 	
-	def assertUnicode(self, unicodeObject, assertType = True):
+	def assertUnicode(self, unicodeObject, assertType = True, readOnly = False):
 		if assertType:
 			assert unicode(unicodeObject)
-		oldValue = unicodeObject
-		unicodeObject = u'Ə'
-		self.assertEqual(unicodeObject, u'Ə')
-		unicodeObject = oldValue
+		if readOnly == False:
+			oldValue = unicodeObject
+			unicodeObject = u'Ə'
+			self.assertEqual(unicodeObject, u'Ə')
+			unicodeObject = oldValue
 	
-	def assertBool(self, boolObject, assertType = True):
+	def assertBool(self, boolObject, assertType = True, readOnly = False):
 		if assertType:
 			assert type(boolObject) == bool
-		oldValue = boolObject
-		boolObject = not boolObject
-		self.assertEqual(boolObject, (not oldValue))
-		boolObject = oldValue
+		if readOnly == False:
+			oldValue = boolObject
+			boolObject = not boolObject
+			self.assertEqual(boolObject, (not oldValue))
+			boolObject = oldValue
 	
 	def setUp(self):
-		if Glyphs.font is None:
-			Glyphs.open(PathToTestFile)
+		Glyphs.clearLog()
+	
+	def tearDown(self):
+		Glyphs.showMacroWindow()
 	
 	def test_GSApplication(self):
 		
@@ -99,7 +106,7 @@ class GlyphsAppTests(unittest.TestCase):
 		for reporter in Glyphs.reporters:
 			Glyphs.activateReporter(reporter)
 		
-		assert len(Glyphs.activeReporters) == len(Glyphs.reporters)
+		self.assertEqual(len(Glyphs.activeReporters), len(Glyphs.reporters))
 		# deactivate all reporters
 		for reporter in Glyphs.reporters:
 			Glyphs.deactivateReporter(reporter)
@@ -130,13 +137,13 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertInteger(Glyphs.handleSize)
 		
 		# GSApplication.versionString
-		assert str(Glyphs.versionString)
+		self.assertString(Glyphs.versionString, readOnly = True)
 		
 		# GSApplication.versionNumber
-		assert float(Glyphs.versionNumber)
+		self.assertFloat(Glyphs.versionNumber, readOnly = True)
 		
 		# GSApplication.buildNumber
-		assert int(Glyphs.buildNumber)
+		self.assertInteger(Glyphs.buildNumber, readOnly = True)
 		
 		## Methods
 		
@@ -144,19 +151,19 @@ class GlyphsAppTests(unittest.TestCase):
 		Glyphs.showGlyphInfoPanelWithSearchString('a')
 		
 		# GSApplication.glyphInfoForName()
-		assert str(Glyphs.glyphInfoForName('a')) == "<GSGlyphInfo 'a'>"
+		self.assertEqual(str(Glyphs.glyphInfoForName('a')), "<GSGlyphInfo 'a'>")
 		
 		# GSApplication.glyphInfoForUnicode()
-		assert str(Glyphs.glyphInfoForUnicode('0061')) == "<GSGlyphInfo 'a'>"
+		self.assertEqual(str(Glyphs.glyphInfoForUnicode('0061')), "<GSGlyphInfo 'a'>")
 		
 		# GSApplication.niceGlyphName()
-		assert Glyphs.niceGlyphName('a') == 'a'
+		self.assertEqual(Glyphs.niceGlyphName('a'), 'a')
 		
 		# GSApplication.productionGlyphName()
-		assert Glyphs.productionGlyphName('a') == 'a'
+		self.assertEqual(Glyphs.productionGlyphName('a'), 'a')
 		
 		# GSApplication.ligatureComponents()
-		assert len(list(Glyphs.ligatureComponents('allah-ar'))) == 4
+		self.assertEqual(len(list(Glyphs.ligatureComponents('allah-ar'))), 4)
 		
 		# GSApplication.redraw()
 		Glyphs.redraw()
@@ -164,12 +171,12 @@ class GlyphsAppTests(unittest.TestCase):
 		# GSApplication.showNotification()
 		Glyphs.showNotification('Glyphs Unit Test', 'Hello World')
 		
-		assert Glyphs.localize({
+		self.assertIsNotNone(Glyphs.localize({
 			'en':  'Hello World',
 			'de': u'Hallöle Welt',
 			'fr':  'Bonjour tout le monde',
 			'es':  'Hola Mundo',
-			})
+			}))
 
 
 	def test_GSFont(self):
@@ -179,34 +186,46 @@ class GlyphsAppTests(unittest.TestCase):
 		## Attributes
 		
 		# GSFont.parent
-		assert 'GSDocument' in str(font.parent)
+		self.assertIn('GSDocument', str(font.parent))
 		
 		# GSFont.masters
-		assert len(list(font.masters)) >= 1
+		self.assertGreaterEqual(len(list(font.masters)), 1)
 		
 		# GSFont.instances
-		assert len(list(font.instances)) >= 1
+		self.assertGreaterEqual(len(list(font.instances)), 1)
 		
 		# GSFont.glyphs
-		assert len(list(font.glyphs)) >= 1
+		self.assertGreaterEqual(len(list(font.glyphs)), 1)
 		
 		# GSFont.classes
+		font.classes = []
+		self.assertEqual(len(font.classes), 0)
 		font.classes.append(GlyphsApp.GSClass('uppercaseLetters', 'A'))
-		assert 'uppercaseLetters' in str(font.classes)
-		assert 'A' in font.classes['uppercaseLetters'].code
+		self.assertEqual(len(font.classes), 1)
+		self.assertIn('uppercaseLetters', str(font.classes))
+		self.assertIn('A', font.classes['uppercaseLetters'].code)
 		del(font.classes['uppercaseLetters'])
+		self.assertEqual(len(font.classes), 0)
 		
 		# GSFont.features
+		font.features = []
+		self.assertEqual(len(font.features), 0)
 		font.features.append(GlyphsApp.GSFeature('liga', 'sub f i by fi;'))
-		assert '<GSFeature "liga">' in str(font.features)
-		assert 'sub f i by fi;' in font.features['liga'].code
+		self.assertEqual(len(font.features), 1)
+		self.assertIn('<GSFeature "liga">', str(font.features))
+		self.assertIn('sub f i by fi;', font.features['liga'].code)
 		del(font.features['liga'])
+		self.assertEqual(len(font.features), 0)
 		
 		# GSFont.featurePrefixes
+		font.featurePrefixes = []
+		self.assertEqual(len(font.featurePrefixes), 0)
 		font.featurePrefixes.append(GlyphsApp.GSFeaturePrefix('LanguageSystems', 'languagesystem DFLT dflt;'))
-		assert 'LanguageSystems' in str(font.featurePrefixes)
-		assert 'languagesystem DFLT dflt;' in font.featurePrefixes['LanguageSystems'].code
+		self.assertEqual(len(font.featurePrefixes), 1)
+		self.assertIn('LanguageSystems', str(font.featurePrefixes))
+		self.assertIn('languagesystem DFLT dflt;', font.featurePrefixes['LanguageSystems'].code)
 		del(font.featurePrefixes['LanguageSystems'])
+		self.assertEqual(len(font.featurePrefixes), 0)
 		
 		# GSFont.copyright
 		self.assertUnicode(font.copyright)
@@ -230,7 +249,7 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertInteger(font.versionMinor)
 		
 		# GSFont.date
-		assert font.date
+		self.assertIsInstance(font.date, NSDate)
 		
 		# GSFont.familyName
 		self.assertUnicode(font.familyName)
@@ -242,7 +261,7 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertUnicode(font.note)
 		
 		# GSFont.kerning
-		assert dict(font.kerning)
+		self.assertIsInstance(dict(font.kerning), dict)
 		
 		# GSFont.userData
 		self.assertDict(font.userData)
@@ -252,7 +271,7 @@ class GlyphsAppTests(unittest.TestCase):
 		
 		# GSFont.customParameters
 		font.customParameters['trademark'] = 'ThisFont is a trademark by MyFoundry.com'
-		assert len(list(font.customParameters)) >= 1
+		self.assertGreaterEqual(len(list(font.customParameters)), 1)
 		del(font.customParameters['trademark'])
 		
 		# GSFont.grid
@@ -262,23 +281,28 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertInteger(font.gridSubDivisions)
 		
 		# GSFont.gridLength
-		assert type(font.gridLength) == float
+		self.assertFloat(font.gridLength, readOnly = True)
 		
 		# GSFont.selection
 		for glyph in font.glyphs:
 			glyph.selected = False
 		font.glyphs['a'].selected = True
-		assert len(list(font.selection)) == 1
+		self.assertEqual(len(list(font.selection)), 1)
+		for glyph in font.glyphs:
+			glyph.selected = True
+		self.assertEqual(len(list(font.selection)), len(font.glyphs))
 		
 		# GSFont.selectedLayers
 		# GSFont.currentText
 		# GSFont.tabs
 		# GSFont.currentTab
+		for tab in font.tabs:
+			tab.close()
 		font.newTab('a')
-		assert len(list(font.selectedLayers)) == 1
-		assert len(list(font.tabs)) >= 1
-		assert font.currentText == 'a'
-		assert font.currentTab == font.tabs[-1]
+		self.assertEqual(len(list(font.selectedLayers)), 1)
+		self.assertEqual(len(list(font.tabs)), 1)
+		self.assertEqual(font.currentText, 'a')
+		self.assertEqual(font.currentTab, font.tabs[-1])
 		font.tabs[0].close()
 		
 		# GSFont.selectedFontMaster
@@ -286,18 +310,18 @@ class GlyphsAppTests(unittest.TestCase):
 		oldMasterIndex = font.masterIndex
 		for i in range(len(list(font.masters))):
 			font.masterIndex = i
-			assert font.selectedFontMaster == font.masters[i]
+			self.assertEqual(font.selectedFontMaster, font.masters[i])
 		font.masterIndex = oldMasterIndex
 		
 		# GSFont.filepath
-		assert font.filepath
+		self.assertIsNotNone(font.filepath)
 		
 		# GSFont.tool
 		# GSFont.tools
 		oldTool = font.tool
 		for toolName in font.tools:
 			font.tool = toolName
-			assert font.tool == toolName
+			self.assertEqual(font.tool, toolName)
 		font.tool = oldTool
 		
 		
@@ -308,8 +332,7 @@ class GlyphsAppTests(unittest.TestCase):
 		
 		# GSFont.close()
 		font.close()
-		Glyphs.open(os.path.join(os.path.dirname(__file__), 'Glyphs Unit Test Sans.glyphs'))
-		Glyphs.showMacroWindow()
+		Glyphs.open(PathToTestFile)
 		
 		# GSFont.disableUpdateInterface()
 		font.disableUpdateInterface()
@@ -321,7 +344,7 @@ class GlyphsAppTests(unittest.TestCase):
 		font.setKerningForPair(font.masters[0].id, 'a', 'a', -10)
 		
 		# GSFont.kerningForPair()
-		assert font.kerningForPair(font.masters[0].id, 'a', 'a') == -10
+		self.assertEqual(font.kerningForPair(font.masters[0].id, 'a', 'a'), -10)
 		
 		# GSFont.removeKerningForPair()
 		font.removeKerningForPair(font.masters[0].id, 'a', 'a')
@@ -399,33 +422,37 @@ class GlyphsAppTests(unittest.TestCase):
 		
 		# GSFontMaster.customParameters
 		master.customParameters['trademark'] = 'ThisFont is a trademark by MyFoundry.com'
-		assert len(list(master.customParameters)) >= 1
+		self.assertGreaterEqual(len(list(master.customParameters)), 1)
 		del(master.customParameters['trademark'])
 	
 	def test_GSAlignmentZone(self):
 		
 		master = Glyphs.font.masters[0]
 		
+		master.alignmentZones = []
+		self.assertEqual(len(master.alignmentZones), 0)
 		master.alignmentZones.append(GlyphsApp.GSAlignmentZone(100, 10))
+		self.assertEqual(len(master.alignmentZones), 1)
 		self.assertEqual(master.alignmentZones[-1].position, 100)
 		self.assertEqual(master.alignmentZones[-1].size, 10)
 		del master.alignmentZones[-1]
+		self.assertEqual(len(master.alignmentZones), 0)
 	
 	def test_GSInstance(self):
 		
 		instance = Glyphs.font.instances[0]
 		
 		# GSInstance.active
-		self.assertIsInstance(instance.active, bool)
+		self.assertBool(instance.active, readOnly = True)
 		
 		# GSInstance.name
 		self.assertString(instance.name)
 		
 		# GSInstance.weight
-		assert str(instance.weight)
+		self.assertString(instance.weight, readOnly = True)
 		
 		# GSInstance.width
-		assert str(instance.width)
+		self.assertString(instance.width, readOnly = True)
 		
 		# GSInstance.weightValue
 		self.assertFloat(instance.weightValue)
@@ -458,10 +485,10 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertString(instance.windowsFamily)
 		
 		# GSInstance.windowsStyle
-		assert str(instance.windowsStyle)
+		self.assertString(instance.windowsStyle)
 		
 		# GSInstance.windowsLinkedToStyle
-		assert str(instance.windowsLinkedToStyle)
+		self.assertString(instance.windowsLinkedToStyle)
 		
 		# GSInstance.fontName
 		self.assertString(instance.fontName)
@@ -471,7 +498,7 @@ class GlyphsAppTests(unittest.TestCase):
 		
 		# GSInstance.customParameters
 		instance.customParameters['trademark'] = 'ThisFont is a trademark by MyFoundry.com'
-		self.assertGreater(len(instance.customParameters), 0)
+		self.assertGreaterEqual(len(instance.customParameters), 1)
 		del(instance.customParameters['trademark'])
 		
 		# GSInstance.instanceInterpolations
@@ -487,7 +514,7 @@ class GlyphsAppTests(unittest.TestCase):
 		## Methods
 		
 		# GSInstance.generate()
-		assert instance.generate(FontPath = os.path.join(os.path.dirname(__file__), 'Glyphs Unit Test Sans.otf')) == True
+		self.assertEqual(instance.generate(FontPath = os.path.join(os.path.dirname(__file__), 'Glyphs Unit Test Sans.otf')), True)
 
 
 	def test_GSGlyph(self):
@@ -497,7 +524,7 @@ class GlyphsAppTests(unittest.TestCase):
 		Glyphs.font.glyphs.append(glyph)
 		
 		# GSGlyph.parent
-		assert glyph.parent == Glyphs.font
+		self.assertEqual(glyph.parent, Glyphs.font)
 		
 		# GSGlyph.layers
 		glyph.layers = Glyphs.font.glyphs['a'].layers
@@ -510,10 +537,10 @@ class GlyphsAppTests(unittest.TestCase):
 		
 		# GSGlyph.string
 		if glyph.unicode:
-			assert type(glyph.string) == unicode
+			self.assertIsInstance(glyph.string, unicode)
 		
 		# GSGlyph.id
-		assert type(glyph.id) == str
+		self.assertIsInstance(glyph.id, str)
 		
 		# GSGlyph.category
 		assert type(glyph.category) == unicode or type(glyph.category) == type(None)
@@ -528,19 +555,19 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertBool(glyph.storeSubCategory)
 		
 		# GSGlyph.script
-		assert type(glyph.script) == unicode or type(glyph.script) == type(None)
+		self.assertTrue(type(glyph.category) == unicode or type(glyph.category) == type(None))
 		
 		# GSGlyph.storeScript
 		self.assertBool(glyph.storeScript)
 		
 		# GSGlyph.productionName
-		assert type(glyph.productionName) == unicode or type(glyph.productionName) == type(None)
+		self.assertTrue(type(glyph.productionName) == unicode or type(glyph.productionName) == type(None))
 		
 		# GSGlyph.storeProductionName
 		self.assertBool(glyph.storeProductionName)
 		
 		# GSGlyph.glyphInfo
-		assert glyph.glyphInfo or glyph.glyphInfo == None
+		self.assertTrue(glyph.glyphInfo != None or glyph.glyphInfo == None)
 		
 		# GSGlyph.leftKerningGroup
 		self.assertUnicode(glyph.leftKerningGroup)
@@ -564,7 +591,8 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertInteger(glyph.color)
 		
 		# GSGlyph.colorObject
-		a = glyph.colorObject
+		glyph.color = 1
+		self.assertIsInstance(glyph.colorObject, NSColor)
 		
 		# GSGlyph.note
 		self.assertUnicode(glyph.note)
@@ -584,7 +612,7 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertIsInstance(list(glyph.smartComponentAxes), list)
 		
 		# GSGlyph.lastChange
-		assert int(glyph.lastChange)
+		self.assertInteger(glyph.lastChange, readOnly = True)
 		
 		
 		## Methods
