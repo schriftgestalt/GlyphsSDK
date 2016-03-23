@@ -1302,7 +1302,7 @@ class FontFeaturePrefixesProxy (Proxy):
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.featurePrefixes()
 	def setterMethod(self):
-		return self._owner.setfFeaturePrefixes_
+		return self._owner.setFeaturePrefixes_
 
 
 class LayersIterator:
