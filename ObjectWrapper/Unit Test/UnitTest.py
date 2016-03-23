@@ -625,12 +625,10 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertIsInstance(glyph.mastersCompatible, bool)
 		
 		# GSGlyph.userData
-		self.assertIsNotNone(glyph.userData)
-		if (len(glyph.userData) > 0):
-			self.assertDict(glyph.userData)
+		self.assertDict(glyph.userData)
 		
 		# GSGlyph.smartComponentAxes
-		self.assertIsInstance(list(glyph.smartComponentAxes), list)
+		# postponed to its own test
 		
 		# GSGlyph.lastChange
 		self.assertInteger(glyph.lastChange, readOnly = True)
@@ -669,7 +667,7 @@ class GlyphsAppTests(unittest.TestCase):
 		
 		# GSLayer.colorObject
 		layer.color = 1
-		self.assertIsInstance(glyph.colorObject, NSColor)
+		self.assertIsInstance(layer.colorObject, NSColor)
 		
 		# GSLayer.components
 		layer = Glyphs.font.glyphs['adieresis'].layers[0]
@@ -735,6 +733,166 @@ class GlyphsAppTests(unittest.TestCase):
 		del layer.anchors['top']
 		layer.anchors['top'] = GSAnchor()
 		layer.anchors['top'].position = oldPosition
+
+		# GSLayer.paths
+		# postponed to own test
+		
+		# GSLayer.selection
+		layer.selection = []
+		self.assertEqual(len(layer.selection), 0)
+		selection = 0
+		for path in layer.paths:
+			path.selected = True
+			selection += len(path.nodes)
+		for anchor in layer.anchors:
+			anchor.selected = True
+			selection += 1
+		self.assertEqual(len(layer.selection), selection)
+		layer.clearSelection()
+		self.assertEqual(len(layer.selection), 0)
+
+		
+		# GSLayer.LSB
+		self.assertFloat(layer.LSB)
+		
+		# GSLayer.RSB
+		self.assertFloat(layer.RSB)
+
+		# GSLayer.TSB
+		self.assertFloat(layer.TSB)
+
+		# GSLayer.BSB
+		self.assertFloat(layer.BSB)
+
+		# GSLayer.width
+		self.assertFloat(layer.width)
+
+		# GSLayer.leftMetricsKey
+		self.assertUnicode(layer.leftMetricsKey)
+
+		# GSLayer.rightMetricsKey
+		self.assertUnicode(layer.rightMetricsKey)
+
+		# GSLayer.widthMetricsKey
+		self.assertUnicode(layer.widthMetricsKey)
+
+		# GSLayer.bounds
+		self.assertIsInstance(layer.bounds, NSRect)
+
+		# GSLayer.selectionBounds
+		self.assertIsInstance(layer.selectionBounds, NSRect)
+
+		# GSLayer.background
+		self.assertIn('GSBackgroundLayer', layer.background.__repr__())
+		
+		# GSLayer.backgroundImage
+		# postponed to its own test
+
+		# GSLayer.bezierPath
+		self.assertIsInstance(layer.bezierPath, NSBezierPath)
+
+		# GSLayer.userData
+		self.assertDict(layer.userData)
+
+
+		## Methods
+		decomposedLayer = layer.copyDecomposedLayer()
+		self.assertGreaterEqual(decomposedLayer.paths, 1)
+		
+		layer = Glyphs.font.glyphs['adieresis'].layers[0]
+		layer.decomposeComponents()
+		self.assertGreaterEqual(layer.paths, 1)
+
+		self.assertString(layer.compareString())
+		
+		layer.connectAllOpenPaths()
+		
+		layer.syncMetrics()
+
+		layer.correctPathDirection()
+
+		layer.removeOverlap()
+
+		layer.roundCoordinates()
+
+		layer.addNodesAtExtremes()
+
+		layer.applyTransform(NSAffineTransformStruct(
+					0.5, # x scale factor
+					0.0, # x skew factor
+					0.0, # y skew factor
+					0.5, # y scale factor
+					0.0, # x position
+					0.0  # y position
+					))
+
+		layer.beginChanges()
+
+		layer.endChanges()
+
+		layer.cutBetweenPoints(NSPoint(0, 100), NSPoint(layer.width, 100))
+
+		intersections = layer.intersectionsBetweenPoints((-1000, 100), (layer.width+1000, 100))
+
+		layer.addMissingAnchors()
+		
+		#layer.clearSelection()
+		# already tested
+		
+		layer.swapForegroundWithBackground()
+		layer.swapForegroundWithBackground()
+
+		layer.reinterpolate()
+
+		layer.clear()
+		
+		
+		
+	def test_smartComponents(self):
+		
+		glyph = Glyphs.font.glyphs['_part.shoulder']
+		
+		glyph.smartComponentAxes = []
+		self.assertEqual(len(glyph.smartComponentAxes), 0)
+		
+		# Add axes
+		
+		axis1 = GlyphsApp.GSSmartComponentAxis()
+		axis1.name = 'crotchDepth'
+		axis1.topValue = 0
+		axis1.bottomValue = -100
+		glyph.smartComponentAxes.append(axis1)
+
+		axis2 = GlyphsApp.GSSmartComponentAxis()
+		axis2.name = 'shoulderWidth'
+		axis2.topValue = 100
+		axis2.bottomValue = 0
+		glyph.smartComponentAxes.append(axis2)
+
+		self.assertEqual(len(glyph.smartComponentAxes), 2)
+		
+		# Map to poles
+
+		for layer in glyph.layers:
+			
+			# NarrowShoulder layer
+			if layer.name == 'NarrowShoulder':
+				layer.smartComponentPoleMapping['crotchDepth'] = 2
+				layer.smartComponentPoleMapping['shoulderWidth'] = 1
+
+			# LowCrotch layer
+			elif layer.name == 'LowCrotch':
+				layer.smartComponentPoleMapping['crotchDepth'] = 1
+				layer.smartComponentPoleMapping['shoulderWidth'] = 2
+
+			# normal layer
+			else:
+				layer.smartComponentPoleMapping['crotchDepth'] = 2
+				layer.smartComponentPoleMapping['shoulderWidth'] = 2
+
+		Glyphs.font.glyphs['n'].components[0].smartComponentValues['shoulderWidth'] = 30
+		Glyphs.font.glyphs['n'].components[0].smartComponentValues['crotchDepth'] = -77
+
 
 
 sys.argv = ["GlyphsAppTests"]
