@@ -1439,6 +1439,8 @@ class GlyphSmartComponentAxesProxy (Proxy):
 		self._owner.pyobjc_instanceMethods.partsSettings().addObject_(SmartComponentProperty)
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.partsSettings()
+	def setterMethod(self):
+		return self._owner.setPartsSettings_
 
 class LayerGuideLinesProxy (Proxy):
 	def __getitem__(self, Key):
@@ -3764,7 +3766,7 @@ GSGlyph.userData = property(lambda self: self.pyobjc_instanceMethods.userData(),
 		glyph.userData['rememberToMakeCoffee'] = True
 '''
 
-GSGlyph.smartComponentAxes = property(lambda self: GlyphSmartComponentAxesProxy(self))
+GSGlyph.smartComponentAxes = property(lambda self: GlyphSmartComponentAxesProxy(self), lambda self, value: GlyphSmartComponentAxesProxy(self).setter(value))
 '''.. attribute:: smartComponentAxes
 
 	.. versionadded:: 2.3
@@ -4518,14 +4520,14 @@ GSLayer.applyTransform = __GSLayer_applyTransform__
 
 		layer = Glyphs.font.selectedLayers[0] # current layer
 
-		layer.applyTransform(NSAffineTransformStruct(
+		layer.applyTransform(
 					0.5, # x scale factor
 					0.0, # x skew factor
 					0.0, # y skew factor
 					0.5, # y scale factor
 					0.0, # x position
 					0.0  # y position
-					))
+					)
 '''
 
 
@@ -5040,34 +5042,22 @@ GSComponent.transform = property(	lambda self: self.transformStruct(),
 GSComponent.transformation = property(	lambda self: self.transformStruct(),
 									  lambda self, value: self.setTransformStruct_(value))
 
-def __CGSomponent_applyTransform__(self, transformStruct):
-	transform = self.transform
-	print "__transform", transform
-	oldTransform = NSAffineTransform.transform()
-	oldTransform.setTransformStruct_(transform)
-	newTransform = NSAffineTransform.transform()
-	newTransform.setTransformStruct_(transformStruct)
-	oldTransform.appendTransform_(newTransform)
-	self.setTransformStruct_(oldTransform.transformStruct())
-	
-GSComponent.applyTransform = __CGSomponent_applyTransform__
+'''.. attribute:: transformation
 
-'''.. function:: applyTransform
-
-	Apply a transformation matrix to the component.
+	Transformation matrix of the component.
 
 	.. code-block:: python
 
 		component = layer.components[0]
 
-		component.applyTransform(NSAffineTransformStruct(
+		component.transformation = (
 					0.5, # x scale factor
 					0.0, # x skew factor
 					0.0, # y skew factor
 					0.5, # y scale factor
 					0.0, # x position
 					0.0  # y position
-					))
+					)
 '''
 
 
@@ -5193,6 +5183,35 @@ Functions
 	Decomposes the component.
 '''
 
+def __CGSomponent_applyTransform__(self, transformStruct):
+	transform = self.transform
+	print "__transform", transform
+	oldTransform = NSAffineTransform.transform()
+	oldTransform.setTransformStruct_(transform)
+	newTransform = NSAffineTransform.transform()
+	newTransform.setTransformStruct_(transformStruct)
+	oldTransform.appendTransform_(newTransform)
+	self.setTransformStruct_(oldTransform.transformStruct())
+	
+GSComponent.applyTransform = __CGSomponent_applyTransform__
+
+'''.. function:: applyTransform
+
+	Apply a transformation matrix to the component.
+
+	.. code-block:: python
+
+		component = layer.components[0]
+
+		component.applyTransform(
+					0.5, # x scale factor
+					0.0, # x skew factor
+					0.0, # y skew factor
+					0.5, # y scale factor
+					0.0, # x position
+					0.0  # y position
+					)
+'''
 
 
 
@@ -5528,14 +5547,14 @@ GSPath.applyTransform = __CGPath_applyTransform__
 
 		path = layer.paths[0]
 
-		path.applyTransform(NSAffineTransformStruct(
+		path.applyTransform(
 					0.5, # x scale factor
 					0.0, # x skew factor
 					0.0, # y skew factor
 					0.5, # y scale factor
 					0.0, # x position
 					0.0  # y position
-					))
+					)
 '''
 
 
