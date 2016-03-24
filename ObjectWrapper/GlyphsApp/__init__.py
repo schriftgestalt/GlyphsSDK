@@ -119,6 +119,10 @@ class Proxy(object):
 #
 ##################################################################################
 
+def _______________________(): pass
+def ____GSApplication____(): pass
+def _______________________(): pass
+
 
 Glyphs = NSApplication.sharedApplication()
 
@@ -891,6 +895,12 @@ GSApplication.deactivateReporter = __GSApplication_deactivateReporter__
 
 
 
+def _______________________(): pass
+def ____CONSTANTS____(): pass
+
+
+
+
 
 GSMOVE_ = 17
 GSLINE_ = 1
@@ -970,6 +980,15 @@ GSElement.y = property(lambda self: self.pyobjc_instanceMethods.position().y,
 	lambda self, value: self.setPosition_(NSMakePoint(self.x, value)))
 
 GSElement.layer = property(lambda self: self.parent())
+
+
+
+
+def ____PROXIES____(): pass
+def _______________________(): pass
+
+
+
 
 class AppDocumentProxy (Proxy):
 	"""The list of documents."""
@@ -1668,7 +1687,11 @@ def SetObjectInLayer_selected(self, state):
 #
 ##################################################################################
 
-		
+def ________________(): pass
+def ____GSFont____(): pass
+def ________________(): pass
+
+
 '''
 :mod:`GSFont`
 ===============================================================================
@@ -2346,6 +2369,9 @@ GSFont.newTab = __GSFont__addTab__
 #
 ##################################################################################
 
+def _______________________(): pass
+def ____GSFontMaster____(): pass
+def _______________________(): pass
 
 '''
 
@@ -2560,6 +2586,10 @@ GSElement.selected = property(	lambda self: ObjectInLayer_selected(self), lambda
 ##################################################################################
 
 
+def ___________________________(): pass
+def ____GSAlignmentZone____(): pass
+def ___________________________(): pass
+
 '''
 	
 :mod:`GSAlignmentZone`
@@ -2632,6 +2662,11 @@ GSAlignmentZone.size = property(lambda self: self.valueForKey_("size"), lambda s
 #
 #
 ##################################################################################
+
+
+def ____________________(): pass
+def ____GSInstance____(): pass
+def ____________________(): pass
 
 
 '''
@@ -2923,6 +2958,11 @@ GSInstance.generate = __Instance_Export__
 ##################################################################################
 
 
+def ______________________________(): pass
+def ____GSCustomParameter____(): pass
+def ______________________________(): pass
+
+
 '''
 	
 :mod:`GSCustomParameter`
@@ -3012,6 +3052,11 @@ GSCustomParameter.value = property(lambda self: self.valueForKey_("value"), lamb
 #
 ##################################################################################
 
+
+def _________________(): pass
+def ____GSClass____(): pass
+def _________________(): pass
+
 '''
 :mod:`GSClass`
 ===============================================================================
@@ -3083,6 +3128,11 @@ GSClass.automatic = property(lambda self: self.valueForKey_("automatic").boolVal
 #
 #
 ##################################################################################
+
+def _________________________(): pass
+def ____GSFeaturePrefix____(): pass
+def _________________________(): pass
+
 
 '''
 :mod:`GSFeaturePrefix`
@@ -3159,6 +3209,10 @@ GSFeaturePrefix.automatic = property(lambda self: self.valueForKey_("automatic")
 #
 #
 ##################################################################################
+
+def ___________________(): pass
+def ____GSFeature____(): pass
+def ___________________(): pass
 
 '''
 
@@ -3289,6 +3343,10 @@ Functions
 #
 ##################################################################################
 
+def ________________________(): pass
+def ____GSSubstitution____(): pass
+def ________________________(): pass
+
 
 """
 
@@ -3339,6 +3397,12 @@ GSSubstitution.scriptTag = property(lambda self: self.valueForKey_("scriptTag"),
 #
 #
 ##################################################################################
+
+
+def _________________(): pass
+def ____GSGlyph____(): pass
+def _________________(): pass
+
 
 '''
 
@@ -3872,6 +3936,10 @@ GSGlyph.updateGlyphInfo = __updateGlyphInfo
 #
 #
 ##################################################################################
+
+def _________________(): pass
+def ____GSLayer____(): pass
+def _________________(): pass
 
 
 '''
@@ -4777,6 +4845,10 @@ GSLayer._invalidateContours = _invalidateContours_
 #
 ##################################################################################
 
+def ___________________(): pass
+def ____GSAnchor____(): pass
+def ___________________(): pass
+
 '''
 
 :mod:`GSAnchor`
@@ -4887,6 +4959,11 @@ GSAnchor.drawPoints = __GSAnchor_drawPoints__
 #
 #
 ##################################################################################
+
+def _______________________(): pass
+def ____GSComponent____(): pass
+def _______________________(): pass
+
 
 
 '''
@@ -5225,6 +5302,10 @@ GSComponent.applyTransform = __CGSomponent_applyTransform__
 #
 ##################################################################################
 
+def __________________________________(): pass
+def ____GSSmartComponentAxis____(): pass
+def __________________________________(): pass
+
 
 '''
 
@@ -5300,6 +5381,11 @@ GSSmartComponentAxis.bottomValue = property(lambda self: self.valueForKey_("bott
 #
 #
 ##################################################################################
+
+
+def ________________(): pass
+def ____GSPath____(): pass
+def ________________(): pass
 
 
 '''
@@ -5567,6 +5653,10 @@ GSPath.applyTransform = __CGPath_applyTransform__
 #
 #
 ##################################################################################
+
+def ________________(): pass
+def ____GSNode____(): pass
+def ________________(): pass
 
 '''
 
@@ -5872,6 +5962,10 @@ Functions
 #
 ##################################################################################
 
+def ______________________(): pass
+def ____GSGuideline____(): pass
+def ______________________(): pass
+
 
 '''
 
@@ -5953,6 +6047,9 @@ GSGuideLine.name = property(	lambda self: self.valueForKey_("name"),
 #
 ##################################################################################
 
+def _______________________(): pass
+def ____GSAnnotation____(): pass
+def _______________________(): pass
 
 '''
 
@@ -6057,6 +6154,9 @@ GSAnnotation.width = property(lambda self: self.valueForKey_("width").floatValue
 #
 ##################################################################################
 
+def ________________(): pass
+def ____GSHint____(): pass
+def ________________(): pass
 
 '''
 
@@ -6175,6 +6275,10 @@ GSHint.horizontal = property(	lambda self: self.valueForKey_("horizontal").boolV
 #
 #
 ##################################################################################
+
+def ______________________________(): pass
+def ____GSBackgroundImage____(): pass
+def ______________________________(): pass
 
 
 '''
@@ -6434,6 +6538,10 @@ GSBackgroundImage.scaleHeightToEmUnits = BackgroundImage_scaleHeightToEmUnits
 #
 #
 ##################################################################################
+
+def _______________________________(): pass
+def ____GSEditViewController____(): pass
+def _______________________________(): pass
 
 '''
 
@@ -6913,6 +7021,12 @@ GSEditViewController.close = Close_Tab
 ##################################################################################
 
 
+def _____________________(): pass
+def ____GSGlyphInfo____(): pass
+def _____________________(): pass
+
+
+
 def GSGlyphInfo__new__(typ, *args, **kwargs):
 	return GSGlyphInfo.alloc().init()
 GSGlyphInfo.__new__ = GSGlyphInfo__new__;
@@ -7084,6 +7198,15 @@ GSGlyphInfo.altNames = property(lambda self: self.pyobjc_instanceMethods.altName
 	:type: unicode
 
 '''
+
+
+
+
+def ____________________(): pass
+def ____METHODS____(): pass
+def ____________________(): pass
+
+
 
 def __GSPathPen_moveTo__(self, pt):
 	self.moveTo_(pt)
