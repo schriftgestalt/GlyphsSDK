@@ -3455,6 +3455,7 @@ Functions
 	beginUndo()
 	endUndo()
 	updateGlyphInfo()
+	duplicate()
 
 ----------
 Properties
@@ -3922,7 +3923,26 @@ GSGlyph.updateGlyphInfo = __updateGlyphInfo
 '''
 
 
+def Glyph_Duplicate(self, name = None):
+	
+	newGlyph = self.copyThin_layers_(True, True)
+	if newGlyph.unicode:
+		newGlyph.unicode = None
+	if name:
+		newGlyph.name = name
+	else:
+		newGlyph.name = newGlyph.name + '.001'
+	
+	self.parent.glyphs.append(newGlyph)
 
+GSGlyph.duplicate = Glyph_Duplicate
+
+'''.. function:: duplicate([name])
+	
+	Duplicate the glyph under a new name.
+	
+	If no name is given, .001 will be appended to it.
+'''
 
 
 
@@ -5254,7 +5274,7 @@ Functions
 
 def __CGSomponent_applyTransform__(self, transformStruct):
 	transform = self.transform
-	print "__transform", transform
+#	print "__transform", transform
 	oldTransform = NSAffineTransform.transform()
 	oldTransform.setTransformStruct_(transform)
 	newTransform = NSAffineTransform.transform()
