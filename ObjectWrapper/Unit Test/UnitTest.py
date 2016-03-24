@@ -670,17 +670,7 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertIsInstance(layer.colorObject, NSColor)
 		
 		# GSLayer.components
-		layer = Glyphs.font.glyphs['adieresis'].layers[0]
-		self.assertEqual(len(layer.components), 2)
-		layer.components = []
-		self.assertEqual(len(layer.components), 0)
-		layer.components.append(GSComponent('a'))
-		self.assertIsNotNone(layer.components[0].__repr__())
-		self.assertEqual(len(layer.components), 1)
-		layer.components.append(GSComponent('dieresis'))
-		self.assertEqual(len(layer.components), 2)
-		layer.components = [GSComponent('a'), GSComponent('dieresis')]
-		self.assertEqual(len(layer.components), 2)
+		# -> own test
 
 		# GSLayer.guides
 		self.assertIsInstance(list(layer.guides), list)
@@ -733,6 +723,7 @@ class GlyphsAppTests(unittest.TestCase):
 		del layer.anchors['top']
 		layer.anchors['top'] = GSAnchor()
 		layer.anchors['top'].position = oldPosition
+		self.assertString(layer.anchors['top'].name)
 
 		# GSLayer.paths
 		# postponed to own test
@@ -894,6 +885,72 @@ class GlyphsAppTests(unittest.TestCase):
 		Glyphs.font.glyphs['n'].components[0].smartComponentValues['crotchDepth'] = -77
 
 
+
+	def test_GSComponent(self):
+		
+		
+		layer = Glyphs.font.glyphs['adieresis'].layers[0]
+		component = layer.components[0]
+
+		# Delete and add
+		self.assertEqual(len(layer.components), 2)
+		layer.components = []
+		self.assertEqual(len(layer.components), 0)
+		layer.components.append(GSComponent('a'))
+		self.assertIsNotNone(layer.components[0].__repr__())
+		self.assertEqual(len(layer.components), 1)
+		layer.components.append(GSComponent('dieresis'))
+		self.assertEqual(len(layer.components), 2)
+		layer.components = [GSComponent('a'), GSComponent('dieresis')]
+		self.assertEqual(len(layer.components), 2)
+
+
+		# GSComponent.position
+		self.assertIsInstance(component.position, NSPoint)
+
+		# GSComponent.scale
+		self.assertTrue(type(component.scale) == float or type(component.scale) == tuple)
+		
+		# GSComponent.rotation
+		self.assertFloat(component.rotation)
+
+		# GSComponent.componentName
+		# GSComponent.component
+		# GSComponent.layer
+		component.componentName = 'A'
+		self.assertEqual(component.component, Glyphs.font.glyphs['A'])
+		self.assertEqual(component.layer, Glyphs.font.glyphs['A'].layers[layer.layerId])
+		component.componentName = 'a'
+		self.assertEqual(component.component, Glyphs.font.glyphs['a'])
+		self.assertEqual(component.layer, Glyphs.font.glyphs['a'].layers[layer.layerId])
+
+		component = layer.components[0]
+
+		# GSComponent.transform
+		component.transform = (1.0, 0, 0, 1.0, 0, 0)
+
+		# GSComponent.bounds
+		self.assertIsInstance(component.bounds, NSRect)
+
+		# GSComponent.automaticAlignment
+		self.assertBool(component.automaticAlignment)
+
+		# GSComponent.anchor
+		self.assertUnicode(component.anchor)
+
+		# GSComponent.selected
+		self.assertBool(component.selected)
+		
+		# GSComponent.smartComponentValues
+		# -> see test_smartComponents()
+		
+		# GSComponent.bezierPath
+		self.assertIsInstance(component.bezierPath, NSBezierPath)
+
+		## Methods
+		component.applyTransform((.5, 0, 0, .5, 0, 0))
+		component.decompose()
+		
 
 sys.argv = ["GlyphsAppTests"]
 
