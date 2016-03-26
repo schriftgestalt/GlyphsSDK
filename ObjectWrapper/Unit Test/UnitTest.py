@@ -1086,6 +1086,69 @@ class GlyphsAppTests(unittest.TestCase):
 		del layer.backgroundImage
 
 
+	def test_GSEditViewController(self):
+		
+		font = Glyphs.font
+		font.newTab('a')
+		tab = font.tabs[-1]
+		self.assertIsNotNone(tab.__repr__())
+		
+		# GSEditViewController.parent
+		self.assertEqual(tab.parent, Glyphs.font)
+
+		# GSEditViewController.text
+		self.assertEqual(tab.text, 'a')
+
+		# GSEditViewController.layers
+		self.assertEqual(list(tab.layers), [Glyphs.font.glyphs['a'].layers[0]])
+
+		# GSEditViewController.scale
+		self.assertFloat(tab.scale)
+
+		# GSEditViewController.viewPort
+		self.assertIsInstance(tab.viewPort, NSRect)
+
+		# GSEditViewController.bounds
+		self.assertIsInstance(tab.bounds, NSRect)
+
+		# GSEditViewController.selectedLayerOrigin
+		self.assertIsInstance(tab.selectedLayerOrigin, NSPoint)
+
+		# GSEditViewController.textCursor
+		self.assertInteger(tab.textCursor)
+
+		# GSEditViewController.textRange
+		self.assertInteger(tab.textRange)
+
+		# GSEditViewController.direction
+		self.assertTrue(tab.direction in [LTR, RTL, LTRTTB, RTLTTB])
+		tab.direction = RTL
+		self.assertTrue(tab.direction in [LTR, RTL, LTRTTB, RTLTTB])
+		tab.direction = LTR
+		self.assertTrue(tab.direction in [LTR, RTL, LTRTTB, RTLTTB])
+
+		# GSEditViewController.features
+		font.features.append(GlyphsApp.GSFeature('liga', 'sub a by A;'))
+		tab.features = ['liga']
+		self.assertEqual(list(tab.features), ['liga'])
+		tab.features = []
+		del(font.features['liga'])
+
+		# GSEditViewController.previewInstances
+		tab.previewInstances = 'all'
+		self.assertEqual(tab.previewInstances, 'all')
+		tab.previewInstances = 'live'
+		self.assertEqual(tab.previewInstances, 'live')
+		for instance in font.instances:
+			tab.previewInstances = instance
+			self.assertEqual(tab.previewInstances, instance)
+
+		# GSEditViewController.previewHeight
+		self.assertInteger(tab.previewHeight)
+		
+		## Methods
+		
+		tab.close()
 
 
 sys.argv = ["GlyphsAppTests"]
