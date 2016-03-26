@@ -9,6 +9,7 @@ import unittest
 import GlyphsApp
 from GlyphsApp import *
 import os, time
+import objc
 
 PathToTestFile = os.path.join(os.path.dirname(__file__), 'Glyphs Unit Test Sans.glyphs')
 
@@ -539,16 +540,15 @@ class GlyphsAppTests(unittest.TestCase):
 
 	def test_GSGlyph(self):
 		
-		glyph = GlyphsApp.GSGlyph()
-		glyph.name = 'test'
-		Glyphs.font.glyphs.append(glyph)
-		self.assertIsNotNone(glyph.__repr__())
-		
+		font = Glyphs.font
+		font.glyphs['a'].duplicate('a.test')
+		glyph = font.glyphs['a.test']
+
 		# GSGlyph.parent
 		self.assertEqual(glyph.parent, Glyphs.font)
 		
 		# GSGlyph.layers
-		glyph.layers = Glyphs.font.glyphs['a'].layers
+		self.assertIsNotNone(glyph.layers)
 		
 		# GSGlyph.name
 		self.assertUnicode(glyph.name)
@@ -564,25 +564,25 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertIsInstance(glyph.id, str)
 		
 		# GSGlyph.category
-		assert type(glyph.category) == unicode or type(glyph.category) == type(None)
+		self.assertTrue(type(glyph.category) == unicode or type(glyph.category) == objc.pyobjc_unicode or type(glyph.category) == type(None))
 		
 		# GSGlyph.storeCategory
 		self.assertBool(glyph.storeCategory)
 		
 		# GSGlyph.subCategory
-		assert type(glyph.subCategory) == unicode or type(glyph.subCategory) == type(None)
+		self.assertTrue(type(glyph.subCategory) == unicode or type(glyph.category) == objc.pyobjc_unicode or type(glyph.subCategory) == type(None))
 		
 		# GSGlyph.storeSubCategory
 		self.assertBool(glyph.storeSubCategory)
 		
 		# GSGlyph.script
-		self.assertTrue(type(glyph.category) == unicode or type(glyph.category) == type(None))
+		self.assertTrue(type(glyph.category) == unicode or type(glyph.category) == objc.pyobjc_unicode or type(glyph.category) == type(None))
 		
 		# GSGlyph.storeScript
 		self.assertBool(glyph.storeScript)
 		
 		# GSGlyph.productionName
-		self.assertTrue(type(glyph.productionName) == unicode or type(glyph.productionName) == type(None))
+		self.assertTrue(type(glyph.productionName) == unicode or type(glyph.category) == objc.pyobjc_unicode or type(glyph.productionName) == type(None))
 		
 		# GSGlyph.storeProductionName
 		self.assertBool(glyph.storeProductionName)
@@ -641,7 +641,7 @@ class GlyphsAppTests(unittest.TestCase):
 
 		
 		# Delete glyph
-		del Glyphs.font.glyphs['test']
+		del Glyphs.font.glyphs['a.test']
 	
 
 	def test_GSLayer(self):
@@ -889,8 +889,12 @@ class GlyphsAppTests(unittest.TestCase):
 	def test_GSComponent(self):
 		
 		
-		layer = Glyphs.font.glyphs['adieresis'].layers[0]
+		Glyphs.font.glyphs['adieresis'].duplicate('adieresis.test')
+		
+		glyph = Glyphs.font.glyphs['adieresis.test']
+		layer = glyph.layers[0]
 		component = layer.components[0]
+		self.assertIsNotNone(component.__repr__())
 
 		# Delete and add
 		self.assertEqual(len(layer.components), 2)
@@ -951,6 +955,138 @@ class GlyphsAppTests(unittest.TestCase):
 		component.applyTransform((.5, 0, 0, .5, 0, 0))
 		component.decompose()
 		
+		del Glyphs.font.glyphs['adieresis.test']
+
+		
+		
+	def test_GSPath(self):
+		
+		layer = Glyphs.font.glyphs['a'].layers[0]
+		path = layer.paths[0]
+		self.assertIsNotNone(path.__repr__())
+		
+		# GSPath.parent
+		self.assertEqual(path.parent, Glyphs.font.glyphs['a'].layers[0])
+
+		# GSPath.nodes
+		self.assertIsNotNone(list(path.nodes))
+
+		# GSPath.segments
+		self.assertIsNotNone(list(path.segments))
+
+		# GSPath.closed
+		self.assertBool(path.closed, readOnly = True)
+
+		# GSPath.direction
+		self.assertTrue(path.direction == 1 or path.direction == -1)
+
+		# GSPath.bounds
+		self.assertIsInstance(path.bounds, NSRect)
+
+		# GSPath.closed
+		self.assertBool(path.selected)
+
+		# GSPath.bounds
+		self.assertIsInstance(path.bezierPath, NSBezierPath)
+
+		## Methods
+
+		path.reverse()
+		path.reverse()
+		path.addNodesAtExtremes()
+		path.applyTransform([
+					1.0, # x scale factor
+					0.0, # x skew factor
+					0.0, # y skew factor
+					1.0, # y scale factor
+					0.0, # x position
+					0.0  # y position
+					])
+
+
+	def test_GSNode(self):
+		
+		layer = Glyphs.font.glyphs['a'].layers[0]
+		path = layer.paths[0]
+		node = path.nodes[0]
+		self.assertIsNotNone(node.__repr__())
+		
+		# GSNode.position
+		self.assertIsInstance(node.position, NSPoint)
+
+		# GSNode.type
+		self.assertTrue(node.type in [GlyphsApp.LINE, GlyphsApp.CURVE, GlyphsApp.OFFCURVE])
+		
+		# GSNode.smooth
+		self.assertBool(node.smooth)
+
+		# GSNode.selected
+		self.assertBool(node.selected)
+
+		# GSNode.index
+		self.assertInteger(node.index, readOnly = True)
+		self.assertNotEqual(node.index, 9223372036854775807) # theoretically, this value could be maxint in a node, but in our test font it should be 0, I guess (taken from actual glyph, not orphan path)
+
+		# GSNode.nextNode
+		self.assertIsInstance(node.nextNode, GSNode)
+
+		# GSNode.prevNode
+		self.assertIsInstance(node.prevNode, GSNode)
+
+		# GSNode.name
+		self.assertUnicode(node.name)
+		
+		## Methods
+
+		node.makeNodeFirst()
+		node.toggleConnection()
+
+
+
+	def test_GSBackgroundImage(self):
+
+		glyph = Glyphs.font.glyphs['A']
+		layer = glyph.layers[0]
+		
+		layer.backgroundImage = GlyphsApp.GSBackgroundImage(os.path.join(os.path.dirname(__file__), 'A.jpg'))
+		image = layer.backgroundImage
+		self.assertIsNotNone(image.__repr__())
+		
+		
+		# GSBackgroundImage.path
+		self.assertEqual(image.path, os.path.abspath(os.path.join(os.path.dirname(__file__), 'A.jpg')))
+		
+		# GSBackgroundImage.image
+		self.assertIsInstance(image.image, NSImage)
+		
+		# GSBackgroundImage.crop
+		self.assertIsInstance(image.crop, NSRect)
+		image.crop = NSRect(NSPoint(0, 0), NSPoint(100, 100))
+		
+		# GSBackgroundImage.locked
+		self.assertBool(image.locked)
+		
+		# GSBackgroundImage.alpha
+		self.assertInteger(image.alpha)
+		
+		# GSBackgroundImage.position
+		self.assertIsInstance(image.position, NSPoint)
+
+		# GSBackgroundImage.scale
+		self.assertTrue(type(image.scale) == float or type(image.scale) == tuple)
+
+		# GSBackgroundImage.rotation
+		self.assertFloat(image.rotation)
+		
+		## Methods
+		
+		image.resetCrop()
+		image.scaleWidthToEmUnits(layer.width)
+		
+		del layer.backgroundImage
+
+
+
 
 sys.argv = ["GlyphsAppTests"]
 
