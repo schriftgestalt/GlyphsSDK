@@ -4608,14 +4608,14 @@ GSLayer.applyTransform = __GSLayer_applyTransform__
 
 		layer = Glyphs.font.selectedLayers[0] # current layer
 
-		layer.applyTransform(
+		layer.applyTransform([
 					0.5, # x scale factor
 					0.0, # x skew factor
 					0.0, # y skew factor
 					0.5, # y scale factor
 					0.0, # x position
 					0.0  # y position
-					)
+					])
 '''
 
 
@@ -5292,14 +5292,14 @@ GSComponent.applyTransform = __CGSomponent_applyTransform__
 
 		component = layer.components[0]
 
-		component.applyTransform(
+		component.applyTransform([
 					0.5, # x scale factor
 					0.0, # x skew factor
 					0.0, # y skew factor
 					0.5, # y scale factor
 					0.0, # x position
 					0.0  # y position
-					)
+					])
 '''
 
 
@@ -5645,14 +5645,14 @@ GSPath.applyTransform = __CGPath_applyTransform__
 
 		path = layer.paths[0]
 
-		path.applyTransform(
+		path.applyTransform([
 					0.5, # x scale factor
 					0.0, # x skew factor
 					0.0, # y skew factor
 					0.5, # y scale factor
 					0.0, # x position
 					0.0  # y position
-					)
+					])
 '''
 
 
