@@ -535,7 +535,12 @@ class GlyphsAppTests(unittest.TestCase):
 		## Methods
 		
 		# GSInstance.generate()
-		self.assertEqual(instance.generate(FontPath = os.path.join(os.path.dirname(__file__), 'Glyphs Unit Test Sans.otf')), True)
+		path = os.path.join(os.path.dirname(__file__), 'Glyphs Unit Test Sans.otf')
+		self.assertEqual(instance.generate(FontPath = path), True)
+		self.assertTrue(os.path.exists(path))
+		if os.path.exists(path):
+			os.remove(path)
+			
 
 
 	def test_GSGlyph(self):
