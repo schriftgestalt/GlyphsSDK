@@ -3941,14 +3941,13 @@ GSGlyph.updateGlyphInfo = __updateGlyphInfo
 
 def Glyph_Duplicate(self, name = None):
 	
-	newGlyph = self.copyThin_layers_(True, True)
+	newGlyph = self.copyThin_layers_(False, True)
 	if newGlyph.unicode:
 		newGlyph.unicode = None
 	if name:
 		newGlyph.name = name
 	else:
-		newGlyph.name = newGlyph.name + '.001'
-	
+		newGlyph.name = self.parent.saveNameForName_(newGlyph.name) # will add a .00X suffix
 	self.parent.glyphs.append(newGlyph)
 
 GSGlyph.duplicate = Glyph_Duplicate
