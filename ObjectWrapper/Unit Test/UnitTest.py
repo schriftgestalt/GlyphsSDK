@@ -203,7 +203,7 @@ class GlyphsAppTests(unittest.TestCase):
 		# GSFont.classes
 		font.classes = []
 		self.assertEqual(len(font.classes), 0)
-		font.classes.append(GlyphsApp.GSClass('uppercaseLetters', 'A'))
+		font.classes.append(GSClass('uppercaseLetters', 'A'))
 		self.assertIsNotNone(font.classes['uppercaseLetters'].__repr__())
 		self.assertEqual(len(font.classes), 1)
 		self.assertIn('uppercaseLetters', str(font.classes))
@@ -214,7 +214,7 @@ class GlyphsAppTests(unittest.TestCase):
 		# GSFont.features
 		font.features = []
 		self.assertEqual(len(font.features), 0)
-		font.features.append(GlyphsApp.GSFeature('liga', 'sub f i by fi;'))
+		font.features.append(GSFeature('liga', 'sub f i by fi;'))
 		self.assertIsNotNone(font.features['liga'].__repr__())
 		self.assertEqual(len(font.features), 1)
 		self.assertIn('<GSFeature "liga">', str(font.features))
@@ -225,7 +225,7 @@ class GlyphsAppTests(unittest.TestCase):
 		# GSFont.featurePrefixes
 		font.featurePrefixes = []
 		self.assertEqual(len(font.featurePrefixes), 0)
-		font.featurePrefixes.append(GlyphsApp.GSFeaturePrefix('LanguageSystems', 'languagesystem DFLT dflt;'))
+		font.featurePrefixes.append(GSFeaturePrefix('LanguageSystems', 'languagesystem DFLT dflt;'))
 		self.assertIsNotNone(font.featurePrefixes['LanguageSystems'].__repr__())
 		self.assertEqual(len(font.featurePrefixes), 1)
 		self.assertIn('LanguageSystems', str(font.featurePrefixes))
@@ -450,7 +450,7 @@ class GlyphsAppTests(unittest.TestCase):
 		
 		master.alignmentZones = []
 		self.assertEqual(len(master.alignmentZones), 0)
-		master.alignmentZones.append(GlyphsApp.GSAlignmentZone(100, 10))
+		master.alignmentZones.append(GSAlignmentZone(100, 10))
 		self.assertIsNotNone(master.alignmentZones[-1].__repr__())
 		self.assertEqual(len(master.alignmentZones), 1)
 		self.assertEqual(master.alignmentZones[-1].position, 100)
@@ -848,13 +848,13 @@ class GlyphsAppTests(unittest.TestCase):
 		
 		# Add axes
 		
-		axis1 = GlyphsApp.GSSmartComponentAxis()
+		axis1 = GSSmartComponentAxis()
 		axis1.name = 'crotchDepth'
 		axis1.topValue = 0
 		axis1.bottomValue = -100
 		glyph.smartComponentAxes.append(axis1)
 
-		axis2 = GlyphsApp.GSSmartComponentAxis()
+		axis2 = GSSmartComponentAxis()
 		axis2.name = 'shoulderWidth'
 		axis2.topValue = 100
 		axis2.bottomValue = 0
@@ -1015,7 +1015,7 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertIsInstance(node.position, NSPoint)
 
 		# GSNode.type
-		self.assertTrue(node.type in [GlyphsApp.LINE, GlyphsApp.CURVE, GlyphsApp.OFFCURVE])
+		self.assertTrue(node.type in [LINE, CURVE, OFFCURVE])
 		
 		# GSNode.smooth
 		self.assertBool(node.smooth)
@@ -1048,7 +1048,7 @@ class GlyphsAppTests(unittest.TestCase):
 		glyph = Glyphs.font.glyphs['A']
 		layer = glyph.layers[0]
 		
-		layer.backgroundImage = GlyphsApp.GSBackgroundImage(os.path.join(os.path.dirname(__file__), 'A.jpg'))
+		layer.backgroundImage = GSBackgroundImage(os.path.join(os.path.dirname(__file__), 'A.jpg'))
 		image = layer.backgroundImage
 		self.assertIsNotNone(image.__repr__())
 		
@@ -1083,7 +1083,7 @@ class GlyphsAppTests(unittest.TestCase):
 		image.resetCrop()
 		image.scaleWidthToEmUnits(layer.width)
 		
-		del layer.backgroundImage
+		layer.backgroundImage = None
 
 
 	def test_GSEditViewController(self):
@@ -1128,7 +1128,7 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertTrue(tab.direction in [LTR, RTL, LTRTTB, RTLTTB])
 
 		# GSEditViewController.features
-		font.features.append(GlyphsApp.GSFeature('liga', 'sub a by A;'))
+		font.features.append(GSFeature('liga', 'sub a by A;'))
 		tab.features = ['liga']
 		self.assertEqual(list(tab.features), ['liga'])
 		tab.features = []
@@ -1203,6 +1203,61 @@ class GlyphsAppTests(unittest.TestCase):
 
 		# GSGlyphInfo.altNames
 		self.assertEqual(info.altNames, None)
+
+
+	def test_Methods(self):
+
+		# divideCurve()
+		self.assertEqual(len(divideCurve(
+			NSPoint(0, 0),
+			NSPoint(50, 0),
+			NSPoint(100, 50),
+			NSPoint(100, 100),
+			.5
+			)), 7)
+
+		# distance()
+		self.assertEqual(distance(NSPoint(0, 0), NSPoint(0, 2)), 2.0)
+
+		# addPoints()
+		self.assertEqual(addPoints(NSPoint(0, 0), NSPoint(1, 2)), NSPoint(1, 2))
+
+		# scalePoint()
+		self.assertEqual(scalePoint(NSPoint(2, 2), 2), NSPoint(4, 4))
+
+		GetSaveFile(filetypes = ['.glyphs'])
+		GetOpenFile()
+		GetFolder()
+		Message('Title', 'Message')
+		LogToConsole('Message')
+		LogError('Error message created in test code. Ignore it.')
+
+
+	def test_Constants(self):
+
+		self.assertIsNotNone(LINE)
+		self.assertIsNotNone(CURVE)
+		self.assertIsNotNone(OFFCURVE)
+
+		self.assertIsNotNone(GSSHARP)
+		self.assertIsNotNone(GSSMOOTH)
+
+		self.assertIsNotNone(TOPGHOST)
+		self.assertIsNotNone(STEM)
+		self.assertIsNotNone(BOTTOMGHOST)
+		self.assertIsNotNone(TTANCHOR)
+		self.assertIsNotNone(TTSTEM)
+		self.assertIsNotNone(TTALIGN)
+		self.assertIsNotNone(TTINTERPOLATE)
+		self.assertIsNotNone(TTDIAGONAL)
+		self.assertIsNotNone(CORNER)
+		self.assertIsNotNone(CAP)
+
+		self.assertIsNotNone(TTROUND)
+		self.assertIsNotNone(TTROUNDUP)
+		self.assertIsNotNone(TTROUNDDOWN)
+		self.assertIsNotNone(TTDONTROUND)
+		self.assertIsNotNone(TRIPLE)
 
 
 sys.argv = ["GlyphsAppTests"]
