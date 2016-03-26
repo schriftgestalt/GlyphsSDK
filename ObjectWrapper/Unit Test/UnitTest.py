@@ -1151,6 +1151,60 @@ class GlyphsAppTests(unittest.TestCase):
 		tab.close()
 
 
+
+	def test_GSGlyphInfo(self):
+
+		info = Glyphs.font.glyphs['a'].glyphInfo
+		self.assertIsNotNone(info.__repr__())
+
+		# GSGlyphInfo.name
+		self.assertEqual(info.name, 'a')
+
+		# GSGlyphInfo.productionName
+		self.assertEqual(info.productionName, None)
+
+		# GSGlyphInfo.category
+		self.assertEqual(info.category, 'Letter')
+
+		# GSGlyphInfo.subCategory
+		self.assertEqual(info.subCategory, 'Lowercase')
+
+		# GSGlyphInfo.components
+		self.assertEqual(info.subCategory, 'Lowercase')
+
+		# GSGlyphInfo.components
+		info = Glyphs.font.glyphs['adieresis'].glyphInfo
+		self.assertIsInstance(list(info.components), list)
+
+		# GSGlyphInfo.accents
+		info = Glyphs.font.glyphs['a'].glyphInfo
+		self.assertIsInstance(list(info.accents), list)
+
+		# GSGlyphInfo.anchors
+		self.assertIsInstance(list(info.anchors), list)
+
+		# GSGlyphInfo.unicode
+		self.assertEqual(info.unicode, '0061')
+
+		# GSGlyphInfo.unicode2
+		self.assertIsNotNone(info.unicode2)
+
+		# GSGlyphInfo.index
+		self.assertInteger(info.index, readOnly = True)
+		
+		# GSGlyphInfo.sortName
+		self.assertEqual(info.sortName, None)
+
+		# GSGlyphInfo.sortNameKeep
+		self.assertEqual(info.sortNameKeep, None)
+
+		# GSGlyphInfo.desc
+		self.assertEqual(info.desc, None)
+
+		# GSGlyphInfo.altNames
+		self.assertEqual(info.altNames, None)
+
+
 sys.argv = ["GlyphsAppTests"]
 
 if __name__ == '__main__':
