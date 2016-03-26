@@ -5054,7 +5054,7 @@ def Component__init__(self, glyph, offset=(0,0), scale=(1,1), transform=None):
 	if transform is None:
 		xx, yy = scale
 		dx, dy = offset
-		self.transform = (xx, 0, 0, yy, dx, dy)
+		self.transform = ((xx, 0, 0, yy, dx, dy))
 	else:
 		self.transform = transform
 		
@@ -5153,14 +5153,14 @@ GSComponent.transform = property(	lambda self: self.transformStruct(),
 
 		component = layer.components[0]
 
-		component.transformation = (
+		component.transform = ((
 					0.5, # x scale factor
 					0.0, # x skew factor
 					0.0, # y skew factor
 					0.5, # y scale factor
 					0.0, # x position
 					0.0  # y position
-					)
+					))
 	
 	:type: NSAffineTransformStruct'''
 
@@ -5289,7 +5289,6 @@ Functions
 
 def __CGSomponent_applyTransform__(self, transformStruct):
 	transform = self.transform
-#	print "__transform", transform
 	oldTransform = NSAffineTransform.transform()
 	oldTransform.setTransformStruct_(transform)
 	newTransform = NSAffineTransform.transform()
@@ -5307,14 +5306,14 @@ GSComponent.applyTransform = __CGSomponent_applyTransform__
 
 		component = layer.components[0]
 
-		component.applyTransform([
+		component.applyTransform((
 					0.5, # x scale factor
 					0.0, # x skew factor
 					0.0, # y skew factor
 					0.5, # y scale factor
 					0.0, # x position
 					0.0  # y position
-					])
+					))
 '''
 
 
@@ -5660,14 +5659,14 @@ GSPath.applyTransform = __CGPath_applyTransform__
 
 		path = layer.paths[0]
 
-		path.applyTransform([
+		path.applyTransform((
 					0.5, # x scale factor
 					0.0, # x skew factor
 					0.0, # y skew factor
 					0.5, # y scale factor
 					0.0, # x position
 					0.0  # y position
-					])
+					))
 '''
 
 
@@ -6423,7 +6422,7 @@ GSBackgroundImage.alpha = property(		lambda self: bool(self.pyobjc_instanceMetho
 def BackgroundImage_getPosition(self):
 	return NSPoint(self.transform[4], self.transform[5])
 def BackgroundImage_setPosition(self, pos):
-	self.transform = (self.transform[0], self.transform[1], self.transform[2], self.transform[3], pos.x, pos.y)
+	self.transform = ((self.transform[0], self.transform[1], self.transform[2], self.transform[3], pos.x, pos.y))
 
 GSBackgroundImage.position = property(		lambda self: BackgroundImage_getPosition(self),
 						 		lambda self, value: BackgroundImage_setPosition(self, value))
@@ -6494,14 +6493,14 @@ GSBackgroundImage.transform = property(	lambda self: self.pyobjc_instanceMethods
 	.. code-block:: python
 
 		# change transformation
-		layer.backgroundImage.transform = (
+		layer.backgroundImage.transform = ((
 			1.0, # x scale factor
 			0.0, # x skew factor
 			0.0, # y skew factor
 			1.0, # y scale factor
 			0.0, # x position
 			0.0  # y position
-			)
+			))
 
 
 ----------
