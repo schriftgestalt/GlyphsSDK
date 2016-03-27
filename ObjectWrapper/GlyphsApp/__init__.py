@@ -3945,8 +3945,12 @@ GSGlyph.smartComponentAxes = property(lambda self: GlyphSmartComponentAxesProxy(
 		# Deleting one axis
 		del g.smartComponentAxes[1]
 '''
-
-GSGlyph.lastChange = property(lambda self: int(self.pyobjc_instanceMethods.lastChange().timeIntervalSince1970()))
+def __GSGlyph__lastChange__(self):
+	try:
+		self.pyobjc_instanceMethods.lastChange().timeIntervalSince1970()
+	except:
+		return None
+GSGlyph.lastChange = property(__GSGlyph__lastChange__)
 
 '''.. attribute:: lastChange
 
