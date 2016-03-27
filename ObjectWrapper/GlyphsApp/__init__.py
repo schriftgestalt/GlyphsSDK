@@ -7478,7 +7478,7 @@ def GetSaveFile(message=None, ProposedFileName=None, filetypes=None):
 	Panel.setAllowedFileTypes_(filetypes)
 	if ProposedFileName is not None:
 		Panel.setNameFieldStringValue_(ProposedFileName)
-	pressedButton = Panel.runModalForTypes_(filetypes)
+	pressedButton = Panel.runModal()
 	if pressedButton == NSOKButton:
 		return Panel.filename()
 	return None
@@ -7553,7 +7553,7 @@ def GetOpenFile(message=None, allowsMultipleSelection=False, filetypes=None):
 		Panel.setTitle_(message)
 	if filetypes is not None and len(filetypes) > 0:
 		Panel.setAllowedFileTypes_(filetypes)
-	pressedButton = Panel.runModalForTypes_(filetypes)
+	pressedButton = Panel.runModal()
 	if pressedButton == NSOKButton:
 		if allowsMultipleSelection:
 			return Panel.filenames()
