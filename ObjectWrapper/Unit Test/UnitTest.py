@@ -63,7 +63,7 @@ class GlyphsAppTests(unittest.TestCase):
 	
 	def assertBool(self, boolObject, assertType = True, readOnly = False):
 		if assertType:
-			assert type(boolObject) == bool
+			self.assertIsInstance(boolObject, bool)
 		if readOnly == False:
 			oldValue = boolObject
 			boolObject = not boolObject
