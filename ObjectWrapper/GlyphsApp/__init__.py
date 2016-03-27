@@ -1339,7 +1339,71 @@ class FontFeaturePrefixesProxy (Proxy):
 	def setterMethod(self):
 		return self._owner.setFeaturePrefixes_
 
-
+class UserDataProxy(Proxy):
+	def __getitem__(self, Key):
+		return self._owner.userDataForKey_(Key)
+	def __setitem__(self, Key, Value):
+		self._owner.setUserData_forKey_(Value, Key)
+	def __delitem__(self, Key):
+		self._owner.removeUserDataForKey_(Key)
+	def values(self):
+		userData = self._owner.pyobjc_instanceMethods.userData()
+		if userData != None:
+			return userData.allValues()
+		return None
+	def __repr__(self):
+		return self._owner.pyobjc_instanceMethods.userData().description()
+		
+class SmartComponentPoleMappingProxy(Proxy):
+	def __getitem__(self, Key):
+		poleMapping = self._owner.userDataForKey_("PartSelection")
+		if poleMapping != None:
+			return poleMapping[Key]
+		return None
+	def __setitem__(self, Key, Value):
+		poleMapping = self._owner.userDataForKey_("PartSelection")
+		if poleMapping == None:
+			self._owner.setUserData_forKey_(NSMutableDictionary.dictionaryWithObject_forKey_(Value, Key), "PartSelection")
+		else:
+			poleMapping[Key] = Value
+	def __delitem__(self, Key):
+		poleMapping = self._owner.userDataForKey_("PartSelection")
+		if poleMapping != None:
+			del(poleMapping[Key])
+	def values(self):
+		poleMapping = self._owner.userDataForKey_("PartSelection")
+		if poleMapping != None:
+			return poleMapping.allValues()
+		return None
+	def __repr__(self):
+		poleMapping = self._owner.userDataForKey_("PartSelection")
+		return str(poleMapping)
+		
+class smartComponentValuesProxy(Proxy):
+	def __getitem__(self, Key):
+		pieceSettings = self._owner.pieceSettings()
+		if pieceSettings != None:
+			return pieceSettings[Key]
+		return None
+	def __setitem__(self, Key, Value):
+		pieceSettings = self._owner.pieceSettings()
+		if pieceSettings == None:
+			self._owner.setPieceSettings_({Key: Value})
+		else:
+			pieceSettings[Key] = Value
+	def __delitem__(self, Key):
+		pieceSettings = self._owner.pieceSettings()
+		if pieceSettings != None:
+			del(pieceSettings[Key])
+	def values(self):
+		pieceSettings = self._owner.pieceSettings()
+		if pieceSettings != None:
+			return pieceSettings.allValues()
+		return None
+	def __repr__(self):
+		pieceSettings = self._owner.pieceSettings()
+		return str(pieceSettings)
+		
 class LayersIterator:
 	def __init__(self, owner):
 		self.curInd = 0
@@ -1966,7 +2030,7 @@ GSFont.kerning = property(lambda self: self.valueForKey_("kerning"), lambda self
 	To set a value, is is better to use the method :class:`GSFont`.setKerningForPair(). This ensures a better data integrity (and is faster).
 	:type: dict
 '''
-GSFont.userData = property(lambda self: self.pyobjc_instanceMethods.userData(), lambda self, value: self.setUserData_(value))
+GSFont.userData = property(lambda self: UserDataProxy(self))
 '''.. attribute:: userData
 	A dictionary to store user data. Use a unique key and only use objects that can be stored in a property list (string, list, dict, numbers, NSData) otherwise the data will not be recoverable from the saved file.
 	:type: dict
@@ -2551,7 +2615,7 @@ GSFontMaster.guideLines = GSFontMaster.guides
 '''.. attribute:: guides
 	Collection of :class:`GSGuideLine <GSGuideLine>`. These are the font-wide (actually master-wide) red guidelines. For glyph-level guidelines (attached to the layers) see :attr:`GSLayer`.guides
 	:type: list'''
-GSFontMaster.userData = property(lambda self: self.pyobjc_instanceMethods.userData(), lambda self, value: self.setUserData_(value))
+GSFontMaster.userData = property(lambda self: UserDataProxy(self))
 '''.. attribute:: userData
 	A dictionary to store user data. Use a unique key and only use objects that can be stored in a property list (string, list, dict, numbers, NSData) otherwise the date will not be recoverable from the saved file.
 	:type: dict
@@ -3835,7 +3899,7 @@ GSGlyph.mastersCompatible = property( lambda self: bool(self.pyobjc_instanceMeth
 
 '''
 
-GSGlyph.userData = property(lambda self: self.pyobjc_instanceMethods.userData(), lambda self, value: self.setUserData_(value))
+GSGlyph.userData = property(lambda self: UserDataProxy(self))
 '''.. attribute:: userData
 
 	.. versionadded:: 2.3
@@ -4468,7 +4532,7 @@ GSLayer.openBezierPath = property(	 lambda self: self.pyobjc_instanceMethods.ope
 '''
 	
 
-GSLayer.userData = property(lambda self: self.pyobjc_instanceMethods.userData(), lambda self, value: self.setUserData_(value))
+GSLayer.userData = property(lambda self: UserDataProxy(self))
 '''.. attribute:: userData
 
 	.. versionadded:: 2.3
@@ -4480,13 +4544,7 @@ GSLayer.userData = property(lambda self: self.pyobjc_instanceMethods.userData(),
 		layer.userData['rememberToMakeCoffee'] = True
 '''
 
-def Layer_smartComponentPoleMapping(self):
-	try:
-		return self.userData["PartSelection"]
-	except:
-		return None
-
-GSLayer.smartComponentPoleMapping = property(lambda self: Layer_smartComponentPoleMapping(self))
+GSLayer.smartComponentPoleMapping = property(lambda self: SmartComponentPoleMappingProxy(self))
 
 '''.. attribute:: smartComponentPoleMapping
 
@@ -5227,7 +5285,7 @@ def DrawComponentWithPen(self, pen):
 GSComponent.draw = DrawComponentWithPen
 GSComponent.drawPoints = DrawComponentWithPen
 
-GSComponent.smartComponentValues = property(lambda self: self.pieceSettings())
+GSComponent.smartComponentValues = property(lambda self: smartComponentValuesProxy(self))
 '''.. attribute:: smartComponentValues
 
 	.. versionadded:: 2.3
@@ -5931,7 +5989,7 @@ GSNode.prevNode = property(	lambda self: __GSNode__prevNode__(self))
 
 def __GSNode__get_name(self):
 	try:
-		return self.userData()["name"]
+		return self.userDataForKey_("name")
 	except:
 		pass
 	return None
