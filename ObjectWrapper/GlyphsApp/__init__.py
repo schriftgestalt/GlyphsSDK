@@ -3949,14 +3949,15 @@ def Glyph_Duplicate(self, name = None):
 	else:
 		newGlyph.name = self.parent.saveNameForName_(newGlyph.name) # will add a .00X suffix
 	self.parent.glyphs.append(newGlyph)
+	return newGlyph
 
 GSGlyph.duplicate = Glyph_Duplicate
 
 '''.. function:: duplicate([name])
 	
-	Duplicate the glyph under a new name.
+	Duplicate the glyph under a new name and return it.
 	
-	If no name is given, .001 will be appended to it.
+	If no name is given, .00n will be appended to it.
 '''
 
 
