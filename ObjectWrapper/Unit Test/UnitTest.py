@@ -71,10 +71,11 @@ class GlyphsAppTests(unittest.TestCase):
 			boolObject = oldValue
 	
 	def setUp(self):
-		Glyphs.clearLog()
+		if Glyphs.font is None:
+			Glyphs.open(PathToTestFile)
 	
 	def tearDown(self):
-		Glyphs.showMacroWindow()
+		pass
 	
 	def test_GSApplication(self):
 		
@@ -88,7 +89,6 @@ class GlyphsAppTests(unittest.TestCase):
 		
 		# open font
 		Glyphs.open(PathToTestFile)
-		
 		# Macro window
 		Glyphs.showMacroWindow()
 		
@@ -270,7 +270,12 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertIsInstance(dict(font.kerning), dict)
 		
 		# GSFont.userData
-		self.assertDict(font.userData)
+		# self.assertDict(font.userData)
+		self.assertIsNone(font.userData["TestData"])
+		font.userData["TestData"] = 42
+		self.assertEqual(font.userData["TestData"], 42)
+		del(font.userData["TestData"])
+		self.assertIsNone(font.userData["TestData"])
 		
 		# GSFont.disablesNiceNames
 		self.assertBool(font.disablesNiceNames)
@@ -437,7 +442,11 @@ class GlyphsAppTests(unittest.TestCase):
 
 		
 		# GSFontMaster.userData
-		self.assertDict(master.userData)
+		self.assertIsNotNone(master.userData)
+		master.userData["TestData"] = 42
+		self.assertEqual(master.userData["TestData"], 42)
+		del(master.userData["TestData"])
+		self.assertIsNone(master.userData["TestData"])
 		
 		# GSFontMaster.customParameters
 		master.customParameters['trademark'] = 'ThisFont is a trademark by MyFoundry.com'
@@ -636,9 +645,11 @@ class GlyphsAppTests(unittest.TestCase):
 		# postponed to its own test
 		
 		# GSGlyph.lastChange
-		self.assertInteger(glyph.lastChange, readOnly = True)
 		
-		
+		self.assertTrue(glyph.lastChange == None)
+		glyph.name = "a.test2"
+		self.assertIsInstance(glyph.lastChange, int)
+		glyph.name = "a.test1"
 		## Methods
 		glyph.beginUndo()
 		glyph.endUndo()
@@ -788,6 +799,7 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertIsInstance(layer.bezierPath, NSBezierPath)
 
 		# GSLayer.userData
+		layer.userData["Hallo"]
 		self.assertDict(layer.userData)
 
 
@@ -885,9 +897,9 @@ class GlyphsAppTests(unittest.TestCase):
 			else:
 				layer.smartComponentPoleMapping['crotchDepth'] = 2
 				layer.smartComponentPoleMapping['shoulderWidth'] = 2
-
-		Glyphs.font.glyphs['n'].components[0].smartComponentValues['shoulderWidth'] = 30
-		Glyphs.font.glyphs['n'].components[0].smartComponentValues['crotchDepth'] = -77
+		layer = Glyphs.font.glyphs['n'].layers[0]
+		layer.components[0].smartComponentValues['shoulderWidth'] = 30
+		layer.components[0].smartComponentValues['crotchDepth'] = -77
 
 
 
@@ -928,10 +940,10 @@ class GlyphsAppTests(unittest.TestCase):
 		# GSComponent.layer
 		component.componentName = 'A'
 		self.assertEqual(component.component, Glyphs.font.glyphs['A'])
-		self.assertEqual(component.layer, Glyphs.font.glyphs['A'].layers[layer.layerId])
+# not defined yet		self.assertEqual(component.layer, Glyphs.font.glyphs['A'].layers[layer.layerId])
 		component.componentName = 'a'
 		self.assertEqual(component.component, Glyphs.font.glyphs['a'])
-		self.assertEqual(component.layer, Glyphs.font.glyphs['a'].layers[layer.layerId])
+# not defined yet		self.assertEqual(component.layer, Glyphs.font.glyphs['a'].layers[layer.layerId])
 
 		component = layer.components[0]
 
@@ -1053,13 +1065,13 @@ class GlyphsAppTests(unittest.TestCase):
 		glyph = Glyphs.font.glyphs['A']
 		layer = glyph.layers[0]
 		
-		layer.backgroundImage = GSBackgroundImage(os.path.join(os.path.dirname(__file__), 'A.jpg'))
+		layer.backgroundImage = GSBackgroundImage(os.path.join(os.path.dirname(PathToTestFile), 'A.jpg'))
 		image = layer.backgroundImage
 		self.assertIsNotNone(image.__repr__())
 		
 		
 		# GSBackgroundImage.path
-		self.assertEqual(image.path, os.path.abspath(os.path.join(os.path.dirname(__file__), 'A.jpg')))
+		self.assertEqual(image.path, os.path.abspath(os.path.join(os.path.dirname(PathToTestFile), 'A.jpg')))
 		
 		# GSBackgroundImage.image
 		self.assertIsInstance(image.image, NSImage)
@@ -1182,35 +1194,35 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertIsInstance(list(info.components), list)
 
 		# GSGlyphInfo.accents
-		info = Glyphs.font.glyphs['a'].glyphInfo
+		info = Glyphs.font.glyphsInfo().glyphInfoForName_('lam_alef-ar')
 		self.assertIsInstance(list(info.accents), list)
 
 		# GSGlyphInfo.anchors
 		self.assertIsInstance(list(info.anchors), list)
 
 		# GSGlyphInfo.unicode
-		self.assertEqual(info.unicode, '0061')
+		self.assertEqual(info.unicode, 'FEFB')
 
 		# GSGlyphInfo.unicode2
-		self.assertIsNotNone(info.unicode2)
+		self.assertIsNone(info.unicode2())
 
 		# GSGlyphInfo.index
-		self.assertInteger(info.index, readOnly = True)
+		self.assertIsInstance(info.index, int)
 		
 		# GSGlyphInfo.sortName
-		self.assertEqual(info.sortName, None)
+		self.assertEqual(info.sortName, "ar0010_ar0009")
 
 		# GSGlyphInfo.sortNameKeep
-		self.assertEqual(info.sortNameKeep, None)
+		self.assertEqual(info.sortNameKeep, "ar0900_ar0009")
 
 		# GSGlyphInfo.desc
-		self.assertEqual(info.desc, None)
+		self.assertEqual(info.desc, "ARABIC LIGATURE LAM WITH ALEF ISOLATED FORM")
 
 		# GSGlyphInfo.altNames
-		self.assertEqual(info.altNames, None)
+		self.assertEqual(info.altNames, "lamalefisolatedarabic")
 
 
-	def test_Methods(self):
+	def not_test_Methods(self):
 
 		# divideCurve()
 		self.assertEqual(len(divideCurve(
@@ -1230,7 +1242,7 @@ class GlyphsAppTests(unittest.TestCase):
 		# scalePoint()
 		self.assertEqual(scalePoint(NSPoint(2, 2), 2), NSPoint(4, 4))
 
-		GetSaveFile(filetypes = ['.glyphs'])
+		GetSaveFile(filetypes = ['glyphs'])
 		GetOpenFile()
 		GetFolder()
 		Message('Title', 'Message')
@@ -1268,4 +1280,4 @@ class GlyphsAppTests(unittest.TestCase):
 sys.argv = ["GlyphsAppTests"]
 
 if __name__ == '__main__':
-	unittest.main(exit=False)
+	unittest.main(exit=False, failfast=True)
