@@ -1459,7 +1459,10 @@ class GlyphLayerProxy (Proxy):
 				else:
 					return self._owner.pyobjc_instanceMethods.layers().objectAtIndex_(Key)
 			else:
-				return self._owner.layerForKey_(Key)
+				layer = self._owner.layerForKey_(Key)
+				if layer is None:
+					layer = self._owner.layerForName_(Key)
+				return layer
 	def __setitem__(self, Key, Layer):
 		if type(Key) is int and self._owner.parent:
 			if Key < 0:
@@ -3750,25 +3753,36 @@ def __GSGlyph_glyphDataEntryString__(self):
 	Decompose = self.layers[0].componentNamesText()
 	if Decompose != None and len(Decompose) > 0:
 		Decompose = "decompose=\"%s\" " % Decompose
-		
+	else:
+		Decompose = ""
 	SubCategory = ""
 	if self.subCategory != "Other":
 		SubCategory = "subCategory=\"%s\" " % self.subCategory
 	Anchors = self.layers[0].anchors.keys()
-	if len(Anchors) > 0:
-		Anchors = "anchors=\"%s\" " % ", ".join(Anchors)
+	if Anchors != None and len(Anchors) > 0:
+		Anchors = "anchors=\"%s\" " % ", ".join(sorted(Anchors))
 	else:
 		Anchors = ""
 	GlyphInfo = self.glyphInfo
-	Accents = GlyphInfo.accents
+	Accents = None
+	if GlyphInfo != None:
+		Accents = GlyphInfo.accents
 	if Accents != None and len(Accents) > 0:
-		Accents = "accents=\"%s\"" % ", ".join(Accents)
+		Accents = "accents=\"%s\"" % ", ".join(sorted(Accents))
 	else:
 		Accents = ""
-	Production = Glyphs.productionGlyphName(self.name)
+	Production = ""
+	if self.productionName != None and len(self.productionName) > 0:
+		Production = self.productionName
+	else:
+		Production = Glyphs.productionGlyphName(self.name)
 	if len(Production) > 0:
 		Production = "production=\"%s\"" % Production
-	return "	<glyph unicode=\"%s\" name=\"%s\" %scategory=\"%s\" %sscript=\"%s\" description=\"\" %s%s />" % (Unicode, self.name, Decompose, self.category, SubCategory, self.script, Anchors, Accents)
+	else:
+		Production = ""
+	if self.note != None and len(self.note) > 0:
+		Production += " altNames=\"%s\"" % self.note
+	return "	<glyph unicode=\"%s\" name=\"%s\" %scategory=\"%s\" %sscript=\"%s\" description=\"\" %s%s%s />" % (Unicode, self.name, Decompose, self.category, SubCategory, self.script, Production, Anchors, Accents)
 
 GSGlyph.glyphDataEntryString = __GSGlyph_glyphDataEntryString__
 
@@ -5033,7 +5047,7 @@ GSAnchor.name = property(		lambda self: self.valueForKey_("name"),
 '''
 
 def DrawAnchorWithPen(self, pen):
-	if hasattr(pen, addAnchor):
+	if hasattr(pen, "addAnchor"):
 		pen.addAnchor(self.name, (self.x, self.y))
 	else:
 		pen.moveTo(self.position)
@@ -5196,7 +5210,7 @@ GSComponent.component = property(	lambda self: self.valueForKey_("component"))
 	The :class:`GSGlyph` the component is pointing to. This is read only. In order to change the referenced base glyph, set :class:`GSComponent`.componentName to the new glyph name.
 	:type: :class:`GSGlyph`
 '''
-
+# this is not in Glyphs, yet. Needs fixing
 GSComponent.layer = property(	lambda self: self.valueForKey_("component").layers[self.parent().associatedMasterId])
 '''.. attribute:: layer
 
@@ -5600,9 +5614,8 @@ def Path_selected(self):
 	return Set(self.nodes) <= Set(self.parent.selection)
 
 def Path_SetSelected(self, state):
-	for node in self.nodes:
-		node.selected = state
-
+	layer = self.parent
+	layer.addObjectsFromArrayToSelection_(self.nodes)
 
 GSPath.selected = property(	 lambda self: Path_selected(self), lambda self, value: Path_SetSelected(self, value) )
 '''.. attribute:: selected
