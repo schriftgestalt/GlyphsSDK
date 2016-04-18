@@ -1880,16 +1880,16 @@ Properties
 
 
 def Font__new__(typ, *args, **kwargs):
-	if len(args) > 0 and (type(args[0]) == type(str) or type(args[0]) == type(unicode)):
+	if len(args) > 0 and isinstance(args[0], (str, unicode)):
 		path = args[0]
 		URL = NSURL.fileURLWithPath_(path)
-		typeName = NSWorkspace.sharedWorkspace().typeOfFile_error_(path, None)
-		Doc = GSDocument.alloc().initWithContentsOfURL_ofType_error_(URL, typeName, None)
-		if Doc is not None:
-			return Doc.font()
+		typeName = NSWorkspace.sharedWorkspace().typeOfFile_error_(path, None)[0]
+		if typeName != None:
+			Doc = GSDocument.alloc().initWithContentsOfURL_ofType_error_(URL, typeName, None)
+			if Doc is not None:
+				return Doc[0].font
 		raise("Unable to open font")
-	else:
-		return GSFont.alloc().init()
+	return GSFont.alloc().init()
 GSFont.__new__ = Font__new__
 
 def Font__init__(self, path=None):
