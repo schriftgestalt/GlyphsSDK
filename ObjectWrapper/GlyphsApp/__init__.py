@@ -510,6 +510,8 @@ GSApplication.open = OpenFont
 	
 	:param Path: The path where the document is located.
 	:type Path: str
+	:param showInterface: If a document window should be opened
+	:type showInterface: bool
 	:return: The opened document object or None.
 	:rtype: :class:`GSFont`'''
 
