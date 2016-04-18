@@ -4948,8 +4948,8 @@ def DrawPointsWithPen(self, pen):
 	"""draw the object with a point pen"""
 	for a in self.anchors:
 		a.drawPoints(pen)
-	for c in self.paths:
-		c.drawPoints(pen)
+	for p in self.paths:
+		p.drawPoints(pen)
 	for c in self.components:
 		c.drawPoints(pen)
 
