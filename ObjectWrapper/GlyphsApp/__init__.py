@@ -15,7 +15,7 @@ __all__ = [
 	# Constans
 	"GSMOVE", "GSLINE", "GSCURVE", "GSOFFCURVE", "GSSHARP", "GSSMOOTH",
 	"TAG", "TOPGHOST", "STEM", "BOTTOMGHOST", "TTANCHOR", "TTSTEM", "TTALIGN", "TTINTERPOLATE", "TTDIAGONAL", "CORNER", "CAP", "TTDONTROUND", "TTROUND", "TTROUNDUP", "TTROUNDDOWN", "TRIPLE",
-	"DRAWFOREGROUND", "DRAWBACKGROUND", "DRAWINACTIVE", "DOCUMENTWASSAVED", "TEXT", "ARROW", "CIRCLE", "PLUS", "MINUS",
+	"DRAWFOREGROUND", "DRAWBACKGROUND", "DRAWINACTIVE", "DOCUMENTWASSAVED", "DOCUMENTOPENED", "TABDIDOPEN", "TABWILLCLOSE", "TEXT", "ARROW", "CIRCLE", "PLUS", "MINUS",
 	"LINE",
 	"CURVE",
 	"OFFCURVE",
@@ -654,14 +654,25 @@ DRAWINACTIVE = "DrawInactive"
 DrawLayerCallbacks = (DRAWFOREGROUND, DRAWBACKGROUND, DRAWINACTIVE)
 
 DOCUMENTWASSAVED = "GSDocumentWasSavedSuccessfully"
-Observers = (DOCUMENTWASSAVED)
+DOCUMENTOPENED = "GSDocumentWasOpened"
+TABDIDOPEN = "TabDidOpen"
+TABWILLCLOSE = "TabWillClose"
 
-callbackTargets = {}
+Observers = (DOCUMENTWASSAVED, DOCUMENTOPENED, TABDIDOPEN, TABWILLCLOSE)
 
-class callbackHelperClass():
+callbackOperationTargets = {}
+
+class callbackHelperClass(NSObject):
 	def __init__(self, func, operation):
 		self.func = func
 		self.operation = operation
+		
+	def __new__(typ, *args, **kwargs):
+		self = callbackHelperClass.alloc().init()
+		if len(args) > 1:
+			self.func = args[0]
+			self.operation = args[1]
+		return self
 
 	def drawForegroundForLayer_options_(self, Layer, options):
 		if self.func:
@@ -674,36 +685,49 @@ class callbackHelperClass():
 	def drawBackgroundForInactiveLayer_options_(self, Layer, options):
 		if self.func:
 			self.func(Layer, options)
+			
+	def notificationCallback(self, notification):
+		if self.func:
+			self.func(notification)
+	
 
 
 def __addCallback__(self, target, operation):
 
 	# Remove possible old function by the same name
-	if callbackTargets.has_key(target.__name__):
-		self.removeCallback(target)
+	try:
+		callbackTargets = None
+		try:
+			callbackTargets = callbackOperationTargets[operation]
+		except:
+			callbackTargets = {}
+			callbackOperationTargets[operation] = callbackTargets
+		
+		if callbackTargets.has_key(target.__name__):
+			self.removeCallback(target, operation)
+		
+		# DrawLayerCallbacks
+		if operation in DrawLayerCallbacks:
 
-	# DrawLayerCallbacks
-	if operation in DrawLayerCallbacks:
-
-		# Add class to callbackTargets dict by the function name
-		callbackTargets[target.__name__] = callbackHelperClass(target, operation)
+			# Add class to callbackTargets dict by the function name
+			callbackTargets[target.__name__] = callbackHelperClass(target, operation)
 	
-		# Add to stack
-		self.delegate().addCallback_forOperation_(callbackTargets[target.__name__], operation)
+			# Add to stack
+			self.delegate().addCallback_forOperation_(callbackTargets[target.__name__], operation)
 
-		# Redraw immediately
-		self.redraw()
+			# Redraw immediately
+			self.redraw()
 
-	# Other observers
-	elif operation in Observers:
+		# Other observers
+		elif operation in Observers:
+			# Add class to callbackTargets dict by the function name
+			callbackTargets[target.__name__] = callbackHelperClass(target, operation)
+			selector = objc.selector(callbackTargets[target.__name__].notificationCallback, signature="v@:@")
+			NSNotificationCenter.defaultCenter().addObserver_selector_name_object_(callbackTargets[target.__name__], selector, operation, objc.nil)
+	except:
+		import traceback
+		NSLog(traceback.format_exc())
 
-		# Add class to callbackTargets dict by the function name
-		callbackTargets[target.__name__] = callbackHelperClass(target, operation)
-
-		selector = objc.selector( callbackTargets[target.__name__].func, signature="v@:@" )
-		NSNotificationCenter.defaultCenter().addObserver_selector_name_object_(callbackTargets[target.__name__], selector, operation, None )
-		
-		
 GSApplication.addCallback = __addCallback__
 
 """.. function:: addCallback(function, hook)
@@ -739,25 +763,31 @@ GSApplication.addCallback = __addCallback__
 		Glyphs.addCallback(drawGlyphIntoBackground, DRAWBACKGROUND)
 	"""
 
-def __removeCallback___(self, target, operation = None):
-
+def __do__removeCallback___(self, target, operation):
+	callbackTargets = None
+	try:
+		callbackTargets = callbackOperationTargets[operation]
+	except:
+		return
 	if callbackTargets.has_key(target.__name__):
 
 		# DrawLayerCallbacks
 		if callbackTargets[target.__name__].operation in DrawLayerCallbacks:
-
-#			if operation != None:
-#				self.delegate().removeCallback_forOperation_(callbackTargets[target.__name__], operation)
-#			else:
 			self.delegate().removeCallback_(callbackTargets[target.__name__])
-			
+			del(callbackTargets[target.__name__])
 			# Redraw immediately
 			self.redraw()
-
 		# Other observers
 		elif callbackTargets[target.__name__].operation in Observers:
-
 			NSNotificationCenter.defaultCenter().removeObserver_(callbackTargets[target.__name__])
+			del(callbackTargets[target.__name__])
+
+def __removeCallback___(self, target, operation = None):
+	if operation != None:
+		__do__removeCallback___(self, target, operation)
+	else:
+		for operation in callbackOperationTargets.allKeys():
+			__do__removeCallback___(self, target, operation)
 
 
 GSApplication.removeCallback = __removeCallback___
