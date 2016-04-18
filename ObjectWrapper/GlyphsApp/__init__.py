@@ -1671,6 +1671,8 @@ class LayerAnchorsProxy (Proxy):
 		elif type(values) == type(dict) or isinstance(values, NSDictionary):
 			for (key, anchor) in value.items() :
 				newAnchors[anchor.name] = anchor
+		elif values == None:
+			pass
 		else:
 			raise TypeError
 		self._owner.setAnchors_(newAnchors)
