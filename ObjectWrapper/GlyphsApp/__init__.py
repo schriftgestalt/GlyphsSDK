@@ -7043,6 +7043,25 @@ GSEditViewController.features = property(lambda self: TabSelectedFeaturesProxy(s
 
 '''
 
+# TODO documentation
+class TempDataProxy(Proxy):
+	def __getitem__(self, Key):
+		return self._owner.tempData().get(Key, None)
+	def __setitem__(self, Key, Value):
+		if self._owner.tempData() == None:
+			self._owner.setTempData_(NSMutableDictionary.alloc().init())
+		self._owner.tempData()[Key] = Value
+		NSLog("self._tempData %s" % self._owner.tempData())
+	def __delitem__(self, Key):
+		del(self._owner.tempData()[Key])
+	def values(self):
+		if self._owner.tempData() != None:
+			return self._owner.tempData().allValues()
+		return None
+	def __repr__(self):
+		return str(self._owner.tempData())
+
+GSEditViewController.userData = property(lambda self: TempDataProxy(self))
 
 
 def Get_ShowInPreview(self):
