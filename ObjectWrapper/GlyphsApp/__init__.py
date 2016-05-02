@@ -299,6 +299,25 @@ GSApplication.activeReporters = property(lambda self: self.delegate().activeRepo
 def isString(string):
 	return isinstance(value, (str, unicode, objc.pyobjc_unicode))
 
+def objcObject(pyObject):
+	if isinstance(pyObject, (str, unicode)):
+		return NSString.stringWithString_(pyObject)
+	if isinstance(pyObject, int):
+		return NSNumber.numberWithInt_(pyObject)
+	if isinstance(pyObject, float):
+		return NSNumber.numberWithFloat_(pyObject)
+	if isinstance(pyObject, list):
+		array = NSMutableArray.array()
+		for value in pyObject:
+			array.addObject_(objcObject(value))
+		return array
+	if isinstance(pyObject, dict):
+		dictionary = NSMutableDictionary.dictionary()
+		for key, value in pyObject.viewitems():
+			dictionary.setObject_forKey_(objcObject(value), objcObject(key))
+		return dictionary
+	return pyObject
+
 class DefaultsProxy(Proxy):
 	def __getitem__(self, Key):
 		return NSUserDefaults.standardUserDefaults().objectForKey_(Key)
@@ -1220,9 +1239,11 @@ class CustomParametersProxy(Proxy):
 				Key = self.__len__() + Key
 			Value = self._owner.objectInCustomParametersAtIndex_(Key)
 			if Value is not None:
-				Value.setValue_(Parameter)
+				Value.setValue_(objcObject(Parameter))
+			else:
+				raise ValueError
 		else:
-			self._owner.setCustomParameter_forKey_(Parameter, Key)
+			self._owner.setCustomParameter_forKey_(objcObject(Parameter), objcObject(Key))
 	def __delitem__(self, Key):
 		if type(Key) is int:
 			if Key < 0:
