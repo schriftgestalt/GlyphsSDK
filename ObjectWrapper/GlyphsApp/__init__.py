@@ -296,7 +296,8 @@ GSApplication.activeReporters = property(lambda self: self.delegate().activeRepo
 	List of activated reporter plug-ins.
 '''
 
-
+def isString(string):
+	return isinstance(value, (str, unicode, objc.pyobjc_unicode))
 
 class DefaultsProxy(Proxy):
 	def __getitem__(self, Key):
@@ -849,7 +850,7 @@ GSApplication.showNotification = Glyphs_showNotification;
 	'''
 
 def Glyphs_localize(self, localization):
-	if type(localization) == str or type(localization) == unicode:
+	if isString(localization):
 		return localization
 	elif type(localization) == dict:
 		# Return first match of languages list
@@ -894,8 +895,7 @@ GSApplication.localize = Glyphs_localize;
 
 
 def __GSApplication_activateReporter__(self, Reporter):
-	
-	if type(Reporter) == str:
+	if isString(Reporter):
 		for r in self.reporters:
 			if r.__class__.__name__ == Reporter:
 				Reporter = r
@@ -918,8 +918,7 @@ GSApplication.activateReporter = __GSApplication_activateReporter__
 '''
 
 def __GSApplication_deactivateReporter__(self, Reporter):
-
-	if type(Reporter) == str:
+	if isString(Reporter):
 		for r in self.reporters:
 			if r.__class__.__name__ == Reporter:
 				Reporter = r
@@ -1145,7 +1144,7 @@ class FontFontMasterProxy (Proxy):
 			if Key < 0:
 				Key = self.__len__() + Key
 			return self._owner.fontMasterAtIndex_(Key)
-		elif type(Key) is str or type(Key) is unicode or type(Key) is objc.pyobjc_unicode:
+		elif isString(Key):
 			return self._owner.fontMasterForId_(Key)
 		else:
 			raise(KeyError)
@@ -1154,7 +1153,7 @@ class FontFontMasterProxy (Proxy):
 			if Key < 0:
 				Key = self.__len__() + Key
 			self._owner.replaceFontMasterAtIndex_withFontMaster_(Key, FontMaster)
-		elif type(Key) is str or type(Key) is unicode or type(Key) is objc.pyobjc_unicode:
+		elif isString(Key):
 			OldFontMaster = self._owner.fontMasterForId_(Key)
 			self._owner.removeFontMaster_(OldFontMaster)
 			return self._owner.addFontMaster_(FontMaster)
@@ -1250,7 +1249,7 @@ class FontClassesProxy (Proxy):
 			if Key < 0:
 				Key = self.__len__() + Key
 			return self._owner.objectInClassesAtIndex_(Key)
-		elif type(Key) is str or type(Key) is unicode or type(Key) is objc.pyobjc_unicode:
+		elif isString(Key):
 			if len(Key) > 0:
 				return self._owner.classForTag_(Key)
 		raise(KeyError)
@@ -1264,7 +1263,7 @@ class FontClassesProxy (Proxy):
 			if Key < 0:
 				Key = self.__len__() + Key
 			return self._owner.removeObjectFromClassesAtIndex_(Key)
-		elif type(Key) is str or type(Key) is unicode or type(Key) is objc.pyobjc_unicode:
+		elif isString(Key):
 			Class = self._owner.classForTag_(Key)
 			if Class is not None:
 				return self._owner.removeClass_(Class)
@@ -1288,7 +1287,7 @@ class FontFeaturesProxy (Proxy):
 			if Key < 0:
 				Key = self.__len__() + Key
 			return self._owner.featureAtIndex_(Key)
-		if type(Key) is str or type(Key) is unicode or type(Key) is objc.pyobjc_unicode:
+		if isString(Key):
 			return self._owner.featureForTag_(Key)
 		else:
 			raise(KeyError)
@@ -1302,7 +1301,7 @@ class FontFeaturesProxy (Proxy):
 			if Key < 0:
 				Key = self.__len__() + Key
 			return self._owner.removeFeatureAtIndex_(Key)
-		elif type(Key) is str or type(Key) is unicode or type(Key) is objc.pyobjc_unicode:
+		elif isString(Key):
 			Feature = self._owner.featureForTag_(Key)
 			if Feature is not None:
 				return self._owner.removeFeature_(Feature)
@@ -1339,7 +1338,7 @@ class FontFeaturePrefixesProxy (Proxy):
 			if Key < 0:
 				Key = self.__len__() + Key
 			return self._owner.objectInFeaturePrefixesAtIndex_(Key)
-		if type(Key) is str or type(Key) is unicode or type(Key) is objc.pyobjc_unicode:
+		if isString(Key):
 			return self._owner.featurePrefixForTag_(Key)
 		else:
 			raise(KeyError)
@@ -1353,7 +1352,7 @@ class FontFeaturePrefixesProxy (Proxy):
 			if Key < 0:
 				Key = self.__len__() + Key
 			return self._owner.removeObjectFromFeaturePrefixesAtIndex_(Key)
-		elif type(Key) is str or type(Key) is unicode or type(Key) is objc.pyobjc_unicode:
+		elif isString(Key):
 			FeaturePrefix = self._owner.featurePrefixForTag_(Key)
 			if FeaturePrefix is not None:
 				return self._owner.removeFeaturePrefix_(FeaturePrefix)
@@ -1625,18 +1624,18 @@ class LayerHintsProxy (Proxy):
 class LayerAnchorsProxy (Proxy):
 	"""layer.anchors is a dict!!!"""
 	def __getitem__(self, Key):
-		if type(Key) is str or type(Key) is unicode or type(Key) is objc.pyobjc_unicode:
+		if isString(Key):
 			return self._owner.anchorForName_(Key)
 		else:
 			raise KeyError
 	def __setitem__(self, Key, Anchor):
-		if type(Key) is str or type(Key) is unicode or type(Key) is objc.pyobjc_unicode:
+		if isString(Key):
 			Anchor.setName_(Key)
 			self._owner.addAnchor_(Anchor)
 		else:
 			raise TypeError
 	def __delitem__(self, Key):
-		if type(Key) is str or type(Key) is unicode or type(Key) is objc.pyobjc_unicode:
+		if isString(Key):
 			self._owner.removeAnchorWithName_(Key)
 		else:
 			raise TypeError
@@ -6048,7 +6047,7 @@ def __GSNode__get_name(self):
 	return None
 
 def __GSNode__set_name(self, value):
-	if value is None or type(value) is str or type(value) is unicode or type(value) is objc.pyobjc_unicode:
+	if value is None or isString(value):
 		self.setUserData_forKey_(value, "name")
 	else:
 		raise(ValueError)
@@ -7003,7 +7002,7 @@ class TabSelectedFeaturesProxy (Proxy):
 		return _hasFeature
 
 	def append(self, feature):
-		if type(feature) != str:
+		if not isString(feature):
 			raise TypeError
 
 		if self.hasFeature(feature):
@@ -7012,9 +7011,8 @@ class TabSelectedFeaturesProxy (Proxy):
 		self.reflow()
 
 	def remove(self, feature):
-		if type(feature) != str:
+		if not isString(feature):
 			raise TypeError
-
 		try:
 			self._owner.selectedFeatures().remove(feature)
 		except:
