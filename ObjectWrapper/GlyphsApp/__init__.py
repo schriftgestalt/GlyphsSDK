@@ -1307,7 +1307,7 @@ class FontFeaturesProxy (Proxy):
 		if type(Key) is int:
 			if Key < 0:
 				Key = self.__len__() + Key
-			return self._owner.featureAtIndex_(Key)
+			return self._owner.objectInFeaturesAtIndex_(Key)
 		if isString(Key):
 			return self._owner.featureForTag_(Key)
 		else:
@@ -1316,19 +1316,19 @@ class FontFeaturesProxy (Proxy):
 		if type(Key) is int:
 			if Key < 0:
 				Key = self.__len__() + Key
-			self._owner.replaceFeatureAtIndex_withFeature_(Key, Feature)
+			self._owner.replaceObjectInFeaturesAtIndex_withObject_(Key, Feature)
 	def __delitem__(self, Key):
 		if type(Key) is int:
 			if Key < 0:
 				Key = self.__len__() + Key
-			return self._owner.removeFeatureAtIndex_(Key)
+			return self._owner.removeObjectFromFeaturesAtIndex_(Key)
 		elif isString(Key):
 			Feature = self._owner.featureForTag_(Key)
 			if Feature is not None:
 				return self._owner.removeFeature_(Feature)
 	def __iter__(self):
 		for index in range(self._owner.countOfFeatures()):
-			yield self._owner.featureAtIndex_(index)
+			yield self._owner.objectInFeaturesAtIndex_(index)
 	def append(self, Feature):
 		#print "append", Node
 		self._owner.addFeature_(Feature)
