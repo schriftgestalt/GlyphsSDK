@@ -1464,12 +1464,12 @@ class LayersIterator:
 		return self
 	def next(self):
 		if self._owner.parent:
-			if self.curInd >= self._owner.countOfLayers():
-				raise StopIteration
 			if self.curInd < self._owner.parent.countOfFontMasters():
 				FontMaster = self._owner.parent.fontMasterAtIndex_(self.curInd)
 				Item = self._owner.layerForKey_(FontMaster.id)
 			else:
+				if self.curInd >= self._owner.countOfLayers():
+					raise StopIteration
 				ExtraLayerIndex = self.curInd - self._owner.parent.countOfFontMasters()
 				Index = 0
 				ExtraLayer = None
