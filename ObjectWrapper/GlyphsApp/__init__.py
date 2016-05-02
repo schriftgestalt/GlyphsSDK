@@ -7025,10 +7025,17 @@ class TabSelectedFeaturesProxy (Proxy):
 	def append(self, feature):
 		if not isString(feature):
 			raise TypeError
-
 		if self.hasFeature(feature):
 			self._owner.selectedFeatures().append(feature)
 
+		self.reflow()
+	
+	def extend(self, features):
+		if not isinstance(features, list):
+			raise TypeError
+		for feature in features:
+			if self.hasFeature(feature):
+				self._owner.selectedFeatures().append(feature)
 		self.reflow()
 
 	def remove(self, feature):
