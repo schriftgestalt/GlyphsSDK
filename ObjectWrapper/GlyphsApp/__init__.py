@@ -297,7 +297,7 @@ GSApplication.activeReporters = property(lambda self: self.delegate().activeRepo
 '''
 
 def isString(string):
-	return isinstance(value, (str, unicode, objc.pyobjc_unicode))
+	return isinstance(string, (str, unicode, objc.pyobjc_unicode))
 
 def objcObject(pyObject):
 	if isinstance(pyObject, (str, unicode)):
@@ -998,11 +998,11 @@ TTDIAGONAL = 6
 CORNER = 16
 CAP = 17
 
-TTDONTROUND = 4,
-TTROUND = 0,
-TTROUNDUP = 1,
-TTROUNDDOWN = 2,
-TRIPLE = 128,
+TTDONTROUND = 4
+TTROUND = 0
+TTROUNDUP = 1
+TTROUNDDOWN = 2
+TRIPLE = 128
 
 #annotations:
 TEXT = 1
