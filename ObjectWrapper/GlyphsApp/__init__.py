@@ -6400,7 +6400,14 @@ GSHint.type = property(			lambda self: self.valueForKey_("type"),
 '''.. attribute:: type
 	See Constants section at the bottom of the page
 	:type: int'''
-	
+
+GSHint.options = property(		lambda self: self.valueForKey_("options"),
+								lambda self, value: self.setOptions_(value))
+'''.. attribute:: options
+	Stores extra options for the hint. For TT hints, that might be the rounding settings.
+	See Constants section at the bottom of the page
+	:type: int'''
+
 GSHint.horizontal = property(	lambda self: self.valueForKey_("horizontal").boolValue(),
 								lambda self, value: self.setHorizontal_(value))
 '''.. attribute:: horizontal
