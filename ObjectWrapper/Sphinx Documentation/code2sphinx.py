@@ -19,7 +19,7 @@ from ynlib.system import Execute
 path = os.path.dirname(__file__)
 
 # Read docu code from GlyphsApp.py
-code = ReadFromFile(os.path.join(path, '..', 'GlyphsApp.py'))
+code = ReadFromFile(os.path.join(path, '..', 'GlyphsApp', '__init__.py'))
 sphinxoriginal = ReadFromFile(os.path.join(path, 'sphinx folder', 'index.rst.original'))
 
 # focus on triple comments
