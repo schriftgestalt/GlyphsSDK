@@ -1,16 +1,8 @@
-### Warning
-
-We’re currently in the process of restructuring the whole Python implementation of our plug-ins. Although we’re pretty far with it, please note that until we have released a stable 2.3 version, the plug-in skeletons might still see minor changes that could break a plug-in of yours currently under development from this code base here.
-
-Please refrain from finishing up and publishing plug-ins based on this code until we have announced the final version 2.3 and monitor code changes to this repository.
-
-January 27th 2016
-
 # GlyphsSDK
 
 ## Plugin SDK
 
-This is the Plugin SDK for the [Glyphs font editor](http://glyphsapp.com/). There are various kinds of plugins (see below), and there are two ways of writing them, in ObjectiveC or in Python. You will find extensive documentation in the readme files and the code comments. But do [start with the tutorial](https://glyphsapp.com/tutorials/plugins). Then, continue with the `README.md` file inside the Templates folder.
+This is the Plugin SDK for the [Glyphs font editor](http://glyphsapp.com/). There are various kinds of plugins (see below), and there are two ways of writing them, in ObjectiveC or in Python. You will find extensive documentation in the readme files and the code comments. But do [start with the tutorial](https://glyphsapp.com/tutorials/plugins). Then, continue with the `README.md` file inside the respective template subfolder.
 
 ### .glyphsFileFormat
 
