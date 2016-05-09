@@ -20,41 +20,12 @@ Glyphs.app Python Scripting API Documentation
 
 This is the documentation for the Python Scripting API for Glyphs.app (`glyphsapp.com <http://glyphsapp.com/>`_)
 
-Calling font objects starts with the mothership, the Glyphs object::
-
-	print Glyphs
-
-.. code-block:: python
-
-	<Glyphs.app>
-	
-The currently open fonts are attached to it::
-
-	# topmost open font
-	font = Glyphs.font
-	print font
-
-.. code-block:: python
-	
-	<GSFont "My Font" v1.0 with 2 masters and 5 instances>
-
-.. code-block:: python
-	
-	# all open fonts
-	fonts = Glyphs.fonts
-	print fonts
-
-.. code-block:: python
-	
-	[<GSFont "My Font" v1.0 with 2 masters and 5 instances>,
-	<GSFont "My Other Font" v1.0 with 1 masters and 1 instances>]
-
 .. image:: _static/objectmodel.png
 
 
-More Details
-============
+About this Document
+===================
 
-This document covers all methods that are implemented in the wrapper. There is a lot more available. Please have a look at the Core part of the documentation.
+This document covers all methods that are implemented in the Python wrapper. There are many more functions and objects available via the PyObjC bridge. For more details, please have a look at the Core part of the documentation.
 
 
