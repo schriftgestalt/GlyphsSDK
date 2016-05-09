@@ -45,7 +45,7 @@ class ____PluginClassName____(FileFormatPlugin):
 		self.toolbarPosition = 100
 
 		# Load .nib dialog (with .extension)
-		self.loadNib('IBdialog')
+		self.loadNib('IBdialog', __file__)
 
 	def start(self):
 

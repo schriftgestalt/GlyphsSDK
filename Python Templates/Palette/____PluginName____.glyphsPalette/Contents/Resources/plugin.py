@@ -23,7 +23,7 @@ class ____PluginClassName____ (PalettePlugin):
 		self.name = Glyphs.localize({'en': u'My Palette', 'de': u'Meine Palette'})
 		
 		# Load .nib dialog (without .extension)
-		self.loadNib('IBdialog')
+		self.loadNib('IBdialog', __file__)
 	
 	def start(self):
 
