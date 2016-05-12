@@ -1,6 +1,4 @@
-Welcome to Glyphs.app’s plug-in documentation. 
-
-This documentation here covers only a few details of the whole process. If you’re new to the subject, we recommend to start by [reading our tutorial](https://glyphsapp.com/tutorials/plugins), where you will later be asked to return here.
+Welcome to Glyphs.app’s plug-in documentation! This document covers only some details of the process. If you are new to the subject, we recommend you start with [reading our tutorial](https://glyphsapp.com/tutorials/plugins), which points you back here at the appropriate moment.
 
 ## Using the Python Templates
 
@@ -38,7 +36,7 @@ Glyphs provides automatic update checks and notifications (not automatic install
 
 But even if you don’t want to participate in the automatic update notifications, it is advisable to fill in the version numbers.
 
-> Pro tip: Think ahead and specify at least a URL for automatic update notifications even if it’s way too early for you to implement the update procedure. Glyphs is well capable of handling an error response for that URL until the time has come. Consider: once your plug-in has shipped to users, it’s too late to remedy.
+> Pro tip: Think ahead and specify at least a URL for automatic update notifications even if it’s way too early for you to implement the update procedure. Glyphs can handle an error response for that URL until the time has come. Consider that once your plug-in has shipped to users, it’s too late to remedy.
 
 > Simply take this `Info.plist` file, upload it on some server, and place a http link to that file into the `UpdateFeedURL` field of the shipped plug-in’s `Info.plist`. For the time being, leave the version number in `CFBundleVersion` in the online file the same as the shipped file. When the time has come, you’ll fill in the new version number and the `productPageURL` field, and voilà: we have established ourselves an automatic update notification process.
 
@@ -60,6 +58,7 @@ Glyphs will add the URL parameters `glyphsUniqueID` (an anonymous ID identifying
 The interface language of Glyphs makes its way into the update check call via the HTTP headers. Therefore, you may choose to provide the `productReleaseNotes` dynamically in various languages.
 
 A live example of all of this can be found for Yanone’s Speed Punk, with `productReleaseNotes` provided in English and German (if you click the following link here in your browser, your browser will send the preferred languages via the HTTP headers identical to how Glyphs would do it): https://yanone.de/buy/?page=versionInformation&product=speedpunkglyphs&format=GlyphsInfoPlist
+
 ### Edit `Contents/Resources/plugin.py`:
 
 This is where your own code goes. You need to rename the main class `class ____PluginClassName____(...)` to the above mentioned class name.
@@ -133,6 +132,19 @@ For convenience, we provide a droplet app that will accept your `.xib` file so y
 ![](_Readme_Images/dock.png)
 
 You’ll find the dropplet .app here in this *Python Templates* folder in the Git repository.
+
+## Plug-in Manager
+
+Make your plug-in available for easy installation via *Window > Plugin Manager* in app versions 2.3 and later. To do that, simply make a pull request for the `packages.plist` file in the [glyphs-packages](https://github.com/schriftgestalt/glyphs-packages) repository. All you need to add in that file are these few lines:
+
+			{
+				name = "PluginNameWithExtension.glyphsPlugin";
+				url = "https://github.com/userName/repositoryName";
+				description = "Single-line description. Careful: WITHOUT LINEBREAKS! Use \n instead.";
+				screenshot = "https://optional.link.to/pluginScreenshot.png";
+			}
+
+Entries must be separated by commas. So don’t forget a comma right after the closing curly brace `}` if another entry is following. (And on the previous line if you add your entry at the end.) The order of entries does not matter, the manager will sort all registered plug-ins alphabetically anyway.
 
 ## Further reading
 
