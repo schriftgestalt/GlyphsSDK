@@ -30,9 +30,7 @@ def LoadNib(self, nibname):
 		self.logError("Error loading %s.nib." % nibname)
 
 def setUpMenuHelper(Menu, Items, defaultTarget):
-	print "setUpMenuHelper 1"
 	if type(Items) == list:
-		print "setUpMenuHelper 2"
 		for entry in Items:
 			
 			if "view" in entry and not "name" in entry:
@@ -53,9 +51,7 @@ def setUpMenuHelper(Menu, Items, defaultTarget):
 			if "view" in entry:
 				try:
 					view = entry["view"]
-					print "view", isinstance(view, NSView), "--"
 					if isinstance(view, NSView):
-						print "__add view"
 						newMenuItem.setView_(view)
 				except:
 					LogToConsole(traceback.format_exc(), "setUpMenuHelper") # from GlyhsApp.py
