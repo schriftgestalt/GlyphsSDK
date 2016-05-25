@@ -750,7 +750,7 @@ def __addCallback__(self, target, operation):
 
 GSApplication.addCallback = __addCallback__
 
-""".. function:: addCallback(function, hook)
+'''.. function:: addCallback(function, hook)
 
 	.. versionadded:: 2.3
 
@@ -781,7 +781,8 @@ GSApplication.addCallback = __addCallback__
 
 		# add your function to the hook
 		Glyphs.addCallback(drawGlyphIntoBackground, DRAWBACKGROUND)
-	"""
+
+	'''
 
 def __do__removeCallback___(self, target, operation):
 	callbackTargets = None
@@ -812,7 +813,7 @@ def __removeCallback___(self, target, operation = None):
 
 GSApplication.removeCallback = __removeCallback___
 
-""".. function:: removeCallback(function)
+'''.. function:: removeCallback(function)
 
 	.. versionadded:: 2.3
 
@@ -823,7 +824,7 @@ GSApplication.removeCallback = __removeCallback___
 		# remove your function to the hook
 		Glyphs.removeCallback(drawGlyphIntoBackground)
 
-	"""
+	'''
 
 
 
@@ -893,7 +894,6 @@ GSApplication.localize = Glyphs_localize;
 	Tip: You can find Glyphs’ localized languages here `Glyphs.defaults["AppleLanguages"]`.
 	
 	.. code-block:: python
-	
 		# encoding: utf-8
 		
 		print Glyphs.localize({
@@ -906,7 +906,7 @@ GSApplication.localize = Glyphs_localize;
 		# Given that your Mac’s system language is set to German 
 		# and Glyphs.app UI is set to use localization (change in preferences),
 		# it will print:
-		Hallöle Welt
+		# Hallöle Welt
 
 	'''
 
@@ -6125,7 +6125,7 @@ def ______________________(): pass
 :mod:`GSGuideLine`
 ===============================================================================
 
-Implementation of the guideline object.
+Implementation of the guide object.
 
 For details on how to access them, please see :class:`GSLayer`.guides
 
@@ -6591,7 +6591,7 @@ GSBackgroundImage.scale = property(		lambda self: BackgroundImage_getScale(self)
 	
 	Scale factor of image.
 	
-	A scale factor of 1.0 (100%) means that 1 font unit is equal to 1 pixel.
+	A scale factor of 1.0 (100%) means that 1 font unit is equal to 1 point.
 	
 	This sets the scale factor for x and y scale simultaneously. For separate scale factors, please use a transformation matrix.
 	
@@ -7769,6 +7769,7 @@ Node connection
 
 	GSSMOOTH = 100
 		A smooth or tangent node
+
 	.. deprecated:: 2.3
 	   Use attribute `smooth` instead.
 	
