@@ -20,3 +20,8 @@ class ____PluginClassName____(GeneralPlugin):
 	
 	def start(self):
 		print 'GeneralPlugin loaded'
+	
+	def __file__(self):
+		"""Please leave this method unchanged"""
+		return __file__
+	

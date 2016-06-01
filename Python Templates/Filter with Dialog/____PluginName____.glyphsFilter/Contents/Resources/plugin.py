@@ -74,3 +74,7 @@ class ____PluginClassName____(FilterWithDialog):
 	
 	def generateCustomParameter( self ):
 		return "%s; shift:%s;" % (self.__class__.__name__, Glyphs.defaults['com.myname.myfilter.value'] )
+	
+	def __file__(self):
+		"""Please leave this method unchanged"""
+		return __file__

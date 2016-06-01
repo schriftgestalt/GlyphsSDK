@@ -88,3 +88,7 @@ class ____PluginClassName____(SelectTool):
 
 		anchor = Glyphs.font.selectedLayers[0].selection[0]
 		anchor.position = NSPoint(anchor.position.x + random.randint(-50, 50), anchor.position.y + random.randint(-50, 50))
+
+	def __file__(self):
+		"""Please leave this method unchanged"""
+		return __file__

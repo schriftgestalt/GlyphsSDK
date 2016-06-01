@@ -25,3 +25,8 @@ class ____PluginClassName____(FilterWithoutDialog):
 		# Apply your filter code here
 		
 		print layer, inEditView, customParameters
+	
+	def __file__(self):
+		"""Please leave this method unchanged"""
+		return __file__
+	

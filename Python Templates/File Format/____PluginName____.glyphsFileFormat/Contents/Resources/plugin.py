@@ -119,3 +119,6 @@ class ____PluginClassName____(FileFormatPlugin):
 		else:
 			return (False, 'No file chosen')
 	
+	def __file__(self):
+		"""Please leave this method unchanged"""
+		return __file__
