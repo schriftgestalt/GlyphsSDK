@@ -9,7 +9,6 @@ class MultipleTools(SelectTool):
 	def settings(self):
 		self.name = u'Multiple Tools'
 		self.keyboardShortcut = 'x'
-		self._icon = None
 		self.toolbarPosition = 250
 		
 		osource_image = os.path.join(os.path.dirname(__file__), 'toolbarX.pdf')
