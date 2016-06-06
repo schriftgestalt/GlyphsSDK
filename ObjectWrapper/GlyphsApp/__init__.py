@@ -6430,6 +6430,9 @@ GSHint.horizontal = property(	lambda self: self.valueForKey_("horizontal").boolV
 
 GSHint.name = property(lambda self: self.valueForKey_("name"), lambda self, value: self.setName_(value))
 '''.. attribute:: name
+	
+	.. versionadded:: 2.3.1
+	
 	Name of the hint. This is the referenced glyph for corner and cap components.
 	:type: string'''
 
@@ -6549,7 +6552,7 @@ GSBackgroundImage.locked = property(		lambda self: bool(self.pyobjc_instanceMeth
 '''
 
 GSBackgroundImage.alpha = property(		lambda self: bool(self.pyobjc_instanceMethods.alpha()),
-						 		lambda self, value: self.setAlpha_(value))
+								lambda self, value: self.setAlpha_(value))
 '''.. attribute:: alpha
 	
 	.. versionadded:: 2.3
