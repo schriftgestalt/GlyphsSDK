@@ -4013,10 +4013,10 @@ GSGlyph.smartComponentAxes = property(lambda self: GlyphSmartComponentAxesProxy(
 
 def __GSGlyph__lastChange__(self):
 	try:
-		self.pyobjc_instanceMethods.lastChange().timeIntervalSince1970()
+		return self.pyobjc_instanceMethods.lastChange().timeIntervalSince1970()
 	except:
 		return None
-GSGlyph.lastChange = property(__GSGlyph__lastChange__)
+GSGlyph.lastChange = property(lambda self:__GSGlyph__lastChange__(self))
 
 '''.. attribute:: lastChange
 
