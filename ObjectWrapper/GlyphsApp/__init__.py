@@ -895,6 +895,7 @@ GSApplication.localize = Glyphs_localize;
 	Tip: You can find Glyphs’ localized languages here `Glyphs.defaults["AppleLanguages"]`.
 	
 	.. code-block:: python
+	
 		# encoding: utf-8
 		
 		print Glyphs.localize({
