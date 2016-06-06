@@ -6359,6 +6359,8 @@ def Hint__repr__(self):
 		return "<GSHint %s origin=(%s,%s) type=%s>" % (hintConstants[self.type], self.originNode.position.x, self.originNode.position.y, self.type)
 	elif self.type == STEM:
 		return "<GSHint Stem origin=(%s,%s) target=(%s,%s) %s>" % (self.originNode.position.x, self.originNode.position.y, self.targetNode.position.x, self.targetNode.position.y, direction)
+	elif self.type == CORNER or self.type == CAP:
+		return "<GSHint %s %s>" % (hintConstants[self.type], self.name)
 	else:
 		return "<GSHint %s %s>" % (hintConstants[self.type], direction)
 GSHint.__repr__ = Hint__repr__;
@@ -6425,6 +6427,10 @@ GSHint.horizontal = property(	lambda self: self.valueForKey_("horizontal").boolV
 	:type: bool
 '''
 
+GSHint.name = property(lambda self: self.valueForKey_("name"), lambda self, value: self.setName_(value))
+'''.. attribute:: name
+	Name of the hint. This is the referenced glyph for corner and cap components.
+	:type: string'''
 
 
 ##################################################################################
