@@ -1577,21 +1577,21 @@ class GlyphSmartComponentAxesProxy (Proxy):
 		if type(Key) is int:
 			if Key < 0:
 				Key = self.__len__() + Key
-		return self._owner.pyobjc_instanceMethods.partsSettings().objectAtIndex_(Key)
+		return self._owner.objectInPartsSettingsAtIndex_(Key)
 	def __setitem__(self, Key, SmartComponentProperty):
 		if type(Key) is int:
 			if Key < 0:
 				Key = self.__len__() + Key
-		self._owner.pyobjc_instanceMethods.partsSettings().replaceObjectsAtIndex_withObjects_(Key, SmartComponentProperty)
+		self._owner.insertObject_inPartsSettingsAtIndex_(SmartComponentProperty, Key)
 	def __delitem__(self, Key):
 		if type(Key) is int:
 			if Key < 0:
 				Key = self.__len__() + Key
-		self._owner.pyobjc_instanceMethods.partsSettings().removeObjectAtIndex_(Key)
+		self._owner.removeObjectFromPartsSettingsAtIndex_(Key)
 	def append(self, SmartComponentProperty):
-		self._owner.pyobjc_instanceMethods.partsSettings().addObject_(SmartComponentProperty)
+		self._owner.addPartsSetting_(SmartComponentProperty)
 	def values(self):
-		return self._owner.pyobjc_instanceMethods.partsSettings()
+		return self._owner.partsSettings()
 	def setterMethod(self):
 		return self._owner.setPartsSettings_
 
@@ -1679,7 +1679,7 @@ class LayerAnchorsProxy (Proxy):
 		self._owner.addAnchor_(Anchor)
 	def __len__(self):
 		#print "count"
-		return self._owner.anchorCount()
+		return self._owner.countOfAnchors()
 
 	def setter(self, values):
 		newAnchors = NSMutableDictionary.dictionary()
