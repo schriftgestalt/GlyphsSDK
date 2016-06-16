@@ -21,6 +21,7 @@ class ____PluginClassName____(SelectTool):
 		self.generalContextMenus = [
 			{'name': Glyphs.localize({'en': u'Layer info in Macro window', 'de': u'Ebenen-Infos in Makro-Fenster'}), 'action': self.printInfo},
 		]
+		self.keyboardShortcut = 'c'
 
 	def start(self):
 		pass
