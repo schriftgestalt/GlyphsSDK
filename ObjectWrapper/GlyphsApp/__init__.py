@@ -14,11 +14,9 @@ __all__ = [
 
 	# Constants
 	"MOVE", "LINE", "CURVE", "OFFCURVE", "QCURVE", "GSMOVE", "GSLINE", "GSCURVE", "GSOFFCURVE", "GSSHARP", "GSSMOOTH",
-	"TAG", "TOPGHOST", "STEM", "BOTTOMGHOST", "TTANCHOR", "TTSTEM", "TTALIGN", "TTINTERPOLATE", "TTDIAGONAL", "CORNER", "CAP", "TTDONTROUND", "TTROUND", "TTROUNDUP", "TTROUNDDOWN", "TRIPLE",
-	"DRAWFOREGROUND", "DRAWBACKGROUND", "DRAWINACTIVE", "DOCUMENTWASSAVED", "DOCUMENTOPENED", "TABDIDOPEN", "TABWILLCLOSE", "UPDATEINTERFACE", "TEXT", "ARROW", "CIRCLE", "PLUS", "MINUS",
-	"LINE",
-	"CURVE",
-	"OFFCURVE",
+	"TAG", "TOPGHOST", "STEM", "BOTTOMGHOST", "TTANCHOR", "TTSTEM", "TTALIGN", "TTINTERPOLATE", "TTDIAGONAL", "TTDELTA", "CORNER", "CAP", "TTDONTROUND", "TTROUND", "TTROUNDUP", "TTROUNDDOWN", "TRIPLE",
+	"DRAWFOREGROUND", "DRAWBACKGROUND", "DRAWINACTIVE", "DOCUMENTWASSAVED", "DOCUMENTOPENED", "TABDIDOPEN", "TABWILLCLOSE", "UPDATEINTERFACE", "TEXT", "ARROW", "CIRCLE", "PLUS", "MINUS", "APP_MENU", "FILE_MENU", "EDIT_MENU", "GLYPH_MENU", "PATH_MENU", "FILTER_MENU", "VIEW_MENU", "SCRIPT_MENU", "WINDOW_MENU", "HELP_MENU"
+	"LINE", "CURVE", "OFFCURVE",
 	"LTR", "RTL", "LTRTTB", "RTLTTB", "GSTopLeft", "GSTopCenter", "GSTopRight", "GSCenterLeft", "GSCenterCenter", "GSCenterRight", "GSBottomLeft", "GSBottomCenter", "GSBottomRight",
 	
 	# Methods
@@ -463,6 +461,86 @@ GSApplication.versionString = NSBundle.mainBundle().infoDictionary()["CFBundleSh
 	
 	:type: string'''
 
+APP_MENU = "APP_MENU"
+FILE_MENU = "FILE_MENU"
+EDIT_MENU = "EDIT_MENU"
+GLYPH_MENU = "GLYPH_MENU"
+PATH_MENU = "PATH_MENU"
+FILTER_MENU = "FILTER_MENU"
+VIEW_MENU = "VIEW_MENU"
+SCRIPT_MENU = "SCRIPT_MENU"
+WINDOW_MENU = "WINDOW_MENU"
+HELP_MENU = "HELP_MENU"
+
+
+menuTagLookup = {
+	APP_MENU : 1,
+	FILE_MENU : 3,
+	EDIT_MENU : 5,
+	GLYPH_MENU : 7,
+	PATH_MENU : 9,
+	FILTER_MENU : 11,
+	VIEW_MENU : 13,
+	SCRIPT_MENU : 15,
+	WINDOW_MENU : 17,
+	HELP_MENU : 19,
+}
+
+class AppMenuProxy (Proxy):
+	"""Access the main menu."""
+	def __getitem__(self, Key):
+		if isinstance(Key, int):
+			return self._owner.mainMenu().itemAtIndex_(Key)
+		elif isString(Key):
+			Tag = menuTagLookup[Key]
+			return self._owner.mainMenu().itemWithTag_(Tag)
+	def values(self):
+		return self._owner.mainMenu().itemArray()
+
+GSApplication.menu = property(lambda self: AppMenuProxy(self))
+
+'''.. attribute:: menu
+
+	.. versionadded:: 2.3.1-910
+
+	Access to the main menu.
+	
+	You can use the index or better the constants (like 'EDIT_MENU').
+	
+	.. code-block:: python
+		newMenuItem = NSMenuItem(self.name, self.showWindow)
+		Glyphs.menu[EDIT_MENU].append(newMenuItem)
+	'''
+
+def NSMenuItem__new__(typ, *args, **kwargs):
+	return NSMenuItem.alloc().init()
+NSMenuItem.__new__ = NSMenuItem__new__
+
+def NSMenuItem__init__(self, title, callback, keyboard = "", modifier = 0):
+	self.setTitle_(title)
+	callbackTargets = None
+	try:
+		callbackTargets = callbackOperationTargets["NSMenuItem"]
+	except:
+		callbackTargets = []
+		callbackOperationTargets["NSMenuItem"] = callbackTargets
+	helper = callbackHelperClass(callback, None)
+	callbackTargets.append(helper)
+	selector = objc.selector(helper.callback, signature="v@:@")
+	self.setAction_(selector)
+	self.setTarget_(helper)
+	if keyboard != "":
+		self.setKeyEquivalent_(keyboard)
+		self.setKeyEquivalentModifierMask_(modifier)
+NSMenuItem.__init__ = NSMenuItem__init__
+
+def __NSMenuItem__append__(self, item):
+	self.submenu().addItem_(item)
+NSMenuItem.append = __NSMenuItem__append__
+
+def __NSMenuItem__insert__(self, index, item):
+	self.submenu().insertItem_atIndex_(item, index)
+NSMenuItem.insert = __NSMenuItem__insert__
 
 def Glyphs_FloatVersion(self):
 	m = re.match(r"(\d+)\.(\d+)", self.versionString)
@@ -678,8 +756,9 @@ DOCUMENTOPENED = "GSDocumentWasOpened"
 TABDIDOPEN = "TabDidOpen"
 TABWILLCLOSE = "TabWillClose"
 UPDATEINTERFACE = "GSUpdateInterface"
+MOUSEMOVED = "mouseMoved"
 
-Observers = (DOCUMENTWASSAVED, DOCUMENTOPENED, TABDIDOPEN, TABWILLCLOSE, UPDATEINTERFACE)
+Observers = (DOCUMENTWASSAVED, DOCUMENTOPENED, TABDIDOPEN, TABWILLCLOSE, UPDATEINTERFACE, MOUSEMOVED)
 
 callbackOperationTargets = {}
 
@@ -707,7 +786,7 @@ class callbackHelperClass(NSObject):
 		if self.func:
 			self.func(Layer, options)
 			
-	def notificationCallback(self, notification):
+	def callback(self, notification):
 		if self.func:
 			self.func(notification)
 	
@@ -743,7 +822,7 @@ def __addCallback__(self, target, operation):
 		elif operation in Observers:
 			# Add class to callbackTargets dict by the function name
 			callbackTargets[target.__name__] = callbackHelperClass(target, operation)
-			selector = objc.selector(callbackTargets[target.__name__].notificationCallback, signature="v@:@")
+			selector = objc.selector(callbackTargets[target.__name__].callback, signature="v@:@")
 			NSNotificationCenter.defaultCenter().addObserver_selector_name_object_(callbackTargets[target.__name__], selector, operation, objc.nil)
 	except:
 		import traceback
@@ -995,6 +1074,7 @@ TTSTEM = 3
 TTALIGN = 4
 TTINTERPOLATE = 5
 TTDIAGONAL = 6
+TTDELTA = 7
 CORNER = 16
 CAP = 17
 
@@ -1023,6 +1103,7 @@ hintConstants = {
 	4: 'TTAlign',
 	5: 'TTInterpolate',
 	6: 'TTDiagonal',
+	7: 'TTDelta',
 	16: 'Corner',
 	17: 'Cap',
 }
@@ -1136,7 +1217,9 @@ class FontGlyphsProxy (Proxy):
 		else:
 			self._owner.removeGlyph_( self._owner.glyphForName_(Key) )
 	def __contains__(self, item):
-		return self._owner.indexOfGlyph_(item) < NSNotFound #indexOfGlyph_ returns NSNotFound which is some very big number
+		if isString(item):
+			return self._owner.glyphForName_(item) != None
+		return self._owner.indexOfGlyph_(item) < NSNotFound # indexOfGlyph_ returns NSNotFound which is some very big number
 	def keys(self):
 		return self._owner.pyobjc_instanceMethods.glyphs().valueForKeyPath_("@unionOfObjects.name")
 	def values(self):
@@ -1251,6 +1334,10 @@ class CustomParametersProxy(Proxy):
 			self._owner.removeObjectFromCustomParametersAtIndex_(Key)
 		else:
 			self._owner.removeObjectFromCustomParametersForKey_(Key)
+	def __contains__(self, item):
+		if isString(item):
+			return self._owner.customParameterForKey_(item) != None
+		return self._owner.pyobjc_instanceMethods.customParameters().containsObject_(item)
 	def __iter__(self):
 		for index in range(self._owner.countOfCustomParameters()):
 			yield self._owner.objectInCustomParametersAtIndex_(index)
@@ -1403,8 +1490,14 @@ class UserDataProxy(Proxy):
 		if userData != None:
 			return userData.allValues()
 		return None
+	def keys(self):
+		userData = self._owner.pyobjc_instanceMethods.userData()
+		if userData != None:
+			return userData.allKeys()
+		return None
 	def __repr__(self):
 		return self._owner.pyobjc_instanceMethods.userData().description()
+
 		
 class SmartComponentPoleMappingProxy(Proxy):
 	def __getitem__(self, Key):
@@ -1754,7 +1847,7 @@ class PathNodesProxy (Proxy):
 	def append(self, Node):
 		self._owner.addNode_(Node)
 	def extend(self, objects):
-		self._owner.addNodes_(objects)
+		self._owner.addNodes_(list(objects))
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.nodes()
 	def setterMethod(self):
@@ -2492,7 +2585,15 @@ GSFont.newTab = __GSFont__addTab__
 	:param tabText: Text or glyph names escaped with '/'
 '''
 
+GSFont.masterIndex = property(lambda self: self.parent.windowController().masterIndex(), lambda self, value: self.parent.windowController().setMasterIndex_(value));
+'''
+.. attribute:: features
+	.. versionadded:: 2.3.1
 
+	The index of the currently active master
+
+	:type: int
+'''
 
 
 
@@ -3688,7 +3789,7 @@ GSGlyph.layers = property(	lambda self: GlyphLayerProxy(self),
 		
 '''
 GSGlyph.name = property(			lambda self: self.pyobjc_instanceMethods.name(),
-									lambda self, value: self.setName_(value))
+									lambda self, value: self.setName_changeName_update_(value, False, True))
 '''.. attribute:: name
 	The name of the glyph. It will be converted to a "nice name" (afii10017 to A-cy) (you can disable this behavior in font info or the app preference)
 	:type: unicode
@@ -3893,7 +3994,7 @@ GSGlyph.color =			  property( lambda self: self.colorIndex(),
 		glyph.color = 9223372036854775807	# not colored, white
 '''
 
-GSGlyph.colorObject =			  property( lambda self: self.valueForKey_("color") )
+GSGlyph.colorObject =			property( lambda self: self.valueForKey_("color"), lambda self, value: self.setColor_(value))
 '''.. attribute:: colorObject
 
 	.. versionadded:: 2.3
@@ -3903,7 +4004,7 @@ GSGlyph.colorObject =			  property( lambda self: self.valueForKey_("color") )
 
 	.. code-block:: python
 
-		# Set Color
+		# use glyph color to draw the outline
 		glyph.colorObject.set()
 		
 		# Get RGB (and alpha) values (as float numbers 0..1, multiply with 256 if necessary)
@@ -3918,7 +4019,9 @@ GSGlyph.colorObject =			  property( lambda self: self.valueForKey_("color") )
 		# Draw layer
 		glyph.layers[0].bezierPath.fill()
 		
-
+		# set the glyph color.
+		
+		glyph.colorObject = NSColor.colorWithDeviceRed_green_blue_alpha_(247.0 / 255.0, 74.0 / 255.0, 62.9 / 255.0, 1)
 '''
 
 
@@ -4289,7 +4392,7 @@ GSLayer.color =			  property( lambda self: self.colorIndex(),
 		glyph.color = 9223372036854775807	# not colored, white
 '''
 
-GSLayer.colorObject =			  property( lambda self: self.valueForKey_("color") )
+GSLayer.colorObject =			  property( lambda self: self.valueForKey_("color"), lambda self, value: self.setColor_(value))
 '''.. attribute:: colorObject
 
 	.. versionadded:: 2.3
@@ -4299,7 +4402,7 @@ GSLayer.colorObject =			  property( lambda self: self.valueForKey_("color") )
 
 	.. code-block:: python
 
-		# Set Color
+		# use layer color to draw the outline
 		layer.colorObject.set()
 		
 		# Get RGB (and alpha) values (as float numbers 0..1, multiply with 256 if necessary)
@@ -4313,6 +4416,10 @@ GSLayer.colorObject =			  property( lambda self: self.valueForKey_("color") )
 		
 		# Draw layer
 		layer.bezierPath.fill()
+		
+		# set the layer color.
+		
+		layer.colorObject = NSColor.colorWithDeviceRed_green_blue_alpha_(247.0 / 255.0, 74.0 / 255.0, 62.9 / 255.0, 1)
 		
 
 '''
@@ -4975,19 +5082,10 @@ GSLayer.drawPoints = DrawPointsWithPen
 
 
 def _getPen_(self):
-	return GSPathPen.alloc().init()
+	return GSPathPen.alloc().initWithLayer_(self)
 
 GSLayer.getPen = _getPen_
-
-def _getPointPen_(self):
-	#print "Get GSPoint Pen"
-	if "GSPen" in sys.modules.keys():
-		del(sys.modules["GSPen"])
-	from GSPen import GSPointPen
-	
-	return GSPointPen(self, self)
-
-GSLayer.getPointPen = _getPointPen_
+GSLayer.getPointPen = _getPen_
 
 def _invalidateContours_(self):
 	pass
@@ -6772,7 +6870,7 @@ GSEditViewController.parent = property(lambda self: self.representedObject())
 
 
 
-GSEditViewController.text = property(lambda self: self.graphicView().displayString(),
+GSEditViewController.text = property(lambda self: self.graphicView().displayStringSave_(False),
 									 lambda self, value: self.graphicView().setDisplayString_(value))
 '''
 
@@ -7604,6 +7702,10 @@ def __allValues__(self):
 	return self.allValues()
 MGOrderedDictionary.items = __allValues__
 
+def __allKeys__(self):
+	return self.allKeys()
+MGOrderedDictionary.keys = __allKeys__
+
 def __Dict_removeObjectForKey__(self, key):
 	if isinstance(key, int):
 		if key < 0:
@@ -7615,6 +7717,9 @@ def __Dict_removeObjectForKey__(self, key):
 	self.removeObjectForKey_(key)
 
 MGOrderedDictionary.__delitem__ = __Dict_removeObjectForKey__
+
+GSNotifyingDictionary.items = __allValues__
+GSNotifyingDictionary.keys = __allKeys__
 
 
 #This should be possible but the way pyObjc wrapper works does not allow it.
@@ -7802,14 +7907,17 @@ Hint types
 		Stem for TT hints
 	
 	TTALIGN = 4
-		Aling for TT hints
+		Align for TT hints
 
 	TTINTERPOLATE = 5
 		Interpolation for TT hints
 
 	TTDIAGONAL = 6
 		Diagonal for TT hints
-
+	
+	TTDELTA = 8
+		Delta TT hints
+	
 	CORNER = 16
 		Corner Component
 
@@ -7835,4 +7943,28 @@ Hint Option
 	TRIPLE = 128
 		Indicates a triple hint group. There need to be exactly three horizontal TTStem hints with this setting to take effect.
 	
+Menu Tags
+	
+	This are tags to access the menu items in the apps main menu. Please see :class:`GSApplication`.menu for details
+		
+	APP_MENU
+		The 'Glyphs' menu
+	FILE_MENU
+		The File menu
+	EDIT_MENU
+		The Edit menu
+	GLYPH_MENU
+		The Glyph menu
+	PATH_MENU
+		The Path menu
+	FILTER_MENU
+		The Filter menu
+	VIEW_MENU
+		The View menu
+	SCRIPT_MENU
+		The Script menu
+	WINDOW_MENU
+		The Window menu
+	HELP_MENU
+		The Help menu
 '''
