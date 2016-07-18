@@ -16,8 +16,6 @@
 	<string>____PluginName____</string>
 	<key>CFBundlePackageType</key>
 	<string>BNDL</string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>____BundleVersion____</string>
 	<key>CFBundleShortVersionString</key>
@@ -28,10 +26,6 @@
 	<string>____ProductPageURL____</string>
 	<key>productReleaseNotes</key>
 	<string>____LatestReleaseNotes____</string>
-	<key>LSHasLocalizedDisplayName</key>
-	<false/>
-	<key>NSAppleScriptEnabled</key>
-	<false/>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright, ____Developer____, ____YEAR____</string>
 	<key>NSMainNibFile</key>
@@ -40,7 +34,7 @@
 	<string>____PluginClassName____</string>
 	<key>PyMainFileNames</key>
 	<array>
-		<string>__boot__</string>
+		<string>../MacOS/main.py</string>
 	</array>
 </dict>
 </plist>

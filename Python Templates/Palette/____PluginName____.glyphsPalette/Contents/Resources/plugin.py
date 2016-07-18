@@ -26,10 +26,11 @@ class ____PluginClassName____ (PalettePlugin):
 		self.loadNib('IBdialog', __file__)
 	
 	def start(self):
-
 		# Adding a callback for the 'GSUpdateInterface' event
-		s = objc.selector( self.update, signature="v@:" )
-		NSNotificationCenter.defaultCenter().addObserver_selector_name_object_( self, s, "GSUpdateInterface", None )
+		Glyphs.addCallback(self.update, UPDATEINTERFACE)
+	
+	def __del__(self):
+		Glyphs.removeCallback(self.update)
 
 	def update( self, sender ):
 
@@ -56,8 +57,7 @@ class ____PluginClassName____ (PalettePlugin):
 
 		# Send text to dialog to display
 		self.textField.setStringValue_('\n'.join(text))
-			
-	def quit(self):
-		
-		# Unload callback
-		NSNotificationCenter.defaultCenter().removeObserver_(self)
+	
+	def __file__(self):
+		"""Please leave this method unchanged"""
+		return __file__
