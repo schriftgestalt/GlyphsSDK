@@ -785,21 +785,32 @@ class callbackHelperClass(NSObject):
 		return self
 
 	def drawForegroundForLayer_options_(self, Layer, options):
-		if self.func:
-			self.func(Layer, options)
+		try:
+			if self.func:
+				self.func(Layer, options)
+		except:
+			LogError(traceback.format_exc()))
 
 	def drawBackgroundForLayer_options_(self, Layer, options):
-		if self.func:
-			self.func(Layer, options)
+		try:
+			if self.func:
+				self.func(Layer, options)
+		except:
+			LogError(traceback.format_exc()))
 
 	def drawBackgroundForInactiveLayer_options_(self, Layer, options):
-		if self.func:
-			self.func(Layer, options)
-			
+		try:
+			if self.func:
+				self.func(Layer, options)
+		except:
+			LogError(traceback.format_exc()))
+
 	def callback(self, notification):
-		if self.func:
-			self.func(notification)
-	
+		try:
+			if self.func:
+				self.func(notification)
+		except:
+			LogError(traceback.format_exc()))
 
 
 def __addCallback__(self, target, operation):
