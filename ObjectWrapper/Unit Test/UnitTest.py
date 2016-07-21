@@ -1287,6 +1287,17 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertIsNotNone(WINDOW_MENU)
 		self.assertIsNotNone(HELP_MENU)
 
+		self.assertIsNotNone(DRAWFOREGROUND)
+		self.assertIsNotNone(DRAWBACKGROUND)
+		self.assertIsNotNone(DRAWINACTIVE)
+		self.assertIsNotNone(DOCUMENTWASSAVED)
+		self.assertIsNotNone(DOCUMENTOPENED)
+		self.assertIsNotNone(TABDIDOPEN)
+		self.assertIsNotNone(TABWILLCLOSE)
+		self.assertIsNotNone(UPDATEINTERFACE)
+		self.assertIsNotNone(MOUSEMOVED)
+		
+
 sys.argv = ["GlyphsAppTests"]
 
 if __name__ == '__main__':

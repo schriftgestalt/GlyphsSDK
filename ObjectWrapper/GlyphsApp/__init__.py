@@ -29,6 +29,9 @@ __all__ = [
 
 	# Menus
 	"APP_MENU", "FILE_MENU", "EDIT_MENU", "GLYPH_MENU", "PATH_MENU", "FILTER_MENU", "VIEW_MENU", "SCRIPT_MENU", "WINDOW_MENU", "HELP_MENU",
+	
+	# Callbacks:
+	"DRAWFOREGROUND", "DRAWBACKGROUND", "DRAWINACTIVE", "DOCUMENTWASSAVED", "DOCUMENTOPENED", "TABDIDOPEN", "TABWILLCLOSE", "UPDATEINTERFACE", "MOUSEMOVED",
 	]
 
 
@@ -850,8 +853,8 @@ GSApplication.addCallback = __addCallback__
 	
 	Your function needs to accept two values: `layer` which will contain the respective :class:`GSLayer` object of the layer we're dealing with and `info` which is a dictionary and contains the value `Scale` (for the moment).
 	
-	For the hooks use the three defined constants `DRAWFOREGROUND`, `DRAWBACKGROUND`, and `DRAWINACTIVE`.
-	
+	For the hooks these constants are defined: `DRAWFOREGROUND`, `DRAWBACKGROUND`, `DRAWINACTIVE`, `DOCUMENTWASSAVED`, `DOCUMENTOPENED`, `TABDIDOPEN`, `TABWILLCLOSE`, `UPDATEINTERFACE`, `MOUSEMOVED`.
+
 	.. code-block:: python
 	
 		def drawGlyphIntoBackground(layer, info):
