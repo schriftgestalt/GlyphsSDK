@@ -15,8 +15,7 @@ __all__ = [
 	# Constants
 	"MOVE", "LINE", "CURVE", "OFFCURVE", "GSMOVE", "GSLINE", "GSCURVE", "GSOFFCURVE", "GSSHARP", "GSSMOOTH",
 	"TAG", "TOPGHOST", "STEM", "BOTTOMGHOST", "TTANCHOR", "TTSTEM", "TTALIGN", "TTINTERPOLATE", "TTDIAGONAL", "TTDELTA", "CORNER", "CAP", "TTDONTROUND", "TTROUND", "TTROUNDUP", "TTROUNDDOWN", "TRIPLE",
-	"DRAWFOREGROUND", "DRAWBACKGROUND", "DRAWINACTIVE", "DOCUMENTWASSAVED", "DOCUMENTOPENED", "TABDIDOPEN", "TABWILLCLOSE", "UPDATEINTERFACE", "TEXT", "ARROW", "CIRCLE", "PLUS", "MINUS", "APP_MENU", "FILE_MENU", "EDIT_MENU", "GLYPH_MENU", "PATH_MENU", "FILTER_MENU", "VIEW_MENU", "SCRIPT_MENU", "WINDOW_MENU", "HELP_MENU",
-	"LINE", "CURVE", "OFFCURVE",
+	"TEXT", "ARROW", "CIRCLE", "PLUS", "MINUS",
 	"LTR", "RTL", "LTRTTB", "RTLTTB", "GSTopLeft", "GSTopCenter", "GSTopRight", "GSCenterLeft", "GSCenterCenter", "GSCenterRight", "GSBottomLeft", "GSBottomCenter", "GSBottomRight",
 	
 	# Methods
@@ -25,8 +24,6 @@ __all__ = [
 	# Classes
 	"GSSmartComponentAxis",
 	
-	#"QCURVE", 
-
 	# Menus
 	"APP_MENU", "FILE_MENU", "EDIT_MENU", "GLYPH_MENU", "PATH_MENU", "FILTER_MENU", "VIEW_MENU", "SCRIPT_MENU", "WINDOW_MENU", "HELP_MENU",
 	
@@ -838,7 +835,6 @@ def __addCallback__(self, target, operation):
 			selector = objc.selector(callbackTargets[target.__name__].callback, signature="v@:@")
 			NSNotificationCenter.defaultCenter().addObserver_selector_name_object_(callbackTargets[target.__name__], selector, operation, objc.nil)
 	except:
-		import traceback
 		NSLog(traceback.format_exc())
 
 GSApplication.addCallback = __addCallback__
