@@ -152,7 +152,7 @@ class GlyphsAppTests(unittest.TestCase):
 			print 'hello'
 		newMenuItem = NSMenuItem('B', a)
 		Glyphs.menu[EDIT_MENU].append(newMenuItem)
-		
+
 		
 		## Methods
 		
@@ -652,10 +652,8 @@ class GlyphsAppTests(unittest.TestCase):
 		# postponed to its own test
 		
 		# GSGlyph.lastChange
-		
-		self.assertTrue(glyph.lastChange == None)
 		glyph.name = "a.test2"
-		self.assertIsInstance(glyph.lastChange, int)
+		self.assertIsInstance(glyph.lastChange, float)
 		glyph.name = "a.test1"
 		## Methods
 		glyph.beginUndo()
