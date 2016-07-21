@@ -557,7 +557,7 @@ GSApplication.menu = property(lambda self: AppMenuProxy(self))
 	
 	.. code-block:: python
 
-		def doStuff():
+		def doStuff(sender):
 			# do stuff
 
 		newMenuItem = NSMenuItem('My menu title', doStuff)
