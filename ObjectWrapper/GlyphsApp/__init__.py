@@ -13,7 +13,7 @@ __all__ = [
 	"wrapperVersion",
 
 	# Constants
-	"MOVE", "LINE", "CURVE", "OFFCURVE", "QCURVE", "GSMOVE", "GSLINE", "GSCURVE", "GSOFFCURVE", "GSSHARP", "GSSMOOTH",
+	"MOVE", "LINE", "CURVE", "OFFCURVE", "GSMOVE", "GSLINE", "GSCURVE", "GSOFFCURVE", "GSSHARP", "GSSMOOTH",
 	"TAG", "TOPGHOST", "STEM", "BOTTOMGHOST", "TTANCHOR", "TTSTEM", "TTALIGN", "TTINTERPOLATE", "TTDIAGONAL", "TTDELTA", "CORNER", "CAP", "TTDONTROUND", "TTROUND", "TTROUNDUP", "TTROUNDDOWN", "TRIPLE",
 	"DRAWFOREGROUND", "DRAWBACKGROUND", "DRAWINACTIVE", "DOCUMENTWASSAVED", "DOCUMENTOPENED", "TABDIDOPEN", "TABWILLCLOSE", "UPDATEINTERFACE", "TEXT", "ARROW", "CIRCLE", "PLUS", "MINUS", "APP_MENU", "FILE_MENU", "EDIT_MENU", "GLYPH_MENU", "PATH_MENU", "FILTER_MENU", "VIEW_MENU", "SCRIPT_MENU", "WINDOW_MENU", "HELP_MENU",
 	"LINE", "CURVE", "OFFCURVE",
@@ -24,7 +24,11 @@ __all__ = [
 
 	# Classes
 	"GSSmartComponentAxis",
-		
+	
+	#"QCURVE", 
+
+	# Menus
+	"APP_MENU", "FILE_MENU", "EDIT_MENU", "GLYPH_MENU", "PATH_MENU", "FILTER_MENU", "VIEW_MENU", "SCRIPT_MENU", "WINDOW_MENU", "HELP_MENU",
 	]
 
 
@@ -176,6 +180,7 @@ Properties
 	versionString
 	versionNumber
 	buildNumber
+	menu
 	
 
 	
@@ -461,86 +466,6 @@ GSApplication.versionString = NSBundle.mainBundle().infoDictionary()["CFBundleSh
 	
 	:type: string'''
 
-APP_MENU = "APP_MENU"
-FILE_MENU = "FILE_MENU"
-EDIT_MENU = "EDIT_MENU"
-GLYPH_MENU = "GLYPH_MENU"
-PATH_MENU = "PATH_MENU"
-FILTER_MENU = "FILTER_MENU"
-VIEW_MENU = "VIEW_MENU"
-SCRIPT_MENU = "SCRIPT_MENU"
-WINDOW_MENU = "WINDOW_MENU"
-HELP_MENU = "HELP_MENU"
-
-
-menuTagLookup = {
-	APP_MENU : 1,
-	FILE_MENU : 3,
-	EDIT_MENU : 5,
-	GLYPH_MENU : 7,
-	PATH_MENU : 9,
-	FILTER_MENU : 11,
-	VIEW_MENU : 13,
-	SCRIPT_MENU : 15,
-	WINDOW_MENU : 17,
-	HELP_MENU : 19,
-}
-
-class AppMenuProxy (Proxy):
-	"""Access the main menu."""
-	def __getitem__(self, Key):
-		if isinstance(Key, int):
-			return self._owner.mainMenu().itemAtIndex_(Key)
-		elif isString(Key):
-			Tag = menuTagLookup[Key]
-			return self._owner.mainMenu().itemWithTag_(Tag)
-	def values(self):
-		return self._owner.mainMenu().itemArray()
-
-GSApplication.menu = property(lambda self: AppMenuProxy(self))
-
-'''.. attribute:: menu
-
-	.. versionadded:: 2.3.1-910
-
-	Access to the main menu.
-	
-	You can use the index or better the constants (like 'EDIT_MENU').
-	
-	.. code-block:: python
-		newMenuItem = NSMenuItem(self.name, self.showWindow)
-		Glyphs.menu[EDIT_MENU].append(newMenuItem)
-	'''
-
-def NSMenuItem__new__(typ, *args, **kwargs):
-	return NSMenuItem.alloc().init()
-NSMenuItem.__new__ = NSMenuItem__new__
-
-def NSMenuItem__init__(self, title, callback, keyboard = "", modifier = 0):
-	self.setTitle_(title)
-	callbackTargets = None
-	try:
-		callbackTargets = callbackOperationTargets["NSMenuItem"]
-	except:
-		callbackTargets = []
-		callbackOperationTargets["NSMenuItem"] = callbackTargets
-	helper = callbackHelperClass(callback, None)
-	callbackTargets.append(helper)
-	selector = objc.selector(helper.callback, signature="v@:@")
-	self.setAction_(selector)
-	self.setTarget_(helper)
-	if keyboard != "":
-		self.setKeyEquivalent_(keyboard)
-		self.setKeyEquivalentModifierMask_(modifier)
-NSMenuItem.__init__ = NSMenuItem__init__
-
-def __NSMenuItem__append__(self, item):
-	self.submenu().addItem_(item)
-NSMenuItem.append = __NSMenuItem__append__
-
-def __NSMenuItem__insert__(self, index, item):
-	self.submenu().insertItem_atIndex_(item, index)
-NSMenuItem.insert = __NSMenuItem__insert__
 
 def Glyphs_FloatVersion(self):
 	m = re.match(r"(\d+)\.(\d+)", self.versionString)
@@ -583,6 +508,91 @@ GSApplication.buildNumber = int(NSBundle.mainBundle().infoDictionary()["CFBundle
 	
 	:type: int'''
 
+APP_MENU = "APP_MENU"
+FILE_MENU = "FILE_MENU"
+EDIT_MENU = "EDIT_MENU"
+GLYPH_MENU = "GLYPH_MENU"
+PATH_MENU = "PATH_MENU"
+FILTER_MENU = "FILTER_MENU"
+VIEW_MENU = "VIEW_MENU"
+SCRIPT_MENU = "SCRIPT_MENU"
+WINDOW_MENU = "WINDOW_MENU"
+HELP_MENU = "HELP_MENU"
+
+
+menuTagLookup = {
+	APP_MENU : 1,
+	FILE_MENU : 3,
+	EDIT_MENU : 5,
+	GLYPH_MENU : 7,
+	PATH_MENU : 9,
+	FILTER_MENU : 11,
+	VIEW_MENU : 13,
+	SCRIPT_MENU : 15,
+	WINDOW_MENU : 17,
+	HELP_MENU : 19,
+}
+
+class AppMenuProxy (Proxy):
+	"""Access the main menu."""
+	def __getitem__(self, Key):
+		if isinstance(Key, int):
+			return self._owner.mainMenu().itemAtIndex_(Key)
+		elif isString(Key):
+			Tag = menuTagLookup[Key]
+			return self._owner.mainMenu().itemWithTag_(Tag)
+	def values(self):
+		return self._owner.mainMenu().itemArray()
+
+GSApplication.menu = property(lambda self: AppMenuProxy(self))
+
+'''.. attribute:: menu
+
+	.. versionadded:: 2.3.1-910
+
+	Add menu items to Glyphs’ main menus.
+
+	Following constants for accessing the menus are defined: 
+	APP_MENU, FILE_MENU, EDIT_MENU, GLYPH_MENU, PATH_MENU, FILTER_MENU, VIEW_MENU, SCRIPT_MENU, WINDOW_MENU, HELP_MENU
+	
+	.. code-block:: python
+
+		def doStuff():
+			# do stuff
+
+		newMenuItem = NSMenuItem('My menu title', doStuff)
+		Glyphs.menu[EDIT_MENU].append(newMenuItem)
+	'''
+
+def NSMenuItem__new__(typ, *args, **kwargs):
+	return NSMenuItem.alloc().init()
+NSMenuItem.__new__ = NSMenuItem__new__
+
+def NSMenuItem__init__(self, title, callback, keyboard = "", modifier = 0):
+	self.setTitle_(title)
+	callbackTargets = None
+	try:
+		callbackTargets = callbackOperationTargets["NSMenuItem"]
+	except:
+		callbackTargets = []
+		callbackOperationTargets["NSMenuItem"] = callbackTargets
+	helper = callbackHelperClass(callback, None)
+	callbackTargets.append(helper)
+	selector = objc.selector(helper.callback, signature="v@:@")
+	self.setAction_(selector)
+	self.setTarget_(helper)
+	if keyboard != "":
+		self.setKeyEquivalent_(keyboard)
+		self.setKeyEquivalentModifierMask_(modifier)
+NSMenuItem.__init__ = NSMenuItem__init__
+
+def __NSMenuItem__append__(self, item):
+	self.submenu().addItem_(item)
+NSMenuItem.append = __NSMenuItem__append__
+
+def __NSMenuItem__insert__(self, index, item):
+	self.submenu().insertItem_atIndex_(item, index)
+NSMenuItem.insert = __NSMenuItem__insert__
 
 
 '''

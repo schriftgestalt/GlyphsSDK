@@ -1276,6 +1276,16 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertIsNotNone(TTDONTROUND)
 		self.assertIsNotNone(TRIPLE)
 
+		self.assertIsNotNone(APP_MENU)
+		self.assertIsNotNone(FILE_MENU)
+		self.assertIsNotNone(EDIT_MENU)
+		self.assertIsNotNone(GLYPH_MENU)
+		self.assertIsNotNone(PATH_MENU)
+		self.assertIsNotNone(FILTER_MENU)
+		self.assertIsNotNone(VIEW_MENU)
+		self.assertIsNotNone(SCRIPT_MENU)
+		self.assertIsNotNone(WINDOW_MENU)
+		self.assertIsNotNone(HELP_MENU)
 
 sys.argv = ["GlyphsAppTests"]
 
