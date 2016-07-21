@@ -1168,6 +1168,10 @@ class GlyphsAppTests(unittest.TestCase):
 		# GSEditViewController.previewHeight
 		self.assertInteger(tab.previewHeight)
 		
+		# GSEditViewController.userData
+		tab.userData['a'] = 'b'
+		self.assertTrue(tab.userData['a'] == 'b')
+
 		## Methods
 		
 		tab.close()
