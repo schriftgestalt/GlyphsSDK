@@ -146,6 +146,13 @@ class GlyphsAppTests(unittest.TestCase):
 		
 		# GSApplication.buildNumber
 		self.assertInteger(Glyphs.buildNumber, readOnly = True)
+
+		# GSApplication.menu
+		def a():
+			print 'hello'
+		newMenuItem = NSMenuItem('B', a)
+		Glyphs.menu[EDIT_MENU].append(newMenuItem)
+		
 		
 		## Methods
 		
@@ -1267,6 +1274,7 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertIsNotNone(TTALIGN)
 		self.assertIsNotNone(TTINTERPOLATE)
 		self.assertIsNotNone(TTDIAGONAL)
+		self.assertIsNotNone(TTDELTA)
 		self.assertIsNotNone(CORNER)
 		self.assertIsNotNone(CAP)
 
@@ -1296,7 +1304,7 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertIsNotNone(TABWILLCLOSE)
 		self.assertIsNotNone(UPDATEINTERFACE)
 		self.assertIsNotNone(MOUSEMOVED)
-		
+
 
 sys.argv = ["GlyphsAppTests"]
 
