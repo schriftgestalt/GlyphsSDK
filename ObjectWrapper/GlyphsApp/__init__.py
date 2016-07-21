@@ -2270,8 +2270,7 @@ GSFont.selectedFontMaster = property(lambda self: self.parent.selectedFontMaster
 	Returns the active master (selected in the toolbar).
 	:type: :class:`GSFontMaster <GSFontMaster>`'''
 
-GSFont.masterIndex = property(lambda self: self.parent.masterIndex(),
-							  lambda self, Index: self.parent.windowController().setMasterIndex_(Index % self.countOfFontMasters()))
+GSFont.masterIndex = property(lambda self: self.parent.windowController().masterIndex(), lambda self, value: self.parent.windowController().setMasterIndex_(value));
 '''.. attribute:: masterIndex
 	Returns the index of the active master (selected in the toolbar).
 	:type: int'''
@@ -2596,16 +2595,6 @@ GSFont.newTab = __GSFont__addTab__
 	Opens a new tab in the current document window, optionally with text
 	
 	:param tabText: Text or glyph names escaped with '/'
-'''
-
-GSFont.masterIndex = property(lambda self: self.parent.windowController().masterIndex(), lambda self, value: self.parent.windowController().setMasterIndex_(value));
-'''
-.. attribute:: features
-	.. versionadded:: 2.3.1
-
-	The index of the currently active master
-
-	:type: int
 '''
 
 
