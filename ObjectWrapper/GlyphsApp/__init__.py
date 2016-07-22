@@ -28,7 +28,8 @@ __all__ = [
 	"APP_MENU", "FILE_MENU", "EDIT_MENU", "GLYPH_MENU", "PATH_MENU", "FILTER_MENU", "VIEW_MENU", "SCRIPT_MENU", "WINDOW_MENU", "HELP_MENU",
 	
 	# Callbacks:
-	"DRAWFOREGROUND", "DRAWBACKGROUND", "DRAWINACTIVE", "DOCUMENTWASSAVED", "DOCUMENTOPENED", "TABDIDOPEN", "TABWILLCLOSE", "UPDATEINTERFACE", "MOUSEMOVED",
+
+	"DRAWFOREGROUND", "DRAWBACKGROUND", "DRAWINACTIVE", "DOCUMENTOPENED", "DOCUMENTACTIVATED", "DOCUMENTWASSAVED", "DOCUMENTCLOSED", "TABDIDOPEN", "TABWILLCLOSE", "UPDATEINTERFACE", "MOUSEMOVED",
 	]
 
 
@@ -7198,7 +7199,7 @@ class TempDataProxy(Proxy):
 		if self._owner.tempData() == None:
 			self._owner.setTempData_(NSMutableDictionary.alloc().init())
 		self._owner.tempData()[Key] = Value
-		NSLog("self._tempData %s" % self._owner.tempData())
+#		NSLog("self._tempData %s" % self._owner.tempData())
 	def __delitem__(self, Key):
 		del(self._owner.tempData()[Key])
 	def values(self):
