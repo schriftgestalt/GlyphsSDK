@@ -120,6 +120,15 @@ If you want to draw the glyphs in the Edit View even different that the inactive
 				component.bezierPath.fill()
 ```
 
+Hint: The `inactiveLayers()` method draws the complete inactive glyph, i.e., it will prevent Glyphs from drawing the *main outline* and thus, start from a clean sheet. If you want to *add* drawings to the way Glyphs renders inactive glyphs, rather than replace them, simply add this method:
+
+```python
+	def needsExtraMainOutlineDrawingForInactiveLayer_(self, layer):
+		return True
+```
+
+The return value `True` tells Glyphs that the inactive layer does need an extra main outline to be drawn according to the settings in the *View* menu.
+
 #### preview()
 
 Use this method to replace Glyph.app’s default drawing method for glyphs in the preview panel.
