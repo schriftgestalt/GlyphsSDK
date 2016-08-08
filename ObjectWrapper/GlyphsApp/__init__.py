@@ -421,7 +421,10 @@ def Glyphs_setUserDefaults(self, key, value):
 
 
 def NSStr(string):
-	return NSString.stringWithString_(string)
+	if string:
+		return NSString.stringWithString_(string)
+	else:
+		return None
 
 GSApplication.editViewWidth = property(lambda self: self.intDefaults["GSFontViewWidth"], lambda self, value: Glyphs_setUserDefaults(self, "GSFontViewWidth", int(value)))
 '''.. attribute:: editViewWidth
