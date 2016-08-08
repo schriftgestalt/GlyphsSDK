@@ -4724,7 +4724,17 @@ GSLayer.openBezierPath = property(	 lambda self: self.pyobjc_instanceMethods.ope
 
 	:type: NSBezierPath
 '''
-	
+
+GSLayer.isAligned = property(lambda self: self.hasAlignedWidth())
+'''.. attribute:: isAligned
+
+	.. versionadded:: 2.3.1
+
+	Indicates if the components are auto aligned.
+
+	:type: bool
+'''
+
 
 GSLayer.userData = property(lambda self: UserDataProxy(self))
 '''.. attribute:: userData
