@@ -10,7 +10,7 @@ These plugins add additional file formats for the export dialog.
 
 ### .glyphsFilter
 
-These plugins that add functionality in the *Filter* submenu of Glyphs. A filter can either have a GUI (dialog window) or none. A filter can also be called as an instance custom parameter.
+These are plugins that add functionality in the *Filter* submenu of Glyphs. A filter can either have a GUI (dialog window) or none. A filter can also be called as an instance custom parameter.
 
 ### .glyphsPalette
 
