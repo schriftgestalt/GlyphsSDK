@@ -4735,6 +4735,39 @@ GSLayer.openBezierPath = property(	 lambda self: self.pyobjc_instanceMethods.ope
 	:type: NSBezierPath
 '''
 
+GSLayer.drawBezierPath = property(	 lambda self: self.pyobjc_instanceMethods.drawBezierPath() )
+'''.. attribute:: bezierPath
+
+	.. versionadded:: 2.3.1
+
+	The layer as an NSBezierPath object including path from components. Useful for drawing glyphs in plugins.
+
+	.. code-block:: python
+	
+		# draw the path into the Edit view
+		NSColor.redColor().set()
+		layer.drawBezierPath.fill()
+
+	:type: NSBezierPath
+'''
+
+GSLayer.drawOpenBezierPath = property(	 lambda self: self.pyobjc_instanceMethods.drawOpenBezierPath() )
+'''.. attribute:: openBezierPath
+
+	.. versionadded:: 2.3.1
+
+	All open paths of the layer as an NSBezierPath object including path from components. Useful for drawing glyphs in plugins.
+
+	.. code-block:: python
+	
+		# draw the path into the Edit view
+		NSColor.redColor().set()
+		layer.drawOpenBezierPath.stroke()
+
+	:type: NSBezierPath
+'''
+
+
 GSLayer.isAligned = property(lambda self: self.hasAlignedWidth())
 '''.. attribute:: isAligned
 
