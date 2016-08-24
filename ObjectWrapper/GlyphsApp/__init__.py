@@ -3130,6 +3130,15 @@ GSInstance.manualInterpolation = property(lambda self: bool(self.valueForKey_("m
 	:type: bool
 	'''
 
+GSInstance.interpolatedFontProxy = property(lambda self: self.pyobjc_instanceMethods.interpolatedFont())
+
+'''.. attribute:: interpolatedFontProxy
+	
+	a proxy font that acts similar to a normal font object but only interpolates the glyphs you ask it for. 
+	
+	It is not properly wrapped yet. So you need to use the ObjectiveC methods directly.
+'''
+
 def Instance_FontObject(self):
 	return self.font().generateInstance_error_(self, None)
 
