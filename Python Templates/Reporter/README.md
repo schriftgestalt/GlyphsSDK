@@ -219,7 +219,7 @@ In order to make use of the Cocoa objects, make sure to include them into your P
 Here are a few examples:
 
 ```python
-	def drawForeground(self, layer):
+	def foreground(self, layer):
 
 		# Setting colors:
 		# sets RGBA values between 0.0 and 1.0:
@@ -237,9 +237,8 @@ Here are a few examples:
 		myPath.fill()   # fill with the current NSColor (see above)
 		myPath.stroke() # stroke with the current NSColor (see above)
 		
-		# All layers, paths, and components have a .bezierPath method that
-		# returns that path as a NSBezierPath object that you can use for drawing:
-		# NOTE: This method will be renamed to a .bezierPath attribute very soon!!!
+		# All layers, paths, and components have a .bezierPath property that
+		# returns that path as an NSBezierPath object that you can use for drawing:
 		layer.bezierPath.fill()
 		layer.paths[0].bezierPath.fill()
 		layer.components[0].bezierPath.fill()
@@ -265,12 +264,55 @@ Optional arguments:
 - `fontColor` (`NSColor` object. Default: black)
 
 ```python
-	def drawForeground(self, layer):
-		
+
+	def foreground(self, layer):
 		# Draw name of glyph at 0,0
 		self.drawTextAtPoint(layer.parent.name, NSPoint(0, 0))
-
 ```
+
+#### getScale()
+
+Determine the current scale of the Edit view. Useful for keeping the apparent size while zooming. To do that, *divide* your measurement by `self.getScale()`.
+
+Glyphs scales its drawings a little differently at small and large zoom stages. To match the way the app compensates zoom magnification, *multiply* your measurements with `self.getScale()**-0.9`:
+
+```python
+	
+	NSColor.orangeColor().set()
+	openPaths = layer.openBezierPath
+	openPaths.setLineWidth_( 5.0 * self.getScale() ** -0.9 )
+	openPaths.stroke()
+```
+
+To match the way Glyphs draws handle sizes, you can use the following method. It takes into account that the user can choose between three different handle sizes, that BCPs are drawn a little smaller, and that selected nodes are a little bigger.
+
+```python
+
+	from GlyphsApp import OFFCURVE
+	
+	def drawHandleForNode(self, node):
+		# calculate handle size:
+		handleSizes = (5, 8, 12) # possible user settings
+		handleSizeIndex = Glyphs.handleSize # user choice in Glyphs > Preferences > User Preferences > Handle Size
+		handleSize = handleSizes[handleSizeIndex]*self.getScale()**-0.9 # scaled diameter
+		
+		# offcurves are a little smaller:
+		if node.type == OFFCURVE:
+			rectSize *= 0.8
+		
+		# selected handles are a little bigger:
+		layerSelection = node.parent().parent.selection
+		if node in layerSelection: # workaround for node.selected (currently broken)
+			rectSize *= 1.45
+		
+		# draw disc inside a rectangle around point position:
+		position = node.position
+		rect = NSRect()
+		rect.origin = NSPoint(position.x-rectSize/2, position.y-rectSize/2)
+		rect.size = NSSize(rectSize, rectSize)
+		NSBezierPath.bezierPathWithOvalInRect_(rect).fill()
+```
+
 
 ## Dialogs in contextual menus
 
