@@ -1259,6 +1259,7 @@ class SelectTool (GSToolSelect):
 		Use this for any initializations you need.
 		"""
 		try:
+			self = objc.super(SelectTool, self).init()
 			self.name = 'My Select Tool'
 			self.toolbarPosition = 100
 			self._icon = 'toolbar.pdf'
@@ -1274,18 +1275,23 @@ class SelectTool (GSToolSelect):
 			if hasattr(self, 'settings'):
 				self.settings()
 			try:
-				Bundle = NSBundle.bundleForClass_(NSClassFromString(self.className()));
-				BundlePath = Bundle.pathForResource_ofType_(os.path.splitext(self._icon)[0], os.path.splitext(self._icon)[1]) # Set this to the filename and type of your icon.
-				self.tool_bar_image = NSImage.alloc().initWithContentsOfFile_(BundlePath)
-				self.tool_bar_image.setTemplate_(True) # Makes the icon blend in with the toolbar.
+				if hasattr(self, "__file__"):
+					path = self.__file__()
+					Bundle = NSBundle.bundleWithPath_(path[:path.rfind("Contents/Resources/")])
+				else:
+					Bundle = NSBundle.bundleForClass_(NSClassFromString(self.className()));
+				if self._icon != None:
+					self.tool_bar_image = Bundle.imageForResource_(self._icon)
+					self.tool_bar_image.setTemplate_(True) # Makes the icon blend in with the toolbar.
 			except:
-				self.logError("Problem loading toolbar icon", self._icon)
+				self.logError(traceback.format_exc())
 			if hasattr(self, 'start'):
 				self.start()
 			
 			return self
 		except:
 			self.logError(traceback.format_exc())
+		return objc.nil
 
 	def view(self):
 		return self.inspectorDialogView
@@ -1333,6 +1339,7 @@ class SelectTool (GSToolSelect):
 			return self.tool_bar_image
 		except:
 			self.logError(traceback.format_exc())
+		return objc.nil
 	
 	def groupID(self):
 		"""
