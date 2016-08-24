@@ -1167,6 +1167,8 @@ def _______________________(): pass
 class AppDocumentProxy (Proxy):
 	"""The list of documents."""
 	def __getitem__(self, Key):
+		if type(Key) == slice:
+			return self.values().__getitem__(Key)
 		if type(Key) is int:
 			Values = self.values()
 			if Key < 0:
@@ -1184,6 +1186,8 @@ class AppDocumentProxy (Proxy):
 class AppFontProxy (Proxy):
 	"""The list of fonts."""
 	def __getitem__(self, Key):
+		if type(Key) == slice:
+			return self.values().__getitem__(Key)
 		if type(Key) is int:
 			Values = self.values()
 			if Key < 0:
@@ -1221,6 +1225,8 @@ class FontGlyphsProxy (Proxy):
 		...
 	"""
 	def __getitem__(self, Key):
+		if type(Key) == slice:
+			return self.values().__getitem__(Key)
 		if type(Key) is int:
 			if Key < 0:
 				Key = self.__len__() + Key
@@ -1269,6 +1275,8 @@ class FontGlyphsProxy (Proxy):
 
 class FontFontMasterProxy (Proxy):
 	def __getitem__(self, Key):
+		if type(Key) == slice:
+			return self.values().__getitem__(Key)
 		if type(Key) is int:
 			if Key < 0:
 				Key = self.__len__() + Key
@@ -1308,6 +1316,8 @@ class FontFontMasterProxy (Proxy):
 
 class FontInstancesProxy (Proxy):
 	def __getitem__(self, Key):
+		if type(Key) == slice:
+			return self.values().__getitem__(Key)
 		if type(Key) is int:
 			if Key < 0:
 				Key = self.__len__() + Key
@@ -1339,6 +1349,8 @@ class FontInstancesProxy (Proxy):
 
 class CustomParametersProxy(Proxy):
 	def __getitem__(self, Key):
+		if type(Key) == slice:
+			return self.values().__getitem__(Key)
 		if type(Key) is int:
 			return self._owner.objectInCustomParametersAtIndex_(Key)
 		else:
@@ -1380,6 +1392,8 @@ class CustomParametersProxy(Proxy):
 
 class FontClassesProxy (Proxy):
 	def __getitem__(self, Key):
+		if type(Key) == slice:
+			return self.values().__getitem__(Key)
 		if type(Key) is int:
 			if Key < 0:
 				Key = self.__len__() + Key
@@ -1418,6 +1432,8 @@ class FontClassesProxy (Proxy):
 
 class FontFeaturesProxy (Proxy):
 	def __getitem__(self, Key):
+		if type(Key) == slice:
+			return self.values().__getitem__(Key)
 		if type(Key) is int:
 			if Key < 0:
 				Key = self.__len__() + Key
@@ -1469,6 +1485,8 @@ class FontFeaturesProxy (Proxy):
 
 class FontFeaturePrefixesProxy (Proxy):
 	def __getitem__(self, Key):
+		if type(Key) == slice:
+			return self.values().__getitem__(Key)
 		if type(Key) is int:
 			if Key < 0:
 				Key = self.__len__() + Key
@@ -1611,23 +1629,15 @@ class LayersIterator:
 
 class GlyphLayerProxy (Proxy):
 	def __getitem__(self, Key):
-			if type(Key) is int:
-				if Key < 0:
-					Key = self.__len__() + Key
-				if self._owner.parent:
-					if Key < self._owner.parent.countOfFontMasters():
-						FontMaster = self._owner.parent.fontMasterAtIndex_(Key)
-						return self._owner.layerForKey_(FontMaster.id)
-					else:
-						ExtraLayerIndex = Key - len(self._owner.parent.masters)
-						Index = 0
-						ExtraLayer = None
-						while ExtraLayerIndex >= 0:
-							ExtraLayer = self._owner.pyobjc_instanceMethods.layers().objectAtIndex_(Index)
-							if ExtraLayer.layerId != ExtraLayer.associatedMasterId:
-								ExtraLayerIndex = ExtraLayerIndex - 1
-							Index = Index + 1
-						return ExtraLayer
+		if type(Key) == slice:
+			return self.values().__getitem__(Key)
+		if type(Key) is int:
+			if Key < 0:
+				Key = self.__len__() + Key
+			if self._owner.parent:
+				if Key < self._owner.parent.countOfFontMasters():
+					FontMaster = self._owner.parent.fontMasterAtIndex_(Key)
+					return self._owner.layerForKey_(FontMaster.id)
 				else:
 					return self._owner.pyobjc_instanceMethods.layers().objectAtIndex_(Key)
 			else:
@@ -1675,6 +1685,8 @@ class GlyphLayerProxy (Proxy):
 
 class LayerComponentsProxy (Proxy):
 	def __getitem__(self, Key):
+		if type(Key) == slice:
+			return self.values().__getitem__(Key)
 		if Key < 0:
 			Key = self.__len__() + Key
 		return self._owner.componentAtIndex_(Key)
@@ -1695,6 +1707,8 @@ class LayerComponentsProxy (Proxy):
 
 class GlyphSmartComponentAxesProxy (Proxy):
 	def __getitem__(self, Key):
+		if type(Key) == slice:
+			return self.values().__getitem__(Key)
 		if type(Key) is int:
 			if Key < 0:
 				Key = self.__len__() + Key
@@ -1718,6 +1732,8 @@ class GlyphSmartComponentAxesProxy (Proxy):
 
 class LayerGuideLinesProxy (Proxy):
 	def __getitem__(self, Key):
+		if type(Key) == slice:
+			return self.values().__getitem__(Key)
 		return self._owner.guideLineAtIndex_(Key)
 	def __setitem__(self, Key, Component):
 		self._owner.setGuideLine_atIndex_(Component, Key)
@@ -1732,6 +1748,8 @@ class LayerGuideLinesProxy (Proxy):
 
 class LayerAnnotationProxy (Proxy):
 	def __getitem__(self, Key):
+		if type(Key) == slice:
+			return self.values().__getitem__(Key)
 		return self._owner.objectInAnnotationsAtIndex_(Key)
 	def __setitem__(self, Key, Annotation):
 		self._owner.insertObject_inAnnotationsAtIndex_(Annotation, Key)
@@ -1748,6 +1766,8 @@ class LayerAnnotationProxy (Proxy):
 
 class LayerHintsProxy (Proxy):
 	def __getitem__(self, Key):
+		if type(Key) == slice:
+			return self.values().__getitem__(Key)
 		return self._owner.hintAtIndex_(Key)
 	def __setitem__(self, Key, Component):
 		self._owner.setHint_atIndex_(Component, Key)
@@ -1820,6 +1840,8 @@ class LayerAnchorsProxy (Proxy):
 
 class LayerPathsProxy (Proxy):
 	def __getitem__(self, idx):
+		if type(idx) == slice:
+			return self.values().__getitem__(idx)
 		if idx < 0:
 			idx = self._owner.countOfPaths() + idx
 		return self._owner.pathAtIndex_(idx)
@@ -1842,6 +1864,8 @@ class LayerPathsProxy (Proxy):
 
 class LayerSelectionProxy (Proxy):
 	def __getitem__(self, idx):
+		if type(idx) == slice:
+			return self.values().__getitem__(idx)
 		return self._owner.pyobjc_instanceMethods.selection().objectAtIndex_(idx)
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.selection().array()
@@ -1857,18 +1881,20 @@ class LayerSelectionProxy (Proxy):
 
 
 class PathNodesProxy (Proxy):
-	def __getitem__(self, i):
-		if i < 0:
-			i = len(self) + i
-		return self._owner.nodeAtIndex_(i)
-	def __setitem__(self, i, Node):
-		if i < 0:
-			i = len(self) + i
-		self._owner.setNode_atIndex_(Node, i)
-	def __delitem__(self, i):
-		if i < 0:
-			i = len(self) + i
-		self._owner.removeNodeAtIndex_(i)
+	def __getitem__(self, idx):
+		if type(idx) == slice:
+			return self.values().__getitem__(idx)
+		if idx < 0:
+			idx = len(self) + idx
+		return self._owner.nodeAtIndex_(idx)
+	def __setitem__(self, idx, Node):
+		if idx < 0:
+			idx = len(self) + idx
+		self._owner.setNode_atIndex_(Node, idx)
+	def __delitem__(self, idx):
+		if idx < 0:
+			idx = len(self) + idx
+		self._owner.removeNodeAtIndex_(idx)
 	def __len__(self):
 		return self._owner.countOfNodes()
 	def append(self, Node):
@@ -1883,12 +1909,14 @@ class PathNodesProxy (Proxy):
 
 
 class FontTabsProxy (Proxy):
-	def __getitem__(self, Key):
+	def __getitem__(self, idx):
+		if type(idx) == slice:
+			return self.values().__getitem__(idx)
 		if self._owner.parent:
-			if type(Key) is int:
-				if Key < 0:
-					Key = self.__len__() + Key
-				return self._owner.parent.windowController().tabBarControl().viewControllers()[Key + 1]
+			if type(idx) is int:
+				if idx < 0:
+					idx = self.__len__() + idx
+				return self._owner.parent.windowController().tabBarControl().viewControllers()[idx + 1]
 			else:
 				raise(KeyError)
 		else:
@@ -1907,8 +1935,8 @@ class FontTabsProxy (Proxy):
 		else:
 			raise(KeyError)
 	def __iter__(self):
-		for index in range(self.__len__()):
-			yield self.__getitem__(index)
+		for idx in range(self.__len__()):
+			yield self.__getitem__(idx)
 	def __len__(self):
 		return len(self._owner.parent.windowController().tabBarControl().viewControllers()) - 1
 	def values(self):
