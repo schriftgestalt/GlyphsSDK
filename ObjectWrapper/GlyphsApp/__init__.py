@@ -8093,9 +8093,23 @@ Callback Keys
 		is called when the document becomes the active document
 	DOCUMENTWASSAVED
 		is called when the document is saved.
-		The document itself is passed in in the userdata of the notification object
+		The document itself is passed in notification.object()
 	DOCUMENTEXPORTED
-		if a font is exported. This is called for every instance and the notifications userdata will contain the path to the final font file.
+		if a font is exported. This is called for every instance and notification.object() will contain the path to the final font file.
+
+.. code-block:: python
+	def exportCallback(info):
+		try:
+			print info.object()
+		except:
+			# Error. Print exception.
+			import traceback
+			print traceback.format_exc()
+
+	# add your function to the hook
+	Glyphs.addCallback(exportCallback, DOCUMENTEXPORTED)
+
+		
 	DOCUMENTCLOSED
 		is called when the document is closed
 	TABDIDOPEN
