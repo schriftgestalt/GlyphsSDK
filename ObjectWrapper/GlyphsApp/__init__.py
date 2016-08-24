@@ -1985,6 +1985,7 @@ Properties
 	grid
 	gridSubDivisions
 	gridLength
+	keyboardIncrement
 	disablesNiceNames
 	customParameters
 	selection
@@ -2251,6 +2252,15 @@ GSFont.gridSubDivisions = property(lambda self: self.pyobjc_instanceMethods.grid
 GSFont.gridLength = property(lambda self: self.pyobjc_instanceMethods.gridLength())
 '''.. attribute:: gridLength
 	Ready calculated size of grid for rounding purposes. Result of division of grid with gridSubDivisions.
+	:type: float'''
+
+
+GSFont.keyboardIncrement = property(lambda self: self.pyobjc_instanceMethods.keyboardIncrement(), lambda self, value: self.setKeyboardIncrement_(value))
+'''.. attribute:: keyboardIncrement
+	
+	.. versionadded:: 2.3.1
+	
+	distance of movement by arrow keys. Default:1
 	:type: float'''
 
 def Font_selectedGlyphs(self):
