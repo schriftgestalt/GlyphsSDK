@@ -4910,15 +4910,17 @@ Functions
 	Corrects the path direction.
 '''
 
-def RemoveOverlap(self):
+def RemoveOverlap(self, checkSelection=False):
 	removeOverlapFilter = NSClassFromString("GlyphsFilterRemoveOverlap").alloc().init()
-	removeOverlapFilter.runFilterWithLayer_error_(self, None)
+	removeOverlapFilter.removeOverlapFromLayer_checkSelection_error_(self, checkSelection, None)
 GSLayer.removeOverlap = RemoveOverlap
 
 '''
 .. function:: removeOverlap()
 	
 	Joins all contours.
+	
+	:param checkSelection: if the selection will be considered. Default: False
 '''
 
 '''
