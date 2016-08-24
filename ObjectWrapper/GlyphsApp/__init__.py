@@ -6124,6 +6124,8 @@ GSNode.connection = property(__GSNode_get_connection, __GSNode_set_connection, d
 	   Use :attribute:`smooth` instead.
 '''
 
+GSNode.parent = property(lambda self: self.pyobjc_instanceMethods.parent())
+
 GSNode.layer = property(lambda self: self.parent.parent)
 
 
