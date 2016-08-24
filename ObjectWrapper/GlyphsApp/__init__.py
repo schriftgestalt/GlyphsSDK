@@ -29,7 +29,7 @@ __all__ = [
 	
 	# Callbacks:
 
-	"DRAWFOREGROUND", "DRAWBACKGROUND", "DRAWINACTIVE", "DOCUMENTOPENED", "DOCUMENTACTIVATED", "DOCUMENTWASSAVED", "DOCUMENTCLOSED", "TABDIDOPEN", "TABWILLCLOSE", "UPDATEINTERFACE", "MOUSEMOVED",
+	"DRAWFOREGROUND", "DRAWBACKGROUND", "DRAWINACTIVE", "DOCUMENTOPENED", "DOCUMENTACTIVATED", "DOCUMENTWASSAVED", "DOCUMENTEXPORTED", "DOCUMENTCLOSED", "TABDIDOPEN", "TABWILLCLOSE", "UPDATEINTERFACE", "MOUSEMOVED",
 	]
 
 
@@ -765,16 +765,17 @@ DRAWBACKGROUND = "DrawBackground"
 DRAWINACTIVE = "DrawInactive"
 DrawLayerCallbacks = (DRAWFOREGROUND, DRAWBACKGROUND, DRAWINACTIVE)
 
-DOCUMENTOPENED = "GSDocumentWasOpened"
+DOCUMENTOPENED = "GSDocumentWasOpenedNotification"
 DOCUMENTACTIVATED = "GSDocumentActivateNotification"
 DOCUMENTWASSAVED = "GSDocumentWasSavedSuccessfully"
+DOCUMENTEXPORTED = "GSDocumentWasExportedNotification"
 DOCUMENTCLOSED = "GSDocumentCloseNotification"
-TABDIDOPEN = "TabDidOpen"
-TABWILLCLOSE = "TabWillClose"
+TABDIDOPEN = "TabDidOpenNotification"
+TABWILLCLOSE = "TabWillCloseNotification"
 UPDATEINTERFACE = "GSUpdateInterface"
 MOUSEMOVED = "mouseMoved"
 
-Observers = (DOCUMENTOPENED, DOCUMENTACTIVATED, DOCUMENTWASSAVED, DOCUMENTCLOSED, TABDIDOPEN, TABWILLCLOSE, UPDATEINTERFACE, MOUSEMOVED)
+Observers = (DOCUMENTOPENED, DOCUMENTACTIVATED, DOCUMENTWASSAVED, DOCUMENTEXPORTED, DOCUMENTCLOSED, TABDIDOPEN, TABWILLCLOSE, UPDATEINTERFACE, MOUSEMOVED)
 
 callbackOperationTargets = {}
 
@@ -866,7 +867,7 @@ GSApplication.addCallback = __addCallback__
 	
 	Your function needs to accept two values: `layer` which will contain the respective :class:`GSLayer` object of the layer we're dealing with and `info` which is a dictionary and contains the value `Scale` (for the moment).
 	
-	For the hooks these constants are defined: `DRAWFOREGROUND`, `DRAWBACKGROUND`, `DRAWINACTIVE`, `DOCUMENTWASSAVED`, `DOCUMENTOPENED`, `TABDIDOPEN`, `TABWILLCLOSE`, `UPDATEINTERFACE`, `MOUSEMOVED`.
+	For the hooks these constants are defined: `DRAWFOREGROUND`, `DRAWBACKGROUND`, `DRAWINACTIVE`, `DOCUMENTWASSAVED`, `DOCUMENTOPENED`, `TABDIDOPEN`, `TABWILLCLOSE`, `UPDATEINTERFACE`, `MOUSEMOVED`. For more information check the constants section.
 
 	.. code-block:: python
 	
@@ -8036,4 +8037,35 @@ Menu Tags
 		The Window menu
 	HELP_MENU
 		The Help menu
+
+Callback Keys
+	
+	This are the available callbacks
+		
+	DRAWFOREGROUND
+		to draw in the foreground
+	DRAWBACKGROUND
+		to draw in the background
+	DRAWINACTIVE
+		draw inactive glyphs
+	DOCUMENTOPENED
+		is called if a new document is opened
+	DOCUMENTACTIVATED
+		is called when the document becomes the active document
+	DOCUMENTWASSAVED
+		is called when the document is saved.
+		The document itself is passed in in the userdata of the notification object
+	DOCUMENTEXPORTED
+		if a font is exported. This is called for every instance and the notifications userdata will contain the path to the final font file.
+	DOCUMENTCLOSED
+		is called when the document is closed
+	TABDIDOPEN
+		if a new tab is opened
+	TABWILLCLOSE
+		if a tab is closed
+	UPDATEINTERFACE
+		if some thing changed in the edit view. Maybe the selection or the glyph data.
+	MOUSEMOVED
+		is calle if the mouse is moved. If you need to draw something, you need to call `Glyphs.redraw()` and also register to one of the drawing callbacks.
+	
 '''
