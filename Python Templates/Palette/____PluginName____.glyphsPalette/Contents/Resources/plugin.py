@@ -61,3 +61,15 @@ class ____PluginClassName____ (PalettePlugin):
 	def __file__(self):
 		"""Please leave this method unchanged"""
 		return __file__
+	
+	# Temporary Fix
+	# Sort ID for compatibility with v919:
+	_sortID = 0
+	def setSortID_(self, id):
+		try:
+			self._sortID = id
+		except Exception as e:
+			self.logToConsole( "setSortID_: %s" % str(e) )
+	def sortID(self):
+		return self._sortID
+	
