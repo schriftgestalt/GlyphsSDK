@@ -98,7 +98,7 @@ This method gets called when the plug-in is unloaded, e.g., when Glyphs.app is b
 You need to unload all callbacks here because Glyphs.app will otherwise crash.
 
 ```python
-	def quit(self):
+	def __del__(self):
 		# Unload callback
 		Glyphs.removeCallback(self.update)
 ```
