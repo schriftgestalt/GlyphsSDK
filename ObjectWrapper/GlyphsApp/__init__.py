@@ -1631,7 +1631,9 @@ class GlyphLayerProxy (Proxy):
 	def __getitem__(self, Key):
 		if type(Key) == slice:
 			return self.values().__getitem__(Key)
-		if type(Key) is int:
+		elif isString(Key):
+			return self._owner.layerForKey_(Key)
+		elif type(Key) is int:
 			if Key < 0:
 				Key = self.__len__() + Key
 			if self._owner.parent:
