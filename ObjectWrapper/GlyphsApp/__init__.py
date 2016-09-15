@@ -1328,12 +1328,12 @@ class FontInstancesProxy (Proxy):
 		if type(Key) is int:
 			if Key < 0:
 				Key = self.__len__() + Key
-			self._owner.replaceObjectInInstancesAtIndex_withObject_(Key, Class)
+			self._owner.replaceInstanceAtIndex_withInstance_(Key, Class)
 	def __delitem__(self, Key):
 		if type(Key) is int:
 			if Key < 0:
 				Key = self.__len__() + Key
-			return self._owner.removeObjectFromInstancesAtIndex_(Key)
+			return self._owner.removeInstanceAtIndex_(Key)
 	def __iter__(self):
 		for index in range(self._owner.countOfInstances()):
 			yield self._owner.instanceAtIndex_(index)
