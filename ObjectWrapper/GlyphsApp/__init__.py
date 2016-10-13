@@ -325,7 +325,10 @@ class DefaultsProxy(Proxy):
 	def __getitem__(self, Key):
 		return NSUserDefaults.standardUserDefaults().objectForKey_(Key)
 	def __setitem__(self, Key, Value):
-		NSUserDefaults.standardUserDefaults().setObject_forKey_(Value, Key)
+		if Value is not None:
+			NSUserDefaults.standardUserDefaults().setObject_forKey_(Value, Key)
+		else:
+			NSUserDefaults.standardUserDefaults().removeObjectForKey_(Key)
 	def __delitem__(self, Key):
 		NSUserDefaults.standardUserDefaults().removeObjectForKey_(Key)
 	def __repr__(self):
@@ -360,7 +363,10 @@ class BoolDefaultsProxy(DefaultsProxy):
 	def __getitem__(self, Key):
 		return NSUserDefaults.standardUserDefaults().boolForKey_(Key)
 	def __setitem__(self, Key, Value):
-		NSUserDefaults.standardUserDefaults().setBool_forKey_(Value, Key)
+		if Value is not None:
+			NSUserDefaults.standardUserDefaults().setBool_forKey_(Value, Key)
+		else:
+			NSUserDefaults.standardUserDefaults().removeObjectForKey_(Key)
 
 GSApplication.boolDefaults = property(lambda self: BoolDefaultsProxy(self))
 
@@ -368,7 +374,10 @@ class IntDefaultsProxy(DefaultsProxy):
 	def __getitem__(self, Key):
 		return NSUserDefaults.standardUserDefaults().integerForKey_(Key)
 	def __setitem__(self, Key, Value):
-		NSUserDefaults.standardUserDefaults().setInteger_forKey_(Value, Key)
+		if Value is not None:
+			NSUserDefaults.standardUserDefaults().setInteger_forKey_(Value, Key)
+		else:
+			NSUserDefaults.standardUserDefaults().removeObjectForKey_(Key)
 
 GSApplication.intDefaults = property(lambda self: IntDefaultsProxy(self))
 
