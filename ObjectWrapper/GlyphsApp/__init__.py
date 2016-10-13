@@ -2678,6 +2678,8 @@ def __GSFont__updateFeatures__(self):
 GSFont.updateFeatures = __GSFont__updateFeatures__
 
 '''.. function:: updateFeatures()
+
+	.. versionadded:: 2.4
 	
 	Updates all OpenType features and classes at once, including generating necessary new features and classes. Equivalent to the Update button in the features panel.
 '''
