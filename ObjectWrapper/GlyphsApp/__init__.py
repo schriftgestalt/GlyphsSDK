@@ -2062,6 +2062,7 @@ Functions
 	setKerningForPair()
 	removeKerningForPair()
 	newTab()
+	updateFeatures()
 
 ----------
 Properties
@@ -2671,6 +2672,15 @@ GSFont.newTab = __GSFont__addTab__
 	:param tabText: Text or glyph names escaped with '/'
 '''
 
+def __GSFont__updateFeatures__(self):
+	GSFeatureGenerator.alloc().init().makeFeatures_(self)
+
+GSFont.updateFeatures = __GSFont__updateFeatures__
+
+'''.. function:: updateFeatures()
+	
+	Updates all OpenType features and classes at once, including generating necessary new features and classes. Equivalent to the Update button in the features panel.
+'''
 
 
 ##################################################################################
