@@ -26,6 +26,7 @@ __all__ = [
 	
 	# Menus
 	"APP_MENU", "FILE_MENU", "EDIT_MENU", "GLYPH_MENU", "PATH_MENU", "FILTER_MENU", "VIEW_MENU", "SCRIPT_MENU", "WINDOW_MENU", "HELP_MENU",
+	"ONSTATE", "OFFSTATE", "MIXEDSTATE",
 	
 	# Callbacks:
 
@@ -171,7 +172,7 @@ Properties
 	reporters
 	activeReporters
 	defaults
-	scriptAbbrevations
+	scriptAbbreviations
 	scriptSuffixes
 	languageScripts
 	languageData
@@ -265,7 +266,7 @@ GSApplication.fonts = property(lambda self: AppFontProxy(self))
 		
 '''
 
-GSApplication.reporters = property(lambda self: self.delegate().reporterInstances().allValues())
+GSApplication.reporters = property(lambda self: GSCallbackHandler.sharedManager().reporterInstances().allValues())
 
 '''.. attribute:: reporters
 	
@@ -289,7 +290,7 @@ GSApplication.reporters = property(lambda self: self.delegate().reporterInstance
 		Glyphs.activateReporter('GlyphsMasterCompatibility') # by class name
 '''
 
-GSApplication.activeReporters = property(lambda self: self.delegate().activeReporters())
+GSApplication.activeReporters = property(lambda self: GSCallbackHandler.activeReporters())
 
 '''.. attribute:: activeReporters
 
@@ -371,9 +372,14 @@ class IntDefaultsProxy(DefaultsProxy):
 
 GSApplication.intDefaults = property(lambda self: IntDefaultsProxy(self))
 
-GSApplication.scriptAbbrevations = property(lambda self: GSGlyphsInfo.scriptAbrevations())
+GSApplication.scriptAbbreviations = property(lambda self: GSGlyphsInfo.scriptAbbreviations())
+# fixed an typo in the property name. Kept this for compatibility.
+def _old_scriptAbbreviations():
+	print "The method name has changed. Please use new syntax: Glyphs.scriptAbbreviations"
+	return GSGlyphsInfo.scriptAbbreviations()
+GSApplication.scriptAbbrevations = property(lambda self: _old_scriptAbbreviations())
 
-'''.. attribute:: scriptAbbrevations
+'''.. attribute:: scriptAbbreviations
 	
 	A dictionary with script name to abbreviation mapping, e.g., 'arabic': 'arab'
 	
@@ -522,6 +528,10 @@ VIEW_MENU = "VIEW_MENU"
 SCRIPT_MENU = "SCRIPT_MENU"
 WINDOW_MENU = "WINDOW_MENU"
 HELP_MENU = "HELP_MENU"
+
+ONSTATE = NSOnState
+OFFSTATE = NSOffState
+MIXEDSTATE = NSMixedState
 
 
 menuTagLookup = {
@@ -773,7 +783,7 @@ DOCUMENTCLOSED = "GSDocumentCloseNotification"
 TABDIDOPEN = "TabDidOpenNotification"
 TABWILLCLOSE = "TabWillCloseNotification"
 UPDATEINTERFACE = "GSUpdateInterface"
-MOUSEMOVED = "mouseMoved"
+MOUSEMOVED = "mouseMovedNotification"
 
 Observers = (DOCUMENTOPENED, DOCUMENTACTIVATED, DOCUMENTWASSAVED, DOCUMENTEXPORTED, DOCUMENTCLOSED, TABDIDOPEN, TABWILLCLOSE, UPDATEINTERFACE, MOUSEMOVED)
 
@@ -841,7 +851,7 @@ def __addCallback__(self, target, operation):
 			callbackTargets[target.__name__] = callbackHelperClass(target, operation)
 	
 			# Add to stack
-			self.delegate().addCallback_forOperation_(callbackTargets[target.__name__], operation)
+			GSCallbackHandler.addCallback_forOperation_(callbackTargets[target.__name__], operation)
 
 			# Redraw immediately
 			self.redraw()
@@ -901,7 +911,7 @@ def __do__removeCallback___(self, target, operation):
 
 		# DrawLayerCallbacks
 		if callbackTargets[target.__name__].operation in DrawLayerCallbacks:
-			self.delegate().removeCallback_(callbackTargets[target.__name__])
+			GSCallbackHandler.removeCallback_(callbackTargets[target.__name__])
 			del(callbackTargets[target.__name__])
 			# Redraw immediately
 			self.redraw()
@@ -1026,7 +1036,7 @@ def __GSApplication_activateReporter__(self, Reporter):
 				Reporter = r
 				break
 		
-	self.delegate().activateReporter_(Reporter)
+	GSCallbackHandler.activateReporter_(Reporter)
 
 GSApplication.activateReporter = __GSApplication_activateReporter__
 
@@ -1049,7 +1059,7 @@ def __GSApplication_deactivateReporter__(self, Reporter):
 				Reporter = r
 				break
 
-	self.delegate().deactivateReporter_(Reporter)
+	GSCallbackHandler.deactivateReporter_(Reporter)
 
 GSApplication.deactivateReporter = __GSApplication_deactivateReporter__
 
@@ -1267,6 +1277,8 @@ class FontGlyphsProxy (Proxy):
 		return self._owner.glyphForName_(Key) != None
 	def append(self, Glyph):
 		self._owner.addGlyph_(Glyph)
+	def extend(self, objects):
+		self._owner.addGlyphsFromArray_(list(objects))
 	def __len__(self):
 		return self._owner.count()
 	def setterMethod(self):
@@ -1328,12 +1340,12 @@ class FontInstancesProxy (Proxy):
 		if type(Key) is int:
 			if Key < 0:
 				Key = self.__len__() + Key
-			self._owner.replaceInstanceAtIndex_withInstance_(Key, Class)
+			self._owner.replaceObjectInInstancesAtIndex_withObject_(Key, Class)
 	def __delitem__(self, Key):
 		if type(Key) is int:
 			if Key < 0:
 				Key = self.__len__() + Key
-			return self._owner.removeInstanceAtIndex_(Key)
+			return self._owner.removeObjectFromInstancesAtIndex_(Key)
 	def __iter__(self):
 		for index in range(self._owner.countOfInstances()):
 			yield self._owner.instanceAtIndex_(index)
@@ -1631,9 +1643,7 @@ class GlyphLayerProxy (Proxy):
 	def __getitem__(self, Key):
 		if type(Key) == slice:
 			return self.values().__getitem__(Key)
-		elif isString(Key):
-			return self._owner.layerForKey_(Key)
-		elif type(Key) is int:
+		if type(Key) is int:
 			if Key < 0:
 				Key = self.__len__() + Key
 			if self._owner.parent:
@@ -1641,12 +1651,22 @@ class GlyphLayerProxy (Proxy):
 					FontMaster = self._owner.parent.fontMasterAtIndex_(Key)
 					return self._owner.layerForKey_(FontMaster.id)
 				else:
-					return self._owner.pyobjc_instanceMethods.layers().objectAtIndex_(Key)
+					ExtraLayerIndex = Key - len(self._owner.parent.masters)
+					Index = 0
+					ExtraLayer = None
+					while ExtraLayerIndex >= 0:
+						ExtraLayer = self._owner.pyobjc_instanceMethods.layers().objectAtIndex_(Index)
+						if ExtraLayer.layerId != ExtraLayer.associatedMasterId:
+							ExtraLayerIndex = ExtraLayerIndex - 1
+						Index = Index + 1
+					return ExtraLayer
 			else:
-				layer = self._owner.layerForKey_(Key)
-				if layer is None:
-					layer = self._owner.layerForName_(Key)
-				return layer
+				return self._owner.pyobjc_instanceMethods.layers().objectAtIndex_(Key)
+		else:
+			layer = self._owner.layerForKey_(Key)
+			if layer is None:
+				layer = self._owner.layerForName_(Key)
+			return layer
 	def __setitem__(self, Key, Layer):
 		if type(Key) is int and self._owner.parent:
 			if Key < 0:
@@ -4674,6 +4694,7 @@ GSLayer.BSB = property(		lambda self: self.valueForKey_("BSB").floatValue(),
 
 GSLayer.width = property(	lambda self: self.valueForKey_("width").floatValue(),
 							lambda self, value: self.setWidth_(float(value)))
+GSBackgroundLayer.width = property(	lambda self: self.valueForKey_("width").floatValue(), lambda self, value: None)
 '''.. attribute:: width
 	Glyph width
 	:type: float'''
@@ -7157,7 +7178,8 @@ GSEditViewController.selectedLayerOrigin = property(lambda self: self.graphicVie
 
 
 
-GSEditViewController.textCursor = property(lambda self: self.contentView().selectedRange().location, lambda self, value: self.contentView().setSelectedRange_(NSRange(value, self.selection)));
+GSEditViewController.textCursor = property(lambda self: self.graphicView().selectedRange().location,
+										   lambda self, value: self.graphicView().setSelectedRange_(NSRange(value, self.graphicView().selectedRange().length)));
 
 '''
 
@@ -8078,6 +8100,14 @@ Menu Tags
 		The Window menu
 	HELP_MENU
 		The Help menu
+		
+Menu States
+	ONSTATE
+		The menu entry will have a checkbox
+	OFFSTATE
+		The menu entry will have no checkbox
+	MIXEDSTATE
+		The menu entry will have horizontal line
 
 Callback Keys
 	
