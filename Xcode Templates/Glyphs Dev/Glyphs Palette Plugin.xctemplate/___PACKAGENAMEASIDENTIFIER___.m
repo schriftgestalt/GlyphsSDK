@@ -12,12 +12,13 @@
 #import <GlyphsCore/GSGlyph.h>
 #import <GlyphsCore/GSLayer.h>
 #import <GlyphsCore/GSPath.h>
+#import <GlyphsKit/NSBundle+NibLoading.h>
 
 @implementation ___FILEBASENAMEASIDENTIFIER___
 
 - (id) init {
 	self = [super init];
-	[NSBundle loadNibNamed:@"___PACKAGENAMEASIDENTIFIER___View" owner:self];
+	[NSBundle loadNibNamed:@"___PACKAGENAMEASIDENTIFIER___View" owner:self error:nil];
 	return self;
 }
 
