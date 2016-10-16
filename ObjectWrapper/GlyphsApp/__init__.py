@@ -4,7 +4,6 @@ from AppKit import *
 from Foundation import *
 
 import time, math, sys, os, string, re, traceback
-from sets import Set
 
 
 __all__ = [
@@ -5913,11 +5912,14 @@ GSPath.bounds = property(	 lambda self: self.pyobjc_instanceMethods.bounds() )
 	'''
 
 def Path_selected(self):
-	return Set(self.nodes) <= Set(self.parent.selection)
+	return set(self.nodes) <= set(self.parent.selection)
 
 def Path_SetSelected(self, state):
 	layer = self.parent
-	layer.addObjectsFromArrayToSelection_(self.nodes)
+	if state:
+		layer.addObjectsFromArrayToSelection_(self.pyobjc_instanceMethods.nodes())
+	else:
+		layer.removeObjectsFromSelection_(self.pyobjc_instanceMethods.nodes())
 
 GSPath.selected = property(	 lambda self: Path_selected(self), lambda self, value: Path_SetSelected(self, value) )
 '''.. attribute:: selected
