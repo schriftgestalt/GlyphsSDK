@@ -117,8 +117,8 @@ class GlyphsAppTests(unittest.TestCase):
 		# GSApplication.defaults
 		self.assertDict(Glyphs.defaults, assertType = False)
 		
-		# GSApplication.scriptAbbrevations
-		self.assertIsNotNone(dict(Glyphs.scriptAbbrevations))
+		# GSApplication.scriptAbbreviations
+		self.assertIsNotNone(dict(Glyphs.scriptAbbreviations))
 		
 		# GSApplication.scriptSuffixes
 		self.assertIsNotNone(dict(Glyphs.scriptSuffixes))
@@ -804,7 +804,7 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertIsInstance(layer.bezierPath, NSBezierPath)
 
 		# GSLayer.userData
-		layer.userData["Hallo"]
+		layer.userData["Hallo"] = "Welt"
 		self.assertDict(layer.userData)
 
 
@@ -978,7 +978,6 @@ class GlyphsAppTests(unittest.TestCase):
 		component.decompose()
 		
 		del Glyphs.font.glyphs['adieresis.test']
-
 		
 		
 	def test_GSPath(self):
@@ -1228,7 +1227,7 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertEqual(info.desc, "ARABIC LIGATURE LAM WITH ALEF ISOLATED FORM")
 
 		# GSGlyphInfo.altNames
-		self.assertEqual(info.altNames, "lamalefisolatedarabic")
+		self.assertEqual(info.altNames[0], "lamalefisolatedarabic")
 
 
 	def not_test_Methods(self):
