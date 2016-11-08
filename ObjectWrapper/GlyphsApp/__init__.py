@@ -265,7 +265,7 @@ GSApplication.fonts = property(lambda self: AppFontProxy(self))
 		
 '''
 
-GSApplication.reporters = property(lambda self: GSCallbackHandler.sharedManager().reporterInstances().allValues())
+GSApplication.reporters = property(lambda self: GSCallbackHandler.sharedHandler().reporterInstances().allValues())
 
 '''.. attribute:: reporters
 	
@@ -5613,10 +5613,10 @@ GSComponent.bounds = property(		lambda self: self.pyobjc_instanceMethods.bounds(
 
 # keep for compatibility:
 GSComponent.disableAlignment = property(lambda self: bool(self.pyobjc_instanceMethods.disableAlignment()),
-									lambda self, value: self.setDisableAlignment_(value))
+										lambda self, value: self.setDisableAlignment_(value))
 # new:
-GSComponent.automaticAlignment = property(lambda self: not bool(self.pyobjc_instanceMethods.disableAlignment()),
-									lambda self, value: self.setDisableAlignment_(not bool(value)))
+GSComponent.automaticAlignment = property(lambda self: bool(self.doesAlign() or self.doesAttach()),
+										  lambda self, value: self.setDisableAlignment_(not bool(value)))
 '''.. attribute:: automaticAlignment
 	
 	Defines whether the component is automatically aligned.
@@ -7276,6 +7276,22 @@ GSEditViewController.textRange = property(lambda self: self.contentView().select
 	.. versionadded:: 2.3
 
 	Amount of selected glyphs in text, starting at cursor position (see above).
+	
+	:type: integer
+
+'''
+
+GSEditViewController.layersCursor = property(lambda self: self.graphicView().cachedSelectionRange().location);
+
+'''
+
+.. attribute:: layersCursor
+
+	.. versionadded:: 2.4
+
+	Position of cursor in the layers list, starting with 0.
+	
+	.. seealso:: `GSEditViewController.layers`
 	
 	:type: integer
 
