@@ -3775,6 +3775,8 @@ Properties
 	glyphInfo
 	leftKerningGroup
 	rightKerningGroup
+	leftKerningKey
+	rightKerningKey
 	leftMetricsKey
 	rightMetricsKey
 	widthMetricsKey
@@ -4054,6 +4056,53 @@ GSGlyph.rightKerningGroup = property(lambda self: self.valueForKey_("rightKernin
 '''.. attribute:: rightKerningGroup
 	The rightKerningGroup of the glyph. All glyphs with the same text in the kerning group end up in the same kerning class.
 	:type: unicode'''
+
+def GSGlyph__leftKerningKey(self):
+	if self.leftKerningGroup:
+		return '@MMK_R_%s' % self.leftKerningGroup
+	else:
+		return self.name
+GSGlyph.leftKerningKey = property(lambda self: GSGlyph__leftKerningKey(self))
+
+'''.. attribute:: leftKerningKey
+
+	.. versionadded:: 2.4
+
+	The key to be used with the kerning functions (:class:`GSFont`.kerningForPair()/.setKerningForPair()/.removeKerningForPair()).
+
+	If the glyph has a `.leftKerningGroup` attribute, the internally used `@MMK_R_xx` notation will be returned (note that the R in there stands for the right side of the kerning pair for LTR fonts, which corresponds to the left kerning group of the glyph). If no group is given, the glyph’s name will be returned.
+	:type: string
+
+	.. code-block:: python
+
+		# Set kerning for 'T' and all members of kerning class 'a'
+		# For LTR fonts, always use the .rightKerningKey for the first (left) glyph of the pair, .leftKerningKey for the second (right) glyph.
+		font.setKerningForPair(font.selectedFontMaster.id, font.glyphs['T'].rightKerningKey, font.glyphs['a'].leftKerningKey, -60)
+
+		# which corresponds to:
+		font.setKerningForPair(font.selectedFontMaster.id, 'T', '@MMK_R_a', -60)
+
+	'''
+
+def GSGlyph__rightKerningKey(self):
+	if self.rightKerningGroup:
+		return '@MMK_L_%s' % self.rightKerningGroup
+	else:
+		return self.name
+GSGlyph.rightKerningKey = property(lambda self: GSGlyph__rightKerningKey(self))
+
+'''.. attribute:: rightKerningKey
+
+	.. versionadded:: 2.4
+
+	The key to be used with the kerning functions (:class:`GSFont`.kerningForPair()/.setKerningForPair()/.removeKerningForPair()).
+
+	If the glyph has a `.rightKerningGroup` attribute, the internally used `@MMK_L_xx` notation will be returned (note that the L in there stands for the left side of the kerning pair for LTR fonts, which corresponds to the right kerning group of the glyph). If no group is given, the glyph’s name will be returned.
+
+ 	See above for an example.
+
+	:type: string'''
+
 GSGlyph.leftMetricsKey =  property(	lambda self: self.valueForKey_("leftMetricsKey"), 
 									lambda self, value: self.setLeftMetricsKey_(NSStr(value)))
 '''.. attribute:: leftMetricsKey

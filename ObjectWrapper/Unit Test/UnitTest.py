@@ -617,6 +617,12 @@ class GlyphsAppTests(unittest.TestCase):
 		# GSGlyph.rightKerningGroup
 		self.assertUnicode(glyph.rightKerningGroup)
 		
+		# GSGlyph.leftKerningKey
+		self.assertString(glyph.leftKerningKey)
+		
+		# GSGlyph.rightKerningKey
+		self.assertString(glyph.rightKerningKey)
+
 		# GSGlyph.leftMetricsKey
 		self.assertUnicode(glyph.leftMetricsKey)
 		
