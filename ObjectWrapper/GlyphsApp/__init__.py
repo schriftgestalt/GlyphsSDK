@@ -4058,8 +4058,8 @@ GSGlyph.rightKerningGroup = property(lambda self: self.valueForKey_("rightKernin
 	:type: unicode'''
 
 def GSGlyph__leftKerningKey(self):
-	if self.leftKerningGroup:
-		return '@MMK_R_%s' % self.leftKerningGroup
+	if self.leftKerningGroupId():
+		return self.leftKerningGroupId()
 	else:
 		return self.name
 GSGlyph.leftKerningKey = property(lambda self: GSGlyph__leftKerningKey(self))
@@ -4085,8 +4085,8 @@ GSGlyph.leftKerningKey = property(lambda self: GSGlyph__leftKerningKey(self))
 	'''
 
 def GSGlyph__rightKerningKey(self):
-	if self.rightKerningGroup:
-		return '@MMK_L_%s' % self.rightKerningGroup
+	if self.rightKerningGroupId():
+		return self.rightKerningGroupId()
 	else:
 		return self.name
 GSGlyph.rightKerningKey = property(lambda self: GSGlyph__rightKerningKey(self))
