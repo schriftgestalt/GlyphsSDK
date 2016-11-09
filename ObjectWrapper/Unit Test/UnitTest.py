@@ -368,6 +368,12 @@ class GlyphsAppTests(unittest.TestCase):
 		# GSFont.removeKerningForPair()
 		font.removeKerningForPair(font.masters[0].id, 'a', 'a')
 
+		# GSFont.updateFeatures()
+		font.updateFeatures()
+
+		# GSFont.glyphForCharacter()
+		self.assertEqual(font.glyphForCharacter(ord('a')) == font.glyphs['a'])
+
 
 	def test_GSFontMaster(self):
 		

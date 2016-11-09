@@ -2071,6 +2071,7 @@ Functions
 	removeKerningForPair()
 	newTab()
 	updateFeatures()
+	glyphForCharacter()
 
 ----------
 Properties
@@ -2691,6 +2692,25 @@ GSFont.updateFeatures = __GSFont__updateFeatures__
 	
 	Updates all OpenType features and classes at once, including generating necessary new features and classes. Equivalent to the Update button in the features panel.
 '''
+
+def __GSFont__glyphForCharacter__(self, integerUnicode):
+	return self.glyphForCharacter_(integerUnicode)
+GSFont.glyphForCharacter = __GSFont__glyphForCharacter__
+
+'''.. function:: glyphForCharacter(unicode)
+
+	.. versionadded:: 2.4
+	
+	Returns a glyph object for a corresponding integer unicode, if present.
+
+	:param unicode: Unicode value
+	:type unicode: int
+
+	.. code-block:: python
+		# get glyph for ampersand
+		print font.glyphForCharacter(ord(u'&'))
+'''
+
 
 
 ##################################################################################
