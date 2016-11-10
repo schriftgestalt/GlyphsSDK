@@ -317,7 +317,8 @@ class GlyphsAppTests(unittest.TestCase):
 		# GSFont.currentTab
 		for tab in font.tabs:
 			tab.close()
-		font.newTab('a')
+		tab = font.newTab('a')
+		self.assertEqual(tab, font.tabs[-1])
 		self.assertIsNotNone(font.currentTab.__repr__())
 		self.assertEqual(len(list(font.selectedLayers)), 1)
 		self.assertEqual(len(list(font.tabs)), 1)

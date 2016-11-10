@@ -2676,14 +2676,23 @@ GSFont.removeKerningForPair = removeKerningForPair
 def __GSFont__addTab__(self, tabText = ""):
 	if self.parent:
 		self.parent.windowController().addTabWithString_(tabText)
+		return self.tabs[-1]
 
 GSFont.newTab = __GSFont__addTab__
 
 '''.. function:: newTab([tabText])
 	
-	Opens a new tab in the current document window, optionally with text
+	Opens a new tab in the current document window, optionally with text, and return that tab object
 	
 	:param tabText: Text or glyph names escaped with '/'
+
+	.. code-block:: python
+		# open new tab
+		font.newTab('abcdef')
+
+		# or
+		tab = font.newTab('abcdef')
+		print tab
 '''
 
 def __GSFont__updateFeatures__(self):
