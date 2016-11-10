@@ -1249,8 +1249,10 @@ class FontGlyphsProxy (Proxy):
 			if Key < 0:
 				Key = self.__len__() + Key
 			return self._owner.glyphAtIndex_(Key)
-		else:
+		elif self._owner.glyphForName_(Key):
 			return self._owner.glyphForName_(Key)
+		elif len(Key) == 1 and self._owner.glyphForCharacter_(ord(Key)):
+			return self._owner.glyphForCharacter_(ord(Key))
 	def __setitem__(self, Key, Glyph):
 		if type(Key) is int:
 			if Key < 0:
@@ -2071,7 +2073,6 @@ Functions
 	removeKerningForPair()
 	newTab()
 	updateFeatures()
-	glyphForCharacter()
 
 ----------
 Properties
@@ -2126,7 +2127,7 @@ GSFont.instances = property(lambda self: FontInstancesProxy(self),
 GSFont.glyphs = property(lambda self: FontGlyphsProxy(self),
 						 lambda self, value: FontGlyphsProxy(self).setter(value))
 '''.. attribute:: glyphs
-	Collection of :class:`GSGlyph <GSGlyph>` objects. Returns a list, but you may also call glyphs using index or glyph name as key.
+	Collection of :class:`GSGlyph <GSGlyph>` objects. Returns a list, but you may also call glyphs using index or glyph name or character (as of v2.4) as key.
 	.. code-block:: python
 		# Access all glyphs
 		for glyph in font.glyphs:
@@ -2139,6 +2140,10 @@ GSFont.glyphs = property(lambda self: FontGlyphsProxy(self),
 		# Access one glyph
 		print font.glyphs['A']
 		<GSGlyph "A" with 4 layers>
+
+		# Access a glyph by character (new in v2.4)
+		print font.glyphs[u'Ư']
+		<GSGlyph "Uhorn" with 4 layers>
 		
 		# Add a glyph
 		font.glyphs.append(GSGlyph('adieresis'))
@@ -2693,23 +2698,6 @@ GSFont.updateFeatures = __GSFont__updateFeatures__
 	Updates all OpenType features and classes at once, including generating necessary new features and classes. Equivalent to the Update button in the features panel.
 '''
 
-def __GSFont__glyphForCharacter__(self, integerUnicode):
-	return self.glyphForCharacter_(integerUnicode)
-GSFont.glyphForCharacter = __GSFont__glyphForCharacter__
-
-'''.. function:: glyphForCharacter(unicode)
-
-	.. versionadded:: 2.4
-	
-	Returns a glyph object for a corresponding integer unicode, if present.
-
-	:param unicode: Unicode value
-	:type unicode: int
-
-	.. code-block:: python
-		# get glyph for ampersand
-		print font.glyphForCharacter(ord(u'&'))
-'''
 
 
 
