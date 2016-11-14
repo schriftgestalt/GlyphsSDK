@@ -7053,6 +7053,7 @@ Properties
 	parent
 	text
 	layers
+	composedLayers
 	scale
 	viewPort
 	bounds
@@ -7097,7 +7098,7 @@ GSEditViewController.text = property(lambda self: self.graphicView().displayStri
 '''
 
 .. attribute:: text
-	The text of the tab, either as text, or slash-escaped glyph names, or mixed.
+	The text of the tab, either as text, or slash-escaped glyph names, or mixed. OpenType features will be applied after the text has been changed.
 	
 	:type: Unicode
 
@@ -7117,40 +7118,70 @@ def __GSEditViewController__repr__(self):
 
 GSEditViewController.__repr__ = __GSEditViewController__repr__
 
-def __GSEditViewController_layers__(self):
-	try:
-		return self.parent.windowController().activeEditViewController().graphicView().displayString()
-	except:
-		pass
-	return None
-def __GSEditViewController_set_layers__(self, layers):
-	if not (type(layers) is list or "objectAtIndex_" in layers.__class__.__dict__):
-		raise ValueError
-	string = NSMutableAttributedString.alloc().init()
-	Font = self.representedObject()
-	for l in layers:
-		if l.className() == "GSLayer":
-			char = Font.characterForGlyph_(l.parent)
-			A = NSAttributedString.alloc().initWithString_attributes_(unichr(char), { "GSLayerIdAttrib" : l.associatedMasterId })
-		elif l.className() == "GSBackgroundLayer":
-			char = Font.characterForGlyph_(l.parent)
-			A = NSAttributedString.alloc().initWithString_attributes_(unichr(char), { "GSLayerIdAttrib" : l.associatedMasterId, "GSShowBackgroundAttrib": True })
-		elif l.className() == "GSControlLayer":
-			char = l.parent().unicodeChar()
-			A = NSAttributedString.alloc().initWithString_(unichr(char))
-		else:
-			raise ValueError
-		string.appendAttributedString_(A)
-	self.graphicView().textStorage().setText_(string)
 
-GSEditViewController.layers = property(lambda self: self.graphicView().layoutManager().cachedGlyphs(),
-							  lambda self, value: __GSEditViewController_set_layers__(self, value))
+class TabLayersProxy (Proxy):
+
+	def deactivateFeatures(self):
+		self.savedFeatures = copy.copy(self._owner.features)
+		self._owner.features = []
+
+	def activateFeatures(self):
+		self._owner.features = self.savedFeatures
+
+	def setter(self, layers):
+
+		self.deactivateFeatures()
+		
+		if not (type(layers) is list or type(layers) is tuple or "objectAtIndex_" in layers.__class__.__dict__ or type(layers) is type(self)):
+			raise ValueError
+		if type(layers) is type(self):
+			otherTab = layers
+			layers = layers.values()
+
+		string = NSMutableAttributedString.alloc().init()
+		Font = self._owner.representedObject()
+		for l in layers:
+			if l.className() == "GSLayer":
+				char = Font.characterForGlyph_(l.parent)
+				A = NSAttributedString.alloc().initWithString_attributes_(unichr(char), { "GSLayerIdAttrib" : l.associatedMasterId })
+			elif l.className() == "GSBackgroundLayer":
+				char = Font.characterForGlyph_(l.parent)
+				A = NSAttributedString.alloc().initWithString_attributes_(unichr(char), { "GSLayerIdAttrib" : l.associatedMasterId, "GSShowBackgroundAttrib": True })
+			elif l.className() == "GSControlLayer":
+				char = l.parent().unicodeChar()
+				A = NSAttributedString.alloc().initWithString_(unichr(char))
+			else:
+				raise ValueError
+			string.appendAttributedString_(A)
+		self._owner.graphicView().textStorage().setText_(string)
+		self.activateFeatures()
+
+	def composedLayers(self):
+		return list(self._owner.graphicView().layoutManager().cachedGlyphs())
+
+	def values(self):
+		self.deactivateFeatures()
+		layers = list(self._owner.graphicView().layoutManager().cachedGlyphs())
+		self.activateFeatures()
+		return layers
+
+	def append(self, value):
+		values = copy.copy(self.values())
+		values.append(value)
+		self.setter(values)
+
+	def remove(self, value):
+		values = self.values()
+		values.remove(value)
+		self.setter(values)
+
+
+GSEditViewController.layers = property(lambda self: TabLayersProxy(self), lambda self, value: TabLayersProxy(self).setter(value))
 
 '''
 .. attribute:: layers
-	Alternatively, you can set (and read) a list of :class:`GSLayer` objects. These can be any of the layers of a glyph.
 	
-	
+	Alternatively, you can set (and read) a list of :class:`GSLayer` objects. These can be any of the layers of a glyph. OpenType features will be applied after the layers have been changed.
 
 	:type: list
 
@@ -7164,6 +7195,22 @@ GSEditViewController.layers = property(lambda self: self.graphicView().layoutMan
 			font.tabs[0].layers.append(layer)
 	
 '''
+
+GSEditViewController.composedLayers = property(lambda self: TabLayersProxy(self).composedLayers())
+
+
+'''
+.. attribute:: composedLayers
+	
+	.. versionadded:: 2.4
+
+	Similar to the above, but this list contains the :class:`GSLayer` objects after the OpenType features have been applied (see :class:`GSEditViewController`.features). Read-only.
+
+	:type: list
+	
+'''
+
+
 
 GSEditViewController.scale = property(lambda self: self.graphicView().scale(), lambda self, value: self.graphicView().setScale_(value))
 

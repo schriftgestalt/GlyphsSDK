@@ -1133,6 +1133,13 @@ class GlyphsAppTests(unittest.TestCase):
 
 		# GSEditViewController.layers
 		self.assertEqual(list(tab.layers), [Glyphs.font.glyphs['a'].layers[0]])
+		tab.layers = [Glyphs.font.glyphs['a'].layers[0]]
+		tab.layers.append(Glyphs.font.glyphs['A'].layers[0])
+		tab.layers.remove(Glyphs.font.glyphs['A'].layers[0])
+		self.assertEqual(list(tab.layers), [Glyphs.font.glyphs['a'].layers[0]])
+
+		# GSEditViewController.composedLayers
+		self.assertEqual(list(tab.composedLayers), [Glyphs.font.glyphs['a'].layers[0]])
 
 		# GSEditViewController.scale
 		self.assertFloat(tab.scale)
