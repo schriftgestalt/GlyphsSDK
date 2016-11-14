@@ -7352,10 +7352,15 @@ class TabSelectedFeaturesProxy (Proxy):
 	
 	def setter(self, values):
 		
-		if type(values) != list:
+		if not (type(values) is list or type(values) is tuple or type(values) is type(self)):
 			raise TypeError
 		
 		self._owner.pyobjc_instanceMethods.selectedFeatures().removeAllObjects()
+
+		if type(values) is type(self):
+			otherFeaturesProxy = values
+			values = list(otherFeaturesProxy.values())
+
 		for feature in values:
 			self.append(feature)
 		
