@@ -7849,7 +7849,7 @@ def __PathOperator_intersectPaths__(paths, otherPaths):
 	if result[0] != 1:
 		print result[1].localizedDescription()
 		return None
-	return Paths
+	return OtherPaths
 
 intersectPaths = __PathOperator_intersectPaths__
 
