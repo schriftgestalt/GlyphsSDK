@@ -92,7 +92,6 @@ class Proxy(object):
 			return len(Values)
 		return 0
 	def pop(self, i):
-		print "__pop", i
 		if type(i) == int:
 			node = self[i]
 			del self[i]
@@ -1442,7 +1441,6 @@ class FontClassesProxy (Proxy):
 		for index in range(self._owner.countOfClasses()):
 			yield self._owner.objectInClassesAtIndex_(index)
 	def append(self, Class):
-		 # print "append Class", Class
 		self._owner.addClass_(Class)
 	def __len__(self):
 		return self._owner.countOfClasses()
@@ -1482,7 +1480,6 @@ class FontFeaturesProxy (Proxy):
 		for index in range(self._owner.countOfFeatures()):
 			yield self._owner.objectInFeaturesAtIndex_(index)
 	def append(self, Feature):
-		#print "append", Node
 		self._owner.addFeature_(Feature)
 
 	def __len__(self):
@@ -1532,7 +1529,6 @@ class FontFeaturePrefixesProxy (Proxy):
 			if FeaturePrefix is not None:
 				return self._owner.removeFeaturePrefix_(FeaturePrefix)
 	def append(self, Feature):
-		#print "append", Node
 		self._owner.addFeaturePrefix_(Feature)
 	def text(self):
 		LineList = []
@@ -3617,7 +3613,6 @@ Properties
 
 
 def Feature__new__(typ, *args, **kwargs):
-	#print "new", args, kwargs
 	return GSFeature.alloc().init()
 GSFeature.__new__ = Feature__new__;
 
