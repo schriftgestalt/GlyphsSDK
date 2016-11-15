@@ -7810,7 +7810,7 @@ def __PathOperator_removeOverlap__(paths):
 		Paths = NSMutableArray.arrayWithArray_(paths.values())
 	
 	result = GSPathFinder.alloc().init().removeOverlapPaths_error_(Paths, None)
-	if type(result) is not int:
+	if result[0] != 1:
 		print result[1].localizedDescription()
 		return None
 	return Paths
@@ -7828,7 +7828,7 @@ def __PathOperator_subtractPaths__(paths, subtract):
 		Subtract = NSMutableArray.arrayWithArray_(subtract.values())
 	result = GSPathFinder.alloc().init().subtractPaths_from_error_(Subtract, Paths, None)
 	print result, type(result)
-	if type(result) is not int:
+	if result[0] != 1:
 		print result[1].localizedDescription()
 		return None
 	return Paths
@@ -7845,9 +7845,8 @@ def __PathOperator_intersectPaths__(paths, otherPaths):
 		OtherPaths = NSMutableArray.arrayWithArray_(otherPaths)
 	except:
 		OtherPaths = NSMutableArray.arrayWithArray_(otherPaths.values())
-	
 	result = GSPathFinder.alloc().init().intersectPaths_from_error_(Paths, OtherPaths, None)
-	if type(result) is not int:
+	if result[0] != 1:
 		print result[1].localizedDescription()
 		return None
 	return Paths
