@@ -7144,10 +7144,10 @@ class TabLayersProxy (Proxy):
 		for l in layers:
 			if l.className() == "GSLayer":
 				char = Font.characterForGlyph_(l.parent)
-				A = NSAttributedString.alloc().initWithString_attributes_(unichr(char), { "GSLayerIdAttrib" : l.associatedMasterId })
+				A = NSAttributedString.alloc().initWithString_attributes_(unichr(char), { "GSLayerIdAttrib" : l.layerId })
 			elif l.className() == "GSBackgroundLayer":
 				char = Font.characterForGlyph_(l.parent)
-				A = NSAttributedString.alloc().initWithString_attributes_(unichr(char), { "GSLayerIdAttrib" : l.associatedMasterId, "GSShowBackgroundAttrib": True })
+				A = NSAttributedString.alloc().initWithString_attributes_(unichr(char), { "GSLayerIdAttrib" : l.layerId, "GSShowBackgroundAttrib": True })
 			elif l.className() == "GSControlLayer":
 				char = l.parent().unicodeChar()
 				A = NSAttributedString.alloc().initWithString_(unichr(char))
