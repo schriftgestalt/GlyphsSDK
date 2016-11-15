@@ -1886,7 +1886,14 @@ class LayerPathsProxy (Proxy):
 			Key = self._owner.countOfPaths() + idx
 		self._owner.removePathAtIndex_(idx)
 	def append(self, Path):
-		self._owner.addPath_(Path)
+		if type(Path) == list or type(Path) == tuple:
+			for path in Path:
+				self._owner.addPath_(path)
+		elif type(Path) == type(self):
+			for path in Path.values():
+				self._owner.addPath_(path)
+		else:
+			self._owner.addPath_(Path)
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.paths()
 	def setterMethod(self):
