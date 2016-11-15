@@ -112,8 +112,7 @@ class Proxy(object):
 
 	def setter(self, values):
 		method = self.setterMethod()
-
-		if type(values) == list:
+		if type(values) == list or values.__class__.__name__ == "__NSArrayM":
 			method(NSMutableArray.arrayWithArray_(values))
 		elif type(values) == tuple:
 			method(NSMutableArray.arrayWithArray_(list(values)))
