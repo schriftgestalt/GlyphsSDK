@@ -28,8 +28,6 @@
 	<string>____LatestReleaseNotes____</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright, ____Developer____, ____YEAR____</string>
-	<key>NSMainNibFile</key>
-	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>____PluginClassName____</string>
 	<key>PyMainFileNames</key>
