@@ -7,7 +7,7 @@
 	<key>CFBundleDisplayName</key>
 	<string>Multiple Tools</string>
 	<key>CFBundleExecutable</key>
-	<string>multipleTools</string>
+	<string>plugin</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.GeorgSeifert.multipleTools</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -16,8 +16,6 @@
 	<string>Multiple Tools</string>
 	<key>CFBundlePackageType</key>
 	<string>BNDL</string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>0.1</string>
 	<key>CFBundleShortVersionString</key>
@@ -28,19 +26,13 @@
 	<string>____ProductPageURL____</string>
 	<key>productReleaseNotes</key>
 	<string>____LatestReleaseNotes____</string>
-	<key>LSHasLocalizedDisplayName</key>
-	<false/>
-	<key>NSAppleScriptEnabled</key>
-	<false/>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright, Georg Seifert, 2016</string>
-	<key>NSMainNibFile</key>
-	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>MultipleTools</string>
 	<key>PyMainFileNames</key>
 	<array>
-		<string>__boot__</string>
+		<string>../MacOS/main.py</string>
 	</array>
 </dict>
 </plist>
