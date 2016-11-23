@@ -8050,13 +8050,15 @@ MGOrderedDictionary.__delattr__ = __Dict__del__
 def GetFile(message=None, allowsMultipleSelection=False, filetypes=None):
 	return GetOpenFile(message, allowsMultipleSelection, filetypes)
 
-def GetOpenFile(message=None, allowsMultipleSelection=False, filetypes=None):
+def GetOpenFile(message=None, allowsMultipleSelection=False, filetypes=None, path=None):
 	if filetypes is None:
 		filetypes = []
 	Panel = NSOpenPanel.openPanel().retain()
 	Panel.setCanChooseFiles_(True)
 	Panel.setCanChooseDirectories_(False)
 	Panel.setAllowsMultipleSelection_(allowsMultipleSelection)
+	if path is not None:
+		Panel.setDirectory_(path)
 	if message is not None:
 		Panel.setTitle_(message)
 	if filetypes is not None and len(filetypes) > 0:
@@ -8075,16 +8077,18 @@ def GetOpenFile(message=None, allowsMultipleSelection=False, filetypes=None):
 	:param message: A message string.
 	:param allowsMultipleSelection: Boolean, True if user can select more than one file
 	:param filetypes: list of strings indicating the filetypes, e.g., ["gif", "pdf"]
-	
+	:param path: The initial directory path
 	:return: The selected file or a list of file names or None
 	:rtype: unicode or list
 '''
 
-def GetFolder(message=None, allowsMultipleSelection=False):
+def GetFolder(message=None, allowsMultipleSelection=False, path=None):
 	Panel = NSOpenPanel.openPanel().retain()
 	Panel.setCanChooseFiles_(False)
 	Panel.setCanChooseDirectories_(True)
 	Panel.setAllowsMultipleSelection_(allowsMultipleSelection)
+	if path is not None:
+		Panel.setDirectory_(path)
 	pressedButton = Panel.runModal()
 	if pressedButton == NSOKButton:
 		if allowsMultipleSelection:
@@ -8099,6 +8103,7 @@ def GetFolder(message=None, allowsMultipleSelection=False):
 	
 	:param message:
 	:param allowsMultipleSelection:
+	:param path:
 	:return: The selected folder or None
 	:rtype: unicode
 '''
