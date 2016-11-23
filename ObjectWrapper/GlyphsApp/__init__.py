@@ -4436,6 +4436,7 @@ Functions
 .. autosummary::
 	
 	decomposeComponents()
+	decomposeCorners()
 	compareString()
 	connectAllOpenPaths()
 	copyDecomposedLayer()
@@ -4985,6 +4986,12 @@ Functions
 .. function:: decomposeComponents()
 	
 	Decomposes all components of the layer at once.
+
+.. function:: decomposeCorners()
+	
+	.. versionadded:: 2.4
+	
+	Decomposes all corners of the layer at once.
 
 .. function:: compareString()
 	
