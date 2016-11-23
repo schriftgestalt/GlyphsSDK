@@ -1846,7 +1846,6 @@ class LayerAnchorsProxy (Proxy):
 	def append(self, Anchor):
 		self._owner.addAnchor_(Anchor)
 	def __len__(self):
-		#print "count"
 		return self._owner.countOfAnchors()
 
 	def setter(self, values):
