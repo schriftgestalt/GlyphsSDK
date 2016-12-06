@@ -3,7 +3,7 @@
 from AppKit import *
 from Foundation import *
 
-import time, math, sys, os, string, re, traceback
+import time, math, sys, os, string, re, traceback, copy
 
 
 __all__ = [
@@ -7130,6 +7130,12 @@ GSEditViewController.__repr__ = __GSEditViewController__repr__
 
 
 class TabLayersProxy (Proxy):
+
+	def __getitem__(self, idx):
+		if type(idx) == slice:
+			return self.values().__getitem__(idx)
+		else:
+			return self.values()[idx]
 
 	def deactivateFeatures(self):
 		self.savedFeatures = copy.copy(self._owner.features)
