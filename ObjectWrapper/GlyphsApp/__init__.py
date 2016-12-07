@@ -1885,20 +1885,27 @@ class LayerPathsProxy (Proxy):
 	def append(self, Path):
 		if type(Path) == list or type(Path) == tuple:
 			for path in Path:
-				self._owner.addPath_(path.copy())
+				if self._owner.parent != path.parent:
+					self._owner.addPath_(path.copy())
+				else:
+					self._owner.addPath_(path)
 		elif type(Path) == type(self):
-			for path in copy.copy(Path.values()):
-				self._owner.addPath_(path.copy())
+			for path in Path:
+				if self._owner.parent != path.parent:
+					self._owner.addPath_(path.copy())
+				else:
+					self._owner.addPath_(path)
 
 		else:
 			self._owner.addPath_(Path)
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.paths()
-#	def setterMethod(self):
-#		return self._owner.setPaths_
 
 	def setter(self, paths):
-		self._owner.setPaths_([x.copy() for x in paths])
+		if paths and self._owner.parent != paths[0].parent:
+			self._owner.setPaths_([x.copy() for x in paths])
+		else:
+			self._owner.setPaths_(paths)
 
 
 
