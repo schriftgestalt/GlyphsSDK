@@ -10,6 +10,7 @@ import GlyphsApp
 from GlyphsApp import *
 import os, time
 import objc
+import copy
 
 PathToTestFile = os.path.join(os.path.dirname(__file__), 'Glyphs Unit Test Sans.glyphs')
 
@@ -1191,6 +1192,10 @@ class GlyphsAppTests(unittest.TestCase):
 
 		## Methods
 		
+		# GSEditViewController.saveToPDF()
+		tab.saveToPDF(os.path.join(os.path.dirname(font.filepath), 'Unit Test.pdf'))
+
+		# GSEditViewController.close()
 		tab.close()
 
 

@@ -7091,6 +7091,7 @@ Functions
 .. autosummary::
 
 	close()
+	saveToPDF()
 
 
 ----------
@@ -7617,6 +7618,34 @@ GSEditViewController.close = Close_Tab
 	Close this tab.
 	
 '''
+
+
+def GSEditViewController_saveToPDF(self, path, rect = None):
+
+	if rect == None:
+		rect = self.viewPort
+	pdf = self.graphicView().dataWithPDFInsideRect_(rect)
+	pdf.writeToFile_atomically_(path, True)	
+
+
+GSEditViewController.saveToPDF = GSEditViewController_saveToPDF
+
+
+'''
+
+
+.. function:: saveToPDF(path[, rect])
+	
+	.. versionadded:: 2.4
+
+	Save the view to a PDF file.
+
+	:param path: Path to the file
+	:param rect: Optional. NSRect defining the view port. If omitted, :class:`GSEditViewController`.viewPort will be used.
+
+	
+'''
+
 
 
 ##################################################################################
