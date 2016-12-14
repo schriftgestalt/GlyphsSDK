@@ -7572,7 +7572,8 @@ def EditViewPreviewHeight(self, height):
 	Frame = splitView.frame()
 	splitView.setPosition_ofDividerAtIndex_(Frame.size.height - height, 0)
 
-GSEditViewController.previewHeight = property(lambda self: Glyphs.defaults["GSPreviewHeight"], lambda self, value: EditViewPreviewHeight(self, value));
+
+GSEditViewController.previewHeight = property(lambda self: self.previewSplitView().subviews()[-1].frame().size.height, lambda self, value: EditViewPreviewHeight(self, value));
 
 '''
 
