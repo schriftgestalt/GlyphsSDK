@@ -1,0 +1,302 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		56D659B81E080F2200135582 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56D659B71E080F2200135582 /* Cocoa.framework */; };
+		56D659BB1E080F2200135582 /* TestTool-Prefix.pch in Resources */ = {isa = PBXBuildFile; fileRef = 56D659BA1E080F2200135582 /* TestTool-Prefix.pch */; };
+		56D659BD1E080F2200135582 /* TestTool-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 56D659BC1E080F2200135582 /* TestTool-Info.plist */; };
+		56D659C01E080F2200135582 /* TestTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 56D659BF1E080F2200135582 /* TestTool.m */; };
+		56D659C31E080F2200135582 /* ToolbarIconTemplate.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 56D659C21E080F2200135582 /* ToolbarIconTemplate.pdf */; };
+		56D659C51E080F2200135582 /* GlyphsCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56D659C41E080F2200135582 /* GlyphsCore.framework */; };
+		56D659D51E080F4A00135582 /* TestToolViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56D659D31E080F4A00135582 /* TestToolViewController.m */; };
+		56D659D61E080F4A00135582 /* TestToolView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 56D659D41E080F4A00135582 /* TestToolView.xib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		56D659B41E080F2200135582 /* TestTool.glyphsTool */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TestTool.glyphsTool; sourceTree = BUILT_PRODUCTS_DIR; };
+		56D659B71E080F2200135582 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		56D659BA1E080F2200135582 /* TestTool-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TestTool-Prefix.pch"; sourceTree = "<group>"; };
+		56D659BC1E080F2200135582 /* TestTool-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TestTool-Info.plist"; sourceTree = "<group>"; };
+		56D659BE1E080F2200135582 /* TestTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestTool.h; sourceTree = "<group>"; };
+		56D659BF1E080F2200135582 /* TestTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestTool.m; sourceTree = "<group>"; };
+		56D659C21E080F2200135582 /* ToolbarIconTemplate.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = ToolbarIconTemplate.pdf; sourceTree = "<group>"; };
+		56D659C41E080F2200135582 /* GlyphsCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GlyphsCore.framework; path = /Applications/Glyphs.app/Contents/Frameworks/GlyphsCore.framework; sourceTree = "<absolute>"; };
+		56D659C61E080F2200135582 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		56D659D21E080F4A00135582 /* TestToolViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestToolViewController.h; sourceTree = "<group>"; };
+		56D659D31E080F4A00135582 /* TestToolViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestToolViewController.m; sourceTree = "<group>"; };
+		56D659D41E080F4A00135582 /* TestToolView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TestToolView.xib; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		56D659B11E080F2200135582 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				56D659C51E080F2200135582 /* GlyphsCore.framework in Frameworks */,
+				56D659B81E080F2200135582 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		56D659AB1E080F2200135582 = {
+			isa = PBXGroup;
+			children = (
+				56D659B91E080F2200135582 /* TestTool */,
+				56D659B61E080F2200135582 /* Frameworks */,
+				56D659B51E080F2200135582 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		56D659B51E080F2200135582 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				56D659B41E080F2200135582 /* TestTool.glyphsTool */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		56D659B61E080F2200135582 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				56D659B71E080F2200135582 /* Cocoa.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		56D659B91E080F2200135582 /* TestTool */ = {
+			isa = PBXGroup;
+			children = (
+				56D659BA1E080F2200135582 /* TestTool-Prefix.pch */,
+				56D659BC1E080F2200135582 /* TestTool-Info.plist */,
+				56D659BE1E080F2200135582 /* TestTool.h */,
+				56D659BF1E080F2200135582 /* TestTool.m */,
+				56D659C61E080F2200135582 /* Info.plist */,
+				56D659C11E080F2200135582 /* Supporting Files */,
+				56D659D21E080F4A00135582 /* TestToolViewController.h */,
+				56D659D31E080F4A00135582 /* TestToolViewController.m */,
+				56D659D41E080F4A00135582 /* TestToolView.xib */,
+			);
+			path = TestTool;
+			sourceTree = "<group>";
+		};
+		56D659C11E080F2200135582 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				56D659C21E080F2200135582 /* ToolbarIconTemplate.pdf */,
+				56D659C41E080F2200135582 /* GlyphsCore.framework */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		56D659B31E080F2200135582 /* TestTool */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 56D659C91E080F2200135582 /* Build configuration list for PBXNativeTarget "TestTool" */;
+			buildPhases = (
+				56D659B01E080F2200135582 /* Sources */,
+				56D659B11E080F2200135582 /* Frameworks */,
+				56D659B21E080F2200135582 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TestTool;
+			productName = TestTool;
+			productReference = 56D659B41E080F2200135582 /* TestTool.glyphsTool */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		56D659AC1E080F2200135582 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0720;
+				ORGANIZATIONNAME = "Georg Seifert";
+				TargetAttributes = {
+					56D659B31E080F2200135582 = {
+						CreatedOnToolsVersion = 7.2.1;
+					};
+				};
+			};
+			buildConfigurationList = 56D659AF1E080F2200135582 /* Build configuration list for PBXProject "TestTool" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 56D659AB1E080F2200135582;
+			productRefGroup = 56D659B51E080F2200135582 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				56D659B31E080F2200135582 /* TestTool */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		56D659B21E080F2200135582 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				56D659C31E080F2200135582 /* ToolbarIconTemplate.pdf in Resources */,
+				56D659BD1E080F2200135582 /* TestTool-Info.plist in Resources */,
+				56D659D61E080F4A00135582 /* TestToolView.xib in Resources */,
+				56D659BB1E080F2200135582 /* TestTool-Prefix.pch in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		56D659B01E080F2200135582 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				56D659D51E080F4A00135582 /* TestToolViewController.m in Sources */,
+				56D659C01E080F2200135582 /* TestTool.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		56D659C71E080F2200135582 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+			};
+			name = Debug;
+		};
+		56D659C81E080F2200135582 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+			};
+			name = Release;
+		};
+		56D659CA1E080F2200135582 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DEPLOYMENT_LOCATION = YES;
+				DSTROOT = "~/Library/Application Support/Glyphs/Plugins";
+				FRAMEWORK_SEARCH_PATHS = "$(SYSTEM_APPS_DIR)/Glyphs.app/Contents/Frameworks";
+				INFOPLIST_FILE = TestTool/Info.plist;
+				INSTALL_PATH = /;
+				PRODUCT_BUNDLE_IDENTIFIER = com.GeorgSeifert.TestTool;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = glyphsTool;
+			};
+			name = Debug;
+		};
+		56D659CB1E080F2200135582 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(SYSTEM_APPS_DIR)/Glyphs.app/Contents/Frameworks";
+				INFOPLIST_FILE = TestTool/Info.plist;
+				INSTALL_PATH = /;
+				PRODUCT_BUNDLE_IDENTIFIER = com.GeorgSeifert.TestTool;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				WRAPPER_EXTENSION = glyphsTool;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		56D659AF1E080F2200135582 /* Build configuration list for PBXProject "TestTool" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				56D659C71E080F2200135582 /* Debug */,
+				56D659C81E080F2200135582 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		56D659C91E080F2200135582 /* Build configuration list for PBXNativeTarget "TestTool" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				56D659CA1E080F2200135582 /* Debug */,
+				56D659CB1E080F2200135582 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 56D659AC1E080F2200135582 /* Project object */;
+}
