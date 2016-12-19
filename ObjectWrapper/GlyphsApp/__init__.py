@@ -2346,11 +2346,8 @@ GSFont.keyboardIncrement = property(lambda self: self.pyobjc_instanceMethods.key
 	:type: float'''
 
 def Font_selectedGlyphs(self):
-	_glyphs = []
-	for g in self.glyphs:
-		if g.selected:
-			_glyphs.append(g)
-	return _glyphs
+
+	return self.parent.windowController().glyphsController().selectedObjects()
 
 GSFont.selection = property(lambda self: Font_selectedGlyphs(self))
 '''.. attribute:: selection
