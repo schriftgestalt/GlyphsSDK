@@ -7222,6 +7222,9 @@ GSEditViewController.layers = property(lambda self: TabLayersProxy(self), lambda
 		# display all layers of one glyph next to each other
 		for layer in font.glyphs['a'].layers:
 			font.tabs[0].layers.append(layer)
+
+		# append line break
+		font.tabs[0].layers.append(GSControlLayer(10)) # 10 being the ASCII code of the new line character (\n)
 	
 '''
 
