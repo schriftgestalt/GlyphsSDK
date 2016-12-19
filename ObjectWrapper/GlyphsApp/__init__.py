@@ -996,6 +996,7 @@ def Glyphs_localize(self, localization):
 	elif type(localization) == dict:
 		# Return first match of languages list
 		for priority in self.defaults["AppleLanguages"]:
+			priority = priority[:2]
 			if localization.has_key(priority):
 				return localization[priority]
 		
