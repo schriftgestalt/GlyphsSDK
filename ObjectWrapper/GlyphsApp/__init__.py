@@ -1170,7 +1170,7 @@ GSElement.x = property(lambda self: self.pyobjc_instanceMethods.position().x,
 GSElement.y = property(lambda self: self.pyobjc_instanceMethods.position().y,
 	lambda self, value: self.setPosition_(NSMakePoint(self.x, value)))
 
-GSElement.layer = property(lambda self: self.parent)
+GSElement.layer = property(lambda self: self.parent())
 
 
 
@@ -1354,7 +1354,7 @@ class FontInstancesProxy (Proxy):
 		if type(Key) is int:
 			if Key < 0:
 				Key = self.__len__() + Key
-			return self._owner.removeObjectFromInstancesAtIndex_(Key)
+			return self._owner.removeInstanceAtIndex_(Key)
 	def __iter__(self):
 		for index in range(self._owner.countOfInstances()):
 			yield self._owner.instanceAtIndex_(index)
@@ -2710,6 +2710,8 @@ GSFont.newTab = __GSFont__addTab__
 
 def __GSFont__updateFeatures__(self):
 	GSFeatureGenerator.alloc().init().makeFeatures_(self)
+	self.compileTempFontError_(None)
+	
 
 GSFont.updateFeatures = __GSFont__updateFeatures__
 
@@ -7572,7 +7574,7 @@ GSEditViewController.previewInstances = property(lambda self: Get_ShowInPreview(
 def EditViewPreviewHeight(self, height):
 	splitView = self.previewSplitView()
 	Frame = splitView.frame()
-	splitView.setPosition_ofDividerAtIndex_(Frame.size.height - height, 0)
+	splitView.setPosition_ofDividerAtIndex_(Frame.size.height - height - 1, 0)
 
 
 GSEditViewController.previewHeight = property(lambda self: self.previewSplitView().subviews()[-1].frame().size.height, lambda self, value: EditViewPreviewHeight(self, value));
