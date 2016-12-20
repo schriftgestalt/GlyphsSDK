@@ -1726,6 +1726,8 @@ class LayerComponentsProxy (Proxy):
 		if Key < 0:
 			Key = self.__len__() + Key
 		self._owner.removeComponentAtIndex_(Key)
+	def __copy__(self):
+		return [x.copy() for x in self.values()]
 	def append(self, Component):
 		self._owner.addComponent_(Component)
 	def values(self):
@@ -1767,6 +1769,8 @@ class LayerGuideLinesProxy (Proxy):
 		self._owner.setGuideLine_atIndex_(Component, Key)
 	def __delitem__(self, Key):
 		self._owner.removeGuideLineAtIndex_(Key)
+	def __copy__(self):
+		return [x.copy() for x in self.values()]
 	def append(self, GuideLine):
 		self._owner.addGuideLine_(GuideLine)
 	def values(self):
@@ -1783,6 +1787,8 @@ class LayerAnnotationProxy (Proxy):
 		self._owner.insertObject_inAnnotationsAtIndex_(Annotation, Key)
 	def __delitem__(self, Key):
 		self._owner.removeObjectFromAnnotationsAtIndex_(Key)
+	def __copy__(self):
+		return [x.copy() for x in self.values()]
 	def append(self, Annotation):
 		self._owner.addAnnotation_(Annotation)
 	def values(self):
@@ -1801,6 +1807,8 @@ class LayerHintsProxy (Proxy):
 		self._owner.setHint_atIndex_(Component, Key)
 	def __delitem__(self, Key):
 		self._owner.removeObjectFromHintsAtIndex_(Key)
+	def __copy__(self):
+		return [x.copy() for x in self.values()]
 	def append(self, Hint):
 		self._owner.addHint_(Hint)
 	def values(self):
@@ -1828,6 +1836,8 @@ class LayerAnchorsProxy (Proxy):
 			self._owner.removeAnchorWithName_(Key)
 		else:
 			raise TypeError
+	def __copy__(self):
+		return [x.copy() for x in self.values()]
 	def items(self):
 		Items = []
 		for key in self.keys():
@@ -1883,30 +1893,21 @@ class LayerPathsProxy (Proxy):
 		if idx < 0:
 			Key = self._owner.countOfPaths() + idx
 		self._owner.removePathAtIndex_(idx)
+	def __copy__(self):
+		return [x.copy() for x in self.values()]
 	def append(self, Path):
 		if type(Path) == list or type(Path) == tuple:
 			for path in Path:
-				if self._owner.parent != path.parent:
-					self._owner.addPath_(path.copy())
-				else:
-					self._owner.addPath_(path)
+				self._owner.addPath_(path)
 		elif type(Path) == type(self):
-			for path in Path:
-				if self._owner.parent != path.parent:
-					self._owner.addPath_(path.copy())
-				else:
-					self._owner.addPath_(path)
-
+			for path in Path.values():
+				self._owner.addPath_(path)
 		else:
 			self._owner.addPath_(Path)
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.paths()
-
-	def setter(self, paths):
-		if paths and self._owner.parent != paths[0].parent:
-			self._owner.setPaths_([x.copy() for x in paths])
-		else:
-			self._owner.setPaths_(paths)
+	def setterMethod(self):
+		return self._owner.setPaths_
 
 
 
@@ -4633,6 +4634,11 @@ GSLayer.components = property(lambda self: LayerComponentsProxy(self),
 		        if component.componentName == 'dieresis':
 		                del(layer.components[i])
 		                break
+
+		# copy components from another layer
+		import copy
+		layer.components = copy.copy(anotherlayer.components)
+
 '''
 
 GSLayer.guides = property(lambda self: LayerGuideLinesProxy(self),
@@ -4660,6 +4666,10 @@ GSLayer.guideLines = GSLayer.guides
 
 		# delete guide
 		del(layer.guides[0])
+
+		# copy guides from another layer
+		import copy
+		layer.guides = copy.copy(anotherlayer.guides)
 '''
 
 GSLayer.annotations = property(lambda self: LayerAnnotationProxy(self),
@@ -4684,6 +4694,10 @@ GSLayer.annotations = property(lambda self: LayerAnnotationProxy(self),
 
 		# delete annotation
 		del(layer.annotations[0])
+
+		# copy annotations from another layer
+		import copy
+		layer.annotations = copy.copy(anotherlayer.annotations)
 '''
 
 
@@ -4708,6 +4722,10 @@ GSLayer.hints = property(lambda self: LayerHintsProxy(self),
 
 		# delete hint
 		del(layer.hints[0])
+
+		# copy hints from another layer
+		import copy
+		layer.hints = copy.copy(anotherlayer.hints)
 '''
 
 GSLayer.anchors = property(lambda self: LayerAnchorsProxy(self),
@@ -4729,6 +4747,10 @@ GSLayer.anchors = property(lambda self: LayerAnchorsProxy(self),
 
 		# delete anchor
 		del(layer.anchors['top'])
+
+		# copy anchors from another layer
+		import copy
+		layer.anchors = copy.copy(anotherlayer.anchors)
 '''
 
 GSLayer.paths = property(	lambda self: LayerPathsProxy(self),
@@ -4745,6 +4767,10 @@ GSLayer.paths = property(	lambda self: LayerPathsProxy(self),
 
 		# delete path
 		del(layer.paths[0])
+
+		# copy paths from another layer
+		import copy
+		layer.paths = copy.copy(anotherlayer.paths)
 '''
 
 GSLayer.selection = property(	lambda self: LayerSelectionProxy(self), lambda self, value: LayerSelectionProxy(self).setter(value))
