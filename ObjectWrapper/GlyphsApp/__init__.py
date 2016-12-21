@@ -4896,7 +4896,7 @@ GSLayer.bezierPath = property(	 lambda self: self.pyobjc_instanceMethods.bezierP
 
 	.. versionadded:: 2.3
 
-	The layer as an NSBezierPath object. Useful for drawing glyphs in plugins.
+	The layer as an NSBezierPath object. Useful for drawing glyphs in plug-ins.
 
 	.. code-block:: python
 	
@@ -4912,7 +4912,7 @@ GSLayer.openBezierPath = property(	 lambda self: self.pyobjc_instanceMethods.ope
 
 	.. versionadded:: 2.3
 
-	All open paths of the layer as an NSBezierPath object. Useful for drawing glyphs in plugins.
+	All open paths of the layer as an NSBezierPath object. Useful for drawing glyphs as outlines in plug-ins.
 
 	.. code-block:: python
 	
@@ -4923,34 +4923,34 @@ GSLayer.openBezierPath = property(	 lambda self: self.pyobjc_instanceMethods.ope
 	:type: NSBezierPath
 '''
 
-GSLayer.drawBezierPath = property(	 lambda self: self.pyobjc_instanceMethods.drawBezierPath() )
-'''.. attribute:: bezierPath
+GSLayer.completeBezierPath = property(	 lambda self: self.pyobjc_instanceMethods.drawBezierPath() )
+'''.. attribute:: completeBezierPath
 
 	.. versionadded:: 2.3.1
 
-	The layer as an NSBezierPath object including path from components. Useful for drawing glyphs in plugins.
+	The layer as an NSBezierPath object including paths from components. Useful for drawing glyphs in plug-ins.
 
 	.. code-block:: python
 	
 		# draw the path into the Edit view
 		NSColor.redColor().set()
-		layer.drawBezierPath.fill()
+		layer.completeBezierPath.fill()
 
 	:type: NSBezierPath
 '''
 
-GSLayer.drawOpenBezierPath = property(	 lambda self: self.pyobjc_instanceMethods.drawOpenBezierPath() )
-'''.. attribute:: openBezierPath
+GSLayer.completeOpenBezierPath = property(	 lambda self: self.pyobjc_instanceMethods.drawOpenBezierPath() )
+'''.. attribute:: completeOpenBezierPath
 
 	.. versionadded:: 2.3.1
 
-	All open paths of the layer as an NSBezierPath object including path from components. Useful for drawing glyphs in plugins.
+	All open paths of the layer as an NSBezierPath object including paths from components. Useful for drawing glyphs as outlines in plugins.
 
 	.. code-block:: python
 	
 		# draw the path into the Edit view
 		NSColor.redColor().set()
-		layer.drawOpenBezierPath.stroke()
+		layer.completeOpenBezierPath.stroke()
 
 	:type: NSBezierPath
 '''
