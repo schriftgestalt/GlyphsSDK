@@ -819,6 +819,15 @@ class GlyphsAppTests(unittest.TestCase):
 		# GSLayer.bezierPath
 		self.assertIsInstance(layer.bezierPath, NSBezierPath)
 
+		# GSLayer.openBezierPath
+		self.assertIsInstance(layer.openBezierPath, NSBezierPath)
+
+		# GSLayer.completeBezierPath
+		self.assertIsInstance(layer.completeBezierPath, NSBezierPath)
+
+		# GSLayer.completeOpenBezierPath
+		self.assertIsInstance(layer.completeOpenBezierPath, NSBezierPath)
+
 		# GSLayer.userData
 		layer.userData["Hallo"] = "Welt"
 		self.assertDict(layer.userData)
