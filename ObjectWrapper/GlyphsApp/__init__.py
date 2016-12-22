@@ -4726,6 +4726,8 @@ GSLayer.hints = property(lambda self: LayerHintsProxy(self),
 		# copy hints from another layer
 		import copy
 		layer.hints = copy.copy(anotherlayer.hints)
+		# remember to reconnect the hints' nodes with the new layer's nodes
+
 '''
 
 GSLayer.anchors = property(lambda self: LayerAnchorsProxy(self),
