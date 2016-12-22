@@ -1170,7 +1170,7 @@ GSElement.x = property(lambda self: self.pyobjc_instanceMethods.position().x,
 GSElement.y = property(lambda self: self.pyobjc_instanceMethods.position().y,
 	lambda self, value: self.setPosition_(NSMakePoint(self.x, value)))
 
-GSElement.layer = property(lambda self: self.parent())
+GSElement.layer = property(lambda self: self.parent)
 
 
 
@@ -1244,14 +1244,25 @@ class FontGlyphsProxy (Proxy):
 	def __getitem__(self, Key):
 		if type(Key) == slice:
 			return self.values().__getitem__(Key)
+
+		# by index
 		if type(Key) is int:
 			if Key < 0:
 				Key = self.__len__() + Key
 			return self._owner.glyphAtIndex_(Key)
+
+		# by glyph name
 		elif self._owner.glyphForName_(Key):
 			return self._owner.glyphForName_(Key)
+
+		# by string representation as u'ä'
 		elif len(Key) == 1 and self._owner.glyphForCharacter_(ord(Key)):
 			return self._owner.glyphForCharacter_(ord(Key))
+		
+		# by unicode as 'uniXXXX'
+		elif Key.startswith('uni'):
+			return self._owner.glyphForUnicode_(Key[3:].upper())
+
 	def __setitem__(self, Key, Glyph):
 		if type(Key) is int:
 			if Key < 0:
@@ -2158,8 +2169,12 @@ GSFont.glyphs = property(lambda self: FontGlyphsProxy(self),
 		print font.glyphs['A']
 		<GSGlyph "A" with 4 layers>
 
-		# Access a glyph by character (new in v2.4)
+		# Access a glyph by character (new in v2.4.1)
 		print font.glyphs[u'Ư']
+		<GSGlyph "Uhorn" with 4 layers>
+
+		# Access a glyph by unicode (new in v2.4.1)
+		print font.glyphs['uni01AF']
 		<GSGlyph "Uhorn" with 4 layers>
 		
 		# Add a glyph
