@@ -212,8 +212,8 @@ class GlyphsAppTests(unittest.TestCase):
 		# GSFont.glyphs
 		self.assertGreaterEqual(len(list(font.glyphs)), 1)
 		self.assertEqual(font.glyphs[u'ä'], font.glyphs['adieresis'])
-		self.assertEqual(font.glyphs['uni00E4'], font.glyphs['adieresis'])
-		self.assertEqual(font.glyphs['uni00e4'], font.glyphs['adieresis'])
+		self.assertEqual(font.glyphs['00E4'], font.glyphs['adieresis'])
+		self.assertEqual(font.glyphs['00e4'], font.glyphs['adieresis'])
 
 		# GSFont.classes
 		font.classes = []

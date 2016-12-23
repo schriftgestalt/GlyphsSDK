@@ -1259,9 +1259,9 @@ class FontGlyphsProxy (Proxy):
 		elif len(Key) == 1 and self._owner.glyphForCharacter_(ord(Key)):
 			return self._owner.glyphForCharacter_(ord(Key))
 		
-		# by unicode as 'uniXXXX'
-		elif Key.startswith('uni'):
-			return self._owner.glyphForUnicode_(Key[3:].upper())
+		# by unicode
+		else:
+			return self._owner.glyphForUnicode_(Key.upper())
 
 	def __setitem__(self, Key, Glyph):
 		if type(Key) is int:
@@ -2174,7 +2174,7 @@ GSFont.glyphs = property(lambda self: FontGlyphsProxy(self),
 		<GSGlyph "Uhorn" with 4 layers>
 
 		# Access a glyph by unicode (new in v2.4.1)
-		print font.glyphs['uni01AF']
+		print font.glyphs['01AF']
 		<GSGlyph "Uhorn" with 4 layers>
 		
 		# Add a glyph
