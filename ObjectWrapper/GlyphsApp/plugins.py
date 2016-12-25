@@ -810,6 +810,8 @@ class PalettePlugin (NSObject, GlyphsPaletteProtocol):
 		try:
 		# if True:
 			self.name = 'My Palette'
+
+			self.sortId = 0
 			
 			# Call settings
 			if hasattr(self, 'settings'):
@@ -856,6 +858,9 @@ class PalettePlugin (NSObject, GlyphsPaletteProtocol):
 			return self.name
 		except:
 			self.logError(traceback.format_exc())
+	
+	def sortID(self):
+		return self.sortId
 	
 	def windowController(self):
 		try:
