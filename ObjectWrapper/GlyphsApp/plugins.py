@@ -24,10 +24,22 @@ def LogToConsole_AsClassExtension(self, message):
 def LogError_AsClassExtension(self, message):
 	LogError(message) # from GlyhsApp.py
 
-def LoadNib(self, nibname):
-	# Replace "SliderView" with the name of your dialog (without .extension)
-	if not NSBundle.loadNibNamed_owner_(nibname, self):
-		self.logError("Error loading %s.nib." % nibname)
+def LoadNib(self, nibname, path = None):
+	if path and len(path) > 10:
+		bundlePath = path[:path.find("/Contents/Resources/")]
+		bundle = NSBundle.bundleWithPath_(bundlePath)
+		nib = NSNib.alloc().initWithNibNamed_bundle_(nibname, bundle)
+		if not nib:
+			self.logError("Error loading nib for Class: %s", self.__class__.__name__)
+		
+		result = nib.instantiateWithOwner_topLevelObjects_(self, None)
+		if not result or not result[0]:
+			self.logError("Error instantiating nib for Class: %s", self.__class__.__name__)
+		else:
+			self.topLevelObjects = result[1]
+	else:
+		if not NSBundle.loadNibNamed_owner_(nibname, self):
+			self.logError("Error loading %s.nib." % nibname)
 
 def setUpMenuHelper(Menu, Items, defaultTarget):
 	if type(Items) == list:
