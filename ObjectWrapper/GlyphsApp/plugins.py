@@ -55,6 +55,12 @@ def setUpMenuHelper(Menu, Items, defaultTarget):
 						newMenuItem.setView_(view)
 				except:
 					LogToConsole(traceback.format_exc(), "setUpMenuHelper") # from GlyhsApp.py
+			if "state" in entry:
+				state = entry["state"]
+				if state == ONSTATE or state == OFFSTATE or state == MIXEDSTATE:
+					newMenuItem.setState_(entry["state"])
+				else:
+					LogToConsole("illegal state for menu item '%s'" % entry["name"], "setUpMenuHelper")
 			if index >= 0:
 				Menu.insertItem_atIndex_(newMenuItem, index)
 			else:
