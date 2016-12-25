@@ -4940,6 +4940,8 @@ GSLayer.openBezierPath = property(	 lambda self: self.pyobjc_instanceMethods.ope
 	:type: NSBezierPath
 '''
 
+GSLayer.drawBezierPath = property(	 lambda self: self.pyobjc_instanceMethods.drawBezierPath() )
+
 GSLayer.completeBezierPath = property(	 lambda self: self.pyobjc_instanceMethods.drawBezierPath() )
 '''.. attribute:: completeBezierPath
 
@@ -4956,7 +4958,9 @@ GSLayer.completeBezierPath = property(	 lambda self: self.pyobjc_instanceMethods
 	:type: NSBezierPath
 '''
 
-GSLayer.completeOpenBezierPath = property(	 lambda self: self.pyobjc_instanceMethods.drawOpenBezierPath() )
+GSLayer.drawOpenBezierPath = property(	 lambda self: self.pyobjc_instanceMethods.drawOpenBezierPath() )
+
+GSLayer.completeOpenBezierPath = property(lambda self: self.pyobjc_instanceMethods.drawOpenBezierPath() )
 '''.. attribute:: completeOpenBezierPath
 
 	.. versionadded:: 2.3.1
