@@ -4654,6 +4654,9 @@ GSLayer.components = property(lambda self: LayerComponentsProxy(self),
 		import copy
 		layer.components = copy.copy(anotherlayer.components)
 
+		# copy one component to another layer
+		layer.components.append(anotherlayer.component[0].copy())
+
 '''
 
 GSLayer.guides = property(lambda self: LayerGuideLinesProxy(self),
@@ -4940,7 +4943,11 @@ GSLayer.openBezierPath = property(	 lambda self: self.pyobjc_instanceMethods.ope
 	:type: NSBezierPath
 '''
 
-GSLayer.drawBezierPath = property(	 lambda self: self.pyobjc_instanceMethods.drawBezierPath() )
+# keep for compatibility:
+def Layer__drawBezierPath(self):
+	print "layer.drawBezierPath is deprecated. Please use layer.completeBezierPath"
+	return self.pyobjc_instanceMethods.drawBezierPath()
+GSLayer.drawBezierPath = property(	 lambda self: Layer__drawBezierPath(self) )
 
 GSLayer.completeBezierPath = property(	 lambda self: self.pyobjc_instanceMethods.drawBezierPath() )
 '''.. attribute:: completeBezierPath
@@ -4957,9 +4964,11 @@ GSLayer.completeBezierPath = property(	 lambda self: self.pyobjc_instanceMethods
 
 	:type: NSBezierPath
 '''
-
-GSLayer.drawOpenBezierPath = property(	 lambda self: self.pyobjc_instanceMethods.drawOpenBezierPath() )
-
+# keep for compatibility:
+def Layer__drawOpenBezierPath(self):
+	print "layer.drawBezierPath is deprecated. Please use layer.completeBezierPath"
+	return self.pyobjc_instanceMethods.drawOpenBezierPath()
+GSLayer.drawOpenBezierPath = property(	 lambda self: Layer__drawOpenBezierPath(self) )
 GSLayer.completeOpenBezierPath = property(lambda self: self.pyobjc_instanceMethods.drawOpenBezierPath() )
 '''.. attribute:: completeOpenBezierPath
 
