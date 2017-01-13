@@ -6477,8 +6477,20 @@ GSNode.name = property(__GSNode__get_name, __GSNode__set_name, doc="")
 	:type: unicode
 	'''
 
+GSNode.userData = property(lambda self: UserDataProxy(self))
+'''.. attribute:: userData
 
-'''	
+	.. versionadded:: 2.4.1
+
+	A dictionary to store user data. Use a unique key and only use objects that can be stored in a property list (string, list, dict, numbers, NSData) otherwise the data will not be recoverable from the saved file.
+	:type: dict
+	.. code-block:: python
+		# set value
+		node.userData['rememberToMakeCoffee'] = True
+'''
+
+'''
+
 
 ---------
 Functions
