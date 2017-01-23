@@ -1208,7 +1208,7 @@ class ReporterPlugin (NSObject, GlyphsReporterProtocol):
 				NSForegroundColorAttributeName: fontColor }
 			displayText = NSAttributedString.alloc().initWithString_attributes_(unicode(text), fontAttributes)
 			textAlignment = alignment[align] # top left: 6, top center: 7, top right: 8, center left: 3, center center: 4, center right: 5, bottom left: 0, bottom center: 1, bottom right: 2
-			displayText.drawAtPoint_alignment_(displayText, textPosition, textAlignment)
+			displayText.drawAtPoint_alignment_(textPosition, textAlignment)
 		except:
 			self.logError(traceback.format_exc())
 	
