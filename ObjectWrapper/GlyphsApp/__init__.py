@@ -1445,7 +1445,7 @@ class CustomParametersProxy(Proxy):
 		return self._owner.pyobjc_instanceMethods.customParameters()
 	def setterMethod(self):
 		return self._owner.setCustomParameters_
-	
+
 
 class FontClassesProxy (Proxy):
 	def __getitem__(self, Key):
@@ -1478,6 +1478,13 @@ class FontClassesProxy (Proxy):
 			yield self._owner.objectInClassesAtIndex_(index)
 	def append(self, Class):
 		self._owner.addClass_(Class)
+	def extend(self, Classes):
+		for Class in Classes:
+			self._owner.addClass_(Class)
+	def remove(self, Class):
+		self._owner.removeClass_(Class)
+	def insert(self, Index, Class):
+		self._owner.insertObject_inClassesAtIndex_(Class, Index)
 	def __len__(self):
 		return self._owner.countOfClasses()
 	def values(self):
@@ -1517,7 +1524,13 @@ class FontFeaturesProxy (Proxy):
 			yield self._owner.objectInFeaturesAtIndex_(index)
 	def append(self, Feature):
 		self._owner.addFeature_(Feature)
-
+	def extend(self, Features):
+		for Feature in Features:
+			self._owner.addFeature_(Feature)
+	def remove(self, Class):
+		self._owner.removeFeature_(Class)
+	def insert(self, Index, Class):
+		self._owner.insertObject_inFeaturesAtIndex_(Class, Index)
 	def __len__(self):
 		return self._owner.countOfFeatures()
 	def text(self):
