@@ -4445,7 +4445,8 @@ GSGlyph.updateGlyphInfo = __updateGlyphInfo
 
 def Glyph_Duplicate(self, name = None):
 	
-	newGlyph = self.copyThin_layers_(False, True)
+	newGlyph = copy.copy(self)
+#	newGlyph = self.copyThin_layers_(False, True)
 	if newGlyph.unicode:
 		newGlyph.unicode = None
 	if name:
