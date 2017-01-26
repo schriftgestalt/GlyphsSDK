@@ -1793,6 +1793,13 @@ class LayerComponentsProxy (Proxy):
 		return [x.copy() for x in self.values()]
 	def append(self, Component):
 		self._owner.addComponent_(Component)
+	def extend(self, Components):
+		for Component in Components:
+			self._owner.addComponent_(Component)
+	def insert(self, Index, Component):
+		self._owner.insertComponent_atIndex_(Component, Index)
+	def remove(self, Component):
+		self._owner.removeComponent_(Component)
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.components()
 	def setterMethod(self):

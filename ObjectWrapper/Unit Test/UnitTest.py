@@ -1060,7 +1060,14 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertEqual(len(layer.components), 2)
 		layer.components = [GSComponent('a'), GSComponent('dieresis')]
 		self.assertEqual(len(layer.components), 2)
-
+		layer.components = []
+		layer.components.extend([GSComponent('a'), GSComponent('dieresis')])
+		self.assertEqual(len(layer.components), 2)
+		newComponent = GSComponent('dieresis')
+		layer.components.insert(0, newComponent)
+		self.assertEqual(newComponent, layer.components[0])
+		layer.components.remove(layer.components[0])
+		self.assertEqual(len(layer.components), 2)
 
 		# GSComponent.position
 		self.assertIsInstance(component.position, NSPoint)
