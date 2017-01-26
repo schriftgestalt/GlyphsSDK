@@ -330,7 +330,24 @@ class GlyphsAppTests(unittest.TestCase):
 		
 		# GSFont.customParameters
 		font.customParameters['trademark'] = 'ThisFont is a trademark by MyFoundry.com'
-		self.assertGreaterEqual(len(list(font.customParameters)), 1)
+		self.assertEqual(font.customParameters['trademark'], 'ThisFont is a trademark by MyFoundry.com')
+		amount = len(list(font.customParameters))
+		newParameter = GSCustomParameter('hello1', 'world1')
+		font.customParameters.append(newParameter)
+		self.assertEqual(newParameter, list(font.customParameters)[-1])
+		del font.customParameters[-1]
+		newParameter1 = GSCustomParameter('hello2', 'world2')
+		newParameter2 = GSCustomParameter('hello3', 'world3')
+		font.customParameters.extend([newParameter1, newParameter2])
+		self.assertEqual(newParameter1, list(font.customParameters)[-2])
+		self.assertEqual(newParameter2, list(font.customParameters)[-1])
+		font.customParameters.remove(list(font.customParameters)[-1])
+		font.customParameters.remove(list(font.customParameters)[-1])
+		newParameter = GSCustomParameter('hello1', 'world1')
+		font.customParameters.insert(0, newParameter)
+		self.assertEqual(newParameter, list(font.customParameters)[0])
+		font.customParameters.remove(list(font.customParameters)[0])
+		self.assertEqual(amount, len(list(font.customParameters)))
 		del(font.customParameters['trademark'])
 		
 		# GSFont.grid

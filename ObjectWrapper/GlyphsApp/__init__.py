@@ -1430,6 +1430,15 @@ class CustomParametersProxy(Proxy):
 			yield self._owner.objectInCustomParametersAtIndex_(index)
 	def append(self, Parameter):
 		self._owner.addCustomParameter_(Parameter)
+	def extend(self, Parameters):
+		for Parameter in Parameters:
+			self._owner.addCustomParameter_(Parameter)
+	def remove(self, Parameter):
+		self._owner.removeObjectFromCustomParametersForKey_(Parameter.name)
+	def insert(self, Index, Parameter):
+		customParameters = copy.copy(self.values())
+		customParameters.insert(Index, Parameter)
+		self._owner.setCustomParameters_(customParameters)
 	def __len__(self):
 		return self._owner.countOfCustomParameters()
 	def values(self):
