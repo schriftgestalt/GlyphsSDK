@@ -856,6 +856,25 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertEqual(len(layer.annotations), 1)
 		del layer.annotations[0]
 		self.assertEqual(len(layer.annotations), 0)
+		newAnnotation1 = GSAnnotation()
+		newAnnotation1.type = ARROW
+		newAnnotation2 = GSAnnotation()
+		newAnnotation2.type = CIRCLE
+		newAnnotation3 = GSAnnotation()
+		newAnnotation3.type = PLUS
+		layer.annotations.extend([newAnnotation1, newAnnotation2, newAnnotation3])
+		self.assertEqual(layer.annotations[-3], newAnnotation1)
+		self.assertEqual(layer.annotations[-2], newAnnotation2)
+		self.assertEqual(layer.annotations[-1], newAnnotation3)
+		newAnnotation = GSAnnotation()
+		newAnnotation.type = MINUS
+		layer.annotations.insert(0, newAnnotation)
+		self.assertEqual(layer.annotations[0], newAnnotation)
+		layer.annotations.remove(layer.annotations[0])
+		layer.annotations.remove(layer.annotations[-1])
+		layer.annotations.remove(layer.annotations[-1])
+		layer.annotations.remove(layer.annotations[-1])
+		self.assertEqual(len(layer.annotations), 0)
 
 		# GSLayer.hints
 		layer = Glyphs.font.glyphs['a'].layers[0]

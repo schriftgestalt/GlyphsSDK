@@ -1863,6 +1863,10 @@ class LayerAnnotationProxy (Proxy):
 	def __getitem__(self, Key):
 		if type(Key) == slice:
 			return self.values().__getitem__(Key)
+		elif type(Key) == int:
+			if Key < 0:
+				Key = self.__len__() + Key
+			return self._owner.objectInAnnotationsAtIndex_(Key)
 		return self._owner.objectInAnnotationsAtIndex_(Key)
 	def __setitem__(self, Key, Annotation):
 		self._owner.insertObject_inAnnotationsAtIndex_(Annotation, Key)
@@ -1872,6 +1876,15 @@ class LayerAnnotationProxy (Proxy):
 		return [x.copy() for x in self.values()]
 	def append(self, Annotation):
 		self._owner.addAnnotation_(Annotation)
+	def extend(self, Annotations):
+		for Annotation in Annotations:
+			self._owner.addAnnotation_(Annotation)
+	def insert(self, Index, Annotation):
+		annotations = self.values()
+		annotations.insert(Index, Annotation)
+		self._owner.setAnnotations_(annotations)
+	def remove(self, Annotation):
+		self._owner.removeAnnotation_(Annotation)
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.annotations()
 	def setterMethod(self):
