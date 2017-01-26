@@ -827,6 +827,23 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertEqual(len(layer.guides), 1)
 		del layer.guides[0]
 		self.assertEqual(len(layer.guides), 0)
+		newGuide1 = GSGuideLine()
+		newGuide1.position = NSPoint(100, 100)
+		newGuide1.angle = -10.0
+		newGuide2 = GSGuideLine()
+		newGuide2.position = NSPoint(100, 100)
+		newGuide2.angle = -10.0
+		layer.guides.extend([newGuide1, newGuide2])
+		self.assertEqual(layer.guides[-2], newGuide1)
+		self.assertEqual(layer.guides[-1], newGuide2)
+		newGuide = GSGuideLine()
+		layer.guides.insert(0, newGuide)
+		self.assertEqual(layer.guides[0], newGuide)
+		layer.guides.remove(layer.guides[-1])
+		layer.guides.remove(layer.guides[-1])
+		layer.guides.remove(layer.guides[0])
+		self.assertEqual(len(layer.guides), 0)
+
 
 		# GSLayer.annotations
 		layer.annotations = []

@@ -1834,6 +1834,10 @@ class LayerGuideLinesProxy (Proxy):
 	def __getitem__(self, Key):
 		if type(Key) == slice:
 			return self.values().__getitem__(Key)
+		elif type(Key) == int:
+			if Key < 0:
+				Key = self.__len__() + Key
+			return self._owner.guideLineAtIndex_(Key)
 		return self._owner.guideLineAtIndex_(Key)
 	def __setitem__(self, Key, Component):
 		self._owner.setGuideLine_atIndex_(Component, Key)
@@ -1843,6 +1847,13 @@ class LayerGuideLinesProxy (Proxy):
 		return [x.copy() for x in self.values()]
 	def append(self, GuideLine):
 		self._owner.addGuideLine_(GuideLine)
+	def extend(self, GuideLines):
+		for GuideLine in GuideLines:
+			self._owner.addGuideLine_(GuideLine)
+	def insert(self, Index, GuideLine):
+		self._owner.insertGuideLine_atIndex_(GuideLine, Index)
+	def remove(self, GuideLine):
+		self._owner.removeGuideLine_(GuideLine)
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.guideLines()
 	def setterMethod(self):
