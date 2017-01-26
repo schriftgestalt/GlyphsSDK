@@ -294,14 +294,25 @@ class GlyphsAppTests(unittest.TestCase):
 		
 		# GSFont.featurePrefixes
 		font.featurePrefixes = []
-		self.assertEqual(len(font.featurePrefixes), 0)
+		amount = len(font.featurePrefixes)
 		font.featurePrefixes.append(GSFeaturePrefix('LanguageSystems', 'languagesystem DFLT dflt;'))
-		self.assertIsNotNone(font.featurePrefixes['LanguageSystems'].__repr__())
+		self.assertIsNotNone(font.featurePrefixes[-1].__repr__())
 		self.assertEqual(len(font.featurePrefixes), 1)
-		self.assertIn('LanguageSystems', str(font.featurePrefixes))
-		self.assertIn('languagesystem DFLT dflt;', font.featurePrefixes['LanguageSystems'].code)
+		self.assertIn('<GSFeaturePrefix "LanguageSystems">', str(font.featurePrefixes))
+		self.assertIn('languagesystem DFLT dflt;', font.featurePrefixes[-1].code)
 		del(font.featurePrefixes['LanguageSystems'])
-		self.assertEqual(len(font.featurePrefixes), 0)
+		newFeaturePrefix1 = GSFeaturePrefix('LanguageSystems1', 'languagesystem DFLT dflt;')
+		newFeaturePrefix2 = GSFeaturePrefix('LanguageSystems2', 'languagesystem DFLT dflt;')
+		font.featurePrefixes.extend([newFeaturePrefix1, newFeaturePrefix2 ])
+		self.assertEqual(newFeaturePrefix1, font.featurePrefixes[-2])
+		self.assertEqual(newFeaturePrefix2, font.featurePrefixes[-1])
+		newFeaturePrefix = GSFeaturePrefix('LanguageSystems3', 'languagesystem DFLT dflt;')
+		font.featurePrefixes.insert(0, newFeaturePrefix)
+		self.assertEqual(newFeaturePrefix, font.featurePrefixes[0])
+		font.featurePrefixes.remove(font.featurePrefixes[-1])
+		font.featurePrefixes.remove(font.featurePrefixes[-1])
+		font.featurePrefixes.remove(font.featurePrefixes[0])
+		self.assertEqual(len(font.featurePrefixes), amount)
 		
 		# GSFont.copyright
 		self.assertUnicode(font.copyright)

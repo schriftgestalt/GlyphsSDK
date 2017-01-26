@@ -1577,8 +1577,15 @@ class FontFeaturePrefixesProxy (Proxy):
 			FeaturePrefix = self._owner.featurePrefixForTag_(Key)
 			if FeaturePrefix is not None:
 				return self._owner.removeFeaturePrefix_(FeaturePrefix)
-	def append(self, Feature):
-		self._owner.addFeaturePrefix_(Feature)
+	def append(self, FeaturePrefix):
+		self._owner.addFeaturePrefix_(FeaturePrefix)
+	def extend(self, FeaturePrefixes):
+		for FeaturePrefix in FeaturePrefixes:
+			self._owner.addFeaturePrefix_(FeaturePrefix)
+	def remove(self, FeaturePrefix):
+		self._owner.removeFeaturePrefix_(FeaturePrefix)
+	def insert(self, Index, FeaturePrefix):
+		self._owner.insertObject_inFeaturePrefixesAtIndex_(FeaturePrefix, Index)
 	def text(self):
 		LineList = []
 		for Prefixe in self._owner.pyobjc_instanceMethods.featurePrefixes():
