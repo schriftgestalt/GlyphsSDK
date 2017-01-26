@@ -1755,6 +1755,13 @@ class GlyphLayerProxy (Proxy):
 		if not Layer.associatedMasterId:
 			Layer.associatedMasterId = self._owner.parent.masters[0].id
 		self._owner.setLayer_forKey_(Layer, NSString.UUID())
+	def extend(self, Layers):
+		for Layer in Layers:
+			self.append(Layer)
+	def remove(self, Layer):
+		return self._owner.removeLayerForKey_(Layer.layerId)
+	def insert(self, Index, Layer):
+		self.append(Layer)
 	def setter(self, values):
 		newLayers = NSMutableDictionary.dictionary()
 		if type(values) == list or type(values) == tuple or type(values) == type(self):

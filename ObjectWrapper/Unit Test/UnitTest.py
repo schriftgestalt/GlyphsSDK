@@ -651,7 +651,7 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertTrue(os.path.exists(path))
 		if os.path.exists(path):
 			os.remove(path)
-			
+
 
 
 	def test_GSGlyph(self):
@@ -665,6 +665,28 @@ class GlyphsAppTests(unittest.TestCase):
 		
 		# GSGlyph.layers
 		self.assertIsNotNone(glyph.layers)
+		amount = len(glyph.layers)
+		newLayer = GSLayer()
+		newLayer.name = '1'
+		glyph.layers.append(newLayer)
+		self.assertEqual(newLayer, glyph.layers[-1])
+		del glyph.layers[-1]
+		newLayer1 = GSLayer()
+		newLayer1.name = '2'
+		newLayer2 = GSLayer()
+		newLayer2.name = '3'
+		glyph.layers.extend([newLayer1, newLayer2])
+		self.assertEqual(newLayer1, glyph.layers[-2])
+		self.assertEqual(newLayer2, glyph.layers[-1])
+		newLayer = GSLayer()
+		newLayer.name = '4'
+		glyph.layers.insert(0, newLayer) # indices here don't make sense because layer get appended using a UUID
+		self.assertEqual(newLayer, glyph.layers[-1]) # so the latest layer got appended at the end also
+		glyph.layers.remove(glyph.layers[-1])
+		glyph.layers.remove(glyph.layers[-1])
+		glyph.layers.remove(glyph.layers[-1])
+		self.assertEqual(amount, len(glyph.layers))
+		Glyphs.redraw()
 		
 		# GSGlyph.name
 		self.assertUnicode(glyph.name)
