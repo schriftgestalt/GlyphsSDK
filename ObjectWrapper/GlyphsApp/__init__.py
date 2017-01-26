@@ -1343,6 +1343,15 @@ class FontFontMasterProxy (Proxy):
 		return self._owner.pyobjc_instanceMethods.fontMasters()
 	def setterMethod(self):
 		return self._owner.setFontMasters_
+	def append(self, FontMaster):
+		self._owner.addFontMaster_(FontMaster)
+	def remove(self, FontMaster):
+		self._owner.removeFontMaster_(FontMaster)
+	def insert(self, Index, FontMaster):
+		self._owner.insertFontMaster_atIndex_(FontMaster, Index)
+	def extend(self, FontMasters):
+		for FontMaster in FontMasters:
+			self._owner.addFontMaster_(FontMaster)
 	
 
 
@@ -1959,6 +1968,10 @@ class PathNodesProxy (Proxy):
 		return self._owner.countOfNodes()
 	def append(self, Node):
 		self._owner.addNode_(Node)
+	def remove(self, Node):
+		self._owner.removeNode_(Node)
+	def insert(self, Index, Node):
+		self._owner.insertNode_atIndex_(Node, Index)
 	def extend(self, objects):
 		self._owner.addNodes_(list(objects))
 	def values(self):
