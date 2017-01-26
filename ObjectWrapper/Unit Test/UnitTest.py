@@ -889,6 +889,26 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertEqual(len(layer.hints), 1)
 		del layer.hints[0]
 		self.assertEqual(len(layer.hints), 0)
+		newHint1 = GSHint()
+		newHint1.originNode = layer.paths[0].nodes[0]
+		newHint1.targetNode = layer.paths[0].nodes[1]
+		newHint1.type = STEM
+		newHint2 = GSHint()
+		newHint2.originNode = layer.paths[0].nodes[0]
+		newHint2.targetNode = layer.paths[0].nodes[1]
+		newHint2.type = STEM
+		layer.hints.extend([newHint1, newHint2])
+		newHint = GSHint()
+		newHint.originNode = layer.paths[0].nodes[0]
+		newHint.targetNode = layer.paths[0].nodes[1]
+		self.assertEqual(layer.hints[-2], newHint1)
+		self.assertEqual(layer.hints[-1], newHint2)
+		layer.hints.insert(0, newHint)
+		self.assertEqual(layer.hints[0], newHint)
+		layer.hints.remove(layer.hints[0])
+		layer.hints.remove(layer.hints[-1])
+		layer.hints.remove(layer.hints[-1])
+		self.assertEqual(len(layer.hints), 0)
 
 		# GSLayer.anchors
 		if layer.anchors['top']:

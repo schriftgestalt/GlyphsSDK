@@ -1896,6 +1896,10 @@ class LayerHintsProxy (Proxy):
 	def __getitem__(self, Key):
 		if type(Key) == slice:
 			return self.values().__getitem__(Key)
+		elif type(Key) == int:
+			if Key < 0:
+				Key = self.__len__() + Key
+			return self._owner.hintAtIndex_(Key)
 		return self._owner.hintAtIndex_(Key)
 	def __setitem__(self, Key, Component):
 		self._owner.setHint_atIndex_(Component, Key)
@@ -1905,6 +1909,13 @@ class LayerHintsProxy (Proxy):
 		return [x.copy() for x in self.values()]
 	def append(self, Hint):
 		self._owner.addHint_(Hint)
+	def extend(self, Hints):
+		for Hint in Hints:
+			self._owner.addHint_(Hint)
+	def insert(self, Index, Hint):
+		self._owner.insertHint_atIndex_(Hint, Index)
+	def remove(self, Hint):
+		self._owner.removeHint_(Hint)
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.hints()
 	def setterMethod(self):
