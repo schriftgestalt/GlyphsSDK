@@ -222,12 +222,25 @@ class GlyphsAppTests(unittest.TestCase):
 		font.masters.remove(font.masters[0])
 		self.assertEqual(amount, len(font.masters))
 
-
-		
 		# GSFont.instances
-		font.instances.append(GSInstance())
+		amount = len(font.instances)
 		self.assertGreaterEqual(len(list(font.instances)), 1)
-		del(font.instances[-1])
+		newInstance = GSInstance()
+		font.instances.append(newInstance)
+		self.assertEqual(newInstance, font.instances[-1])
+		del font.instances[-1]
+		newInstance1 = GSInstance()
+		newInstance2 = GSInstance()
+		font.instances.extend([newInstance1, newInstance2])
+		self.assertEqual(newInstance1, font.instances[-2])
+		self.assertEqual(newInstance2, font.instances[-1])
+		font.instances.remove(font.instances[-1])
+		font.instances.remove(font.instances[-1])
+		newInstance = GSInstance()
+		font.instances.insert(0, newInstance)
+		self.assertEqual(newInstance, font.instances[0])
+		font.instances.remove(font.instances[0])
+		self.assertEqual(amount, len(font.instances))
 		
 		# GSFont.glyphs
 		self.assertGreaterEqual(len(list(font.glyphs)), 1)
@@ -1037,6 +1050,7 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertEqual(path.parent, Glyphs.font.glyphs['a'].layers[0])
 
 		# GSPath.nodes
+		amount = len(path.nodes)
 		self.assertIsNotNone(list(path.nodes))
 		newNode = GSNode(NSPoint(20,20))
 		path.nodes.append(newNode)
@@ -1053,6 +1067,7 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertEqual(newNode2, path.nodes[-1])
 		del path.nodes[-2]
 		del path.nodes[-1]
+		self.assertEqual(amount, len(path.nodes))
 
 		# GSPath.segments
 		self.assertIsNotNone(list(path.segments))

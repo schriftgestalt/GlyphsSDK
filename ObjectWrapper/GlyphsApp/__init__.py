@@ -1380,6 +1380,13 @@ class FontInstancesProxy (Proxy):
 			yield self._owner.instanceAtIndex_(index)
 	def append(self, Instance):
 		self._owner.addInstance_(Instance)
+	def extend(self, Instances):
+		for Instance in Instances:
+			self._owner.addInstance_(Instance)
+	def remove(self, Instance):
+		self._owner.removeInstance_(Instance)
+	def insert(self, Index, Instance):
+		self._owner.insertInstance_atIndex_(Instance, Index)
 	def __len__(self):
 		return self._owner.countOfInstances()
 	def values(self):
