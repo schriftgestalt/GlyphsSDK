@@ -657,8 +657,7 @@ class GlyphsAppTests(unittest.TestCase):
 	def test_GSGlyph(self):
 		
 		font = Glyphs.font
-		font.glyphs['a'].duplicate('a.test')
-		glyph = font.glyphs['a.test']
+		glyph = font.glyphs['a'].duplicate('a.test')
 
 		# GSGlyph.parent
 		self.assertEqual(glyph.parent, Glyphs.font)
@@ -669,6 +668,7 @@ class GlyphsAppTests(unittest.TestCase):
 		newLayer = GSLayer()
 		newLayer.name = '1'
 		glyph.layers.append(newLayer)
+		self.assertIn('<GSLayer "1" (a.test)>', str(glyph.layers[-1]))
 		self.assertEqual(newLayer, glyph.layers[-1])
 		del glyph.layers[-1]
 		newLayer1 = GSLayer()
@@ -686,7 +686,6 @@ class GlyphsAppTests(unittest.TestCase):
 		glyph.layers.remove(glyph.layers[-1])
 		glyph.layers.remove(glyph.layers[-1])
 		self.assertEqual(amount, len(glyph.layers))
-		Glyphs.redraw()
 		
 		# GSGlyph.name
 		self.assertUnicode(glyph.name)
