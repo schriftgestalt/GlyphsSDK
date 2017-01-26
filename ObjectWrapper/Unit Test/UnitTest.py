@@ -12,7 +12,6 @@ from GlyphsApp import *
 import os, time
 import objc
 import copy
-from AppKit import *
 
 PathToTestFile = os.path.join(os.path.dirname(__file__), 'Glyphs Unit Test Sans.glyphs')
 
@@ -203,26 +202,7 @@ class GlyphsAppTests(unittest.TestCase):
 
 		
 		# GSFont.masters
-		amount = len(font.masters)
 		self.assertGreaterEqual(len(list(font.masters)), 1)
-		newMaster = GSFontMaster()
-		font.masters.append(newMaster)
-		self.assertEqual(newMaster, font.masters[-1])
-		del font.masters[-1]
-		newMaster1 = GSFontMaster()
-		newMaster2 = GSFontMaster()
-		font.masters.extend([newMaster1, newMaster2])
-		self.assertEqual(newMaster1, font.masters[-2])
-		self.assertEqual(newMaster2, font.masters[-1])
-		font.masters.remove(font.masters[-1])
-		font.masters.remove(font.masters[-1])
-		newMaster = GSFontMaster()
-		font.masters.insert(0, newMaster)
-		self.assertEqual(newMaster, font.masters[0])
-		font.masters.remove(font.masters[0])
-		self.assertEqual(amount, len(font.masters))
-
-
 		
 		# GSFont.instances
 		font.instances.append(GSInstance())
@@ -1038,21 +1018,6 @@ class GlyphsAppTests(unittest.TestCase):
 
 		# GSPath.nodes
 		self.assertIsNotNone(list(path.nodes))
-		newNode = GSNode(NSPoint(20,20))
-		path.nodes.append(newNode)
-		self.assertEqual(newNode, path.nodes[-1])
-		del path.nodes[-1]
-		newNode = GSNode(NSPoint(20,20))
-		path.nodes.insert(0, newNode)
-		self.assertEqual(newNode, path.nodes[0])
-		path.nodes.remove(path.nodes[0])
-		newNode1 = GSNode(NSPoint(10,10))
-		newNode2 = GSNode(NSPoint(20,20))
-		path.nodes.extend([newNode1, newNode2])
-		self.assertEqual(newNode1, path.nodes[-2])
-		self.assertEqual(newNode2, path.nodes[-1])
-		del path.nodes[-2]
-		del path.nodes[-1]
 
 		# GSPath.segments
 		self.assertIsNotNone(list(path.segments))
