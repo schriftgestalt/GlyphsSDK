@@ -1343,7 +1343,15 @@ class FontFontMasterProxy (Proxy):
 		return self._owner.pyobjc_instanceMethods.fontMasters()
 	def setterMethod(self):
 		return self._owner.setFontMasters_
-	
+	def append(self, FontMaster):
+		self._owner.addFontMaster_(FontMaster)
+	def remove(self, FontMaster):
+		self._owner.removeFontMaster_(FontMaster)
+	def insert(self, Index, FontMaster):
+		self._owner.insertFontMaster_atIndex_(FontMaster, Index)
+	def extend(self, FontMasters):
+		for FontMaster in FontMasters:
+			self._owner.addFontMaster_(FontMaster)
 
 
 class FontInstancesProxy (Proxy):
@@ -1959,6 +1967,10 @@ class PathNodesProxy (Proxy):
 		return self._owner.countOfNodes()
 	def append(self, Node):
 		self._owner.addNode_(Node)
+	def remove(self, Node):
+		self._owner.removeNode_(Node)
+	def insert(self, Index, Node):
+		self._owner.insertNode_atIndex_(Node, Index)
 	def extend(self, objects):
 		self._owner.addNodes_(list(objects))
 	def values(self):
@@ -4654,9 +4666,6 @@ GSLayer.components = property(lambda self: LayerComponentsProxy(self),
 		import copy
 		layer.components = copy.copy(anotherlayer.components)
 
-		# copy one component to another layer
-		layer.components.append(anotherlayer.component[0].copy())
-
 '''
 
 GSLayer.guides = property(lambda self: LayerGuideLinesProxy(self),
@@ -4943,12 +4952,6 @@ GSLayer.openBezierPath = property(	 lambda self: self.pyobjc_instanceMethods.ope
 	:type: NSBezierPath
 '''
 
-# keep for compatibility:
-def Layer__drawBezierPath(self):
-	print "layer.drawBezierPath is deprecated. Please use layer.completeBezierPath"
-	return self.pyobjc_instanceMethods.drawBezierPath()
-GSLayer.drawBezierPath = property(	 lambda self: Layer__drawBezierPath(self) )
-
 GSLayer.completeBezierPath = property(	 lambda self: self.pyobjc_instanceMethods.drawBezierPath() )
 '''.. attribute:: completeBezierPath
 
@@ -4964,12 +4967,8 @@ GSLayer.completeBezierPath = property(	 lambda self: self.pyobjc_instanceMethods
 
 	:type: NSBezierPath
 '''
-# keep for compatibility:
-def Layer__drawOpenBezierPath(self):
-	print "layer.drawBezierPath is deprecated. Please use layer.completeBezierPath"
-	return self.pyobjc_instanceMethods.drawOpenBezierPath()
-GSLayer.drawOpenBezierPath = property(	 lambda self: Layer__drawOpenBezierPath(self) )
-GSLayer.completeOpenBezierPath = property(lambda self: self.pyobjc_instanceMethods.drawOpenBezierPath() )
+
+GSLayer.completeOpenBezierPath = property(	 lambda self: self.pyobjc_instanceMethods.drawOpenBezierPath() )
 '''.. attribute:: completeOpenBezierPath
 
 	.. versionadded:: 2.3.1
@@ -6477,20 +6476,8 @@ GSNode.name = property(__GSNode__get_name, __GSNode__set_name, doc="")
 	:type: unicode
 	'''
 
-GSNode.userData = property(lambda self: UserDataProxy(self))
-'''.. attribute:: userData
 
-	.. versionadded:: 2.4.1
-
-	A dictionary to store user data. Use a unique key and only use objects that can be stored in a property list (string, list, dict, numbers, NSData) otherwise the data will not be recoverable from the saved file.
-	:type: dict
-	.. code-block:: python
-		# set value
-		node.userData['rememberToMakeCoffee'] = True
-'''
-
-'''
-
+'''	
 
 ---------
 Functions
