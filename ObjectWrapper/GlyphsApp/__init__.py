@@ -2361,6 +2361,9 @@ GSFont.userData = property(lambda self: UserDataProxy(self))
 	.. code-block:: python
 		# set value
 		font.userData['rememberToMakeCoffee'] = True
+
+		# delete value
+		del font.userData['rememberToMakeCoffee']
 '''
 GSFont.disablesNiceNames = property(lambda self: self.valueForKey_("disablesNiceNames").boolValue(), lambda self, value: self.setValue_forKey_(value, "disablesNiceNames"))
 '''.. attribute:: disablesNiceNames
@@ -2971,6 +2974,9 @@ GSFontMaster.userData = property(lambda self: UserDataProxy(self))
 	.. code-block:: python
 		# set value
 		font.masters[0].userData['rememberToMakeTea'] = True
+
+		# delete value
+		del font.masters[0].userData['rememberToMakeTea']
 '''
 GSFontMaster.customParameters = property(lambda self: CustomParametersProxy(self))
 '''.. attribute:: customParameters
@@ -4328,6 +4334,9 @@ GSGlyph.userData = property(lambda self: UserDataProxy(self))
 	.. code-block:: python
 		# set value
 		glyph.userData['rememberToMakeCoffee'] = True
+
+		# delete value
+		del glyph.userData['rememberToMakeCoffee']
 '''
 
 GSGlyph.smartComponentAxes = property(lambda self: GlyphSmartComponentAxesProxy(self), lambda self, value: GlyphSmartComponentAxesProxy(self).setter(value))
@@ -5056,6 +5065,9 @@ GSLayer.userData = property(lambda self: UserDataProxy(self))
 	.. code-block:: python
 		# set value
 		layer.userData['rememberToMakeCoffee'] = True
+
+		# delete value
+		del layer.userData['rememberToMakeCoffee']
 '''
 
 GSLayer.smartComponentPoleMapping = property(lambda self: SmartComponentPoleMappingProxy(self))
@@ -6536,6 +6548,9 @@ GSNode.userData = property(lambda self: UserDataProxy(self))
 	.. code-block:: python
 		# set value
 		node.userData['rememberToMakeCoffee'] = True
+
+		# delete value
+		del node.userData['rememberToMakeCoffee']
 '''
 
 '''
