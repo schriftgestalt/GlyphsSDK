@@ -2229,6 +2229,12 @@ def Font__repr__(self):
 	return "<GSFont \"%s\" v%s.%s with %s masters and %s instances>" % (self.familyName, self.versionMajor, self.versionMinor, len(self.masters), len(self.instances))
 GSFont.__repr__ = Font__repr__
 
+def Font__copy__(self, memo=None):
+	font = self.copy()
+	font.setParent_(self.parent)
+	return font
+GSFont.mutableCopyWithZone_ = Font__copy__
+
 
 GSFont.parent = property(lambda self: self.valueForKey_("parent"))
 '''.. attribute:: parent
@@ -2879,6 +2885,10 @@ def FontMaster__repr__(self):
 	return "<GSFontMaster \"%s\" width %s weight %s>" % (self.name, self.widthValue, self.weightValue)
 GSFontMaster.__repr__ = FontMaster__repr__;
 
+def FontMaster__copy__(self, memo=None):
+	return self.copy()
+GSFontMaster.mutableCopyWithZone_ = FontMaster__copy__
+
 '''
 
 Properties
@@ -3106,6 +3116,10 @@ def AlignmentZone__repr__(self):
 	return "<GSAlignmentZone pos %s size %s>" % (self.position, self.size)
 GSAlignmentZone.__repr__ = AlignmentZone__repr__;
 
+def AlignmentZone__copy__(self, memo=None):
+	return self.copy()
+GSAlignmentZone.mutableCopyWithZone_ = AlignmentZone__copy__
+
 
 '''
 Properties
@@ -3175,6 +3189,10 @@ GSInstance.__init__ = Instance__init__;
 def Instance__repr__(self):
 	return "<GSInstance \"%s\" width %s weight %s>" % (self.name, self.widthValue, self.weightValue)
 GSInstance.__repr__ = Instance__repr__;
+
+def Instance__copy__(self, memo=None):
+	return self.copy()
+GSInstance.mutableCopyWithZone_ = Instance__copy__
 
 
 '''
@@ -3498,6 +3516,10 @@ def CustomParameter__repr__(self):
 	return "<GSCustomParameter %s: %s>" % (self.name, self.value)
 GSCustomParameter.__repr__ = CustomParameter__repr__;
 
+def CustomParameter__copy__(self, memo=None):
+	return self.copy()
+GSCustomParameter.mutableCopyWithZone_ = CustomParameter__copy__
+
 
 '''
 Properties
@@ -3592,6 +3614,10 @@ def Class__repr__(self):
 	return "<GSClass \"%s\">" % (self.name)
 GSClass.__repr__ = Class__repr__;
 
+def Class__copy__(self, memo=None):
+	return self.copy()
+GSClass.mutableCopyWithZone_ = Class__copy__
+
 GSClass.name = property(lambda self: self.valueForKey_("name"), 
 							 lambda self, value: self.setName_(value))
 '''.. attribute:: name
@@ -3669,6 +3695,10 @@ GSFeaturePrefix.__init__ = FeaturePrefix__init__;
 def FeaturePrefix__repr__(self):
 	return "<GSFeaturePrefix \"%s\">" % (self.name)
 GSFeaturePrefix.__repr__ = FeaturePrefix__repr__;
+
+def FeaturePrefix__copy__(self, memo=None):
+	return self.copy()
+GSFeaturePrefix.mutableCopyWithZone_ = FeaturePrefix__copy__
 
 GSFeaturePrefix.name = property(lambda self: self.valueForKey_("name"),
 						lambda self, value: self.setName_(value))
@@ -3759,6 +3789,10 @@ GSFeature.__init__ = Feature__init__;
 def Feature__repr__(self):
 	return "<GSFeature \"%s\">" % (self.name)
 GSFeature.__repr__ = Feature__repr__;
+
+def Feature__copy__(self, memo=None):
+	return self.copy()
+GSFeature.mutableCopyWithZone_ = Feature__copy__
 
 GSFeature.name = property(lambda self: self.valueForKey_("name"), 
 								 lambda self, value: self.setName_(value))
@@ -3972,8 +4006,11 @@ def Glyph__repr__(self):
 GSGlyph.__repr__ = Glyph__repr__;
 
 def Glyph__copy__(self, memo=None):
-	return self.copy()
-GSGlyph.__deepcopy__ = Glyph__copy__
+	glyph = self.copy()
+	glyph.parent = self.parent
+	return glyph
+#GSGlyph.__deepcopy__ = Glyph__copy__
+GSGlyph.mutableCopyWithZone_ = Glyph__copy__
 
 GSGlyph.parent = property(			lambda self: self.valueForKey_("parent"),
 									lambda self, value: self.setParent_(value)) 
@@ -4621,6 +4658,12 @@ def Layer__repr__(self):
 		parent = 'orphan'
 	return "<%s \"%s\" (%s)>" % (self.className(), name, parent)
 GSLayer.__repr__ = Layer__repr__;
+
+def Layer__copy__(self, memo=None):
+	layer = self.copy()
+	layer.parent = self.parent
+	return layer
+GSLayer.mutableCopyWithZone_ = Layer__copy__
 
 GSLayer.parent = property(			lambda self: self.valueForKey_("parent"),
 									lambda self, value: self.setParent_(value))
@@ -5562,6 +5605,10 @@ def Anchor__repr__(self):
 	return "<GSAnchor \"%s\" x=%s y=%s>" % (self.name, self.position.x, self.position.y)
 GSAnchor.__repr__ = Anchor__repr__;
 
+def Anchor__copy__(self, memo=None):
+	return self.copy()
+GSAnchor.mutableCopyWithZone_ = Anchor__copy__
+
 GSAnchor.position = property(	lambda self: self.valueForKey_("position").pointValue(),
 								lambda self, value: self.setPosition_(value))
 '''.. attribute:: position
@@ -5704,6 +5751,10 @@ GSComponent.__init__ = Component__init__;
 def Component__repr__(self):
 	return "<GSComponent \"%s\" x=%s y=%s>" % (self.componentName, self.position.x, self.position.y)
 GSComponent.__repr__ = Component__repr__;
+
+def Component__copy__(self, memo=None):
+	return self.copy()
+GSComponent.mutableCopyWithZone_ = Component__copy__
 
 GSComponent.position = property(	lambda self: self.valueForKey_("position").pointValue(),
 									lambda self, value: self.setPosition_(value))
@@ -6101,6 +6152,12 @@ def Path__repr__(self):
 	return "<GSPath %s nodes and %s segments>" % (len(self.nodes), len(self.segments))
 GSPath.__repr__ = Path__repr__;
 
+def Path__copy__(self, memo=None):
+	path = self.copy()
+	path.parent = self.parent
+	return path
+GSPath.mutableCopyWithZone_ = Path__copy__
+
 GSPath.parent = property(		lambda self: self.valueForKey_("parent"),
 								lambda self, value: self.setParent_(value)) 
 '''.. attribute:: parent
@@ -6386,6 +6443,12 @@ def Node__repr__(self):
 		NodeType += " smooth"
 	return "<GSNode x=%s y=%s %s>" % (self.position.x, self.position.y, NodeType)
 GSNode.__repr__ = Node__repr__;
+
+def Node__copy__(self, memo=None):
+	node = self.copy()
+	node.setParent_(self.parent)
+	return node
+GSNode.mutableCopyWithZone_ = Node__copy__
 
 GSNode.position = property(		lambda self: self.pyobjc_instanceMethods.position(),
 								lambda self, value: self.setPosition_(value))
@@ -6684,6 +6747,10 @@ def GuideLine__repr__(self):
 	return "<GSGuideLine x=%s y=%s angle=%s>" % (self.position.x, self.position.y, self.angle)
 GSGuideLine.__repr__ = GuideLine__repr__;
 
+def GuideLine__copy__(self, memo=None):
+	return self.copy()
+GSGuideLine.mutableCopyWithZone_ = GuideLine__copy__
+
 GSGuideLine.position = property(lambda self: self.valueForKey_("position").pointValue(),
 								lambda self, value: self.setPosition_(value))
 '''.. attribute:: position
@@ -6779,6 +6846,10 @@ def Annotation__repr__(self):
 		TypeName = "Minus"
 	return "<%s %s x=%s y=%s>" % (self.className(), TypeName, self.position.x, self.position.y)
 GSAnnotation.__repr__ = Annotation__repr__;
+
+def Annotation__copy__(self, memo=None):
+	return self.copy()
+GSAnnotation.mutableCopyWithZone_ = Annotation__copy__
 
 
 GSAnnotation.position = property(lambda self: self.valueForKey_("position").pointValue(),
@@ -6888,6 +6959,10 @@ def Hint__repr__(self):
 	else:
 		return "<GSHint %s %s>" % (hintConstants[self.type], direction)
 GSHint.__repr__ = Hint__repr__;
+
+def Hint__copy__(self, memo=None):
+	return self.copy()
+GSHint.mutableCopyWithZone_ = Hint__copy__
 
 GSHint.originNode = property(	lambda self: self.valueForKey_("originNode"),
 								lambda self, value: self.setOriginNode_(value))
@@ -7029,6 +7104,10 @@ GSBackgroundImage.__init__ = BackgroundImage__init__;
 def BackgroundImage__repr__(self):
 	return "<GSBackgroundImage '%s'>" % self.imagePath()
 GSBackgroundImage.__repr__ = BackgroundImage__repr__;
+
+def BackgroundImage__copy__(self, memo=None):
+	return self.copy()
+GSBackgroundImage.mutableCopyWithZone_ = BackgroundImage__copy__
 
 def BackgroundImage_setPath(self, path):
 	self.setImagePath_(path)

@@ -263,6 +263,7 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertEqual(newClass1, font.classes[-2])
 		self.assertEqual(newClass2, font.classes[-1])
 		newClass = GSClass('uppercaseLetters3', 'A')
+		newClass = copy.copy(newClass)
 		font.classes.insert(0, newClass)
 		self.assertEqual(newClass, font.classes[0])
 		font.classes.remove(font.classes[-1])
@@ -285,6 +286,7 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertEqual(newFeature1, font.features[-2])
 		self.assertEqual(newFeature2, font.features[-1])
 		newFeature = GSFeature('liga', 'sub f i by fi;')
+		newFeature = copy.copy(newFeature)
 		font.features.insert(0, newFeature)
 		self.assertEqual(newFeature, font.features[0])
 		font.features.remove(font.features[-1])
@@ -307,6 +309,7 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertEqual(newFeaturePrefix1, font.featurePrefixes[-2])
 		self.assertEqual(newFeaturePrefix2, font.featurePrefixes[-1])
 		newFeaturePrefix = GSFeaturePrefix('LanguageSystems3', 'languagesystem DFLT dflt;')
+		newFeaturePrefix = copy.copy(newFeaturePrefix)
 		font.featurePrefixes.insert(0, newFeaturePrefix)
 		self.assertEqual(newFeaturePrefix, font.featurePrefixes[0])
 		font.featurePrefixes.remove(font.featurePrefixes[-1])
@@ -371,6 +374,7 @@ class GlyphsAppTests(unittest.TestCase):
 		del font.customParameters[-1]
 		newParameter1 = GSCustomParameter('hello2', 'world2')
 		newParameter2 = GSCustomParameter('hello3', 'world3')
+		newParameter2 = copy.copy(newParameter2)
 		font.customParameters.extend([newParameter1, newParameter2])
 		self.assertEqual(newParameter1, list(font.customParameters)[-2])
 		self.assertEqual(newParameter2, list(font.customParameters)[-1])
@@ -464,9 +468,18 @@ class GlyphsAppTests(unittest.TestCase):
 		font.updateFeatures()
 
 
+
+
+
+		font = copy.copy(font) # Testing this at the end because otherwise some UI-dependent tests fail (like selection of glyphs)
+
+
+
+
 	def test_GSFontMaster(self):
 		
 		master = Glyphs.font.masters[0]
+		master = copy.copy(master)
 		self.assertIsNotNone(master.__repr__())
 		
 		# GSFontMaster.id
@@ -563,6 +576,7 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertEqual(len(master.alignmentZones), 0)
 		master.alignmentZones.append(GSAlignmentZone(100, 10))
 		self.assertIsNotNone(master.alignmentZones[-1].__repr__())
+		zone = copy.copy(master.alignmentZones[-1])
 		self.assertEqual(len(master.alignmentZones), 1)
 		self.assertEqual(master.alignmentZones[-1].position, 100)
 		self.assertEqual(master.alignmentZones[-1].size, 10)
@@ -572,6 +586,7 @@ class GlyphsAppTests(unittest.TestCase):
 	def test_GSInstance(self):
 		
 		instance = Glyphs.font.instances[0]
+		instance = copy.copy(instance)
 		self.assertIsNotNone(instance.__repr__())
 		
 		# GSInstance.active
@@ -658,6 +673,7 @@ class GlyphsAppTests(unittest.TestCase):
 		
 		font = Glyphs.font
 		glyph = font.glyphs['a'].duplicate('a.test')
+		glyph = copy.copy(glyph)
 
 		# GSGlyph.parent
 		self.assertEqual(glyph.parent, Glyphs.font)
@@ -791,6 +807,7 @@ class GlyphsAppTests(unittest.TestCase):
 
 		
 		layer = Glyphs.font.glyphs['a'].layers[0]
+		layer = copy.copy(layer)
 		self.assertIsNotNone(layer.__repr__())
 
 		# GSLayer.parent
@@ -820,6 +837,7 @@ class GlyphsAppTests(unittest.TestCase):
 		layer.guides = []
 		self.assertEqual(len(layer.guides), 0)
 		newGuide = GSGuideLine()
+		newGuide = copy.copy(newGuide)
 		newGuide.position = NSPoint(100, 100)
 		newGuide.angle = -10.0
 		layer.guides.append(newGuide)
@@ -867,6 +885,7 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertEqual(layer.annotations[-2], newAnnotation2)
 		self.assertEqual(layer.annotations[-1], newAnnotation3)
 		newAnnotation = GSAnnotation()
+		newAnnotation = copy.copy(newAnnotation)
 		newAnnotation.type = MINUS
 		layer.annotations.insert(0, newAnnotation)
 		self.assertEqual(layer.annotations[0], newAnnotation)
@@ -881,6 +900,7 @@ class GlyphsAppTests(unittest.TestCase):
 		layer.hints = []
 		self.assertEqual(len(layer.hints), 0)
 		newHint = GSHint()
+		newHint = copy.copy(newHint)
 		newHint.originNode = layer.paths[0].nodes[0]
 		newHint.targetNode = layer.paths[0].nodes[1]
 		newHint.type = STEM
@@ -919,6 +939,7 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertGreaterEqual(len(layer.anchors), 1)
 		self.assertIsNotNone(layer.anchors['top'].__repr__())
 		layer.anchors['top'].position = NSPoint(100, 100)
+		anchor = copy.copy(layer.anchors['top'])
 		del layer.anchors['top']
 		layer.anchors['top'] = GSAnchor()
 		layer.anchors['top'].position = oldPosition
@@ -1103,6 +1124,7 @@ class GlyphsAppTests(unittest.TestCase):
 		glyph = Glyphs.font.glyphs['adieresis.test']
 		layer = glyph.layers[0]
 		component = layer.components[0]
+		component = copy.copy(component)
 		self.assertIsNotNone(component.__repr__())
 
 		# Delete and add
@@ -1178,6 +1200,7 @@ class GlyphsAppTests(unittest.TestCase):
 		
 		layer = Glyphs.font.glyphs['a'].layers[0]
 		path = layer.paths[0]
+		path = copy.copy(path)
 		self.assertIsNotNone(path.__repr__())
 		
 		# GSPath.parent
@@ -1275,6 +1298,13 @@ class GlyphsAppTests(unittest.TestCase):
 
 
 
+
+		# Copy, then test again
+		node = copy.copy(node)
+		self.assertEqual(node.index, 9223372036854775807) # theoretically, this value could be maxint in a node, but in our test font it should be 0, I guess (taken from actual glyph, not orphan path)
+
+
+
 	def test_GSBackgroundImage(self):
 
 		glyph = Glyphs.font.glyphs['A']
@@ -1282,6 +1312,7 @@ class GlyphsAppTests(unittest.TestCase):
 		
 		layer.backgroundImage = GSBackgroundImage(os.path.join(os.path.dirname(PathToTestFile), 'A.jpg'))
 		image = layer.backgroundImage
+		image = copy.copy(image)
 		self.assertIsNotNone(image.__repr__())
 		
 		
