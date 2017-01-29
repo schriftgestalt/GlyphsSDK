@@ -194,6 +194,7 @@ class GlyphsAppTests(unittest.TestCase):
 	def test_GSFont(self):
 		
 		font = Glyphs.font
+		font.show()
 		self.assertIsNotNone(font.__repr__())
 		
 		## Attributes

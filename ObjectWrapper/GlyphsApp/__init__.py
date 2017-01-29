@@ -2195,6 +2195,7 @@ Functions
 	
 	save()
 	close()
+	show()
 	disableUpdateInterface()
 	enableUpdateInterface()
 	kerningForPair()
@@ -2717,6 +2718,19 @@ GSFont.close = Font__close__
 	
 	'''
 
+def GSFont__show__(self):
+	if not self in Glyphs.fonts:
+		Glyphs.fonts.append(self)
+	else:
+		self.parent.windowController().showWindow_(None)
+GSFont.show = GSFont__show__
+
+'''.. function:: show()
+
+	.. versionadded:: 2.5
+	
+	Makes font visible in the application, either by bringing an already open font window to the front or by appending a formerly invisible font object (such as the result of a `copy()` operation) as a window to the application.
+'''
 
 
 def kerningForPair(self, FontMasterID, LeftKeringId, RightKerningId ):
