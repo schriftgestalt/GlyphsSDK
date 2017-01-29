@@ -1224,6 +1224,9 @@ class AppFontProxy (Proxy):
 	def append(self, font):
 		doc = Glyphs.documentController().openUntitledDocumentAndDisplay_error_(True, None)[0]
 		doc.setFont_(font)
+	def extend(self, fonts):
+		for font in fonts:
+			self.append(font)
 
 GSDocument.font = property(lambda self: self.valueForKey_("font"),
 						   lambda self, value: self.setFont_(value))

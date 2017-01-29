@@ -98,6 +98,14 @@ class GlyphsAppTests(unittest.TestCase):
 		# Assert font
 		self.assertIsNotNone(Glyphs.font)
 		self.assertEqual(len(Glyphs.fonts), 1)
+
+		# AppFontProxy
+		hiddenFont = copy.copy(font)
+		Glyphs.fonts.append(hiddenFont)
+		hiddenFont.close()
+		hiddenFont = copy.copy(font)
+		Glyphs.fonts.extend([hiddenFont])
+		hiddenFont.close()
 		
 		
 		## Attributes
