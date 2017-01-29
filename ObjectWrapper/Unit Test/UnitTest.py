@@ -986,8 +986,12 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertEqual(len(layer.selection), selection)
 		layer.clearSelection()
 		self.assertEqual(len(layer.selection), 0)
+		layer.selection.append(layer.paths[0])
+		layer.selection.extend(layer.anchors)
+		layer.selection.remove(layer.paths[0])
+		layer.selection.insert(0, layer.paths[0])
+		self.assertEqual(len(layer.selection), 1 + len(layer.anchors)) # 1 for the single path
 
-		
 		# GSLayer.LSB
 		self.assertFloat(layer.LSB)
 		

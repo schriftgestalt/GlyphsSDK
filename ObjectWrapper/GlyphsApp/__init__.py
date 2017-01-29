@@ -2046,9 +2046,11 @@ class LayerSelectionProxy (Proxy):
 	def append(self, object):
 		self._owner.addSelection_(object)
 	def extend(self, objects):
-		self._owner.addObjectsFromArrayToSelection_(objects)
+		self._owner.addObjectsFromArrayToSelection_(list(objects))
 	def remove(self, object):
 		self._owner.removeObjectFromSelection_(object)
+	def insert(self, Index, object):
+		self._owner.addSelection_(object)
 	def setterMethod(self):
 		return self._owner.setSelection_
 
