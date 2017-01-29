@@ -2022,6 +2022,13 @@ class LayerPathsProxy (Proxy):
 				self._owner.addPath_(path)
 		else:
 			self._owner.addPath_(Path)
+	def extend(self, Paths):
+		for Path in Paths:
+			self.append(Path)
+	def remove(self, Path):
+		self._owner.removePath_(Path)
+	def insert(self, Index, Path):
+		self._owner.insertPath_atIndex_(Path, Index)
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.paths()
 	def setterMethod(self):

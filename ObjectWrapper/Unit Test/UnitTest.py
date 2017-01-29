@@ -971,7 +971,7 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertEqual(amount, len(layer.anchors))
 
 		# GSLayer.paths
-		# postponed to own test
+		# has its own test
 		
 		# GSLayer.selection
 		layer.selection = []
@@ -1227,6 +1227,22 @@ class GlyphsAppTests(unittest.TestCase):
 		path = layer.paths[0]
 		path = copy.copy(path)
 		self.assertIsNotNone(path.__repr__())
+
+		# Proxy
+		amount = len(layer.paths)
+		pathCopy1 = copy.copy(path)
+		layer.paths.append(pathCopy1)
+		pathCopy2 = copy.copy(pathCopy1)
+		layer.paths.extend([pathCopy2])
+		self.assertEqual(layer.paths[-2], pathCopy1)
+		self.assertEqual(layer.paths[-1], pathCopy2)
+		pathCopy3 = copy.copy(pathCopy2)
+		layer.paths.insert(0, pathCopy3)
+		self.assertEqual(layer.paths[0], pathCopy3)
+		layer.paths.remove(layer.paths[0])
+		layer.paths.remove(layer.paths[-1])
+		layer.paths.remove(layer.paths[-1])
+		self.assertEqual(amount, len(layer.paths))
 		
 		# GSPath.parent
 		self.assertEqual(path.parent, Glyphs.font.glyphs['a'].layers[0])
