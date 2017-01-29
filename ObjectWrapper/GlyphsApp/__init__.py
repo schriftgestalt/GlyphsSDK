@@ -1967,6 +1967,13 @@ class LayerAnchorsProxy (Proxy):
 			return []
 	def append(self, Anchor):
 		self._owner.addAnchor_(Anchor)
+	def extend(self, Anchors):
+		for Anchor in Anchors:
+			self._owner.addAnchor_(Anchor)
+	def remove(self, Anchor):
+		self._owner.removeAnchor_(Anchor)
+	def insert(self, Index, Anchor):
+		self.append(Anchor)
 	def __len__(self):
 		return self._owner.countOfAnchors()
 

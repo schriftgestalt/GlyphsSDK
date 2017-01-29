@@ -940,6 +940,7 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertEqual(len(layer.hints), 0)
 
 		# GSLayer.anchors
+		amount = len(layer.anchors)
 		if layer.anchors['top']:
 			oldPosition = layer.anchors['top'].position
 		else:
@@ -953,6 +954,21 @@ class GlyphsAppTests(unittest.TestCase):
 		layer.anchors['top'] = GSAnchor()
 		layer.anchors['top'].position = oldPosition
 		self.assertString(layer.anchors['top'].name)
+		newAnchor1 = GSAnchor()
+		newAnchor1.name = 'testPosition1'
+		newAnchor2 = GSAnchor()
+		newAnchor2.name = 'testPosition2'
+		layer.anchors.extend([newAnchor1, newAnchor2])
+		self.assertEqual(layer.anchors['testPosition1'], newAnchor1)
+		self.assertEqual(layer.anchors['testPosition2'], newAnchor2)
+		newAnchor3 = GSAnchor()
+		newAnchor3.name = 'testPosition3'
+		layer.anchors.append(newAnchor3)
+		self.assertEqual(layer.anchors['testPosition3'], newAnchor3)
+		layer.anchors.remove(layer.anchors['testPosition3'])
+		layer.anchors.remove(layer.anchors['testPosition2'])
+		layer.anchors.remove(layer.anchors['testPosition1'])
+		self.assertEqual(amount, len(layer.anchors))
 
 		# GSLayer.paths
 		# postponed to own test
