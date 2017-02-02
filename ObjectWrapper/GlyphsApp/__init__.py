@@ -1844,7 +1844,7 @@ class LayerGuideLinesProxy (Proxy):
 			if Key < 0:
 				Key = self.__len__() + Key
 			return self._owner.guideLineAtIndex_(Key)
-		return self._owner.guideLineAtIndex_(Key)
+		raise(KeyError)
 	def __setitem__(self, Key, Component):
 		self._owner.setGuideLine_atIndex_(Component, Key)
 	def __delitem__(self, Key):
@@ -1873,7 +1873,7 @@ class LayerAnnotationProxy (Proxy):
 			if Key < 0:
 				Key = self.__len__() + Key
 			return self._owner.objectInAnnotationsAtIndex_(Key)
-		return self._owner.objectInAnnotationsAtIndex_(Key)
+		raise(KeyError)
 	def __setitem__(self, Key, Annotation):
 		self._owner.insertObject_inAnnotationsAtIndex_(Annotation, Key)
 	def __delitem__(self, Key):
@@ -1906,7 +1906,7 @@ class LayerHintsProxy (Proxy):
 			if Key < 0:
 				Key = self.__len__() + Key
 			return self._owner.hintAtIndex_(Key)
-		return self._owner.hintAtIndex_(Key)
+		raise(KeyError)
 	def __setitem__(self, Key, Component):
 		self._owner.setHint_atIndex_(Component, Key)
 	def __delitem__(self, Key):
