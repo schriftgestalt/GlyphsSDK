@@ -1197,11 +1197,7 @@ class AppDocumentProxy (Proxy):
 		else:
 			raise(KeyError)
 	def values(self):
-		docs = []
-		for doc in self._owner.orderedDocuments():
-			if doc.isKindOfClass_(NSClassFromString("GSDocument")):
-				docs.append(doc)
-		return docs
+		return self._owner.fontDocuments()
 
 class AppFontProxy (Proxy):
 	"""The list of fonts."""
