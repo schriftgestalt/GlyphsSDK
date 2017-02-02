@@ -4027,12 +4027,7 @@ def Glyph__repr__(self):
 	return "<GSGlyph \"%s\" with %s layers>" % (self.name, len(self.layers))
 GSGlyph.__repr__ = Glyph__repr__;
 
-def Glyph__copy__(self, memo=None):
-	glyph = self.copy()
-	glyph.parent = self.parent
-	return glyph
-#GSGlyph.__deepcopy__ = Glyph__copy__
-GSGlyph.mutableCopyWithZone_ = Glyph__copy__
+GSGlyph.mutableCopyWithZone_ = GSObject__copy__
 
 GSGlyph.parent = property(			lambda self: self.valueForKey_("parent"),
 									lambda self, value: self.setParent_(value)) 
@@ -4546,8 +4541,7 @@ GSGlyph.updateGlyphInfo = __updateGlyphInfo
 
 def Glyph_Duplicate(self, name = None):
 	
-	newGlyph = copy.copy(self)
-#	newGlyph = self.copyThin_layers_(False, True)
+	newGlyph = self.copyThin_layers_(False, True)
 	if newGlyph.unicode:
 		newGlyph.unicode = None
 	if name:
@@ -4681,11 +4675,7 @@ def Layer__repr__(self):
 	return "<%s \"%s\" (%s)>" % (self.className(), name, parent)
 GSLayer.__repr__ = Layer__repr__;
 
-def Layer__copy__(self, memo=None):
-	layer = self.copy()
-	layer.parent = self.parent
-	return layer
-GSLayer.mutableCopyWithZone_ = Layer__copy__
+GSLayer.mutableCopyWithZone_ = GSObject__copy__
 
 GSLayer.parent = property(			lambda self: self.valueForKey_("parent"),
 									lambda self, value: self.setParent_(value))
@@ -6170,11 +6160,7 @@ def Path__repr__(self):
 	return "<GSPath %s nodes and %s segments>" % (len(self.nodes), len(self.segments))
 GSPath.__repr__ = Path__repr__;
 
-def Path__copy__(self, memo=None):
-	path = self.copy()
-	path.parent = self.parent
-	return path
-GSPath.mutableCopyWithZone_ = Path__copy__
+GSPath.mutableCopyWithZone_ = GSObject__copy__
 
 GSPath.parent = property(		lambda self: self.valueForKey_("parent"),
 								lambda self, value: self.setParent_(value)) 
@@ -6462,11 +6448,7 @@ def Node__repr__(self):
 	return "<GSNode x=%s y=%s %s>" % (self.position.x, self.position.y, NodeType)
 GSNode.__repr__ = Node__repr__;
 
-def Node__copy__(self, memo=None):
-	node = self.copy()
-	node.setParent_(self.parent)
-	return node
-GSNode.mutableCopyWithZone_ = Node__copy__
+GSNode.mutableCopyWithZone_ = GSObject__copy__
 
 GSNode.position = property(		lambda self: self.pyobjc_instanceMethods.position(),
 								lambda self, value: self.setPosition_(value))
