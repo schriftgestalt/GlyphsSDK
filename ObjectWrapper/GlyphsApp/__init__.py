@@ -5738,9 +5738,12 @@ def Component__init__(self, glyph, offset=(0,0), scale=(1,1), transform=None):
 	transformation: transform matrix as list of numbers
 	"""
 	if transform is None:
-		xx, yy = scale
-		dx, dy = offset
-		self.transform = ((xx, 0, 0, yy, dx, dy))
+		if scale != (1, 1):
+			xx, yy = scale
+			dx, dy = offset
+			self.transform = ((xx, 0, 0, yy, dx, dy))
+		elif offset != (0, 0):
+			self.setPositionFast_(offset)
 	else:
 		self.transform = transform
 		
