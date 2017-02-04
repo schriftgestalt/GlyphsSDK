@@ -276,9 +276,12 @@ class FileFormatPlugin (NSObject, GlyphsFileFormatProtocol):
 		- error: on return, if the document contents could not be read, a pointer to an error object that encapsulates the reason they could not be read.
 		"""
 		try:
-			self.writeCSVFile(font, filepath)
-			
-			return (True, None)
+			if hasattr(self, 'export'):
+				self.export(font, URL.path())
+				return (True, None)
+			else:
+				error = NSError.errorWithDomain_code_userInfo_(self.title(), -57, {NSLocalizedDescriptionKey: "The plugin does not support exporting the file"})
+				return None, error
 		except:
 			self.logError(traceback.format_exc())
 
@@ -304,13 +307,16 @@ class FileFormatPlugin (NSObject, GlyphsFileFormatProtocol):
 		"""
 		try:
 			# Create a new font object:
-			font = GSFont()
-			# Add glyphs and other info here...
-			pass
-			# Return the font object to be opened in Glyphs:
-			return font
+			if hasattr(self, 'read'):
+				font = self.read(URL.path(), fonttype)
+				return font, None
+			else:
+				error = NSError.errorWithDomain_code_userInfo_(self.title(), -57, {NSLocalizedDescriptionKey: "The plugin does not support opening the file"})
+				return None, error
 		except:
-			self.logError(traceback.format_exc())
+			print traceback.format_exc()
+		return None, None
+
 
 FileFormatPlugin.logToConsole = LogToConsole_AsClassExtension
 FileFormatPlugin.logError = LogError_AsClassExtension
