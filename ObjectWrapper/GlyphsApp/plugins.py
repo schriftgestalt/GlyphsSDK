@@ -41,6 +41,14 @@ def LoadNib(self, nibname, path = None):
 		if not NSBundle.loadNibNamed_owner_(nibname, self):
 			self.logError("Error loading %s.nib." % nibname)
 
+def pathForResource(resourceName, extension, path = None):
+	if path and len(path) > 10:
+		bundlePath = path[:path.find("/Contents/Resources/")]
+		bundle = NSBundle.bundleWithPath_(bundlePath)
+		return bundle.pathForResource_ofType_(resourceName, extension)
+	else:
+		raise("Please supply path")
+
 def setUpMenuHelper(Menu, Items, defaultTarget):
 	if type(Items) == list:
 		for entry in Items:
