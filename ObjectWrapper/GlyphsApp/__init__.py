@@ -1769,8 +1769,8 @@ class GlyphLayerProxy (Proxy):
 		if type(values) == list or type(values) == tuple or type(values) == type(self):
 			for layer in values:
 				newLayers[layer.layerId] = layer
-		elif type(values) == type(dict) or isinstance(values, NSDictionary):
-			for (key, layer) in value.items() :
+		elif type(values) == dict or isinstance(values, NSDictionary):
+			for (key, layer) in values.items() :
 				newLayers[anchor.name] = anchor
 		else:
 			raise TypeError
