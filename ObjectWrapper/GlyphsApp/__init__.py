@@ -1736,17 +1736,17 @@ class GlyphLayerProxy (Proxy):
 			if Key < 0:
 				Key = self.__len__() + Key
 			FontMaster = self._owner.parent.fontMasterAtIndex_(Key)
-			return self._owner.setLayer_forKey_(Layer, FontMaster.id)
-		else:
-			return self._owner.setLayer_forKey_(Layer, Key)
+			Key = FontMaster.id
+		return self._owner.setLayer_forKey_(Layer, Key)
+	
 	def __delitem__(self, Key):
 		if type(Key) is int and self._owner.parent:
 			if Key < 0:
 				Key = self.__len__() + Key
 			Layer = self.__getitem__(Key)
-			return self._owner.removeLayerForKey_(Layer.layerId)
-		else:
-			return self._owner.removeLayerForKey_(Key)
+			Key = Layer.layerId
+		return self._owner.removeLayerForKey_(Key)
+	
 	def __iter__(self):
 		return LayersIterator(self._owner)
 	def __len__(self):
