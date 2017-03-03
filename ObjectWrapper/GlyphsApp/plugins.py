@@ -30,13 +30,20 @@ def LoadNib(self, nibname, path = None):
 		bundle = NSBundle.bundleWithPath_(bundlePath)
 		nib = NSNib.alloc().initWithNibNamed_bundle_(nibname, bundle)
 		if not nib:
-			self.logError("Error loading nib for Class: %s", self.__class__.__name__)
+			self.logError("Error loading nib for Class: %s" % self.__class__.__name__)
 		
 		result = nib.instantiateWithOwner_topLevelObjects_(self, None)
-		if not result or not result[0]:
-			self.logError("Error instantiating nib for Class: %s", self.__class__.__name__)
+		try:
+			error = bool(result[0])
+		except:
+			error = bool(result) # in 10.9, the result is a bool
+		if not error:
+			self.logError("Error instantiating nib for Class: %s" % self.__class__.__name__)
 		else:
-			self.topLevelObjects = result[1]
+			try:
+				self.topLevelObjects = result[1]
+			except:
+				pass
 	else:
 		if not NSBundle.loadNibNamed_owner_(nibname, self):
 			self.logError("Error loading %s.nib." % nibname)
