@@ -60,34 +60,47 @@ def setUpMenuHelper(Menu, Items, defaultTarget):
 	if type(Items) == list:
 		for entry in Items:
 			
-			if "view" in entry and not "name" in entry:
-				entry["name"] = ""
-			if "view" in entry and not "action" in entry:
-				entry["action"] = None
-			
-			newMenuItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_(entry["name"], entry["action"], "")
-			if "target" in entry:
-				newMenuItem.setTarget_(entry["target"])
-			else:
-				newMenuItem.setTarget_(defaultTarget)
 			if "index" in entry:
 				index = int(entry["index"])
 			else:
 				index = -1
-			
-			if "view" in entry:
-				try:
-					view = entry["view"]
-					if isinstance(view, NSView):
-						newMenuItem.setView_(view)
-				except:
-					LogToConsole(traceback.format_exc(), "setUpMenuHelper") # from GlyhsApp.py
-			if "state" in entry:
-				state = entry["state"]
-				if state == ONSTATE or state == OFFSTATE or state == MIXEDSTATE:
-					newMenuItem.setState_(entry["state"])
-				else:
-					LogToConsole("illegal state for menu item '%s'" % entry["name"], "setUpMenuHelper")
+
+			# Use supplied NSMenuItem 
+			if "menu" in entry:
+				newMenuItem = entry["menu"]
+
+			# Create menu item
+			else:
+
+
+				if "view" in entry and not "name" in entry:
+					entry["name"] = ""
+				if "view" in entry and not "action" in entry:
+					entry["action"] = None
+				
+				
+				newMenuItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_(entry["name"], entry["action"], "")
+				
+				if "view" in entry:
+					try:
+						view = entry["view"]
+						if isinstance(view, NSView):
+							newMenuItem.setView_(view)
+					except:
+						LogToConsole(traceback.format_exc(), "setUpMenuHelper") # from GlyhsApp.py
+				if "state" in entry:
+					state = entry["state"]
+					if state == ONSTATE or state == OFFSTATE or state == MIXEDSTATE:
+						newMenuItem.setState_(entry["state"])
+					else:
+						LogToConsole("illegal state for menu item '%s'" % entry["name"], "setUpMenuHelper")
+
+
+			if "target" in entry:
+				newMenuItem.setTarget_(entry["target"])
+			else:
+				newMenuItem.setTarget_(defaultTarget)
+
 			if index >= 0:
 				Menu.insertItem_atIndex_(newMenuItem, index)
 			else:
