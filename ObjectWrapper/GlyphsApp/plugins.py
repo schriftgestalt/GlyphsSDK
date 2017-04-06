@@ -16,6 +16,19 @@ if not path in sys.path:
 
 ############################################################################################
 
+#  Constants
+
+# Forward compatibility for adding plugin menu items in self-created submenu or Glyphs-created submenu.
+# False means all menu items get added to the main contextual menu. So a developer could decide to put menu items into his/her own submenu.
+# Set to True once plugin menu items get forced into Glyphs-created sub menu. AND THEN LEAVE THIS CONSTANT HERE FOREVER!
+PLUGINMENUSINFORCEDSUBMENU = False
+
+# Forward compatibility for the possibility to supply self-created NSMenuItem objects in the "menu" key of the contextual menus.
+# LEAVE THIS CONSTANT HERE FOREVER!
+USESELFCREATEDNSMENUITEMS = True
+
+############################################################################################
+
 #  Helper methods
 
 def LogToConsole_AsClassExtension(self, message):
