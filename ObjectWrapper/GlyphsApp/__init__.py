@@ -171,6 +171,7 @@ Properties
 	fonts
 	reporters
 	activeReporters
+	filters
 	defaults
 	scriptAbbreviations
 	scriptSuffixes
@@ -297,6 +298,15 @@ GSApplication.activeReporters = property(lambda self: GSCallbackHandler.activeRe
 	.. versionadded:: 2.3
 
 	List of activated reporter plug-ins.
+'''
+
+GSApplication.filters = property(lambda self: NSApp.delegate().valueForKey_("filterInstances"))
+
+'''.. attribute:: filters
+	
+	.. versionadded:: After 2.4.2 (to be replaced later)
+
+	List of available filters (same as 'Filter' menu). These are the actual objects..
 '''
 
 def isString(string):
