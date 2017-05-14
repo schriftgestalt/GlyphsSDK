@@ -4393,7 +4393,17 @@ GSGlyph.color =			  property( lambda self: self.colorIndex(),
 		glyph.color = 9223372036854775807	# not colored, white
 '''
 
-GSGlyph.colorObject =			property( lambda self: self.valueForKey_("color"), lambda self, value: self.setColor_(value))
+def _set_Glyph_setColor(self, colorValue):
+	if isinstance(colorValue, (tuple, list)):
+		if max(colorValue) > 1:
+			colorValue = [c / 255.0 if c > 1 else c for c in colorValue]
+		colorValue = list(colorValue)
+		colorValue.extend((1,1,1))
+		print colorValue
+		colorValue = NSColor.colorWithDeviceRed_green_blue_alpha_(colorValue[0], colorValue[1], colorValue[2], colorValue[3])
+	self.setColor_(colorValue)
+
+GSGlyph.colorObject =			property( lambda self: self.valueForKey_("color"), lambda self, value: _set_Glyph_setColor(self, value))
 '''.. attribute:: colorObject
 
 	.. versionadded:: 2.3
@@ -4421,6 +4431,13 @@ GSGlyph.colorObject =			property( lambda self: self.valueForKey_("color"), lambd
 		# set the glyph color.
 		
 		glyph.colorObject = NSColor.colorWithDeviceRed_green_blue_alpha_(247.0 / 255.0, 74.0 / 255.0, 62.9 / 255.0, 1)
+
+		new in 2.4.2:
+		glyph.colorObject = (247.0, 74.0, 62.9) # 
+		or 
+		glyph.colorObject = (247.0, 74.0, 62.9, 1) # 
+		or
+		glyph.colorObject = (0.968, 0.29, 0.247, 1) # 
 '''
 
 
