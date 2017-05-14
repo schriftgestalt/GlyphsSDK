@@ -1666,27 +1666,27 @@ class UserDataProxy(Proxy):
 		
 class SmartComponentPoleMappingProxy(Proxy):
 	def __getitem__(self, Key):
-		poleMapping = self._owner.userDataForKey_("PartSelection")
+		poleMapping = self._owner.partSelection()
 		if poleMapping != None:
 			return poleMapping[Key]
 		return None
 	def __setitem__(self, Key, Value):
-		poleMapping = self._owner.userDataForKey_("PartSelection")
+		poleMapping = self._owner.partSelection()
 		if poleMapping == None:
-			self._owner.setUserData_forKey_(NSMutableDictionary.dictionaryWithObject_forKey_(Value, Key), "PartSelection")
+			self._owner.setPartSelection_(NSMutableDictionary.dictionaryWithObject_forKey_(Value, Key))
 		else:
 			poleMapping[Key] = Value
 	def __delitem__(self, Key):
-		poleMapping = self._owner.userDataForKey_("PartSelection")
+		poleMapping = self._owner.partSelection()
 		if poleMapping != None:
 			del(poleMapping[Key])
 	def values(self):
-		poleMapping = self._owner.userDataForKey_("PartSelection")
+		poleMapping = self._owner.partSelection()
 		if poleMapping != None:
 			return poleMapping.allValues()
 		return None
 	def __repr__(self):
-		poleMapping = self._owner.userDataForKey_("PartSelection")
+		poleMapping = self._owner.partSelection()
 		return str(poleMapping)
 		
 class smartComponentValuesProxy(Proxy):
@@ -2833,7 +2833,7 @@ def setKerningForPair(self, FontMasterID, LeftKeringId, RightKerningId, Value):
 		LeftKeringId = self.glyphs[LeftKeringId].id
 	if not RightKerningId[0] == '@':
 		RightKerningId = self.glyphs[RightKerningId].id
-	self.setKerningForFontMasterID_LeftKey_RightKey_Value_(FontMasterID, LeftKeringId, RightKerningId, Value)
+	self.setKerningForFontMasterID_LeftKey_RightKey_Value_direction_(FontMasterID, LeftKeringId, RightKerningId, Value, LTR)
 GSFont.setKerningForPair = setKerningForPair
 '''.. function:: setKerningForPair(FontMasterId, LeftKey, RightKey, Value)
 	
