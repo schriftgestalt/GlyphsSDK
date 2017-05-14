@@ -5034,7 +5034,7 @@ GSLayer.selection = property(	lambda self: LayerSelectionProxy(self), lambda sel
 	:type: list
 '''
 
-GSLayer.LSB = property(		lambda self: self.valueForKey_("LSB").floatValue(),
+GSLayer.LSB = property(		lambda self: self.pyobjc_instanceMethods.LSB(),
 							lambda self, value: self.setLSB_(float(value)))
 '''.. attribute:: LSB
 	Left sidebearing
@@ -5059,7 +5059,7 @@ GSLayer.BSB = property(		lambda self: self.valueForKey_("BSB").floatValue(),
 	Bottom sidebearing
 	:type: float'''
 
-GSLayer.width = property(	lambda self: self.valueForKey_("width").floatValue(),
+GSLayer.width = property(	lambda self: self.pyobjc_instanceMethods.width(),
 							lambda self, value: self.setWidth_(float(value)))
 GSBackgroundLayer.width = property(	lambda self: self.valueForKey_("width").floatValue(), lambda self, value: None)
 '''.. attribute:: width
@@ -6348,22 +6348,25 @@ def DrawPathWithPen(self, pen):
 	if self.closed:
 		for i in range(len(self)-1, -1, -1):
 			StartNode = self.nodeAtIndex_(i)
-			if StartNode.type is not OFFCURVE:
-				pen.moveTo(StartNode.position)
+			GS_Type = StartNode.pyobjc_instanceMethods.type()
+			if GS_Type is not GSOFFCURVE_:
+				pen.moveTo(StartNode.pyobjc_instanceMethods.position())
 				break
 	else:
 		for i in range(len(self)):
 			StartNode = self.nodeAtIndex_(i)
-			if StartNode.type is not OFFCURVE:
-				pen.moveTo(StartNode.position)
+			GS_Type = StartNode.pyobjc_instanceMethods.type()
+			if GS_Type is not GSOFFCURVE_:
+				pen.moveTo(StartNode.pyobjc_instanceMethods.position())
 				Start = i + 1
 				break
 	for i in range(Start, len(self), 1):
 		Node = self.nodeAtIndex_(i)
-		if Node.type == LINE:
-			pen.lineTo(Node.position)
-		elif Node.type == CURVE:
-			pen.curveTo(self.nodeAtIndex_(i-2).position, self.nodeAtIndex_(i-1).position, Node.position)
+		GS_Type = Node.pyobjc_instanceMethods.type()
+		if GS_Type == GSLINE_:
+			pen.lineTo(Node.pyobjc_instanceMethods.position())
+		elif GS_Type == GSCURVE_:
+			pen.curveTo(self.nodeAtIndex_(i-2).pyobjc_instanceMethods.position(), self.nodeAtIndex_(i-1).pyobjc_instanceMethods.position(), Node.pyobjc_instanceMethods.position())
 	if self.closed:
 		pen.closePath()
 	else:
