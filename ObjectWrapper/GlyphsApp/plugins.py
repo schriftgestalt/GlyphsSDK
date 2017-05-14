@@ -1522,12 +1522,12 @@ class SelectTool (GSToolSelect):
 				contextMenus = self.conditionalContextMenus()
 			
 				if contextMenus:
-					# Todo: Make sure that the index is 0 for all items
+					# Todo: Make sure that the index is 0 for all items,
+					# i.e., add at top rather than at bottom of menu:
+					newSeparator = NSMenuItem.separatorItem()
+					theMenu.addItem_(newSeparator)
 					setUpMenuHelper(theMenu, contextMenus, self)
 					
-					newSeparator = NSMenuItem.separatorItem()
-					theMenu.insertItem_atIndex_(newSeparator, 1)
-		
 		except:
 			self.logError(traceback.format_exc())
 	
