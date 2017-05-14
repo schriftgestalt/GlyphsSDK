@@ -881,16 +881,20 @@ class PalettePlugin (NSObject, GlyphsPaletteProtocol):
 			if self.theView() is not None:
 				Frame = self.theView().frame()
 				# Set minimum and maximum height to height of Frame
-			
-				self.min = Frame.size.height
-				self.max = Frame.size.height
+				if not hasattr(self, "min"):
+					self.min = Frame.size.height
+				if not hasattr(self, "max"):
+					self.max = Frame.size.height
 #			if NSUserDefaults.standardUserDefaults().objectForKey_(self.dialogName + ".ViewHeight"):
 #				Frame.size.height = NSUserDefaults.standardUserDefaults().integerForKey_(self.dialogName + ".ViewHeight")
 #				self.theView().setFrame_(Frame)
 			
 			if hasattr(self, 'start'):
 				self.start()
-			
+			try:
+				self.theView().setController_(self)
+			except:
+				pass
 			return self
 		except:
 			self.logError(traceback.format_exc())
