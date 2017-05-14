@@ -1661,7 +1661,7 @@ class UserDataProxy(Proxy):
 			return userData.allKeys()
 		return None
 	def __repr__(self):
-		return self._owner.pyobjc_instanceMethods.userData().description()
+		return self._owner.pyobjc_instanceMethods.userData().__repr__()
 
 		
 class SmartComponentPoleMappingProxy(Proxy):
