@@ -374,6 +374,12 @@ class DefaultsProxy(Proxy):
 
 GSApplication.defaults = property(lambda self: DefaultsProxy(self))
 
+def __registerDefaults__(self, key, value):
+	if key != None and value != None and len(key) > 2:
+		NSUserDefaults.standardUserDefaults().registerDefaults_({key:value})
+	else:
+		raise KeyError
+GSApplication.registerDefault = __registerDefaults__
 '''.. attribute:: defaults
 	
 	A dict like object for storing preferences. You can get and set key-value pairs.
