@@ -295,21 +295,21 @@ To match the way Glyphs draws handle sizes, you can use the following method. It
 		handleSizes = (5, 8, 12) # possible user settings
 		handleSizeIndex = Glyphs.handleSize # user choice in Glyphs > Preferences > User Preferences > Handle Size
 		handleSize = handleSizes[handleSizeIndex]*self.getScale()**-0.9 # scaled diameter
-		
+	
 		# offcurves are a little smaller:
 		if node.type == OFFCURVE:
-			rectSize *= 0.8
-		
+			handleSize *= 0.8
+	
 		# selected handles are a little bigger:
-		layerSelection = node.parent().parent.selection
+		layerSelection = node.parent.parent.selection
 		if node in layerSelection: # workaround for node.selected (currently broken)
-			rectSize *= 1.45
-		
+			handleSize *= 1.45
+	
 		# draw disc inside a rectangle around point position:
 		position = node.position
 		rect = NSRect()
-		rect.origin = NSPoint(position.x-rectSize/2, position.y-rectSize/2)
-		rect.size = NSSize(rectSize, rectSize)
+		rect.origin = NSPoint(position.x-handleSize/2, position.y-handleSize/2)
+		rect.size = NSSize(handleSize, handleSize)
 		NSBezierPath.bezierPathWithOvalInRect_(rect).fill()
 ```
 
