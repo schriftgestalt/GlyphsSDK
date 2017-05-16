@@ -301,8 +301,7 @@ To match the way Glyphs draws handle sizes, you can use the following method. It
 			handleSize *= 0.8
 	
 		# selected handles are a little bigger:
-		layerSelection = node.parent.parent.selection
-		if node in layerSelection: # workaround for node.selected (currently broken)
+		if node.selected:
 			handleSize *= 1.45
 	
 		# draw disc inside a rectangle around point position:
