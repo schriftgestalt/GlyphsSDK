@@ -2820,7 +2820,7 @@ GSFont.kerningForPair = kerningForPair
 	:type leftKey: str
 	:param rightKey: either a glyph name or a class name
 	:type rightKey: str
-	:param direction: writing direction (see Constants)
+	:param direction: optional writing direction (see Constants). Default is LTR.
 	:type direction: str
 	:return: The kerning value
 	:rtype: float
@@ -2841,25 +2841,27 @@ GSFont.kerningForPair = kerningForPair
 		9.22337203685e+18 # (this is the maximum number for 64 bit. It is used as an empty value)
 '''
 
-def setKerningForPair(self, FontMasterID, LeftKeringId, RightKerningId, Value):
+def setKerningForPair(self, FontMasterID, LeftKeringId, RightKerningId, Value, direction = LTR):
 	if not LeftKeringId[0] == '@':
 		LeftKeringId = self.glyphs[LeftKeringId].id
 	if not RightKerningId[0] == '@':
 		RightKerningId = self.glyphs[RightKerningId].id
-	self.setKerningForFontMasterID_LeftKey_RightKey_Value_direction_(FontMasterID, LeftKeringId, RightKerningId, Value, LTR)
+	self.setKerningForFontMasterID_LeftKey_RightKey_Value_direction_(FontMasterID, LeftKeringId, RightKerningId, Value, direction)
 GSFont.setKerningForPair = setKerningForPair
-'''.. function:: setKerningForPair(FontMasterId, LeftKey, RightKey, Value)
+'''.. function:: setKerningForPair(fontMasterId, leftKey, rightKey, value [, direction = LTR])
 	
-	This sets the kerning for the two specified glyphs (LeftKey or RightKey is the glyphname) or a kerning group key (@MMK_X_XX).
+	This sets the kerning for the two specified glyphs (leftKey or rightKey is the glyphname) or a kerning group key (@MMK_X_XX).
 	
-	:param FontMasterId: The id of the FontMaster
-	:type FontMasterId: str
-	:param LeftKey: either a glyph name or a class name
-	:type LeftKey: str
-	:param RightKey: either a glyph name or a class name
-	:type RightKey: str
-	:param Value: kerning value
-	:type Value: float
+	:param fontMasterId: The id of the FontMaster
+	:type fontMasterId: str
+	:param leftKey: either a glyph name or a class name
+	:type leftKey: str
+	:param rightKey: either a glyph name or a class name
+	:type rightKey: str
+	:param value: kerning value
+	:type value: float
+	:param direction: optional writing direction (see Constants). Default is LTR.
+	:type direction: str
 
 	.. code-block:: python
 		# set kerning for group T and group A for currently selected master
