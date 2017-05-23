@@ -2797,7 +2797,7 @@ def kerningForPair(self, FontMasterID, LeftKeringId, RightKerningId ):
 		LeftKeringId = self.glyphs[LeftKeringId].id
 	if not RightKerningId[0] == '@':
 		RightKerningId = self.glyphs[RightKerningId].id
-	return self.kerningForFontMasterID_LeftKey_RightKey_(FontMasterID, LeftKeringId, RightKerningId)
+	return self.kerningForFontMasterID_LeftKey_RightKey_direction_(FontMasterID, LeftKeringId, RightKerningId, LTR)
 GSFont.kerningForPair = kerningForPair
 '''.. function:: kerningForPair(FontMasterId, LeftKey, RightKey)
 	
