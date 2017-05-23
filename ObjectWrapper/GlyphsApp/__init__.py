@@ -2792,23 +2792,25 @@ GSFont.show = GSFont__show__
 '''
 
 
-def kerningForPair(self, FontMasterID, LeftKeringId, RightKerningId ):
+def kerningForPair(self, FontMasterID, LeftKeringId, RightKerningId, direction = LTR):
 	if not LeftKeringId[0] == '@':
 		LeftKeringId = self.glyphs[LeftKeringId].id
 	if not RightKerningId[0] == '@':
 		RightKerningId = self.glyphs[RightKerningId].id
-	return self.kerningForFontMasterID_LeftKey_RightKey_direction_(FontMasterID, LeftKeringId, RightKerningId, LTR)
+	return self.kerningForFontMasterID_LeftKey_RightKey_direction_(FontMasterID, LeftKeringId, RightKerningId, direction)
 GSFont.kerningForPair = kerningForPair
-'''.. function:: kerningForPair(FontMasterId, LeftKey, RightKey)
+'''.. function:: kerningForPair(fontMasterId, leftKey, rightKey [, direction = LTR])
 	
-	This returns the kerning value for the two specified glyphs (LeftKey or RightKey is the glyphname) or a kerning group key (@MMK_X_XX).
+	This returns the kerning value for the two specified glyphs (leftKey or rightKey is the glyph name) or a kerning group key (@MMK_X_XX).
 	
-	:param FontMasterId: The id of the FontMaster
-	:type FontMasterId: str
-	:param LeftKey: either a glyph name or a class name
-	:type LeftKey: str
-	:param RightKey: either a glyph name or a class name
-	:type RightKey: str
+	:param fontMasterId: The id of the FontMaster
+	:type fontMasterId: str
+	:param leftKey: either a glyph name or a class name
+	:type leftKey: str
+	:param rightKey: either a glyph name or a class name
+	:type rightKey: str
+	:param direction: writing direction (see Constants)
+	:type direction: str
 	:return: The kerning value
 	:rtype: float
 
@@ -3535,6 +3537,31 @@ def __set__lastExportedFilePath__(self, value):
 	else:
 		self.tempData().removeObjectForKey_("lastExportedFilePath")
 GSInstance.lastExportedFilePath = property(lambda self: self.tempData().objectForKey_("lastExportedFilePath"), lambda self, value: __set__lastExportedFilePath__(self, value))
+
+'''.. attribute:: lastExportedFilePath
+
+	.. versionadded:: 2.4.2
+	
+	Returns a ready interpolated :class:`GSFont` object representing this instance. Other than the source object, this interpolated font will contain only one master and one instance.
+	
+	Note: When accessing several properties of such an instance consecutively, it is advisable to create the instance once into a variable and then use that. Otherwise, the instance object will be completely interpolated upon each access. See sample below.
+
+	.. code-block:: python
+		
+		# create instance once
+		interpolated = Glyphs.font.instances[0].interpolatedFont
+		
+		# then access it several times
+		print interpolated.masters
+		print interpolated.instances
+		
+		(<GSFontMaster "Light" width 100.0 weight 75.0>)
+		(<GSInstance "Web" width 100.0 weight 75.0>)
+
+
+	:type: unicode
+	'''
+
 
 
 ##################################################################################
