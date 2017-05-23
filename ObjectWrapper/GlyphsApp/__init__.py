@@ -571,21 +571,6 @@ GSApplication.buildNumber = int(NSBundle.mainBundle().infoDictionary()["CFBundle
 	
 	:type: int'''
 
-APP_MENU = "APP_MENU"
-FILE_MENU = "FILE_MENU"
-EDIT_MENU = "EDIT_MENU"
-GLYPH_MENU = "GLYPH_MENU"
-PATH_MENU = "PATH_MENU"
-FILTER_MENU = "FILTER_MENU"
-VIEW_MENU = "VIEW_MENU"
-SCRIPT_MENU = "SCRIPT_MENU"
-WINDOW_MENU = "WINDOW_MENU"
-HELP_MENU = "HELP_MENU"
-
-ONSTATE = NSOnState
-OFFSTATE = NSOffState
-MIXEDSTATE = NSMixedState
-
 
 menuTagLookup = {
 	APP_MENU : 1,
@@ -823,21 +808,7 @@ GSApplication.ligatureComponents = _ligatureComponents
 #
 
 
-DRAWFOREGROUND = "DrawForeground"
-DRAWBACKGROUND = "DrawBackground"
-DRAWINACTIVE = "DrawInactive"
 DrawLayerCallbacks = (DRAWFOREGROUND, DRAWBACKGROUND, DRAWINACTIVE)
-
-DOCUMENTOPENED = "GSDocumentWasOpenedNotification"
-DOCUMENTACTIVATED = "GSDocumentActivateNotification"
-DOCUMENTWASSAVED = "GSDocumentWasSavedSuccessfully"
-DOCUMENTEXPORTED = "GSDocumentWasExportedNotification"
-DOCUMENTCLOSED = "GSDocumentCloseNotification"
-TABDIDOPEN = "TabDidOpenNotification"
-TABWILLCLOSE = "TabWillCloseNotification"
-UPDATEINTERFACE = "GSUpdateInterface"
-MOUSEMOVED = "mouseMovedNotification"
-
 Observers = (DOCUMENTOPENED, DOCUMENTACTIVATED, DOCUMENTWASSAVED, DOCUMENTEXPORTED, DOCUMENTCLOSED, TABDIDOPEN, TABWILLCLOSE, UPDATEINTERFACE, MOUSEMOVED)
 
 callbackOperationTargets = {}
@@ -1209,6 +1180,49 @@ GSCenterRight = 5
 GSBottomLeft = 0
 GSBottomCenter = 1
 GSBottomRight = 2
+
+
+# Writing direction
+LTR = 0
+RTL = 1
+LTRTTB = 3
+RTLTTB = 2
+
+# Callbacks
+DRAWFOREGROUND = "DrawForeground"
+DRAWBACKGROUND = "DrawBackground"
+DRAWINACTIVE = "DrawInactive"
+DOCUMENTOPENED = "GSDocumentWasOpenedNotification"
+DOCUMENTACTIVATED = "GSDocumentActivateNotification"
+DOCUMENTWASSAVED = "GSDocumentWasSavedSuccessfully"
+DOCUMENTEXPORTED = "GSDocumentWasExportedNotification"
+DOCUMENTCLOSED = "GSDocumentCloseNotification"
+TABDIDOPEN = "TabDidOpenNotification"
+TABWILLCLOSE = "TabWillCloseNotification"
+UPDATEINTERFACE = "GSUpdateInterface"
+MOUSEMOVED = "mouseMovedNotification"
+
+# Menus
+APP_MENU = "APP_MENU"
+FILE_MENU = "FILE_MENU"
+EDIT_MENU = "EDIT_MENU"
+GLYPH_MENU = "GLYPH_MENU"
+PATH_MENU = "PATH_MENU"
+FILTER_MENU = "FILTER_MENU"
+VIEW_MENU = "VIEW_MENU"
+SCRIPT_MENU = "SCRIPT_MENU"
+WINDOW_MENU = "WINDOW_MENU"
+HELP_MENU = "HELP_MENU"
+
+ONSTATE = NSOnState
+OFFSTATE = NSOffState
+MIXEDSTATE = NSMixedState
+
+
+
+
+
+
 
 
 GSElement.x = property(lambda self: self.pyobjc_instanceMethods.position().x,
@@ -7744,12 +7758,6 @@ GSEditViewController.layersCursor = property(lambda self: self.graphicView().cac
 	:type: integer
 
 '''
-
-LTR = 0
-RTL = 1
-
-LTRTTB = 3
-RTLTTB = 2
 
 
 GSEditViewController.direction = property(lambda self: self.writingDirection(), lambda self, value: self.setWritingDirection_(value));
