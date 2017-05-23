@@ -3517,15 +3517,24 @@ def __Instance_Export__(self, Format = "OTF", FontPath = None, AutoHint = True, 
 	Exporter.setUseProductionNames_(UseProductionNames)
 
 	Exporter.setTempPath_(os.path.expanduser("~/Library/Application Support/Glyphs/Temp/")) # this has to be set correctly.
-
+	
 	Delegate = _ExporterDelegate_.alloc().init() # the collectResults_() method of this object will be called on case the exporter has to report a problem.
 	Exporter.setDelegate_(Delegate)
 	Exporter.main()
+	if Delegate.result is True:
+		self.lastExportedFilePath = Exporter.finalFontFile()
+	else:
+		self.lastExportedFilePath = None
 	return Delegate.result
 
 GSInstance.generate = __Instance_Export__
 
-
+def __set__lastExportedFilePath__(self, value):
+	if value:
+		self.tempData().setObject_forKey_(value, "lastExportedFilePath")
+	else:
+		self.tempData().removeObjectForKey_("lastExportedFilePath")
+GSInstance.lastExportedFilePath = property(lambda self: self.tempData().objectForKey_("lastExportedFilePath"), lambda self, value: __set__lastExportedFilePath__(self, value))
 
 
 ##################################################################################
