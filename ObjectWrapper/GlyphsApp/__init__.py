@@ -8741,5 +8741,18 @@ Callback Keys
 		if some thing changed in the edit view. Maybe the selection or the glyph data.
 	MOUSEMOVED
 		is calle if the mouse is moved. If you need to draw something, you need to call `Glyphs.redraw()` and also register to one of the drawing callbacks.
+
+Writing Directions
+
+	The writing directions of the Edit View.
+
+	LTR
+		Left To Right (e.g. Latin)
+	RTL
+		Right To Left (e.g. Arabic, Hebrew)
+	LTRTTB
+		Left To Right, Top To Bottom
+	RTLTTB
+		Right To Left, Top To Bottom
 	
 '''
