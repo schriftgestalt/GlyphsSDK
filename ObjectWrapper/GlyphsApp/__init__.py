@@ -1228,7 +1228,7 @@ GSElement.x = property(lambda self: self.pyobjc_instanceMethods.position().x,
 GSElement.y = property(lambda self: self.pyobjc_instanceMethods.position().y,
 	lambda self, value: self.setPosition_(NSMakePoint(self.x, value)))
 
-GSElement.layer = property(lambda self: self.parent)
+GSElement.layer = property(lambda self: self.parent())
 
 
 
