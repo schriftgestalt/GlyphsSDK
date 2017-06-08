@@ -977,6 +977,9 @@ class callbackHelperClass(NSObject):
 def __addCallback__(self, target, operation):
 
 	# Remove possible old function by the same name
+	targetName = str(target)
+	print targetName
+
 	try:
 		callbackTargets = None
 		try:
@@ -985,17 +988,17 @@ def __addCallback__(self, target, operation):
 			callbackTargets = {}
 			callbackOperationTargets[operation] = callbackTargets
 		
-		if callbackTargets.has_key(target.__name__):
+		if callbackTargets.has_key(targetName):
 			self.removeCallback(target, operation)
 		
 		# DrawLayerCallbacks
 		if operation in DrawLayerCallbacks:
 
 			# Add class to callbackTargets dict by the function name
-			callbackTargets[target.__name__] = callbackHelperClass(target, operation)
+			callbackTargets[targetName] = callbackHelperClass(target, operation)
 	
 			# Add to stack
-			GSCallbackHandler.addCallback_forOperation_(callbackTargets[target.__name__], operation)
+			GSCallbackHandler.addCallback_forOperation_(callbackTargets[targetName], operation)
 
 			# Redraw immediately
 			self.redraw()
@@ -1003,9 +1006,9 @@ def __addCallback__(self, target, operation):
 		# Other observers
 		elif operation in Observers:
 			# Add class to callbackTargets dict by the function name
-			callbackTargets[target.__name__] = callbackHelperClass(target, operation)
-			selector = objc.selector(callbackTargets[target.__name__].callback, signature="v@:@")
-			NSNotificationCenter.defaultCenter().addObserver_selector_name_object_(callbackTargets[target.__name__], selector, operation, objc.nil)
+			callbackTargets[targetName] = callbackHelperClass(target, operation)
+			selector = objc.selector(callbackTargets[targetName].callback, signature="v@:@")
+			NSNotificationCenter.defaultCenter().addObserver_selector_name_object_(callbackTargets[targetName], selector, operation, objc.nil)
 	except:
 		NSLog(traceback.format_exc())
 
@@ -1046,23 +1049,25 @@ GSApplication.addCallback = __addCallback__
 	'''
 
 def __do__removeCallback___(self, target, operation):
+
+	targetName = str(target)
 	callbackTargets = None
 	try:
 		callbackTargets = callbackOperationTargets[operation]
 	except:
 		return
-	if callbackTargets.has_key(target.__name__):
+	if callbackTargets.has_key(targetName):
 
 		# DrawLayerCallbacks
-		if callbackTargets[target.__name__].operation in DrawLayerCallbacks:
-			GSCallbackHandler.removeCallback_(callbackTargets[target.__name__])
-			del(callbackTargets[target.__name__])
+		if callbackTargets[targetName].operation in DrawLayerCallbacks:
+			GSCallbackHandler.removeCallback_(callbackTargets[targetName])
+			del(callbackTargets[targetName])
 			# Redraw immediately
 			self.redraw()
 		# Other observers
-		elif callbackTargets[target.__name__].operation in Observers:
-			NSNotificationCenter.defaultCenter().removeObserver_(callbackTargets[target.__name__])
-			del(callbackTargets[target.__name__])
+		elif callbackTargets[targetName].operation in Observers:
+			NSNotificationCenter.defaultCenter().removeObserver_(callbackTargets[targetName])
+			del(callbackTargets[targetName])
 
 def __removeCallback___(self, target, operation = None):
 	if operation != None:
