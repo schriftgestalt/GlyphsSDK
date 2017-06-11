@@ -4120,14 +4120,7 @@ def Glyph__repr__(self):
 	return "<GSGlyph \"%s\" with %s layers>" % (self.name, len(self.layers))
 GSGlyph.__repr__ = Glyph__repr__;
 
-def GSGlyph__copy__(self, memo=None):
-	new = self.copy()
-	new.parent = self.parent
-	return new
-GSGlyph.__copy__ = GSGlyph__copy__
-
-GSGlyph.mutableCopyWithZone_ = GSGlyph__copy__
-
+GSGlyph.mutableCopyWithZone_ = GSObject__copy__
 
 GSGlyph.parent = property(			lambda self: self.valueForKey_("parent"),
 									lambda self, value: self.setParent_(value)) 
@@ -4792,13 +4785,7 @@ def Layer__repr__(self):
 	return "<%s \"%s\" (%s)>" % (self.className(), name, parent)
 GSLayer.__repr__ = Layer__repr__;
 
-def GSLayer__copy__(self, memo=None):
-	new = self.copy()
-	new.parent = self.parent
-	return new
-GSLayer.__copy__ = GSLayer__copy__
-
-GSLayer.mutableCopyWithZone_ = GSLayer__copy__
+GSLayer.mutableCopyWithZone_ = GSObject__copy__
 
 GSLayer.parent = property(			lambda self: self.valueForKey_("parent"),
 									lambda self, value: self.setParent_(value))
@@ -6286,13 +6273,7 @@ def Path__repr__(self):
 	return "<GSPath %s nodes and %s segments>" % (len(self.nodes), len(self.segments))
 GSPath.__repr__ = Path__repr__;
 
-def GSPath__copy__(self, memo=None):
-	new = self.copy()
-	new.parent = self.parent
-	return new
-GSPath.__copy__ = GSPath__copy__
-
-GSPath.mutableCopyWithZone_ = GSPath__copy__
+GSPath.mutableCopyWithZone_ = GSObject__copy__
 
 GSPath.parent = property(		lambda self: self.valueForKey_("parent"),
 								lambda self, value: self.setParent_(value)) 
