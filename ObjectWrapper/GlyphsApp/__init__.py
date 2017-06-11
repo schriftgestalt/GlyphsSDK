@@ -1662,7 +1662,7 @@ class UserDataProxy(Proxy):
 	def __getitem__(self, Key):
 		return self._owner.userDataForKey_(Key)
 	def __setitem__(self, Key, Value):
-		self._owner.setUserData_forKey_(Value, Key)
+		self._owner.setUserData_forKey_(objcObject(Value), Key)
 	def __delitem__(self, Key):
 		self._owner.removeUserDataForKey_(Key)
 	def values(self):
@@ -1688,9 +1688,9 @@ class SmartComponentPoleMappingProxy(Proxy):
 	def __setitem__(self, Key, Value):
 		poleMapping = self._owner.partSelection()
 		if poleMapping == None:
-			self._owner.setPartSelection_(NSMutableDictionary.dictionaryWithObject_forKey_(Value, Key))
+			self._owner.setPartSelection_(NSMutableDictionary.dictionaryWithObject_forKey_(objcObject(Value), Key))
 		else:
-			poleMapping[Key] = Value
+			poleMapping[Key] = objcObject(Value)
 	def __delitem__(self, Key):
 		poleMapping = self._owner.partSelection()
 		if poleMapping != None:
@@ -1713,9 +1713,9 @@ class smartComponentValuesProxy(Proxy):
 	def __setitem__(self, Key, Value):
 		pieceSettings = self._owner.pieceSettings()
 		if pieceSettings == None:
-			self._owner.setPieceSettings_({Key: Value})
+			self._owner.setPieceSettings_({Key: objcObject(Value)})
 		else:
-			pieceSettings[Key] = Value
+			pieceSettings[Key] = objcObject(Value)
 	def __delitem__(self, Key):
 		pieceSettings = self._owner.pieceSettings()
 		if pieceSettings != None:
