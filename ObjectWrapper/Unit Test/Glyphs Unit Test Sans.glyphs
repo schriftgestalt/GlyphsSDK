@@ -1,5 +1,8 @@
 {
 .appVersion = "1032";
+DisplayStrings = (
+A
+);
 classes = (
 {
 code = A;
@@ -255,7 +258,7 @@ xHeight = 490;
 glyphs = (
 {
 glyphname = A;
-lastChange = "2016-03-05 11:48:13 +0000";
+lastChange = "2017-06-20 10:35:01 +0000";
 layers = (
 {
 anchors = (
@@ -385,6 +388,10 @@ nodes = (
 );
 }
 );
+};
+backgroundImage = {
+crop = "{{0, 0}, {489, 637}}";
+imagePath = A.jpg;
 };
 layerId = "C4872ECA-A3A9-40AB-960A-1DB2202F16DE";
 paths = (
