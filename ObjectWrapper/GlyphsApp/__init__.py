@@ -7261,7 +7261,7 @@ GSBackgroundImage.locked = property(		lambda self: bool(self.pyobjc_instanceMeth
 	:type: bool
 '''
 
-GSBackgroundImage.alpha = property(		lambda self: bool(self.pyobjc_instanceMethods.alpha()),
+GSBackgroundImage.alpha = property(		lambda self: self.pyobjc_instanceMethods.alpha(),
 								lambda self, value: self.setAlpha_(value))
 '''.. attribute:: alpha
 	
