@@ -1137,7 +1137,7 @@ class ReporterPlugin (NSObject, GlyphsReporterProtocol):
 			self._scale = options["Scale"]
 			if hasattr(self, 'foregroundInViewCoords'):
 
-				self.foregroundInViewCoords(Glyphs.font.selectedLayers[0])
+				self.foregroundInViewCoords(self.activeLayer())
 
 		except:
 			self.logError(traceback.format_exc())
