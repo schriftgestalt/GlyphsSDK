@@ -5819,6 +5819,8 @@ Properties
 .. autosummary::
 	
 	position
+	scale
+	rotation
 	componentName
 	component
 	layer
