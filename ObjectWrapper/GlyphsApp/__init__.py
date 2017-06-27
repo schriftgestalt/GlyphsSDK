@@ -7185,6 +7185,7 @@ Properties
 	locked
 	position
 	scale
+	rotation
 	transform
 	alpha
 	
