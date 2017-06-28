@@ -16,6 +16,18 @@ if not path in sys.path:
 
 ############################################################################################
 
+
+# Forward compatibility for plugins that wish to use their self-created contextual NSMenuItem entries instead of Glyphs' wrapper
+# Set to True once this functionality shall be published. (It's working as of this writing)
+USESELFCREATEDNSMENUITEMS = True
+
+# Forward compatibility to notify plugins if all contextual menu items will be forced into one sub menu per plugin.
+# Set to True once the contextual menu items of plugins will be grouped and forced into sub menus.
+PLUGINMENUSINFORCEDSUBMENU = False
+
+
+############################################################################################
+
 #  Helper methods
 
 def LogToConsole_AsClassExtension(self, message):
