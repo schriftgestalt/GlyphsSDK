@@ -1423,7 +1423,7 @@ class FontInstancesProxy (Proxy):
 		if type(Key) is int:
 			if Key < 0:
 				Key = self.__len__() + Key
-			return self._owner.instanceAtIndex_(Key)
+			return self._owner.objectInInstancesAtIndex_(Key)
 		else:
 			raise(KeyError)
 	def __setitem__(self, Key, Class):
@@ -1435,10 +1435,10 @@ class FontInstancesProxy (Proxy):
 		if type(Key) is int:
 			if Key < 0:
 				Key = self.__len__() + Key
-			return self._owner.removeInstanceAtIndex_(Key)
+			return self._owner.removeObjectFromInstancesAtIndex_(Key)
 	def __iter__(self):
 		for index in range(self._owner.countOfInstances()):
-			yield self._owner.instanceAtIndex_(index)
+			yield self._owner.objectInInstancesAtIndex_(index)
 	def append(self, Instance):
 		self._owner.addInstance_(Instance)
 	def extend(self, Instances):
@@ -1447,7 +1447,7 @@ class FontInstancesProxy (Proxy):
 	def remove(self, Instance):
 		self._owner.removeInstance_(Instance)
 	def insert(self, Index, Instance):
-		self._owner.insertInstance_atIndex_(Instance, Index)
+		self._owner.insertObject_inInstancesAtIndex_(Instance, Index)
 	def __len__(self):
 		return self._owner.countOfInstances()
 	def values(self):
