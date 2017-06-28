@@ -1232,7 +1232,7 @@ GSElement.x = property(lambda self: self.pyobjc_instanceMethods.position().x,
 GSElement.y = property(lambda self: self.pyobjc_instanceMethods.position().y,
 	lambda self, value: self.setPosition_(NSMakePoint(self.x, value)))
 
-GSElement.layer = property(lambda self: self.parent())
+GSElement.layer = property(lambda self: self.pyobjc_instanceMethods.layer())
 
 
 
@@ -6647,8 +6647,7 @@ GSNode.connection = property(__GSNode_get_connection, __GSNode_set_connection, d
 
 GSNode.parent = property(lambda self: self.pyobjc_instanceMethods.parent())
 
-GSNode.layer = property(lambda self: self.parent.parent)
-
+GSNode.layer = property(lambda self: self.pyobjc_instanceMethods.layer())
 
 '''.. attribute:: selected
 	Selection state of node in UI.
