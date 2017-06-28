@@ -1072,7 +1072,7 @@ def __removeCallback___(self, target, operation = None):
 	if operation != None:
 		__do__removeCallback___(self, target, operation)
 	else:
-		for operation in callbackOperationTargets.allKeys():
+		for operation in callbackOperationTargets.keys():
 			__do__removeCallback___(self, target, operation)
 
 
