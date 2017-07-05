@@ -2741,7 +2741,11 @@ def Font__save__(self, path=None):
 			self.parent.saveDocument_(None)
 		else:
 			URL = NSURL.fileURLWithPath_(path)
-			self.parent.writeSafelyToURL_ofType_forSaveOperation_error_(URL, self.parent.fileType(), 1, objc.nil)
+			if path.endswith('.glyphs'):
+				typeName = "com.schriftgestaltung.glyphs"
+			elif path.endswith('.ufo'):
+				typeName = "org.unifiedfontobject.ufo"
+			self.parent.writeSafelyToURL_ofType_forSaveOperation_error_(URL, typeName, 1, objc.nil)
 	elif path is not None:
 		Doc = GSDocument.alloc().init()
 		Doc.font = self
