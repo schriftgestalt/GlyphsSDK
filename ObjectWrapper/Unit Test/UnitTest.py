@@ -212,6 +212,7 @@ class GlyphsAppTests(unittest.TestCase):
 
 		
 		# GSFont.masters
+		amountLayersPerGlyph = len(font.glyphs['a'].layers)
 		amount = len(font.masters)
 		self.assertGreaterEqual(len(list(font.masters)), 1)
 		newMaster = GSFontMaster()
@@ -230,6 +231,7 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertEqual(newMaster, font.masters[0])
 		font.masters.remove(font.masters[0])
 		self.assertEqual(amount, len(font.masters))
+		self.assertEqual(amountLayersPerGlyph, len(font.glyphs['a'].layers))
 
 		# GSFont.instances
 		amount = len(font.instances)
