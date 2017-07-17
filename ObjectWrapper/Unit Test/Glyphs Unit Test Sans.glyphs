@@ -1,5 +1,5 @@
 {
-.appVersion = "1032";
+.appVersion = "1043";
 DisplayStrings = (
 A
 );
@@ -258,7 +258,7 @@ xHeight = 490;
 glyphs = (
 {
 glyphname = A;
-lastChange = "2017-06-20 10:35:01 +0000";
+lastChange = "2017-07-17 13:57:06 +0000";
 layers = (
 {
 anchors = (
@@ -398,7 +398,7 @@ paths = (
 {
 closed = 1;
 nodes = (
-"321 700 LINE",
+"321 700 LINE {\nname = \"Hello World\";\n}",
 "275 700 LINE",
 "45 0 LINE",
 "65 0 LINE",
@@ -472,7 +472,7 @@ unicode = 00C4;
 },
 {
 glyphname = a;
-lastChange = "2016-03-18 09:51:27 +0000";
+lastChange = "2017-07-17 13:49:10 +0000";
 layers = (
 {
 anchors = (
@@ -791,7 +791,7 @@ paths = (
 {
 closed = 1;
 nodes = (
-"352 147 LINE SMOOTH",
+"352 147 LINE SMOOTH {\nname = Hello;\n}",
 "352 68 OFFCURVE",
 "314 7 OFFCURVE",
 "212 7 CURVE SMOOTH",
