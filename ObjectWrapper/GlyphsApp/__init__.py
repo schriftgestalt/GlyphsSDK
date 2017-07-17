@@ -6606,7 +6606,7 @@ GSNode.type = property(__GSNode_get_type__, __GSNode_set_type__, doc="")
 '''.. attribute:: type
 	The type of the node, LINE, CURVE or OFFCURVE
 	
-	always comare agains the constants, never agains the actual value.
+	Always compare against the constants, never against the actual value.
 	:type: str'''
 
 def __GSNode__get_smooth(self):
