@@ -7039,6 +7039,7 @@ Properties
 
 .. autosummary::
 	
+	parent
 	originNode
 	targetNode
 	otherNode1
@@ -7094,6 +7095,17 @@ def Hint__repr__(self):
 GSHint.__repr__ = Hint__repr__;
 
 GSHint.mutableCopyWithZone_ = GSObject__copy__
+
+GSHint.parent = property(	lambda self: self.pyobjc_instanceMethods.parent())
+
+'''.. attribute:: parent
+	
+	.. versionadded:: 2.4.2
+	
+	Parent layer of hint.
+
+	:type: GSLayer'''
+
 
 GSHint.originNode = property(	lambda self: self.valueForKey_("originNode"),
 								lambda self, value: self.setOriginNode_(value))
