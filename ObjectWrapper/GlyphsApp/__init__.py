@@ -4709,6 +4709,7 @@ Properties
 	
 	parent
 	name
+	master
 	associatedMasterId
 	layerId
 	components
@@ -4805,6 +4806,17 @@ GSLayer.name = property(			lambda self: self.valueForKey_("name"),
 '''.. attribute:: name
 	Name of layer
 	:type: unicode'''
+
+def GSLayer__master__(self):
+	if self.associatedMasterId:
+		master = self.parent.parent.masters[self.associatedMasterId]
+		return master
+
+
+GSLayer.master = property(	lambda self: GSLayer__master__(self))
+'''.. attribute:: master
+	Master that this layer is connected to. Read only.
+	:type: GSFontMaster'''
 
 GSLayer.associatedMasterId = property(lambda self: self.valueForKey_("associatedMasterId"),
 									lambda self, value: self.setAssociatedMasterId_(value)) 
