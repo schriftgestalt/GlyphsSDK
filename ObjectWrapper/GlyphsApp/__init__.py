@@ -7190,6 +7190,39 @@ GSHint.name = property(lambda self: self.valueForKey_("name"), lambda self, valu
 	:type: string'''
 
 
+def GSHint__stem__(self):
+	value = self.pyobjc_instanceMethods.stem()
+	stems = self.parent.master.customParameters['TTFStems']
+	if stems and -1 <= value <= (len(stems)-1):
+		return value
+	else:
+		return -2
+
+def GSHint__setStem__(self, value):
+	stems = self.parent.master.customParameters['TTFStems']
+	if stems and -1 <= value <= (len(stems)-1):
+		self.pyobjc_instanceMethods.setStem_(value)
+	elif value == -2:
+		self.pyobjc_instanceMethods.setStem_(sys.maxint)
+	else:
+		raise ValueError('Wrong value. Stem values can be indices of TT stems ("TTFStems" master custom parameter) or -1 for no stem or -2 for automatic.')
+
+
+GSHint.stem = property(	lambda self: GSHint__stem__(self),
+						lambda self, value: GSHint__setStem__(self, value))
+'''.. attribute:: stem
+	
+	.. versionadded:: 2.4.2
+	
+	Index of TrueType stem that this hint is attached to. The stems are defined in the custom parameter "TTFStems" per master.
+
+	For no stem, value is -1.
+
+	For automatic, value is -2.
+
+	:type: integer'''
+
+
 ##################################################################################
 #
 #
