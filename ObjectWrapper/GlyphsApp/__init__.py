@@ -7200,6 +7200,8 @@ def GSHint__stem__(self):
 
 def GSHint__setStem__(self, value):
 	stems = self.parent.master.customParameters['TTFStems']
+	if not stems:
+		raise ValueError('The master of this layer has no defined "TTFStems" custom parameter')
 	if stems and -1 <= value <= (len(stems)-1):
 		self.pyobjc_instanceMethods.setStem_(value)
 	elif value == -2:
