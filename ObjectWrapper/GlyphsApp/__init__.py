@@ -135,6 +135,8 @@ TABDIDOPEN = "TabDidOpenNotification"
 TABWILLCLOSE = "TabWillCloseNotification"
 UPDATEINTERFACE = "GSUpdateInterface"
 MOUSEMOVED = "mouseMovedNotification"
+MOUSEDOWN = "mouseDownNotification"
+MOUSEUP = "mouseUpNotification"
 
 # Menus
 APP_MENU = "APP_MENU"
