@@ -7077,7 +7077,7 @@ GSHint.__init__ = Hint__init__;
 
 def Hint__origin__pos(self):
 	if (self.originNode):
-		if self.horizontal():
+		if self.horizontal:
 			return self.originNode.position.y
 		else:
 			return self.originNode.position.x
@@ -7085,7 +7085,7 @@ def Hint__origin__pos(self):
 
 def Hint__width__pos(self):
 	if (self.targetNode):
-		if self.horizontal():
+		if self.horizontal:
 			return self.targetNode.position.y
 		else:
 			return self.targetNode.position.x
@@ -7099,7 +7099,7 @@ def Hint__repr__(self):
 	if self.type == BOTTOMGHOST or self.type == TOPGHOST:
 		return "<GSHint %s origin=(%s)>" % (hintConstants[self.type], Hint__origin__pos(self))
 	elif self.type == STEM:
-		return "<GSHint %s Stem origin=(%s) target=(%s) %s>" % (direction, Hint__origin__pos(self), Hint__width__pos(self))
+		return "<GSHint %s Stem origin=(%s) target=(%s)>" % (direction, Hint__origin__pos(self), Hint__width__pos(self))
 	elif self.type == CORNER or self.type == CAP:
 		return "<GSHint %s %s>" % (hintConstants[self.type], self.name)
 	else:
