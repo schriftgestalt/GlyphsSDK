@@ -4076,8 +4076,13 @@ Properties
 	string
 	id
 	category
+	storeCategory
 	subCategory
+	storeSubCategory
 	script
+	storeScript
+	productionName
+	storeProductionName
 	glyphInfo
 	leftKerningGroup
 	rightKerningGroup
