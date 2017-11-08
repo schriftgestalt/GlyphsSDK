@@ -4298,7 +4298,7 @@ GSGlyph.productionName = property(	lambda self: self.production(),
 	.. versionadded:: 2.3
 '''
 
-GSGlyph.storeProductionName = property(lambda self: bool(self.valueForKey_("storeScript")), 
+GSGlyph.storeProductionName = property(lambda self: bool(self.valueForKey_("storeProduction")), 
 									lambda self, value: self.setStoreProduction_(value))
 '''.. attribute:: storeProductionName
 	Set to True in order to manipulate the `productionName` of the glyph (see above).
