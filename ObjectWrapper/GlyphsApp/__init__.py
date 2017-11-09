@@ -4206,9 +4206,9 @@ GSGlyph.layers = property(	lambda self: GlyphLayerProxy(self),
 '''
 
 def GSGlyph_setName(self, name):
-	if name == self.name:
+	if name == self.name or not self.parent:
 		pass
-	elif not self.parent.glyphs.has_key(name):
+	elif self.parent and not self.parent.glyphs.has_key(name):
 		self.setName_changeName_update_(value, False, True)
 	else:
 		raise NameError('The glyph name %s already exists in the font.' % name)
