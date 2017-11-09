@@ -4204,8 +4204,17 @@ GSGlyph.layers = property(	lambda self: GlyphLayerProxy(self),
 		del(font.glyphs['a'].layers[font.selectedLayers[0].layerId])
 		
 '''
+
+def GSGlyph_setName(self, name):
+	if name == self.name:
+		pass
+	elif not self.parent.glyphs.has_key(name):
+		self.setName_changeName_update_(value, False, True)
+	else:
+		raise NameError('The glyph name %s already exists in the font.' % name)
+
 GSGlyph.name = property(			lambda self: self.pyobjc_instanceMethods.name(),
-									lambda self, value: self.setName_changeName_update_(value, False, True))
+									lambda self, value: GSGlyph_setName(self, value))
 '''.. attribute:: name
 	The name of the glyph. It will be converted to a "nice name" (afii10017 to A-cy) (you can disable this behavior in font info or the app preference)
 	:type: unicode
