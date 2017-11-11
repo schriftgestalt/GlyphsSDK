@@ -12,7 +12,7 @@ __all__ = [
 	"wrapperVersion",
 
 	# Constants
-	"MOVE", "LINE", "CURVE", "OFFCURVE", "GSMOVE", "GSLINE", "GSCURVE", "GSOFFCURVE", "GSSHARP", "GSSMOOTH",
+	"MOVE", "LINE", "CURVE", "OFFCURVE", "QCURVE", "GSMOVE", "GSLINE", "GSCURVE", "GSOFFCURVE", "GSSHARP", "GSSMOOTH",
 	"TAG", "TOPGHOST", "STEM", "BOTTOMGHOST", "TTANCHOR", "TTSTEM", "TTALIGN", "TTINTERPOLATE", "TTDIAGONAL", "TTDELTA", "CORNER", "CAP", "TTDONTROUND", "TTROUND", "TTROUNDUP", "TTROUNDDOWN", "TRIPLE",
 	"TEXT", "ARROW", "CIRCLE", "PLUS", "MINUS",
 	"LTR", "RTL", "LTRTTB", "RTLTTB", "GSTopLeft", "GSTopCenter", "GSTopRight", "GSCenterLeft", "GSCenterCenter", "GSCenterRight", "GSBottomLeft", "GSBottomCenter", "GSBottomRight",
@@ -46,6 +46,7 @@ def ____CONSTANTS____(): pass
 GSMOVE_ = 17
 GSLINE_ = 1
 GSCURVE_ = 35
+GSQCURVE_ = 36
 GSOFFCURVE_ = 65
 GSSHARP = 0
 GSSMOOTH = 100
@@ -59,6 +60,7 @@ GSOFFCURVE = "offcurve"
 MOVE = "move"
 LINE = "line"
 CURVE = "curve"
+QCURVE = "qcurve"
 OFFCURVE = "offcurve"
 
 TAG = -2
@@ -6625,6 +6627,8 @@ def __GSNode_get_type__(self):
 		return OFFCURVE
 	elif GS_Type == GSCURVE_:
 		return CURVE
+	elif GS_Type == GSQCURVE_:
+		return QCURVE
 	else:
 		return LINE
 
@@ -8721,6 +8725,9 @@ Node types
 
 	CURVE = "curve"
 		Curve node. Make sure that each curve node is preceded by two off-curve nodes.
+
+	QCURVE = "qcurve"
+		Quadratic curve node. Make sure that each curve node is preceded by at least one off-curve node.
 
 	OFFCURVE = "offcurve"
 		Off-cuve node
