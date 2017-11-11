@@ -1684,7 +1684,10 @@ class UserDataProxy(Proxy):
 		return None
 	def __repr__(self):
 		return self._owner.pyobjc_instanceMethods.userData().__repr__()
-
+	def __contains__(self, item):
+		return self._owner.pyobjc_instanceMethods.userData().objectForKey_(item) is not None
+	def has_key(self, item):
+		return self._owner.pyobjc_instanceMethods.userData().objectForKey_(item) is not None
 		
 class SmartComponentPoleMappingProxy(Proxy):
 	def __getitem__(self, Key):
@@ -2132,7 +2135,7 @@ class PathNodesProxy (Proxy):
 	def __delitem__(self, idx):
 		if idx < 0:
 			idx = len(self) + idx
-		self._owner.removeNodeAtIndex_(idx)
+		self._owner.removeObjectFromNodesAtIndex_(idx)
 	def __len__(self):
 		return self._owner.countOfNodes()
 	def append(self, Node):
@@ -2158,7 +2161,7 @@ class FontTabsProxy (Proxy):
 			if type(idx) is int:
 				if idx < 0:
 					idx = self.__len__() + idx
-				return self._owner.parent.windowController().tabBarControl().viewControllers()[idx + 1]
+				return self._owner.parent.windowController().tabBarControl().tabItemAtIndex_(idx + 1)
 			else:
 				raise(KeyError)
 		else:
@@ -2168,11 +2171,11 @@ class FontTabsProxy (Proxy):
 			raise(NotImplementedError)
 		else:
 			raise(KeyError)
-	def __delitem__(self, Key):
-		if type(Key) is int:
-			if Key < 0:
-				Key = self.__len__() + Key
-			Tab = self._owner.parent.windowController().tabBarControl().viewControllers()[Key + 1]
+	def __delitem__(self, idx):
+		if type(idx) is int:
+			if idx < 0:
+				idx = self.__len__() + idx
+			Tab = self._owner.parent.windowController().tabBarControl().tabItemAtIndex_(idx + 1)
 			self._owner.parent.windowController().tabBarControl().closeTabItem_(Tab)
 		else:
 			raise(KeyError)
@@ -2180,9 +2183,9 @@ class FontTabsProxy (Proxy):
 		for idx in range(self.__len__()):
 			yield self.__getitem__(idx)
 	def __len__(self):
-		return len(self._owner.parent.windowController().tabBarControl().viewControllers()) - 1
+		return self._owner.parent.windowController().tabBarControl().countOfTabItems() - 1
 	def values(self):
-		return self._owner.parent.windowController().tabBarControl().viewControllers()[1:]
+		return self._owner.parent.windowController().tabBarControl().tabItems()[1:]
 
 
 # Function shared by all user-selectable elements in a layer (nodes, anchors etc.)
@@ -2610,7 +2613,6 @@ GSFont.currentText = property(lambda self: __current_Text__(self),
 # Tab interaction:
 
 GSFont.tabs = property(lambda self: FontTabsProxy(self))
-
 
 '''.. attribute:: tabs
 	List of open Edit view tabs in UI, as list of :class:`GSEditViewController` objects.
@@ -4224,7 +4226,7 @@ def GSGlyph_setName(self, name):
 	elif (self.parent and not self.parent.glyphs.has_key(name)) or not self.parent:
 		self.setName_changeName_update_(name, False, True)
 	else:
-		raise NameError('The glyph name %s already exists in the font.' % name)
+		raise NameError('The glyph name \"%s\" already exists in the font.' % name)
 
 GSGlyph.name = property(			lambda self: self.pyobjc_instanceMethods.name(),
 									lambda self, value: GSGlyph_setName(self, value))
@@ -4320,7 +4322,7 @@ GSGlyph.productionName = property(	lambda self: self.production(),
 	.. versionadded:: 2.3
 '''
 
-GSGlyph.storeProductionName = property(lambda self: bool(self.valueForKey_("storeProduction")), 
+GSGlyph.storeProductionName = property(lambda self: bool(self.storeProduction()), 
 									lambda self, value: self.setStoreProduction_(value))
 '''.. attribute:: storeProductionName
 	Set to True in order to manipulate the `productionName` of the glyph (see above).
@@ -7864,7 +7866,7 @@ GSEditViewController.textRange = property(lambda self: self.contentView().select
 
 '''
 
-GSEditViewController.layersCursor = property(lambda self: self.graphicView().cachedSelectionRange().location);
+GSEditViewController.layersCursor = property(lambda self: self.graphicView().cachedLayerSelectionRange().location);
 
 '''
 
