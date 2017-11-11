@@ -4669,9 +4669,9 @@ GSGlyph.endUndo = __EndUndo
 
 def __updateGlyphInfo(self, changeName = True):
 	if self.parent is not None:
-		self.parent.glyphsInfo().updateGlyphInfo_changeName_(self, True)
+		self.parent.glyphsInfo().updateGlyphInfo_changeName_(self, changeName)
 	else:
-		GSGlyphsInfo.sharedManager().updateGlyphInfo_changeName_(self, True)
+		GSGlyphsInfo.sharedManager().updateGlyphInfo_changeName_(self, changeName)
 GSGlyph.updateGlyphInfo = __updateGlyphInfo
 
 '''.. function:: updateGlyphInfo(changeName = True)
