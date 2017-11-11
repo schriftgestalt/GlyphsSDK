@@ -2263,6 +2263,7 @@ Properties
 	masterIndex
 	currentText
 	tabs
+	fontView
 	currentTab
 	filepath
 	tool
@@ -2625,6 +2626,13 @@ GSFont.tabs = property(lambda self: FontTabsProxy(self))
 		font.tabs[-1].close()
 	
 	:type: list'''
+
+GSFont.fontView = property(lambda self: self.parent.windowController().tabBarControl().tabItemAtIndex_(0))
+
+
+'''.. attribute:: fontView
+
+	:type GSFontViewController'''
 
 def __GSFont__currentTab__(self):
 	return self.parent.windowController().activeEditViewController()
