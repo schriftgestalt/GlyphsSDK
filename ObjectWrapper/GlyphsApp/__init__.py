@@ -1359,7 +1359,10 @@ class FontGlyphsProxy (Proxy):
 	def has_key(self, Key):
 		return self._owner.glyphForName_(Key) != None
 	def append(self, Glyph):
-		self._owner.addGlyph_(Glyph)
+		if not self.has_key(Glyph.name):
+			self._owner.addGlyph_(Glyph)
+		else:
+			raise NameError('There is a glyph with the name \"%s\" already in the font.' % Glyph.name)
 	def extend(self, objects):
 		self._owner.addGlyphsFromArray_(list(objects))
 	def __len__(self):
@@ -4206,10 +4209,10 @@ GSGlyph.layers = property(	lambda self: GlyphLayerProxy(self),
 '''
 
 def GSGlyph_setName(self, name):
-	if name == self.name or not self.parent:
+	if name == self.name:
 		pass
-	elif self.parent and not self.parent.glyphs.has_key(name):
-		self.setName_changeName_update_(value, False, True)
+	elif (self.parent and not self.parent.glyphs.has_key(name)) or not self.parent:
+		self.setName_changeName_update_(name, False, True)
 	else:
 		raise NameError('The glyph name %s already exists in the font.' % name)
 
