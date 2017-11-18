@@ -49,6 +49,9 @@ The XML file contains a dictionary with the following structure. The elements wi
     * production `string`: manually set production name (new in v2.2)
     * script `string`: manually set script (new in v2.2)
     * category `string`: manually set category (new in v2.2)
+    * color `int` or `list`: 
+        1. If `int`, it is the index of the internal color list
+        2. If `list, four numbers in the range of 0–255 denoting a RGBA value
     * subcategory `string`: manually set subcategory (new in v2.2)
     * lastChange `string`: Format `2014-01-29 14:14:38 +0000`.
     * layers `list`
