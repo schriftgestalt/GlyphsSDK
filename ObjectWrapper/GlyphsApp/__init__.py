@@ -4766,6 +4766,7 @@ Properties
 	openBezierPath
 	userData
 	smartComponentPoleMapping
+	isSpecialLayer
 
 Functions
 
@@ -5312,6 +5313,14 @@ GSLayer.isAligned = property(lambda self: self.hasAlignedWidth())
 	.. versionadded:: 2.3.1
 
 	Indicates if the components are auto aligned.
+
+	:type: bool
+'''
+
+GSLayer.isSpecialLayer = property(lambda self: self.pyobjc_instanceMethods.isSpecialLayer())
+'''.. attribute:: isSpecialLayer
+
+	If the layer is a brace, bracket or a smart component layer
 
 	:type: bool
 '''
