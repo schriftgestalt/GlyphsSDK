@@ -3734,6 +3734,7 @@ Properties
 	name
 	code
 	automatic
+	active
 
 ----------
 Properties
@@ -3775,7 +3776,12 @@ GSClass.automatic = property(lambda self: self.valueForKey_("automatic").boolVal
 	Define whether this class should be auto-generated when pressing the 'Update' button in the Font Info.
 	:type: bool
 '''
-
+GSClass.active = property(lambda self: not self.disabled(),
+									lambda self, value: self.setDisabled_(not value))
+'''.. attribute:: active
+	:type: bool
+	.. versionadded:: 2.5
+'''
 
 
 ##################################################################################
@@ -3813,6 +3819,7 @@ Properties
 	name
 	code
 	automatic
+	active
 
 ----------
 Properties
@@ -3856,8 +3863,12 @@ GSFeaturePrefix.automatic = property(lambda self: self.valueForKey_("automatic")
 	:type: bool
 	'''
 
-
-
+GSFeaturePrefix.active = property(lambda self: not self.disabled(),
+									lambda self, value: self.setDisabled_(not value))
+'''.. attribute:: active
+	:type: bool
+	.. versionadded:: 2.5
+'''
 
 
 
@@ -3897,6 +3908,7 @@ Properties
 	code
 	automatic
 	notes
+	active
 	
 Functions
 
@@ -3955,8 +3967,14 @@ GSFeature.notes = property(lambda self: self.valueForKey_("notes"),
 	:type: unicode
 	'''
 
+GSFeature.active = property(lambda self: not self.disabled(),
+									lambda self, value: self.setDisabled_(not value))
+'''.. attribute:: active
+	:type: bool
+	.. versionadded:: 2.5
 '''
 
+'''
 ---------
 Functions
 ---------
