@@ -5905,6 +5905,7 @@ Properties
 	selected
 	smartComponentValues
 	bezierPath
+	userData
 	
 Functions
 
@@ -6152,6 +6153,21 @@ GSComponent.bezierPath = property(	 lambda self: self.pyobjc_instanceMethods.bez
 	:type: NSBezierPath
 '''
 
+GSComponent.userData = property(lambda self: UserDataProxy(self))
+
+'''.. attribute:: userData
+
+	.. versionadded:: 2.5
+
+	A dictionary to store user data. Use a unique key and only use objects that can be stored in a property list (string, list, dict, numbers, NSData) otherwise the data will not be recoverable from the saved file.
+	:type: dict
+	.. code-block:: python
+		# set value
+		component.userData['rememberToMakeCoffee'] = True
+
+		# delete value
+		del component.userData['rememberToMakeCoffee']
+'''
 
 
 '''
