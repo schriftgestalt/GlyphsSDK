@@ -3859,7 +3859,7 @@ GSFeaturePrefix.code = property(lambda self: self.valueForKey_("code"),
 GSFeaturePrefix.automatic = property(lambda self: self.valueForKey_("automatic").boolValue(),
 							 lambda self, value: self.setAutomatic_(value))
 '''.. attribute:: automatic
-	Define whether this should be auto-generated when pressing the 'Update' button in the Font Ínfo.
+	Define whether this should be auto-generated when pressing the 'Update' button in the Font Info.
 	:type: bool
 	'''
 
