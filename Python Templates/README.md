@@ -103,10 +103,10 @@ In the plug-in’s `settings()` method, load the .nib:
 ```python
 	def settings(self):
 		# Load .nib file next to plugin.py
-		self.loadNib("TransparencySlider", __file__)
+		self.loadNib("filename", __file__)
 ```
 
-In order to make the lasst line work, make sure you also have a `__file__()` method in your plug-in class. It will return the position of the plugin.py file, so that the `loadNib()` function can find the right `.nib` file. Otherwise, you will get a *Could not load NIB* error. If you don’t have a `__file__()` method, copy and paste this to the end of your plug-in class:
+In order to make the last line work, make sure you also have a `__file__()` method in your plug-in class. It will return the position of the plugin.py file, so that the `loadNib()` function can find the right `.nib` file. Otherwise, you will get a *Could not load NIB* error. If you don’t have a `__file__()` method, copy and paste this to the end of your plug-in class:
 
 ```python
 	def __file__(self):
