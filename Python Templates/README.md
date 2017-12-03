@@ -86,9 +86,35 @@ The sample plug-ins here that use a UI, `File Format`, `Filter With Dialog`, and
 At the root of the plug-in class, you define variables that will be linked to UI elements. In this example, we want to create a pointer to a text field in the dialog to the variable `textField `.
 
 ```python
-class CSVFileExport (FileFormatPlugin):
+class CSVFileExport(FileFormatPlugin):
     textField = objc.IBOutlet() # A text field in the user interface
 ```
+
+In reporters and filters, you need to do the same, e.g.:
+
+```python
+class ShowBackgroundWithoutSnapping(ReporterPlugin):
+	sliderView = objc.IBOutlet()         # the dialog view (e.g., panel or window)
+	transparencySlider = objc.IBOutlet() # the slider placed inside the view
+```
+
+In the plug-in’s `settings()` method, load the .nib:
+
+```python
+	def settings(self):
+		# Load .nib file next to plugin.py
+		self.loadNib("TransparencySlider", __file__)
+```
+
+In order to make the lasst line work, make sure you also have a `__file__()` method in your plug-in class. It will return the position of the plugin.py file, so that the `loadNib()` function can find the right `.nib` file. Otherwise, you will get a *Could not load NIB* error. If you don’t have a `__file__()` method, copy and paste this to the end of your plug-in class:
+
+```python
+	def __file__(self):
+		return __file__
+```
+
+And don’t fiddle with it. Leave it as it is.
+
 
 ##### 2. IBActions: Let UI elements trigger Python functions
 
@@ -155,6 +181,6 @@ For the complete reference for the UI elements, see Apple's AppKit Framework Ref
 ## Troubleshooting and Debugging
 
 Check *Console.app* for error messages to see if everything went right.
-You can also output your own debug code to *Console.app* using the plugin’s own `self.logToConsole()` function.
+You can also output your own debug code to *Console.app* using the plug-in’s own `self.logToConsole()` function.
 
 > Tip: Enter 'Glyphs' into Console.app’s search field to filter for the relevant messages.

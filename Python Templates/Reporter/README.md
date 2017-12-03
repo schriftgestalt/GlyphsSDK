@@ -327,9 +327,11 @@ As with other dialogs, we have two choices to create them: Use Xcode’s Interfa
 
 ### Interface Builder
 
-Create a dialog in Interface Builder like you’ve read about [here](https://github.com/schriftgestalt/GlyphsSDK/tree/master/Python%20Templates). An *IBOutlet* needs to be created at the root of the plug-in class for it (and more for more controls that you want to access from Python), and our class needs an *IBAction* method to receive input from the dialog.
+Create a dialog with interface elements in Interface Builder like you’ve read about [here](https://github.com/schriftgestalt/GlyphsSDK/tree/master/Python%20Templates). In short: add the plugin.py with *File > Add Files...* (Cmd-Opt-A), set the *Custom Class* in the *Identity Inspector* of *File’s Owner* to the name of your plug-in class, ctrl-drag from and to *File’s Owner* to connect outlets and actions. Save your .xib and compile it to a .nib.
 
-You will find the .xib/.nib files of this example [here](https://github.com/schriftgestalt/GlyphsSDK/tree/master/Python%20Templates/Sample%20dialogs) as `SliderView`. Place them in the `Resources` folder in the plug-in package, where the main `plugin.py` is located.
+In `plugin.py`, an *IBOutlet* needs to be created at the root of the plug-in class for the dialog (and more for more controls that you want to access from Python), and our class needs an *IBAction* method to receive input from interface elements.
+
+You will find the .xib/.nib files of this example [here](https://github.com/schriftgestalt/GlyphsSDK/tree/master/Python%20Templates/Sample%20dialogs) as `SliderView`. Place them in the `Resources` folder in the plug-in package, right next to where the `plugin.py` is located.
 
 
 ```python
@@ -340,23 +342,31 @@ from GlyphsApp.plugins import *
 class ____PluginClassName____(SelectTool):
 
 	# The reference to the dialog
-	sliderMenuView = objc.IBOutlet()
+	sliderMenuView = objc.IBOutlet() # the view area placed inside the context menu
+	slider = objc.IBOutlet()         # the slider placed inside sliderMenuView
 	
 	def settings(self):
 		self.name = 'My Select Tool'
 
 		# Load .nib file from package
-		self.loadNib("SliderView")
+		self.loadNib("SliderView", __file__)
 
-		# Define the menu
+		# Add the view to the context menu
 		self.generalContextMenus = [
 			{"view": self.sliderMenuView}
 		]
+		
+		# Prepare slider
+		self.slider.setMinValue_(0.0)
+		self.slider.setMaxValue_(1.0)
 
 	# Prints the slider’s value
 	@objc.IBAction
 	def slider_(self, sender):
 		print 'Slider value:', sender.floatValue()
+	
+	def __file__(self):
+		return __file__
 ```
 
 ### Vanilla
