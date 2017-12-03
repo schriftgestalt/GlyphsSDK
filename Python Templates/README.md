@@ -93,9 +93,9 @@ class CSVFileExport(FileFormatPlugin):
 In reporters and filters, you need to do the same, e.g.:
 
 ```python
-class ShowBackgroundWithoutSnapping(ReporterPlugin):
-	sliderView = objc.IBOutlet()         # the dialog view (e.g., panel or window)
-	transparencySlider = objc.IBOutlet() # the slider placed inside the view
+class ShowSomething(ReporterPlugin):
+	sliderView = objc.IBOutlet()  # the dialog view (e.g., panel or window)
+	slider = objc.IBOutlet()      # the slider placed inside the view
 ```
 
 In the plug-in’s `settings()` method, load the .nib:
