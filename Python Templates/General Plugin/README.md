@@ -52,5 +52,37 @@ You put all your initialization code here.
 ```python
 	def start(self):
 
-		# Your plugin code goes here...
+		# Your plug-in code goes here...
 ```
+
+Something you will probably want to do here is add an entry to one of the menus:
+
+```python
+	def start(self):
+	
+		# create a menu item with its name, and a reference to the method it shoud invoke:
+		newMenuItem = NSMenuItem(self.name, self.doSomething)
+		
+		# append the menu item to one of the menus:
+		Glyphs.menu[FILE_MENU].append(newMenuItem)
+	
+	def doSomething(self):
+		# Your plug-in code goes here...
+```
+
+For the Glyphs menus, you can use any of these predefined, self-explanatory constants:
+
+```python
+	APP_MENU
+	FILE_MENU
+	EDIT_MENU
+	GLYPH_MENU
+	PATH_MENU
+	FILTER_MENU
+	SCRIPT_MENU
+	VIEW_MENU
+	WINDOW_MENU
+	HELP_MENU
+```
+
+In case you are wondering: the constants are defined in `ObjectWrapper/GlyphsApp/__init__.py` in this repository.
