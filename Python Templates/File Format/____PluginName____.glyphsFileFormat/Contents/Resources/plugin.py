@@ -50,10 +50,8 @@ class ____PluginClassName____(FileFormatPlugin):
 	def start(self):
 		
 		# Init user preferences if not existent and set default value
-		if Glyphs.defaults[unicodePref] == None:
-			Glyphs.defaults[unicodePref] = True
-		if Glyphs.defaults[glyphWidthPref] == None:
-			Glyphs.defaults[glyphWidthPref] = True
+		Glyphs.registerDefault(unicodePref, True)
+		Glyphs.registerDefault(glyphWidthPref, True)
 		
 		# Set initial state of checkboxes according to user variables
 		self.unicodeCheckBox.setState_(Glyphs.defaults[unicodePref])
