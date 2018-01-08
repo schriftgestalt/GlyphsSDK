@@ -31,15 +31,17 @@ class ____PluginClassName____(FilterWithDialog):
 	def settings(self):
 		self.menuName = Glyphs.localize({'en': u'My Filter', 'de': u'Mein Filter'})
 		
+		# Word on Run Button (default: Apply)
+		self.actionButtonLabel = Glyphs.localize({'en': u'Apply', 'de': u'Anwenden'})
+		
 		# Load dialog from .nib (without .extension)
 		self.loadNib('IBdialog', __file__)
 	
 	# On dialog show
 	def start(self):
 		
-		# Set default setting if not present
-		if not Glyphs.defaults['com.myname.myfilter.value']:
-			Glyphs.defaults['com.myname.myfilter.value'] = 15.0
+		# Set default value
+		Glyphs.registerDefault('com.myname.myfilter.value', 15.0)
 		
 		# Set value of text field
 		self.myTextField.setStringValue_(Glyphs.defaults['com.myname.myfilter.value'])
