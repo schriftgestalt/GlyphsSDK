@@ -12,7 +12,10 @@
 #import <GlyphsCore/GSGlyph.h>
 #import <GlyphsCore/GSLayer.h>
 #import <GlyphsCore/GSPath.h>
-#import <GlyphsKit/NSBundle+NibLoading.h>
+
+@interface NSBundle (NibLoading)
++ (NSArray *)loadNibNamed:(NSString *)nibName owner:(id)owner error:(NSError **)error;
+@end
 
 @implementation ___FILEBASENAMEASIDENTIFIER___
 
