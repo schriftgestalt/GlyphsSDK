@@ -19,6 +19,8 @@
 
 @implementation ___FILEBASENAMEASIDENTIFIER___
 
+@synthesize windowController;
+
 - (id) init {
 	self = [super init];
 	[NSBundle loadNibNamed:@"___PACKAGENAMEASIDENTIFIER___View" owner:self error:nil];
