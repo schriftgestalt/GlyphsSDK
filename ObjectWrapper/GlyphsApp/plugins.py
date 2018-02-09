@@ -1,10 +1,10 @@
 # encoding: utf-8
 
-
+from __future__ import print_function
 import objc
-from Foundation import *
-from AppKit import *
-import sys, os, re, commands, traceback
+from Foundation import NSBundle, NSLog, NSObject, NSClassFromString, NSMutableArray, NSMutableOrderedSet, NSAttributedString, NSNumber, NSUserDefaults, NSUserNotification, NSUserNotificationCenter, NSNotificationCenter, NSError, NSLocalizedDescriptionKey, NSLocalizedRecoverySuggestionErrorKey, NSNotFound, NSPoint, NSMakePoint, NSZeroPoint, NSMakeRect, NSMakeSize, NSMinX, NSMinY, NSMaxX, NSMaxY, NSRect, NSSize, NSUnarchiver
+from AppKit import NSApplication, NSColor, NSNib, NSMenu, NSMenuItem, NSView, NSImage, NSDocumentController, NSBezierPath, NSFont, NSFontAttributeName, NSForegroundColorAttributeName, NSControlKeyMask, NSCommandKeyMask, NSShiftKeyMask, NSAlternateKeyMask, NSEvent, NSAffineTransform
+import sys, os, re, traceback
 from types import *
 from GlyphsApp import *
 
@@ -25,6 +25,16 @@ USESELFCREATEDNSMENUITEMS = True
 # Set to True once the contextual menu items of plugins will be grouped and forced into sub menus.
 PLUGINMENUSINFORCEDSUBMENU = False
 
+GSFilterPlugin = objc.lookUpClass("GSFilterPlugin")
+GSToolSelect = objc.lookUpClass("GSToolSelect")
+
+__all__ = ["Glyphs", "FileFormatPlugin", "FilterWithDialog", "FilterWithoutDialog", "GeneralPlugin", "PalettePlugin", "ReporterPlugin", "SelectTool",
+	"NSBundle", "NSLog", "NSObject", "NSClassFromString", "NSMutableArray", "NSMutableOrderedSet", "NSAttributedString", "NSNumber", "NSUserDefaults", "NSUserNotification", "NSUserNotificationCenter", "NSNotificationCenter", "NSError", 
+		"NSLocalizedDescriptionKey", "NSLocalizedRecoverySuggestionErrorKey", "NSNotFound", "NSPoint", "NSMakePoint", "NSZeroPoint", "NSMakeRect", "NSMakeSize", "NSMinX", "NSMinY", "NSMaxX", "NSMaxY", "NSRect", "NSSize", "NSUnarchiver",
+	"NSApplication", "NSColor", "NSNib", "NSMenu", "NSMenuItem", "NSView", "NSImage", "NSDocumentController", "NSBezierPath", "NSFont", "NSFontAttributeName", "NSForegroundColorAttributeName", "NSControlKeyMask", "NSCommandKeyMask", "NSShiftKeyMask", "NSAlternateKeyMask", "NSEvent", "NSAffineTransform",
+	"GSFilterPlugin", "setUpMenuHelper",
+	"objc"
+]
 
 ############################################################################################
 
@@ -129,8 +139,8 @@ def setUpMenuHelper(Menu, Items, defaultTarget):
 
 GlyphsFileFormatProtocol = objc.protocolNamed("GlyphsFileFormat")
 
-class FileFormatPlugin (NSObject, GlyphsFileFormatProtocol):
-
+class FileFormatPlugin (NSObject):
+	__pyobjc_protocols__ = [GlyphsFileFormatProtocol]
 	def init(self):
 		"""
 		Do all initializing here.
@@ -354,7 +364,7 @@ class FileFormatPlugin (NSObject, GlyphsFileFormatProtocol):
 				error = NSError.errorWithDomain_code_userInfo_(self.title(), -57, {NSLocalizedDescriptionKey: "The plugin does not support opening the file"})
 				return None, error
 		except:
-			print traceback.format_exc()
+			print(traceback.format_exc())
 		return None, None
 
 
@@ -530,7 +540,7 @@ class FilterWithDialog (GSFilterPlugin):
 				ShadowLayer = ShadowLayers[k]
 				Layer = Layers[k]
 				Layer.setPaths_(NSMutableArray.alloc().initWithArray_copyItems_(ShadowLayer.pyobjc_instanceMethods.paths(), True))
-				Layer.setSelection_(NSMutableArray.array())
+				Layer.setSelection_(None)
 				try:
 					# Glyphs 2.1 and earlier:
 					if len(ShadowLayer.selection()) > 0 and checkSelection:
@@ -595,8 +605,8 @@ FilterWithDialog.loadNib = LoadNib
 
 GlyphsFilterWithoutDialogProtocol = objc.protocolNamed("GlyphsFilter")
 
-class FilterWithoutDialog (NSObject, GlyphsFilterWithoutDialogProtocol):
-
+class FilterWithoutDialog (NSObject):
+	__pyobjc_protocols__ = [GlyphsFilterWithoutDialogProtocol]
 	def init(self):
 		"""
 		Do all initializing here.
@@ -674,7 +684,8 @@ class FilterWithoutDialog (NSObject, GlyphsFilterWithoutDialogProtocol):
 			self.logError(traceback.format_exc())
 	
 	# deprecated --> filter() in user code
-	def __processLayer(self, Layer, selectionCounts): 
+	@objc.python_method
+	def XXprocessLayer(self, Layer, selectionCounts): 
 		"""
 		Each layer is eventually processed here. This is where your code goes.
 		If selectionCounts is True, then apply the code only to the selection.
@@ -702,7 +713,6 @@ class FilterWithoutDialog (NSObject, GlyphsFilterWithoutDialogProtocol):
 		and more than one layer is selected.
 		"""
 		try:
-			# print Layers
 			for Layer in Layers:
 				# Layer = Layers[k]
 				# Layer.clearSelection()
@@ -747,9 +757,6 @@ class FilterWithoutDialog (NSObject, GlyphsFilterWithoutDialogProtocol):
 			# set glyphList to all glyphs
 			glyphList = Font.glyphs
 			
-			# print Arguments
-			
-			# customParameters delivered to filter()
 			customParameters = {}
 			unnamedCustomParameterCount = 0
 			for i in range(1, len(Arguments)):
@@ -810,8 +817,8 @@ FilterWithoutDialog.logError = LogError_AsClassExtension
 
 GlyphsGeneralPluginProtocol = objc.protocolNamed("GlyphsPlugin")
 
-class GeneralPlugin (NSObject, GlyphsGeneralPluginProtocol):
-	
+class GeneralPlugin (NSObject):
+	__pyobjc_protocols__ = [GlyphsGeneralPluginProtocol]
 	def interfaceVersion(self):
 		"""
 		Distinguishes the API version the plugin was built for. 
@@ -861,7 +868,8 @@ GeneralPlugin.logError = LogError_AsClassExtension
 
 GlyphsPaletteProtocol = objc.protocolNamed("GlyphsPalette")
 
-class PalettePlugin (NSObject, GlyphsPaletteProtocol):
+class PalettePlugin (NSObject):
+	__pyobjc_protocols__ = [GlyphsPaletteProtocol]
 	# Define all your IB outlets for your .xib after _theView:
 	_windowController = None
 	# _theView = objc.IBOutlet() # Palette view on which you can place UI elements.
@@ -897,9 +905,6 @@ class PalettePlugin (NSObject, GlyphsPaletteProtocol):
 					self.min = Frame.size.height
 				if not hasattr(self, "max"):
 					self.max = Frame.size.height
-#			if NSUserDefaults.standardUserDefaults().objectForKey_(self.dialogName + ".ViewHeight"):
-#				Frame.size.height = NSUserDefaults.standardUserDefaults().integerForKey_(self.dialogName + ".ViewHeight")
-#				self.theView().setFrame_(Frame)
 			
 			if hasattr(self, 'start'):
 				self.start()
@@ -996,7 +1001,7 @@ class PalettePlugin (NSObject, GlyphsPaletteProtocol):
 		except:
 			self.logError(traceback.format_exc())
 	
-	def currentWindowController(self, sender):
+	def currentWindowController(self):
 		"""
 		Returns a window controller object.
 		Use self.currentWindowController() to access it.
@@ -1036,8 +1041,8 @@ PalettePlugin.loadNib = LoadNib
 
 GlyphsReporterProtocol = objc.protocolNamed("GlyphsReporter")
 
-class ReporterPlugin (NSObject, GlyphsReporterProtocol):
-	
+class ReporterPlugin (NSObject):
+	__pyobjc_protocols__ = [GlyphsReporterProtocol]
 	def init(self):
 		"""
 		Put any initializations you want to make here.
@@ -1128,6 +1133,7 @@ class ReporterPlugin (NSObject, GlyphsReporterProtocol):
 		"""
 		try:
 			self._scale = options["Scale"]
+			self.black = options["Black"]
 			if hasattr(self, 'foreground'):
 				self.foreground(Layer)
 		except:
@@ -1147,6 +1153,7 @@ class ReporterPlugin (NSObject, GlyphsReporterProtocol):
 		"""
 		try:
 			self._scale = options["Scale"]
+			self.black = options["Black"]
 			if hasattr(self, 'foregroundInViewCoords'):
 
 				self.foregroundInViewCoords(self.activeLayer())
@@ -1160,6 +1167,7 @@ class ReporterPlugin (NSObject, GlyphsReporterProtocol):
 		"""
 		try:
 			self._scale = options["Scale"]
+			self.black = options["Black"]
 			if hasattr(self, 'background'):
 				self.background(Layer)
 		except:
@@ -1171,10 +1179,9 @@ class ReporterPlugin (NSObject, GlyphsReporterProtocol):
 		"""
 		try:
 			self._scale = options["Scale"]
+			self.black = options["Black"]
 			if hasattr(self, 'backgroundInViewCoords'):
-
 				self.backgroundInViewCoords(Glyphs.font.selectedLayers[0])
-
 		except:
 			self.logError(traceback.format_exc())
 	
@@ -1191,12 +1198,12 @@ class ReporterPlugin (NSObject, GlyphsReporterProtocol):
 		
 		try:
 			self._scale = options["Scale"]
+			self.black = options["Black"]
 			assert Glyphs
 			
 			if self.controller:
 				if hasattr(self, 'inactiveLayers'):
 					self.inactiveLayers(Layer)
-			
 			else:
 				if hasattr(self, 'preview'):
 					self.preview(Layer)
@@ -1236,7 +1243,8 @@ class ReporterPlugin (NSObject, GlyphsReporterProtocol):
 		
 		except:
 			self.logError(traceback.format_exc())
-	
+
+	@objc.python_method
 	def drawTextAtPoint(self, text, textPosition, fontSize=10.0, fontColor=NSColor.blackColor(), align='bottomleft'):
 		"""
 		Use self.drawTextAtPoint("blabla", myNSPoint) to display left-aligned text at myNSPoint.
@@ -1425,8 +1433,9 @@ class SelectTool (GSToolSelect):
 			return self.toolbarPosition
 		except:
 			self.logError(traceback.format_exc())
-	
- 	def trigger(self):
+
+	@objc.python_method
+	def trigger(self):
 		"""
 		The key to select the tool with keyboard (like v for the select tool).
 		Either use trigger() or keyEquivalent(), not both. Remove the method(s) you do not use.

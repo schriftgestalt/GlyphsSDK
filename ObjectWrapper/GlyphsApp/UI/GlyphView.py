@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
-__all__ = ["GlyphView"]
+from __future__ import print_function
 
+__all__ = ["GlyphView"]
 
 import traceback
 from vanilla import Group
@@ -19,7 +20,7 @@ class GlyphView_view(NSView):
 				NSRectFill(bounds)
 			self._layer.drawInFrame_(bounds)
 		except:
-			print traceback.format_exc()
+			print(traceback.format_exc())
 
 class GlyphView(Group):
 	

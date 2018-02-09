@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
+
 __all__ = ["CanvasView"]
 
 import traceback
@@ -14,7 +16,7 @@ class CanvasView_view(NSView):
 			if self._delegate != None:
 				self._delegate.draw(self)
 		except:
-			print traceback.format_exc()
+			print(traceback.format_exc())
 
 class CanvasView(Group):
 	

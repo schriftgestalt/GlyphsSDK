@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+from __future__ import print_function
+
 from AppKit import NSBezierPath, NSColor, NSFont, NSImage, NSGradient, NSColorSpace, NSMiterLineJoinStyle, NSRoundLineJoinStyle, NSBevelLineJoinStyle, NSFontAttributeName, NSForegroundColorAttributeName, NSGraphicsContext, NSCompositeSourceOver, NSGradientDrawsBeforeStartingLocation, NSGradientDrawsAfterEndingLocation
 from Foundation import NSMakeRect, NSAffineTransform, NSClassFromString, NSMakePoint, NSZeroRect
 
@@ -43,20 +45,20 @@ def newPath():
 	# creates a new path 
 	currentPath = NSBezierPath.bezierPath()
 	
-def moveTo((x, y)):
+def moveTo(pt):
 	# move to point
 	if currentPath is not None:
-		currentPath.moveToPoint_(NSMakePoint(x, y))
+		currentPath.moveToPoint_(NSMakePoint(pt[0], pt[1]))
 	
-def lineTo((x, y)):
+def lineTo(pt):
 	# line to point
 	if currentPath is not None:
-		currentPath.lineToPoint_(NSMakePoint(x, y))
+		currentPath.lineToPoint_(NSMakePoint(pt[0], pt[1]))
 	
-def curveTo((h1x, h1y), (h2x, h2y), (x, y)):
+def curveTo(h1, h2, pt):
 	# curve to point with bcps
 	if currentPath is not None:
-		currentPath.curveToPoint_controlPoint1_controlPoint2_(NSMakePoint(x, y), NSMakePoint(h1x, h1y), NSMakePoint(h2x, h2y))
+		currentPath.curveToPoint_controlPoint1_controlPoint2_(NSMakePoint(pt[0], pt[1]), NSMakePoint(h1[0], h1[1]), NSMakePoint(h2[0], h2[1]))
 
 def closePath():
 	# close the path
@@ -186,13 +188,13 @@ def fontSize(fontSize):
 	# Set the font size.
 	currentFont = NSFont.fontWithName_size_(currentFont.fontName(), fontSize)
 
-def text(textString, (x, y)):
+def text(textString, pt):
 	# Draw a text on position "x", "y".
-	NSString.stringWithString_(textString).drawAtPoint_withAttributes_(NSMakePoint(x, y), {NSFontAttributeName: currentFont, NSForegroundColorAttributeName:currentFillColor})
+	NSString.stringWithString_(textString).drawAtPoint_withAttributes_(NSMakePoint(pt[0], pt[1]), {NSFontAttributeName: currentFont, NSForegroundColorAttributeName:currentFillColor})
 	
-def image(image, (x, y), alpha=1):
+def image(image, pt, alpha=1):
 	if type(image) == NSImage:
-		image.drawAtPoint_fromRect_operation_fraction_(NSMakePoint(x, y), NSZeroRect, NSCompositeSourceOver, 1)
+		image.drawAtPoint_fromRect_operation_fraction_(NSMakePoint(pt[0], pt[1]), NSZeroRect, NSCompositeSourceOver, 1)
 		
 def linearGradient(startPoint=None, endPoint=None, colors=None, locations=None):
 	global currentGradient
