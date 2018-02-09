@@ -11,6 +11,6 @@ def _run(script):
 		with open(path, 'r', encoding='utf-8') as fp:
 			source = fp.read() + '\n'
 
-	exec(compile(source, script, 'exec'), globals(), globals())
+	exec(compile(source, path, 'exec'), globals(), globals())
 
 _run('plugin.py')
