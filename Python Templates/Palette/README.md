@@ -49,8 +49,11 @@ From there you can add the following methods:
 
 #### settings()
 
-In this method you set all attributes that describe the plug-in, such as its name etc.
+In this method you set all attributes that describe the plug-in, such as its name etc. Possible attributes are:
 
+* `self.min` is the minimum height in pixels, e.g., `self.min=200`.
+* `self.max` is the maximum height in pixels, e.g., `self.max=200`.
+* `self.name` is the name of the plug-in. Can be a string (`"MyName"`), a Unicode string (`u"MyName"`), or a `Glyphs.localize()` function for multiple languages:
 
 ```python
 	def settings(self):
@@ -107,15 +110,19 @@ You need to unload all callbacks here because Glyphs.app will otherwise crash.
 
 #### windowController()
 
-`self.windowController()` returns the current window controller. Use `self.windowController().document().font` to drill down to the font which is open in the same window as the palette. 
+`self.windowController()` returns the current window controller. Use `self.windowController().document().font` to drill down to the font which is open in the same window as the palette. In order to prevent a crash, make sure you always check that neither the window controller nor the font is `None`:
 
-#### minHeight() and maxHeight()
-
-`minHeight()` and `maxHeight()` set the minimum and maximum palette heights for resizable palettes. Make sure your .nib/.xib is actually resizable if you make use of it.
+```python
+windowController = self.windowController()
+if windowController:
+	thisFont = windowController.document().font
+	if thisFont:
+		pass # your code goes here
+```
 
 #### currentHeight() and setCurrentHeight_()
 
-`currentHeight()` returns and `setCurrentHeight_()` sets the height of the palette.
+`self.currentHeight()` returns and `self.setCurrentHeight_()` sets the height of the palette.
 
 
 ## Use Vanilla for the dialog view
