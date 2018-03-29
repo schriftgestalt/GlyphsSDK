@@ -2360,6 +2360,7 @@ Functions
 	removeKerningForPair()
 	newTab()
 	updateFeatures()
+	compileFeatures()
 
 ----------
 Properties
@@ -3044,9 +3045,21 @@ GSFont.updateFeatures = __GSFont__updateFeatures__
 
 	.. versionadded:: 2.4
 	
-	Updates all OpenType features and classes at once, including generating necessary new features and classes. Equivalent to the Update button in the features panel.
+	Updates all OpenType features and classes at once, including generating necessary new features and classes. Equivalent to the "Update" button in the features panel.
 '''
 
+def __GSFont__compileFeatures__(self):
+	self.compileTempFontError_(None)
+	
+
+GSFont.compileFeatures = __GSFont__compileFeatures__
+
+'''.. function:: compileFeatures()
+
+	.. versionadded:: 2.5
+	
+	Compiles the features, thus making the new feature code functionally available in the editor. Equivalent to the "Test" button in the features panel.
+'''
 
 
 
