@@ -3036,7 +3036,7 @@ GSFont.newTab = __GSFont__addTab__
 
 def __GSFont__updateFeatures__(self):
 	GSFeatureGenerator.alloc().init().makeFeatures_(self)
-	self.compileTempFontError_(None)
+	self.compileFeatures()
 	
 
 GSFont.updateFeatures = __GSFont__updateFeatures__
