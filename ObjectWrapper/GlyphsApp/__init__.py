@@ -4858,6 +4858,8 @@ Properties
 	master
 	associatedMasterId
 	layerId
+	color
+	colorObject
 	components
 	guides
 	annotations
