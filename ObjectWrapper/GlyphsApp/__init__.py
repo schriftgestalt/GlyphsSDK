@@ -1911,8 +1911,8 @@ class GlyphLayerProxy (Proxy):
 			for layer in values:
 				newLayers[layer.layerId] = layer
 		elif type(values) == dict or isinstance(values, NSDictionary):
-			for (key, layer) in values.items() :
-				newLayers[anchor.name] = anchor
+			for (key, layer) in values.items():
+				newLayers[layer.layerId] = layer
 		else:
 			raise TypeError
 		self._owner.setLayers_(newLayers)
@@ -2089,8 +2089,8 @@ class LayerAnchorsProxy (Proxy):
 	def items(self):
 		Items = []
 		for key in self.keys():
-			Value = self._owner.anchorForName_(Key)
-			Items.append((Key, Value))
+			Value = self._owner.anchorForName_(key)
+			Items.append((key, Value))
 		return Items
 	def values(self):
 		if self._owner.pyobjc_instanceMethods.anchors() is not None:
@@ -2121,7 +2121,7 @@ class LayerAnchorsProxy (Proxy):
 			for anchor in values:
 				newAnchors[anchor.name] = anchor
 		elif type(values) == type(dict) or isinstance(values, NSDictionary):
-			for (key, anchor) in values.items() :
+			for (key, anchor) in values.items():
 				newAnchors[anchor.name] = anchor
 		elif values == None:
 			pass
@@ -2146,7 +2146,7 @@ class LayerPathsProxy (Proxy):
 		self._owner.replacePathAtIndex_withPath_(idx, Path)
 	def __delitem__(self, idx):
 		if idx < 0:
-			Key = self._owner.countOfPaths() + idx
+			idx = self._owner.countOfPaths() + idx
 		self._owner.removePathAtIndex_(idx)
 	def __copy__(self):
 		return [x.copy() for x in self.values()]
@@ -2770,10 +2770,12 @@ toolClassAbrevations = { # abrevation : className
 	"TrueTypeTool" : "GlyphsToolTrueTypeInstructor",
 }
 
-toolClassAbrevationsReverse = {}
-
-for key, value in toolClassAbrevations.items():
-	toolClassAbrevationsReverse[value] = key
+#toolClassAbrevationsReverse = {}
+#
+#for key, value in toolClassAbrevations.items():
+#	toolClassAbrevationsReverse[value] = key
+# Note: next line should be equiv to above code without side effect of setting key, value vars.
+toolClassAbrevationsReverse = dict((v,k) for k,v in toolClassAbrevations.items())
 
 def __GSFont_tool__(self):
 	toolIndex = self.toolIndex
