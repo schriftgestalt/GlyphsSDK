@@ -67,3 +67,6 @@ class ____PluginClassName____(ReporterPlugin):
 
 	def doSomethingElse(self):
 		print 'Just did something else'
+	def __file__(self):
+		"""Please leave this method unchanged"""
+		return __file__
