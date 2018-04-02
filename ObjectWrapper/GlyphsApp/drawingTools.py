@@ -1,10 +1,8 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-from __future__ import print_function
-
-from AppKit import NSBezierPath, NSColor, NSFont, NSImage, NSGradient, NSColorSpace, NSMiterLineJoinStyle, NSRoundLineJoinStyle, NSBevelLineJoinStyle, NSFontAttributeName, NSForegroundColorAttributeName, NSGraphicsContext, NSCompositeSourceOver, NSGradientDrawsBeforeStartingLocation, NSGradientDrawsAfterEndingLocation
-from Foundation import NSMakeRect, NSAffineTransform, NSClassFromString, NSMakePoint, NSZeroRect
+from AppKit import NSBezierPath, NSColor, NSFont, NSImage, NSGradient, NSColorSpace, NSMiterLineJoinStyle, NSRoundLineJoinStyle, NSBevelLineJoinStyle, NSButtLineCapStyle, NSRoundLineCapStyle, NSSquareLineCapStyle, NSFontAttributeName, NSForegroundColorAttributeName, NSGraphicsContext, NSCompositeSourceOver, NSGradientDrawsBeforeStartingLocation, NSGradientDrawsAfterEndingLocation
+from Foundation import NSMakeRect, NSAffineTransform, NSClassFromString, NSMakePoint, NSZeroRect, NSString
 
 def drawGlyph(glyph):
 	path = glyph._layer.bezierPath
@@ -22,6 +20,7 @@ currentPath = None
 currentFillColor = NSColor.blackColor()
 currentStrokeColor = None
 currentGradient = None
+currentStrokeWidth = None
 currentFont = NSFont.systemFontOfSize_(NSFont.systemFontSize())
 
 def rect(x, y, width, height):
@@ -98,6 +97,8 @@ def drawPath(path=None):
 		elif gradient.gradientType == "radial":
 			pass
 		restore()
+	if currentStrokeWidth is not None:
+		path.setLineWidth_(currentStrokeWidth)
 	if currentStrokeColor is not None:
 		currentStrokeColor.set()
 		path.stroke()
@@ -127,6 +128,8 @@ def stroke(r=None, g=None, b=None, a=1):
 	
 def strokeWidth(value):
 	# Set the stroke width for a path.
+	global currentStrokeWidth
+	currentStrokeWidth = value
 	if currentPath is not None:
 		currentPath.lineWidth = value
 	
@@ -144,7 +147,16 @@ def lineJoin(join):
 		elif join == "round":
 			Style = NSRoundLineJoinStyle
 		currentPath.lineJoinStyle = Style
-	
+
+def lineCap(cap):
+	if currentPath is not None:
+		Style = NSButtLineCapStyle
+		if join == "square":
+			Style = NSSquareLineCapStyle
+		elif join == "round":
+			Style = NSRoundLineCapStyle
+		currentPath.lineCapStyle = Style
+
 def dashLine(dash):
 	# dash is a list of of values 
 	pass
@@ -205,4 +217,3 @@ def linearGradient(startPoint=None, endPoint=None, colors=None, locations=None):
 		locations = [i / float(len(colors)-1) for i in range(len(colors))]
 	currentGradient = ("linear", startPoint, endPoint, colors, locations)
 	currentFillColor = None
-	
