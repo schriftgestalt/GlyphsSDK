@@ -1,10 +1,11 @@
 # encoding: utf-8
 
 from __future__ import print_function
+
 import objc
 from Foundation import NSBundle, NSLog, NSObject, NSClassFromString, NSMutableArray, NSMutableOrderedSet, NSAttributedString, NSNumber, NSUserDefaults, NSUserNotification, NSUserNotificationCenter, NSNotificationCenter, NSError, NSLocalizedDescriptionKey, NSLocalizedRecoverySuggestionErrorKey, NSNotFound, NSPoint, NSMakePoint, NSZeroPoint, NSMakeRect, NSMakeSize, NSMinX, NSMinY, NSMaxX, NSMaxY, NSRect, NSSize, NSUnarchiver
 from AppKit import NSApplication, NSColor, NSNib, NSMenu, NSMenuItem, NSView, NSImage, NSDocumentController, NSBezierPath, NSFont, NSFontAttributeName, NSForegroundColorAttributeName, NSControlKeyMask, NSCommandKeyMask, NSShiftKeyMask, NSAlternateKeyMask, NSEvent, NSAffineTransform
-import sys, os, re, traceback
+import sys, traceback
 from types import *
 from GlyphsApp import *
 
@@ -526,6 +527,44 @@ class FilterWithDialog (GSFilterPlugin):
 				Message('Error in %s' % self.menuName, "There was an error in %s's filter() method when called through a Custom Parameter upon font export. Check your Macro window output." % self.menuName)
 			
 			self.logError(traceback.format_exc())
+
+
+	def processLayer_withArguments_(self, Layer, Arguments):
+		"""
+		Invoked when called as Custom Parameter in an instance to generate the Preview.
+		The Arguments come from the custom parameter in the instance settings. 
+		Item 0 in Arguments is the class-name. The consecutive items should be your filter options.
+		"""
+		try:
+			if not hasattr(self, 'filter'):
+				print("The filter: %s doesn’t fully support the plugin API. The method 'filter()' is missing" % self.menuName)
+				return
+			
+			# customParameters delivered to filter()
+			customParameters = {}
+			unnamedCustomParameterCount = 0
+			for i in range(1, len(Arguments)):
+				# if key:value pair
+				if ':' in Arguments[i]:
+					key, value = Arguments[i].split(':')
+				# only value given, no key. make key name
+				else:
+					key = unnamedCustomParameterCount
+					unnamedCustomParameterCount += 1
+					value = Arguments[i]
+				# attempt conversion to float value
+				try:
+					customParameters[key] = float(value)
+				except:
+					customParameters[key] = value
+			self.filter(Layer, False, customParameters)
+		
+		except:
+			# Custom Parameter
+			if len(Arguments) > 1:
+				Message('Error in %s' % self.menuName, "There was an error in %s's filter() method when called through a Custom Parameter upon font export. Check your Macro window output." % self.menuName)
+			
+			self.logError(traceback.format_exc())
 	
 	def process_(self, sender):
 		"""
@@ -683,30 +722,6 @@ class FilterWithoutDialog (NSObject):
 		except:
 			self.logError(traceback.format_exc())
 	
-	# deprecated --> filter() in user code
-	@objc.python_method
-	def XXprocessLayer(self, Layer, selectionCounts): 
-		"""
-		Each layer is eventually processed here. This is where your code goes.
-		If selectionCounts is True, then apply the code only to the selection.
-		"""
-		try:
-			if selectionCounts == True:
-				selection = ()
-				try:
-					selection = Layer.selection() # Glyphs v2.1 and earlier
-				except:
-					selection = Layer.selection # Glyphs v2.2 and later
-				if selection == (): # empty selection
-					selectionCounts = False
-			
-			# Do stuff here.
-			
-			return (True, None)
-		except:
-			self.logError(traceback.format_exc())
-			return (False, None)
-	
 	def runFilterWithLayers_error_(self, Layers, Error):
 		"""
 		Invoked when user triggers the filter through the Filter menu
@@ -854,7 +869,7 @@ class GeneralPlugin (NSObject):
 
 GeneralPlugin.logToConsole = LogToConsole_AsClassExtension
 GeneralPlugin.logError = LogError_AsClassExtension
-
+GeneralPlugin.loadNib = LoadNib
 
 
 
@@ -1212,6 +1227,26 @@ class ReporterPlugin (NSObject):
 		
 		except:
 			self.logError(traceback.format_exc())
+	
+	def drawForegroundForInactiveLayer_options_(self, Layer, options):
+		"""
+		Whatever you draw here will be displayed behind the paths, but
+		- for inactive glyphs in the EDIT VIEW
+		- and for glyphs in the PREVIEW
+		Please note: If you are using this method, you probably want
+		self.needsExtraMainOutlineDrawingForInactiveLayer_() to return False
+		because otherwise Glyphs will draw the main outline on top of it, and
+		potentially cover up your background drawing.
+		"""
+		
+		try:
+			self._scale = options["Scale"]
+			self.black = options["Black"]
+			if self.controller:
+				if hasattr(self, 'inactiveLayerForeground'):
+					self.inactiveLayerForeground(Layer)
+		except:
+			print(traceback.format_exc())
 	
 	def needsExtraMainOutlineDrawingForInactiveLayer_(self, Layer):
 		"""
