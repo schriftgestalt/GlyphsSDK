@@ -6,15 +6,36 @@ __all__ = ["CanvasView"]
 
 import traceback
 from vanilla import Group
-from AppKit import NSView
+from AppKit import NSView, NSRectFill, NSColor
 
 
 class CanvasView_view(NSView):
 	
 	def drawRect_(self, rect):
 		try:
+			if self._backgroundColor is not None:
+				self._backgroundColor.set()
+				NSRectFill(rect)
 			if self._delegate != None:
 				self._delegate.draw(self)
+		except:
+			print(traceback.format_exc())
+	def mouseDown_(self, event):
+		try:
+			if self._delegate != None and hasattr(self._delegate, "mouseDown"):
+				self._delegate.mouseDown(event)
+		except:
+			print(traceback.format_exc())
+	def mouseDragged_(self, event):
+		try:
+			if self._delegate != None and hasattr(self._delegate, "mouseDragged"):
+				self._delegate.mouseDragged(event)
+		except:
+			print(traceback.format_exc())
+	def mouseUp_(self, event):
+		try:
+			if self._delegate != None and hasattr(self._delegate, "mouseUp"):
+				self._delegate.mouseUp(event)
 		except:
 			print(traceback.format_exc())
 
@@ -44,9 +65,10 @@ class CanvasView(Group):
 	version = "1.0"
 	nsViewClass = CanvasView_view
 	
-	def __init__(self, posSize, delegate):
+	def __init__(self, posSize, delegate, backgroundColor=None):
 		self._setupView(self.nsViewClass, posSize)
 		self.delegate = delegate
+		self._nsObject._backgroundColor = backgroundColor
 	
 	def _get_delegate(self):
 		return self.view._delegate
@@ -55,3 +77,5 @@ class CanvasView(Group):
 		self._nsObject.setNeedsDisplay_(True)
 	delegate = property(_get_delegate, _set_delegate)
 	
+	def update(self):
+		self._nsObject.setNeedsDisplay_(True)
