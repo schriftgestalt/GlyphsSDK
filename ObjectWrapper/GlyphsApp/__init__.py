@@ -2573,7 +2573,9 @@ def __get_date__(self):
 def __set_date__(self, date):
 	import datetime
 	if isinstance(date, datetime.datetime):
-		date = NSDate.alloc().initWithTimeIntervalSinceReferenceDate_(date.total_seconds())
+		# date has no total_seconds():
+		# date = NSDate.alloc().initWithTimeIntervalSinceReferenceDate_(date.total_seconds())
+		NSDate.alloc().initWithString_( date.strftime("%Y-%m-%d %H:%M:%S +0000") )
 	self.setDate_(date)	
 GSFont.date = property(lambda self: __get_date__(self), lambda self, value: __set_date__(self, value))
 '''.. attribute:: date
