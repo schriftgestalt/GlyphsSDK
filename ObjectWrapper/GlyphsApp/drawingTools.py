@@ -170,7 +170,7 @@ def translate(x, y):
 def rotate(angle):
 	# Rotate the art board by an angle.
 	Transform = NSAffineTransform.alloc().init()
-	Transform.rotateByDegrees(angle)
+	Transform.rotateByDegrees_(angle)
 	Transform.concat()
 	
 def scale(x, y = None):
