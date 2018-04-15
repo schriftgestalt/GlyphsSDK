@@ -7629,25 +7629,21 @@ Properties
 
 def BackgroundImage__init__(self, path = None):
 	if path:
-		self.path = path
+		self.setImagePath_(path)
+		self.loadImage()
 GSBackgroundImage.__init__ = BackgroundImage__init__
 
 def BackgroundImage__repr__(self):
-	return "<GSBackgroundImage '%s'>" % self.path
+	return "<GSBackgroundImage '%s'>" % self.imagePath()
 GSBackgroundImage.__repr__ = python_method(BackgroundImage__repr__)
 
 GSBackgroundImage.mutableCopyWithZone_ = GSObject__copy__
 
-def BackgroundImage_path(self):
-	url = self.imageURL()
-	if url is not None:
-		return url.path()
-	
 def BackgroundImage_setPath(self, path):
-	self.setImageURL_(NSURL.fileURLWithPath_(path))
+	self.setImagePath_(path)
 	self.loadImage()
 
-GSBackgroundImage.path = property(	lambda self: BackgroundImage_path(self),
+GSBackgroundImage.path = property(	lambda self: self.pyobjc_instanceMethods.imagePath(),
 						lambda self, value: BackgroundImage_setPath(self, value))
 
 '''.. attribute:: path
@@ -8164,7 +8160,7 @@ GSEditViewController.textCursor = property(lambda self: self.graphicView().selec
 
 
 GSEditViewController.textRange = property(lambda self: self.contentView().selectedRange().length,
-										  lambda self, value: self.contentView().setSelectedRange_(NSRange(self.cursor, value)))
+										  lambda self, value: self.contentView().setSelectedRange_(NSRange(self.textCursor, value)))
 
 '''
 
