@@ -3,7 +3,7 @@
 from __future__ import print_function
 
 import objc
-from Foundation import NSObject, NSString, NSMutableArray, NSMutableDictionary, NSDictionary, NSNumber, NSConcreteValue, NSClassFromString, NSUserDefaults, NSURL, NSNotificationCenter, NSMakePoint, NSNotFound, NSAttributedString, NSMutableAttributedString, NSLog, NSBundle, NSAffineTransform, NSPoint, NSRect, NSRange, NSUserNotification, NSUserNotificationCenter, NSDate
+from Foundation import NSObject, NSString, NSMutableArray, NSMutableDictionary, NSDictionary, NSNumber, NSConcreteValue, NSClassFromString, NSUserDefaults, NSURL, NSNotificationCenter, NSMakePoint, NSNotFound, NSAttributedString, NSMutableAttributedString, NSLog, NSBundle, NSAffineTransform, NSPoint, NSRect, NSRange, NSUserNotification, NSUserNotificationCenter, NSDate, NSIndexSet
 from AppKit import NSApplication, NSObject, NSDocumentController, NSOpenPanel, NSSavePanel, NSOKButton, NSWorkspace, NSMenuItem, NSMenu, NSOnState, NSOffState, NSMixedState, NSColor
 
 GSAlignmentZone = objc.lookUpClass("GSAlignmentZone")
@@ -57,6 +57,8 @@ __all__ = [
 	"TAG", "TOPGHOST", "STEM", "BOTTOMGHOST", "TTANCHOR", "TTSTEM", "TTALIGN", "TTINTERPOLATE", "TTDIAGONAL", "TTDELTA", "CORNER", "CAP", "TTDONTROUND", "TTROUND", "TTROUNDUP", "TTROUNDDOWN", "TRIPLE",
 	"TEXT", "ARROW", "CIRCLE", "PLUS", "MINUS",
 	"LTR", "RTL", "LTRTTB", "RTLTTB", "GSTopLeft", "GSTopCenter", "GSTopRight", "GSCenterLeft", "GSCenterCenter", "GSCenterRight", "GSBottomLeft", "GSBottomCenter", "GSBottomRight",
+	
+	"OTF", "TTF", "VARIABLE", "UFO", "WOFF", "WOFF2", "PLAIN", "EOT",
 	
 	# Methods
 	"divideCurve", "distance", "addPoints", "subtractPoints", "GetFolder", "GetSaveFile", "GetOpenFile", "Message", "LogToConsole", "LogError", "removeOverlap", "subtractPaths", "intersectPaths", "scalePoint",
@@ -139,6 +141,14 @@ CIRCLE = 3
 PLUS = 4
 MINUS = 5
 
+OTF = "OTF"
+TTF = "TTF"
+VARIABLE = "variable"
+UFO = "UFO"
+WOFF = "WOFF"
+WOFF2 = "WOFF2"
+PLAIN = "plain"
+EOT = "EOT"
 
 # Reverse lookup for __repr__
 hintConstants = {
@@ -554,14 +564,14 @@ class DefaultsProxy(Proxy):
 
 GSApplication.defaults = property(lambda self: DefaultsProxy(self))
 
-def __registerDefaults__(self, defaults, values=None):
+def __registerDefault__(self, defaults, values=None):
 	if defaults != None and values != None and len(defaults) > 2:
 		NSUserDefaults.standardUserDefaults().registerDefaults_({defaults:values})
 	elif defaults and not values:
 		NSUserDefaults.standardUserDefaults().registerDefaults_(defaults)
 	else:
 		raise KeyError
-GSApplication.registerDefault = __registerDefaults__
+GSApplication.registerDefault = __registerDefault__
 
 def __registerDefaults__(self, defaults):
 	if defaults != None:
@@ -981,7 +991,7 @@ GSApplication.ligatureComponents = _ligatureComponents
 	
 	.. code-block:: python
 	
-		print Glyphs.ligatureComponents('allah-ar')
+		print(Glyphs.ligatureComponents('allah-ar'))
 
 		(
 		    "alef-ar",
@@ -1960,10 +1970,15 @@ class GlyphSmartComponentAxesProxy (Proxy):
 	def __getitem__(self, Key):
 		if type(Key) == slice:
 			return self.values().__getitem__(Key)
-		if type(Key) is int:
+		if isinstance(Key, int):
 			if Key < 0:
 				Key = self.__len__() + Key
-		return self._owner.objectInPartsSettingsAtIndex_(Key)
+			return self._owner.objectInPartsSettingsAtIndex_(Key)
+		if isString(Key):
+			for partSetting in self._owner.partsSettings():
+				if partSetting.name == Key:
+					return partSetting
+		return None
 	def __setitem__(self, Key, SmartComponentProperty):
 		if type(Key) is int:
 			if Key < 0:
@@ -2164,8 +2179,8 @@ class LayerPathsProxy (Proxy):
 		else:
 			raise ValueError
 	def extend(self, Paths):
-		if type(Path) == type(self):
-			for path in Path.values():
+		if type(Paths) == type(self):
+			for path in Paths.values():
 				self._owner.addPath_(path)
 		elif isinstance(Paths, (list, tuple)):
 			for Path in Paths:
@@ -2573,9 +2588,7 @@ def __get_date__(self):
 def __set_date__(self, date):
 	import datetime
 	if isinstance(date, datetime.datetime):
-		# date has no total_seconds():
-		# date = NSDate.alloc().initWithTimeIntervalSinceReferenceDate_(date.total_seconds())
-		date = NSDate.alloc().initWithString_( date.strftime("%Y-%m-%d %H:%M:%S +0000") )
+		date = NSDate.alloc().initWithTimeIntervalSince1970_(time.mktime(date.timetuple()))
 	self.setDate_(date)	
 GSFont.date = property(lambda self: __get_date__(self), lambda self, value: __set_date__(self, value))
 '''.. attribute:: date
@@ -3641,29 +3654,30 @@ Functions
 ---------
 
 
-.. function:: generate([Format, FontPath, AutoHint, RemoveOverlap, UseSubroutines, UseProductionNames])
+.. function:: generate([Format, FontPath, AutoHint, RemoveOverlap, UseSubroutines, UseProductionNames, Containers])
 	
 	Exports the instance. All parameters are optional.
 	
-	:param str Format: 'OTF' or 'TTF'. Default: 'OTF'
+	:param str The format of the outlines: OTF or TTF. Default: OTF
 	:param str FontPath: The destination path for the final fonts. If None, it uses the default location set in the export dialog
 	:param bool AutoHint: If autohinting should be applied. Default: True
 	:param bool RemoveOverlap: If overlaps should be removed. Default: True
 	:param bool UseSubroutines: If to use subroutines for CFF. Default: True
 	:param bool UseProductionNames: If to use production names. Default: True
+	:param bool Containers: list of container formats. Use any of the following constants: PLAIN, WOFF, WOFF2, EOT. Default: PLAIN
 	:return: On success, True, on failure error message.
 	:rtype: bool/list
 
 
 	.. code-block:: python
 		
-		# export all instances as OpenType (.otf) to user's font folder
+		# export all instances as OpenType (.otf) and WOFF2 to user's font folder
 
 		exportFolder = '/Users/myself/Library/Fonts'
 		
 		for instance in Glyphs.font.instances:
-			instance.generate(FontPath = exportFolder)
-			
+			instance.generate(FontPath = exportFolder, Containers = [PLAIN, WOFF2])
+		
 		Glyphs.showNotification('Export fonts', 'The export of %s was successful.' % (Glyphs.font.familyName))
 '''
 
@@ -3682,36 +3696,86 @@ class _ExporterDelegate_ (NSObject):
 			Error = unicode(String)
 		self.result = Error
 
-def __Instance_Export__(self, Format = "OTF", FontPath = None, AutoHint = True, RemoveOverlap = True, UseSubroutines = True, UseProductionNames = True):
+def __Instance_Export__(self, Format = "OTF", FontPath = None, AutoHint = True, RemoveOverlap = True, UseSubroutines = True, UseProductionNames = True, Containers = None, ConvertNames = False, DecomposeSmartStuff = True):
 	
-	if Format == "OTF":
-		Format = 0
-	else:
-		Format = 1 # 0 == OTF, 1 = TTF
-	Font = self.font()
-	Exporter = NSClassFromString("GSExportInstanceOperation").alloc().initWithFont_instance_format_(Font, self, Format)
-	if FontPath is None:
-		FontPath = NSUserDefaults.standardUserDefaults().objectForKey_("OTFExportPath")
-
-	Exporter.setInstallFontURL_(NSURL.fileURLWithPath_(FontPath))
-	# the following parameters can be set here or directly read from the instance.
-	Exporter.setAutohint_(AutoHint)
-	Exporter.setRemoveOverlap_(RemoveOverlap)
-	Exporter.setUseSubroutines_(UseSubroutines)
-	Exporter.setUseProductionNames_(UseProductionNames)
-
-	Exporter.setTempPath_(os.path.expanduser("~/Library/Application Support/Glyphs/Temp/")) # this has to be set correctly.
+	if Format not in [OTF, WOFF, WOFF2, TTF, UFO]:
+		raise KeyError('The font format is not supported: %s (only \'OTF\' and \'TTF\')' % Format)
 	
-	Delegate = _ExporterDelegate_.alloc().init() # the collectResults_() method of this object will be called on case the exporter has to report a problem.
-	Exporter.setDelegate_(Delegate)
-	Exporter.main()
-	if Delegate.result is True:
-		self.lastExportedFilePath = Exporter.finalFontFile()
+	ContainerList = None
+	if Containers is not None:
+		ContainerList = []
+		for Container in Containers:
+			if Container in [PLAIN, WOFF, WOFF2, EOT]:
+				ContainerList.append(Container.lower())
+			else:
+				raise KeyError('The container format is not supported: %s (only \'WOFF\' \'WOFF2\' \'plain\' and \'EOT\')' % Container)
+		
+	if Format == UFO:
+		if not FontPath:
+			print("!", FontPath)
+			raise ValueError('Please provide a FontPath')
+		instanceFont = self.interpolatedFont
+		return instanceFont.export(Format = Format, FontPath = FontPath, UseProductionNames = UseProductionNames, DecomposeSmartStuff = DecomposeSmartStuff)
 	else:
-		self.lastExportedFilePath = None
-	return Delegate.result
+		Font = self.font()
+		if FontPath is None:
+			FontPath = NSUserDefaults.standardUserDefaults().objectForKey_("OTFExportPath")
+		
+		Exporter = NSClassFromString("GSExportInstanceOperation").alloc().initWithFont_instance_outlineFormat_containers_(Font, self, Format, ContainerList)
+		if FontPath is None:
+			FontPath = NSUserDefaults.standardUserDefaults().objectForKey_("OTFExportPath")
+		Exporter.setInstallFontURL_(NSURL.fileURLWithPath_(FontPath))
+		# the following parameters can be set here or directly read from the instance.
+		Exporter.setAutohint_(AutoHint)
+		Exporter.setRemoveOverlap_(RemoveOverlap)
+		Exporter.setUseSubroutines_(UseSubroutines)
+		Exporter.setUseProductionNames_(UseProductionNames)
+
+		Exporter.setTempPath_(os.path.expanduser("~/Library/Application Support/Glyphs/Temp/")) # this has to be set correctly.
+	
+		Delegate = _ExporterDelegate_.alloc().init() # the collectResults_() method of this object will be called on case the exporter has to report a problem.
+		Exporter.setDelegate_(Delegate)
+		Exporter.main()
+		if Delegate.result is True:
+			self.lastExportedFilePath = Exporter.finalFontPath()
+		else:
+			self.lastExportedFilePath = None
+		return Delegate.result
 
 GSInstance.generate = __Instance_Export__
+
+def __Font_Export__(self, Format = "OTF", Instances = None, FontPath = None, AutoHint = True, RemoveOverlap = True, UseSubroutines = True, UseProductionNames = True, Containers = None, DecomposeSmartStuff = True):
+	if Format not in [OTF, WOFF, WOFF2, TTF, VARIABLE, UFO]:
+		raise KeyError('The font format is not supported: %s (only \'OTF\' and \'TTF\')' % Format)
+	
+	if FontPath is None:
+		FontPath = Glyphs.defaults["OTFExportPath"]
+	
+	if Format == VARIABLE:
+		Font = self.font()
+		Exporter = NSClassFromString("GlyphsFileFormatVariationFonts").alloc().init()
+		Exporter.setFont_(Font)
+		result = Exporter.writeVARTables_error_(NSURL.fileURLWithPath_(FontPath), None)
+		return result
+	elif Format == UFO:
+		Font = self.font()
+		Exporter = NSClassFromString("GlyphsFileFormatUFO").alloc().init()
+		Exporter.setConvertNames_(UseProductionNames)
+		Exporter.setDecomposeSmartStuff_(DecomposeSmartStuff)
+		Exporter.setExportOptions_({"SeletedMasterIndexes" : NSIndexSet.indexSetWithIndexesInRange_(NSRange(0, len(Font.masters)))})
+		result = Exporter.exportFont_toDirectory_error_(Font, NSURL.fileURLWithPath_(FontPath), None)
+		return result
+	else:
+		if not Instances:
+			Instances = [i for i in self.instances if i.isActive]
+		allResults = []
+		Format = Format.lower()
+		for i in Instances:
+			result = i.generate(Format = "OTF", FontPath = None, AutoHint = True, RemoveOverlap = True, UseSubroutines = True, UseProductionNames = True, Containers = None)
+			allResults.append(result)
+		return allResults
+
+GSFont.export = __Font_Export__
 
 def __set__lastExportedFilePath__(self, value):
 	if value:
@@ -5518,22 +5582,26 @@ GSLayer.smartComponentPoleMapping = property(lambda self: SmartComponentPoleMapp
 	.. code-block:: python
 		
 		# Map layers to top and bottom poles:
+		
+		crotchDepthAxis = glyph.smartComponentAxes['crotchDepth']
+		shoulderWidthAxis = glyph.smartComponentAxes['shoulderWidth']
+
 		for layer in glyph.layers:
 			
 			# Regular layer
 			if layer.name == 'Regular':
-				layer.smartComponentPoleMapping['crotchDepth'] = 2
-				layer.smartComponentPoleMapping['shoulderWidth'] = 2
+				layer.smartComponentPoleMapping[crotchDepthAxis.id] = 2
+				layer.smartComponentPoleMapping[shoulderWidthAxis.id] = 2
 
 			# NarrowShoulder layer
 			elif layer.name == 'NarrowShoulder':
-				layer.smartComponentPoleMapping['crotchDepth'] = 2
-				layer.smartComponentPoleMapping['shoulderWidth'] = 1
+				layer.smartComponentPoleMapping[crotchDepthAxis.id] = 2
+				layer.smartComponentPoleMapping[shoulderWidthAxis.id] = 1
 
 			# LowCrotch layer
 			elif layer.name == 'LowCrotch':
-				layer.smartComponentPoleMapping['crotchDepth'] = 1
-				layer.smartComponentPoleMapping['shoulderWidth'] = 2
+				layer.smartComponentPoleMapping[crotchDepthAxis.id] = 1
+				layer.smartComponentPoleMapping[shoulderWidthAxis.id] = 2
 '''
 
 
@@ -6297,7 +6365,8 @@ GSComponent.smartComponentValues = property(lambda self: smartComponentValuesPro
 
 		# Low crotch of h
 		glyph = font.glyphs['h']
-		glyph.layers[0].components[1].smartComponentValues['crotchDepth'] = -77  # Shoulder. Index is 1, given that the stem is also a component with index 0
+		crotchDepthAxis = glyph.smartComponentAxes['crotchDepth']
+		glyph.layers[0].components[1].smartComponentValues[crotchDepthAxis.id] = -77  # Shoulder. Index is 1, given that the stem is also a component with index 0
 		
 		# Check whether a component is a smart component
 		for component in layer.components:
@@ -6446,12 +6515,22 @@ def SmartComponentProperty__repr__(self):
 GSSmartComponentAxis.__repr__ = python_method(SmartComponentProperty__repr__)
 
 GSSmartComponentAxis.name = property(lambda self: self.pyobjc_instanceMethods.name(),
-						 		lambda self, value: self.setName_(value))
+								lambda self, value: self.setName_(value))
 '''.. attribute:: name
-	Name of the axis. This name will be used to map the Smart Glyph's layers to the poles of the interpolation. See :class:`GSLayer`.smartComponentPoleMapping
+	Name of the axis. The name is for display purpose only.
 
 	:type: str
 '''
+GSSmartComponentAxis.id = property(lambda self: self.pyobjc_instanceMethods.id())
+'''.. attribute:: id
+
+	.. versionadded:: 2.5
+
+	Id of the axis. This Id will be used to map the Smart Glyph's layers to the poles of the interpolation. See :class:`GSLayer`.smartComponentPoleMapping
+
+	:type: str
+'''
+
 GSSmartComponentAxis.topValue = property(lambda self: self.pyobjc_instanceMethods.topValue(),
 						 		lambda self, value: self.setTopValue_(value))
 '''.. attribute:: topValue
@@ -7335,7 +7414,7 @@ def Hint__width__pos(self):
 	return width
 
 def Hint__repr__(self):
-	if self.type in (TTANCHOR, TTSTEM, TTALIGN, TTINTERPOLATE, TTDIAGONAL, TTDELTA):
+	if self.isTrueType():
 		return self.description()
 	if self.horizontal:
 		direction = "hori"
@@ -8874,7 +8953,7 @@ def GetFolder(message=None, allowsMultipleSelection=False, path=None):
 	:rtype: unicode
 '''
 
-def Message(title, message, OKButton=None):
+def Message(message, title = "Alert", OKButton=None):
 	Glyphs.showAlert_message_OKButton_(title, message, OKButton)
 
 '''.. function:: Message(title, message, OKButton=None)

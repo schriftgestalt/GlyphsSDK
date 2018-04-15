@@ -5,8 +5,12 @@ from AppKit import NSBezierPath, NSColor, NSFont, NSImage, NSGradient, NSColorSp
 from Foundation import NSMakeRect, NSAffineTransform, NSClassFromString, NSMakePoint, NSZeroRect, NSString
 
 def drawGlyph(glyph):
-	path = glyph._layer.bezierPath
-	drawPath(path)
+	if isinstance(glyph, RGlyph):
+		path = glyph._layer.bezierPath
+		drawPath(path)
+	else:
+		raise ValueError('Please provide an RGlyph object. For GSGlyph, use the native API')
+
 
 def save():
 	# save the current graphic state 
