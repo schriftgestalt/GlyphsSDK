@@ -2,6 +2,10 @@
 Glyphs stores data using the Apple property list (plist) format. It saves its files in plaintext format, because it saves a lot of space, but the XML-based flavour is also supported. So, the files can be viewed and edited with any text editor. Open an existing `.glyphs` file to see how it works.
 
 ## Changes:
+### 21. April. 2018:
+- Add .appVersion, customValue, weight, width, custom
+- Fix typo
+
 ### 4. Feb. 2016:
 - added hints
 - updated and added a few field in layers
@@ -9,6 +13,7 @@ Glyphs stores data using the Apple property list (plist) format. It saves its fi
 ## Top Level Elements
 The XML file contains a dictionary with the following structure. The elements with child elements are usually a `list` of `dict` elements.
 
+* .appVersion `string`
 * DisplayStrings `list`
 * classes `list`: OpenType classes.
     * automatic `bool`: Always set to `1`. If the feature is not set to automatic, the key should be omitted.
@@ -38,10 +43,16 @@ The XML file contains a dictionary with the following structure. The elements wi
         * value `string`: Value of the custom parameter.
     * descender `int`: is always negative.
     * horizontalStems `list`: a list of `int` values.
+    * iconName `string`: stores the selected master icon (new in v2.5)
     * id `string` a unique id that connects the layers (associated ID) with the master.
     * userData `dict` to store custom data. Only `string`, `int`, `float`, `array`, `dict` and `date` data is allowed.
     * weightValue `int`: The width position for interpolation. Is only present if the value is not `100`.
     * weightValue `int`: The weight position for interpolation. Is only present if the value is not `100`.
+    * customValue `int`: The custom position for interpolation. Is only present if the value is not `0`.
+    * customValue[1-3] `int`: More custom positions for interpolation. Is only present if the value is not `0`.
+    * weight `string` : The weight part of the master name. Possible values "SemiLight", "Light", "SemiBold", "Bold"
+    * width `string` : The width part of the master name. Possible values "SemiCondensed", "Condensed", "SemiExtended", "Extended"
+    * custom `string` : All other parts of the master name that doesn’t fit into `weight` or `width`
     * verticalStems `list`: a list of `int` values.
     * xHeight `int`
 * glyphs `list`
@@ -91,7 +102,7 @@ The XML file contains a dictionary with the following structure. The elements wi
         * rightMetricsKey `string`
         * widthMetricsKey `string`
         * name `string`: The name of the layer. Only stored for none master layers (this is changed in 2.3, before the master names where stored)
-        * path `list`
+        * paths `list`
             * closed `bool`: Always set to `1`. If not set, the key is not present at all.
             * nodes `list`: One entry per node. Format: `X Y TYPE [SMOOTH]`, where X and Y are the coordinates as float, and TYPE is either `LINE`, `CURVE` or `OFFCURVE`. After `LINE` and `CURVE`, you can additionally add a `SMOOTH`.
         * userDate `dict`: A dict with user defined structure
