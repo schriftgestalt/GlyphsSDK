@@ -3,8 +3,8 @@ Glyphs stores data using the Apple property list (plist) format. It saves its fi
 
 ## Changes:
 ### 21. April. 2018:
-- Add .appVersion, customValue, weight, width, custom
-- Fix typo
+- Add .appVersion, disablesNiceNames, customValue, weight, width, custom
+- Fix typos: paths, widthValue
 
 ### 4. Feb. 2016:
 - added hints
@@ -26,6 +26,7 @@ The XML file contains a dictionary with the following structure. The elements wi
 * date `string`: Format `2014-01-29 14:14:38 +0000`.
 * designer `string`
 * designerURL `string`
+* disablesNiceNames `bool` is always set to `1`. If not set the key is not set at all.
 * familyName `string`
 * featurePrefixes `list`: OpenType feature code before the class definitions.
     * code `string`
@@ -46,7 +47,7 @@ The XML file contains a dictionary with the following structure. The elements wi
     * iconName `string`: stores the selected master icon (new in v2.5)
     * id `string` a unique id that connects the layers (associated ID) with the master.
     * userData `dict` to store custom data. Only `string`, `int`, `float`, `array`, `dict` and `date` data is allowed.
-    * weightValue `int`: The width position for interpolation. Is only present if the value is not `100`.
+    * widthValue `int`: The width position for interpolation. Is only present if the value is not `100`.
     * weightValue `int`: The weight position for interpolation. Is only present if the value is not `100`.
     * customValue `int`: The custom position for interpolation. Is only present if the value is not `0`.
     * customValue[1-3] `int`: More custom positions for interpolation. Is only present if the value is not `0`.
