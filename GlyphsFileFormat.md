@@ -47,8 +47,8 @@ The XML file contains a dictionary with the following structure. The elements wi
     * iconName `string`: stores the selected master icon (new in v2.5)
     * id `string` a unique id that connects the layers (associated ID) with the master.
     * userData `dict` to store custom data. Only `string`, `int`, `float`, `array`, `dict` and `date` data is allowed.
-    * widthValue `int`: The width position for interpolation. Is only present if the value is not `100`.
     * weightValue `int`: The weight position for interpolation. Is only present if the value is not `100`.
+    * widthValue `int`: The width position for interpolation. Is only present if the value is not `100`.
     * customValue `int`: The custom position for interpolation. Is only present if the value is not `0`.
     * customValue[1-3] `int`: More custom positions for interpolation. Is only present if the value is not `0`.
     * weight `string` : The weight part of the master name. Possible values "SemiLight", "Light", "SemiBold", "Bold"
