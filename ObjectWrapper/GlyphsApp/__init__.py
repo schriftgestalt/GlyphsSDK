@@ -3,8 +3,12 @@
 from __future__ import print_function
 
 import objc
-from Foundation import NSObject, NSString, NSMutableArray, NSMutableDictionary, NSDictionary, NSNumber, NSConcreteValue, NSClassFromString, NSUserDefaults, NSURL, NSNotificationCenter, NSMakePoint, NSNotFound, NSAttributedString, NSMutableAttributedString, NSLog, NSBundle, NSAffineTransform, NSPoint, NSRect, NSRange, NSUserNotification, NSUserNotificationCenter, NSDate, NSIndexSet
-from AppKit import NSApplication, NSObject, NSDocumentController, NSOpenPanel, NSSavePanel, NSOKButton, NSWorkspace, NSMenuItem, NSMenu, NSOnState, NSOffState, NSMixedState, NSColor
+from Foundation import NSObject, NSString, NSMutableArray, NSMutableDictionary, NSDictionary, NSNumber, NSConcreteValue, \
+	NSClassFromString, NSUserDefaults, NSURL, NSNotificationCenter, NSMakePoint, NSNotFound, NSAttributedString, \
+	NSMutableAttributedString, NSLog, NSBundle, NSAffineTransform, NSPoint, NSRect, NSRange, NSUserNotification, \
+	NSUserNotificationCenter, NSDate, NSIndexSet
+from AppKit import NSApplication, NSObject, NSDocumentController, NSOpenPanel, NSSavePanel, NSOKButton, NSWorkspace, \
+	NSMenuItem, NSMenu, NSOnState, NSOffState, NSMixedState, NSColor
 
 GSAlignmentZone = objc.lookUpClass("GSAlignmentZone")
 GSAnchor = objc.lookUpClass("GSAnchor")
@@ -1201,7 +1205,7 @@ def Glyphs_showNotification(self, title, message):
 	notification = NSUserNotification.alloc().init()
 	notification.setTitle_(title)
 	notification.setInformativeText_(message)
-	NSUserNotificationCenter.defaultUserNotificationCenter().scheduleNotification_(notification)
+	NSUserNotificationCenter.defaultUserNotificationCenter().deliverNotification_(notification)
 	
 GSApplication.showNotification = Glyphs_showNotification
 
@@ -4454,6 +4458,18 @@ GSGlyph.unicode = property(			lambda self: self.pyobjc_instanceMethods.unicode()
 	String with the hex Unicode value of glyph, if encoded.
 	:type: unicode
 '''
+def __glyph__unicode__(self):
+	codes = self.pyobjc_instanceMethods.unicodes()
+	if codes and len(codes):
+		return list(codes)
+	return None
+
+GSGlyph.unicodes = property(		lambda self: __glyph__unicode__(self),
+									lambda self, value: self.setUnicodes_(value))
+'''.. attribute:: unicodes
+	List of String‚ with the hex Unicode values of glyph, if encoded.
+	:type: unicode
+'''
 
 GSGlyph.production = property(		lambda self: self.pyobjc_instanceMethods.production(),
 									lambda self, value: self.setProduction_(self, value))
@@ -4528,7 +4544,7 @@ GSGlyph.storeScript = property(		lambda self: bool(self.pyobjc_instanceMethods.s
 	.. versionadded:: 2.3
 '''
 
-GSGlyph.productionName = property(	lambda self: self.production(), 
+GSGlyph.productionName = property(	lambda self: self.pyobjc_instanceMethods.production(),
 									lambda self, value: self.setProduction_(value))
 '''.. attribute:: productionName
 	The productionName of the glyph.
@@ -8836,9 +8852,13 @@ def GetSaveFile(message=None, ProposedFileName=None, filetypes=None):
 	:rtype: unicode
 '''
 
-def __allValues__(self):
-	return self.allValues()
-MGOrderedDictionary.items = __allValues__
+def __allItems__(self):
+	items = []
+	for key in self.allKeys():
+		value = self[key]
+		items.append((key, value))
+	return items
+MGOrderedDictionary.items = __allItems__
 
 def __allKeys__(self):
 	return self.allKeys()
@@ -8856,7 +8876,7 @@ def __Dict_removeObjectForKey__(self, key):
 
 MGOrderedDictionary.__delitem__ = __Dict_removeObjectForKey__
 
-GSNotifyingDictionary.items = __allValues__
+GSNotifyingDictionary.items = __allItems__
 GSNotifyingDictionary.keys = __allKeys__
 
 
