@@ -42,11 +42,13 @@ def exportAllInstances():
 		})
 		
 	'''
-	more possible keys:
-		autoHint
-		removeOverlap
-		useSubroutines
-		useProductionNames
+	possible keys:
+		ExportContiner: "woff", "woff2", "eot"
+		Destination: NSURL
+		autoHint: bool (default = true)
+		removeOverlap: bool (default = true)
+		useSubroutines: bool (default = true)
+		useProductionNames: bool (default = true)
 	'''
 	
 	doc.close()
