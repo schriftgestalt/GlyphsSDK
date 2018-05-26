@@ -530,7 +530,7 @@ class FilterWithDialog (GSFilterPlugin):
 			
 			# Custom Parameter
 			if len(Arguments) > 1:
-				Message('Error in %s' % self.menuName, "There was an error in %s's filter() method when called through a Custom Parameter upon font export. Check your Macro window output." % self.menuName)
+				Message(title='Error in %s' % self.menuName, message="There was an error in %s's filter() method when called through a Custom Parameter upon font export. Check your Macro window output." % self.menuName)
 			
 			self.logError(traceback.format_exc())
 
@@ -568,7 +568,7 @@ class FilterWithDialog (GSFilterPlugin):
 		except:
 			# Custom Parameter
 			if len(Arguments) > 1:
-				Message('Error in %s' % self.menuName, "There was an error in %s's filter() method when called through a Custom Parameter upon font export. Check your Macro window output." % self.menuName)
+				Message(title='Error in %s' % self.menuName, message="There was an error in %s's filter() method when called through a Custom Parameter upon font export. Check your Macro window output." % self.menuName)
 			
 			self.logError(traceback.format_exc())
 	
@@ -818,7 +818,7 @@ class FilterWithoutDialog (NSObject):
 			
 			# Custom Parameter
 			if len(Arguments) > 1:
-				Message('Error in %s' % self.menuName, "There was an error in %s's filter() method when called through a Custom Parameter upon font export. Check your Macro window output." % self.menuName)
+				Message(title='Error in %s' % self.menuName, message="There was an error in %s's filter() method when called through a Custom Parameter upon font export. Check your Macro window output." % self.menuName)
 
 			self.logError(traceback.format_exc())
 
