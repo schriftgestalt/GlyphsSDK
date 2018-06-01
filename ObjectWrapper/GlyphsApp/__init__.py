@@ -6798,7 +6798,10 @@ def __GSPath__drawPoints__(self, pen):
 	pen.beginPath()
 	for i in range(len(self)):
 		Node = self.nodeAtIndex_(i)
-		pen.addPoint(Node.position, segmentType=Node.type, smooth=Node.smooth)
+		node_type = Node.type
+		if Node.type == GSOFFCURVE:
+			node_type = None
+		pen.addPoint(Node.position, segmentType=node_type, smooth=Node.smooth, name=Node.name)
 	pen.endPath()
 
 GSPath.drawPoints = __GSPath__drawPoints__
