@@ -5943,8 +5943,6 @@ GSLayer.draw = DrawLayerWithPen
 
 def DrawPointsWithPen(self, pen):
 	"""draw the object with a point pen"""
-	for a in self.anchors:
-		a.drawPoints(pen)
 	for p in self.paths:
 		p.drawPoints(pen)
 	for c in self.components:
@@ -6075,13 +6073,6 @@ def DrawAnchorWithPen(self, pen):
 		pen.endPath()
 
 GSAnchor.draw = DrawAnchorWithPen
-
-def __GSAnchor_drawPoints__(self, pen):
-	"""draw the object with a point pen"""
-	pen.beginPath()
-	pen.addPoint((self.x, self.y), segmentType="move", smooth=False, name=self.name)
-	pen.endPath()
-GSAnchor.drawPoints = __GSAnchor_drawPoints__
 
 
 ##################################################################################
