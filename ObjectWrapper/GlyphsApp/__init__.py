@@ -5918,7 +5918,7 @@ GSControlLayer.placeholder = staticmethod(ControlLayer__placeholder__)
 
 
 
-def DrawLayerWithPen(self, pen):
+def DrawLayerWithPen(self, pen, contours=True, components=True):
 	"""draw the object with a RoboFab segment pen"""
 	try:
 		pen.setWidth(self.width)
@@ -5927,12 +5927,14 @@ def DrawLayerWithPen(self, pen):
 	except AttributeError:
 		# FontTools pens don't have these methods
 		pass
-	for a in self.anchors:
-		a.draw(pen)
-	for c in self.paths:
-		c.draw(pen)
-	for c in self.components:
-		c.draw(pen)
+	if contours:
+		for a in self.anchors:
+			a.draw(pen)
+		for c in self.paths:
+			c.draw(pen)
+	if components:
+		for c in self.components:
+			c.draw(pen)
 	try:
 		pen.doneDrawing()
 	except AttributeError:
@@ -5941,12 +5943,14 @@ def DrawLayerWithPen(self, pen):
 
 GSLayer.draw = DrawLayerWithPen
 
-def DrawPointsWithPen(self, pen):
+def DrawPointsWithPen(self, pen, contours=True, components=True):
 	"""draw the object with a point pen"""
-	for p in self.paths:
-		p.drawPoints(pen)
-	for c in self.components:
-		c.drawPoints(pen)
+	if contours:
+		for p in self.paths:
+			p.drawPoints(pen)
+	if components:
+		for c in self.components:
+			c.drawPoints(pen)
 
 GSLayer.drawPoints = DrawPointsWithPen
 
