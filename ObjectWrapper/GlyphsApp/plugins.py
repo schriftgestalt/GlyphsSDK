@@ -167,9 +167,15 @@ class FileFormatPlugin (NSObject):
 			if not hasattr(self, 'dialog'):
 				self.dialog = None
 			
-			thisBundle = NSBundle.bundleForClass_(NSClassFromString(self.className()))
+			if hasattr(self, "__file__"):
+				path = self.__file__()
+				thisBundle = NSBundle.bundleWithPath_(path[:path.rfind("Contents/Resources/")])
+			else:
+				thisBundle = NSBundle.bundleForClass_(NSClassFromString(self.className()));
 			self.toolbarIcon = NSImage.alloc().initWithContentsOfFile_(thisBundle.pathForImageResource_(self.icon))
-			self.toolbarIcon.setName_(self.icon)
+			# Using self.toolbarIconName() instead of self.icon to
+			#   make sure registered NSImage name is unique
+			self.toolbarIcon.setName_(self.toolbarIconName())
 			
 			if hasattr(self, 'start'):
 				self.start()
@@ -210,10 +216,11 @@ class FileFormatPlugin (NSObject):
 	
 	def toolbarIconName(self):
 		"""
-		The filename of the icon, without the suffix.
+		Used for image and tab tags. Should be unique.
+		The className + the filename of the icon (without the suffix).
 		"""
 		try:
-			return self.icon or "ExportIcon"
+			return "{}{}".format(self.className(), self.icon)
 		except:
 			self.logError(traceback.format_exc())
 	
@@ -778,6 +785,7 @@ class FilterWithoutDialog (NSObject):
 			# set glyphList to all glyphs
 			glyphList = Font.glyphs
 			
+			# customParameters delivered to filter()
 			customParameters = {}
 			unnamedCustomParameterCount = 0
 			for i in range(1, len(Arguments)):

@@ -307,9 +307,7 @@ class Proxy(object):
 		method = self.setterMethod()
 		if type(values) == list or values.__class__.__name__ == "__NSArrayM":
 			method(NSMutableArray.arrayWithArray_(values))
-		elif type(values) == tuple:
-			method(NSMutableArray.arrayWithArray_(list(values)))
-		elif type(values) == type(self):
+		elif isinstance(values, (tuple, type(self))):
 			method(NSMutableArray.arrayWithArray_(list(values)))
 		elif values == None:
 			method(NSMutableArray.array())
@@ -1053,11 +1051,8 @@ class callbackHelperClass(NSObject):
 
 	@objc.python_method
 	def callback(self, notification):
-		try:
-			if self.func:
-				self.func(notification)
-		except:
-			LogError(traceback.format_exc())
+		if self.func:
+			self.func(notification)
 
 	def description(self): # for debugging in Xcode
 		desc = super(callbackHelperClass, self).description()
@@ -1264,7 +1259,7 @@ GSApplication.localize = Glyphs_localize
 		# Given that your Mac’s system language is set to German 
 		# and Glyphs.app UI is set to use localization (change in preferences),
 		# it will print:
-		# Hallöle Welt
+		> Hallöle Welt
 
 	'''
 
@@ -1850,17 +1845,17 @@ class LayersIterator:
 				Index = 0
 				ExtraLayer = None
 				while ExtraLayerIndex >= 0:
-					ExtraLayer = self._owner.pyobjc_instanceMethods.layers().objectAtIndex_(Index)
+					ExtraLayer = self._owner.objectInLayersAtIndex_(Index)
 					if ExtraLayer.layerId != ExtraLayer.associatedMasterId:
-						ExtraLayerIndex = ExtraLayerIndex - 1
-					Index = Index + 1
+						ExtraLayerIndex -= 1
+					Index += 1
 				Item = ExtraLayer
 			self.curInd += 1
 			return Item
 		else:
 			if self.curInd >= self._owner.countOfLayers():
 				raise StopIteration
-			Item = self._owner.pyobjc_instanceMethods.layers().objectAtIndex_(self.curInd)
+			Item = self._owner.objectInLayersAtIndex_(self.curInd)
 			self.curInd += 1
 			return Item
 		return None
@@ -3494,6 +3489,7 @@ Properties
 	instanceInterpolations
 	manualInterpolation
 	interpolatedFont
+	font
 	
 Functions
 	
@@ -3518,7 +3514,9 @@ GSInstance.weight = property(lambda self: self.pyobjc_instanceMethods.weightClas
 '''.. attribute:: weight
 	Human-readable weight name, chosen from list in Font Info. For actual position in interpolation design space, use GSInstance.weightValue.
 	:type: string'''
+GSInstance.weightClass = property(lambda self: self.pyobjc_instanceMethods.weightClass(), lambda self, value: self.setWeightClass_(value))
 GSInstance.width = property(lambda self: self.pyobjc_instanceMethods.widthClass(), lambda self, value: self.setWidthClass_(value))
+GSInstance.widthClass = property(lambda self: self.pyobjc_instanceMethods.widthClass(), lambda self, value: self.setWidthClass_(value))
 '''.. attribute:: width
 	Human-readable width name, chosen from list in Font Info. For actual position in interpolation design space, use GSInstance.widthValue.
 	:type: string'''
@@ -3580,6 +3578,12 @@ GSInstance.fullName = property(lambda self: self.pyobjc_instanceMethods.fullName
 	fullName (postscriptFullName)
 	:type: string'''
 
+GSInstance.font = property(lambda self: self.pyobjc_instanceMethods.font(), lambda self, value: self.setFont_(value))
+'''.. attribute:: font
+	.. versionadded:: 2.5.1
+	Reference to the :class:`GSFont` object that contains the instance. Normally that is set by the app, only if the instance is not actually added to the font, then set this manually.
+	:type: GSFont'''
+
 GSInstance.customParameters = property(lambda self: CustomParametersProxy(self))
 '''.. attribute:: customParameters
 	The custom parameters. List of :class:`GSCustomParameter` objects. You can access them by name or by index.
@@ -3623,7 +3627,7 @@ GSInstance.interpolatedFontProxy = property(lambda self: self.pyobjc_instanceMet
 '''
 
 def Instance_FontObject(self):
-	return self.font().generateInstance_error_(self, None)
+	return self.font.generateInstance_error_(self, None)
 
 GSInstance.interpolatedFont = property(lambda self: Instance_FontObject(self))
 
@@ -3700,7 +3704,7 @@ class _ExporterDelegate_ (NSObject):
 			Error = unicode(String)
 		self.result = Error
 
-def __Instance_Export__(self, Format = "OTF", FontPath = None, AutoHint = True, RemoveOverlap = True, UseSubroutines = True, UseProductionNames = True, Containers = None, ConvertNames = False, DecomposeSmartStuff = True):
+def __Instance_Export__(self, Format = OTF, FontPath = None, AutoHint = True, RemoveOverlap = True, UseSubroutines = True, UseProductionNames = True, Containers = None, ConvertNames = False, DecomposeSmartStuff = True):
 	
 	if Format not in [OTF, WOFF, WOFF2, TTF, UFO]:
 		raise KeyError('The font format is not supported: %s (only \'OTF\' and \'TTF\')' % Format)
@@ -3721,10 +3725,11 @@ def __Instance_Export__(self, Format = "OTF", FontPath = None, AutoHint = True, 
 		instanceFont = self.interpolatedFont
 		return instanceFont.export(Format = Format, FontPath = FontPath, UseProductionNames = UseProductionNames, DecomposeSmartStuff = DecomposeSmartStuff)
 	else:
-		Font = self.font()
+		Font = self.font
 		if FontPath is None:
 			FontPath = NSUserDefaults.standardUserDefaults().objectForKey_("OTFExportPath")
 		
+		Format = Format.lower()	# GSExportInstanceOperation uses Format as file .extension
 		Exporter = NSClassFromString("GSExportInstanceOperation").alloc().initWithFont_instance_outlineFormat_containers_(Font, self, Format, ContainerList)
 		if FontPath is None:
 			FontPath = NSUserDefaults.standardUserDefaults().objectForKey_("OTFExportPath")
@@ -3748,7 +3753,7 @@ def __Instance_Export__(self, Format = "OTF", FontPath = None, AutoHint = True, 
 
 GSInstance.generate = __Instance_Export__
 
-def __Font_Export__(self, Format = "OTF", Instances = None, FontPath = None, AutoHint = True, RemoveOverlap = True, UseSubroutines = True, UseProductionNames = True, Containers = None, DecomposeSmartStuff = True):
+def __Font_Export__(self, Format = OTF, Instances = None, FontPath = None, AutoHint = True, RemoveOverlap = True, UseSubroutines = True, UseProductionNames = True, Containers = None, DecomposeSmartStuff = True):
 	if Format not in [OTF, WOFF, WOFF2, TTF, VARIABLE, UFO]:
 		raise KeyError('The font format is not supported: %s (only \'OTF\' and \'TTF\')' % Format)
 	
@@ -3773,9 +3778,8 @@ def __Font_Export__(self, Format = "OTF", Instances = None, FontPath = None, Aut
 		if not Instances:
 			Instances = [i for i in self.instances if i.isActive]
 		allResults = []
-		Format = Format.lower()
 		for i in Instances:
-			result = i.generate(Format = "OTF", FontPath = None, AutoHint = True, RemoveOverlap = True, UseSubroutines = True, UseProductionNames = True, Containers = None)
+			result = i.generate(Format = Format, FontPath = None, AutoHint = True, RemoveOverlap = True, UseSubroutines = True, UseProductionNames = True, Containers = None)
 			allResults.append(result)
 		return allResults
 
