@@ -3,7 +3,7 @@
 from __future__ import print_function
 
 import objc
-from Foundation import NSObject, NSString, NSMutableArray, NSMutableDictionary, NSDictionary, NSNumber, NSConcreteValue, \
+from Foundation import NSObject, NSString, NSArray, NSMutableArray, NSMutableDictionary, NSDictionary, NSNumber, NSConcreteValue, \
 	NSClassFromString, NSUserDefaults, NSURL, NSNotificationCenter, NSMakePoint, NSNotFound, NSAttributedString, \
 	NSMutableAttributedString, NSLog, NSBundle, NSAffineTransform, NSPoint, NSRect, NSRange, NSUserNotification, \
 	NSUserNotificationCenter, NSDate, NSIndexSet
@@ -305,7 +305,7 @@ class Proxy(object):
 
 	def setter(self, values):
 		method = self.setterMethod()
-		if type(values) == list or values.__class__.__name__ == "__NSArrayM":
+		if isinstance(values, (list, NSArray)):
 			method(NSMutableArray.arrayWithArray_(values))
 		elif isinstance(values, (tuple, type(self))):
 			method(NSMutableArray.arrayWithArray_(list(values)))
