@@ -2449,7 +2449,7 @@ GSFont.axes = property(lambda self: self.pyobjc_instanceMethods.axes(),
 	.. versionadded:: 2.5
 	
 	a list of dicts:
-		{"Name":"Wight", "Tag":"wght"}
+		{"Name":"Weight", "Tag":"wght"}
 	:type: list
 '''
 
