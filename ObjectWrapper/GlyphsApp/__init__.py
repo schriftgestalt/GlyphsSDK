@@ -6082,6 +6082,13 @@ def DrawAnchorWithPen(self, pen):
 
 GSAnchor.draw = DrawAnchorWithPen
 
+def __GSAnchor_drawPoints__(self, pen):
+	"""draw the object with a point pen"""
+	pen.beginPath()
+	pen.addPoint((self.x, self.y), segmentType="move", smooth=False, name=self.name)
+	pen.endPath()
+GSAnchor.drawPoints = __GSAnchor_drawPoints__
+
 
 ##################################################################################
 #
