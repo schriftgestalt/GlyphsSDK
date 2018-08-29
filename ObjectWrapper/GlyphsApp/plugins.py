@@ -1185,7 +1185,6 @@ class ReporterPlugin (NSObject):
 			self._scale = options["Scale"]
 			self.black = options["Black"]
 			if hasattr(self, 'foregroundInViewCoords'):
-
 				self.foregroundInViewCoords(self.activeLayer())
 
 		except:
@@ -1266,7 +1265,7 @@ class ReporterPlugin (NSObject):
 				if hasattr(self, 'inactiveLayerForeground'):
 					self.inactiveLayerForeground(Layer)
 		except:
-			print(traceback.format_exc())
+			self.logError(traceback.format_exc())
 	
 	def needsExtraMainOutlineDrawingForInactiveLayer_(self, Layer):
 		"""
