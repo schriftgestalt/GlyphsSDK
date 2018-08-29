@@ -1076,6 +1076,7 @@ class ReporterPlugin (NSObject):
 		"""
 		Put any initializations you want to make here.
 		"""
+		self.needsExtraMainOutlineDrawingForInactiveLayers = True
 		try:
 			#Bundle = NSBundle.bundleForClass_(NSClassFromString(self.className()));
 			# Default values
@@ -1266,13 +1267,13 @@ class ReporterPlugin (NSObject):
 		"""
 		Decides whether inactive glyphs in Edit View and glyphs in Preview should be drawn
 		by Glyphs (‘the main outline drawing’).
-		Return True (or remove the method) to let Glyphs draw the main outline.
+		Return True to let Glyphs draw the main outline.
 		Return False to prevent Glyphs from drawing the glyph (the main outline 
 		drawing), which is probably what you want if you are drawing the glyph
-		yourself in self.drawBackgroundForInactiveLayer_().
+		yourself in self.inactiveLayerForeground() (self.drawForegroundForInactiveLayer_options_()).
 		"""
 		try:
-			return not hasattr(self, 'inactiveLayers')
+			return self.needsExtraMainOutlineDrawingForInactiveLayers
 		except:
 			self.logError(traceback.format_exc())
 	
