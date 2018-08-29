@@ -1174,8 +1174,8 @@ class ReporterPlugin (NSObject):
 		Whatever you draw here will be displayed IN FRONT OF the paths. The difference to drawForegroundForLayer_options_() is that you need to deal with the scaling and current layer yourself.
 		
 		examples::
-			layer = self.controller.graphicView().activeLayer()
-			layerPosition = self.controller.graphicView().activePosition()
+			layer = self.activeLayer()
+			layerPosition = self.activePosition()
 			scale = options["Scale"]
 			allLayers = self.controller.graphicView().layoutManager().cachedGlyphs()
 			indexOfActiveLayer = self.controller.graphicView().activeIndex()
