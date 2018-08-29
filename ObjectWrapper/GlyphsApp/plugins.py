@@ -1091,7 +1091,7 @@ class ReporterPlugin (NSObject):
 
 			if hasattr(self, 'start'):
 				self.start()
-
+			self.hasWarned = False
 			return self
 		except:
 			self.logError(traceback.format_exc())
@@ -1232,7 +1232,12 @@ class ReporterPlugin (NSObject):
 			assert Glyphs
 			
 			if self.controller:
-				if hasattr(self, 'inactiveLayers'):
+				if hasattr(self, 'inactiveLayer'):
+					self.inactiveLayerBackground(Layer)
+				elif hasattr(self, 'inactiveLayers'):
+					if not self.hasWarned:
+						print "%s: the method 'inactiveLayers' has been deprecated. Please use 'inactiveLayerBackground'" % self.className()
+						self.hasWarned = True
 					self.inactiveLayers(Layer)
 			else:
 				if hasattr(self, 'preview'):

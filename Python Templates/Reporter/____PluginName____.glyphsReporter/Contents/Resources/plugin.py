@@ -28,7 +28,7 @@ class ____PluginClassName____(ReporterPlugin):
 		NSBezierPath.fillRect_(layer.bounds)
 		self.drawTextAtPoint(layer.parent.name, NSPoint(0, 0))
 
-	def inactiveLayers(self, layer):
+	def inactiveLayer(self, layer):
 		NSColor.redColor().set()
 		if layer.paths:
 			layer.bezierPath.fill()
