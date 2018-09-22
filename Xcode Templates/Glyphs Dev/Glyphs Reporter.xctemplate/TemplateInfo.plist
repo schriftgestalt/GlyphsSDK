@@ -39,16 +39,14 @@
 				<key>Debug</key>
 				<dict>
 					<key>DSTROOT</key>
-					<string>~/Library/Application Support/Glyphs/Plugins</string>
-					<key>SKIP_INSTALL</key>
-					<string>YES</string>
+					<string>$(USER_LIBRARY_DIR)/Application Support/Glyphs/Plugins</string>
 					<key>DEPLOYMENT_LOCATION</key>
 					<string>YES</string>
 				</dict>
 				<key>Release</key>
 				<dict>
 					<key>SKIP_INSTALL</key>
-					<string>NO</string>
+					<string>YES</string>
 				</dict>
 			</dict>
 			<key>BuildPhases</key>
