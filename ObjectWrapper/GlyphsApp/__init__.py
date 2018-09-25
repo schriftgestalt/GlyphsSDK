@@ -2681,11 +2681,22 @@ GSFont.keyboardIncrement = property(lambda self: self.pyobjc_instanceMethods.key
 	distance of movement by arrow keys. Default:1
 	:type: float'''
 
-def Font_selectedGlyphs(self):
+def Font_GetSelectedGlyphs(self):
 
 	return self.parent.windowController().glyphsController().selectedObjects()
 
-GSFont.selection = property(lambda self: Font_selectedGlyphs(self))
+def Font_SetSelectedGlyphs(self, value):
+
+	if not type(value) in (list, tuple):
+		raise ValueError('Argument needs to be a list.')
+
+	for g in self.glyphs:
+		if g in value:
+			g.selected = True
+		else:
+			g.selected = False
+
+GSFont.selection = property(lambda self: Font_GetSelectedGlyphs(self), lambda self, value: Font_SetSelectedGlyphs(self, value))
 '''.. attribute:: selection
 
 	.. versionadded:: 2.3
