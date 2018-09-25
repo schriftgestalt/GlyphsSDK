@@ -1235,7 +1235,7 @@ class ReporterPlugin (NSObject):
 					self.inactiveLayerBackground(Layer)
 				elif hasattr(self, 'inactiveLayers'):
 					if not self.hasWarned:
-						print "%s: the method 'inactiveLayers' has been deprecated. Please use 'inactiveLayerBackground'" % self.className()
+						print("%s: the method 'inactiveLayers' has been deprecated. Please use 'inactiveLayerBackground'" % self.className())
 						self.hasWarned = True
 					self.inactiveLayers(Layer)
 			else:
