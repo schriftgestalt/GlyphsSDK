@@ -6370,11 +6370,11 @@ GSComponent.component = property(lambda self: self.pyobjc_instanceMethods.compon
 	The :class:`GSGlyph` the component is pointing to. This is read-only. In order to change the referenced base glyph, set :class:`GSComponent`.componentName to the new glyph name.
 	:type: :class:`GSGlyph`
 '''
-# this is not in Glyphs, yet. Needs fixing
-GSComponent.layer = property(	lambda self: self.pyobjc_instanceMethods.component().layers[self.parent().associatedMasterId])
-'''.. attribute:: layer
 
-	.. versionadded:: 2.3
+GSComponent.componentLayer = property(lambda self: self.pyobjc_instanceMethods.componentLayer())
+'''.. attribute:: componentLayer
+
+	.. versionadded:: 2.5
 
 	The :class:`GSLayer` the component is pointing to. This is read-only. In order to change the referenced base glyph, set :class:`GSComponent`.componentName to the new glyph name.
 
