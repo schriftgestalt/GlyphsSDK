@@ -9137,14 +9137,9 @@ def LogToConsole(message, title=None):
 lastErrorMessage = ''
 def LogError(message):
 	global lastErrorMessage
-	try:
-		if message != lastErrorMessage:
-
-			lastErrorMessage = message
-			sys.stderr.write(message)
-
-	except:
-		LogToConsole(traceback.format_exc())
+	if message != lastErrorMessage:
+		lastErrorMessage = message
+		sys.stderr.write(message)
 
 '''.. function:: LogError(message)
 
