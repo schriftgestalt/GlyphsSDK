@@ -1539,6 +1539,119 @@ class FontInstancesProxy (Proxy):
 	def setterMethod(self):
 		return self._owner.setInstances_
 
+class FontAxesProxy (Proxy):
+	def __getitem__(self, Key):
+		if type(Key) == slice:
+			return self.values().__getitem__(Key)
+		if type(Key) is int:
+			if Key < 0:
+				Key = self.__len__() + Key
+			return self._owner.objectInAxesAtIndex_(Key)
+		else:
+			raise(KeyError)
+	def __setitem__(self, Key, Class):
+		if type(Key) is int:
+			if Key < 0:
+				Key = self.__len__() + Key
+			self._owner.replaceObjectInAxesAtIndex_withObject_(Key, Class)
+	def __delitem__(self, Key):
+		if type(Key) is int:
+			if Key < 0:
+				Key = self.__len__() + Key
+			return self._owner.removeObjectFromAxesAtIndex_(Key)
+	def __iter__(self):
+		for index in range(self._owner.countOfAxes()):
+			yield self._owner.objectInAxesAtIndex_(index)
+	def append(self, axis):
+		self._owner.addAxis_(axis)
+	def extend(self, Axes):
+		for axis in Axes:
+			self._owner.addAxis_(axis)
+	def remove(self, axis):
+		self._owner.removeAxis_(axis)
+	def insert(self, Index, axis):
+		self._owner.insertObject_inAxesAtIndex_(axis, Index)
+	def __len__(self):
+		return self._owner.countOfAxes()
+	def values(self):
+		return self._owner.pyobjc_instanceMethods.axes()
+	def setterMethod(self):
+		return self._owner.setAxes_
+
+class MasterAxesProxy (Proxy):
+	def __getitem__(self, Key):
+		if type(Key) is int:
+			if Key < 0:
+				Key = self.__len__() + Key
+			count = self.__len__()
+			if Key >= count:
+				raise IndexError("list index out of range")
+			if Key == 0:
+				return self._owner.weightValue
+			if Key == 1:
+				return self._owner.widthValue
+			if Key == 2:
+				return self._owner.customValue
+			if Key == 3:
+				return self._owner.customValue1
+			if Key == 4:
+				return self._owner.customValue2
+			if Key == 5:
+				return self._owner.customValue3
+		raise(KeyError)
+	def __setitem__(self, Key, value):
+		if type(Key) is int:
+			if Key < 0:
+				Key = self.__len__() + Key
+			count = self.__len__()
+			if Key >= count:
+				raise IndexError("list index out of range")
+			if Key == 0:
+				self._owner.weightValue = value
+				return
+			if Key == 1:
+				self._owner.widthValue = value
+				return
+			if Key == 2:
+				self._owner.customValue = value
+				return
+			if Key == 3:
+				self._owner.customValue1 = value
+				return
+			if Key == 4:
+				self._owner.customValue2 = value
+				return
+			if Key == 5:
+				self._owner.customValue3 = value
+				return
+		raise(KeyError)
+	def __delitem__(self, Key):
+		raise("Can't delete axis values")
+	def __iter__(self):
+		for index in range(self.__len__()):
+			yield self.__getitem__(index)
+	def append(self, value):
+		raise("Can't append axis values")
+	def extend(self, value):
+		raise("Can't extend axis values")
+	def remove(self, value):
+		raise("Can't remove axis values")
+	def insert(self, Index, value):
+		raise("Can't insert axis values")
+	def __len__(self):
+		return min(6, self._owner.font().countOfAxes())
+	def values(self):
+		count = self.__len__()
+		values = []
+		for i in range(count):
+			values.append(self.__getitem__(i))
+		return values
+	def setter(self, values):
+		print(values, type(values))
+		count = min(self.__len__(), len(values))
+		for i in range(count):
+			value = values[i]
+			self.__setitem__(i, value)
 
 class CustomParametersProxy(Proxy):
 	def __getitem__(self, Key):
@@ -2436,8 +2549,9 @@ GSFont.instances = property(lambda self: FontInstancesProxy(self),
 	Collection of :class:`GSInstance <GSInstance>` objects.
 	:type: list
 '''
-GSFont.axes = property(lambda self: self.pyobjc_instanceMethods.axes(),
-					   lambda self, value: self.setAxes_(value))
+
+GSFont.axes = property(lambda self: FontAxesProxy(self),
+						lambda self, value: FontAxesProxy(self).setter(value))
 '''.. attribute:: axes
 
 	.. versionadded:: 2.5
@@ -3208,6 +3322,10 @@ GSFontMaster.name = property(lambda self: self.pyobjc_instanceMethods.name(),
 '''.. attribute:: name
 	Name of the master. This usually is a combination of GSFontMaster.weight and GSFontMaster.width and is a human-readable identification of each master, e.g., "Bold Condensed".
 	:type: string'''
+
+GSFontMaster.axes = property(lambda self: MasterAxesProxy(self),
+							 lambda self, value: MasterAxesProxy(self).setter(value))
+
 # GSFontMaster.weight = property(lambda self: self.pyobjc_instanceMethods.weight(), lambda self, value: self.setWeight_(value))
 '''.. attribute:: weight
 	Human-readable weight name, chosen from list in Font Info. For the position in the interpolation design space, use GSFontMaster.weightValue.
