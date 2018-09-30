@@ -2796,12 +2796,7 @@ def Font_SetSelectedGlyphs(self, value):
 
 	if not type(value) in (list, tuple):
 		raise ValueError('Argument needs to be a list.')
-
-	for g in self.glyphs:
-		if g in value:
-			g.selected = True
-		else:
-			g.selected = False
+	self.parent.windowController().glyphsController().setSelectedObjects_(value)
 
 GSFont.selection = property(lambda self: Font_GetSelectedGlyphs(self), lambda self, value: Font_SetSelectedGlyphs(self, value))
 '''.. attribute:: selection
