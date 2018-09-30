@@ -1353,9 +1353,8 @@ class AppFontProxy (Proxy):
 			raise(KeyError)
 	def values(self):
 		fonts = []
-		for doc in self._owner.orderedDocuments():
-			if doc.isKindOfClass_(NSClassFromString("GSDocument")):
-				fonts.append(doc.font)
+		for doc in self._owner.fontDocuments():
+			fonts.append(doc.font)
 		return fonts
 	def append(self, font):
 		doc = Glyphs.documentController().openUntitledDocumentAndDisplay_error_(True, None)[0]
