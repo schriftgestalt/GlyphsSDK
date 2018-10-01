@@ -25,7 +25,9 @@ Glyphs saves its files in plaintext format. So the files can be viewed and edite
     * except: color list, they are all on one line.
 - empty elements are always omitted. 
     * except: in `userData` entires. There the structure is preserved.
+- Numbers are always written without quotes (negative and float). Strings that look like numbers are written with quotes (mostly important in userData).
 - Unicodes are written as hex string but always without quotes so it might be ambiguous for a general parser ('1234' could be read as int or hex)
+- The last element in a list doesn’t get a trailing comma.
 
 ## Top Level Elements
 The XML file contains a dictionary with the following structure. The elements with child elements are usually a `list` of `dict` elements.
