@@ -1,14 +1,31 @@
 # Glyphs File Format, Version 2
-Glyphs stores data using the Apple property list (plist) format. It saves its files in plaintext format, because it saves a lot of space, but the XML-based flavour is also supported. So, the files can be viewed and edited with any text editor. Open an existing `.glyphs` file to see how it works.
+Glyphs saves its files in plaintext format. So the files can be viewed and edited with any text editor. Open an existing `.glyphs` file to see how it works.
 
-## Changes:
-### 21. April. 2018:
+- The format is based on Apples old style property list (plist) format.
+- It doesn’t use the more common XML-based flavor (that is supported for reading) to save space.
+- There are some small deviations from the default format. More about that in Notes.
+
+## Changes
+### 1. Oct. 2018:
+- Add Notes about special cases
+- Better general explanation
+
+### 21. April 2018:
 - Add .appVersion, disablesNiceNames, customValue, weight, width, custom
 - Fix typos: paths, widthValue
 
 ### 4. Feb. 2016:
 - added hints
 - updated and added a few field in layers
+
+## Notes
+- It is written without indentation. That is to save file size.
+- Each key needs to be on its own line.
+- Lists have each element on one line, empty `lists` or `dicts` need to span two lines.
+    * except: color list, they are all on one line.
+- empty elements are always omitted. 
+    * except: in `userData` entires. There the structure is preserved.
+- Unicodes are written as hex string but always without quotes so it might be ambiguous for a general parser ('1234' could be read as int or hex)
 
 ## Top Level Elements
 The XML file contains a dictionary with the following structure. The elements with child elements are usually a `list` of `dict` elements.
