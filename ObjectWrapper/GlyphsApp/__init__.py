@@ -8794,6 +8794,11 @@ def ____METHODS____(): pass
 def ____________________(): pass
 
 
+def __GSPathPen_beginPath__(self, identifier=None, **kwargs):
+	self.beginPath_(identifier)
+	path = self.currentPath()
+	path.closed = True
+GSPathPen.beginPath = __GSPathPen_beginPath__
 
 def __GSPathPen_moveTo__(self, pt):
 	self.moveTo_(pt)
@@ -8806,6 +8811,23 @@ GSPathPen.lineTo = __GSPathPen_lineTo__
 def __GSPathPen_curveTo__(self, off1, off2, pt):
 	self.curveTo_off1_off2_(pt, off1, off2)
 GSPathPen.curveTo = __GSPathPen_curveTo__
+
+def __GSPathPen_addPoint__(self, pt, segmentType=None, smooth=False, name=None, identifier=None, **kwargs):
+	node = GSNode()
+	node.position = pt
+	path = self.currentPath()
+	if segmentType == "move":
+		path.closed = False
+	elif segmentType is not None:
+		node.type = segmentType
+	else:
+		node.type = OFFCURVE
+	if smooth:
+		node.smooth = True
+	if name is not None:
+		node.name = name
+	path.nodes.append(node)
+GSPathPen.addPoint = __GSPathPen_addPoint__
 
 def __PathOperator_removeOverlap__(paths):
 	try:
