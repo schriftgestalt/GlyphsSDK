@@ -230,7 +230,21 @@ Changes in the API
 
 These changes could possibly break your code, so you need to keep track of them. Please see :class:`GSApplication`.versionNumber for how to check for the app version in your code. Really, read it. There’s a catch.
 
-----------
+--------------------
+Major Changes in 2.5
+--------------------
+
+	- Add pointPen capabilities to `GSPathPen`
+	- Add setter for :meth:`GSFont.selection <selection>`
+	- Add :meth:`GSFont.axes <axes>`, :meth:`GSFontMaster.axes <axes>` and  :meth:`GSInstance.axes <axes>`
+	- Add :meth:`GSLayer.componentLayer <componentLayer>`
+		The :class:`GSLayer` the component is pointing to. This is read-only. In order to change the referenced base glyph, set :class:`GSComponent`.componentName to the new glyph name.
+		For Smart Components, the `componentLayer` contains the interpolated result.
+	- Add :meth:`GSInstance.generate(UFO) <generate>`
+	- Add :meth:`GSFont.export() <export>`
+		This allows to export Variable fonts
+	- Add :meth:`GSGlyph.unicodes <unicodes>`
+--------------------
 Major Changes in 2.3
 --------------------
 
