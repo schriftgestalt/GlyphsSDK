@@ -232,7 +232,7 @@ These changes could possibly break your code, so you need to keep track of them.
 
 ----------
 Major Changes in 2.3
-----------
+--------------------
 
 .. attribute:: *.bezierPath
 
@@ -243,9 +243,9 @@ Old: ``.bezierPath()``
 New: ``.bezierPath``
 
 
-----------
+--------------------
 Major Changes in 2.2
-----------
+--------------------
 
 .. attribute:: GSLayer.selection
 
@@ -3374,7 +3374,7 @@ GSFontMaster.font = property(lambda self: self.pyobjc_instanceMethods.font(), la
 GSFontMaster.name = property(lambda self: self.pyobjc_instanceMethods.name(),
 							 lambda self, value: self.setName_(value))
 '''.. attribute:: name
-	Name of the master. This usually is a combination of GSFontMaster.weight and GSFontMaster.width and is a human-readable identification of each master, e.g., "Bold Condensed".
+	The human-readable identification of the master, e.g., "Bold Condensed".
 	:type: string'''
 
 GSFontMaster.axes = property(lambda self: MasterAxesProxy(self),
@@ -3738,10 +3738,10 @@ GSInstance.name = property(lambda self: self.pyobjc_instanceMethods.name(), lamb
 	Name of instance. Corresponds to the "Style Name" field in the font info. This is used for naming the exported fonts.
 	:type: string'''
 GSInstance.weight = property(lambda self: self.pyobjc_instanceMethods.weightClass(), lambda self, value: self.setWeightClass_(value))
+GSInstance.weightClass = property(lambda self: self.pyobjc_instanceMethods.weightClass(), lambda self, value: self.setWeightClass_(value))
 '''.. attribute:: weight
 	Human-readable weight name, chosen from list in Font Info. For actual position in interpolation design space, use GSInstance.weightValue.
 	:type: string'''
-GSInstance.weightClass = property(lambda self: self.pyobjc_instanceMethods.weightClass(), lambda self, value: self.setWeightClass_(value))
 GSInstance.width = property(lambda self: self.pyobjc_instanceMethods.widthClass(), lambda self, value: self.setWidthClass_(value))
 GSInstance.widthClass = property(lambda self: self.pyobjc_instanceMethods.widthClass(), lambda self, value: self.setWidthClass_(value))
 '''.. attribute:: width
@@ -3836,6 +3836,7 @@ GSInstance.font = property(lambda self: self.pyobjc_instanceMethods.font(), lamb
 '''.. attribute:: font
 	.. versionadded:: 2.5.1
 	Reference to the :class:`GSFont` object that contains the instance. Normally that is set by the app, only if the instance is not actually added to the font, then set this manually.
+
 	:type: GSFont'''
 
 GSInstance.customParameters = property(lambda self: CustomParametersProxy(self))
@@ -6514,6 +6515,8 @@ GSComponent.componentLayer = property(lambda self: self.pyobjc_instanceMethods.c
 	.. versionadded:: 2.5
 
 	The :class:`GSLayer` the component is pointing to. This is read-only. In order to change the referenced base glyph, set :class:`GSComponent`.componentName to the new glyph name.
+
+	For Smart Components, the `componentLayer` contains the interpolated result.
 
 	:type: :class:`GSLayer`
 '''
