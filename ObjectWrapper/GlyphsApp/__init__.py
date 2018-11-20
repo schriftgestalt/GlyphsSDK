@@ -802,7 +802,7 @@ GSApplication.menu = property(lambda self: AppMenuProxy(self))
 	Add menu items to Glyphs’ main menus.
 
 	Following constants for accessing the menus are defined:
-	APP_MENU, FILE_MENU, EDIT_MENU, GLYPH_MENU, PATH_MENU, FILTER_MENU, VIEW_MENU, SCRIPT_MENU, WINDOW_MENU, HELP_MENU
+	:const:`APP_MENU`, :const:`FILE_MENU`, :const:`EDIT_MENU`, :const:`GLYPH_MENU`, :const:`PATH_MENU`, :const:`FILTER_MENU`, :const:`VIEW_MENU`, :const:`SCRIPT_MENU`, :const:`WINDOW_MENU`, :const:`HELP_MENU`
 
 	.. code-block:: python
 
@@ -3920,13 +3920,13 @@ Functions
 
 	Exports the instance. All parameters are optional.
 
-	:param str The format of the outlines: OTF or TTF. Default: OTF
+	:param str The format of the outlines: :const:`OTF` or :const:`TTF`. Default: OTF
 	:param str FontPath: The destination path for the final fonts. If None, it uses the default location set in the export dialog
 	:param bool AutoHint: If autohinting should be applied. Default: True
 	:param bool RemoveOverlap: If overlaps should be removed. Default: True
 	:param bool UseSubroutines: If to use subroutines for CFF. Default: True
 	:param bool UseProductionNames: If to use production names. Default: True
-	:param bool Containers: list of container formats. Use any of the following constants: PLAIN, WOFF, WOFF2, EOT. Default: PLAIN
+	:param bool Containers: list of container formats. Use any of the following constants: :const:`PLAIN`, :const:`WOFF`, :const:`WOFF2`, :const:`EOT`. Default: PLAIN
 	:return: On success, True, on failure error message.
 	:rtype: bool/list
 
@@ -9312,135 +9312,218 @@ Constants
 
 Node types
 
-	LINE = "line"
+	.. data:: LINE
+
 		Line node.
 
-	CURVE = "curve"
+	.. data:: CURVE
+
 		Curve node. Make sure that each curve node is preceded by two off-curve nodes.
 
-	QCURVE = "qcurve"
+	.. data:: QCURVE
+
 		Quadratic curve node. Make sure that each curve node is preceded by at least one off-curve node.
 
-	OFFCURVE = "offcurve"
+	.. data:: OFFCURVE
+
 		Off-cuve node
 
-Node connection
+Export formats
 
-	GSSHARP = 0
-		Sharp connection.
+	.. data:: OTF
 
-	GSSMOOTH = 100
-		A smooth or tangent node
+		Write CFF based font
 
-	.. deprecated:: 2.3
-		Use attribute `smooth` instead.
+	.. data:: TTF
+
+		Write CFF based font
+
+	.. data:: VARIABLE
+
+		Write Variable font
+
+	.. data:: UFO
+
+		Write UFO based font
+
+	.. data:: WOFF
+
+		Write WOFF
+
+	.. data:: WOFF2
+
+		Write WOFF
+
+	.. data:: PLAIN
+
+		do not package as webfont
+
+	.. data:: EOT
+
+		Write EOT
+
+	.. versionadded:: 2.5
 
 Hint types
 
-	TOPGHOST = -1
+	.. data:: TOPGHOST
+
 		Top ghost for PS hints
 
-	STEM = 0
+	.. data:: STEM
+
 		Stem for PS hints
 
-	BOTTOMGHOST = 1
+	.. data:: BOTTOMGHOST
+
 		Bottom ghost for PS hints
 
-	TTANCHOR = 2
+	.. data:: TTANCHOR
+
 		Anchor for TT hints
 
-	TTSTEM = 3
+	.. data:: TTSTEM
+
 		Stem for TT hints
 
-	TTALIGN = 4
+	.. data:: TTALIGN
+
 		Align for TT hints
 
-	TTINTERPOLATE = 5
+	.. data:: TTINTERPOLATE
+
 		Interpolation for TT hints
 
-	TTDIAGONAL = 6
+	.. data:: TTDIAGONAL
+
 		Diagonal for TT hints
 
-	TTDELTA = 8
+	.. data:: TTDELTA
 		Delta TT hints
 
-	CORNER = 16
+	.. data:: CORNER
+
 		Corner Component
 
-	CAP = 17
+	.. data:: CAP
+
 		Cap Component
 
 Hint Option
 
 	This is only used for TrueType hints.
 
-	TTROUND = 0
+	.. data:: TTROUND
+
 		Round to grid
 
-	TTROUNDUP = 1
+	.. data:: TTROUNDUP
+
 		Round up
 
-	TTROUNDDOWN = 2
+	.. data:: TTROUNDDOWN
+
 		Round down
 
-	TTDONTROUND = 4
+	.. data:: TTDONTROUND
+
 		Don’t round at all
 
-	TRIPLE = 128
+	.. data:: TRIPLE = 128
+
 		Indicates a triple hint group. There need to be exactly three horizontal TTStem hints with this setting to take effect.
+
 
 Menu Tags
 
 	This are tags to access the menu items in the apps main menu. Please see :class:`GSApplication`.menu for details
 
-	APP_MENU
+	.. data:: APP_MENU
+
 		The 'Glyphs' menu
-	FILE_MENU
+
+	.. data:: FILE_MENU
+
 		The File menu
-	EDIT_MENU
+
+	.. data:: EDIT_MENU
+
 		The Edit menu
-	GLYPH_MENU
+
+	.. data:: GLYPH_MENU
+
 		The Glyph menu
-	PATH_MENU
+
+	.. data:: PATH_MENU
+
 		The Path menu
-	FILTER_MENU
+
+	.. data:: FILTER_MENU
+
 		The Filter menu
-	VIEW_MENU
+
+	.. data:: VIEW_MENU
+
 		The View menu
-	SCRIPT_MENU
+
+	.. data:: SCRIPT_MENU
+
 		The Script menu
-	WINDOW_MENU
+
+	.. data:: WINDOW_MENU
+
 		The Window menu
-	HELP_MENU
+
+	.. data:: HELP_MENU
+
 		The Help menu
 
 Menu States
-	ONSTATE
+
+	.. data:: ONSTATE
+
 		The menu entry will have a checkbox
-	OFFSTATE
+
+	.. data:: OFFSTATE
+
 		The menu entry will have no checkbox
-	MIXEDSTATE
+
+	.. data:: MIXEDSTATE
+
 		The menu entry will have horizontal line
 
 Callback Keys
 
 	This are the available callbacks
 
-	DRAWFOREGROUND
+	.. data:: DRAWFOREGROUND
+
 		to draw in the foreground
-	DRAWBACKGROUND
+
+	.. data:: DRAWBACKGROUND
+
 		to draw in the background
-	DRAWINACTIVE
+
+	.. data:: DRAWINACTIVE
+
 		draw inactive glyphs
-	DOCUMENTOPENED
+
+	.. data:: DOCUMENTOPENED
+
 		is called if a new document is opened
-	DOCUMENTACTIVATED
+
+	.. data:: DOCUMENTACTIVATED
+
 		is called when the document becomes the active document
-	DOCUMENTWASSAVED
+
+	.. data:: DOCUMENTWASSAVED
+
 		is called when the document is saved.
 		The document itself is passed in notification.object()
-	DOCUMENTEXPORTED
-		if a font is exported. This is called for every instance and notification.object() will contain the path to the final font file.
+
+	.. data:: DOCUMENTEXPORTED
+
+		if a font is exported. This is called for every instance and ``notification.object()`` will contain the path to the final font file.
 
 .. code-block:: python
 	def exportCallback(info):
@@ -9455,28 +9538,44 @@ Callback Keys
 	Glyphs.addCallback(exportCallback, DOCUMENTEXPORTED)
 
 
-	DOCUMENTCLOSED
+	.. data:: DOCUMENTCLOSED
+
 		is called when the document is closed
-	TABDIDOPEN
+
+	.. data:: TABDIDOPEN
+
 		if a new tab is opened
-	TABWILLCLOSE
+
+	.. data:: TABWILLCLOSE
+
 		if a tab is closed
-	UPDATEINTERFACE
+
+	.. data:: UPDATEINTERFACE
+
 		if some thing changed in the edit view. Maybe the selection or the glyph data.
-	MOUSEMOVED
-		is calle if the mouse is moved. If you need to draw something, you need to call `Glyphs.redraw()` and also register to one of the drawing callbacks.
+
+	.. data:: MOUSEMOVED
+
+		is called if the mouse is moved. If you need to draw something, you need to call `Glyphs.redraw()` and also register to one of the drawing callbacks.
 
 Writing Directions
 
 	The writing directions of the Edit View.
 
-	LTR
+	.. data:: LTR
+
 		Left To Right (e.g. Latin)
-	RTL
+
+	.. data:: RTL
+
 		Right To Left (e.g. Arabic, Hebrew)
-	LTRTTB
+
+	.. data:: LTRTTB
+
 		Left To Right, Top To Bottom
-	RTLTTB
+
+	.. data:: RTLTTB
+
 		Right To Left, Top To Bottom
 
 '''
