@@ -6201,7 +6201,7 @@ GSAnchor.name = property(lambda self: self.pyobjc_instanceMethods.name(),
 		# select anchor
 		layer.anchors[0].selected = True
 
-		# print(selection state)
+		# log selection state
 		print(layer.anchors[0].selected)
 
 	:type: bool
