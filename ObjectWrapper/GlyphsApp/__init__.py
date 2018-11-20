@@ -1638,7 +1638,7 @@ class MasterAxesProxy (Proxy):
 	def insert(self, Index, value):
 		raise("Can't insert axis values")
 	def __len__(self):
-		return min(6, self._owner.font().countOfAxes())
+		return min(6, self._owner.font.countOfAxes())
 	def values(self):
 		count = self.__len__()
 		values = []
@@ -1651,6 +1651,54 @@ class MasterAxesProxy (Proxy):
 		for i in range(count):
 			value = values[i]
 			self.__setitem__(i, value)
+
+class InstanceAxesProxy (MasterAxesProxy):
+	def __getitem__(self, Key):
+		if type(Key) is int:
+			if Key < 0:
+				Key = self.__len__() + Key
+			count = self.__len__()
+			if Key >= count:
+				raise IndexError("list index out of range")
+			if Key == 0:
+				return self._owner.interpolationWeight()
+			if Key == 1:
+				return self._owner.interpolationWidth()
+			if Key == 2:
+				return self._owner.interpolationCustom()
+			if Key == 3:
+				return self._owner.interpolationCustom1()
+			if Key == 4:
+				return self._owner.interpolationCustom2()
+			if Key == 5:
+				return self._owner.interpolationCustom3()
+		raise(KeyError)
+	def __setitem__(self, Key, value):
+		if type(Key) is int:
+			if Key < 0:
+				Key = self.__len__() + Key
+			count = self.__len__()
+			if Key >= count:
+				raise IndexError("list index out of range")
+			if Key == 0:
+				self._owner.setInterpolationWeight_(value)
+				return
+			if Key == 1:
+				self._owner.setInterpolationWidth_(value)
+				return
+			if Key == 2:
+				self._owner.setInterpolationCustom_(value)
+				return
+			if Key == 3:
+				self._owner.setInterpolationCustom1_(value)
+				return
+			if Key == 4:
+				self._owner.setInterpolationCustom2_(value)
+				return
+			if Key == 5:
+				self._owner.setInterpolationCustom3_(value)
+				return
+		raise(KeyError)
 
 class CustomParametersProxy(Proxy):
 	def __getitem__(self, Key):
@@ -2440,6 +2488,7 @@ Properties
 
 	parent
 	masters
+	axes
 	instances
 	glyphs
 	classes
@@ -3271,6 +3320,7 @@ Properties
 	name
 	weight
 	width
+	axes
 	weightValue
 	widthValue
 	customValue
@@ -3288,6 +3338,7 @@ Properties
 	guides
 	userData
 	customParameters
+	font
 
 ----------
 Properties
@@ -3311,6 +3362,15 @@ GSFontMaster.id = property(lambda self: self.pyobjc_instanceMethods.id(), lambda
 		<GSLayer "Light" (A)>
 
 	:type: unicode'''
+
+GSFontMaster.font = property(lambda self: self.pyobjc_instanceMethods.font(), lambda self, value: self.setFont_(value))
+'''.. attribute:: font
+	Reference to the :class:`GSFont` object that contains the master. Normally that is set by the app, only if the instance is not actually added to the font, then set this manually.
+
+	.. versionadded:: 2.5.2
+
+	:type: GSFont'''
+
 GSFontMaster.name = property(lambda self: self.pyobjc_instanceMethods.name(),
 							 lambda self, value: self.setName_(value))
 '''.. attribute:: name
@@ -3319,42 +3379,92 @@ GSFontMaster.name = property(lambda self: self.pyobjc_instanceMethods.name(),
 
 GSFontMaster.axes = property(lambda self: MasterAxesProxy(self),
 							 lambda self, value: MasterAxesProxy(self).setter(value))
+'''.. attribute:: axes
+	List of floats specifying the positions for each axis
+
+	.. code-block:: python
+		# setting a value for a specific axis
+		master.axes[2] = 12
+		# setting all values at once
+		master.axes = [100, 12, 3.5]
+
+	.. versionadded:: 2.5.2
+
+	:type: list'''
+
 
 # GSFontMaster.weight = property(lambda self: self.pyobjc_instanceMethods.weight(), lambda self, value: self.setWeight_(value))
 '''.. attribute:: weight
-	Human-readable weight name, chosen from list in Font Info. For the position in the interpolation design space, use GSFontMaster.weightValue.
+	Human-readable weight name, chosen from list in Font Info. For the position in the interpolation design space, use :attr:`axes`.
+
+	.. deprecated:: 2.5.2
+		Use :attr:`name` instead.
+
 	:type: string'''
 # GSFontMaster.width = property(lambda self: self.pyobjc_instanceMethods.width(), lambda self, value: self.setWidth_(value))
 '''.. attribute:: width
-	Human-readable width name, chosen from list in Font Info. For the position in the interpolation design space, use GSFontMaster.widthValue.
+	Human-readable width name, chosen from list in Font Info. For the position in the interpolation design space, use :attr:`axes`.
+
+	.. deprecated:: 2.5.2
+		Use :attr:`name` instead.
+
+	:type: string'''
+# GSFontMaster.customName = property(lambda self: self.pyobjc_instanceMethods.custom(), lambda self, value: self.setCustom_(value))
+'''.. attribute:: customName
+	The name of the custom interpolation dimension.
+	
+	.. deprecated:: 2.5.2
+		Use :attr:`axes` instead.
+	
 	:type: string'''
 GSFontMaster.weightValue = property(lambda self: self.pyobjc_instanceMethods.weightValue(), lambda self, value: self.setWeightValue_(value))
 '''.. attribute:: weightValue
 	Value for interpolation in design space.
+
+	.. deprecated:: 2.5.2
+		Use :attr:`axes` instead.
+
 	:type: float'''
 GSFontMaster.widthValue = property(lambda self: self.pyobjc_instanceMethods.widthValue(), lambda self, value: self.setWidthValue_(value))
 '''.. attribute:: widthValue
 	Value for interpolation in design space.
+	
+	.. deprecated:: 2.5.2
+		Use :attr:`axes` instead.
+	
 	:type: float'''
-# GSFontMaster.customName = property(lambda self: self.pyobjc_instanceMethods.custom(), lambda self, value: self.setCustom_(value))
-'''.. attribute:: customName
-	The name of the custom interpolation dimension.
-	:type: string'''
+
 GSFontMaster.customValue = property(lambda self: self.pyobjc_instanceMethods.customValue(), lambda self, value: self.setCustomValue_(value))
 '''.. attribute:: customValue
 	Value for interpolation in design space.
+	
+	.. deprecated:: 2.5.2
+		Use :attr:`axes` instead.
+	
 	:type: float'''
 GSFontMaster.customValue1 = property(lambda self: self.pyobjc_instanceMethods.customValue1(), lambda self, value: self.setCustomValue1_(value))
 '''.. attribute:: customValue1
 	Value for interpolation in design space.
+	
+	.. deprecated:: 2.5.2
+		Use :attr:`axes` instead.
+	
 	:type: float'''
 GSFontMaster.customValue2 = property(lambda self: self.pyobjc_instanceMethods.customValue2(), lambda self, value: self.setCustomValue2_(value))
 '''.. attribute:: customValue2
 	Value for interpolation in design space.
+	
+	.. deprecated:: 2.5.2
+		Use :attr:`axes` instead.
+	
 	:type: float'''
 GSFontMaster.customValue3 = property(lambda self: self.pyobjc_instanceMethods.customValue3(), lambda self, value: self.setCustomValue3_(value))
 '''.. attribute:: customValue3
 	Value for interpolation in design space.
+	
+	.. deprecated:: 2.5.2
+		Use :attr:`axes` instead.
+	
 	:type: float'''
 GSFontMaster.ascender = property(lambda self: self.pyobjc_instanceMethods.ascender(), lambda self, value: self.setAscender_(value))
 '''.. attribute:: ascender
@@ -3591,9 +3701,6 @@ Properties
 	weightValue
 	widthValue
 	customValue
-	customValue1
-	customValue2
-	customValue3
 	isItalic
 	isBold
 	linkStyle
@@ -3640,29 +3747,44 @@ GSInstance.widthClass = property(lambda self: self.pyobjc_instanceMethods.widthC
 '''.. attribute:: width
 	Human-readable width name, chosen from list in Font Info. For actual position in interpolation design space, use GSInstance.widthValue.
 	:type: string'''
+
+GSInstance.axes = property(lambda self: InstanceAxesProxy(self),
+							 lambda self, value: InstanceAxesProxy(self).setter(value))
+'''.. attribute:: axes
+	List of floats specifying the positions for each axis
+	
+	.. code-block:: python
+	# setting a value for a specific axis
+	master.axes[2] = 12
+	# setting all values at once
+	master.axes = [100, 12, 3.5]
+	
+	.. versionadded:: 2.5.2
+	
+	:type: list'''
 GSInstance.weightValue = property(lambda self: self.interpolationWeight(), lambda self, value: self.setInterpolationWeight_(value))
 '''.. attribute:: weightValue
 	Value for interpolation in design space.
+	
+	.. deprecated:: 2.5.2
+		Use :attr:`axes` instead.
+	
 	:type: float'''
 GSInstance.widthValue = property(lambda self: self.interpolationWidth(), lambda self, value: self.setInterpolationWidth_(value))
 '''.. attribute:: widthValue
 	Value for interpolation in design space.
+	
+	.. deprecated:: 2.5.2
+		Use :attr:`axes` instead.
+	
 	:type: float'''
 GSInstance.customValue = property(lambda self: self.interpolationCustom(), lambda self, value: self.setInterpolationCustom_(value))
 '''.. attribute:: customValue
-	The value for the third axis in the design space.
-	:type: float'''
-GSInstance.customValue = property(lambda self: self.interpolationCustom1(), lambda self, value: self.setInterpolationCustom1_(value))
-'''.. attribute:: customValue1
-	The value for the forth axis in the design space.
-	:type: float'''
-GSInstance.customValue = property(lambda self: self.interpolationCustom2(), lambda self, value: self.setInterpolationCustom2_(value))
-'''.. attribute:: customValue2
-	The value for the fifth axis in the design space.
-	:type: float'''
-GSInstance.customValue = property(lambda self: self.interpolationCustom3(), lambda self, value: self.setInterpolationCustom3_(value))
-'''.. attribute:: customValue3
-	The value for the sixth axis in the design space.
+	Value for interpolation in design space.
+	
+	.. deprecated:: 2.5.2
+		Use :attr:`axes` instead.
+	
 	:type: float'''
 GSInstance.isItalic = property(lambda self: self.pyobjc_instanceMethods.isItalic(), lambda self, value: self.setIsItalic_(value))
 '''.. attribute:: isItalic
