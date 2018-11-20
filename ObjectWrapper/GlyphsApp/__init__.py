@@ -3591,6 +3591,9 @@ Properties
 	weightValue
 	widthValue
 	customValue
+	customValue1
+	customValue2
+	customValue3
 	isItalic
 	isBold
 	linkStyle
@@ -3647,7 +3650,19 @@ GSInstance.widthValue = property(lambda self: self.interpolationWidth(), lambda 
 	:type: float'''
 GSInstance.customValue = property(lambda self: self.interpolationCustom(), lambda self, value: self.setInterpolationCustom_(value))
 '''.. attribute:: customValue
-	Value for interpolation in design space.
+	The value for the third axis in the design space.
+	:type: float'''
+GSInstance.customValue = property(lambda self: self.interpolationCustom1(), lambda self, value: self.setInterpolationCustom1_(value))
+'''.. attribute:: customValue1
+	The value for the forth axis in the design space.
+	:type: float'''
+GSInstance.customValue = property(lambda self: self.interpolationCustom2(), lambda self, value: self.setInterpolationCustom2_(value))
+'''.. attribute:: customValue2
+	The value for the fifth axis in the design space.
+	:type: float'''
+GSInstance.customValue = property(lambda self: self.interpolationCustom3(), lambda self, value: self.setInterpolationCustom3_(value))
+'''.. attribute:: customValue3
+	The value for the sixth axis in the design space.
 	:type: float'''
 GSInstance.isItalic = property(lambda self: self.pyobjc_instanceMethods.isItalic(), lambda self, value: self.setIsItalic_(value))
 '''.. attribute:: isItalic
