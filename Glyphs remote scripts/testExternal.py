@@ -43,7 +43,7 @@ def exportAllInstances():
 		
 	'''
 	possible keys:
-		ExportContiner: "woff", "woff2", "eot"
+		ExportContainer: "woff", "woff2", "eot"
 		Destination: NSURL
 		autoHint: bool (default = true)
 		removeOverlap: bool (default = true)
