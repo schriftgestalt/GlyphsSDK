@@ -526,7 +526,7 @@ class FilterWithDialog (GSFilterPlugin):
 					glyphList = [g for g in glyphList if g.name not in excludeList]
 				elif "include:" in Arguments[-1]:
 					includeList = [n.strip() for n in Arguments.pop(-1).replace("include:", "").strip().split(",")]
-					glyphList = [g for g in glyphList if g.name in excludeList]
+					glyphList = [g for g in glyphList if g.name in includeList]
 
 			# With these values, call your code on every glyph:
 			FontMasterId = Font.fontMasterAtIndex_(0).id
