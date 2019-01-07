@@ -15,8 +15,7 @@
 	<key>Ancestors</key>
 	<array>
 		<string>com.apple.dt.unit.bundleBase</string>
-		<string>com.apple.dt.unit.macBase</string>
-		<string>com.apple.dt.unit.macReferenceCounting</string>
+		<string>com.apple.dt.unit.osxBase</string>
 	</array>
 	<key>Targets</key>
 	<array>
@@ -71,8 +70,7 @@
 		</dict>
 	</array>
 	<key>Options</key>
-	<array>
-	</array>
+	<array/>
 	<key>Nodes</key>
 	<array>
 		<string>___PACKAGENAME___-Prefix.pch:objC:importCocoa</string>
@@ -81,32 +79,11 @@
 		<string>___PACKAGENAMEASIDENTIFIER___.h</string>
 		<string>___PACKAGENAMEASIDENTIFIER___.m</string>
 		<string>en.lproj/___PACKAGENAMEASIDENTIFIER___View.xib</string>
+		<string>Info.plist:PrincipalClass</string>
 		<string>GlyphsCore</string>
 	</array>
 	<key>Definitions</key>
 	<dict>
-		<key>___PACKAGENAME___-Info.plist:bundle</key>
-		<string>&lt;key&gt;CFBundleDevelopmentRegion&lt;/key&gt;
-&lt;string&gt;English&lt;/string&gt;
-&lt;key&gt;CFBundleExecutable&lt;/key&gt;
-&lt;string&gt;${EXECUTABLE_NAME}&lt;/string&gt;
-&lt;key&gt;CFBundleName&lt;/key&gt;
-&lt;string&gt;${PRODUCT_NAME}&lt;/string&gt;
-&lt;key&gt;CFBundleIconFile&lt;/key&gt;
-&lt;string&gt;&lt;/string&gt;
-&lt;key&gt;CFBundleInfoDictionaryVersion&lt;/key&gt;
-&lt;string&gt;6.0&lt;/string&gt;
-&lt;key&gt;CFBundlePackageType&lt;/key&gt;
-&lt;string&gt;BNDL&lt;/string&gt;
-&lt;key&gt;CFBundleSignature&lt;/key&gt;
-&lt;string&gt;????&lt;/string&gt;
-&lt;key&gt;CFBundleVersion&lt;/key&gt;
-&lt;string&gt;1&lt;/string&gt;
-&lt;key&gt;CFBundleShortVersionString&lt;/key&gt;
-&lt;string&gt;1.0&lt;/string&gt;
-&lt;key&gt;NSPrincipalClass&lt;/key&gt;
-&lt;string&gt;___PACKAGENAMEASIDENTIFIER___&lt;/string&gt;
-</string>
 		<key>___PACKAGENAMEASIDENTIFIER___.h</key>
 		<dict>
 			<key>Path</key>
@@ -124,6 +101,10 @@
 			<key>Group</key>
 			<string>Supporting Files</string>
 		</dict>
+		<key>Info.plist:PrincipalClass</key>
+		<string><![CDATA[<key>NSPrincipalClass</key>
+<string>___PACKAGENAMEASIDENTIFIER___</string>
+]]></string>
 		<key>GlyphsCore</key>
 		<dict>
 			<key>Path</key>
