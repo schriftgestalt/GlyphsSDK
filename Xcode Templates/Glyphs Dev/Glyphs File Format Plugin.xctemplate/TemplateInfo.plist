@@ -10,72 +10,67 @@
 	<true/>
 	<key>Description</key>
 	<string>This template builds a File Format Plugin for Glyphs.</string>
-	<key>SortOrder</key>
-	<integer>3</integer>
 	<key>Ancestors</key>
 	<array>
-		<string>com.apple.dt.unit.bundleBase</string>
-		<string>com.apple.dt.unit.osxBase</string>
+		<string>com.schriftgestaltung.glyphsPluginBase</string>
+	</array>
+	<key>Options</key>
+	<array>
+		<dict>
+			<key>Identifier</key>
+			<string>documentExtension</string>
+			<key>Name</key>
+			<string>Document Extension:</string>
+			<key>Description</key>
+			<string>The extension for your document</string>
+			<key>Type</key>
+			<string>text</string>
+			<key>Default</key>
+			<string>mydoc</string>
+		</dict>
+		<dict>
+			<key>Identifier</key>
+			<string>documentType</string>
+			<key>Name</key>
+			<string>Document Type:</string>
+			<key>Description</key>
+			<string>The type for your document</string>
+			<key>Type</key>
+			<string>text</string>
+			<key>Default</key>
+			<string>com.name.filetype</string>
+		</dict>
+		<dict>
+			<key>Identifier</key>
+			<string>role</string>
+			<key>Name</key>
+			<string>Role:</string>
+			<key>Description</key>
+			<string>If the plugin can read and/or write files</string>
+			<key>Type</key>
+			<string>popup</string>
+			<key>Values</key>
+			<array>
+				<string>Editor</string>
+				<string>Viewer</string>
+				<string>Exporter</string>
+			</array>
+			<key>Default</key>
+			<string>Exporter</string>
+		</dict>
 	</array>
 	<key>Targets</key>
 	<array>
 		<dict>
-			<key>ProductType</key>
-			<string>com.apple.product-type.bundle</string>
 			<key>SharedSettings</key>
 			<dict>
-				<key>INSTALL_PATH</key>
-				<string>/</string>
 				<key>WRAPPER_EXTENSION</key>
 				<string>glyphsFileFormat</string>
-				<key>FRAMEWORK_SEARCH_PATHS</key>
-				<string>$(SYSTEM_APPS_DIR)/Glyphs.app/Contents/Frameworks</string>
-				<key>COMBINE_HIDPI_IMAGES</key>
-				<string>YES</string>
 			</dict>
-			<key>Configurations</key>
-			<dict>
-				<key>Debug</key>
-				<dict>
-					<key>DSTROOT</key>
-					<string>$(USER_LIBRARY_DIR)/Application Support/Glyphs/Plugins</string>
-					<key>DEPLOYMENT_LOCATION</key>
-					<string>YES</string>
-				</dict>
-				<key>Release</key>
-				<dict>
-					<key>SKIP_INSTALL</key>
-					<string>YES</string>
-				</dict>
-			</dict>
-			<key>BuildPhases</key>
-			<array>
-				<dict>
-					<key>Class</key>
-					<string>Sources</string>
-				</dict>
-				<dict>
-					<key>Class</key>
-					<string>Frameworks</string>
-				</dict>
-				<dict>
-					<key>Class</key>
-					<string>Resources</string>
-				</dict>
-			</array>
-			<key>Frameworks</key>
-			<array>
-				<string>Cocoa</string>
-			</array>
 		</dict>
 	</array>
-	<key>Options</key>
-	<array/>
 	<key>Nodes</key>
 	<array>
-		<string>___PACKAGENAME___-Prefix.pch:objC:importCocoa</string>
-		<string>___PACKAGENAME___-Info.plist:bundle</string>
-		<string>___PACKAGENAME___-Info.plist:NSHumanReadableCopyright</string>
 		<string>___PACKAGENAMEASIDENTIFIER___.h</string>
 		<string>___PACKAGENAMEASIDENTIFIER___.m</string>
 		<string>en.lproj/___PACKAGENAMEASIDENTIFIER___Dialog.xib</string>
@@ -84,8 +79,6 @@
 		<string>Info.plist:CFBundleDocumentTypes</string>
 		<string>Info.plist:CFBundleTypeExtensions</string>
 		<string>Info.plist:CFBundleTypeRole</string>
-		<string>Info.plist:PrincipalClass</string>
-		<string>GlyphsCore</string>
 	</array>
 	<key>Definitions</key>
 	<dict>
@@ -103,8 +96,6 @@
 		<dict>
 			<key>Path</key>
 			<string>___PACKAGENAMEASIDENTIFIER___Dialog.xib</string>
-			<key>Group</key>
-			<string>Supporting Files</string>
 		</dict>
 		<key>ExportIcon.tif</key>
 		<dict>
@@ -120,31 +111,22 @@
 			<key>Group</key>
 			<string>Supporting Files</string>
 		</dict>
-		<key>Info.plist:PrincipalClass</key>
-		<string><![CDATA[<key>NSPrincipalClass</key>
-<string>___PACKAGENAMEASIDENTIFIER___</string>
-]]></string>
-<key>Info.plist:CFBundleDocumentTypes</key>
+		<key>Info.plist:CFBundleDocumentTypes</key>
 		<string><![CDATA[<key>CFBundleDocumentTypes</key>
-<array/>
-]]></string>
-<key>Info.plist:CFBundleTypeExtensions</key>
+		<array>
+			<string>___VARIABLE_documentType:XML___</string>
+		</array>
+		]]></string>
+		<key>Info.plist:CFBundleTypeExtensions</key>
 		<string><![CDATA[<key>CFBundleTypeExtensions</key>
-<array/>
-]]></string>
+			<array>
+				<string>___VARIABLE_documentExtension:XML___</string>
+			</array>
+		]]></string>
 <key>Info.plist:CFBundleTypeRole</key>
 		<string><![CDATA[<key>CFBundleTypeRole</key>
-<string>Editor</string>
-]]></string>
-		<key>GlyphsCore</key>
-		<dict>
-			<key>Path</key>
-			<string>/Applications/Glyphs.app/Contents/Frameworks/GlyphsCore.framework</string>
-			<key>PathType</key>
-			<string>Absolute</string>
-			<key>Group</key>
-			<string>Supporting Files</string>
-		</dict>
+			<string>___VARIABLE_role:XML___</string>
+		]]></string>
 	</dict>
 </dict>
 </plist>
