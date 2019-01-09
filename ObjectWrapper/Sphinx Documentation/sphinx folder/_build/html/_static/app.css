@@ -359,7 +359,7 @@ optgroup {
 /**
  * Remove most spacing between table cells.
  */
-table {
+XXtable {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
@@ -367,6 +367,7 @@ table {
 td,
 th {
 	padding: 0;
+	padding-right:0.25em;
 }
 
 /*------------------------------------*\
@@ -397,230 +398,230 @@ html {
 	#FONTS
 \*------------------------------------*/
 /**
- * Graublau_Sans
+ * Graublau Sans
  */
-/* Graublau_Sans Extra Light */
+/* Graublau Sans Extra Light */
 @font-face {
-	font-family: "Graublau_Sans";
+	font-family: "Graublau Sans";
 	src: url("fonts/graublausans-extralight.woff") format("woff");
 	font-weight: 100;
 	font-style: normal;
 }
 
-/* Graublau_Sans Extra Light Italic */
+/* Graublau Sans Extra Light Italic */
 /*@font-face {
-	font-family: "Graublau_Sans";
+	font-family: "Graublau Sans";
 	src: url("fonts/graublausans-extralightitalic.woff") format("woff");
 	font-weight: 100;
 	font-style: italic;
 }*/
 
-/* Graublau_Sans Light */
+/* Graublau Sans Light */
 @font-face {
-	font-family: "Graublau_Sans";
+	font-family: "Graublau Sans";
 	src: url("fonts/graublausans-light.woff") format("woff");
 	font-weight: 200;
 	font-style: normal;
 }
 
-/* Graublau_Sans Light Italic */
+/* Graublau Sans Light Italic */
 /*@font-face {
-	font-family: "Graublau_Sans";
+	font-family: "Graublau Sans";
 	src: url("fonts/graublausans-lightitalic.woff") format("woff");
 	font-weight: 200;
 	font-style: italic;
 }*/
 
-/* Graublau_Sans Regular */
+/* Graublau Sans Regular */
 @font-face {
-	font-family: "Graublau_Sans";
+	font-family: "Graublau Sans";
 	src: url("fonts/graublausans-regular.woff") format("woff");
 	font-weight: 400;
 	font-style: normal;
 }
 
-/* Graublau_Sans Italic */
+/* Graublau Sans Italic */
 /*@font-face {
-	font-family: "Graublau_Sans";
+	font-family: "Graublau Sans";
 	src: url("fonts/graublausans-italic.woff") format("woff");
 	font-weight: 400;
 	font-style: italic;
 }*/
 
-/* Graublau_Sans Book */
+/* Graublau Sans Book */
 @font-face {
-	font-family: "Graublau_Sans";
+	font-family: "Graublau Sans";
 	src: url("fonts/graublausans-book.woff") format("woff");
 	font-weight: 400;
 	font-style: normal;
 }
 
-/* Graublau_Sans Book Italic */
+/* Graublau Sans Book Italic */
 /*@font-face {
-	font-family: "Graublau_Sans";
+	font-family: "Graublau Sans";
 	src: url("fonts/graublausans-bookitalic.woff") format("woff");
 	font-weight: 500;
 	font-style: italic;
 }*/
 
-/* Graublau_Sans Semibold */
+/* Graublau Sans Semibold */
 @font-face {
-	font-family: "Graublau_Sans";
+	font-family: "Graublau Sans";
 	src: url("fonts/graublausans-semibold.woff") format("woff");
 	font-weight: 600;
 	font-style: normal;
 }
 
-/* Graublau_Sans Semibold Italic */
+/* Graublau Sans Semibold Italic */
 /*@font-face {
-	font-family: "Graublau_Sans";
+	font-family: "Graublau Sans";
 	src: url("fonts/graublausans-semibolditalic.woff") format("woff");
 	font-weight: 600;
 	font-style: italic;
 }
 */
-/* Graublau_Sans Bold */
+/* Graublau Sans Bold */
 @font-face {
-	font-family: "Graublau_Sans";
+	font-family: "Graublau Sans";
 	src: url("fonts/graublausans-bold.woff") format("woff");
 	font-weight: 700;
 	font-style: normal;
 }
 
-/* Graublau_Sans Bold Italic */
+/* Graublau Sans Bold Italic */
 /*@font-face {
-	font-family: "Graublau_Sans";
+	font-family: "Graublau Sans";
 	src: url("fonts/graublausans-bolditalic.woff") format("woff");
 	font-weight: 700;
 	font-style: italic;
 }*/
 
-/* Graublau_Sans Heavy */
+/* Graublau Sans Heavy */
 @font-face {
-	font-family: "Graublau_Sans";
+	font-family: "Graublau Sans";
 	src: url("fonts/graublausans-heavy.woff") format("woff");
 	font-weight: 800;
 	font-style: normal;
 }
 
-/* Graublau_Sans Heavy Italic */
+/* Graublau Sans Heavy Italic */
 /*@font-face {
-	font-family: "Graublau_Sans";
+	font-family: "Graublau Sans";
 	src: url("fonts/graublausans-heavyitalic.woff") format("woff");
 	font-weight: 800;
 	font-style: italic;
 }*/
 
 /**
- * Graublau_Slab
+ * Graublau Slab
  */
-/* Graublau_Slab Extra Light */
+/* Graublau Slab Extra Light */
 @font-face {
-	font-family: "Graublau_Slab";
+	font-family: "Graublau Slab";
 	src: url("fonts/graublauslab-extralight.woff") format("woff");
 	font-weight: 100;
 	font-style: normal;
 }
 
-/* Graublau_Slab Extra Light Italic */
+/* Graublau Slab Extra Light Italic */
 /*@font-face {
-	font-family: "Graublau_Slab";
+	font-family: "Graublau Slab";
 	src: url("fonts/graublauslab-extralightitalic.woff") format("woff");
 	font-weight: 100;
 	font-style: italic;
 }*/
 
-/* Graublau_Slab Light */
+/* Graublau Slab Light */
 /*@font-face {
-	font-family: "Graublau_Slab";
+	font-family: "Graublau Slab";
 	src: url("fonts/graublauslab-light.woff") format("woff");
 	font-weight: 200;
 	font-style: normal;
 }*/
 
-/* Graublau_Slab Light Italic */
+/* Graublau Slab Light Italic */
 /*@font-face {
-	font-family: "Graublau_Slab";
+	font-family: "Graublau Slab";
 	src: url("fonts/graublauslab-lightitalic.woff") format("woff");
 	font-weight: 200;
 	font-style: italic;
 }*/
 
-/* Graublau_Slab Regular */
+/* Graublau Slab Regular */
 /*@font-face {
-	font-family: "Graublau_Slab";
+	font-family: "Graublau Slab";
 	src: url("fonts/graublauslab-regular.woff") format("woff");
 	font-weight: 400;
 	font-style: normal;
 }*/
 
-/* Graublau_Slab Italic */
+/* Graublau Slab Italic */
 @font-face {
-	font-family: "Graublau_Slab";
+	font-family: "Graublau Slab";
 	src: url("fonts/graublauslab-italic.woff") format("woff");
 	font-weight: 400;
 	font-style: italic;
 }
 
-/* Graublau_Slab Book */
+/* Graublau Slab Book */
 /*@font-face {
-	font-family: "Graublau_Slab";
+	font-family: "Graublau Slab";
 	src: url("fonts/graublauslab-book.woff") format("woff");
 	font-weight: 500;
 	font-style: normal;
 }*/
 
-/* Graublau_Slab Book Italic */
-/*@font-face {
-	font-family: "Graublau_Slab";
+/* Graublau Slab Book Italic */
+@font-face {
+	font-family: "Graublau Slab";
 	src: url("fonts/graublauslab-bookitalic.woff") format("woff");
 	font-weight: 500;
 	font-style: italic;
-}*/
+}
 
-/* Graublau_Slab Semibold */
+/* Graublau Slab Semibold */
 @font-face {
-	font-family: "Graublau_Slab";
+	font-family: "Graublau Slab";
 	src: url("fonts/graublauslab-semibold.woff") format("woff");
 	font-weight: 600;
 	font-style: normal;
 }
 
-/* Graublau_Slab Semibold Italic */
+/* Graublau Slab Semibold Italic */
 @font-face {
-	font-family: "Graublau_Slab";
+	font-family: "Graublau Slab";
 	src: url("fonts/graublauslab-semibolditalic.woff") format("woff");
 	font-weight: 600;
 	font-style: italic;
 }
 
-/* Graublau_Slab Bold */
+/* Graublau Slab Bold */
 @font-face {
-	font-family: "Graublau_Slab";
+	font-family: "Graublau Slab";
 	src: url("fonts/graublauslab-bold.woff") format("woff");
 	font-weight: 700;
 	font-style: normal;
 }
 
-/* Graublau_Slab Bold Italic */
+/* Graublau Slab Bold Italic */
 @font-face {
-	font-family: "Graublau_Slab";
+	font-family: "Graublau Slab";
 	src: url("fonts/graublauslab-bolditalic.woff") format("woff");
 	font-weight: 700;
 	font-style: italic;
 }
 
-/* Graublau_Slab Heavy */
+/* Graublau Slab Heavy */
 @font-face {
-	font-family: "Graublau_Slab";
+	font-family: "Graublau Slab";
 	src: url("fonts/graublauslab-heavy.woff") format("woff");
 	font-weight: 800;
 	font-style: normal;
 }
 
-/* Graublau_Slab Heavy Italic */
+/* Graublau Slab Heavy Italic */
 @font-face {
-	font-family: "Graublau_Slab";
+	font-family: "Graublau Slab";
 	src: url("fonts/graublauslab-heavyitalic.woff") format("woff");
 	font-weight: 800;
 	font-style: italic;
@@ -628,19 +629,21 @@ html {
 
 @font-face {
 	font-family: 'OliveGreen';
-	src: url('fonts/olivegreenmono-medium.eot');
-	src: url('fonts/olivegreenmono-medium.eot?#iefix') format('embedded-opentype'),
-		 url('fonts/olivegreenmono-medium.woff') format('woff');
+	src: url('fonts/olivegreenmono-regular.woff') format('woff');
 	font-weight: normal;
 	font-style: normal;
 }
 @font-face {
 	font-family: 'OliveGreen';
-	src: url('fonts/olivegreenmono-bold.eot');
-	src: url('fonts/olivegreenmono-bold.eot?#iefix') format('embedded-opentype'),
-		 url('fonts/olivegreenmono-bold.woff') format('woff');
+	src: url('fonts/olivegreenmono-bold.woff') format('woff');
 	font-weight: bold;
 	font-style: normal;
+}
+@font-face {
+	font-family: 'OliveGreen';
+	src: url('fonts/olivegreenmono-italic.woff') format('woff');
+	font-weight: normal;
+	font-style: italic;
 }
 
 /*------------------------------------*\
@@ -685,7 +688,7 @@ html {
 	#PAGE
 \*------------------------------------*/
 html {
-	font-family: "Graublau_Sans", sans-serif;
+	font-family: "Graublau Sans", sans-serif;
 	font-weight: 400;
 }
 
@@ -718,26 +721,48 @@ a:hover {
  */
 dt {
 	font-family: "OliveGreen", serif;
-	font-size: 20px;
-	font-size: 1.25rem;
 	line-height: 1.1;
 	font-weight: bold;
 	color: #175447;
 }
 dt em {
-	font-family: "Graublau_Slab", serif;
-	font-size: 20px;
-	font-size: 1.25rem;
-	line-height: 1.1;
+	font-family: "OliveGreen", serif;
 	font-weight: 200;
 	color: #175447;
 }
-
-
-dd {
-	margin-left: 22px;
+code em {
+	color: #175447;
 }
 
+p code {
+	color: #e53162;
+}
+
+dd {
+/*	margin-left: 22px;*/
+}
+
+dl.attribute, dl.function {
+	margin-bottom: 0.25em;
+	margin-top: 1.25em;
+}
+
+.argument-def {
+	margin-top:0.25em;
+}
+
+.subtitle {
+/*	margin-bottom:0.25em;*/
+}
+.method-title {
+	margin-top:1.5em;
+}
+.method-subtitle {
+	margin-top:0.5em;
+}
+.method-subsection {
+	margin-left: 1.5em;
+}
 /*------------------------------------*\
 	#LIST-INLINE
 \*------------------------------------*/
@@ -959,7 +984,7 @@ dd {
 }
 
 .page-body a {
-	line-height: 1;
+	line-height: 1.2em;
 }
 
 
@@ -1168,7 +1193,7 @@ a.page-logo:hover .st1 {
 .stage__title {
 	z-index: 0;
 	line-height: 1;
-	font-family: "Graublau_Slab", serif;
+	font-family: "Graublau Slab", serif;
 	font-weight: 400;
 	display:inline;
 }

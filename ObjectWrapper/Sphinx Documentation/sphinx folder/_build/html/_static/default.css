@@ -16,7 +16,7 @@
 /* -- page layout ----------------------------------------------------------- */
 
 body {
-	font-family: "Graublau_Sans", sans-serif;
+	font-family: "Graublau Sans", sans-serif;
 	font-size: 17px;
 /*	background-color: #0C2909;*/
 	color: #000;
@@ -47,13 +47,13 @@ h2 a, h2 a:visited {
 
 /* -- body styles ----------------------------------------------------------- */
 div.body h1 {
-	font-family: "Graublau_Slab", sans-serif;
+	font-family: "Graublau Slab", sans-serif;
 	font-weight: 500;
 	margin-top: 5em;
 }
 div.body h1 {
 	font-weight: normal;
-	font-family: "Graublau_Slab", serif;
+	font-family: "Graublau Slab", serif;
 	font-style: italic;
 	font-weight: 500;
 	background-color: #f6dfe5;
@@ -63,7 +63,7 @@ div.body h1 {
 div.body h2 {
 	font-weight: normal;
 	color: #175447;
-	font-family: "Graublau_Slab", serif;
+	font-family: "Graublau Slab", serif;
 	font-style: italic;
 	background-color: #def7f2;
 	font-weight: 500;
@@ -200,13 +200,13 @@ code {
 /* Georg 10.4.13 */
 
 h1 .pre {
-	font-family: "Graublau_Slab", sans-serif;
+	font-family: "Graublau Slab", sans-serif;
 }
 pre, .pre {
 	font-family: OliveGreen, monospace;
 }
 tt {
-	font-family: "Graublau_Sans", sans-serif;
+	font-family: "Graublau Sans", sans-serif;
 	font-weight: normal !important;
 }
 
@@ -214,7 +214,7 @@ td, th {
 	vertical-align:baseline;
 }
 
-ul.task-list , .main-navigation ul {
+ul.task-list , .main-navigation ul, .method-subsection ul {
 	list-style-type: none;
 	padding-left: 0;
 }
@@ -224,6 +224,13 @@ ul.task-list , .main-navigation ul {
 	margin-right: 10px;
 }
 
+h4.method-subtitle {
+	margin-bottom: 0px;
+}
+
+.method-subsection ul {
+	margin: 0;
+}
 
 /* ################ MOBILE ################  */
 
