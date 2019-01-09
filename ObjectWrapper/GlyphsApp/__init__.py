@@ -1399,14 +1399,13 @@ class AppFontProxy (Proxy):
 		for font in fonts:
 			self.append(font)
 
-GSDocument.font = property(lambda self: self.pyobjc_instanceMethods.font(),
-							lambda self, value: self.setFont_(value))
+GSDocument.font = property(lambda self: self.pyobjc_instanceMethods.font(), lambda self, value: self.setFont_(value))
 
-	'''
-	.. attribute:: font
-	The active :class:`GSFont`
-	:type: list
-	'''
+'''
+.. attribute:: font
+The active :class:`GSFont`
+:type: list
+'''
 
 
 
