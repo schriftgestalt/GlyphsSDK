@@ -1160,9 +1160,9 @@ class ReporterPlugin (NSObject):
 		https://developer.apple.com/library/mac/documentation/cocoa/reference/applicationkit/classes/NSColor_Class/Reference/Reference.html
 		"""
 		try:
-			self._scale = options["Scale"]
-			self.black = options["Black"]
 			if hasattr(self, 'foreground'):
+				self._scale = options["Scale"]
+				self.black = options["Black"]
 				self.foreground(Layer)
 		except:
 			self.logError(traceback.format_exc())
@@ -1180,9 +1180,9 @@ class ReporterPlugin (NSObject):
 			selectionRange = self.controller.graphicView().selectedRange()
 		"""
 		try:
-			self._scale = options["Scale"]
-			self.black = options["Black"]
 			if hasattr(self, 'foregroundInViewCoords'):
+				self._scale = options["Scale"]
+				self.black = options["Black"]
 				self.foregroundInViewCoords(self.activeLayer())
 
 		except:
@@ -1193,9 +1193,9 @@ class ReporterPlugin (NSObject):
 		Whatever you draw here will be displayed BEHIND the paths.
 		"""
 		try:
-			self._scale = options["Scale"]
-			self.black = options["Black"]
 			if hasattr(self, 'background'):
+				self._scale = options["Scale"]
+				self.black = options["Black"]
 				self.background(Layer)
 		except:
 			self.logError(traceback.format_exc())
@@ -1205,9 +1205,9 @@ class ReporterPlugin (NSObject):
 		Whatever you draw here will be displayed BEHIND the paths. The difference to drawBackgroundForLayer_options_() is that you need to deal with the scaling and current layer yourself.
 		"""
 		try:
-			self._scale = options["Scale"]
-			self.black = options["Black"]
 			if hasattr(self, 'backgroundInViewCoords'):
+				self._scale = options["Scale"]
+				self.black = options["Black"]
 				self.backgroundInViewCoords(Glyphs.font.selectedLayers[0])
 		except:
 			self.logError(traceback.format_exc())
@@ -1224,23 +1224,25 @@ class ReporterPlugin (NSObject):
 		"""
 
 		try:
-			self._scale = options["Scale"]
-			self.black = options["Black"]
-			assert Glyphs
 
-			if self.controller:
-				if hasattr(self, 'inactiveLayer'):
-					self.inactiveLayerBackground(Layer)
-				elif hasattr(self, 'inactiveLayers'):
-					if not self.hasWarned:
-						print ("%s: the method 'inactiveLayers' has been deprecated. Please use 'inactiveLayerBackground'" % self.className())
-						self.hasWarned = True
-					self.inactiveLayers(Layer)
-			else:
-				if hasattr(self, 'preview'):
-					self.preview(Layer)
-				elif hasattr(self, 'inactiveLayers'):
-					self.inactiveLayers(Layer)
+			if hasattr(self, 'preview') or hasattr(self, 'inactiveLayers'):
+				self._scale = options["Scale"]
+				self.black = options["Black"]
+				assert Glyphs
+
+				if self.controller:
+					if hasattr(self, 'inactiveLayer'):
+						self.inactiveLayerBackground(Layer)
+					elif hasattr(self, 'inactiveLayers'):
+						if not self.hasWarned:
+							print ("%s: the method 'inactiveLayers' has been deprecated. Please use 'inactiveLayerBackground'" % self.className())
+							self.hasWarned = True
+						self.inactiveLayers(Layer)
+				else:
+					if hasattr(self, 'preview'):
+						self.preview(Layer)
+					elif hasattr(self, 'inactiveLayers'):
+						self.inactiveLayers(Layer)
 
 		except:
 			self.logError(traceback.format_exc())
@@ -1257,10 +1259,10 @@ class ReporterPlugin (NSObject):
 		"""
 
 		try:
-			self._scale = options["Scale"]
-			self.black = options["Black"]
-			if self.controller:
-				if hasattr(self, 'inactiveLayerForeground'):
+			if hasattr(self, 'inactiveLayerForeground'):
+				self._scale = options["Scale"]
+				self.black = options["Black"]
+				if self.controller:
 					self.inactiveLayerForeground(Layer)
 		except:
 			self.logError(traceback.format_exc())
