@@ -711,7 +711,8 @@ GSApplication.editViewWidth = property(lambda self: self.intDefaults["GSFontView
 
 	Width of glyph Edit view. Corresponds to the "Width of editor" setting from the Preferences.
 
-	:type: int'''
+	:type: int
+'''
 
 GSApplication.handleSize = property(lambda self: self.intDefaults["GSHandleSize"], lambda self, value: Glyphs_setUserDefaults(self, "GSHandleSize", int(value)))
 '''
@@ -736,7 +737,8 @@ GSApplication.handleSize = property(lambda self: self.intDefaults["GSHandleSize"
 		bezierPath = NSBezierPath.bezierPathWithOvalInRect_(rect)
 		bezierPath.fill()
 
-	:type: int'''
+	:type: int
+'''
 
 
 GSApplication.versionString = NSBundle.mainBundle().infoDictionary()["CFBundleShortVersionString"]
@@ -748,7 +750,8 @@ GSApplication.versionString = NSBundle.mainBundle().infoDictionary()["CFBundleSh
 
 	String containing Glyph.app's version number. May contain letters also, like '2.3b'. To check for a specific version, use .versionNumber below.
 
-	:type: string'''
+	:type: string
+'''
 
 
 def Glyphs_FloatVersion(self):
@@ -778,7 +781,8 @@ GSApplication.versionNumber = property(lambda self: Glyphs_FloatVersion(self))
 			# do other stuff
 
 
-	:type: float'''
+	:type: float
+'''
 
 
 GSApplication.buildNumber = int(NSBundle.mainBundle().infoDictionary()["CFBundleVersion"])
@@ -792,7 +796,8 @@ GSApplication.buildNumber = int(NSBundle.mainBundle().infoDictionary()["CFBundle
 
 	Especially if you're using preview builds, this number may be more important to you than the version number. The build number increases with every released build and is the most significant evidence of new Glyphs versions, while the version number is set arbitrarily and stays the same until the next stable release.
 
-	:type: int'''
+	:type: int
+'''
 
 
 menuTagLookup = {
@@ -2786,11 +2791,13 @@ GSFont.manufacturerURL = property(lambda self: self.pyobjc_instanceMethods.manuf
 GSFont.versionMajor = property(lambda self: self.pyobjc_instanceMethods.versionMajor(), lambda self, value: self.setVersionMajor_(value))
 '''
 	.. attribute:: versionMajor
-	:type: int'''
+	:type: int
+'''
 GSFont.versionMinor = property(lambda self: self.pyobjc_instanceMethods.versionMinor(), lambda self, value: self.setVersionMinor_(value))
 '''
 	.. attribute:: versionMinor
-	:type: int'''
+	:type: int
+'''
 
 def __get_date__(self):
 	return datetime.datetime.fromtimestamp(self.pyobjc_instanceMethods.date().timeIntervalSince1970())
@@ -2821,7 +2828,8 @@ GSFont.upm = property(lambda self: self.unitsPerEm(), lambda self, value: self.s
 '''
 	.. attribute:: upm
 	Units per Em
-	:type: int'''
+	:type: int
+'''
 GSFont.note = property(lambda self: self.pyobjc_instanceMethods.note(),
 						lambda self, value: self.setNote_(value))
 '''
@@ -2934,7 +2942,8 @@ GSFont.selection = property(lambda self: Font_GetSelectedGlyphs(self), lambda se
 	.. versionadded:: 2.3
 
 	Returns a list of all selected glyphs in the Font View.
-	:type: list'''
+	:type: list
+'''
 
 def Font_selectedLayers(self):
 	return self.parent.selectedLayers()
