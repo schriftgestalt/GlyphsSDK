@@ -248,6 +248,9 @@ For more detailed information make sure to read into the Cocoa documentation:
 https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ApplicationKit/Classes/NSBezierPath_Class/Reference/Reference.html
 https://developer.apple.com/library/mac/documentation/cocoa/reference/applicationkit/classes/NSColor_Class/Reference/Reference.html
 
+> **Hint:** For better dark mode compatibility, it is a good idea to use a *semantic* color, i.e., colors predefined by the system. E.g., `NSColor.controlAccentColor().set()`. Read all about them here:
+> https://developer.apple.com/documentation/appkit/nscolor/ui_element_colors?language=objc
+
 # Other useful methods
 
 #### drawTextAtPoint()
