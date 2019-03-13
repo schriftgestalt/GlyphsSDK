@@ -1404,7 +1404,8 @@ class AppFontProxy (Proxy):
 		for font in fonts:
 			self.append(font)
 
-GSDocument.font = property(lambda self: self.pyobjc_instanceMethods.font(), lambda self, value: self.setFont_(value))
+GSDocument.font = property(lambda self: self.pyobjc_instanceMethods.font(),
+							lambda self, value: self.setFont_(value))
 
 '''
 .. attribute:: font
@@ -1687,7 +1688,6 @@ class MasterAxesProxy (Proxy):
 			values.append(self.__getitem__(i))
 		return values
 	def setter(self, values):
-		print(values, type(values))
 		count = min(self.__len__(), len(values))
 		for i in range(count):
 			value = values[i]
@@ -2416,16 +2416,10 @@ class PathNodesProxy (Proxy):
 	def __getitem__(self, idx):
 		if type(idx) == slice:
 			return self.values().__getitem__(idx)
-		if idx < 0:
-			idx = len(self) + idx
 		return self._owner.nodeAtIndex_(idx)
 	def __setitem__(self, idx, Node):
-		if idx < 0:
-			idx = len(self) + idx
-		self._owner.setNode_atIndex_(Node, idx)
+		self._owner.replaceObjectInNodesAtIndex_withObject_(idx, Node)
 	def __delitem__(self, idx):
-		if idx < 0:
-			idx = len(self) + idx
 		self._owner.removeObjectFromNodesAtIndex_(idx)
 	def __len__(self):
 		return self._owner.countOfNodes()
@@ -2631,6 +2625,7 @@ GSFont.masters = property(lambda self: FontFontMasterProxy(self),
 	Collection of :class:`GSFontMaster` objects.
 	:type: list
 '''
+GSInterpolationFontProxy.masters = property(lambda self: FontFontMasterProxy(self))
 
 GSFont.instances = property(lambda self: FontInstancesProxy(self),
 							lambda self, value: FontInstancesProxy(self).setter(value))
@@ -2652,6 +2647,10 @@ GSFont.axes = property(lambda self: FontAxesProxy(self),
 	
 	.. versionadded:: 2.5
 '''
+
+def __GSFont_getitem__(self, value):
+	return self.glyphForName_(value)
+GSFont.__getitem__ = __GSFont_getitem__
 
 GSFont.glyphs = property(lambda self: FontGlyphsProxy(self),
 						lambda self, value: FontGlyphsProxy(self).setter(value))
@@ -3338,8 +3337,8 @@ GSFont.removeKerningForPair = removeKerningForPair
 
 def __GSFont__addTab__(self, tabText=""):
 	if self.parent:
-		self.parent.windowController().addTabWithString_(tabText)
-		return self.tabs[-1]
+		return self.parent.windowController().addTabWithString_(tabText)
+	return None
 
 GSFont.newTab = __GSFont__addTab__
 '''
@@ -3941,9 +3940,9 @@ GSInstance.axes = property(lambda self: InstanceAxesProxy(self),
 	
 	.. code-block:: python
 		# setting a value for a specific axis
-		master.axes[2] = 12
+		instance.axes[2] = 12
 		# setting all values at once
-		master.axes = [100, 12, 3.5]
+		instance.axes = [100, 12, 3.5]
 		
 	:type: list
 
@@ -4267,7 +4266,7 @@ def __Font_Export__(self, Format=OTF, Instances=None, FontPath=None, AutoHint=Tr
 		return result
 	else:
 		if not Instances:
-			Instances = [i for i in self.instances if i.isActive]
+			Instances = [i for i in self.instances if i.active]
 		allResults = []
 		for i in Instances:
 			result = i.generate(Format=Format, FontPath=None, AutoHint=True, RemoveOverlap=True, UseSubroutines=True, UseProductionNames=True, Containers=None)
@@ -5536,6 +5535,7 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 		userData
 		smartComponentPoleMapping
 		isSpecialLayer
+		isMasterLayer
 
 	Functions
 
@@ -6117,12 +6117,21 @@ GSLayer.isAligned = property(lambda self: self.pyobjc_instanceMethods.isAligned(
 	:type: bool
 '''
 
-GSLayer.isSpecialLayer = property(lambda self: self.pyobjc_instanceMethods.isSpecialLayer())
+GSLayer.isSpecialLayer = property(lambda self: bool(self.pyobjc_instanceMethods.isSpecialLayer()))
 '''
 	.. attribute:: isSpecialLayer
 
 	If the layer is a brace, bracket or a smart component layer
 
+	:type: bool
+'''
+
+GSLayer.isMasterLayer = property(lambda self: bool(self.pyobjc_instanceMethods.isMasterLayer()))
+'''
+	.. attribute:: isMasterLayer
+	
+	If it is a master layer
+	
 	:type: bool
 '''
 
@@ -8484,6 +8493,7 @@ For details on how to access them, please look at :class:`GSFont.tabs`
 		previewInstances
 		previewHeight
 		bottomToolbarHeight
+		masterIndex
 
 	Functions
 
@@ -8522,6 +8532,16 @@ def __GSEditViewController__repr__(self):
 	return codecs.encode("<GSEditViewController %s>" % nameString, 'ascii', 'backslashreplace')
 
 GSEditViewController.__repr__ = python_method(__GSEditViewController__repr__)
+
+GSEditViewController.masterIndex = property(lambda self: self.pyobjc_instanceMethods.masterIndex(), lambda self, value: self.setMasterIndex_(value))
+'''
+	.. attribute:: masterIndex
+	The index of the active master (selected in the toolbar).
+	:type: int
+	
+	.. versionadded:: 2.6.1
+	
+'''
 
 
 class TabLayersProxy (Proxy):
@@ -8651,7 +8671,7 @@ GSEditViewController.scale = property(lambda self: self.graphicView().scale(), l
 	.. versionadded:: 2.3
 '''
 
-GSEditViewController.viewPort = property(lambda self: self.graphicView().visibleRect(), lambda self, value: self.graphicView().zoomViewToRect_(value))
+GSEditViewController.viewPort = property(lambda self: self.frameView().visibleRect(), lambda self, value: self.frameView().zoomViewToRect_(value))
 
 
 '''
@@ -8691,7 +8711,7 @@ GSEditViewController.viewPort = property(lambda self: self.graphicView().visible
 	.. versionadded:: 2.3
 '''
 
-GSEditViewController.bounds = property(lambda self: self.graphicView().glyphFrame())
+GSEditViewController.bounds = property(lambda self: self.frameView().glyphFrame())
 '''
 	.. attribute:: bounds
 	Bounding box of all glyphs in the Edit view in view coordinate values.
@@ -8901,13 +8921,7 @@ GSEditViewController.previewInstances = property(lambda self: Get_ShowInPreview(
 	.. versionadded:: 2.3
 '''
 
-def EditViewPreviewHeight(self, height):
-	splitView = self.previewSplitView()
-	Frame = splitView.frame()
-	splitView.setPosition_ofDividerAtIndex_(Frame.size.height - height - 1, 0)
-
-
-GSEditViewController.previewHeight = property(lambda self: self.previewSplitView().subviews()[-1].frame().size.height, lambda self, value: EditViewPreviewHeight(self, value))
+GSEditViewController.previewHeight = property(lambda self: self.pyobjc_instanceMethods.previewHeight(), lambda self, value: self.setPreviewHeight_(value))
 
 '''
 	.. attribute:: previewHeight
@@ -9343,13 +9357,12 @@ Scaled a point.
 '''
 
 def GetSaveFile(message=None, ProposedFileName=None, filetypes=None):
-	if filetypes is None:
-		filetypes = []
 	Panel = NSSavePanel.savePanel().retain()
 	if message is not None:
 		Panel.setTitle_(message)
 	Panel.setCanChooseFiles_(True)
 	Panel.setCanChooseDirectories_(False)
+	if filetypes is not None:
 	Panel.setAllowedFileTypes_(filetypes)
 	if ProposedFileName is not None:
 		if ProposedFileName.find("/") >= 0:
