@@ -99,14 +99,12 @@ Use this method to draw things behind the glyph outlines in the Edit View.
 		NSBezierPath.fillRect_(layer.bounds)
 ```
 
-#### inactiveLayers()
+#### inactiveLayerForeground() and inactiveLayerBackground()
 
-Use this method to replace Glyph.app’s default drawing method for drawing inactive glyphs (the glyphs left and right of the active glyph in the Edit View) as well as the glyphs in the Edit View.
-
-If you want to draw the glyphs in the Edit View even different that the inactive glyphs, also implement the `preview()` method as described below.
+Use these methods to draw in inactive glyphs (the glyphs left and right of the active glyph in the Edit View). These methods deprecate the older `inactiveLayers()` method. While `inactiveLayerForeground()` draws in top of the Edit View rendering, `inactiveLayerBackground()` draws behind it.
 
 ```python
-	def inactiveLayers(self, layer):
+	def inactiveLayerForeground(self, layer):
 
 		# Draw outlines in blue
 		if layer.paths:
@@ -120,20 +118,18 @@ If you want to draw the glyphs in the Edit View even different that the inactive
 				component.bezierPath.fill()
 ```
 
-Hint: The `inactiveLayers()` method draws the complete inactive glyph, i.e., it will prevent Glyphs from drawing the *main outline* and thus, start from a clean sheet. If you want to *add* drawings to the way Glyphs renders inactive glyphs, rather than replace them, simply add this method:
+Hint: The inactive-layer methods *add* drawings to the inactive glyphs. Or in technical terms, Glyphs draws the *main outline* and these methods add their drawing to it. If, however, you want to draw the complete inactive glyph yourself, i.e., prevent Glyphs from drawing the main outline and thus, start from a clean sheet, simply add this method:
 
 ```python
 	def needsExtraMainOutlineDrawingForInactiveLayer_(self, layer):
-		return True
+		return False
 ```
 
-The return value `True` tells Glyphs that the inactive layer does need an extra main outline to be drawn according to the settings in the *View* menu.
+The return value `False` tells Glyphs that the inactive layer does not need an extra main outline to be drawn according to the settings in the *View* menu. But you also have to take care of the whole outline drawing, otherwise the glyphs will be invisible.
 
 #### preview()
 
-Use this method to replace Glyph.app’s default drawing method for glyphs in the preview panel.
-
-You must implement `inactiveLayers()` first and implement `preview()` only as an addition to `inactiveLayers()`. `preview()` cannot be implemented standalone without `inactiveLayers()`.
+Use this method to add drawings for glyphs in the preview panel.
 
 Please note that when you preview is set to "Show all instances" due to the live interpolation of the preview these layers don’t contain components, but only paths.
 
