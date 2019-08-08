@@ -9363,7 +9363,7 @@ def GetSaveFile(message=None, ProposedFileName=None, filetypes=None):
 	Panel.setCanChooseFiles_(True)
 	Panel.setCanChooseDirectories_(False)
 	if filetypes is not None:
-	Panel.setAllowedFileTypes_(filetypes)
+		Panel.setAllowedFileTypes_(filetypes)
 	if ProposedFileName is not None:
 		if ProposedFileName.find("/") >= 0:
 			path, ProposedFileName = os.path.split(ProposedFileName)
