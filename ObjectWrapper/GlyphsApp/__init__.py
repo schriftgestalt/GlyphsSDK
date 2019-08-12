@@ -3874,6 +3874,7 @@ GSInstance.mutableCopyWithZone_ = GSObject__copy__
 		name
 		weight
 		width
+		axes
 		weightValue
 		widthValue
 		customValue
