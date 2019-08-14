@@ -156,6 +156,7 @@ class FileFormatPlugin (NSObject):
 		Do all initializing here.
 		"""
 		try:
+			self = objc.super(FileFormatPlugin, self).init()
 			# Settings, default values
 			self.name = 'My File Format'
 			self.icon = 'ExportIcon'
@@ -415,6 +416,7 @@ class FilterWithDialog (GSFilterPlugin):
 		"""
 
 		try:
+			self = objc.super(FilterWithDialog, self).init()
 			self.menuName = 'My Filter'
 			self.keyboardShortcut = None  # With Cmd+Shift
 			self.actionButtonLabel = 'Apply'
@@ -526,7 +528,7 @@ class FilterWithDialog (GSFilterPlugin):
 					glyphList = [g for g in glyphList if g.name not in excludeList]
 				elif "include:" in Arguments[-1]:
 					includeList = [n.strip() for n in Arguments.pop(-1).replace("include:", "").strip().split(",")]
-					glyphList = [g for g in glyphList if g.name in includeList]
+					glyphList = [Font.glyphs[n] for n in includeList]
 
 			# With these values, call your code on every glyph:
 			FontMasterId = Font.fontMasterAtIndex_(0).id
@@ -667,6 +669,7 @@ class FilterWithoutDialog (NSObject):
 		Do all initializing here.
 		"""
 		try:
+			self = objc.super(FilterWithoutDialog, self).init()
 			self.menuName = 'My Filter'
 			self.keyboardShortcut = None
 
@@ -746,8 +749,7 @@ class FilterWithoutDialog (NSObject):
 		try:
 			for Layer in Layers:
 				if hasattr(self, 'filter'):
-					self.filter(Layer, False, {})
-
+					self.filter(Layer, True, {})
 			return (True, None)
 		except:
 			self.logError(traceback.format_exc())
@@ -908,6 +910,7 @@ class PalettePlugin (NSObject):
 		____CFBundleIdentifier____ should be the reverse domain name you specified in Info.plist.
 		"""
 		try:
+			self = objc.super(PalettePlugin, self).init()
 			# if True:
 			self.name = 'My Palette'
 
@@ -1015,7 +1018,7 @@ class PalettePlugin (NSObject):
 		"""
 		try:
 			# return 150
-			return NSUserDefaults.standardUserDefaults().integerForKey_(self.dialogName + ".ViewHeight")
+			return NSUserDefaults.standardUserDefaults().integerForKey_(self.name + ".ViewHeight")
 		except:
 			self.logError(traceback.format_exc())
 
@@ -1025,7 +1028,7 @@ class PalettePlugin (NSObject):
 		"""
 		try:
 			if newHeight >= self.minHeight() and newHeight <= self.maxHeight():
-				NSUserDefaults.standardUserDefaults().setInteger_forKey_(newHeight, self.dialogName + ".ViewHeight")
+				NSUserDefaults.standardUserDefaults().setInteger_forKey_(newHeight, self.name + ".ViewHeight")
 		except:
 			self.logError(traceback.format_exc())
 
@@ -1041,7 +1044,7 @@ class PalettePlugin (NSObject):
 				if not windowController and self.respondsToSelector_("object"):
 					if self.object().__class__ == NSClassFromString("GSFont"):
 						Font = self.object()
-						windowController = Font.parent().windowControllers()[0]
+						windowController = Font.parent.windowControllers()[0]
 						self.logToConsole("__windowController1", windowController)
 					else:
 						windowController = self.object()
@@ -1075,6 +1078,7 @@ class ReporterPlugin (NSObject):
 		"""
 		Put any initializations you want to make here.
 		"""
+		self = objc.super(ReporterPlugin, self).init()
 		self.needsExtraMainOutlineDrawingForInactiveLayers = True
 		try:
 			# Default values
@@ -1224,25 +1228,22 @@ class ReporterPlugin (NSObject):
 		"""
 
 		try:
-
-			if hasattr(self, 'preview') or hasattr(self, 'inactiveLayers'):
-				self._scale = options["Scale"]
-				self.black = options["Black"]
-				assert Glyphs
-
-				if self.controller:
-					if hasattr(self, 'inactiveLayer'):
-						self.inactiveLayerBackground(Layer)
-					elif hasattr(self, 'inactiveLayers'):
-						if not self.hasWarned:
-							print ("%s: the method 'inactiveLayers' has been deprecated. Please use 'inactiveLayerBackground'" % self.className())
-							self.hasWarned = True
-						self.inactiveLayers(Layer)
-				else:
-					if hasattr(self, 'preview'):
-						self.preview(Layer)
-					elif hasattr(self, 'inactiveLayers'):
-						self.inactiveLayers(Layer)
+			self._scale = options["Scale"]
+			self.black = options["Black"]
+			assert Glyphs
+			if self.controller:
+				if hasattr(self, 'inactiveLayerBackground'):
+					self.inactiveLayerBackground(Layer)
+				elif hasattr(self, 'inactiveLayers'):
+					if not self.hasWarned:
+						print ("%s: the method 'inactiveLayers' has been deprecated. Please use 'inactiveLayerBackground'" % self.className())
+						self.hasWarned = True
+					self.inactiveLayers(Layer)
+			else:
+				if hasattr(self, 'preview'):
+					self.preview(Layer)
+				elif hasattr(self, 'inactiveLayers'):
+					self.inactiveLayers(Layer)
 
 		except:
 			self.logError(traceback.format_exc())
@@ -1259,11 +1260,10 @@ class ReporterPlugin (NSObject):
 		"""
 
 		try:
-			if hasattr(self, 'inactiveLayerForeground'):
+			if hasattr(self, 'inactiveLayerForeground') and self.controller:
 				self._scale = options["Scale"]
 				self.black = options["Black"]
-				if self.controller:
-					self.inactiveLayerForeground(Layer)
+				self.inactiveLayerForeground(Layer)
 		except:
 			self.logError(traceback.format_exc())
 

@@ -22,6 +22,7 @@ GSComponent = objc.lookUpClass("GSComponent")
 GSControlLayer = objc.lookUpClass("GSControlLayer")
 GSCustomParameter = objc.lookUpClass("GSCustomParameter")
 GSDocument = objc.lookUpClass("GSDocument")
+GSProjectDocument = objc.lookUpClass("GSProjectDocument")
 GSEditViewController = objc.lookUpClass("GSEditViewController")
 GSElement = objc.lookUpClass("GSElement")
 GSFeature = objc.lookUpClass("GSFeature")
@@ -53,10 +54,10 @@ __all__ = [
 
 	"Glyphs", "GetFile",
 	"wrapperVersion",
-	"GSAlignmentZone", "GSAnchor", "GSAnnotation", "GSApplication", "GSBackgroundImage", "GSBackgroundLayer", "GSClass", "GSComponent", "GSControlLayer", "GSCustomParameter", "GSDocument", "GSEditViewController", "GSElement", "GSFeature", "GSFeaturePrefix", "GSFont", "GSFontMaster", "GSGlyph", "GSGlyphInfo", "GSGlyphsInfo", "GSGuideLine", "GSHint", "GSInstance", "GSLayer", "GSNode", "GSPath", "GSSubstitution", "GSPartProperty", "GSNotifyingDictionary", "GSPathFinder", "GSPathPen", "GSCallbackHandler", "GSFeatureGenerator",
+	"GSAlignmentZone", "GSAnchor", "GSAnnotation", "GSApplication", "GSBackgroundImage", "GSBackgroundLayer", "GSClass", "GSComponent", "GSControlLayer", "GSCustomParameter", "GSDocument", "GSProjectDocument", "GSEditViewController", "GSElement", "GSFeature", "GSFeaturePrefix", "GSFont", "GSFontMaster", "GSGlyph", "GSGlyphInfo", "GSGlyphsInfo", "GSGuideLine", "GSHint", "GSInstance", "GSLayer", "GSNode", "GSPath", "GSSubstitution", "GSPartProperty", "GSNotifyingDictionary", "GSPathFinder", "GSPathPen", "GSCallbackHandler", "GSFeatureGenerator", "GSTTStem",
 	# Constants
 	"MOVE", "LINE", "CURVE", "OFFCURVE", "QCURVE", "GSMOVE", "GSLINE", "GSCURVE", "GSOFFCURVE", "GSSHARP", "GSSMOOTH",
-	"TAG", "TOPGHOST", "STEM", "BOTTOMGHOST", "TTANCHOR", "TTSTEM", "TTALIGN", "TTINTERPOLATE", "TTDIAGONAL", "TTDELTA", "CORNER", "CAP", "TTDONTROUND", "TTROUND", "TTROUNDUP", "TTROUNDDOWN", "TRIPLE",
+	"TAG", "TOPGHOST", "STEM", "BOTTOMGHOST", "FLEX", "TTANCHOR", "TTSTEM", "TTALIGN", "TTINTERPOLATE", "TTDIAGONAL", "TTDELTA", "CORNER", "CAP", "TTDONTROUND", "TTROUND", "TTROUNDUP", "TTROUNDDOWN", "TRIPLE",
 	"TEXT", "ARROW", "CIRCLE", "PLUS", "MINUS",
 	"LTR", "RTL", "LTRTTB", "RTLTTB", "GSTopLeft", "GSTopCenter", "GSTopRight", "GSCenterLeft", "GSCenterCenter", "GSCenterRight", "GSBottomLeft", "GSBottomCenter", "GSBottomRight",
 
@@ -121,7 +122,8 @@ TAG = -2
 TOPGHOST = -1
 STEM = 0
 BOTTOMGHOST = 1
-TTANCHOR = 2
+FLEX = 2
+TTANCHOR = 3
 TTSTEM = 4
 TTALIGN = 5
 TTINTERPOLATE = 6
@@ -286,7 +288,7 @@ class Proxy(object):
 		strings = []
 		for currItem in self:
 			strings.append("%s" % (currItem))
-		return "(%s)" % (', '.join(strings))
+		return "(%s)" % (',\n'.join(strings))
 	def __len__(self):
 		Values = self.values()
 		if Values is not None:
@@ -1005,8 +1007,8 @@ GSApplication.productionGlyphName = _productionGlyphName
 
 def _ligatureComponents(self, String, font=None):
 	if font is not None:
-		return font.glyphsInfo()._componentsForLigaName_(String)
-	return GSGlyphsInfo.sharedManager()._componentsForLigaName_(String)
+		return font.glyphsInfo().componentsForLigaName_font_(String, font)
+	return GSGlyphsInfo.sharedManager().componentsForLigaName_font_(String, None)
 GSApplication.ligatureComponents = _ligatureComponents
 
 '''
@@ -1345,6 +1347,8 @@ GSApplication.deactivateReporter = __GSApplication_deactivateReporter__
 '''
 
 
+GSDocument.__new__ = staticmethod(GSObject__new__)
+GSProjectDocument.__new__ = staticmethod(GSObject__new__)
 
 
 GSElement.x = property(lambda self: self.pyobjc_instanceMethods.position().x,
@@ -1377,6 +1381,10 @@ class AppDocumentProxy (Proxy):
 			return Values[Key]
 		else:
 			raise(KeyError)
+	def append(self, doc):
+		NSDocumentController.sharedDocumentController().addDocument_(doc)
+		doc.makeWindowControllers()
+		doc.showWindows()
 	def values(self):
 		return self._owner.fontDocuments()
 
@@ -1425,6 +1433,8 @@ class FontGlyphsProxy (Proxy):
 		...
 	"""
 	def __getitem__(self, Key):
+		if Key is None:
+			return None
 		if type(Key) == slice:
 			return self.values().__getitem__(Key)
 
@@ -1516,10 +1526,11 @@ class FontFontMasterProxy (Proxy):
 		if type(Key) is int:
 			if Key < 0:
 				Key = self.__len__() + Key
-			return self._owner.removeFontMasterAtIndex_(Key)
+			removeFontMaster = self._owner.objectInFontMastersAtIndex_(Key)
 		else:
-			OldFontMaster = self._owner.fontMasterForId_(Key)
-			return self._owner.removeFontMaster_(OldFontMaster)
+			removeFontMaster = self._owner.fontMasterForId_(Key)
+		if removeFontMaster:
+			return self._owner.removeFontMasterAndContent_(removeFontMaster)
 	def __iter__(self):
 		for index in range(self._owner.countOfFontMasters()):
 			yield self._owner.fontMasterAtIndex_(index)
@@ -1532,7 +1543,7 @@ class FontFontMasterProxy (Proxy):
 	def append(self, FontMaster):
 		self._owner.addFontMaster_(FontMaster)
 	def remove(self, FontMaster):
-		self._owner.removeFontMaster_(FontMaster)
+		self._owner.removeFontMasterAndContent_(FontMaster)
 	def insert(self, Index, FontMaster):
 		self._owner.insertFontMaster_atIndex_(FontMaster, Index)
 	def extend(self, FontMasters):
@@ -3074,7 +3085,6 @@ toolClassAbrevations = {  # abrevation : className
 	"HandTool": "GlyphsToolHand",
 	"ZoomTool": "GlyphsToolZoom",
 	"MeasurementTool": "GlyphsToolMeasurement",
-	"StrokeTool": "StrokeTool",
 	"TrueTypeTool": "GlyphsToolTrueTypeInstructor",
 }
 
@@ -3167,7 +3177,7 @@ def Font__save__(self, path=None):
 				typeName = "org.unifiedfontobject.ufo"
 			self.parent.writeSafelyToURL_ofType_forSaveOperation_error_(URL, typeName, 1, objc.nil)
 	elif path is not None:
-		Doc = GSDocument.alloc().init()
+		Doc = GSDocument()
 		Doc.font = self
 		URL = NSURL.fileURLWithPath_(path)
 		if path.endswith('.glyphs'):
@@ -3892,6 +3902,7 @@ GSInstance.mutableCopyWithZone_ = GSObject__copy__
 		customParameters
 		instanceInterpolations
 		manualInterpolation
+		interpolatedFontProxy
 		interpolatedFont
 		font
 
@@ -3982,14 +3993,14 @@ GSInstance.customValue = property(lambda self: self.interpolationCustom(), lambd
 	
 	:type: float
 '''
-GSInstance.isItalic = property(lambda self: self.pyobjc_instanceMethods.isItalic(), lambda self, value: self.setIsItalic_(value))
+GSInstance.isItalic = property(lambda self: bool(self.pyobjc_instanceMethods.isItalic()), lambda self, value: self.setIsItalic_(value))
 '''
 	.. attribute:: isItalic
 	Italic flag for style linking
 	:type: bool
 '''
 
-GSInstance.isBold = property(lambda self: self.pyobjc_instanceMethods.isBold(), lambda self, value: self.setIsBold_(value))
+GSInstance.isBold = property(lambda self: bool(self.pyobjc_instanceMethods.isBold()), lambda self, value: self.setIsBold_(value))
 '''
 	.. attribute:: isBold
 	Bold flag for style linking
@@ -4255,7 +4266,7 @@ def __Font_Export__(self, Format=OTF, Instances=None, FontPath=None, AutoHint=Tr
 		Font = self.font()
 		Exporter = NSClassFromString("GlyphsFileFormatVariationFonts").alloc().init()
 		Exporter.setFont_(Font)
-		result = Exporter.writeVARTables_error_(NSURL.fileURLWithPath_(FontPath), None)
+		result = Exporter._exportToURL_error_(NSURL.fileURLWithPath_(FontPath), None)
 		return result
 	elif Format == UFO:
 		Font = self.font()
@@ -4975,17 +4986,14 @@ GSGlyph.unicodes = property(lambda self: __glyph__unicode__(self),
 GSGlyph.production = property(lambda self: self.pyobjc_instanceMethods.production(),
 									lambda self, value: self.setProduction_(self, value))
 
-def _get_Glyphs_String(self):
-	if self.unicode:
-		return unichr(int(self.unicode, 16))
-
-GSGlyph.string = property(lambda self: _get_Glyphs_String(self))
+GSGlyph.string = property(lambda self: self.charString())
 '''
 	.. attribute:: string
 	String representation of glyph, if encoded.
 	This is similar to the string representation that you get when copying glyphs into the clipboard.
 	:type: unicode
 '''
+
 GSGlyph.id = property(lambda self: str(self.pyobjc_instanceMethods.id()),
 									lambda self, value: self.setId_(value))
 '''
@@ -5212,12 +5220,17 @@ GSGlyph.export = property(lambda self: bool(self.pyobjc_instanceMethods.export()
 
 def __getColorIndex__(self):
 	color = self.colorIndex()
-	if color > 20:
+	if color > 20 or color < 0:
 		return None
 	return color
 
+def __setColorIndex(self, value):
+	if value is None:
+		value = -1
+	self.setColorIndex_(value)
+	
 GSGlyph.color = property(lambda self: __getColorIndex__(self),
-						lambda self, value: self.setColorIndex_(value))
+						lambda self, value: __setColorIndex(self, value))
 '''
 	.. attribute:: color
 	Color marking of glyph in UI
@@ -5237,7 +5250,7 @@ GSGlyph.color = property(lambda self: __getColorIndex__(self),
 		glyph.color = 9		# magenta
 		glyph.color = 10	# light gray
 		glyph.color = 11	# charcoal
-		glyph.color = 9223372036854775807	# not colored, white
+		glyph.color = None	# not colored, white (before version 1235, use -1)
 '''
 
 def _set_Glyph_setColor(self, colorValue):
@@ -5452,7 +5465,7 @@ GSGlyph.updateGlyphInfo = __updateGlyphInfo
 
 def Glyph_Duplicate(self, name=None):
 
-	newGlyph = self.copyThin_layers_(False, True)
+	newGlyph = self.copyThin_options_(False, 4) # option: 4 copy all layers
 	if newGlyph.unicode:
 		newGlyph.unicode = None
 	if name:
@@ -5593,6 +5606,7 @@ GSLayer.parent = property(lambda self: self.pyobjc_instanceMethods.parent(),
 									lambda self, value: self.setParent_(value))
 GSBackgroundLayer.parent = property(lambda self: self.pyobjc_instanceMethods.parent(),
 									lambda self, value: self.setParent_(value))
+GSControlLayer.parent = property(lambda self: self.pyobjc_instanceMethods.parent())
 '''
 	.. attribute:: parent
 	Reference to the :class:`glyph <GSGlyph>` object that this layer is attached to.
@@ -5666,8 +5680,8 @@ GSLayer.layerId = property(lambda self: self.pyobjc_instanceMethods.layerId(),
 		layer = font.glyphs['a'].layers[font.masters[0].id]
 '''
 
-GSLayer.color = property(lambda self: self.colorIndex(),
-						lambda self, value: self.setColorIndex_(value))
+GSLayer.color = property(lambda self: __getColorIndex__(self),
+						lambda self, value: __setColorIndex(self, value))
 '''
 	.. attribute:: color
 	Color marking of glyph in UI
@@ -5687,7 +5701,7 @@ GSLayer.color = property(lambda self: self.colorIndex(),
 		glyph.color = 9		# magenta
 		glyph.color = 10	# light gray
 		glyph.color = 11	# charcoal
-		glyph.color = 9223372036854775807	# not colored, white
+		glyph.color = None	# not colored, white (before version 1235, use -1)
 '''
 
 GSLayer.colorObject = property(lambda self: self.pyobjc_instanceMethods.color(), lambda self, value: self.setColor_(value))
@@ -5955,8 +5969,59 @@ GSBackgroundLayer.width = property(lambda self: self.pyobjc_instanceMethods.widt
 									lambda self, value: None)
 '''
 	.. attribute:: width
-	Glyph width
+	Layer width
 	:type: float
+'''
+
+def __GSLayer_vertWidth__(self):
+	value = self.pyobjc_instanceMethods.vertWidth()
+	if value >= 0 and value < 1000000:
+		return value
+	return None
+		
+def __GSLayer_setVertWidth__(self, value):
+	if value is None or value > 1000000 or value < 0:
+		value = NSNotFound
+	else:
+		value = float(value)
+	self.setVertWidth_(value)
+	
+GSLayer.vertWidth = property(lambda self: __GSLayer_vertWidth__(self),
+						lambda self, value: __GSLayer_setVertWidth__(self, value))
+'''
+	.. attribute:: vertWidth
+	Layer vertical width
+	
+	set it to None to reset it to default
+	:type: float
+
+	.. versionadded:: 2.6.2
+'''
+
+def __GSLayer_vertOrigin__(self):
+	value = self.pyobjc_instanceMethods.vertOrigin()
+	if value > -1000000 and value < 1000000:
+		return value
+	return None
+
+def __GSLayer_setVertOrigin__(self, value):
+	if value is None or value > 1000000 or value < -1000000:
+		value = NSNotFound
+	else:
+		value = float(value)
+	self.setVertOrigin_(value)
+
+GSLayer.vertOrigin = property(lambda self: __GSLayer_vertOrigin__(self),
+						lambda self, value: __GSLayer_setVertOrigin__(self, value))
+'''
+	.. attribute:: vertOrigin
+	Layer vertical origin
+
+	set it to None to reset it to default
+
+	:type: float
+
+	.. versionadded:: 2.6.2
 '''
 
 GSLayer.leftMetricsKey = property(lambda self: self.pyobjc_instanceMethods.leftMetricsKey(),
@@ -6461,13 +6526,13 @@ def ControlLayer__init__(self, args):
 GSControlLayer.__init__ = ControlLayer__init__
 
 def ControlLayer__repr__(self):
-	char = self.parent().unicodeChar()
+	char = self.parent.unicodeChar()
 	if char == 10:
 		name = "newline"
 	elif char == 129:
 		name = "placeholder"
 	else:
-		name = GSGlyphsInfo.sharedManager().niceGlyphNameForName_("uni%.4X" % self.parent().unicodeChar())
+		name = GSGlyphsInfo.sharedManager().niceGlyphNameForName_("uni%.4X" % self.parent.unicodeChar())
 	return "<%s \"%s\">" % (self.className(), name)
 GSControlLayer.__repr__ = python_method(ControlLayer__repr__)
 
@@ -6789,7 +6854,7 @@ GSComponent.rotation = property(lambda self: GSComponent_getRotation(self),
 '''
 
 GSComponent.componentName = property(lambda self: self.pyobjc_instanceMethods.componentName(),
-									lambda self, value: self.setComponentName_(value))
+									lambda self, value: self.setComponentName_(objcObject(value)))
 '''
 	.. attribute:: componentName
 	The glyph name the component is pointing to.
@@ -7781,7 +7846,7 @@ For details on how to access them, please see :attr:`GSLayer.guides`
 		angle
 		name
 		selected
-
+		locked
 '''
 
 
@@ -7833,6 +7898,13 @@ GSGuideLine.name = property(lambda self: self.pyobjc_instanceMethods.name(),
 	:type: bool
 '''
 
+GSGuideLine.locked = property(lambda self: bool(self.pyobjc_instanceMethods.locked()),
+							lambda self, value: self.setLocked_(value))
+'''
+	.. attribute:: locked
+	Locked
+	:type: bool
+'''
 
 ##################################################################################
 #
@@ -8134,7 +8206,7 @@ GSHint.horizontal = property(lambda self: self.pyobjc_instanceMethods.horizontal
 	:type: bool
 '''
 
-GSHint.name = property(lambda self: self.pyobjc_instanceMethods.name(), lambda self, value: self.setName_(value))
+GSHint.name = property(lambda self: self.pyobjc_instanceMethods.name(), lambda self, value: self.setName_(objcObject(value)))
 '''
 	.. attribute:: name
 
@@ -8574,13 +8646,13 @@ class TabLayersProxy (Proxy):
 		for l in layers:
 			if l.className() == "GSLayer":
 				char = Font.characterForGlyph_(l.parent)
-				A = NSAttributedString.alloc().initWithString_attributes_(unichr(char), {"GSLayerIdAttrib": l.layerId})
+				A = NSAttributedString.alloc().initWithString_attributes_(NSString.stringWithChar_(char), {"GSLayerIdAttrib": l.layerId})
 			elif l.className() == "GSBackgroundLayer":
 				char = Font.characterForGlyph_(l.parent)
-				A = NSAttributedString.alloc().initWithString_attributes_(unichr(char), {"GSLayerIdAttrib": l.layerId, "GSShowBackgroundAttrib": True})
+				A = NSAttributedString.alloc().initWithString_attributes_(NSString.stringWithChar_(char), {"GSLayerIdAttrib": l.layerId, "GSShowBackgroundAttrib": True})
 			elif l.className() == "GSControlLayer":
-				char = l.parent().unicodeChar()
-				A = NSAttributedString.alloc().initWithString_(unichr(char))
+				char = l.parent.unicodeChar()
+				A = NSAttributedString.alloc().initWithString_(NSString.stringWithChar_(char))
 			else:
 				raise ValueError
 			string.appendAttributedString_(A)
