@@ -11,7 +11,7 @@
 #
 ###########################################################################################################
 
-
+from GlyphsApp import *
 from GlyphsApp.plugins import *
 
 class SmileyPalette (PalettePlugin):
@@ -25,8 +25,11 @@ class SmileyPalette (PalettePlugin):
 		try:
 			self.controller = None
 			self.loadNib('SmileyPaletteView', __file__)
+			
+			self.dialog = self._theView
 			Glyphs.addCallback(self.update, UPDATEINTERFACE)
 		except Exception as e:
+			import traceback
 			self.logError(traceback.format_exc())
 	
 	def start(self):
