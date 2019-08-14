@@ -3912,6 +3912,7 @@ GSInstance.mutableCopyWithZone_ = GSObject__copy__
 	.. autosummary::
 
 		generate()
+		addAsMaster()
 
 	**Properties**
 
@@ -4303,6 +4304,22 @@ def __Font_Export__(self, Format=OTF, Instances=None, FontPath=None, AutoHint=Tr
 		return allResults
 
 GSFont.export = __Font_Export__
+
+
+def AddInstanceAsMaster(self):
+	self.font.addFontAsNewMaster_(self.interpolatedFont.masters[0])
+
+GSInstance.addAsMaster = AddInstanceAsMaster
+
+
+'''
+	.. function:: addAsMaster()
+
+	New after 2.6.2
+
+	Add this instance as a new master to the font. Identical to "Instance as Master" menu item in the Font Info’s Instances section.
+
+'''
 
 
 
