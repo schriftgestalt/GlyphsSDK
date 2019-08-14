@@ -3899,12 +3899,13 @@ GSInstance.mutableCopyWithZone_ = GSObject__copy__
 		windowsLinkedToStyle
 		fontName
 		fullName
+		font
 		customParameters
 		instanceInterpolations
 		manualInterpolation
 		interpolatedFontProxy
 		interpolatedFont
-		font
+		lastExportedFilePath
 
 	Functions
 
@@ -4159,6 +4160,22 @@ GSInstance.interpolatedFont = property(lambda self: Instance_FontObject(self))
 	:type: :class:`GSFont`
 	'''
 
+def __set__lastExportedFilePath__(self, value):
+	if value:
+		self.tempData().setObject_forKey_(value, "lastExportedFilePath")
+	else:
+		self.tempData().removeObjectForKey_("lastExportedFilePath")
+GSInstance.lastExportedFilePath = property(lambda self: self.tempData().objectForKey_("lastExportedFilePath"), lambda self, value: __set__lastExportedFilePath__(self, value))
+
+'''
+	.. attribute:: lastExportedFilePath
+
+	.. versionadded:: 2.4.2
+
+	:type: unicode
+	'''
+
+
 
 '''
 	**Functions**
@@ -4287,37 +4304,6 @@ def __Font_Export__(self, Format=OTF, Instances=None, FontPath=None, AutoHint=Tr
 
 GSFont.export = __Font_Export__
 
-def __set__lastExportedFilePath__(self, value):
-	if value:
-		self.tempData().setObject_forKey_(value, "lastExportedFilePath")
-	else:
-		self.tempData().removeObjectForKey_("lastExportedFilePath")
-GSInstance.lastExportedFilePath = property(lambda self: self.tempData().objectForKey_("lastExportedFilePath"), lambda self, value: __set__lastExportedFilePath__(self, value))
-
-'''
-	.. attribute:: lastExportedFilePath
-
-	.. versionadded:: 2.4.2
-
-	Returns a ready interpolated :class:`GSFont` object representing this instance. Other than the source object, this interpolated font will contain only one master and one instance.
-
-	Note: When accessing several properties of such an instance consecutively, it is advisable to create the instance once into a variable and then use that. Otherwise, the instance object will be completely interpolated upon each access. See sample below.
-
-	.. code-block:: python
-
-		# create instance once
-		interpolated = Glyphs.font.instances[0].interpolatedFont
-
-		# then access it several times
-		print(interpolated.masters)
-		print(interpolated.instances)
-
-		(<GSFontMaster "Light" width 100.0 weight 75.0>)
-		(<GSInstance "Web" width 100.0 weight 75.0>)
-
-
-	:type: unicode
-	'''
 
 
 
