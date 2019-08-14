@@ -347,6 +347,7 @@ The mothership. Everything starts here.
 	:type: int
 
 
+
 	.. attribute:: handleSize
 
 
@@ -375,6 +376,7 @@ The mothership. Everything starts here.
 	:type: int
 
 
+
 	.. attribute:: versionString
 
 
@@ -384,6 +386,7 @@ The mothership. Everything starts here.
 
 
 	:type: string
+
 
 
 	.. attribute:: versionNumber
@@ -417,6 +420,7 @@ The mothership. Everything starts here.
 	:type: float
 
 
+
 	.. attribute:: buildNumber
 
 
@@ -428,6 +432,7 @@ The mothership. Everything starts here.
 
 
 	:type: int
+
 
 
 	.. attribute:: menu
@@ -676,12 +681,11 @@ The mothership. Everything starts here.
 
 
 
-	.. attribute:: font
+.. attribute:: font
 
-	The active :class:`GSFont`
+The active :class:`GSFont`
+:type: list
 
-	:type: list
-	
 
 :mod:`GSFont`
 ===============================================================================
@@ -950,10 +954,12 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 	:type: int
 
 
+
 	.. attribute:: versionMinor
 
 
 	:type: int
+
 
 
 	.. attribute:: date
@@ -983,6 +989,7 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 	Units per Em
 
 	:type: int
+
 
 
 	.. attribute:: note
@@ -1103,6 +1110,7 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 	Returns a list of all selected glyphs in the Font View.
 
 	:type: list
+
 
 
 	.. attribute:: selectedLayers
@@ -1802,6 +1810,7 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 		name
 		weight
 		width
+		axes
 		weightValue
 		widthValue
 		customValue
@@ -1816,17 +1825,20 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 		windowsLinkedToStyle
 		fontName
 		fullName
+		font
 		customParameters
 		instanceInterpolations
 		manualInterpolation
+		interpolatedFontProxy
 		interpolatedFont
-		font
+		lastExportedFilePath
 
 	Functions
 
 	.. autosummary::
 
 		generate()
+		addAsMaster()
 
 	**Properties**
 
@@ -1872,9 +1884,9 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 	.. code-block:: python
 
 		# setting a value for a specific axis
-		master.axes[2] = 12
+		instance.axes[2] = 12
 		# setting all values at once
-		master.axes = [100, 12, 3.5]
+		instance.axes = [100, 12, 3.5]
 		
 
 	:type: list
@@ -2099,6 +2111,16 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 	:type: :class:`GSFont`
 	
 
+
+	.. attribute:: lastExportedFilePath
+
+
+	.. versionadded:: 2.4.2
+
+
+	:type: unicode
+	
+
 	**Functions**
 
 
@@ -2131,34 +2153,13 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 		Glyphs.showNotification('Export fonts', 'The export of %s was successful.' % (Glyphs.font.familyName))
 
 
+	.. function:: addAsMaster()
 
-	.. attribute:: lastExportedFilePath
+	New after 2.6.2
 
-
-	.. versionadded:: 2.4.2
-
-	Returns a ready interpolated :class:`GSFont` object representing this instance. Other than the source object, this interpolated font will contain only one master and one instance.
-
-	Note: When accessing several properties of such an instance consecutively, it is advisable to create the instance once into a variable and then use that. Otherwise, the instance object will be completely interpolated upon each access. See sample below.
+	Add this instance as a new master to the font. Identical to "Instance as Master" menu item in the Font Info’s Instances section.
 
 
-	.. code-block:: python
-
-
-		# create instance once
-		interpolated = Glyphs.font.instances[0].interpolatedFont
-
-		# then access it several times
-		print(interpolated.masters)
-		print(interpolated.instances)
-
-		(<GSFontMaster "Light" width 100.0 weight 75.0>)
-		(<GSInstance "Web" width 100.0 weight 75.0>)
-
-
-
-	:type: unicode
-	
 
 
 :mod:`GSCustomParameter`
@@ -2803,7 +2804,7 @@ For details on how to access these glyphs, please see :class:`GSFont.glyphs`
 		glyph.color = 9		# magenta
 		glyph.color = 10	# light gray
 		glyph.color = 11	# charcoal
-		glyph.color = 9223372036854775807	# not colored, white
+		glyph.color = None	# not colored, white (before version 1235, use -1)
 
 
 
@@ -3024,6 +3025,7 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 		userData
 		smartComponentPoleMapping
 		isSpecialLayer
+		isMasterLayer
 
 	Functions
 
@@ -3148,7 +3150,7 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 		glyph.color = 9		# magenta
 		glyph.color = 10	# light gray
 		glyph.color = 11	# charcoal
-		glyph.color = 9223372036854775807	# not colored, white
+		glyph.color = None	# not colored, white (before version 1235, use -1)
 
 
 
@@ -3424,9 +3426,34 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 
 	.. attribute:: width
 
-	Glyph width
+	Layer width
 
 	:type: float
+
+
+
+	.. attribute:: vertWidth
+
+	Layer vertical width
+	
+	set it to None to reset it to default
+
+	:type: float
+
+	.. versionadded:: 2.6.2
+
+
+
+	.. attribute:: vertOrigin
+
+	Layer vertical origin
+
+	set it to None to reset it to default
+
+
+	:type: float
+
+	.. versionadded:: 2.6.2
 
 
 
@@ -3603,6 +3630,16 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 
 	If the layer is a brace, bracket or a smart component layer
 
+
+	:type: bool
+
+
+
+	.. attribute:: isMasterLayer
+
+	
+	If it is a master layer
+	
 
 	:type: bool
 
@@ -4728,7 +4765,7 @@ For details on how to access them, please see :attr:`GSLayer.guides`
 		angle
 		name
 		selected
-
+		locked
 
 
 
@@ -4769,6 +4806,14 @@ For details on how to access them, please see :attr:`GSLayer.guides`
 		# print(selection state)
 		print(layer.guidelines[0].selected)
 
+
+	:type: bool
+
+
+
+	.. attribute:: locked
+
+	Locked
 
 	:type: bool
 
@@ -5218,6 +5263,7 @@ For details on how to access them, please look at :class:`GSFont.tabs`
 		previewInstances
 		previewHeight
 		bottomToolbarHeight
+		masterIndex
 
 	Functions
 
@@ -5245,6 +5291,17 @@ For details on how to access them, please look at :class:`GSFont.tabs`
 	The text of the tab, either as text, or slash-escaped glyph names, or mixed. OpenType features will be applied after the text has been changed.
 
 	:type: Unicode
+
+
+
+	.. attribute:: masterIndex
+
+	The index of the active master (selected in the toolbar).
+
+	:type: int
+	
+	.. versionadded:: 2.6.1
+	
 
 
 

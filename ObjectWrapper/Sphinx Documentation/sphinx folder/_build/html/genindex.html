@@ -9,7 +9,7 @@
     <title>Index &#8212; Glyphs.app Python Scripting API 2.5.0 documentation</title>
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
@@ -428,9 +428,11 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="index.html#GSApplication.filters">filters (GSApplication attribute)</a>
 </li>
-      <li><a href="index.html#GSApplication.font">font (GSApplication attribute)</a>, <a href="index.html#GSApplication.font">[1]</a>
+      <li><a href="index.html#font">font</a>
 
       <ul>
+        <li><a href="index.html#GSApplication.font">(GSApplication attribute)</a>
+</li>
         <li><a href="index.html#GSFontMaster.font">(GSFontMaster attribute)</a>
 </li>
         <li><a href="index.html#GSInstance.font">(GSInstance attribute)</a>
@@ -584,6 +586,8 @@
 </li>
       <li><a href="index.html#GSInstance">GSInstance (built-in class)</a>
 </li>
+      <li><a href="index.html#GSInstance.addAsMaster">GSInstance.addAsMaster() (built-in function)</a>
+</li>
       <li><a href="index.html#GSInstance.generate">GSInstance.generate() (built-in function)</a>
 </li>
       <li><a href="index.html#GSLayer">GSLayer (built-in class)</a>
@@ -688,10 +692,10 @@
       </ul></li>
       <li><a href="index.html#GSInstance.instanceInterpolations">instanceInterpolations (GSInstance attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="index.html#GSFont.instances">instances (GSFont attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="index.html#GSInstance.interpolatedFont">interpolatedFont (GSInstance attribute)</a>
 </li>
       <li><a href="index.html#GSInstance.interpolatedFontProxy">interpolatedFontProxy (GSInstance attribute)</a>
@@ -701,6 +705,8 @@
       <li><a href="index.html#GSInstance.isBold">isBold (GSInstance attribute)</a>
 </li>
       <li><a href="index.html#GSInstance.isItalic">isItalic (GSInstance attribute)</a>
+</li>
+      <li><a href="index.html#GSLayer.isMasterLayer">isMasterLayer (GSLayer attribute)</a>
 </li>
       <li><a href="index.html#GSLayer.isSpecialLayer">isSpecialLayer (GSLayer attribute)</a>
 </li>
@@ -746,14 +752,14 @@
 </li>
       <li><a href="index.html#GSGlyph.leftKerningKey">leftKerningKey (GSGlyph attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="index.html#GSGlyph.leftMetricsKey">leftMetricsKey (GSGlyph attribute)</a>
 
       <ul>
         <li><a href="index.html#GSLayer.leftMetricsKey">(GSLayer attribute)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="index.html#LINE">LINE (built-in variable)</a>
 </li>
       <li><a href="index.html#GSInstance.linkStyle">linkStyle (GSInstance attribute)</a>
@@ -762,6 +768,8 @@
 
       <ul>
         <li><a href="index.html#GSComponent.locked">(GSComponent attribute)</a>
+</li>
+        <li><a href="index.html#GSGuideLine.locked">(GSGuideLine attribute)</a>
 </li>
       </ul></li>
       <li><a href="index.html#LogError">LogError() (built-in function)</a>
@@ -788,12 +796,16 @@
 </li>
       <li><a href="index.html#GSLayer.master">master (GSLayer attribute)</a>
 </li>
-      <li><a href="index.html#GSFont.masterIndex">masterIndex (GSFont attribute)</a>
+      <li><a href="index.html#GSEditViewController.masterIndex">masterIndex (GSEditViewController attribute)</a>
+
+      <ul>
+        <li><a href="index.html#GSFont.masterIndex">(GSFont attribute)</a>
 </li>
-      <li><a href="index.html#GSFont.masters">masters (GSFont attribute)</a>
-</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="index.html#GSFont.masters">masters (GSFont attribute)</a>
+</li>
       <li><a href="index.html#GSGlyph.mastersCompatible">mastersCompatible (GSGlyph attribute)</a>
 </li>
       <li><a href="index.html#GSApplication.menu">menu (GSApplication attribute)</a>
@@ -1216,13 +1228,17 @@
 </li>
       <li><a href="index.html#GSFont.versionMinor">versionMinor (GSFont attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="index.html#GSApplication.versionNumber">versionNumber (GSApplication attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="index.html#GSApplication.versionString">versionString (GSApplication attribute)</a>
 </li>
       <li><a href="index.html#GSFontMaster.verticalStems">verticalStems (GSFontMaster attribute)</a>
+</li>
+      <li><a href="index.html#GSLayer.vertOrigin">vertOrigin (GSLayer attribute)</a>
+</li>
+      <li><a href="index.html#GSLayer.vertWidth">vertWidth (GSLayer attribute)</a>
 </li>
       <li><a href="index.html#VIEW_MENU">VIEW_MENU (built-in variable)</a>
 </li>
@@ -1308,8 +1324,8 @@
 <footer class="page-foot" role="contentinfo">
   <div class="wrapper">
 		&copy; Copyright 2018, Georg Seifert.
-		Last updated on Nov 22, 2018.
-		Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.0.0+/a8f85ca.
+		Last updated on Aug 14, 2019.
+		Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.7.1.
 		Index
 	</div>
   </div>

@@ -8,7 +8,7 @@
     <title>Glyphs.app Python Scripting API Documentation &#8212; Glyphs.app Python Scripting API 2.5.0 documentation</title>
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
@@ -208,7 +208,7 @@ For Smart Components, the <cite>componentLayer</cite> contains the interpolated 
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#GSApplication.font" title="GSApplication.font"><code class="xref py py-obj docutils literal notranslate"><span class="pre">font</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#font" title="font"><code class="xref py py-obj docutils literal notranslate"><span class="pre">font</span></code></a></td>
 <td></td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#GSApplication.fonts" title="GSApplication.fonts"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fonts</span></code></a></td>
@@ -881,19 +881,19 @@ Here’s a catch: old plugins will only run on the first layer of a glyph, becau
 <p>The argument is a dictionary in the <cite>languageCode: translatedString</cite> format.</p>
 <p>You don’t need to supply strings in all languages that the Glyphs.app UI supports. A subset will do. Just make sure that you add at least an English string to default to next to all your other translated strings. Also don’t forget to mark strings as unicode strings (<cite>u’öäüß’</cite>) when they contain non-ASCII content for proper encoding, and add a <cite># encoding: utf-8</cite> to the top of all your .py files.</p>
 <p>Tip: You can find Glyphs’ localized languages here <cite>Glyphs.defaults[“AppleLanguages”]</cite>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># encoding: utf-8</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span># encoding: utf-8
 
-<span class="k">print</span><span class="p">(</span><span class="n">Glyphs</span><span class="o">.</span><span class="n">localize</span><span class="p">({</span>
-        <span class="s1">&#39;en&#39;</span><span class="p">:</span>  <span class="s1">&#39;Hello World&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;de&#39;</span><span class="p">:</span> <span class="sa">u</span><span class="s1">&#39;Hallöle Welt&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;fr&#39;</span><span class="p">:</span>  <span class="s1">&#39;Bonjour tout le monde&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;es&#39;</span><span class="p">:</span>  <span class="s1">&#39;Hola Mundo&#39;</span><span class="p">,</span>
-<span class="p">}))</span>
+print(Glyphs.localize({
+        &#39;en&#39;:  &#39;Hello World&#39;,
+        &#39;de&#39;: u&#39;Hallöle Welt&#39;,
+        &#39;fr&#39;:  &#39;Bonjour tout le monde&#39;,
+        &#39;es&#39;:  &#39;Hola Mundo&#39;,
+}))
 
-<span class="c1"># Given that your Mac’s system language is set to German</span>
-<span class="c1"># and Glyphs.app UI is set to use localization (change in preferences),</span>
-<span class="c1"># it will print:</span>
-<span class="o">&gt;</span> <span class="n">Hallöle</span> <span class="n">Welt</span>
+# Given that your Mac’s system language is set to German
+# and Glyphs.app UI is set to use localization (change in preferences),
+# it will print:
+&gt; Hallöle Welt
 </pre></div>
 </div>
 <dl class="function">
@@ -920,22 +920,15 @@ Here’s a catch: old plugins will only run on the first layer of a glyph, becau
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Glyphs</span><span class="o">.</span><span class="n">deactivateReporter</span><span class="p">(</span><span class="s1">&#39;GlyphsMasterCompatibility&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<dl class="attribute">
-<dt>
-<code class="descname">font</code></dt>
-<dd></dd></dl>
-
-<p>The active <a class="reference internal" href="#GSFont" title="GSFont"><code class="xref py py-class docutils literal notranslate"><span class="pre">GSFont</span></code></a></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">list</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="font">
+<code class="descname">font</code><a class="headerlink" href="#font" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The active <a class="reference internal" href="#GSFont" title="GSFont"><code class="xref py py-class docutils literal notranslate"><span class="pre">GSFont</span></code></a>
+:type: list</p>
 </div>
 <div class="section" id="gsfont">
 <h1><a class="reference internal" href="#GSFont" title="GSFont"><code class="xref py py-mod docutils literal notranslate"><span class="pre">GSFont</span></code></a><a class="headerlink" href="#gsfont" title="Permalink to this headline">¶</a></h1>
@@ -2055,7 +2048,7 @@ if no path is given, it saves to the existing location.</p>
 <tr class="row-even"><td><a class="reference internal" href="#GSFontMaster.customParameters" title="GSFontMaster.customParameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">customParameters</span></code></a></td>
 <td></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#GSFontMaster.font" title="GSFontMaster.font"><code class="xref py py-obj docutils literal notranslate"><span class="pre">font</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#font" title="font"><code class="xref py py-obj docutils literal notranslate"><span class="pre">font</span></code></a></td>
 <td></td>
 </tr>
 </tbody>
@@ -2095,7 +2088,7 @@ if no path is given, it saves to the existing location.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="#GSFont" title="GSFont">GSFont</a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">GSFont</td>
 </tr>
 </tbody>
 </table>
@@ -2588,46 +2581,52 @@ if no path is given, it saves to the existing location.</p>
 <tr class="row-even"><td><a class="reference internal" href="#GSInstance.width" title="GSInstance.width"><code class="xref py py-obj docutils literal notranslate"><span class="pre">width</span></code></a></td>
 <td></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#GSInstance.weightValue" title="GSInstance.weightValue"><code class="xref py py-obj docutils literal notranslate"><span class="pre">weightValue</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#GSInstance.axes" title="GSInstance.axes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">axes</span></code></a></td>
 <td></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#GSInstance.widthValue" title="GSInstance.widthValue"><code class="xref py py-obj docutils literal notranslate"><span class="pre">widthValue</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#GSInstance.weightValue" title="GSInstance.weightValue"><code class="xref py py-obj docutils literal notranslate"><span class="pre">weightValue</span></code></a></td>
 <td></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#GSInstance.customValue" title="GSInstance.customValue"><code class="xref py py-obj docutils literal notranslate"><span class="pre">customValue</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#GSInstance.widthValue" title="GSInstance.widthValue"><code class="xref py py-obj docutils literal notranslate"><span class="pre">widthValue</span></code></a></td>
 <td></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#GSInstance.isItalic" title="GSInstance.isItalic"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isItalic</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#GSInstance.customValue" title="GSInstance.customValue"><code class="xref py py-obj docutils literal notranslate"><span class="pre">customValue</span></code></a></td>
 <td></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#GSInstance.isBold" title="GSInstance.isBold"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isBold</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#GSInstance.isItalic" title="GSInstance.isItalic"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isItalic</span></code></a></td>
 <td></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#GSInstance.linkStyle" title="GSInstance.linkStyle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">linkStyle</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#GSInstance.isBold" title="GSInstance.isBold"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isBold</span></code></a></td>
 <td></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#GSInstance.familyName" title="GSInstance.familyName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">familyName</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#GSInstance.linkStyle" title="GSInstance.linkStyle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">linkStyle</span></code></a></td>
 <td></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#GSInstance.preferredFamily" title="GSInstance.preferredFamily"><code class="xref py py-obj docutils literal notranslate"><span class="pre">preferredFamily</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#GSInstance.familyName" title="GSInstance.familyName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">familyName</span></code></a></td>
 <td></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#GSInstance.preferredSubfamilyName" title="GSInstance.preferredSubfamilyName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">preferredSubfamilyName</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#GSInstance.preferredFamily" title="GSInstance.preferredFamily"><code class="xref py py-obj docutils literal notranslate"><span class="pre">preferredFamily</span></code></a></td>
 <td></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#GSInstance.windowsFamily" title="GSInstance.windowsFamily"><code class="xref py py-obj docutils literal notranslate"><span class="pre">windowsFamily</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#GSInstance.preferredSubfamilyName" title="GSInstance.preferredSubfamilyName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">preferredSubfamilyName</span></code></a></td>
 <td></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#GSInstance.windowsStyle" title="GSInstance.windowsStyle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">windowsStyle</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#GSInstance.windowsFamily" title="GSInstance.windowsFamily"><code class="xref py py-obj docutils literal notranslate"><span class="pre">windowsFamily</span></code></a></td>
 <td></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#GSInstance.windowsLinkedToStyle" title="GSInstance.windowsLinkedToStyle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">windowsLinkedToStyle</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#GSInstance.windowsStyle" title="GSInstance.windowsStyle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">windowsStyle</span></code></a></td>
 <td></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#GSInstance.fontName" title="GSInstance.fontName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fontName</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#GSInstance.windowsLinkedToStyle" title="GSInstance.windowsLinkedToStyle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">windowsLinkedToStyle</span></code></a></td>
 <td></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#GSInstance.fullName" title="GSInstance.fullName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fullName</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#GSInstance.fontName" title="GSInstance.fontName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fontName</span></code></a></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#GSInstance.fullName" title="GSInstance.fullName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fullName</span></code></a></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#font" title="font"><code class="xref py py-obj docutils literal notranslate"><span class="pre">font</span></code></a></td>
 <td></td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#GSInstance.customParameters" title="GSInstance.customParameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">customParameters</span></code></a></td>
@@ -2639,10 +2638,13 @@ if no path is given, it saves to the existing location.</p>
 <tr class="row-odd"><td><a class="reference internal" href="#GSInstance.manualInterpolation" title="GSInstance.manualInterpolation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">manualInterpolation</span></code></a></td>
 <td></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#GSInstance.interpolatedFont" title="GSInstance.interpolatedFont"><code class="xref py py-obj docutils literal notranslate"><span class="pre">interpolatedFont</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="#GSInstance.interpolatedFontProxy" title="GSInstance.interpolatedFontProxy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">interpolatedFontProxy</span></code></a></td>
 <td></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#GSInstance.font" title="GSInstance.font"><code class="xref py py-obj docutils literal notranslate"><span class="pre">font</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#GSInstance.interpolatedFont" title="GSInstance.interpolatedFont"><code class="xref py py-obj docutils literal notranslate"><span class="pre">interpolatedFont</span></code></a></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#GSInstance.lastExportedFilePath" title="GSInstance.lastExportedFilePath"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lastExportedFilePath</span></code></a></td>
 <td></td>
 </tr>
 </tbody>
@@ -2655,6 +2657,9 @@ if no path is given, it saves to the existing location.</p>
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td><a class="reference internal" href="#GSInstance.generate" title="GSInstance.generate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate()</span></code></a></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#GSInstance.addAsMaster" title="GSInstance.addAsMaster"><code class="xref py py-obj docutils literal notranslate"><span class="pre">addAsMaster()</span></code></a></td>
 <td></td>
 </tr>
 </tbody>
@@ -2722,9 +2727,9 @@ if no path is given, it saves to the existing location.</p>
 
 <p>List of floats specifying the positions for each axis</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># setting a value for a specific axis</span>
-<span class="n">master</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">12</span>
+<span class="n">instance</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">12</span>
 <span class="c1"># setting all values at once</span>
-<span class="n">master</span><span class="o">.</span><span class="n">axes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">]</span>
+<span class="n">instance</span><span class="o">.</span><span class="n">axes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">]</span>
 </pre></div>
 </div>
 <table class="docutils field-list" frame="void" rules="none">
@@ -2954,7 +2959,7 @@ This is computed from “isBold” and “isItalic”. Read-only.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="#GSFont" title="GSFont">GSFont</a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">GSFont</td>
 </tr>
 </tbody>
 </table>
@@ -3053,6 +3058,22 @@ This allowes manual setting of instanceInterpolations.</p>
 </tr>
 </tbody>
 </table>
+<dl class="attribute">
+<dt id="GSInstance.lastExportedFilePath">
+<code class="descname">lastExportedFilePath</code><a class="headerlink" href="#GSInstance.lastExportedFilePath" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.4.2.</span></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">unicode</td>
+</tr>
+</tbody>
+</table>
 <p><strong>Functions</strong></p>
 <dl class="function">
 <dt id="GSInstance.generate">
@@ -3093,35 +3114,13 @@ This allowes manual setting of instanceInterpolations.</p>
 <span class="n">Glyphs</span><span class="o">.</span><span class="n">showNotification</span><span class="p">(</span><span class="s1">&#39;Export fonts&#39;</span><span class="p">,</span> <span class="s1">&#39;The export of </span><span class="si">%s</span><span class="s1"> was successful.&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">Glyphs</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">familyName</span><span class="p">))</span>
 </pre></div>
 </div>
-<dl class="attribute">
-<dt id="GSInstance.lastExportedFilePath">
-<code class="descname">lastExportedFilePath</code><a class="headerlink" href="#GSInstance.lastExportedFilePath" title="Permalink to this definition">¶</a></dt>
+<dl class="function">
+<dt id="GSInstance.addAsMaster">
+<code class="descname">addAsMaster</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GSInstance.addAsMaster" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<div class="versionadded">
-<p><span class="versionmodified">New in version 2.4.2.</span></p>
-</div>
-<p>Returns a ready interpolated <a class="reference internal" href="#GSFont" title="GSFont"><code class="xref py py-class docutils literal notranslate"><span class="pre">GSFont</span></code></a> object representing this instance. Other than the source object, this interpolated font will contain only one master and one instance.</p>
-<p>Note: When accessing several properties of such an instance consecutively, it is advisable to create the instance once into a variable and then use that. Otherwise, the instance object will be completely interpolated upon each access. See sample below.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># create instance once</span>
-<span class="n">interpolated</span> <span class="o">=</span> <span class="n">Glyphs</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">instances</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">interpolatedFont</span>
-
-<span class="c1"># then access it several times</span>
-<span class="k">print</span><span class="p">(</span><span class="n">interpolated</span><span class="o">.</span><span class="n">masters</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">interpolated</span><span class="o">.</span><span class="n">instances</span><span class="p">)</span>
-
-<span class="p">(</span><span class="o">&lt;</span><span class="n">GSFontMaster</span> <span class="s2">&quot;Light&quot;</span> <span class="n">width</span> <span class="mf">100.0</span> <span class="n">weight</span> <span class="mf">75.0</span><span class="o">&gt;</span><span class="p">)</span>
-<span class="p">(</span><span class="o">&lt;</span><span class="n">GSInstance</span> <span class="s2">&quot;Web&quot;</span> <span class="n">width</span> <span class="mf">100.0</span> <span class="n">weight</span> <span class="mf">75.0</span><span class="o">&gt;</span><span class="p">)</span>
-</pre></div>
-</div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">unicode</td>
-</tr>
-</tbody>
-</table>
+<p>New after 2.6.2</p>
+<p>Add this instance as a new master to the font. Identical to “Instance as Master” menu item in the Font Info’s Instances section.</p>
 </dd></dl>
 
 </div>
@@ -3596,7 +3595,7 @@ You can use this to update all OpenType features before export.</p>
 <td></td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#GSGlyph.string" title="GSGlyph.string"><code class="xref py py-obj docutils literal notranslate"><span class="pre">string</span></code></a></td>
-<td>A collection of string constants.</td>
+<td>A collection of string operations (most are no longer used).</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#GSGlyph.id" title="GSGlyph.id"><code class="xref py py-obj docutils literal notranslate"><span class="pre">id</span></code></a></td>
 <td></td>
@@ -4154,7 +4153,7 @@ Makes it possible to ship custom glyph data inside a .glyphs file without a sepa
 <span class="n">glyph</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="mi">9</span>         <span class="c1"># magenta</span>
 <span class="n">glyph</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="mi">10</span>        <span class="c1"># light gray</span>
 <span class="n">glyph</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="mi">11</span>        <span class="c1"># charcoal</span>
-<span class="n">glyph</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="mi">9223372036854775807</span>       <span class="c1"># not colored, white</span>
+<span class="n">glyph</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="bp">None</span>      <span class="c1"># not colored, white (before version 1235, use -1)</span>
 </pre></div>
 </div>
 <dl class="attribute">
@@ -4459,6 +4458,9 @@ This is different to the property font.selectedLayers which returns the selectio
 <tr class="row-odd"><td><a class="reference internal" href="#GSLayer.isSpecialLayer" title="GSLayer.isSpecialLayer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isSpecialLayer</span></code></a></td>
 <td></td>
 </tr>
+<tr class="row-even"><td><a class="reference internal" href="#GSLayer.isMasterLayer" title="GSLayer.isMasterLayer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isMasterLayer</span></code></a></td>
+<td></td>
+</tr>
 </tbody>
 </table>
 <p>Functions</p>
@@ -4568,7 +4570,7 @@ This is different to the property font.selectedLayers which returns the selectio
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="#GSFontMaster" title="GSFontMaster">GSFontMaster</a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">GSFontMaster</td>
 </tr>
 </tbody>
 </table>
@@ -4650,7 +4652,7 @@ It could look like this: “FBCA074D-FCF3-427E-A700-7E318A949AE5”</p>
 <span class="n">glyph</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="mi">9</span>         <span class="c1"># magenta</span>
 <span class="n">glyph</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="mi">10</span>        <span class="c1"># light gray</span>
 <span class="n">glyph</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="mi">11</span>        <span class="c1"># charcoal</span>
-<span class="n">glyph</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="mi">9223372036854775807</span>       <span class="c1"># not colored, white</span>
+<span class="n">glyph</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="bp">None</span>      <span class="c1"># not colored, white (before version 1235, use -1)</span>
 </pre></div>
 </div>
 <dl class="attribute">
@@ -4971,7 +4973,7 @@ If you want to work specifically with nodes, for instance, you may want to cycle
 <code class="descname">width</code><a class="headerlink" href="#GSLayer.width" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<p>Glyph width</p>
+<p>Layer width</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -4980,6 +4982,42 @@ If you want to work specifically with nodes, for instance, you may want to cycle
 </tr>
 </tbody>
 </table>
+<dl class="attribute">
+<dt id="GSLayer.vertWidth">
+<code class="descname">vertWidth</code><a class="headerlink" href="#GSLayer.vertWidth" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Layer vertical width</p>
+<p>set it to None to reset it to default</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.6.2.</span></p>
+</div>
+<dl class="attribute">
+<dt id="GSLayer.vertOrigin">
+<code class="descname">vertOrigin</code><a class="headerlink" href="#GSLayer.vertOrigin" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Layer vertical origin</p>
+<p>set it to None to reset it to default</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.6.2.</span></p>
+</div>
 <dl class="attribute">
 <dt id="GSLayer.leftMetricsKey">
 <code class="descname">leftMetricsKey</code><a class="headerlink" href="#GSLayer.leftMetricsKey" title="Permalink to this definition">¶</a></dt>
@@ -5205,6 +5243,20 @@ If you want to work specifically with nodes, for instance, you may want to cycle
 <dd></dd></dl>
 
 <p>If the layer is a brace, bracket or a smart component layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="GSLayer.isMasterLayer">
+<code class="descname">isMasterLayer</code><a class="headerlink" href="#GSLayer.isMasterLayer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>If it is a master layer</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -6589,7 +6641,7 @@ For details on how to access them, please see <a class="reference internal" href
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="#GSNode" title="GSNode">GSNode</a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">GSNode</td>
 </tr>
 </tbody>
 </table>
@@ -6616,7 +6668,7 @@ For details on how to access them, please see <a class="reference internal" href
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="#GSNode" title="GSNode">GSNode</a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">GSNode</td>
 </tr>
 </tbody>
 </table>
@@ -6706,6 +6758,9 @@ For details on how to access them, please see <a class="reference internal" href
 <tr class="row-even"><td><a class="reference internal" href="#GSGuideLine.selected" title="GSGuideLine.selected"><code class="xref py py-obj docutils literal notranslate"><span class="pre">selected</span></code></a></td>
 <td></td>
 </tr>
+<tr class="row-odd"><td><a class="reference internal" href="#GSGuideLine.locked" title="GSGuideLine.locked"><code class="xref py py-obj docutils literal notranslate"><span class="pre">locked</span></code></a></td>
+<td></td>
+</tr>
 </tbody>
 </table>
 <dl class="attribute">
@@ -6763,6 +6818,20 @@ For details on how to access them, please see <a class="reference internal" href
 <span class="k">print</span><span class="p">(</span><span class="n">layer</span><span class="o">.</span><span class="n">guidelines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">selected</span><span class="p">)</span>
 </pre></div>
 </div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="GSGuideLine.locked">
+<code class="descname">locked</code><a class="headerlink" href="#GSGuideLine.locked" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Locked</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -6934,7 +7003,7 @@ For details on how to access them, please see <a class="reference internal" href
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="#GSLayer" title="GSLayer">GSLayer</a></td>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">GSLayer</td>
 </tr>
 </tbody>
 </table>
@@ -7418,6 +7487,9 @@ See Constants section at the bottom of the page.</p>
 <tr class="row-odd"><td><a class="reference internal" href="#GSEditViewController.bottomToolbarHeight" title="GSEditViewController.bottomToolbarHeight"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bottomToolbarHeight</span></code></a></td>
 <td></td>
 </tr>
+<tr class="row-even"><td><a class="reference internal" href="#GSEditViewController.masterIndex" title="GSEditViewController.masterIndex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">masterIndex</span></code></a></td>
+<td></td>
+</tr>
 </tbody>
 </table>
 <p>Functions</p>
@@ -7464,6 +7536,23 @@ See Constants section at the bottom of the page.</p>
 </tr>
 </tbody>
 </table>
+<dl class="attribute">
+<dt id="GSEditViewController.masterIndex">
+<code class="descname">masterIndex</code><a class="headerlink" href="#GSEditViewController.masterIndex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The index of the active master (selected in the toolbar).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.6.1.</span></p>
+</div>
 <dl class="attribute">
 <dt id="GSEditViewController.layers">
 <code class="descname">layers</code><a class="headerlink" href="#GSEditViewController.layers" title="Permalink to this definition">¶</a></dt>
@@ -8774,8 +8863,8 @@ The document itself is passed in notification.object()</p>
 <footer class="page-foot" role="contentinfo">
   <div class="wrapper">
 		&copy; Copyright 2018, Georg Seifert.
-		Last updated on Nov 22, 2018.
-		Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.0.0+/a8f85ca.
+		Last updated on Aug 14, 2019.
+		Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.7.1.
 		Glyphs.app Python Scripting API Documentation
 	</div>
   </div>
