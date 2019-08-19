@@ -247,6 +247,33 @@ https://developer.apple.com/library/mac/documentation/cocoa/reference/applicatio
 > **Hint:** For better dark mode compatibility, it is a good idea to use a *semantic* color, i.e., colors predefined by the system. E.g., `NSColor.controlAccentColor().set()`. Read all about them here:
 > https://developer.apple.com/documentation/appkit/nscolor/ui_element_colors?language=objc
 
+### Do not draw when text or pan tools are active
+
+Useful method that returns `True` or `False` depending on the state the your edit view is in:
+
+```python
+	def conditionsAreMetForDrawing(self):
+		"""
+		Don't activate if text or pan (hand) tool are active.
+		"""
+		currentController = self.controller.view().window().windowController()
+		if currentController:
+			tool = currentController.toolDrawDelegate()
+			textToolIsActive = tool.isKindOfClass_( NSClassFromString("GlyphsToolText") )
+			handToolIsActive = tool.isKindOfClass_( NSClassFromString("GlyphsToolHand") )
+			if not textToolIsActive and not handToolIsActive: 
+				return True
+		return False
+```
+
+Add this method to your `plugin.py` and call it with something like:
+
+```python
+	if self.conditionsAreMetForDrawing():
+		# your code goes here...
+```
+
+
 # Other useful methods
 
 #### drawTextAtPoint()
