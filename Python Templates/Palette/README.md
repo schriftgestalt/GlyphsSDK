@@ -120,9 +120,21 @@ if windowController:
 		pass # your code goes here
 ```
 
-#### currentHeight() and setCurrentHeight_()
+## Resizing the palette
 
-`self.currentHeight()` returns and `self.setCurrentHeight_()` sets the height of the palette.
+- add a layout height constraint (in a .xib)
+- add an outlet to it.
+- set the constant property of the constraint to the desired height.
+
+```
+    self.heightConstraint.setConstant_(height)
+```
+
+There is an option to animate the resizing. 
+
+```
+    self.heightConstraint.animator().setConstant_(height)
+```
 
 
 ## Use Vanilla for the dialog view
