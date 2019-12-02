@@ -11,23 +11,27 @@
 #
 ###########################################################################################################
 
+from __future__ import division, print_function, unicode_literals
 import objc
 from GlyphsApp import *
 from GlyphsApp.plugins import *
 
 class ____PluginClassName____(ReporterPlugin):
 
+	@objc.python_method
 	def settings(self):
 		self.menuName = Glyphs.localize({'en': u'My Plugin', 'de': u'Mein Plugin'})
 		self.generalContextMenus = [
 			{'name': Glyphs.localize({'en': u'Do something', 'de': u'Tu etwas'}), 'action': self.doSomething},
 		]
-		
+	
+	@objc.python_method
 	def foreground(self, layer):
 		NSColor.blueColor().set()
 		NSBezierPath.fillRect_(layer.bounds)
 		self.drawTextAtPoint(layer.parent.name, NSPoint(0, 0))
-
+	
+	@objc.python_method
 	def inactiveLayer(self, layer):
 		NSColor.redColor().set()
 		if layer.paths:
@@ -35,7 +39,8 @@ class ____PluginClassName____(ReporterPlugin):
 		if layer.components:
 			for component in layer.components:
 				component.bezierPath.fill()
-
+	
+	@objc.python_method
 	def preview(self, layer):
 		NSColor.blueColor().set()
 		if layer.paths:
@@ -44,9 +49,11 @@ class ____PluginClassName____(ReporterPlugin):
 			for component in layer.components:
 				component.bezierPath.fill()
 	
+	@objc.python_method
 	def doSomething(self):
-		print 'Just did something'
-		
+		print('Just did something')
+	
+	@objc.python_method
 	def conditionalContextMenus(self):
 
 		# Empty list of context menu items
@@ -64,9 +71,12 @@ class ____PluginClassName____(ReporterPlugin):
 
 		# Return list of context menu items
 		return contextMenus
-
+	
+	@objc.python_method
 	def doSomethingElse(self):
-		print 'Just did something else'
+		print('Just did something else')
+	
+	@objc.python_method
 	def __file__(self):
 		"""Please leave this method unchanged"""
 		return __file__

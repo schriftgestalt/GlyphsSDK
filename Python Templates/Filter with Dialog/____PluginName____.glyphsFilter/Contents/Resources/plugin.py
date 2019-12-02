@@ -14,6 +14,7 @@
 #
 ###########################################################################################################
 
+from __future__ import division, print_function, unicode_literals
 import objc
 from GlyphsApp import *
 from GlyphsApp.plugins import *
@@ -28,6 +29,7 @@ class ____PluginClassName____(FilterWithDialog):
 	# Text field in dialog
 	myTextField = objc.IBOutlet()
 	
+	@objc.python_method
 	def settings(self):
 		self.menuName = Glyphs.localize({'en': u'My Filter', 'de': u'Mein Filter'})
 		
@@ -38,6 +40,7 @@ class ____PluginClassName____(FilterWithDialog):
 		self.loadNib('IBdialog', __file__)
 	
 	# On dialog show
+	@objc.python_method
 	def start(self):
 		
 		# Set default value
@@ -60,6 +63,7 @@ class ____PluginClassName____(FilterWithDialog):
 		self.update()
 	
 	# Actual filter
+	@objc.python_method
 	def filter(self, layer, inEditView, customParameters):
 		
 		# Called on font export, get value from customParameters
@@ -75,9 +79,11 @@ class ____PluginClassName____(FilterWithDialog):
 			for node in path.nodes:
 				node.position = NSPoint(node.position.x + value, node.position.y + value)
 	
+	@objc.python_method
 	def generateCustomParameter( self ):
 		return "%s; shift:%s;" % (self.__class__.__name__, Glyphs.defaults['com.myname.myfilter.value'] )
 	
+	@objc.python_method
 	def __file__(self):
 		"""Please leave this method unchanged"""
 		return __file__

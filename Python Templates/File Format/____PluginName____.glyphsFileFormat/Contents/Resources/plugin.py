@@ -15,13 +15,14 @@
 #
 ###########################################################################################################
 
+from __future__ import division, print_function, unicode_literals
 import objc
 from GlyphsApp import *
 from GlyphsApp.plugins import *
 
 
 # Preference key names
-# Part of the example. You may delete them
+# Part of the example, you can delete them:
 unicodePref = 'com.test.csvexport.exportUnicode'
 glyphWidthPref = 'com.test.csvexport.exportGlyphWidth'
 
@@ -39,6 +40,7 @@ class ____PluginClassName____(FileFormatPlugin):
 	unicodeCheckBox = objc.IBOutlet()
 	glyphWidthCheckbox = objc.IBOutlet()
 	
+	@objc.python_method
 	def settings(self):
 		self.name = Glyphs.localize({'en': u'My CSV Export', 'de': u'Mein CSV-Export'})
 		self.icon = 'ExportIcon'
@@ -47,6 +49,7 @@ class ____PluginClassName____(FileFormatPlugin):
 		# Load .nib dialog (with .extension)
 		self.loadNib('IBdialog', __file__)
 	
+	@objc.python_method
 	def start(self):
 		
 		# Init user preferences if not existent and set default value
@@ -73,6 +76,7 @@ class ____PluginClassName____(FileFormatPlugin):
 		self.updateFeedBackTextField()
 	
 	# Example function. You may delete it
+	@objc.python_method
 	def updateFeedBackTextField(self):
 		string = []
 		if Glyphs.defaults[unicodePref]:
@@ -81,6 +85,7 @@ class ____PluginClassName____(FileFormatPlugin):
 			string.append('Glyph Width')
 		self.feedbackTextField.setStringValue_(', '.join(string) if len(string) else 'Nothing')
 	
+	@objc.python_method
 	def export(self, font):
 		
 		# Ask for export destination and write the file:
@@ -118,6 +123,7 @@ class ____PluginClassName____(FileFormatPlugin):
 		else:
 			return (False, 'No file chosen')
 	
+	@objc.python_method
 	def __file__(self):
 		"""Please leave this method unchanged"""
 		return __file__
