@@ -471,6 +471,7 @@ width = 753;
 unicode = 00C4;
 },
 {
+color = 0;
 glyphname = a;
 lastChange = "2017-07-17 13:49:10 +0000";
 layers = (
