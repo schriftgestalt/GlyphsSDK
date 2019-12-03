@@ -2,17 +2,22 @@
 # encoding: utf-8
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
+
 #import GlyphsApp
-#reload(GlyphsApp) 
+#reload(GlyphsApp)
 
 import unittest
 
 import GlyphsApp
 from GlyphsApp import *
-import os, time
+import os, time, sys, datetime
 import objc
 import copy
 from AppKit import *
+
+if sys.version_info[0] == 3:
+	unicode = str
 
 PathToTestFile = os.path.join(os.path.dirname(__file__), 'Glyphs Unit Test Sans.glyphs')
 
@@ -160,7 +165,7 @@ class GlyphsAppTests(unittest.TestCase):
 
 		# GSApplication.menu
 		def a():
-			print 'hello'
+			print('hello')
 		newMenuItem = NSMenuItem('B', a)
 		Glyphs.menu[EDIT_MENU].append(newMenuItem)
 
@@ -350,7 +355,7 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertInteger(font.versionMinor)
 		
 		# GSFont.date
-		self.assertIsInstance(font.date, NSDate)
+		self.assertIsInstance(font.date, datetime.datetime)
 		
 		# GSFont.familyName
 		self.assertUnicode(font.familyName)
@@ -488,34 +493,40 @@ class GlyphsAppTests(unittest.TestCase):
 
 
 	def test_GSFontMaster(self):
-		
-		master = Glyphs.font.masters[0]
-		master = copy.copy(master)
-		self.assertIsNotNone(master.__repr__())
+		font = Glyphs.font
+		self.assertEqual(len(font.axes), 1)
+		master = font.masters[0]
+		masterCopy = copy.copy(master)
+		self.assertIsNotNone(masterCopy.__repr__())
 		
 		# GSFontMaster.id
-		self.assertIsNotNone(unicode(master.id))
+		self.assertIsNotNone(master.id)
 		
 		# GSFontMaster.name
 		self.assertIsNotNone(str(master.name))
 		self.assertIsNotNone(master.name)
-		# GSFontMaster.weight
-		self.assertIsNotNone(str(master.weight))
 		
-		# GSFontMaster.width
-		self.assertIsNotNone(str(master.width))
+		# GSFontMaster.axes
+		self.assertIsNotNone(master.axes)
+		self.assertEqual(len(master.axes), 1)
 		
-		# GSFontMaster.weightValue
-		self.assertFloat(master.weightValue)
-		
-		# GSFontMaster.widthValue
-		self.assertFloat(master.widthValue)
-		
-		# GSFontMaster.customName
-		self.assertString(master.customName)
-		
-		# GSFontMaster.customValue
-		self.assertFloat(master.customValue)
+		# # GSFontMaster.weight
+		# self.assertIsNotNone(str(master.weight))
+		#
+		# # GSFontMaster.width
+		# self.assertIsNotNone(str(master.width))
+		#
+		# # GSFontMaster.weightValue
+		# self.assertFloat(master.weightValue)
+		#
+		# # GSFontMaster.widthValue
+		# self.assertFloat(master.widthValue)
+		#
+		# # GSFontMaster.customName
+		# self.assertString(master.customName)
+		#
+		# # GSFontMaster.customValue
+		# self.assertFloat(master.customValue)
 		
 		# GSFontMaster.ascender
 		self.assertFloat(master.ascender)
@@ -533,16 +544,16 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertFloat(master.italicAngle)
 		
 		# GSFontMaster.verticalStems
-		oldStems = master.verticalStems
-		master.verticalStems = [10, 15, 20]
-		self.assertEqual(len(list(master.verticalStems)), 3)
-		master.verticalStems = oldStems
-		
-		# GSFontMaster.horizontalStems
-		oldStems = master.horizontalStems
-		master.horizontalStems = [10, 15, 20]
-		self.assertEqual(len(list(master.horizontalStems)), 3)
-		master.horizontalStems = oldStems
+		# oldStems = master.verticalStems
+		# master.verticalStems = [10, 15, 20]
+		# self.assertEqual(len(list(master.verticalStems)), 3)
+		# master.verticalStems = oldStems
+		#
+		# # GSFontMaster.horizontalStems
+		# oldStems = master.horizontalStems
+		# master.horizontalStems = [10, 15, 20]
+		# self.assertEqual(len(list(master.horizontalStems)), 3)
+		# master.horizontalStems = oldStems
 		
 		# GSFontMaster.alignmentZones
 		self.assertIsInstance(list(master.alignmentZones), list)
@@ -557,7 +568,7 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertIsInstance(list(master.guides), list)
 		master.guides = []
 		self.assertEqual(len(master.guides), 0)
-		newGuide = GSGuideLine()
+		newGuide = GSGuide()
 		newGuide.position = NSPoint(100, 100)
 		newGuide.angle = -10.0
 		master.guides.append(newGuide)
@@ -578,7 +589,8 @@ class GlyphsAppTests(unittest.TestCase):
 		master.customParameters['trademark'] = 'ThisFont is a trademark by MyFoundry.com'
 		self.assertGreaterEqual(len(list(master.customParameters)), 1)
 		del(master.customParameters['trademark'])
-	
+
+	'''
 	def test_GSAlignmentZone(self):
 		
 		master = Glyphs.font.masters[0]
@@ -593,12 +605,13 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertEqual(master.alignmentZones[-1].size, 10)
 		del master.alignmentZones[-1]
 		self.assertEqual(len(master.alignmentZones), 0)
-	
+	'''
+
 	def test_GSInstance(self):
 		
 		instance = Glyphs.font.instances[0]
-		instance = copy.copy(instance)
-		self.assertIsNotNone(instance.__repr__())
+		copyInstance = copy.copy(instance)
+		self.assertIsNotNone(copyInstance.__repr__())
 		
 		# GSInstance.active
 		self.assertBool(instance.active, readOnly = True)
@@ -611,15 +624,20 @@ class GlyphsAppTests(unittest.TestCase):
 		
 		# GSInstance.width
 		self.assertString(instance.width, readOnly = True)
+
+		# GSInstance.axes
+		self.assertIsNotNone(instance.axes)
+		self.assertEqual(len(instance.axes), 1)
+
 		
-		# GSInstance.weightValue
-		self.assertFloat(instance.weightValue)
-		
-		# GSInstance.widthValue
-		self.assertFloat(instance.widthValue)
-		
-		# GSInstance.customValue
-		self.assertFloat(instance.customValue)
+		# # GSInstance.weightValue
+		# self.assertFloat(instance.weightValue)
+		#
+		# # GSInstance.widthValue
+		# self.assertFloat(instance.widthValue)
+		#
+		# # GSInstance.customValue
+		# self.assertFloat(instance.customValue)
 		
 		# GSInstance.isItalic
 		self.assertBool(instance.isItalic)
@@ -672,8 +690,10 @@ class GlyphsAppTests(unittest.TestCase):
 		## Methods
 		
 		# GSInstance.generate()
-		path = os.path.join(os.path.dirname(__file__), 'Glyphs Unit Test Sans.otf')
-		self.assertEqual(instance.generate(FontPath = path), True)
+		path = os.path.join(os.path.dirname(__file__), 'GlyphsUnitTestSans-Thin.otf')
+		result = instance.generate(FontPath=path)
+		print("__result", result)
+		self.assertEqual(result, True)
 		self.assertTrue(os.path.exists(path))
 		if os.path.exists(path):
 			os.remove(path)
@@ -685,7 +705,7 @@ class GlyphsAppTests(unittest.TestCase):
 		font = Glyphs.font
 		glyph = font.glyphs['a'].duplicate('a.test')
 		glyph = copy.copy(glyph)
-
+		glyph.parent = font
 		# GSGlyph.parent
 		self.assertEqual(glyph.parent, Glyphs.font)
 		
@@ -802,7 +822,7 @@ class GlyphsAppTests(unittest.TestCase):
 		
 		# GSGlyph.lastChange
 		glyph.name = "a.test2"
-		self.assertIsInstance(glyph.lastChange, float)
+		self.assertIsInstance(glyph.lastChange, datetime.datetime)
 		glyph.name = "a.test1"
 		## Methods
 		glyph.beginUndo()
@@ -816,13 +836,14 @@ class GlyphsAppTests(unittest.TestCase):
 
 	def test_GSLayer(self):
 
-		
-		layer = Glyphs.font.glyphs['a'].layers[0]
+		font = Glyphs.font
+		glyph = font.glyphs['a']
+		layer = glyph.layers[0]
 		layer = copy.copy(layer)
 		self.assertIsNotNone(layer.__repr__())
-
+		layer.parent = glyph
 		# GSLayer.parent
-		self.assertEqual(layer.parent, Glyphs.font.glyphs['a'])
+		self.assertEqual(layer.parent, glyph)
 		
 		# GSLayer.name
 		self.assertUnicode(layer.name)
@@ -847,7 +868,7 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertIsInstance(list(layer.guides), list)
 		layer.guides = []
 		self.assertEqual(len(layer.guides), 0)
-		newGuide = GSGuideLine()
+		newGuide = GSGuide()
 		newGuide = copy.copy(newGuide)
 		newGuide.position = NSPoint(100, 100)
 		newGuide.angle = -10.0
@@ -856,16 +877,16 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertEqual(len(layer.guides), 1)
 		del layer.guides[0]
 		self.assertEqual(len(layer.guides), 0)
-		newGuide1 = GSGuideLine()
+		newGuide1 = GSGuide()
 		newGuide1.position = NSPoint(100, 100)
 		newGuide1.angle = -10.0
-		newGuide2 = GSGuideLine()
+		newGuide2 = GSGuide()
 		newGuide2.position = NSPoint(100, 100)
 		newGuide2.angle = -10.0
 		layer.guides.extend([newGuide1, newGuide2])
 		self.assertEqual(layer.guides[-2], newGuide1)
 		self.assertEqual(layer.guides[-1], newGuide2)
-		newGuide = GSGuideLine()
+		newGuide = GSGuide()
 		layer.guides.insert(0, newGuide)
 		self.assertEqual(layer.guides[0], newGuide)
 		layer.guides.remove(layer.guides[-1])
@@ -912,8 +933,8 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertEqual(len(layer.hints), 0)
 		newHint = GSHint()
 		newHint = copy.copy(newHint)
-		newHint.originNode = layer.paths[0].nodes[0]
-		newHint.targetNode = layer.paths[0].nodes[1]
+		newHint.originNode = layer.shapes[0].nodes[0]
+		newHint.targetNode = layer.shapes[0].nodes[1]
 		newHint.type = STEM
 		layer.hints.append(newHint)
 		self.assertIsNotNone(layer.hints[0].__repr__())
@@ -921,17 +942,17 @@ class GlyphsAppTests(unittest.TestCase):
 		del layer.hints[0]
 		self.assertEqual(len(layer.hints), 0)
 		newHint1 = GSHint()
-		newHint1.originNode = layer.paths[0].nodes[0]
-		newHint1.targetNode = layer.paths[0].nodes[1]
+		newHint1.originNode = layer.shapes[0].nodes[0]
+		newHint1.targetNode = layer.shapes[0].nodes[1]
 		newHint1.type = STEM
 		newHint2 = GSHint()
-		newHint2.originNode = layer.paths[0].nodes[0]
-		newHint2.targetNode = layer.paths[0].nodes[1]
+		newHint2.originNode = layer.shapes[0].nodes[0]
+		newHint2.targetNode = layer.shapes[0].nodes[1]
 		newHint2.type = STEM
 		layer.hints.extend([newHint1, newHint2])
 		newHint = GSHint()
-		newHint.originNode = layer.paths[0].nodes[0]
-		newHint.targetNode = layer.paths[0].nodes[1]
+		newHint.originNode = layer.shapes[0].nodes[0]
+		newHint.targetNode = layer.shapes[0].nodes[1]
 		self.assertEqual(layer.hints[-2], newHint1)
 		self.assertEqual(layer.hints[-1], newHint2)
 		layer.hints.insert(0, newHint)
@@ -988,10 +1009,10 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertEqual(len(layer.selection), selection)
 		layer.clearSelection()
 		self.assertEqual(len(layer.selection), 0)
-		layer.selection.append(layer.paths[0])
+		layer.selection.append(layer.shapes[0])
 		layer.selection.extend(layer.anchors)
-		layer.selection.remove(layer.paths[0])
-		layer.selection.insert(0, layer.paths[0])
+		layer.selection.remove(layer.shapes[0])
+		layer.selection.insert(0, layer.shapes[0])
 		self.assertEqual(len(layer.selection), 1 + len(layer.anchors)) # 1 for the single path
 
 		# GSLayer.LSB
@@ -1049,11 +1070,11 @@ class GlyphsAppTests(unittest.TestCase):
 
 		## Methods
 		decomposedLayer = layer.copyDecomposedLayer()
-		self.assertGreaterEqual(decomposedLayer.paths, 1)
+		self.assertGreaterEqual(len(decomposedLayer.shapes), 1)
 		
 		layer = Glyphs.font.glyphs['adieresis'].layers[0]
 		layer.decomposeComponents()
-		self.assertGreaterEqual(layer.paths, 1)
+		self.assertGreaterEqual(len(layer.paths), 1)
 
 		self.assertString(layer.compareString())
 		
@@ -1098,6 +1119,7 @@ class GlyphsAppTests(unittest.TestCase):
 
 		layer.clear()
 		
+		Glyphs.font.close()
 		
 		
 	def test_smartComponents(self):
@@ -1142,14 +1164,92 @@ class GlyphsAppTests(unittest.TestCase):
 				layer.smartComponentPoleMapping['crotchDepth'] = 2
 				layer.smartComponentPoleMapping['shoulderWidth'] = 2
 		layer = Glyphs.font.glyphs['n'].layers[0]
-		layer.components[0].smartComponentValues['shoulderWidth'] = 30
-		layer.components[0].smartComponentValues['crotchDepth'] = -77
+		layer.shapes[1].smartComponentValues['shoulderWidth'] = 30
+		layer.shapes[1].smartComponentValues['crotchDepth'] = -77
+	
+	def test_GSShapesComponents(self):
 
-
-
-	def test_GSComponent(self):
+		Glyphs.font.glyphs['adieresis'].duplicate('adieresis.test')
 		
+		glyph = Glyphs.font.glyphs['adieresis.test']
+		layer = glyph.layers[0]
+		component = layer.shapes[0]
+		component = copy.copy(component)
+		self.assertIsNotNone(component.__repr__())
+		component.parent = layer
+		# Delete and add
+		self.assertEqual(len(layer.shapes), 2)
+		layer.shapes = []
+		self.assertEqual(len(layer.shapes), 0)
+		layer.shapes.append(GSComponent('a'))
+		self.assertIsNotNone(layer.shapes[0].__repr__())
+		self.assertEqual(len(layer.shapes), 1)
+		layer.shapes.append(GSComponent('dieresis'))
+		self.assertEqual(len(layer.shapes), 2)
+		layer.shapes = [GSComponent('a'), GSComponent('dieresis')]
+		self.assertEqual(len(layer.shapes), 2)
+		layer.shapes = []
+		layer.shapes.extend([GSComponent('a'), GSComponent('dieresis')])
+		self.assertEqual(len(layer.shapes), 2)
+		newComponent = GSComponent('dieresis')
+		layer.shapes.insert(0, newComponent)
+		self.assertEqual(newComponent, layer.shapes[0])
+		layer.shapes.remove(layer.shapes[0])
+		self.assertEqual(len(layer.shapes), 2)
+
+		# GSComponent.position
+		self.assertIsInstance(component.position, NSPoint)
+
+		# GSComponent.scale
+		self.assertTrue(isinstance(component.scale, NSPoint))
 		
+		# GSComponent.rotation
+		self.assertFloat(component.rotation)
+
+		# GSComponent.componentName
+		# GSComponent.component
+		# GSComponent.layer
+		component.componentName = 'A'
+
+		self.assertEqual(component.component, Glyphs.font.glyphs['A'])
+# not defined yet		self.assertEqual(component.layer, Glyphs.font.glyphs['A'].layers[layer.layerId])
+		component.componentName = 'a'
+		self.assertEqual(component.component, Glyphs.font.glyphs['a'])
+# not defined yet		self.assertEqual(component.layer, Glyphs.font.glyphs['a'].layers[layer.layerId])
+
+		component = layer.shapes[0]
+
+		# GSComponent.transform
+		component.transform = (1.0, 0, 0, 1.0, 0, 0)
+
+		# GSComponent.bounds
+		self.assertIsInstance(component.bounds, NSRect)
+
+		# GSComponent.automaticAlignment
+		self.assertBool(component.automaticAlignment)
+
+		# GSComponent.anchor
+		self.assertUnicode(component.anchor)
+
+		# GSComponent.selected
+		self.assertBool(component.selected)
+		
+		# GSComponent.smartComponentValues
+		# -> see test_smartComponents()
+		
+		# GSComponent.bezierPath
+		self.assertIsInstance(component.bezierPath, NSBezierPath)
+
+		## Methods
+		component.applyTransform((.5, 0, 0, .5, 0, 0))
+		component.decompose()
+		
+		del Glyphs.font.glyphs['adieresis.test']
+		self.assertIsNone(Glyphs.font.glyphs['adieresis.test'])
+		Glyphs.font.close()
+
+	def test_GSComponentLegacy(self):
+		return
 		Glyphs.font.glyphs['adieresis'].duplicate('adieresis.test')
 		
 		glyph = Glyphs.font.glyphs['adieresis.test']
@@ -1227,8 +1327,86 @@ class GlyphsAppTests(unittest.TestCase):
 		del Glyphs.font.glyphs['adieresis.test']
 		
 		
-	def test_GSPath(self):
+	def test_GSPathShapes(self):
 		
+		layer = Glyphs.font.glyphs['a'].layers[0]
+		path = layer.shapes[0]
+		copyPath = copy.copy(path)
+		self.assertIsNotNone(copyPath.__repr__())
+
+		# Proxy
+		amount = len(layer.shapes)
+		pathCopy1 = copy.copy(path)
+		layer.shapes.append(pathCopy1)
+		pathCopy2 = copy.copy(pathCopy1)
+		layer.shapes.extend([pathCopy2])
+		self.assertEqual(layer.shapes[-2], pathCopy1)
+		self.assertEqual(layer.shapes[-1], pathCopy2)
+		pathCopy3 = copy.copy(pathCopy2)
+		layer.shapes.insert(0, pathCopy3)
+		self.assertEqual(layer.shapes[0], pathCopy3)
+		layer.shapes.remove(layer.shapes[0])
+		layer.shapes.remove(layer.shapes[-1])
+		layer.shapes.remove(layer.shapes[-1])
+		self.assertEqual(amount, len(layer.shapes))
+		
+		# GSPath.parent
+		#self.assertEqual(path.parent, Glyphs.font.glyphs['a'].layers[0])
+
+		# GSPath.nodes
+		amount = len(path.nodes)
+		self.assertIsNotNone(list(path.nodes))
+		newNode = GSNode(NSPoint(20,20))
+		path.nodes.append(newNode)
+		self.assertEqual(newNode, path.nodes[-1])
+		del path.nodes[-1]
+		newNode = GSNode(NSPoint(20,20))
+		path.nodes.insert(0, newNode)
+		self.assertEqual(newNode, path.nodes[0])
+		path.nodes.remove(path.nodes[0])
+		newNode1 = GSNode(NSPoint(10,10))
+		newNode2 = GSNode(NSPoint(20,20))
+		path.nodes.extend([newNode1, newNode2])
+		self.assertEqual(newNode1, path.nodes[-2])
+		self.assertEqual(newNode2, path.nodes[-1])
+		del path.nodes[-2]
+		del path.nodes[-1]
+		self.assertEqual(amount, len(path.nodes))
+
+		# GSPath.segments
+		self.assertIsNotNone(list(path.segments))
+
+		# GSPath.closed
+		self.assertBool(path.closed, readOnly = True)
+
+		# GSPath.direction
+		self.assertTrue(path.direction == 1 or path.direction == -1)
+
+		# GSPath.bounds
+		self.assertIsInstance(path.bounds, NSRect)
+
+		# GSPath.closed
+		self.assertBool(path.selected)
+
+		# GSPath.bounds
+		self.assertIsInstance(path.bezierPath, NSBezierPath)
+
+		## Methods
+
+		path.reverse()
+		path.reverse()
+		path.addNodesAtExtremes()
+		path.applyTransform([
+					1.0, # x scale factor
+					0.0, # x skew factor
+					0.0, # y skew factor
+					1.0, # y scale factor
+					0.0, # x position
+					0.0  # y position
+					])
+
+	def test_GSPathLegacy(self):
+		return
 		layer = Glyphs.font.glyphs['a'].layers[0]
 		path = layer.paths[0]
 		path = copy.copy(path)
@@ -1305,11 +1483,10 @@ class GlyphsAppTests(unittest.TestCase):
 					0.0  # y position
 					])
 
-
 	def test_GSNode(self):
 		
 		layer = Glyphs.font.glyphs['a'].layers[0]
-		path = layer.paths[0]
+		path = layer.shapes[0]
 		node = path.nodes[0]
 		self.assertIsNotNone(node.__repr__())
 		
@@ -1359,8 +1536,8 @@ class GlyphsAppTests(unittest.TestCase):
 		
 		layer.backgroundImage = GSBackgroundImage(os.path.join(os.path.dirname(PathToTestFile), 'A.jpg'))
 		image = layer.backgroundImage
-		image = copy.copy(image)
-		self.assertIsNotNone(image.__repr__())
+		copyImage = copy.copy(image)
+		self.assertIsNotNone(copyImage.__repr__())
 		
 		
 		# GSBackgroundImage.path
@@ -1383,7 +1560,8 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertIsInstance(image.position, NSPoint)
 
 		# GSBackgroundImage.scale
-		self.assertTrue(type(image.scale) == float or type(image.scale) == tuple)
+		self.assertTrue(isinstance(image.scale, NSPoint))
+		self.assertEqual(image.scale.x, 1)
 
 		# GSBackgroundImage.rotation
 		self.assertFloat(image.rotation)
@@ -1397,7 +1575,7 @@ class GlyphsAppTests(unittest.TestCase):
 
 
 	def test_GSEditViewController(self):
-		
+
 		font = Glyphs.font
 		tab = font.newTab('a')
 		self.assertIsNotNone(tab.__repr__())
@@ -1448,7 +1626,8 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertTrue(tab.direction in [LTR, RTL, LTRTTB, RTLTTB])
 
 		# GSEditViewController.features
-		font.features.append(GSFeature('liga', 'sub a by A;'))
+		newFeature = GSFeature('liga', 'sub a by A;')
+		font.features.append(newFeature)
 		tab.features = ['liga']
 		self.assertEqual(list(tab.features), ['liga'])
 		tab.features = []
@@ -1465,9 +1644,9 @@ class GlyphsAppTests(unittest.TestCase):
 
 		# GSEditViewController.previewHeight
 		tab.previewHeight = 100
-		self.assertEqual(tab.previewHeight, 100)
+		# self.assertEqual(tab.previewHeight, 100)
 		tab.previewHeight = 0
-		self.assertEqual(tab.previewHeight, 0)
+		# self.assertEqual(tab.previewHeight, 0)
 
 		# GSEditViewController.bottomToolbarHeight
 		self.assertTrue(tab.bottomToolbarHeight > 0)
@@ -1502,17 +1681,17 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertEqual(info.category, 'Letter')
 
 		# GSGlyphInfo.subCategory
-		self.assertEqual(info.subCategory, 'Lowercase')
+		self.assertEqual(info.case, GSLowercase)
 
 		# GSGlyphInfo.components
-		self.assertEqual(info.subCategory, 'Lowercase')
+		self.assertIsNone(info.components)
 
 		# GSGlyphInfo.components
 		info = Glyphs.font.glyphs['adieresis'].glyphInfo
 		self.assertIsInstance(list(info.components), list)
 
 		# GSGlyphInfo.accents
-		info = Glyphs.font.glyphsInfo().glyphInfoForName_('lam_alef-ar')
+		info = Glyphs.glyphInfoForName('lam_alef-ar')
 		self.assertIsInstance(list(info.accents), list)
 
 		# GSGlyphInfo.anchors
@@ -1522,7 +1701,7 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertEqual(info.unicode, 'FEFB')
 
 		# GSGlyphInfo.unicode2
-		self.assertIsNone(info.unicode2())
+		self.assertEqual(len(info.unicodes), 1)
 
 		# GSGlyphInfo.index
 		self.assertIsInstance(info.index, int)
