@@ -1,0 +1,363 @@
+{
+.appVersion = "1281";
+.formatVersion = 3;
+DisplayStrings = (
+A,
+AB
+);
+axes = (
+{
+hidden = 1;
+name = Weight;
+tag = wght;
+}
+);
+classes = (
+{
+code = "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+";
+name = Uppercase;
+}
+);
+customParameters = (
+{
+name = "Import Font";
+value = {
+};
+}
+);
+date = "2020-01-03 19:42:13 +0000";
+disablesNiceNames = 1;
+familyName = "New Font";
+featurePrefixes = (
+{
+automatic = 1;
+code = "languagesystem DFLT dflt;
+";
+name = Languagesystems;
+}
+);
+features = (
+{
+code = "sub C by D;
+";
+tag = test;
+},
+{
+code = "sub A by B;
+";
+labels = (
+{
+language = dflt;
+value = "Stylistic Set Name 1";
+},
+{
+language = DEU;
+value = "Formatsatzname 1";
+}
+);
+tag = ss01;
+}
+);
+fontMaster = (
+{
+axesValues = (
+0
+);
+customParameters = (
+{
+name = "Default Layer Width";
+value = "600";
+}
+);
+id = m01;
+metricValues = (
+{
+over = 15;
+pos = 800;
+},
+{
+over = 15;
+pos = 700;
+},
+{
+over = 15;
+pos = 500;
+},
+{
+over = -15;
+},
+{
+over = -15;
+pos = -200;
+},
+{
+over = 15;
+pos = 550;
+}
+);
+name = Regular;
+numberValues = (
+123
+);
+stemValues = (
+{
+width = 123;
+}
+);
+visible = 1;
+}
+);
+glyphs = (
+{
+glyphname = A;
+lastChange = "2020-01-04 22:33:38 +0000";
+layers = (
+{
+hints = (
+{
+horizontal = 1;
+origin = (0,0);
+target = (0,3);
+type = Stem;
+}
+);
+layerId = m01;
+metricRight = "=20";
+shapes = (
+{
+closed = 1;
+nodes = (
+(10,66,l),
+(439,66,l),
+(439,608,l),
+(10,608,l,{name = "Hallo	Welt";test = "Hallo
+Welt";})
+);
+}
+);
+width = 459;
+},
+{
+associatedMasterId = m01;
+layerId = "B53B276E-7ED6-4F56-94FF-4162BC3B585A";
+name = Color;
+shapes = (
+{
+attributes = {
+strokeColor = (0,84);
+strokeWidth = 21;
+};
+closed = 0;
+nodes = (
+(20,35,l),
+(91,35,o),
+(97,35,o),
+(100,5,c),
+(103,35,o),
+(109,35,o),
+(180,35,c)
+);
+}
+);
+width = 600;
+}
+);
+metricLeft = "=10";
+tags = (
+tag1,
+tag2
+);
+unicode = (65,97);
+},
+{
+glyphname = B;
+lastChange = "2020-01-04 22:33:44 +0000";
+layers = (
+{
+layerId = m01;
+shapes = (
+{
+angle = 20;
+name = A;
+scale = (0.8,0.8);
+}
+);
+width = 480;
+}
+);
+tags = (
+tag3
+);
+unicode = (66,98);
+},
+{
+glyphname = C;
+lastChange = "2020-01-04 19:35:27 +0000";
+layers = (
+{
+backgroundImage = {
+angle = 3;
+imagePath = Screenshot.png;
+locked = "1";
+pos = (106,89);
+scale = (0.9,0.8);
+};
+layerId = m01;
+width = 600;
+}
+);
+unicode = 67;
+},
+{
+glyphname = D;
+layers = (
+{
+layerId = m01;
+width = 600;
+}
+);
+unicode = 68;
+},
+{
+case = upper;
+glyphname = one;
+lastChange = "2020-01-04 16:36:08 +0000";
+layers = (
+{
+layerId = m01;
+width = 600;
+}
+);
+unicode = 49;
+},
+{
+glyphname = space;
+layers = (
+{
+layerId = m01;
+width = 200;
+}
+);
+unicode = 32;
+},
+{
+export = 0;
+glyphname = _part.test;
+lastChange = "2020-01-04 19:23:12 +0000";
+layers = (
+{
+layerId = m01;
+partSelection = {
+Width = 1;
+};
+width = 100;
+},
+{
+associatedMasterId = m01;
+layerId = "BEE6AB80-1627-43EB-904A-37A721971B03";
+name = Wide;
+partSelection = {
+Width = 2;
+};
+width = 1000;
+}
+);
+partsSettings = (
+{
+bottomValue = 0;
+name = Width;
+topValue = 100;
+}
+);
+}
+);
+instances = (
+{
+axesValues = (
+123
+);
+customParameters = (
+{
+name = familyName;
+value = "Instance Family Name";
+}
+);
+instanceInterpolations = {
+m01 = 1;
+};
+isBold = 1;
+isItalic = 1;
+name = Regular;
+}
+);
+kerningLTR = {
+m01 = {
+A = {
+B = 30;
+};
+};
+};
+metrics = (
+{
+name = ascender;
+},
+{
+name = "cap height";
+},
+{
+name = "x-height";
+},
+{
+name = baseline;
+},
+{
+name = descender;
+},
+{
+filter = "case == 3";
+name = "x-height";
+}
+);
+numbers = (
+{
+name = "Some Number";
+}
+);
+properties = (
+{
+key = copyrights;
+values = (
+{
+language = dflt;
+value = "Default Copyright1";
+},
+{
+language = DEU;
+value = "Deutsches Copyright";
+}
+);
+},
+{
+key = compatibleFullNames;
+values = (
+{
+language = dflt;
+value = "Compatible Full Name 1";
+}
+);
+},
+{
+key = versionString;
+value = "New Value";
+}
+);
+stems = (
+{
+name = "New Stem";
+}
+);
+unitsPerEm = 1000;
+versionMajor = 1;
+versionMinor = 0;
+}
