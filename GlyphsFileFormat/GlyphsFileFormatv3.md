@@ -149,16 +149,23 @@ The property list file contains a dictionary with the following structure.
         * partSelection `dict`: Keys are property names, values are `1` if the layer is selected for the bottom range, `2` for the top.
         * shapes `list>dict`: Can be paths or components
             * path:
-                * attributes: `dict`:
+                * attributes: `dict`: see [Attributes](*attributes)
                 * closed `bool`: Always set to `1`, otherwise omit the key
                 * nodes `tuple`: `(X,Y,TYPE[SMOOTH],{user:data})`, where X and Y are the coordinates as float, and TYPE is either `l`, `c`, `o`, `q`. when the on-curve node is smooth, add an `s`. 
                 when the node has usedData store it as fourth element. Remove all newlines and extra spaces.
             * component:
                 * alignment `int`: controls the automatic alignment of this component. (-1 disables alignment, 1 forces it for glyph that are usually not aligned)
                 * anchor `string`: Should be indicated if connected to an anchor, especially if more than one possibility is available, e.g. in ligatures.
+                * anchorTo `string`: TODO
                 * angle `float`: the rotation
+                * attributes: `dict`: see [Attributes](*attributes)
+                * locked `bool`: Always set to `1`, otherwise omit the key.
                 * name `string`: The name of the linked glyph (i.e., the glyph the component is pointing to).
+                * orientation `int`: if left, center or right aligned
+                * piece `dict>string:float`: keys are the name of the smart property, values a position on the axis.
+                * pos `tuple`: the position
                 * scale `tuple`: `(scaleX,scaleY)`
+                * userData `dict`: to store custom data. Only `string`, `int`, `float`, `array`, `dict` and `date` data is allowed.
         * userDate `dict`: A dict with user defined structure
         * vertOrigin `float`: Offset from default (ascender). Defaults to `0` 
         * vertWidth `float`: Only stored if other than the default (ascender+descender)
@@ -242,5 +249,5 @@ The property list file contains a dictionary with the following structure.
 * value `string`: a single value
 
 ### Attributes
-uses in Paths and components
+uses in paths and components
 TODO
