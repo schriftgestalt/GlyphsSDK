@@ -6,6 +6,8 @@ Glyphs saves its files in plaintext format. So the files can be viewed and edite
 - There are some small deviations from the default format. More about that in Notes.
 
 ## Changes
+### 5. Jan. 2019
+- add some keys and improve ordering
 ### 1. Oct. 2018:
 - Add Notes about special cases
 - Better general explanation
