@@ -26,7 +26,7 @@ Glyphs saves its files in plaintext format. So the files can be viewed and edite
 - Lists have each element on one line, empty `lists` or `dicts` need to span two lines.
 - Some lists (enclosed in normal parenthesis) are put on one line (e.g., `(100,200)`). This is to make it easier to read and save space. We call it *tuple* for now.
     * this is used for colors, points and nodes
-- empty elements are always omitted. 
+- empty elements are always omitted.
     * except: in `userData` entires. There the structure is preserved.
 - Numbers are always written without quotes (negative and float). Strings that look like numbers are written with quotes (mostly important in userData).
 - Unicodes are written as int numbers.
@@ -74,7 +74,7 @@ The property list file contains a dictionary with the following structure.
     * notes `string`: The feature notes.
     * tag `string`: The feature tag.
 * fontMaster `list>dict`
-    * axesValues `list>float`: a list of float values storing the axis coordinate for each axis, Axis settings are stored in the font object. 
+    * axesValues `list>float`: a list of float values storing the axis coordinate for each axis, Axis settings are stored in the font object.
     * customParameters `list>dict`: Master-wide custom parameters.
         * name `string`: Property name of the custom parameter.
         * value `string`: Value of the custom parameter.
@@ -92,7 +92,7 @@ The property list file contains a dictionary with the following structure.
 * glyphs `list>dict`:
     * case `string`: The 'case' if the glyph when manually set. Possible values: "noCase", "upper", "lower", "smallCaps", "other". This could be used to specify 'height' of default numbers (lining sv old style)
     * category `string`: manually set category
-    * color `int` or `tuple`: 
+    * color `int` or `tuple`:
         1. If `int`, it is the index of the internal color list
         2. If `tuple`, two to five numbers in the range of 0–255 denoting a Grey+A, RGBA or CMYKA values
     * direction: The writing direction when manually set. Possible values: "BIDI", "LTR", "RTL", "VTL", "VTR".
@@ -110,13 +110,13 @@ The property list file contains a dictionary with the following structure.
         * annotations `list>dict`:
         * associatedMasterId `string`: ID of the master the layer is linked to. Not present if it equals layerID, i.e. if the layer is in use as master.
         * background `dict`: Contains the same children as the layer itself, except for background, layerId, associatedMasterId and width.
-        * backgroundImage `dict`: a image. 
+        * backgroundImage `dict`: a image.
             * angle `float`: The angle. If not set defaults to 0°
             * imagePath `string`: The file path to the image. It is stored relative if close enough. Otherwise the full path.
             * locked `bool`: Always set to `1`, otherwise omit the key
             * pos `tuple`: the origin
             * scale `tuple`: `(scaleX,scaleY)`
-        * color `int` or `tuple`: 
+        * color `int` or `tuple`:
             1. If `int`, it is the index of the internal color list
             2. If `tuple`, two to five numbers in the range of 0–255 denoting a Gray+A, RGBA or CMYKA values
         * guides `list>dict`
@@ -130,7 +130,7 @@ The property list file contains a dictionary with the following structure.
             * type `string`: The type of the hint. Possible value are: Tag, TopGhost, Stem, BottomGhost, Flex, TTAnchor, TTStem, TTAlign, TTInterpolate, TTDiagonal, TTDelta, Corner, Cap, Brush, Line, Auto
                 If there is no type, it defaults to Stem, or Ghost if `target` is not set
             * origin `string`: '(pathIndex,nodeIndex)'
-                
+               
                 TODO: Explain node indexes
             * target `tuple`: `(pathIndex,nodeIndex)`, `up` or `down`
             * other1 `tuple`: `(pathIndex,nodeIndex)` for TT Institutions that need more than two nodes (Interpolation, Diagonal)
@@ -151,7 +151,7 @@ The property list file contains a dictionary with the following structure.
             * path:
                 * attributes: `dict`: see [Attributes](*attributes)
                 * closed `bool`: Always set to `1`, otherwise omit the key
-                * nodes `tuple`: `(X,Y,TYPE[SMOOTH],{user:data})`, where X and Y are the coordinates as float, and TYPE is either `l`, `c`, `o`, `q`. when the on-curve node is smooth, add an `s`. 
+                * nodes `tuple`: `(X,Y,TYPE[SMOOTH],{user:data})`, where X and Y are the coordinates as float, and TYPE is either `l`, `c`, `o`, `q`. when the on-curve node is smooth, add an `s`.
                 when the node has usedData store it as fourth element. Remove all newlines and extra spaces.
             * component:
                 * alignment `int`: controls the automatic alignment of this component. (-1 disables alignment, 1 forces it for glyph that are usually not aligned)
@@ -167,7 +167,7 @@ The property list file contains a dictionary with the following structure.
                 * scale `tuple`: `(scaleX,scaleY)`
                 * userData `dict`: to store custom data. Only `string`, `int`, `float`, `array`, `dict` and `date` data is allowed.
         * userDate `dict`: A dict with user defined structure
-        * vertOrigin `float`: Offset from default (ascender). Defaults to `0` 
+        * vertOrigin `float`: Offset from default (ascender). Defaults to `0`
         * vertWidth `float`: Only stored if other than the default (ascender+descender)
         * visible `bool`: The visibility setting in the layer panel (the eye symbol). Always set to `1`, otherwise omit the key.
         * width `float`:
@@ -191,7 +191,7 @@ The property list file contains a dictionary with the following structure.
 * gridLength `int`: Only written if not `1`
 * gridSubDivision `int`: Only written if bigger then `1`
 * instances `list>dict`
-    * axesValues `list>float`: A list of float values storing the axis coordinate for each axis, Axis settings are stored in the font object. 
+    * axesValues `list>float`: A list of float values storing the axis coordinate for each axis, Axis settings are stored in the font object.
     * customParameters `list>dict`: Instance custom parameters.
         * name `string`: Property name of the custom parameter.
         * value `string`: Value of the custom parameters.
