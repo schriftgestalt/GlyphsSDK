@@ -108,7 +108,6 @@ The XML file contains a dictionary with the following structure. The elements wi
             * transform `string`: An affine transformation matrix, format: `{m11, m12, m21, m22, tX, tY}`.
             * alignment `int`: controls the automatic alignment of this component. (-1 disables alignment, 1 forces it for glyph that are usually not aligned)
             * disableAlignment `bool`: This component should not be automatically aligned. (not used since version 2.3-826)
-           
         * guideLines `list`
             * alignment `string`: If the guide is `right` or `center` aligned. Default: `left`
             * angle `float`: The angle. If not set defaults to 0°
@@ -120,7 +119,6 @@ The XML file contains a dictionary with the following structure. The elements wi
             * type `string`: The type of the hint. Possible value are: TTStem, TopGhost, BottomGhost, Anchor, Align, Interpolate, Diagonal, Tag, Corner, Cap
                 If there is no type, it defaults to Stem, of Ghost if `target` is set
             * origin `string`: '{pathIndex, nodeIndex}'
-               
                 TODO: Explain node indexes
             * target `string`: `{pathIndex, nodeIndex}`, `up` or `down`
             * other1 `string`: `{pathIndex, nodeIndex}` for TT Institutions that need more than two nodes (Interpolation, Diagonal)
