@@ -23,7 +23,7 @@ Glyphs saves its files in plaintext format. So the files can be viewed and edite
 - Each key needs to be on its own line.
 - Lists have each element on one line, empty `lists` or `dicts` need to span two lines.
     * except: color list, they are all on one line.
-- empty elements are always omitted. 
+- empty elements are always omitted.
     * except: in `userData` entires. There the structure is preserved.
 - Numbers are always written without quotes (negative and float). Strings that look like numbers are written with quotes (mostly important in userData).
 - Unicodes are written as hex string but always without quotes so it might be ambiguous for a general parser ('1234' could be read as int or hex)
@@ -37,7 +37,9 @@ The XML file contains a dictionary with the following structure. The elements wi
 * classes `list`: OpenType classes.
     * automatic `bool`: Always set to `1`. If the feature is not set to automatic, the key should be omitted.
     * code `string`: A string containing space separated glyph names.
+    * disabled `bool`: The class will not be exported. Always set to `1`, otherwise omit the key
     * name `string`: The OpenType class name.
+    * notes `string`: Notes.
 * copyright `string`
 * customParameters `list`: Font-wide custom parameters.
     * name `string`: Property name of the custom parameter.
@@ -45,19 +47,30 @@ The XML file contains a dictionary with the following structure. The elements wi
 * date `string`: Format `2014-01-29 14:14:38 +0000`.
 * designer `string`
 * designerURL `string`
+* disablesAutomaticAlignment `bool`: Always set to `1`, otherwise omit the key
 * disablesNiceNames `bool` is always set to `1`. If not set the key is not set at all.
 * familyName `string`
 * featurePrefixes `list`: OpenType feature code before the class definitions.
-    * code `string`
-    * name `string`
+    * automatic `bool`: Always set to `1`, otherwise omit the key
+    * code `string`: A string containing feature code.
+    * disabled `bool`: The prefix will not be exported. Always set to `1`, otherwise omit the key
+    * name `string`: The name of the prefix
+    * notes `string`: Notes.
 * features `list`
     * automatic `bool` is always set to `1`. If not set the key is not set at all.
     * code `string`: a string containing feature code.
+    * disabled `bool`: The feature will not be exported. Always set to `1`, otherwise omit the key
     * name `string`: the feature tag.
+    * notes `string`: The feature notes. For stylistic sets, the note can contain a `featureNames` definition or a `Name:` + feature name
 * fontMaster `list`
-    * alignmentZones `list`
+    * alignmentZones `list`: list of position and overshot in a string with curly braces (e.g. `"{800, 15}"`)
     * ascender `int`
     * capHeight `int`
+    * custom `string` : All other parts of the master name that doesn’t fit into `weight` or `width`
+    * customValue `int`: axis position for the third axis. Is only present if the value is not `0`.
+    * customValue1 `int`: axis position for the forth  axis. Is only present if the value is not `0`.
+    * customValue2 `int`: axis position for the fifth  axis. Is only present if the value is not `0`.
+    * customValue3 `int`: axis position for the sixth  axis. Is only present if the value is not `0`.
     * customParameters `list`: Master-wide custom parameters.
         * name `string`: Property name of the custom parameter.
         * value `string`: Value of the custom parameter.
@@ -66,21 +79,19 @@ The XML file contains a dictionary with the following structure. The elements wi
     * iconName `string`: stores the selected master icon (new in v2.5)
     * id `string` a unique id that connects the layers (associated ID) with the master.
     * userData `dict` to store custom data. Only `string`, `int`, `float`, `array`, `dict` and `date` data is allowed.
-    * weightValue `int`: The weight position for interpolation. Is only present if the value is not `100`.
-    * widthValue `int`: The width position for interpolation. Is only present if the value is not `100`.
-    * customValue `int`: The custom position for interpolation. Is only present if the value is not `0`.
-    * customValue[1-3] `int`: More custom positions for interpolation. Is only present if the value is not `0`.
-    * weight `string` : The weight part of the master name. Possible values "SemiLight", "Light", "SemiBold", "Bold"
-    * width `string` : The width part of the master name. Possible values "SemiCondensed", "Condensed", "SemiExtended", "Extended"
-    * custom `string` : All other parts of the master name that doesn’t fit into `weight` or `width`
     * verticalStems `list`: a list of `int` values.
+    * visible `int`: Always set to `1`. If not set, the key is not present at all.
+    * weight `string` : The weight part of the master name. Possible values "SemiLight", "Light", "SemiBold", "Bold"
+    * weightValue `int`: The weight position for interpolation. Is only present if the value is not `100`.
+    * width `string` : The width part of the master name. Possible values "SemiCondensed", "Condensed", "SemiExtended", "Extended"
+    * widthValue `int`: The width position for interpolation. Is only present if the value is not `100`.
     * xHeight `int`
 * glyphs `list`
     * glyphname `string`: Must be unique throughout the font.
     * production `string`: manually set production name (new in v2.2)
     * script `string`: manually set script (new in v2.2)
     * category `string`: manually set category (new in v2.2)
-    * color `int` or `list`: 
+    * color `int` or `list`:
         1. If `int`, it is the index of the internal color list
         2. If `list`, four numbers in the range of 0–255 denoting a RGBA value
     * subcategory `string`: manually set subcategory (new in v2.2)
@@ -97,7 +108,7 @@ The XML file contains a dictionary with the following structure. The elements wi
             * transform `string`: An affine transformation matrix, format: `{m11, m12, m21, m22, tX, tY}`.
             * alignment `int`: controls the automatic alignment of this component. (-1 disables alignment, 1 forces it for glyph that are usually not aligned)
             * disableAlignment `bool`: This component should not be automatically aligned. (not used since version 2.3-826)
-            
+           
         * guideLines `list`
             * alignment `string`: If the guide is `right` or `center` aligned. Default: `left`
             * angle `float`: The angle. If not set defaults to 0°
@@ -109,7 +120,7 @@ The XML file contains a dictionary with the following structure. The elements wi
             * type `string`: The type of the hint. Possible value are: TTStem, TopGhost, BottomGhost, Anchor, Align, Interpolate, Diagonal, Tag, Corner, Cap
                 If there is no type, it defaults to Stem, of Ghost if `target` is set
             * origin `string`: '{pathIndex, nodeIndex}'
-                
+               
                 TODO: Explain node indexes
             * target `string`: `{pathIndex, nodeIndex}`, `up` or `down`
             * other1 `string`: `{pathIndex, nodeIndex}` for TT Institutions that need more than two nodes (Interpolation, Diagonal)
@@ -134,18 +145,39 @@ The XML file contains a dictionary with the following structure. The elements wi
     * rightKerningGroup `string`
     * rightMetricsKey `string`
     * unicode `string`: Hexadecimal Unicode value.
+* gridLength `int`: Only written if not `1`
+* gridSubDivision `int`: Only written if bigger then `1`
 * instances `list`
     * customParameters `list`: Instance custom parameters.
         * name `string`: Property name of the custom parameter.
         * value `string`: Value of the custom parameters.
+    * exports `bool`: Always set to `0`, otherwise omit the key.
+    * interpolationCustom `float`: axis position for the third axis
+    * interpolationCustom1 `float`: axis position for the fourth axis
+    * interpolationCustom2 `float`: axis position for the fifth axis
+    * interpolationCustom3 `float`: axis position for the sixth axis
+    * interpolationWeight `float`: axis position for the first axis
+    * interpolationWidth `float`: axis position for the second axis
+    * instanceInterpolations `dict`: keys are master IDs, values are the factors for that master.
+    * isBold `bool`: for style linking. Always set to `1`, otherwise omit the key.
+    * isItalic `bool`: for style linking. Always set to `1`, otherwise omit the key.
+    * linkStyle `string`: The linked style name
+    * manualInterpolation `bool`: If set, use the `instanceInterpolations`, otherwise calculate from `axisValues`. Always set to `1`, otherwise omit the key.
+    * name `string`: The style name.
+    * userData `dict`: to store custom data. Only `string`, `int`, `float`, `array`, `dict` and `date` data is allowed.
+    * weightClass `string`:
+    * widthClass `string`:
+* keepAlternatesTogether: `bool`: Always set to `1`, otherwise omit the key.
 * kerning `dict`: three-level `dict` containing a `float` as value.
     * first level key is the master ID.
     * second level is either the left kerning group name or glyph name.
     * third level is either the right kerning group name or glyph name.
+* vertKerning `dict`: see `kerning`
+* keyboardIncrement `float`: Only written if not `1`
 * manufacturer `string`
 * manufacturerURL `string`
 * unitsPerEm `int`
-* userData `dict`
+* userData `dict`: to store custom data. Only `string`, `int`, `float`, `array`, `dict` and `date` data is allowed.
 * versionMajor `int`
 * versionMinor `int`: must be between 0 and 999.
 
