@@ -103,6 +103,9 @@ numberValues = (
 stemValues = (
 {
 width = 123;
+},
+{
+width = 321;
 }
 );
 visible = 1;
@@ -385,7 +388,11 @@ value = "New Value";
 );
 stems = (
 {
-name = "New Stem";
+name = "New Stem h";
+},
+{
+horizontal = 1;
+name = "New Stem v";
 }
 );
 unitsPerEm = 1000;
