@@ -315,6 +315,13 @@ customParameters = (
 {
 name = familyName;
 value = "Instance Family Name";
+},
+{
+disabled = 1;
+name = "Remove Glyphs";
+value = (
+B
+);
 }
 );
 instanceInterpolations = {
