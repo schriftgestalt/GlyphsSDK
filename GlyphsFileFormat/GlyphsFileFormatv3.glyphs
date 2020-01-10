@@ -134,8 +134,11 @@ nodes = (
 (10,66,l),
 (439,66,l),
 (439,608,l),
-(10,608,l,{name = "Hallo	Welt";test = "Hallo
-Welt";})
+(10,608,l,{
+name = "Hallo	Welt";
+test = "Hallo
+Welt";
+})
 );
 }
 );
