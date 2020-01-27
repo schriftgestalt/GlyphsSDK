@@ -3186,7 +3186,7 @@ def Font__save__(self, path=None):
 			typeName = "org.unifiedfontobject.ufo"
 		Doc.writeSafelyToURL_ofType_forSaveOperation_error_(URL, typeName, 1, objc.nil)
 	else:
-		raise("Now path set")
+		raise("No path set")
 
 GSFont.save = Font__save__
 '''
