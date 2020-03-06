@@ -51,16 +51,19 @@ GSCallbackHandler = objc.lookUpClass("GSCallbackHandler")
 GSInterpolationFontProxy = objc.lookUpClass("GSInterpolationFontProxy")
 GSFeatureGenerator = objc.lookUpClass("GSFeatureGenerator")
 GSTTStem = objc.lookUpClass("GSTTStem")
-
+GSMacroViewController = objc.lookUpClass("GSMacroViewController")
 
 __all__ = [
 
 	"Glyphs", "GetFile",
 	"wrapperVersion",
-	"GSAlignmentZone", "GSAnchor", "GSAnnotation", "GSApplication", "GSBackgroundImage", "GSBackgroundLayer", "GSClass", "GSComponent", "GSControlLayer", "GSCustomParameter", "GSDocument", "GSProjectDocument", "GSEditViewController", "GSElement", "GSFeature", "GSFeaturePrefix", "GSFont", "GSFontMaster", "GSGlyph", "GSGlyphInfo", "GSGlyphsInfo", "GSGuide", "GSHint", "GSInstance", "GSLayer", "GSNode", "GSPath", "GSSubstitution", "GSPartProperty", "GSNotifyingDictionary", "GSPathFinder", "GSPathPen", "GSCallbackHandler", "GSFeatureGenerator", "GSTTStem",
+	"GSAlignmentZone", "GSAnchor", "GSAnnotation", "GSApplication", "GSBackgroundImage", "GSBackgroundLayer", "GSClass", "GSComponent", "GSControlLayer",
+	"GSCustomParameter", "GSDocument", "GSProjectDocument", "GSEditViewController", "GSElement", "GSFeature", "GSFeaturePrefix", "GSFont", "GSFontMaster",
+	"GSGlyph", "GSGlyphInfo", "GSGlyphsInfo", "GSGuide", "GSHint", "GSInstance", "GSLayer", "GSNode", "GSPath", "GSSubstitution", "GSPartProperty", "GSNotifyingDictionary",
+	"GSPathFinder", "GSPathPen", "GSCallbackHandler", "GSFeatureGenerator", "GSTTStem",
 	# Constants
 	"MOVE", "LINE", "CURVE", "OFFCURVE", "QCURVE", "GSMOVE", "GSLINE", "GSCURVE", "GSOFFCURVE", "GSHOBBYCURVE", "GSSHARP", "GSSMOOTH",
-	"FILLCOLOR", "FILL", "STROKECOLOR", "STROKEWIDTH", "STROKEPOSITION", "SHADOW", "MASK",
+	"FILL", "FILLCOLOR", "FILLPATTERNANGLE", "FILLPATTERNBLENDMODE", "FILLPATTERNFILE", "FILLPATTERNOFFSET", "FILLPATTERNSCALE", "STROKECOLOR", "STROKELINECAPEND", "STROKELINECAPSTART", "STROKELINEJOIN", "STROKEPOSITION", "STROKEWIDTH", "GRADIENT", "SHADOW", "INNERSHADOW", "MASK", 
 	"TAG", "TOPGHOST", "STEM", "BOTTOMGHOST", "FLEX", "TTANCHOR", "TTSTEM", "TTALIGN", "TTINTERPOLATE", "TTDIAGONAL", "TTDELTA", "CORNER", "CAP", "TTDONTROUND", "TTROUND", "TTROUNDUP", "TTROUNDDOWN", "TRIPLE",
 	"TEXT", "ARROW", "CIRCLE", "PLUS", "MINUS",
 	"LTR", "RTL", "LTRTTB", "RTLTTB", "GSTopLeft", "GSTopCenter", "GSTopRight", "GSCenterLeft", "GSCenterCenter", "GSCenterRight", "GSBottomLeft", "GSBottomCenter", "GSBottomRight",
@@ -79,7 +82,8 @@ __all__ = [
 
 	# Callbacks:
 
-	"DRAWFOREGROUND", "DRAWBACKGROUND", "DRAWINACTIVE", "DOCUMENTOPENED", "DOCUMENTACTIVATED", "DOCUMENTWASSAVED", "DOCUMENTEXPORTED", "DOCUMENTCLOSED", "TABDIDOPEN", "TABWILLCLOSE", "UPDATEINTERFACE", "MOUSEMOVED", "MOUSEDOWN", "MOUSEUP", "CONTEXTMENUCALLBACK",
+	"DRAWFOREGROUND", "DRAWBACKGROUND", "DRAWINACTIVE", "DOCUMENTOPENED", "DOCUMENTACTIVATED", "DOCUMENTWASSAVED", "DOCUMENTEXPORTED", "DOCUMENTCLOSED", "TABDIDOPEN", "TABWILLCLOSE", "UPDATEINTERFACE",
+	"MOUSEMOVED", "MOUSEDOWN", "MOUSEUP", "CONTEXTMENUCALLBACK",
 	
 	"GSMetricsKeyAscender", "GSMetricsKeyCapHeight", "GSMetricsKeySlantHeight", "GSMetricsKeyxHeight", "GSMetricsKeyTopHeight", "GSMetricsKeyDescender", "GSMetricsKeyBaseline",
 	"GSNoCase", "GSUppercase", "GSLowercase", "GSSmallcaps", "GSOtherCase"
@@ -123,6 +127,27 @@ LINE = "line"
 CURVE = "curve"
 QCURVE = "qcurve"
 OFFCURVE = "offcurve"
+
+# Path Attributes 
+FILL = "fill"
+FILLCOLOR = "fillColor"
+FILLPATTERNANGLE = "fillPatternAngle"
+FILLPATTERNBLENDMODE = "fillPatternBlendMode"
+FILLPATTERNFILE = "fillPatternFile"
+FILLPATTERNOFFSET = "fillPatternOffset"
+FILLPATTERNSCALE = "fillPatternScale"
+STROKECOLOR = "strokeColor"
+STROKELINECAPEND = "lineCapEnd"
+STROKELINECAPSTART = "lineCapStart"
+STROKELINEJOIN = "lineJoin"
+STROKEPOSITION = "strokePos"
+STROKEWIDTH = "strokeWidth"
+GRADIENT = "gradient"
+SHADOW = "shadow"
+INNERSHADOW = "shadowIn"
+MASK = "mask"
+
+
 
 TAG = -2
 TOPGHOST = -1
@@ -361,6 +386,8 @@ class GSProxyShapesIterator:
 	def __init__(self, proxy):
 		self.proxy = proxy
 		self.n = 0
+	def next(self):
+		return self.__next__()
 	def __next__(self):
 		shape = self.proxy.objectAtIndex_(self.n)
 		self.n += 1
@@ -626,6 +653,20 @@ class DefaultsProxy(Proxy):
 		return "<Userdefaults>"
 
 GSApplication.defaults = property(lambda self: DefaultsProxy(self))
+
+def printtraceback():
+	code = []
+	for threadId, stack in sys._current_frames().items():
+		#code.append("\n# Thread: %s(%d)" % (id2name.get(threadId,""), threadId))
+		for filename, lineno, name, line in traceback.extract_stack(stack):
+			code.append('File: "%s", line %d, in %s' % (filename, lineno, name))
+			if line:
+				code.append("  %s" % (line.strip()))
+	if len(code) > 1:
+		del(code[-1])
+	if len(code) > 1:
+		del(code[-1])
+	print("\n".join(code))
 
 def __registerDefault__(self, key, value):
 	if key != None and value != None and len(key) > 2:
@@ -2040,7 +2081,7 @@ class LayersIterator:
 		if self._owner.parent:
 			if self.curInd < self._owner.parent.countOfFontMasters():
 				FontMaster = self._owner.parent.fontMasterAtIndex_(self.curInd)
-				Item = self._owner.layerForKey_(FontMaster.id)
+				Item = self._owner.layerForId_(FontMaster.id)
 			else:
 				if self.curInd >= self._owner.countOfLayers():
 					raise StopIteration
@@ -2073,7 +2114,7 @@ class GlyphLayerProxy (Proxy):
 			if self._owner.parent:
 				if Key < self._owner.parent.countOfFontMasters():
 					FontMaster = self._owner.parent.fontMasterAtIndex_(Key)
-					return self._owner.layerForKey_(FontMaster.id)
+					return self._owner.layerForId_(FontMaster.id)
 				else:
 					ExtraLayerIndex = Key - len(self._owner.parent.masters)
 					Index = 0
@@ -2087,7 +2128,7 @@ class GlyphLayerProxy (Proxy):
 			else:
 				return self._owner.pyobjc_instanceMethods.layers().objectAtIndex_(Key)
 		else:
-			layer = self._owner.layerForKey_(Key)
+			layer = self._owner.layerForId_(Key)
 			if layer is None:
 				layer = self._owner.layerForName_(Key)
 			return layer
@@ -2398,28 +2439,6 @@ class LayerPathsProxy (Proxy):
 	def setterMethod(self):
 		raise ValueError
 
-class LayerComponentsProxy (Proxy):
-	def __getitem__(self, idx):
-		raise ValueError
-	def __setitem__(self, idx, Path):
-		raise ValueError
-	def __delitem__(self, idx):
-		raise ValueError
-	def __copy__(self):
-		return [x.copy() for x in self.values()]
-	def append(self, Path):
-		raise ValueError
-	def extend(self, Paths):
-		raise ValueError
-	def remove(self, Path):
-		raise ValueError
-	def insert(self, Index, Path):
-		raise ValueError
-	def values(self):
-		return self._owner.pyobjc_instanceMethods.components()
-	def setterMethod(self):
-		raise ValueError
-
 class LayerSelectionProxy (Proxy):
 	def __getitem__(self, idx):
 		if type(idx) == slice:
@@ -2459,6 +2478,11 @@ class PathNodesProxy (Proxy):
 		self._owner.insertNode_atIndex_(Node, Index)
 	def extend(self, objects):
 		self._owner.addNodes_(list(objects))
+	def index(self, node):
+		index = self._owner.indexOfNode_(node)
+		if index > 100000:
+			raise ValueError("%s is not in list" % node)
+		return index
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.nodes()
 	def setterMethod(self):
@@ -2959,6 +2983,25 @@ GSFont.keyboardIncrement = property(lambda self: self.pyobjc_instanceMethods.key
 	.. versionadded:: 2.3.1
 '''
 
+GSFont.keyboardIncrementBig = property(lambda self: self.pyobjc_instanceMethods.keyboardIncrementBig(), lambda self, value: self.setKeyboardIncrementBig_(value))
+'''
+	.. attribute:: keyboardIncrementBig
+
+	distance of movement by arrow plus Shift key. Default:10
+	:type: float
+	
+	.. versionadded:: 3.0
+'''
+GSFont.keyboardIncrementHuge = property(lambda self: self.pyobjc_instanceMethods.keyboardIncrementHuge(), lambda self, value: self.setKeyboardIncrementHuge_(value))
+'''
+	.. attribute:: keyboardIncrement
+
+	distance of movement by arrow plus Shift key. Default:100
+	:type: float
+	
+	.. versionadded:: 3.0
+'''
+
 def Font_GetSelectedGlyphs(self):
 
 	return self.parent.windowController().glyphsController().selectedObjects()
@@ -3011,13 +3054,11 @@ GSFont.masterIndex = property(lambda self: self.parent.windowController().master
 
 def __current_Text__(self):
 	try:
-		return self.parent.windowController().activeEditViewController().graphicView().displayString()
+		return self.parent.windowController().activeEditViewController().graphicView().displayStringASCIIonly_(False)
 	except:
 		pass
 	return None
 def __set__current_Text__(self, String):
-	# if String is None:
-	# 	String = ""
 	self.parent.windowController().activeEditViewController().graphicView().setDisplayString_(String)
 
 GSFont.currentText = property(lambda self: __current_Text__(self),
@@ -4834,9 +4875,10 @@ Implementation of the glyph object.
 
 For details on how to access these glyphs, please see :class:`GSFont.glyphs`
 
-.. class:: GSGlyph([name])
+.. class:: GSGlyph([name, autoName=True])
 
 	:param name: The glyph name
+	:param autoName: if the name should be converted to nice name
 
 	Properties
 
@@ -4892,9 +4934,12 @@ For details on how to access these glyphs, please see :class:`GSFont.glyphs`
 GSGlyph.__new__ = staticmethod(GSObject__new__)
 GSGlyph.__new__.__name__ = "__new__"
 
-def Glyph__init__(self, name=None):
+def Glyph__init__(self, name=None, autoName=True):
 	if name and (isinstance(name, str) or isinstance(name, unicode)):
-		self.setName_(name)
+		if not autoName:
+			self.setName_changeName_(name, autoName)
+		else:
+			self.setName_(name)
 GSGlyph.__init__ = objc.python_method(Glyph__init__)
 
 def Glyph__repr__(self):
@@ -5796,8 +5841,7 @@ GSLayer.colorObject = property(lambda self: self.pyobjc_instanceMethods.color(),
 '''
 
 
-GSLayer.components = property(lambda self: LayerComponentsProxy(self),
-								lambda self, value: LayerComponentsProxy(self).setter(value))
+GSLayer.components = property(lambda self: self.pyobjc_instanceMethods.components())
 '''
 	.. attribute:: components
 	Collection of :class:`GSComponent` objects. This is only a helper proxy to iterate all components (without path). To add/remove items, use `GSLayer.shapes`.
@@ -5971,8 +6015,7 @@ GSLayer.shapes = property(lambda self: LayerShapesProxy(self),
 		layer.shapes = copy.copy(anotherlayer.shapes)
 '''
 
-GSLayer.paths = property(lambda self: LayerPathsProxy(self),
-						lambda self, value: LayerPathsProxy(self).setter(value))
+GSLayer.paths = property(lambda self: self.pyobjc_instanceMethods.paths())
 '''
 	.. attribute:: paths
 	List of :class:`GSPath` objects. This is only a helper proxy to iterate all paths (without components). To add/remove items, use `GSLayer.shapes`.
@@ -6286,6 +6329,15 @@ GSLayer.isMasterLayer = property(lambda self: bool(self.pyobjc_instanceMethods.i
 	:type: bool
 '''
 
+GSLayer.italicAngle = property(lambda self: float(self.pyobjc_instanceMethods.italicAngle()))
+'''
+	.. attribute:: italicAngle
+	
+	The italic angle that applies to this layer
+	
+	:type: float
+'''
+
 
 GSLayer.userData = property(lambda self: UserDataProxy(self))
 '''
@@ -6595,10 +6647,6 @@ GSLayer.reinterpolate = Layer_replaceLayerWithInterpolation
 '''
 
 
-
-
-
-
 def ControlLayer__new__(typ, *args, **kwargs):
 	if len(args) > 0:
 		return GSControlLayer.alloc().initWithChar_(args[0])
@@ -6679,10 +6727,121 @@ def _invalidateContours_(self):
 
 GSLayer._invalidateContours = _invalidateContours_
 
+def __GSLayer__add__(self, summand):
+	if isinstance(summand, NSPoint):
+		transform = NSAffineTransform.new()
+		transform.translateXBy_yBy_(summand.x, summand.y)
+		newLayer = self.copy()
+		newLayer.transform_checkForSelection_doComponents_(transform, False, False)
+		return newLayer
+	elif isinstance(summand, GSLayer):
+		if self.compareString() != summand.compareString():
+			raise ValueError("Layers are not compatible", self.compareString(), summand.compareString())
+		newLayer = self.copy()
+		newShapes = NSMutableArray.new()
+		for i in range(len(summand.shapes)):
+			shape1 = newLayer.shapes[i]
+			shape2 = summand.shapes[i]
+			newShape = shape1 + shape2
+			newShapes.addObject_(newShape)
+		newLayer.shapes = newShapes
+		
+		if len(self.anchors):
+			newAnchors = NSMutableDictionary.new()
+			for anchorName in self.anchors.keys():
+				anchor1 = newLayer.anchors[anchorName]
+				anchor2 = summand.anchors[anchorName]
+				newAnchor = anchor1 + anchor2
+				newAnchors.setObject_forKey_(newAnchor, anchorName)
+			newLayer.anchors = newAnchors
+		
+		newLayer.width += summand.width
+		return newLayer
+	else:
+		raise TypeError("unsupported operand type(s) for +: '%s' and '%s'", type(self).__name__, type(summand).__name__)
+GSLayer.__add__ = objc.python_method(__GSLayer__add__)
 
+def __GSLayer__mul__(self, factor):
+	if isinstance(factor, (int, float)):
+		transform = NSAffineTransform.new()
+		transform.scaleBy_(factor)
+		newLayer = self.copy()
+		newLayer.width = self.width * factor
+		newLayer.transform_checkForSelection_doComponents_(transform, False, True)
+		return newLayer
+	else:
+		raise TypeError("unsupported operand type(s) for *: '%s' and '%s'", type(self).__name__, type(factor).__name__)
+GSLayer.__mul__ = objc.python_method(__GSLayer__mul__)
 
+def __GSPath__add__(self, summand):
+	if isinstance(summand, NSPoint):
+		transform = NSAffineTransform.new()
+		transform.translateXBy_yBy_(summand.x, summand.y)
+		newPath = self.copy()
+		newPath.transform_(transform)
+		return newPath
+	elif isinstance(summand, GSPath):
+		if len(self.nodes) != len(summand.nodes) or self.closed != summand.closed:
+			raise ValueError("Paths are not compatible", len(self.nodes), len(summand.nodes))
+		newPath = self.copy()
+		newNodes = NSMutableArray.new()
+		for i in range(len(summand.nodes)):
+			node1 = newPath.nodes[i]
+			node2 = summand.nodes[i]
+			newNode = node1 + node2
+			newNodes.addObject_(newNode)
+		newPath.nodes = newNodes
+		return newPath
+	else:
+		raise TypeError("unsupported operand type(s) for +: '%s' and '%s'", type(self), type(summand))
+GSPath.__add__ = objc.python_method(__GSPath__add__)
 
+def __GSNode__add__(self, summand):
+	if isinstance(summand, NSPoint):
+		newNode = self.copy()
+		newNode.position = addPoints(newNode.position, summand)
+		return newNode
+	elif isinstance(summand, GSNode):
+		if self.type != summand.type:
+			raise ValueError("Nodes are not compatible", self.type, summand.type)
+		newNode = self.copy()
+		newNode.position = addPoints(newNode.position, summand.position)
+		return newNode
+	else:
+		raise TypeError("unsupported operand type(s) for +: '%s' and '%s'", type(self).__name__, type(summand).__name__)
+GSNode.__add__ = objc.python_method(__GSNode__add__)
 
+def __GSComponent__add__(self, summand):
+	if isinstance(summand, NSPoint):
+		newComponent = self.copy()
+		newComponent.position = addPoints(newComponent.position, summand)
+		return newComponent
+	elif isinstance(summand, GSComponent):
+		if self.component != summand.component:
+			raise ValueError("Components are not compatible", self, summand)
+		newComponent = self.copy()
+		newComponent.position = addPoints(newComponent.position, summand.position)
+		newComponent.scale = addPoints(newComponent.scale, summand.scale)
+		newComponent.rotation = newComponent.rotation + summand.rotation
+		return newComponent
+	else:
+		raise TypeError("unsupported operand type(s) for +: '%s' and '%s'", type(self).__name__, type(summand).__name__)
+GSComponent.__add__ = objc.python_method(__GSComponent__add__)
+
+def __GSAnchor__add__(self, summand):
+	if isinstance(summand, NSPoint):
+		newAnchor = self.copy()
+		newAnchor.position = addPoints(newAnchor.position, summand)
+		return newAnchor
+	elif isinstance(summand, GSAnchor):
+		if self.name != summand.name:
+			raise ValueError("Anchors are not compatible", self, summand)
+		newAnchor = self.copy()
+		newAnchor.position = addPoints(newAnchor.position, summand.position)
+		return newAnchor
+	else:
+		raise TypeError("unsupported operand type(s) for +: '%s' and '%s'", type(self).__name__, type(summand).__name__)
+GSAnchor.__add__ = objc.python_method(__GSAnchor__add__)
 
 
 ##################################################################################
@@ -7290,6 +7449,52 @@ GSSmartComponentAxis.bottomValue = property(lambda self: self.pyobjc_instanceMet
 #
 #
 #
+#           GSShape
+#
+#
+#
+##################################################################################
+
+
+def ________________(): pass
+def ____GSShape____(): pass
+def ________________(): pass
+
+
+'''
+
+:mod:`GSShape`
+===============================================================================
+
+Implementation of the shape object.
+
+For details on how to access them, please see :attr:`GSLayer.shapes`
+
+
+.. class:: GSShape()
+
+	**Properties**
+
+	.. autosummary::
+
+		position
+		locked
+'''
+
+
+GSShape.locked = property(lambda self: bool(self.pyobjc_instanceMethods.locked()),
+						  lambda self, value: self.setLocked_(value))
+'''
+	.. attribute:: locked
+	Locked
+	:type: bool
+'''
+
+
+##################################################################################
+#
+#
+#
 #           GSPath
 #
 #
@@ -7378,6 +7583,9 @@ GSPath.nodes = property(lambda self: PathNodesProxy(self),
 			for node in path.nodes:
 				print(node)
 '''
+def Path__len__(self):
+	return self.countOfNodes()
+GSPath.__len__ = python_method(Path__len__)
 
 GSPath.segments = property(lambda self: self.pyobjc_instanceMethods.segments(),
 							lambda self, value: self.setSegments_(value))
@@ -7524,9 +7732,8 @@ GSPath.draw = DrawPathWithPen
 
 def __GSPath__drawPoints__(self, pen):
 	'''draw the object with a fontTools pen'''
-
 	pen.beginPath()
-	for i in range(len(self)):
+	for i in range(self.countOfNodes()):
 		Node = self.nodeAtIndex_(i)
 		node_type = Node.type
 		if Node.type == GSOFFCURVE:
@@ -8698,7 +8905,7 @@ GSEditViewController.parent = property(lambda self: self.representedObject())
 	:type: :class:`GSFont`
 '''
 
-GSEditViewController.text = property(lambda self: self.graphicView().displayStringSave_(False),
+GSEditViewController.text = property(lambda self: self.graphicView().displayStringASCIIonly_(False),
 									lambda self, value: self.graphicView().setDisplayString_(value))
 '''
 	.. attribute:: text
@@ -9100,7 +9307,8 @@ GSEditViewController.previewInstances = property(lambda self: Get_ShowInPreview(
 	.. versionadded:: 2.3
 '''
 
-GSEditViewController.previewHeight = property(lambda self: self.pyobjc_instanceMethods.previewHeight(), lambda self, value: self.setPreviewHeight_(value))
+GSEditViewController.previewHeight = property(lambda self: self.pyobjc_instanceMethods.previewHeight(),
+											  lambda self, value: self.setPreviewHeight_(value))
 
 '''
 	.. attribute:: previewHeight
@@ -9177,6 +9385,8 @@ GSEditViewController.saveToPDF = GSEditViewController_saveToPDF
 
 '''
 
+GSMacroViewController.title = property(lambda self: self.pyobjc_instanceMethods.title(), 
+									   lambda self, value: self.setTitleSave_(value))
 
 ##################################################################################
 #

@@ -14,24 +14,13 @@ from AppKit import NSApplication, NSColor, NSNib, NSMenu, NSMenuItem, NSView, NS
 import sys
 import traceback
 
-from GlyphsApp import *
+from GlyphsApp import Glyphs, LogToConsole, LogError, \
+	ONSTATE, OFFSTATE, MIXEDSTATE, Message, distance
 
 MainBundle = NSBundle.mainBundle()
 path = MainBundle.bundlePath() + "/Contents/Scripts"
 if path not in sys.path:
 	sys.path.append(path)
-
-
-############################################################################################
-
-
-# Forward compatibility for plugins that wish to use their self-created contextual NSMenuItem entries instead of Glyphs' wrapper
-# Set to True once this functionality shall be published. (It's working as of this writing)
-USESELFCREATEDNSMENUITEMS = True
-
-# Forward compatibility to notify plugins if all contextual menu items will be forced into one sub menu per plugin.
-# Set to True once the contextual menu items of plugins will be grouped and forced into sub menus.
-PLUGINMENUSINFORCEDSUBMENU = False
 
 GSFilterPlugin = objc.lookUpClass("GSFilterPlugin")
 GSToolSelect = objc.lookUpClass("GSToolSelect")
@@ -43,8 +32,7 @@ __all__ = ["Glyphs", "FileFormatPlugin", "FilterWithDialog", "FilterWithoutDialo
 	"NSSize", "NSUnarchiver", "NSApplication", "NSColor", "NSNib", "NSMenu", "NSMenuItem", "NSView", "NSImage", "NSDocumentController", "NSBezierPath",
 	"NSFont", "NSFontAttributeName", "NSForegroundColorAttributeName", "NSControlKeyMask", "NSCommandKeyMask", "NSShiftKeyMask", "NSAlternateKeyMask", "NSEvent",
 	"NSAffineTransform", "GSFilterPlugin", "setUpMenuHelper",
-	"objc"
-]
+	"objc"]
 
 ############################################################################################
 
@@ -58,27 +46,23 @@ def LogError_AsClassExtension(self, message):
 
 def LoadNib(self, nibname, path=None):
 	if path and len(path) > 10:
-		bundlePath = path[:path.find("/Contents/Resources/")]
-		bundle = NSBundle.bundleWithPath_(bundlePath)
-		nib = NSNib.alloc().initWithNibNamed_bundle_(nibname, bundle)
-		if not nib:
-			self.logError("Error loading nib for Class: %s" % self.__class__.__name__)
-
-		result = nib.instantiateWithOwner_topLevelObjects_(self, None)
 		try:
-			error = bool(result[0])
-		except:
-			error = bool(result)  # in 10.9, the result is a bool
-		if not error:
-			self.logError("Error instantiating nib for Class: %s" % self.__class__.__name__)
-		else:
-			try:
+			bundlePath = path[:path.find("/Contents/Resources/")]
+			bundle = NSBundle.bundleWithPath_(bundlePath)
+			nib = NSNib.alloc().initWithNibNamed_bundle_(nibname, bundle)
+			if not nib:
+				LogError("Error loading nib for Class: %s" % self.__class__.__name__)
+
+			result = nib.instantiateWithOwner_topLevelObjects_(self, None)
+			if not bool(result[0]) :
+				LogError("Error instantiating nib for Class: %s" % self.__class__.__name__)
+			else:
 				self.topLevelObjects = result[1]
-			except:
-				pass
+		except:
+			LogError(traceback.format_exc())
 	else:
 		if not NSBundle.loadNibNamed_owner_(nibname, self):
-			self.logError("Error loading %s.nib." % nibname)
+			LogError("Error loading %s.nib." % nibname)
 
 def pathForResource(resourceName, extension, path=None):
 	if path and len(path) > 10:
@@ -185,7 +169,7 @@ class FileFormatPlugin (NSObject):
 				self.start()
 
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 		return self
 
@@ -194,10 +178,7 @@ class FileFormatPlugin (NSObject):
 		Distinguishes the API version the plugin was built for.
 		Return 1.
 		"""
-		try:
-			return 1
-		except:
-			self.logError(traceback.format_exc())
+		return 1
 
 	def title(self):
 		"""
@@ -207,7 +188,7 @@ class FileFormatPlugin (NSObject):
 		try:
 			return self.name or self.__class__.__name__ or 'New FileFormat Plugin'
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 	def toolbarTitle(self):
 		"""
@@ -216,7 +197,7 @@ class FileFormatPlugin (NSObject):
 		try:
 			return self.name
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 	def toolbarIconName(self):
 		"""
@@ -226,7 +207,7 @@ class FileFormatPlugin (NSObject):
 		try:
 			return "{}{}".format(self.className(), self.icon)
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 	def groupID(self):
 		"""
@@ -236,29 +217,17 @@ class FileFormatPlugin (NSObject):
 		try:
 			return self.toolbarPosition or 100
 		except:
-			self.logError(traceback.format_exc())
-
-	def progressWindow(self):
-		try:
-			return None
-		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 	def exportSettingsView(self):
 		"""
 		Returns the view to be displayed in the export dialog.
 		Don't touch this.
 		"""
-		try:
-			return self.dialog
-		except:
-			self.logError(traceback.format_exc())
+		return self.dialog
 
 	def font(self):
-		try:
-			return self._font
-		except:
-			self.logError(traceback.format_exc())
+		return self._font
 
 	def setFont_(self, GSFontObj):
 		"""
@@ -268,9 +237,9 @@ class FileFormatPlugin (NSObject):
 		try:
 			self._font = GSFontObj
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
-	def writeFont_error_(self, font, error):
+	def exportFont_(self, font):
 		"""
 		EXPORT dialog
 
@@ -299,6 +268,54 @@ class FileFormatPlugin (NSObject):
 				notification.setInformativeText_(returnMessage)
 				NSUserNotificationCenter.defaultUserNotificationCenter().scheduleNotification_(notification)
 
+				return
+
+			# Export failed, give reason
+			else:
+				error = NSError.errorWithDomain_code_userInfo_(self.title(), -57, {
+					NSLocalizedDescriptionKey: NSLocalizedString('Export failed', None),
+					NSLocalizedRecoverySuggestionErrorKey: returnMessage
+				})
+				font.parent.presentError_(error)
+
+		# Python exception, return error message
+		except Exception as e:
+			LogError(traceback.format_exc())
+			error = NSError.errorWithDomain_code_userInfo_(self.title(), -57, {
+				NSLocalizedDescriptionKey: NSLocalizedString('Python exception', None),
+				NSLocalizedRecoverySuggestionErrorKey: str(e) + '\nCheck Macro window output.'
+			})
+			font.parent.presentError_(error)
+
+	def exportFont_toURL_error_(self, font, destinationURL, error):
+		"""
+		EXPORT dialog
+
+		This is called from "Export All font" or from other plugins
+
+		Parameters:
+		- font: The font object to export
+		- destinationURL: The URL where to write to. That can be the final file or a folder
+		- error: PyObjc-Requirement. It is required here in order to return the error object upon export failure. Ignore its existence here.
+
+		return True, None) if the export was successful
+		return (False, NSError) if the export failed
+		"""
+		try:
+
+			returnStatus, returnMessage = [False, 'export() is not implemented in the plugin.']
+			if hasattr(self, 'export'):
+				returnStatus, returnMessage = self.export(font, destinationURL.path())
+
+			# Export successful
+			# Change the condition (True) to your own assessment on whether or not the export succeeded
+			if returnStatus:
+				# Use Mac Notification Center
+				notification = NSUserNotification.alloc().init()
+				notification.setTitle_(self.title())
+				notification.setInformativeText_(returnMessage)
+				NSUserNotificationCenter.defaultUserNotificationCenter().scheduleNotification_(notification)
+
 				return (True, None)
 
 			# Export failed, give reason
@@ -311,7 +328,7 @@ class FileFormatPlugin (NSObject):
 
 		# Python exception, return error message
 		except Exception as e:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 			error = NSError.errorWithDomain_code_userInfo_(self.title(), -57, {
 				NSLocalizedDescriptionKey: NSLocalizedString('Python exception', None),
 				NSLocalizedRecoverySuggestionErrorKey: str(e) + '\nCheck Macro window output.'
@@ -351,7 +368,7 @@ class FileFormatPlugin (NSObject):
 				error = NSError.errorWithDomain_code_userInfo_(self.title(), -57, {NSLocalizedDescriptionKey: "The plugin does not support exporting the file"})
 				return None, error
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 
 ########################################################################
@@ -433,7 +450,7 @@ class FilterWithDialog (GSFilterPlugin):
 			return self
 
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 	def setup(self):
 		try:
@@ -446,7 +463,7 @@ class FilterWithDialog (GSFilterPlugin):
 
 			return None
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 	def interfaceVersion(self):
 		"""
@@ -456,7 +473,7 @@ class FilterWithDialog (GSFilterPlugin):
 		try:
 			return 1
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 	def title(self):
 		"""
@@ -466,7 +483,7 @@ class FilterWithDialog (GSFilterPlugin):
 		try:
 			return self.menuName
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 	def actionName(self):
 		"""
@@ -476,7 +493,7 @@ class FilterWithDialog (GSFilterPlugin):
 		try:
 			return self.actionButtonLabel
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 	def keyEquivalent(self):
 		"""
@@ -487,7 +504,7 @@ class FilterWithDialog (GSFilterPlugin):
 		try:
 			return self.keyboardShortcut
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 	def processFont_withArguments_(self, Font, Arguments):
 		"""
@@ -544,7 +561,7 @@ class FilterWithDialog (GSFilterPlugin):
 			if len(Arguments) > 1:
 				Message(title='Error in %s' % self.menuName, message="There was an error in %s's filter() method when called through a Custom Parameter upon font export. Check your Macro window output." % self.menuName)
 
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 
 	def processLayer_withArguments_(self, Layer, Arguments):
@@ -582,7 +599,7 @@ class FilterWithDialog (GSFilterPlugin):
 			if len(Arguments) > 1:
 				Message(title='Error in %s' % self.menuName, message="There was an error in %s's filter() method when called through a Custom Parameter upon font export. Check your Macro window output." % self.menuName)
 
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 	def process_(self, sender):
 		"""
@@ -596,30 +613,19 @@ class FilterWithDialog (GSFilterPlugin):
 			for k in range(len(ShadowLayers)):
 				ShadowLayer = ShadowLayers[k]
 				Layer = Layers[k]
-				Layer.setPaths_(NSMutableArray.alloc().initWithArray_copyItems_(ShadowLayer.pyobjc_instanceMethods.paths(), True))
+				Layer.setShapes_(NSMutableArray.alloc().initWithArray_copyItems_(ShadowLayer.pyobjc_instanceMethods.shapes(), True))
 				Layer.setSelection_(None)
-				try:
-					# Glyphs 2.1 and earlier:
-					if len(ShadowLayer.selection()) > 0 and checkSelection:
-						for i in range(len(ShadowLayer.paths)):
-							currShadowPath = ShadowLayer.paths[i]
-							currLayerPath = Layer.paths[i]
-							for j in range(len(currShadowPath.nodes)):
-								currShadowNode = currShadowPath.nodes[j]
-								if ShadowLayer.selection().containsObject_(currShadowNode):
-									Layer.addSelection_(currLayerPath.nodes[j])
-				except:
-					# Glyphs 2.2 and later:
-					if len(ShadowLayer.selection) > 0 and checkSelection:
-						for i in range(len(ShadowLayer.paths)):
-							currShadowPath = ShadowLayer.paths[i]
-							currLayerPath = Layer.paths[i]
+				if len(ShadowLayer.selection) > 0 and checkSelection:
+					for idx in range(len(ShadowLayer.shapes)):
+						currShadowPath = ShadowLayer.paths[idx]
+						if isinstance(currShadowPath, GSPath):
+							currLayerPath = Layer.shapes[idx]
 							for j in range(len(currShadowPath.nodes)):
 								currShadowNode = currShadowPath.nodes[j]
 								if currShadowNode in ShadowLayer.selection:
 									Layer.addSelection_(currLayerPath.nodes[j])
 
-				self.filter(Layer, Glyphs.font.currentTab is not None, {})  # add your class variables here
+				self.filter(Layer, True, {})  # add your class variables here
 				Layer.clearSelection()
 
 			# Safe the values in the FontMaster. But could be saved in UserDefaults, too.
@@ -629,7 +635,7 @@ class FilterWithDialog (GSFilterPlugin):
 			# call the superclass to trigger the immediate redraw:
 			objc.super(FilterWithDialog, self).process_(sender)
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 	def view(self):
 		return self.dialog
@@ -639,11 +645,9 @@ class FilterWithDialog (GSFilterPlugin):
 		Glyphs.redraw()
 
 	def customParameterString(self):
-		try:
-			if hasattr(self, 'generateCustomParameter'):
-				return self.generateCustomParameter()
-		except:
-			self.logError(traceback.format_exc())
+		if hasattr(self, 'generateCustomParameter'):
+			return self.generateCustomParameter()
+		return objc.nil
 
 FilterWithDialog.logToConsole = LogToConsole_AsClassExtension
 FilterWithDialog.logError = LogError_AsClassExtension
@@ -681,7 +685,7 @@ class FilterWithoutDialog (NSObject):
 
 			return self
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 	def interfaceVersion(self):
 		"""
@@ -691,7 +695,7 @@ class FilterWithoutDialog (NSObject):
 		try:
 			return 1
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 	def title(self):
 		"""
@@ -700,7 +704,7 @@ class FilterWithoutDialog (NSObject):
 		try:
 			return self.menuName
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 	def setController_(self, Controller):
 		"""
@@ -710,7 +714,7 @@ class FilterWithoutDialog (NSObject):
 		try:
 			self._controller = Controller
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 	def controller(self):
 		"""
@@ -719,7 +723,7 @@ class FilterWithoutDialog (NSObject):
 		try:
 			return self._controller
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 	def setup(self):
 		"""
@@ -728,7 +732,7 @@ class FilterWithoutDialog (NSObject):
 		try:
 			return None
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 	def keyEquivalent(self):
 		"""
@@ -739,8 +743,9 @@ class FilterWithoutDialog (NSObject):
 		try:
 			return self.keyboardShortcut
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
+	@objc.signature(b'c32@0:8@16o^@24')
 	def runFilterWithLayers_error_(self, Layers, Error):
 		"""
 		Invoked when user triggers the filter through the Filter menu
@@ -752,8 +757,9 @@ class FilterWithoutDialog (NSObject):
 					self.filter(Layer, True, {})
 			return (True, None)
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
+	@objc.signature(b'c40@0:8@16@24o^@32')
 	def runFilterWithLayer_options_error_(self, Layer, Options, Error):
 		"""
 		Required for compatibility with Glyphs version 702 or later.
@@ -762,21 +768,23 @@ class FilterWithoutDialog (NSObject):
 		try:
 			return self.runFilterWithLayer_error_(self, Layer, Error)
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
+	@objc.signature(b'c32@0:8@16o^@24')
 	def runFilterWithLayer_error_(self, Layer, Error):
 		"""
 		Invoked when user triggers the filter through the Filter menu
 		and only one layer is selected.
 		"""
 		try:
+			
 			if hasattr(self, 'filter'):
 				self.filter(Layer, True, {})
 			return (True, None)
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 			return (False, None)
-
+	@objc.signature(b'@@:@@')
 	def processFont_withArguments_(self, Font, Arguments):
 		"""
 		Invoked when called as Custom Parameter in an instance at export.
@@ -829,7 +837,7 @@ class FilterWithoutDialog (NSObject):
 			if len(Arguments) > 1:
 				Message(title='Error in %s' % self.menuName, message="There was an error in %s's filter() method when called through a Custom Parameter upon font export. Check your Macro window output." % self.menuName)
 
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 FilterWithoutDialog.logToConsole = LogToConsole_AsClassExtension
 FilterWithoutDialog.logError = LogError_AsClassExtension
@@ -857,7 +865,7 @@ class GeneralPlugin (NSObject):
 		try:
 			return 1
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 	def loadPlugin(self):
 		try:
@@ -870,7 +878,7 @@ class GeneralPlugin (NSObject):
 				self.start()
 			return None
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 	def title(self):
 		"""
@@ -880,7 +888,7 @@ class GeneralPlugin (NSObject):
 		try:
 			return self.name
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 GeneralPlugin.logToConsole = LogToConsole_AsClassExtension
 GeneralPlugin.logError = LogError_AsClassExtension
@@ -945,17 +953,15 @@ class PalettePlugin (NSObject):
 				pass
 			return self
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
+	@objc.signature(b'L@:')
 	def interfaceVersion(self):
 		"""
 		Distinguishes the API version the plugin was built for.
 		Return 1.
 		"""
-		try:
-			return 1
-		except:
-			self.logError(traceback.format_exc())
+		return 1
 
 	def title(self):
 		"""
@@ -964,8 +970,9 @@ class PalettePlugin (NSObject):
 		try:
 			return self.name
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
+	@objc.signature(b'L@:')
 	def sortID(self):
 		return self.sortId
 
@@ -973,13 +980,13 @@ class PalettePlugin (NSObject):
 		try:
 			return self._windowController
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 	def setWindowController_(self, windowController):
 		try:
 			self._windowController = windowController
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 	def theView(self):
 		"""
@@ -989,8 +996,9 @@ class PalettePlugin (NSObject):
 		try:
 			return self.dialog
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
+	@objc.signature(b'l@:')
 	def minHeight(self):
 		"""
 		The minimum height of the view in pixels.
@@ -998,8 +1006,9 @@ class PalettePlugin (NSObject):
 		try:
 			return self.min
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
+	@objc.signature(b'l@:')
 	def maxHeight(self):
 		"""
 		The maximum height of the view in pixels.
@@ -1008,8 +1017,9 @@ class PalettePlugin (NSObject):
 		try:
 			return self.max
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
+	@objc.signature(b'L@:')
 	def currentHeight(self):
 		"""
 		The current height of the Palette section.
@@ -1020,8 +1030,9 @@ class PalettePlugin (NSObject):
 			# return 150
 			return NSUserDefaults.standardUserDefaults().integerForKey_(self.name + ".ViewHeight")
 		except:
-			self.logError(traceback.format_exc())
-
+			LogError(traceback.format_exc())
+	
+	@objc.signature(b'@::L')
 	def setCurrentHeight_(self, newHeight):
 		"""
 		Sets a new height for the Palette section.
@@ -1030,7 +1041,7 @@ class PalettePlugin (NSObject):
 			if newHeight >= self.minHeight() and newHeight <= self.maxHeight():
 				NSUserDefaults.standardUserDefaults().setInteger_forKey_(newHeight, self.name + ".ViewHeight")
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 	def currentWindowController(self):
 		"""
@@ -1053,7 +1064,7 @@ class PalettePlugin (NSObject):
 				pass
 			return windowController
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 PalettePlugin.logToConsole = LogToConsole_AsClassExtension
 PalettePlugin.logError = LogError_AsClassExtension
@@ -1096,8 +1107,9 @@ class ReporterPlugin (NSObject):
 			self.hasWarned = False
 			return self
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
+	@objc.signature(b'@:L')
 	def interfaceVersion(self):
 		"""
 		Distinguishes the API version the plugin was built for.
@@ -1106,7 +1118,7 @@ class ReporterPlugin (NSObject):
 		try:
 			return 1
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 	def title(self):
 		"""
@@ -1116,7 +1128,7 @@ class ReporterPlugin (NSObject):
 		try:
 			return self.menuName or self.__class__.__name__ or 'New ReporterPlugin'
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 	def keyEquivalent(self):
 		"""
@@ -1127,8 +1139,9 @@ class ReporterPlugin (NSObject):
 		try:
 			return self.keyboardShortcut or None
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
+	@objc.signature(b'i@:')
 	def modifierMask(self):
 		"""
 		Use any combination of these to determine the modifier keys for your default shortcut:
@@ -1140,7 +1153,7 @@ class ReporterPlugin (NSObject):
 		try:
 			return self.keyboardShortcutModifier or 0
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 	def drawForegroundForLayer_options_(self, Layer, options):
 		"""
@@ -1169,7 +1182,7 @@ class ReporterPlugin (NSObject):
 				self.black = options["Black"]
 				self.foreground(Layer)
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 	def drawForegroundWithOptions_(self, options):
 		"""
@@ -1187,10 +1200,10 @@ class ReporterPlugin (NSObject):
 			if hasattr(self, 'foregroundInViewCoords'):
 				self._scale = options["Scale"]
 				self.black = options["Black"]
-				self.foregroundInViewCoords(self.activeLayer())
+				self.foregroundInViewCoords()
 
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 	def drawBackgroundForLayer_options_(self, Layer, options):
 		"""
@@ -1202,7 +1215,7 @@ class ReporterPlugin (NSObject):
 				self.black = options["Black"]
 				self.background(Layer)
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 	def drawBackgroundWithOptions_(self, options):
 		"""
@@ -1212,9 +1225,9 @@ class ReporterPlugin (NSObject):
 			if hasattr(self, 'backgroundInViewCoords'):
 				self._scale = options["Scale"]
 				self.black = options["Black"]
-				self.backgroundInViewCoords(Glyphs.font.selectedLayers[0])
+				self.backgroundInViewCoords()
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 	def drawBackgroundForInactiveLayer_options_(self, Layer, options):
 		"""
@@ -1236,7 +1249,7 @@ class ReporterPlugin (NSObject):
 					self.inactiveLayerBackground(Layer)
 				elif hasattr(self, 'inactiveLayers'):
 					if not self.hasWarned:
-						print ("%s: the method 'inactiveLayers' has been deprecated. Please use 'inactiveLayerBackground'" % self.className())
+						print("%s: the method 'inactiveLayers' has been deprecated. Please use 'inactiveLayerBackground'" % self.className())
 						self.hasWarned = True
 					self.inactiveLayers(Layer)
 			else:
@@ -1246,7 +1259,7 @@ class ReporterPlugin (NSObject):
 					self.inactiveLayers(Layer)
 
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 	def drawForegroundForInactiveLayer_options_(self, Layer, options):
 		"""
@@ -1265,8 +1278,9 @@ class ReporterPlugin (NSObject):
 				self.black = options["Black"]
 				self.inactiveLayerForeground(Layer)
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
+	@objc.signature(b'Z@:@')
 	def needsExtraMainOutlineDrawingForInactiveLayer_(self, Layer):
 		"""
 		Decides whether inactive glyphs in Edit View and glyphs in Preview should be drawn
@@ -1279,7 +1293,7 @@ class ReporterPlugin (NSObject):
 		try:
 			return self.needsExtraMainOutlineDrawingForInactiveLayers
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 	def addMenuItemsForEvent_toMenu_(self, event, contextMenu):
 		'''
@@ -1296,7 +1310,7 @@ class ReporterPlugin (NSObject):
 					setUpMenuHelper(contextMenu, contextMenus, self)
 
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 	@objc.python_method
 	def drawTextAtPoint(self, text, textPosition, fontSize=10.0, fontColor=NSColor.blackColor(), align='bottomleft'):
@@ -1321,12 +1335,13 @@ class ReporterPlugin (NSObject):
 			fontAttributes = {
 				NSFontAttributeName: NSFont.labelFontOfSize_(fontSize / currentZoom),
 				NSForegroundColorAttributeName: fontColor}
-			displayText = NSAttributedString.alloc().initWithString_attributes_(unicode(text), fontAttributes)
+			displayText = NSAttributedString.alloc().initWithString_attributes_(text, fontAttributes)
 			textAlignment = alignment[align]  # top left: 6, top center: 7, top right: 8, center left: 3, center center: 4, center right: 5, bottom left: 0, bottom center: 1, bottom right: 2
 			displayText.drawAtPoint_alignment_(textPosition, textAlignment)
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
+	@objc.python_method
 	def getHandleSize(self):
 		"""
 		Returns the current handle size as set in user preferences.
@@ -1342,9 +1357,10 @@ class ReporterPlugin (NSObject):
 			else:
 				return 7.0  # Regular
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 			return 7.0
 
+	@objc.python_method
 	def getScale(self):
 		"""
 		self.getScale() returns the current scale factor of the Edit View UI.
@@ -1356,14 +1372,15 @@ class ReporterPlugin (NSObject):
 		try:
 			return self.controller.graphicView().activeLayer()
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 	def activePosition(self):
 		try:
 			return self.controller.graphicView().activePosition()
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
+	@objc.signature(b'v@:@')
 	def setController_(self, Controller):
 		"""
 		Use self.controller as object for the current view controller.
@@ -1371,7 +1388,7 @@ class ReporterPlugin (NSObject):
 		try:
 			self.controller = Controller
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 ReporterPlugin.logToConsole = LogToConsole_AsClassExtension
 ReporterPlugin.logError = LogError_AsClassExtension
@@ -1421,13 +1438,13 @@ class SelectTool (GSToolSelect):
 					self.tool_bar_image = Bundle.imageForResource_(self._icon)
 					self.tool_bar_image.setTemplate_(True)  # Makes the icon blend in with the toolbar.
 			except:
-				self.logError(traceback.format_exc())
+				LogError(traceback.format_exc())
 			if hasattr(self, 'start'):
 				self.start()
 
 			return self
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 		return objc.nil
 
 	def view(self):
@@ -1444,7 +1461,7 @@ class SelectTool (GSToolSelect):
 				ViewControllers.append(self)
 
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 		return ViewControllers
 
@@ -1456,7 +1473,7 @@ class SelectTool (GSToolSelect):
 		try:
 			return 1
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 	def title(self):
 		"""
@@ -1465,7 +1482,7 @@ class SelectTool (GSToolSelect):
 		try:
 			return self.name
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 	def toolBarIcon(self):
 		"""
@@ -1475,7 +1492,7 @@ class SelectTool (GSToolSelect):
 		try:
 			return self.tool_bar_image
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 		return objc.nil
 
 	def groupID(self):
@@ -1486,7 +1503,7 @@ class SelectTool (GSToolSelect):
 		try:
 			return self.toolbarPosition
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 	@objc.python_method
 	def trigger(self):
@@ -1497,7 +1514,7 @@ class SelectTool (GSToolSelect):
 		try:
 			return self.keyboardShortcut
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 	def willSelectTempTool_(self, TempTool):
 		"""
@@ -1507,7 +1524,7 @@ class SelectTool (GSToolSelect):
 		try:
 			return TempTool.__class__.__name__ != "GlyphsToolSelect"
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 	def willActivate(self):
 		"""
@@ -1519,7 +1536,7 @@ class SelectTool (GSToolSelect):
 			if hasattr(self, 'activate'):
 				self.activate()
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 	def willDeactivate(self):
 		"""
@@ -1530,7 +1547,7 @@ class SelectTool (GSToolSelect):
 			if hasattr(self, 'deactivate'):
 				self.deactivate()
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 	def elementAtPoint_atLayer_(self, currentPoint, activeLayer):
 		"""
@@ -1558,7 +1575,7 @@ class SelectTool (GSToolSelect):
 					return a
 
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 	# The following four methods are optional, and only necessary
 	# if you intend to extend the context menu with extra items.
@@ -1584,7 +1601,7 @@ class SelectTool (GSToolSelect):
 
 			return theMenu
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 	def addMenuItemsForEvent_toMenu_(self, theEvent, theMenu):
 		"""
@@ -1604,7 +1621,7 @@ class SelectTool (GSToolSelect):
 					setUpMenuHelper(theMenu, contextMenus, self)
 
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 	def drawForegroundForLayer_(self, Layer):
 		"""
@@ -1631,7 +1648,7 @@ class SelectTool (GSToolSelect):
 			if hasattr(self, 'foreground'):
 				self.foreground(Layer)
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 	def drawBackgroundForLayer_(self, Layer):
 		"""
@@ -1641,7 +1658,7 @@ class SelectTool (GSToolSelect):
 			if hasattr(self, 'background'):
 				self.background(Layer)
 		except:
-			self.logError(traceback.format_exc())
+			LogError(traceback.format_exc())
 
 
 SelectTool.logToConsole = LogToConsole_AsClassExtension

@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+from __future__ import print_function
+
 from AppKit import NSBezierPath, NSColor, NSFont, NSImage, NSGradient, NSColorSpace, NSMiterLineJoinStyle, NSRoundLineJoinStyle, NSBevelLineJoinStyle, NSButtLineCapStyle, NSRoundLineCapStyle, NSSquareLineCapStyle, NSFontAttributeName, NSForegroundColorAttributeName, NSGraphicsContext, NSCompositeSourceOver, NSGradientDrawsBeforeStartingLocation, NSGradientDrawsAfterEndingLocation
 from Foundation import NSMakeRect, NSAffineTransform, NSClassFromString, NSMakePoint, NSZeroRect, NSString
 
