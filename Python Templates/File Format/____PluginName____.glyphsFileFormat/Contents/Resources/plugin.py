@@ -1,4 +1,5 @@
 # encoding: utf-8
+from __future__ import division, print_function, unicode_literals
 
 ###########################################################################################################
 #
@@ -38,7 +39,8 @@ class ____PluginClassName____(FileFormatPlugin):
 	feedbackTextField = objc.IBOutlet()
 	unicodeCheckBox = objc.IBOutlet()
 	glyphWidthCheckbox = objc.IBOutlet()
-	
+
+	@objc.python_method
 	def settings(self):
 		self.name = Glyphs.localize({'en': u'My CSV Export', 'de': u'Mein CSV-Export'})
 		self.icon = 'ExportIcon'
@@ -46,7 +48,8 @@ class ____PluginClassName____(FileFormatPlugin):
 		
 		# Load .nib dialog (with .extension)
 		self.loadNib('IBdialog', __file__)
-	
+
+	@objc.python_method
 	def start(self):
 		
 		# Init user preferences if not existent and set default value
@@ -73,6 +76,7 @@ class ____PluginClassName____(FileFormatPlugin):
 		self.updateFeedBackTextField()
 	
 	# Example function. You may delete it
+	@objc.python_method
 	def updateFeedBackTextField(self):
 		string = []
 		if Glyphs.defaults[unicodePref]:
@@ -80,9 +84,9 @@ class ____PluginClassName____(FileFormatPlugin):
 		if Glyphs.defaults[glyphWidthPref]:
 			string.append('Glyph Width')
 		self.feedbackTextField.setStringValue_(', '.join(string) if len(string) else 'Nothing')
-	
+
+	@objc.python_method
 	def export(self, font):
-		
 		# Ask for export destination and write the file:
 		title = "Choose export destination"
 		proposedFilename = font.familyName

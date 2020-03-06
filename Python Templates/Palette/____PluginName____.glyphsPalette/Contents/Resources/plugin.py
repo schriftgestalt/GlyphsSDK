@@ -1,4 +1,5 @@
 # encoding: utf-8
+from __future__ import division, print_function, unicode_literals
 
 ###########################################################################################################
 #
@@ -19,27 +20,29 @@ class ____PluginClassName____ (PalettePlugin):
 	
 	dialog = objc.IBOutlet()
 	textField = objc.IBOutlet()
-	
+
+	@objc.python_method
 	def settings(self):
 		self.name = Glyphs.localize({'en': u'My Palette', 'de': u'Meine Palette'})
 		
 		# Load .nib dialog (without .extension)
 		self.loadNib('IBdialog', __file__)
-	
+
+	@objc.python_method
 	def start(self):
 		# Adding a callback for the 'GSUpdateInterface' event
 		Glyphs.addCallback(self.update, UPDATEINTERFACE)
-	
+
+	@objc.python_method	
 	def __del__(self):
 		Glyphs.removeCallback(self.update)
 
-	def update( self, sender ):
-
+	@objc.python_method
+	def update(self, sender):
+		
 		text = []
-
 		# Extract font from sender
 		font = sender.object()
-
 		# We’re in the Edit View
 		if font.currentTab:
 			# Check whether glyph is being edited
@@ -58,19 +61,8 @@ class ____PluginClassName____ (PalettePlugin):
 
 		# Send text to dialog to display
 		self.textField.setStringValue_('\n'.join(text))
-	
+
+	@objc.python_method
 	def __file__(self):
 		"""Please leave this method unchanged"""
 		return __file__
-	
-	# Temporary Fix
-	# Sort ID for compatibility with v919:
-	_sortID = 0
-	def setSortID_(self, id):
-		try:
-			self._sortID = id
-		except Exception as e:
-			self.logToConsole( "setSortID_: %s" % str(e) )
-	def sortID(self):
-		return self._sortID
-	

@@ -20,7 +20,7 @@ class ____PluginClassName____(ReporterPlugin):
 	def settings(self):
 		self.menuName = Glyphs.localize({'en': u'My Plugin', 'de': u'Mein Plugin'})
 		self.generalContextMenus = [
-			{'name': Glyphs.localize({'en': u'Do something', 'de': u'Tu etwas'}), 'action': self.doSomething},
+			{'name': Glyphs.localize({'en': u'Do something', 'de': u'Tu etwas'}), 'action': self.doSomething_},
 		]
 		
 	def foreground(self, layer):
@@ -44,7 +44,7 @@ class ____PluginClassName____(ReporterPlugin):
 			for component in layer.components:
 				component.bezierPath.fill()
 	
-	def doSomething(self):
+	def doSomething_(self, sender):
 		print 'Just did something'
 		
 	def conditionalContextMenus(self):

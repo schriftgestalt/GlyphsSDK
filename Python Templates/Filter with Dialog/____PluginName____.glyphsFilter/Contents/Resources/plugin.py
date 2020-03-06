@@ -1,4 +1,5 @@
 # encoding: utf-8
+from __future__ import division, print_function, unicode_literals
 
 ###########################################################################################################
 #
@@ -19,25 +20,27 @@ from GlyphsApp import *
 from GlyphsApp.plugins import *
 
 class ____PluginClassName____(FilterWithDialog):
-	
+
 	# Definitions of IBOutlets
-	
+
 	# The NSView object from the User Interface. Keep this here!
 	dialog = objc.IBOutlet()
-	
+
 	# Text field in dialog
 	myTextField = objc.IBOutlet()
-	
+
+	@objc.python_method
 	def settings(self):
-		self.menuName = Glyphs.localize({'en': u'My Filter', 'de': u'Mein Filter'})
+		self.menuName = Glyphs.localize({'en': "____My Filter____", 'de': "____Mein Filter____"})
 		
 		# Word on Run Button (default: Apply)
 		self.actionButtonLabel = Glyphs.localize({'en': u'Apply', 'de': u'Anwenden'})
 		
 		# Load dialog from .nib (without .extension)
 		self.loadNib('IBdialog', __file__)
-	
+
 	# On dialog show
+	@objc.python_method
 	def start(self):
 		
 		# Set default value
@@ -48,7 +51,7 @@ class ____PluginClassName____(FilterWithDialog):
 		
 		# Set focus to text field
 		self.myTextField.becomeFirstResponder()
-		
+
 	# Action triggered by UI
 	@objc.IBAction
 	def setValue_( self, sender ):
@@ -58,12 +61,13 @@ class ____PluginClassName____(FilterWithDialog):
 		
 		# Trigger redraw
 		self.update()
-	
+
 	# Actual filter
+	@objc.python_method
 	def filter(self, layer, inEditView, customParameters):
 		
 		# Called on font export, get value from customParameters
-		if customParameters.has_key('shift'):
+		if "shift" in customParameters:
 			value = customParameters['shift']
 		
 		# Called through UI, use stored value
@@ -74,10 +78,12 @@ class ____PluginClassName____(FilterWithDialog):
 		for path in layer.paths:
 			for node in path.nodes:
 				node.position = NSPoint(node.position.x + value, node.position.y + value)
-	
+
+	@objc.python_method
 	def generateCustomParameter( self ):
 		return "%s; shift:%s;" % (self.__class__.__name__, Glyphs.defaults['com.myname.myfilter.value'] )
-	
+
+	@objc.python_method
 	def __file__(self):
 		"""Please leave this method unchanged"""
 		return __file__
