@@ -1,4 +1,5 @@
 # encoding: utf-8
+from __future__ import division, print_function, unicode_literals
 
 ###########################################################################################################
 #
@@ -17,17 +18,20 @@ from GlyphsApp.plugins import *
 
 class ____PluginClassName____(ReporterPlugin):
 
+	@objc.python_method
 	def settings(self):
-		self.menuName = Glyphs.localize({'en': u'My Plugin', 'de': u'Mein Plugin'})
+		self.menuName = Glyphs.localize({'en': 'My Plugin', 'de': 'Mein Plugin'})
 		self.generalContextMenus = [
-			{'name': Glyphs.localize({'en': u'Do something', 'de': u'Tu etwas'}), 'action': self.doSomething_},
+			{'name': Glyphs.localize({'en': 'Do something', 'de': 'Tu etwas'}), 'action': self.doSomething_},
 		]
-		
+
+	@objc.python_method
 	def foreground(self, layer):
 		NSColor.blueColor().set()
 		NSBezierPath.fillRect_(layer.bounds)
 		self.drawTextAtPoint(layer.parent.name, NSPoint(0, 0))
 
+	@objc.python_method
 	def inactiveLayer(self, layer):
 		NSColor.redColor().set()
 		if layer.paths:
@@ -36,6 +40,7 @@ class ____PluginClassName____(ReporterPlugin):
 			for component in layer.components:
 				component.bezierPath.fill()
 
+	@objc.python_method
 	def preview(self, layer):
 		NSColor.blueColor().set()
 		if layer.paths:
@@ -45,8 +50,9 @@ class ____PluginClassName____(ReporterPlugin):
 				component.bezierPath.fill()
 	
 	def doSomething_(self, sender):
-		print 'Just did something'
-		
+		print('Just did something')
+
+	@objc.python_method
 	def conditionalContextMenus(self):
 
 		# Empty list of context menu items
@@ -60,13 +66,15 @@ class ____PluginClassName____(ReporterPlugin):
 			if len(layer.selection) == 1 and type(layer.selection[0]) == GSAnchor:
 					
 				# Add context menu item
-				contextMenus.append({'name': Glyphs.localize({'en': u'Do something else', 'de': u'Tu etwas anderes'}), 'action': self.doSomethingElse})
+				contextMenus.append({'name': Glyphs.localize({'en': 'Do something else', 'de': 'Tu etwas anderes'}), 'action': self.doSomethingElse_})
 
 		# Return list of context menu items
 		return contextMenus
 
-	def doSomethingElse(self):
-		print 'Just did something else'
+	def doSomethingElse_(self, sender):
+		print('Just did something else')
+
+	@objc.python_method
 	def __file__(self):
 		"""Please leave this method unchanged"""
 		return __file__
