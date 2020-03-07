@@ -374,16 +374,16 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="163" y="199" width="480" height="180"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
-            <view key="contentView" id="dr5-pE-BqS">
-                <rect key="frame" x="0.0" y="0.0" width="480" height="180"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
+            <view key="contentView" misplaced="YES" id="dr5-pE-BqS">
+                <rect key="frame" x="0.0" y="0.0" width="480" height="179"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="VSB-JL-aBt">
-                        <rect key="frame" x="133" y="138" width="77" height="25"/>
+                        <rect key="frame" x="133" y="137" width="77" height="25"/>
                         <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="kcH-VI-2A5" id="XDI-4i-zoo">
                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
+                            <font key="font" metaFont="menu"/>
                             <menu key="menu" id="6LM-kj-Ho0">
                                 <items>
                                     <menuItem title="Item 1" state="on" id="kcH-VI-2A5"/>
@@ -398,7 +398,7 @@
                         </connections>
                     </popUpButton>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="9eB-XR-9P8">
-                        <rect key="frame" x="18" y="144" width="111" height="16"/>
+                        <rect key="frame" x="18" y="143" width="111" height="16"/>
                         <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="Plugin Type" id="5i6-QF-J2Z">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -406,7 +406,7 @@
                         </textFieldCell>
                     </textField>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="FzO-2c-NeD">
-                        <rect key="frame" x="18" y="115" width="111" height="16"/>
+                        <rect key="frame" x="18" y="114" width="111" height="16"/>
                         <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="Plugin Name" id="CdX-m9-upp">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -414,7 +414,7 @@
                         </textFieldCell>
                     </textField>
                     <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="NCU-u2-vO2">
-                        <rect key="frame" x="135" y="112" width="325" height="21"/>
+                        <rect key="frame" x="135" y="111" width="325" height="21"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="CWy-A8-Xly">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -425,7 +425,7 @@
                         </connections>
                     </textField>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="oT9-gs-e4J">
-                        <rect key="frame" x="18" y="84" width="111" height="16"/>
+                        <rect key="frame" x="18" y="83" width="111" height="16"/>
                         <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="Plugin Main Class" id="xcy-xU-W9x">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -433,7 +433,7 @@
                         </textFieldCell>
                     </textField>
                     <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="5aS-D9-lU5">
-                        <rect key="frame" x="135" y="81" width="325" height="21"/>
+                        <rect key="frame" x="135" y="80" width="325" height="21"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="Ioh-v8-1g3">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -444,8 +444,8 @@
                         </connections>
                     </textField>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Fe8-Ht-URi">
-                        <rect key="frame" x="372" y="19" width="88" height="23"/>
-                        <buttonCell key="cell" type="roundTextured" title="Make Plugin" bezelStyle="texturedRounded" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Yc8-1F-dAh">
+                        <rect key="frame" x="352" y="13" width="114" height="32"/>
+                        <buttonCell key="cell" type="push" title="Make Plugin" bezelStyle="rounded" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Yc8-1F-dAh">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -454,7 +454,7 @@
                         </connections>
                     </button>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="sHe-6l-6Qg">
-                        <rect key="frame" x="18" y="53" width="111" height="16"/>
+                        <rect key="frame" x="18" y="52" width="111" height="16"/>
                         <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="Developer Name" id="x2b-AU-OBb">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -462,7 +462,7 @@
                         </textFieldCell>
                     </textField>
                     <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="PAw-JR-Mc7">
-                        <rect key="frame" x="135" y="50" width="325" height="21"/>
+                        <rect key="frame" x="135" y="49" width="325" height="21"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="Hpi-El-Kjg">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
