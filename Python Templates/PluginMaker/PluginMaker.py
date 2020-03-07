@@ -131,7 +131,7 @@ class PluginMaker(NSObject):
 			if os.path.exists(exportFilePath):
 				shutil.rmtree(exportFilePath)
 			result = shutil.copytree(templatePath, exportFilePath)
-
+			os.utime(exportFilePath, None)
 			import datetime
 			now = datetime.datetime.now()
 			replaceDict = {
