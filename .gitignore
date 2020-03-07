@@ -21,3 +21,6 @@ DerivedData
 Pods
 
 *.pyc
+.eggs
+dist
+
