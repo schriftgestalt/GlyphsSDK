@@ -168,7 +168,7 @@ Make your plug-in available for easy installation via *Window > Plugin Manager* 
 				url = "https://github.com/userName/repositoryName";
 				description = "Single-line description. Careful: WITHOUT LINEBREAKS! Use \n instead.";
 				screenshot = "https://optional.link.to/pluginScreenshot.png";
-			}
+			},
 
 Entries must be separated by commas. So don’t forget a comma right after the closing curly brace `}` if another entry is following. (And on the previous line if you add your entry at the end.) The order of entries does not matter, the manager will sort all registered plug-ins alphabetically anyway.
 
