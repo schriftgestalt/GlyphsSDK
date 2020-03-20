@@ -1,5 +1,5 @@
 {
-.appVersion = "1281";
+.appVersion = "1304";
 .formatVersion = 3;
 DisplayStrings = (
 A,
@@ -101,12 +101,8 @@ numberValues = (
 123
 );
 stemValues = (
-{
-width = 123;
-},
-{
-width = 321;
-}
+123,
+321
 );
 visible = 1;
 }
@@ -146,11 +142,13 @@ width = 459;
 },
 {
 associatedMasterId = m01;
+attr = {
+color = 1;
+};
 layerId = "B53B276E-7ED6-4F56-94FF-4162BC3B585A";
-name = Color;
 shapes = (
 {
-attributes = {
+attr = {
 strokeColor = (0,84);
 strokeWidth = 21;
 };
@@ -185,7 +183,7 @@ layerId = m01;
 shapes = (
 {
 angle = 20;
-name = A;
+ref = A;
 scale = (0.8,0.8);
 }
 );
@@ -223,10 +221,10 @@ layers = (
 layerId = m01;
 shapes = (
 {
-name = _part.test;
 piece = {
 Width = 29.74825;
 };
+ref = _part.test;
 }
 );
 width = 100;

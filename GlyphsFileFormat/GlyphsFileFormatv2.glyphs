@@ -1,5 +1,5 @@
 {
-.appVersion = "1281";
+.appVersion = "1306";
 DisplayStrings = (
 A,
 AB,
@@ -24,6 +24,14 @@ name = localizedCopyright;
 value = "German;Deutsches Copyright";
 },
 {
+name = trademark;
+value = "Default Trademark";
+},
+{
+name = description;
+value = "Default Description";
+},
+{
 name = Axes;
 value = (
 {
@@ -35,6 +43,7 @@ Tag = wght;
 }
 );
 date = "2020-01-03 19:42:13 +0000";
+designerURL = "Designer URL";
 disablesNiceNames = 1;
 familyName = "New Font";
 featurePrefixes = (
@@ -113,7 +122,7 @@ nodes = (
 "10 66 LINE",
 "439 66 LINE",
 "439 608 LINE",
-"10 608 LINE {name = \"Hallo\011Welt\";test = \"Hallo\012Welt\";}"
+"10 608 LINE {name = \"Hallo\011Welt\";\ntest = \"Hallo\012Welt\";}"
 );
 }
 );
@@ -154,7 +163,7 @@ layers = (
 backgroundImage = {
 imagePath = Screenshot.png;
 locked = "1";
-transform = "{0.89877, 0.0471, -0.04187, 0.7989, 106, 89}";
+transform = "{0.89877, 0.04712, -0.04188, 0.7989, 106, 89}";
 };
 layerId = m01;
 width = 600;
@@ -288,6 +297,8 @@ B = 30;
 };
 };
 };
+manufacturer = Manufacturer;
+manufacturerURL = "Manufacturer URL";
 unitsPerEm = 1000;
 versionMajor = 1;
 versionMinor = 0;
