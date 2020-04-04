@@ -11,6 +11,19 @@ from Foundation import NSObject, NSString, NSArray, NSMutableArray, NSMutableDic
 from AppKit import NSApp, NSDocumentController, NSOpenPanel, NSSavePanel, NSOKButton, NSWorkspace, \
 	NSMenu, NSMenuItem, NSOnState, NSOffState, NSMixedState, NSColor
 
+GSFont = objc.lookUpClass("GSFont")
+GSFontMaster = objc.lookUpClass("GSFontMaster")
+GSGlyph = objc.lookUpClass("GSGlyph")
+GSGlyphInfo = objc.lookUpClass("GSGlyphInfo")
+GSGlyphsInfo = objc.lookUpClass("GSGlyphsInfo")
+GSGuide = objc.lookUpClass("GSGuide")
+GSGuideLine = GSGuide # compatibility
+GSHint = objc.lookUpClass("GSHint")
+GSInstance = objc.lookUpClass("GSInstance")
+GSLayer = objc.lookUpClass("GSLayer")
+GSNode = objc.lookUpClass("GSNode")
+GSPath = objc.lookUpClass("GSPath")
+GSShape = objc.lookUpClass("GSShape")
 GSAlignmentZone = objc.lookUpClass("GSAlignmentZone")
 GSAnchor = objc.lookUpClass("GSAnchor")
 GSAnnotation = objc.lookUpClass("GSAnnotation")
@@ -27,19 +40,6 @@ GSEditViewController = objc.lookUpClass("GSEditViewController")
 GSElement = objc.lookUpClass("GSElement")
 GSFeature = objc.lookUpClass("GSFeature")
 GSFeaturePrefix = objc.lookUpClass("GSFeaturePrefix")
-GSFont = objc.lookUpClass("GSFont")
-GSFontMaster = objc.lookUpClass("GSFontMaster")
-GSGlyph = objc.lookUpClass("GSGlyph")
-GSGlyphInfo = objc.lookUpClass("GSGlyphInfo")
-GSGlyphsInfo = objc.lookUpClass("GSGlyphsInfo")
-GSGuide = objc.lookUpClass("GSGuide")
-GSGuideLine = GSGuide # compatibility
-GSHint = objc.lookUpClass("GSHint")
-GSInstance = objc.lookUpClass("GSInstance")
-GSLayer = objc.lookUpClass("GSLayer")
-GSNode = objc.lookUpClass("GSNode")
-GSPath = objc.lookUpClass("GSPath")
-GSShape = objc.lookUpClass("GSShape")
 GSProxyShapes = objc.lookUpClass("GSProxyShapes")
 GSSubstitution = objc.lookUpClass("GSSubstitution")
 GSPartProperty = objc.lookUpClass("GSPartProperty")
@@ -52,15 +52,16 @@ GSInterpolationFontProxy = objc.lookUpClass("GSInterpolationFontProxy")
 GSFeatureGenerator = objc.lookUpClass("GSFeatureGenerator")
 GSTTStem = objc.lookUpClass("GSTTStem")
 GSMacroViewController = objc.lookUpClass("GSMacroViewController")
-
+GSPathSegment = objc.lookUpClass("GSPathSegment")
+GlyphsFileFormatUFO = objc.lookUpClass("GlyphsFileFormatUFO")
 __all__ = [
 
 	"Glyphs", "GetFile",
 	"wrapperVersion",
 	"GSAlignmentZone", "GSAnchor", "GSAnnotation", "GSApplication", "GSBackgroundImage", "GSBackgroundLayer", "GSClass", "GSComponent", "GSControlLayer",
 	"GSCustomParameter", "GSDocument", "GSProjectDocument", "GSEditViewController", "GSElement", "GSFeature", "GSFeaturePrefix", "GSFont", "GSFontMaster",
-	"GSGlyph", "GSGlyphInfo", "GSGlyphsInfo", "GSGuide", "GSHint", "GSInstance", "GSLayer", "GSNode", "GSPath", "GSSubstitution", "GSPartProperty", "GSNotifyingDictionary",
-	"GSPathFinder", "GSPathPen", "GSCallbackHandler", "GSFeatureGenerator", "GSTTStem",
+	"GSGlyph", "GSGlyphInfo", "GSGlyphsInfo", "GSGuide", "GSHint", "GSInstance", "GSLayer", "GSNode", "GSPath", "GSShape", "GSSubstitution", "GSPartProperty", "GSNotifyingDictionary",
+	"GSPathFinder", "GSPathPen", "GSCallbackHandler", "GSFeatureGenerator", "GSTTStem", "GSPathSegment",
 	# Constants
 	"MOVE", "LINE", "CURVE", "OFFCURVE", "QCURVE", "GSMOVE", "GSLINE", "GSCURVE", "GSOFFCURVE", "GSHOBBYCURVE", "GSSHARP", "GSSMOOTH",
 	"FILL", "FILLCOLOR", "FILLPATTERNANGLE", "FILLPATTERNBLENDMODE", "FILLPATTERNFILE", "FILLPATTERNOFFSET", "FILLPATTERNSCALE", "STROKECOLOR", "STROKELINECAPEND", "STROKELINECAPSTART", "STROKELINEJOIN", "STROKEPOSITION", "STROKEWIDTH", "GRADIENT", "SHADOW", "INNERSHADOW", "MASK", 
@@ -234,7 +235,7 @@ GSBottomLeft = 0
 GSBottomCenter = 1
 GSBottomRight = 2
 
-
+# TODO this is not up to date
 # Writing direction
 LTR = 0
 RTL = 1
@@ -399,6 +400,11 @@ class GSProxyShapesIterator:
 def GSProxyShapes__iter__(self):
 	return GSProxyShapesIterator(self)
 GSProxyShapes.__iter__ = objc.python_method(GSProxyShapes__iter__)
+def GSProxyShapes__getitem__(self, idx):
+	if idx < self.count():
+		return self.objectAtIndex_(idx)
+	raise IndexError("list index out of range")
+GSProxyShapes.__getitem__ = objc.python_method(GSProxyShapes__getitem__)
 GSProxyShapes.__len__ = property(lambda self: self.count)
 
 ##################################################################################
@@ -1356,7 +1362,7 @@ def Glyphs_localize(self, localization):
 	elif type(localization) == dict:
 		# Return first match of languages list
 		for priority in self.defaults["AppleLanguages"]:
-			priority = priority[:2]
+			priority = priority[:-3]
 			if priority in localization:
 				return localization[priority]
 		language = localization.get("en", None)  # frist look if there is a english entry.
@@ -1459,7 +1465,7 @@ GSElement.y = property(lambda self: self.pyobjc_instanceMethods.position().y,
 	lambda self, value: self.setPosition_(NSMakePoint(self.x, value)))
 
 GSElement.layer = property(lambda self: self.pyobjc_instanceMethods.layer())
-
+GSElement.glyph = property(lambda self: self.pyobjc_instanceMethods.glyph())
 GSElement.__new__ = staticmethod(GSObject__new__)
 GSElement.__new__.__name__ = "__new__"
 
@@ -2138,7 +2144,7 @@ class GlyphLayerProxy (Proxy):
 				Key = self.__len__() + Key
 			FontMaster = self._owner.parent.fontMasterAtIndex_(Key)
 			Key = FontMaster.id
-		return self._owner.setLayer_forKey_(Layer, Key)
+		return self._owner.setLayer_forId_(Layer, Key)
 
 	def __delitem__(self, Key):
 		if type(Key) is int and self._owner.parent:
@@ -2146,7 +2152,7 @@ class GlyphLayerProxy (Proxy):
 				Key = self.__len__() + Key
 			Layer = self.__getitem__(Key)
 			Key = Layer.layerId
-		return self._owner.removeLayerForKey_(Key)
+		return self._owner.removeLayerForId_(Key)
 
 	def __iter__(self):
 		return LayersIterator(self._owner)
@@ -2157,12 +2163,12 @@ class GlyphLayerProxy (Proxy):
 	def append(self, Layer):
 		if not Layer.associatedMasterId:
 			Layer.associatedMasterId = self._owner.parent.masters[0].id
-		self._owner.setLayer_forKey_(Layer, NSString.UUID())
+		self._owner.setLayer_forId_(Layer, NSString.UUID())
 	def extend(self, Layers):
 		for Layer in Layers:
 			self.append(Layer)
 	def remove(self, Layer):
-		return self._owner.removeLayerForKey_(Layer.layerId)
+		return self._owner.removeLayerForId_(Layer.layerId)
 	def insert(self, Index, Layer):
 		self.append(Layer)
 	def setter(self, values):
@@ -2224,7 +2230,7 @@ class LayerGuidesProxy (Proxy):
 		elif type(Key) == int:
 			if Key < 0:
 				Key = self.__len__() + Key
-			return self._owner.guideAtIndex_(Key)
+			return self._owner.objectInGuidesAtIndex_(Key)
 		raise(KeyError)
 	def __setitem__(self, Key, Component):
 		self._owner.setGuide_atIndex_(Component, Key)
@@ -2314,7 +2320,17 @@ class LayerAnchorsProxy (Proxy):
 	"""layer.anchors is a dict!!!"""
 	def __getitem__(self, Key):
 		if isString(Key):
-			return self._owner.anchorForName_(Key)
+			anchor = self._owner.anchorForName_(Key)
+			if anchor is not None:
+				return anchor
+			else:
+				raise ValueError
+		if isinstance(Key, int):
+			return self._owner.objectInAnchorsAtIndex_(Key)
+			if anchor is not None:
+				return anchor
+			else:
+				raise ValueError
 		else:
 			raise KeyError
 	def __setitem__(self, Key, Anchor):
@@ -2324,10 +2340,9 @@ class LayerAnchorsProxy (Proxy):
 		else:
 			raise TypeError
 	def __delitem__(self, Key):
-		if isString(Key):
-			self._owner.removeAnchorWithName_(Key)
-		else:
-			raise TypeError
+		anchor = self.__getitem__(Key)
+		if anchor is not None:
+			self._owner.removeAnchor_(anchor)
 	def __copy__(self):
 		return [x.copy() for x in self.values()]
 	def items(self):
@@ -2454,8 +2469,8 @@ class LayerSelectionProxy (Proxy):
 		self._owner.removeObjectFromSelection_(object)
 	def insert(self, Index, object):
 		self._owner.addSelection_(object)
-	def setterMethod(self):
-		return self._owner.setSelection_
+	def clear(self):
+		self._owner.clearSelection(object)
 
 
 
@@ -3242,7 +3257,7 @@ GSFont.formatVersion = property(lambda self: self.pyobjc_instanceMethods.formatV
 '''
 
 
-def Font__save__(self, path=None):
+def Font__save__(self, path=None, formatVersion=3):
 	if self.parent is not None:
 		if path is None:
 			self.parent.saveDocument_(None)
@@ -3254,14 +3269,12 @@ def Font__save__(self, path=None):
 				typeName = "org.unifiedfontobject.ufo"
 			self.parent.writeSafelyToURL_ofType_forSaveOperation_error_(URL, typeName, 1, objc.nil)
 	elif path is not None:
-		Doc = GSDocument()
-		Doc.font = self
 		URL = NSURL.fileURLWithPath_(path)
 		if path.endswith('.glyphs'):
-			typeName = "com.schriftgestaltung.glyphs"
+			self.saveToURL_error_(URL, None)
 		elif path.endswith('.ufo'):
-			typeName = "org.unifiedfontobject.ufo"
-		Doc.writeSafelyToURL_ofType_forSaveOperation_error_(URL, typeName, 1, objc.nil)
+			ufoWriter = GlyphsFileFormatUFO.new()
+			ufoWriter.writeFont_toURL_error_(self, URL, None)
 	else:
 		raise("Now path set")
 
@@ -3514,7 +3527,7 @@ def FontMaster__init__(self):
 GSFontMaster.__init__ = FontMaster__init__
 
 def FontMaster__repr__(self):
-	return "<GSFontMaster \"%s\" >" % (self.name)
+	return "<GSFontMaster \"%s\" %s>" % (self.name, str(self.axes).replace("\n", "").replace("\t", ""))
 GSFontMaster.__repr__ = python_method(FontMaster__repr__)
 
 GSFontMaster.mutableCopyWithZone_ = GSObject__copy__
@@ -3773,8 +3786,8 @@ GSFontMaster.otherBlues = property(lambda self: FontMaster_otherBlues(self))
 	:type: list
 '''
 
-# new (guides at layers are also called just 'guides')
-GSFontMaster.guides = property(lambda self: self.pyobjc_instanceMethods.guides(), lambda self, value: self.setGuides_(value))
+GSFontMaster.guides = property(lambda self: LayerGuidesProxy(self),
+						  lambda self, value: LayerGuidesProxy(self).setter(value))
 # keep for compatibility
 GSFontMaster.guideLines = GSFontMaster.guides
 '''
@@ -4258,7 +4271,7 @@ class _ExporterDelegate_ (NSObject):
 			Error = unicode(String)
 		self.result = Error
 
-def __Instance_Export__(self, Format=OTF, FontPath=None, AutoHint=True, RemoveOverlap=True, UseSubroutines=True, UseProductionNames=True, Containers=None, ConvertNames=False, DecomposeSmartStuff=True):
+def __Instance_Export__(self, Format=OTF, FontPath=None, AutoHint=True, RemoveOverlap=True, UseSubroutines=True, UseProductionNames=True, Containers=None, DecomposeSmartStuff=True):
 
 	if Format not in [OTF, WOFF, WOFF2, TTF, UFO]:
 		raise KeyError('The font format is not supported: %s (only \'OTF\' and \'TTF\')' % Format)
@@ -4346,7 +4359,7 @@ def __Font_Export__(self, Format=OTF, Instances=None, FontPath=None, AutoHint=Tr
 			Instances = [i for i in self.instances if i.active]
 		allResults = []
 		for i in Instances:
-			result = i.generate(Format=Format, FontPath=None, AutoHint=True, RemoveOverlap=True, UseSubroutines=True, UseProductionNames=True, Containers=None)
+			result = i.generate(Format=Format, FontPath=FontPath, AutoHint=AutoHint, RemoveOverlap=RemoveOverlap, UseSubroutines=UseSubroutines, UseProductionNames=UseSubroutines, Containers=Containers)
 			allResults.append(result)
 		return allResults
 
@@ -4482,7 +4495,11 @@ GSCustomParameter.value = property(lambda self: self.pyobjc_instanceMethods.valu
 	.. attribute:: value
 	:type: str, list, dict, int, float
 '''
-
+GSCustomParameter.parent = property(lambda self: self.pyobjc_instanceMethods.parent())
+'''
+	.. attribute:: parent
+	:type: GSFont, GSFontMaster or GSInstance
+'''
 
 
 
@@ -5139,6 +5156,35 @@ GSGlyph.storeCase = property(lambda self: bool(self.pyobjc_instanceMethods.store
 	Makes it possible to ship custom glyph data inside a .glyphs file without a separate GlyphData file. Same as Cmd-Alt-i dialog in UI.
 	:type: bool
 	
+	.. versionadded:: 3
+'''
+
+GSGlyph.direction = property(lambda self: self.pyobjc_instanceMethods.direction(),
+						lambda self, value: self.setDirection_(value))
+'''
+	.. attribute:: direction
+
+	Writing direction.
+
+	Defined constants are: LTR (left to right), RTL (right to left), LTRTTB (left to right, vertical, top to bottom e.g. Mongolian), and RTLTTB (right to left, vertical, top to bottom e.g. Chinese, Japanese, Korean)
+
+	:type: integer
+
+	.. code-block:: python
+
+		glyph.direction = RTL
+
+	.. versionadded:: 3
+'''
+
+GSGlyph.storeDirection = property(lambda self: bool(self.pyobjc_instanceMethods.storeDirection()),
+									lambda self, value: self.setStoreDirection_(value))
+'''
+	.. attribute:: storeCase
+	Set to True in order to manipulate the `direction` of the glyph (see above).
+	Makes it possible to ship custom glyph data inside a .glyphs file without a separate GlyphData file. Same as Cmd-Alt-i dialog in UI.
+	:type: bool
+
 	.. versionadded:: 3
 '''
 
@@ -6035,7 +6081,7 @@ GSLayer.paths = property(lambda self: self.pyobjc_instanceMethods.paths())
 		layer.paths = copy.copy(anotherlayer.paths)
 '''
 
-GSLayer.selection = property(lambda self: LayerSelectionProxy(self), lambda self, value: LayerSelectionProxy(self).setter(value))
+GSLayer.selection = property(lambda self: LayerSelectionProxy(self))
 
 '''
 	.. attribute:: selection
@@ -6088,9 +6134,13 @@ GSLayer.BSB = property(lambda self: self.pyobjc_instanceMethods.BSB(),
 	Bottom sidebearing
 	:type: float
 '''
-
+def GSLayer__setWidth(self, value):
+	try:
+		self.setWidth_(float(value))
+	except:
+		raise TypeError
 GSLayer.width = property(lambda self: self.pyobjc_instanceMethods.width(),
-						lambda self, value: self.setWidth_(float(value)))
+						 GSLayer__setWidth)
 
 GSBackgroundLayer.width = property(lambda self: self.pyobjc_instanceMethods.width(),
 									lambda self, value: None)
@@ -7018,7 +7068,7 @@ For details on how to access them, please see :attr:`GSLayer.components`
 '''
 
 
-def Component__init__(self, glyph, offset=(0, 0), scale=(1, 1), transform=None):
+def Component__init__(self, glyph=None, offset=(0, 0), scale=(1, 1), transform=None):
 	"""
 	transformation: transform matrix as list of numbers
 	"""
@@ -8101,11 +8151,34 @@ GSNode.userData = property(lambda self: UserDataProxy(self))
 '''
 
 
+##################################################################################
+#
+#
+#
+#           GSPathSegment
+#
+#
+#
+##################################################################################
+
+def ______________________(): pass
+def ____GSPathSegment_____(): pass
+def ______________________(): pass
 
 
+def __GSPathSegment__getitem__(self, idx):
+	return self.pointAtIndex_(idx)
+GSPathSegment.__getitem__ = python_method(__GSPathSegment__getitem__)
 
+GSPathSegment.__len__ = property(lambda self: self.countOfPoints)
 
-
+def GSPathSegment__new__(typ, p1=NSPoint(0, 0), p2=NSPoint(0, 0), p3=None, p4=None):
+	if (p3 is not None and p4 is not None):
+		return typ.alloc().initWithCurvePoint1_point2_point3_point4_direction_(p1, p2, p3, p4, True)
+	else:
+		return typ.alloc().initWithLinePoint1_point2_direction_(p1, p2, True)
+	
+GSPathSegment.__new__ = staticmethod(GSPathSegment__new__)
 
 ##################################################################################
 #
@@ -8118,7 +8191,7 @@ GSNode.userData = property(lambda self: UserDataProxy(self))
 ##################################################################################
 
 def ______________________(): pass
-def ____GSGuide____(): pass
+def ____GSGuide___________(): pass
 def ______________________(): pass
 
 
@@ -8172,9 +8245,13 @@ GSGuide.angle = property(lambda self: self.pyobjc_instanceMethods.angle(),
 	Angle
 	:type: float
 '''
-
+def GSGuide_setName(self, name):
+	if isString(name):
+		self.setName_(name)
+	else:
+		raise TypeError
 GSGuide.name = property(lambda self: self.pyobjc_instanceMethods.name(),
-							lambda self, value: self.setName_(value))
+						GSGuide_setName)
 '''
 	.. attribute:: name
 	a optional name
@@ -8427,7 +8504,7 @@ GSHint.originNode = property(lambda self: self.pyobjc_instanceMethods.originNode
 
 	:type: :class:`GSNode`
 '''
-GSHint.position = property(lambda self: Hint__origin__pos(self),
+GSHint.position = property(Hint__origin__pos,
 							lambda self, value: self.setOrigin_(value))
 GSHint.width = property(lambda self: Hint__width__pos(self),
 						lambda self, value: self.setOrigin_(value))
@@ -8540,7 +8617,7 @@ def GSHint__setStem__(self, value):
 		self.pyobjc_instanceMethods.setStem_(value)
 
 
-GSHint.stem = property(lambda self: GSHint__stem__(self),
+GSHint.stem = property(GSHint__stem__,
 						lambda self, value: GSHint__setStem__(self, value))
 '''
 	.. attribute:: stem
@@ -8656,7 +8733,7 @@ def BackgroundImage_setPath(self, path):
 	self.setImageURL_(NSURL.fileURLWithPath_(path))
 	self.loadImage()
 
-GSBackgroundImage.path = property(lambda self: BackgroundImage_path(self),
+GSBackgroundImage.path = property(BackgroundImage_path,
 						lambda self, value: BackgroundImage_setPath(self, value))
 '''
 	.. attribute:: path
@@ -8718,7 +8795,7 @@ def BackgroundImage_getPosition(self):
 def BackgroundImage_setPosition(self, pos):
 	self.transform = ((self.transform[0], self.transform[1], self.transform[2], self.transform[3], pos.x, pos.y))
 
-GSBackgroundImage.position = property(lambda self: BackgroundImage_getPosition(self),
+GSBackgroundImage.position = property(BackgroundImage_getPosition,
 										lambda self, value: BackgroundImage_setPosition(self, value))
 
 '''
@@ -8767,7 +8844,7 @@ GSBackgroundImage.rotation = property(lambda self: self.angle(),
 	:type: float
 '''
 
-GSBackgroundImage.transform = property(lambda self: self.pyobjc_instanceMethods.transformStruct(),
+GSBackgroundImage.transform = property(lambda self: self.transformStruct(),
 										lambda self, value: self.setTransformStruct_(value))
 '''
 	.. attribute:: transform
@@ -9034,7 +9111,8 @@ GSEditViewController.composedLayers = property(lambda self: TabLayersProxy(self)
 
 
 
-GSEditViewController.scale = property(lambda self: self.graphicView().scale(), lambda self, value: self.graphicView().setScale_(value))
+GSEditViewController.scale = property(lambda self: self.graphicView().scale(),
+									  lambda self, value: self.graphicView().setScale_(value))
 
 '''
 	.. attribute:: scale
@@ -9061,7 +9139,8 @@ GSEditViewController.scale = property(lambda self: self.graphicView().scale(), l
 	.. versionadded:: 2.3
 '''
 
-GSEditViewController.viewPort = property(lambda self: self.frameView().visibleRect(), lambda self, value: self.frameView().zoomViewToRect_(value))
+GSEditViewController.viewPort = property(lambda self: self.frameView().visibleRect(),
+										 lambda self, value: self.frameView().zoomViewToRect_(value))
 
 
 '''
@@ -9283,7 +9362,8 @@ def Set_ShowInPreview(self, value):
 	else:
 		self.setSelectedInstance_(self.parent.instances.index(value))
 
-GSEditViewController.previewInstances = property(lambda self: Get_ShowInPreview(self), lambda self, value: Set_ShowInPreview(self, value))
+GSEditViewController.previewInstances = property(Get_ShowInPreview,
+												 Set_ShowInPreview)
 '''
 	.. attribute:: previewInstances
 
@@ -9764,12 +9844,14 @@ Scaled a point.
 
 def GetSaveFile(message=None, ProposedFileName=None, filetypes=None):
 	Panel = NSSavePanel.savePanel().retain()
+	Panel.setExtensionHidden_(False)
 	if message is not None:
 		Panel.setTitle_(message)
-	Panel.setCanChooseFiles_(True)
-	Panel.setCanChooseDirectories_(False)
 	if filetypes is not None:
-		Panel.setAllowedFileTypes_(filetypes)
+		if isString(filetypes):
+			filetypes = [filetypes]
+		if len(filetypes) > 0:
+			Panel.setAllowedFileTypes_(objcObject(filetypes))
 	if ProposedFileName is not None:
 		if ProposedFileName.find("/") >= 0:
 			path, ProposedFileName = os.path.split(ProposedFileName)
@@ -9860,8 +9942,11 @@ def GetOpenFile(message=None, allowsMultipleSelection=False, filetypes=None, pat
 		Panel.setDirectory_(path)
 	if message is not None:
 		Panel.setTitle_(message)
-	if filetypes is not None and len(filetypes) > 0:
-		Panel.setAllowedFileTypes_(filetypes)
+	if filetypes is not None:
+		if isString(filetypes):
+			filetypes = [filetypes]
+		if len(filetypes) > 0:
+			Panel.setAllowedFileTypes_(objcObject(filetypes))
 	pressedButton = Panel.runModal()
 	if pressedButton == NSOKButton:
 		if allowsMultipleSelection:
