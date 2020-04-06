@@ -27,19 +27,23 @@ class ____PluginClassName____ (PalettePlugin):
 	# A text field to display information in that dialog
 	textField = objc.IBOutlet()
 	
+	@objc.python_method
 	def settings(self):
 		self.name = Glyphs.localize({'en': u'My Palette', 'de': u'Meine Palette'})
 		
 		# Load .nib dialog (without .extension)
 		self.loadNib('IBdialog', __file__)
 
+	@objc.python_method
 	def start(self):
 		# Adding a callback for the 'GSUpdateInterface' event
 		Glyphs.addCallback(self.update, UPDATEINTERFACE)
 
+	@objc.python_method
 	def update( self, sender ):
 		# Your code goes here...
-
+	
+	@objc.python_method
 	def __del__(self):
 		# Delete callbacks when Glyphs quits, otherwise it'll crash :( 
 		Glyphs.removeCallback(self.update)
@@ -77,6 +81,7 @@ In our example, this would be adding the callbacks.
 An observer needs a method to execute. In our example, we’ve used a method named `update()`, but you can name your methods otherwise.
 
 ```python
+	@objc.python_method
 	def start(self):
 		# Adding a callback for the 'GSUpdateInterface' event
 		Glyphs.addCallback(self.update, UPDATEINTERFACE)
@@ -91,6 +96,7 @@ In our example, this method gets called through the callbacks you may have added
 We’ve named this method `update()`, but you can name your methods otherwise.
 
 ```python
+	@objc.python_method
 	def update(self):
 		# Your code goes here...
 ```
@@ -101,6 +107,7 @@ This method gets called when the plug-in is unloaded, e.g., when Glyphs.app is b
 You need to unload all callbacks here because Glyphs.app will otherwise crash.
 
 ```python
+	@objc.python_method
 	def __del__(self):
 		# Unload callback
 		Glyphs.removeCallback(self.update)
@@ -122,18 +129,18 @@ if windowController:
 
 ## Resizing the palette
 
-- add a layout height constraint (in a .xib)
-- add an outlet to it.
-- set the constant property of the constraint to the desired height.
+* Add a layout height constraint (in a .xib)
+* Add an outlet to it.
+* Set the constant property of the constraint to the desired height.
 
-```
-    self.heightConstraint.setConstant_(height)
+```python
+	self.heightConstraint.setConstant_(height)
 ```
 
 There is an option to animate the resizing. 
 
-```
-    self.heightConstraint.animator().setConstant_(height)
+```python
+	self.heightConstraint.animator().setConstant_(height)
 ```
 
 
@@ -156,7 +163,7 @@ from GlyphsApp.plugins import *
 from vanilla import *
 
 class ____PluginClassName____(SelectTool):
-
+	@objc.python_method
 	def settings(self):
 		self.name = 'My Select Tool'
 
@@ -170,6 +177,7 @@ class ____PluginClassName____(SelectTool):
 		# Set dialog to NSView
 		self.dialog = self.paletteView.group.getNSView()
 
+	@objc.python_method
 	def update(self, sender):
 
 		# ...
@@ -178,5 +186,4 @@ class ____PluginClassName____(SelectTool):
 		
 		# Change value of text field using Vanilla like this:
 		self.paletteView.group.text.set('\n'.join(text))
-
 ```
