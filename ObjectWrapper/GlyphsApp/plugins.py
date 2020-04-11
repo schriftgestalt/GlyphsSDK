@@ -15,7 +15,7 @@ import sys
 import traceback
 
 from GlyphsApp import Glyphs, LogToConsole, LogError, \
-	ONSTATE, OFFSTATE, MIXEDSTATE, Message, distance
+	ONSTATE, OFFSTATE, MIXEDSTATE, Message, distance, GSPath
 
 MainBundle = NSBundle.mainBundle()
 path = MainBundle.bundlePath() + "/Contents/Scripts"
