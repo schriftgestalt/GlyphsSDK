@@ -26,7 +26,7 @@ A functional plug-in can be as small as this (in `Contents/Resources/plugin.py`)
 
 ```python
 # encoding: utf-8
-
+from __future__ import division, print_function, unicode_literals
 from GlyphsApp.plugins import *
 
 class ____PluginClassName____(FilterWithDialog):
@@ -39,11 +39,13 @@ class ____PluginClassName____(FilterWithDialog):
 	# Text field in dialog
 	myTextField = objc.IBOutlet()
 	
+	@objc.python_method
 	def settings(self):
 		self.menuName = 'My Filter'
 		self.loadNib('IBdialog')
 
 	# On dialog show
+	@objc.python_method
 	def start(self):
 
 		# Set default setting if not present
@@ -67,10 +69,11 @@ class ____PluginClassName____(FilterWithDialog):
 		self.preview()
 
 	# Actual filter
+	@objc.python_method
 	def filter(self, layer, inEditView, customParameters):
 		
 		# Called on font export, get value from customParameters
-		if customParameters.has_key('shift'):
+		if 'shift' in customParameters:
 			value = customParameters['shift']
 
 		# Called through UI, use stored value
@@ -88,20 +91,20 @@ From there you can add the following methods:
 
 #### settings()
 
-In this method you set all attributes that describe the plug-in, such as its name etc.
-
+In this method you set all attributes that describe the plug-in and need to be loaded when the app starts, such as its name or, optionally, a keyboard shortcut.
 
 ```python
+	@objc.python_method
 	def settings(self):
 
-		# The name as it will appear in Glyphs’s Filter menu
+		# The name as it will appear in the Filter menu
 		# You may use a simple string or Glyphs.localize() for localizations (see http://docu.glyphsapp.com#localize)
-		self.menuName = 'My Filter'
-		# or:
 		self.menuName = Glyphs.localize({'en': u'My Filter', 'de': u'Mein Filter'})
 
 		# A keyboard shortcut for activating/deactivating the plug-in (together with Command+Shift)
 		self.keyboardShortcut = 'p'
+		# Set any combination of NSShiftKeyMask | NSControlKeyMask | NSCommandKeyMask | NSAlternateKeyMask
+		self.keyboardShortcutModifier = NSControlKeyMask | NSShiftKeyMask
 
 		# The caption of the action button of the dialog. 'Apply' is the default.
 		self.actionButtonLabel = 'Apply'
@@ -111,12 +114,13 @@ In this method you set all attributes that describe the plug-in, such as its nam
 
 ```
 
+
 #### start()
 
-This method gets called when the plug-in gets initialized upon filter menu click (and the dialog gets displayed).
-You put all your initialization code here.
+This method gets called when the plug-in gets initialized when the user invokes your plug-in through the menu or a keyboard shortcut, and the dialog gets displayed. You put all your initialization code here.
 
 ```python
+	@objc.python_method
 	def start(self):
 
 		# Your init code goes here...
@@ -150,6 +154,7 @@ The user is exporting a font whose instances contain Custom Parameters that call
 `inEditView` will be set to `False` and `customParameters` will contain any custom parameter (other than the plug-in name, include and exclude statements) that the user has specified in the parameters. You will need to educate the users of your plug-in about what these parameters should look like. The `filter()` method will be called several times according to the results of the include/exclude statements, each time containing a different `layer`.
 
 ```python
+	@objc.python_method
 	def filter(self, layer, inEditView, customParameters):
 		
 		# Apply your filter code here
@@ -168,6 +173,7 @@ Paste into Custom Parameters field:
 ![](../_Readme_Images/filterwithdialog_pastecustomparameters.png)
 
 ```python
+	@objc.python_method
 	def generateCustomParameter( self ):
 
 		# Copy plug-in name (by its class name) with a 'shift' value
@@ -207,12 +213,13 @@ Also, you may delete the two `IBdialog.xib/.nib` files from the `Resources` fold
 
 ```python
 # encoding: utf-8
-
+from __future__ import division, print_function, unicode_literals
 from GlyphsApp.plugins import *
 from vanilla import *
 
 class ____PluginClassName____(SelectTool):
 
+	@objc.python_method
 	def settings(self):
 		self.name = 'My Select Tool'
 
@@ -228,6 +235,7 @@ class ____PluginClassName____(SelectTool):
 		self.dialog = self.paletteView.group.getNSView()
 
 	# On dialog show
+	@objc.python_method
 	def start(self):
 
 		# Set default setting if not present
@@ -238,6 +246,7 @@ class ____PluginClassName____(SelectTool):
 		self.paletteView.group.editText.set(Glyphs.defaults['com.myname.myfilter.value'])
 
 	# Action triggered by UI
+	@objc.python_method
 	def editTextCallback( self, sender ):
 
 		# Store value coming in from dialog
@@ -245,5 +254,4 @@ class ____PluginClassName____(SelectTool):
 
 		# Trigger redraw
 		self.update()
-
 ```

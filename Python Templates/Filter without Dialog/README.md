@@ -26,14 +26,16 @@ A functional plug-in can be as small as this (in `Contents/Resources/plugin.py`)
 
 ```python
 # encoding: utf-8
-
+from __future__ import division, print_function, unicode_literals
 from GlyphsApp.plugins import *
 
 class ____PluginClassName____(FilterWithoutDialog):
 	
+	@objc.python_method
 	def settings(self):
 		self.menuName = 'My Filter'
 
+	@objc.python_method
 	def filter(self, layer, inEditView, customParameters):
 		
 		# Apply your filter code here
@@ -48,16 +50,17 @@ In this method you set all attributes that describe the plug-in, such as its nam
 
 
 ```python
+	@objc.python_method
 	def settings(self):
 
-		# The name as it will appear in Glyphs’s Filter menu
+		# The name as it will appear in the Filter menu
 		# You may use a simple string or Glyphs.localize() for localizations (see http://docu.glyphsapp.com#localize)
-		self.menuName = 'My Plugin'
-		# or:
 		self.menuName = Glyphs.localize({'en': u'My Plugin', 'de': u'Mein Plugin'})
 
-		# A keyboard shortcut for adctivating/deactivating the plug-in (together with Command+Shift)
+		# A keyboard shortcut for adctivating/deactivating the plug-in
 		self.keyboardShortcut = 'p'
+		# Set any combination of NSShiftKeyMask | NSControlKeyMask | NSCommandKeyMask | NSAlternateKeyMask
+		self.keyboardShortcutModifier = NSShiftKeyMask | NSControlKeyMask
 ```
 
 #### start()
@@ -66,6 +69,7 @@ This method gets called when the plug-in gets initialized upon Glyphs.app start.
 You put all your initialization code here.
 
 ```python
+	@objc.python_method
 	def start(self):
 
 		# Your init code goes here...
@@ -108,8 +112,8 @@ If you need a filter with user input even in the UI, please consider choosing th
 
 If you don’t need a dialog and the custom parameters upon font export are sufficient for your case, then you’re good to go.
 
-
 ```python
+	@objc.python_method
 	def filter(self, layer, inEditView, customParameters):
 		
 		# Apply your filter code here

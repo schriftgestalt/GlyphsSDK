@@ -13,15 +13,18 @@ A functional plug-in can be as small as this (in `Contents/Resources/plugin.py`)
 
 ```python
 # encoding: utf-8
-
+from __future__ import division, print_function, unicode_literals
 from GlyphsApp.plugins import *
 
 class ____PluginClassName____(ReporterPlugin):
+	
+	@objc.python_method
 	def settings(self):
 
-		# The name as it will appear in Glyphs’s View menu
+		# The name as it will appear in the View menu
 		self.menuName = 'My Plugin'
 
+	@objc.python_method
 	def foreground(self, layer):
 
 		# Draw a blue rectangle on top of the glyph as big as the glyph’s bounding box
@@ -36,16 +39,15 @@ From there you can add the following methods:
 
 #### settings()
 
-In this method you set all attributes that describe the plug-in, such as its name and icon etc.
+In this method you set all attributes that describe the plug-in, such as its name keyboard short cut etc.
 
 
 ```python
+	@objc.python_method
 	def settings(self):
 
-		# The name as it will appear in Glyphs’s View menu
+		# The name as it will appear in the View menu
 		# You may use a simple string or Glyphs.localize() for localizations (see http://docu.glyphsapp.com#localize)
-		self.menuName = 'My Plugin'
-		# or:
 		self.menuName = Glyphs.localize({'en': u'My Plugin', 'de': u'Mein Plugin'})
 
 		# A keyboard shortcut for activating/deactivating the plug-in
@@ -54,7 +56,7 @@ In this method you set all attributes that describe the plug-in, such as its nam
 		# Modifier keys used for the keyboard shortcut
 		# Set to any combination of:
 		# NSShiftKeyMask | NSControlKeyMask | NSCommandKeyMask | NSAlternateKeyMask
-		self.keyboardShortcutModifier = NSCommandKeyMask | NSShiftKeyMask
+		self.keyboardShortcutModifier = NSControlKeyMask
 
 		# A list of general context menu items described as a dictionary of following keys:
 		# 'name': the text displayed in the menu
@@ -64,12 +66,16 @@ In this method you set all attributes that describe the plug-in, such as its nam
 		]
 ```
 
+Be careful with keyboard shortcuts. If you are not sure, do not set any. It is better to avoid shortcut conflicts and accidental triggers. The user can still set their own shortcuts in preferences.
+
+
 #### start()
 
 This method gets called when the plug-in gets initialized upon Glyphs.app start.
 You put all your initialization code here.
 
 ```python
+	@objc.python_method
 	def start(self):
 
 		# Your init code goes here...
@@ -80,6 +86,7 @@ You put all your initialization code here.
 Use this method to draw things on top the glyph outlines in the Edit View.
 
 ```python
+	@objc.python_method
 	def foreground(self, layer):
 
 		# Draw a blue rectangle on top of the glyph as big as the glyph’s bounding box
@@ -92,6 +99,7 @@ Use this method to draw things on top the glyph outlines in the Edit View.
 Use this method to draw things behind the glyph outlines in the Edit View.
 
 ```python
+	@objc.python_method
 	def background(self, layer):
 
 		# Draw a red rectangle on behind the glyph as big as the glyph’s bounding box
@@ -104,6 +112,7 @@ Use this method to draw things behind the glyph outlines in the Edit View.
 Use these methods to draw in inactive glyphs (the glyphs left and right of the active glyph in the Edit View). These methods deprecate the older `inactiveLayers()` method. While `inactiveLayerForeground()` draws in top of the Edit View rendering, `inactiveLayerBackground()` draws behind it.
 
 ```python
+	@objc.python_method
 	def inactiveLayerForeground(self, layer):
 
 		# Draw outlines in blue
@@ -134,6 +143,7 @@ Use this method to add drawings for glyphs in the preview panel.
 Please note that when you preview is set to "Show all instances" due to the live interpolation of the preview these layers don’t contain components, but only paths.
 
 ```python
+	@objc.python_method
 	def preview(self, layer):
 
 		# Draw in blue
@@ -156,6 +166,7 @@ So you can use this method to position things in the Edit View that are not dire
 See the GSEditViewController attributes `viewPort`, `bounds`, and `selectedLayerOrigin` in the [Python API Docu](http://docu.glyphsapp.com/#gseditviewcontroller) for further information.
 
 ```python
+	@objc.python_method
 	def foregroundInViewCoords(self, layer):
 
 		tab = Glyphs.font.currentTab
@@ -187,6 +198,7 @@ These context menu items could be based on the user’s selection of objects in 
 Return a list of context menu items described as a dictionary (see `self.generalContextMenus` in `settings()` above)
 
 ```python
+	@objc.python_method
 	def conditionalContextMenus(self):
 
 		# Empty list of context menu items
@@ -208,18 +220,17 @@ Return a list of context menu items described as a dictionary (see `self.general
 
 # Tips on Drawing
 
-Glyphs.app uses the Mac’s own Cocoa methods for drawing. These sometimes behave slightly different from other Python objects, and surely they have different names. 
-
-In order to make use of the Cocoa objects, make sure to include them into your Python plug-in declaring `from AppKit import *` at the top of the plug-in.
+Glyphs.app uses the Mac’s own Cocoa methods for drawing. These sometimes behave slightly different from other Python objects, and surely they have different names. In order to make use of the Cocoa objects, you may need to include them into your Python plug-in by declaring `from AppKit import *` at the top. Though, the most important ones are already included in `plugins.py`.
 
 Here are a few examples:
 
 ```python
+	@objc.python_method
 	def foreground(self, layer):
 
 		# Setting colors:
 		# sets RGBA values between 0.0 and 1.0:
-		NSColor.colorWithCalibratedRed_green_blue_alpha_( 1.0, 1.0, 1.0, 1.0 ).set()
+		NSColor.colorWithCalibratedRed_green_blue_alpha_( 1.0, 0.2, 1.0, 0.4 ).set()
 		
 		# predefined colors: blackColor, blueColor, brownColor, clearColor, cyanColor,
 		# darkGrayColor, grayColor, greenColor, lightGrayColor, magentaColor, orangeColor,
@@ -252,6 +263,7 @@ https://developer.apple.com/library/mac/documentation/cocoa/reference/applicatio
 Useful method that returns `True` or `False` depending on the state the your edit view is in:
 
 ```python
+	@objc.python_method
 	def conditionsAreMetForDrawing(self):
 		"""
 		Don't activate if text or pan (hand) tool are active.
@@ -310,17 +322,17 @@ Glyphs scales its drawings a little differently at small and large zoom stages. 
 	openPaths.stroke()
 ```
 
-To match the way Glyphs draws handle sizes, you can use the following method. It takes into account that the user can choose between three different handle sizes, that BCPs are drawn a little smaller, and that selected nodes are a little bigger.
+#### getHandleSize()
+
+Will return the size of handles and nodes, as set by the user in the app preferences. To exactly match the way Glyphs draws handles, you can use the following method. It takes into account that BCPs are drawn a little smaller, and that selected nodes are a little bigger:
 
 ```python
-
 	from GlyphsApp import OFFCURVE
 	
+	@objc.python_method
 	def drawHandleForNode(self, node):
 		# calculate handle size:
-		handleSizes = (5, 8, 12) # possible user settings
-		handleSizeIndex = Glyphs.handleSize # user choice in Glyphs > Preferences > User Preferences > Handle Size
-		handleSize = handleSizes[handleSizeIndex]*self.getScale()**-0.9 # scaled diameter
+		handleSize = self.getHandleSize()*self.getScale()**-0.9 # scaled diameter
 	
 		# offcurves are a little smaller:
 		if node.type == OFFCURVE:
@@ -362,7 +374,7 @@ You will find the .xib/.nib files of this example [here](https://github.com/schr
 
 ```python
 # encoding: utf-8
-
+from __future__ import division, print_function, unicode_literals
 from GlyphsApp.plugins import *
 
 class ____PluginClassName____(SelectTool):
@@ -371,12 +383,13 @@ class ____PluginClassName____(SelectTool):
 	sliderMenuView = objc.IBOutlet() # the view area placed inside the context menu
 	slider = objc.IBOutlet()         # the slider placed inside sliderMenuView
 	
+	@objc.python_method
 	def settings(self):
 		self.name = 'My Select Tool'
-
+		
 		# Load .nib file from package
 		self.loadNib("SliderView", __file__)
-
+		
 		# Add the view to the context menu
 		self.generalContextMenus = [
 			{"view": self.sliderMenuView}
@@ -385,12 +398,13 @@ class ____PluginClassName____(SelectTool):
 		# Prepare slider
 		self.slider.setMinValue_(0.0)
 		self.slider.setMaxValue_(1.0)
-
+	
 	# Prints the slider’s value
 	@objc.IBAction
 	def slider_(self, sender):
-		print 'Slider value:', sender.floatValue()
+		print('Slider value:', sender.floatValue())
 	
+	@objc.python_method
 	def __file__(self):
 		return __file__
 ```
@@ -403,15 +417,16 @@ We need to create a so called [Group](http://ts-vanilla.readthedocs.org/en/lates
 
 ```python
 # encoding: utf-8
-
+from __future__ import division, print_function, unicode_literals
 from GlyphsApp.plugins import *
 from vanilla import *
 
 class ____PluginClassName____(SelectTool):
 
+	@objc.python_method
 	def settings(self):
 		self.name = 'My Select Tool'
-
+		
 		# Create Vanilla window and group with controls
 		viewWidth = 150
 		viewHeight = 40
@@ -419,13 +434,14 @@ class ____PluginClassName____(SelectTool):
 		self.sliderMenuView.group = Group((0, 0, viewWidth, viewHeight))
 		self.sliderMenuView.group.text = TextBox((10, 0, -10, -10), self.name)
 		self.sliderMenuView.group.slider = Slider((10, 18, -10, 23), callback=self.sliderCallback)
-
+		
 		# Define the menu
 		self.generalContextMenus = [
 			{"view": self.sliderMenuView.group.getNSView()}
 		]
-
+		
 	# Prints the slider’s value
+	@objc.python_method
 	def sliderCallback(self, sender):
-		print 'Slider value:', sender.get()
+		print('Slider value:', sender.get())
 ```

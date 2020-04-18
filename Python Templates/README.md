@@ -48,8 +48,7 @@ The variables in detail:
 * `____ProductPageURL____` is where Glyphs will take the user once he got notified of an existing update and has clicked on the notification. On this page, you should make your new plug-in version available for download, since Glyphs will not automatically install the update (at this point).
 * `____LatestReleaseNotes____` is an optional description of the lastest plug-in version, e.g., *‘New feature X’*. This will be displayed when the user checks for updates in the app preferences, and will motivate your users to keep your plug-ins up to date.
 
-
-###### Dynamic version information
+#### Dynamic version information
 
 If you operate your own software distribution system, like an online shop, you can have your server output this Info.plist with dynamic information about the latest version of the plugin, instead of keeping the online Info.plist manually up to date. Please make sure that the file is delivered in the `application/xml` MIME-type.
 
@@ -61,11 +60,11 @@ A live example of all of this can be found for Yanone’s Speed Punk, with `prod
 
 ### Edit `Contents/Resources/plugin.py`:
 
-This is where your own code goes. You need to rename the main class `class ____PluginClassName____(...)` to the above mentioned class name.
+This is where your own code goes. You need to rename the main class `class ____PluginClassName____(...)` to the above mentioned class name. Detailed instructions on what you can do, and which additional convenience methods and attributes are available, you will find in the readmes of the respective templates.
 
 ### Edit `Contents/Resources/IBdialog.xib`:
 
-Should your plug-in contain a dialog, you need to likewise rename the pointer `____PluginClassName____` to the principal class. This is quickest done in text editor, but you can (and must) also read through the Interface Builder instructions below and could change the value in Xcode/Interface Builder.
+Should your plug-in contain a dialog, you need to likewise rename the pointer `____PluginClassName____` to the principal class. This is quickest done in text editor, but you can (and must) also read through the Interface Builder instructions below and change the value in Xcode/Interface Builder.
 
 Don’t forget to re-compile. See the *Interface Builder* section below.
 
@@ -81,7 +80,7 @@ Your Python code communicates with the UI through:
 
 The sample plug-ins here that use a UI, `File Format`, `Filter With Dialog`, and `Palette`, are small functional plug-ins that make use of both IBOutlets and IBActions.
 
-##### 1. IBOutlets: Make UI elements available to Python 
+#### 1. IBOutlets: Make UI elements available to Python 
 
 At the root of the plug-in class, you define variables that will be linked to UI elements. In this example, we want to create a pointer to a text field in the dialog to the variable `textField `.
 
@@ -116,7 +115,7 @@ In order to make the last line work, make sure you also have a `__file__()` meth
 And don’t fiddle with it. Leave it as it is.
 
 
-##### 2. IBActions: Let UI elements trigger Python functions
+#### 2. IBActions: Let UI elements trigger Python functions
 
 Functions to be triggered from the UI get defined by a `@objc.IBAction` just before the function definition.
 The function names need to end with an underscore, e.g. `setValue_()`.
@@ -128,7 +127,7 @@ The function names need to end with an underscore, e.g. `setValue_()`.
 		self.updateFeedBackTextField()
 ```
 
-##### 3. Interface Builder
+#### 3. Interface Builder
 
 ![](_Readme_Images/IB_Overview.png)
 
@@ -148,7 +147,7 @@ All the back and forth relations between the UI and your Python code can be revi
 ![](_Readme_Images/IB_Connections.png)
 
 
-##### 4. Compile .xib to .nib
+#### 4. Compile .xib to .nib
 
 As a last step, you need to compile the `.xib` (the user-editable dialog) file to a `.nib` file with this *Terminal* command: `ibtool xxx.xib --compile xxx.nib`.
 Please note: Every time the .xib is changed, it has to be **recompiled** to a .nib. 
@@ -161,16 +160,19 @@ You’ll find the dropplet .app here in this *Python Templates* folder in the Gi
 
 ## Plug-in Manager
 
-Make your plug-in available for easy installation via *Window > Plugin Manager* in app versions 2.3 and later. To do that, simply make a pull request for the `packages.plist` file in the [glyphs-packages](https://github.com/schriftgestalt/glyphs-packages) repository. All you need to add in that file are these few lines:
+Make your plug-in available for easy installation via *Window > Plugin Manager* in app versions 2.3 and later. To do that, simply make a pull request for the `packages.plist` file in the [glyphs-packages repository](https://github.com/schriftgestalt/glyphs-packages). All you need to add in that file are these few lines:
 
 			{
 				name = "PluginNameWithExtension.glyphsPlugin";
 				url = "https://github.com/userName/repositoryName";
-				description = "Single-line description. Careful: WITHOUT LINEBREAKS! Use \n instead.";
-				screenshot = "https://optional.link.to/pluginScreenshot.png";
-			}
+				descriptions = {
+					en = "Single-line description, markdown-enabled. Start with the menu command through which your plug-in is accessible to the user, e.g. *Filter > Shift Glyph.* Careful: WITHOUT LINEBREAKS! Use \n instead.";
+				};
+			},
 
 Entries must be separated by commas. So don’t forget a comma right after the closing curly brace `}` if another entry is following. (And on the previous line if you add your entry at the end.) The order of entries does not matter, the manager will sort all registered plug-ins alphabetically anyway.
+
+You can add extra information to your packages entry, like screenshots, multilingual titles, and app version control. Find all details and useful tips in the readme of the [glyphs-packages repository](https://github.com/schriftgestalt/glyphs-packages).
 
 ## Further reading
 

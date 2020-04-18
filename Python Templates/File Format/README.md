@@ -16,22 +16,24 @@ A functional plug-in can be as small as this (in `Contents/Resources/plugin.py`)
 
 ```python
 # encoding: utf-8
-
+from __future__ import division, print_function, unicode_literals
 from GlyphsApp.plugins import *
 
 class ____PluginClassName____(FileFormatPlugin):
 	
 	dialog = objc.IBOutlet()
-
+	
+	@objc.python_method
 	def settings(self):
 		self.name = 'My CSV Export'
 		self.icon = 'ExportIcon'
 		self.loadNib('IBdialog')
 
+	@objc.python_method
 	def export(self, font):
-
+	
 		# Code that writes a file goes here...
-
+		
 		# Return values
 		return (True, 'The export of the file was successful.')
 ```
@@ -44,12 +46,11 @@ In this method you set all attributes that describe the plug-in, such as its nam
 
 
 ```python
+	@objc.python_method
 	def settings(self):
 
 		# The name as it will appear in the Export dialog
 		# You may use a simple string or Glyphs.localize() for localizations (see http://docu.glyphsapp.com#localize)
-		self.name = 'My CSV Export'
-		# or:
 		self.name = Glyphs.localize({'en': u'My CSV Export', 'de': u'Mein CSV-Export'})
 
 		# The file name of the icon file without file extension
@@ -68,6 +69,7 @@ This method gets called when the plug-in gets initialized upon Glyphs.app start.
 You put all your initialization code here.
 
 ```python
+	@objc.python_method
 	def start(self):
 
 		# Your init code goes here...
@@ -85,6 +87,7 @@ This function must return a tuple containing:
 - Message (A text message describing the success/failure of the file writing)
 
 ```python
+	@objc.python_method
 	def export(self, font):
 
 		# Your file writing code goes here
@@ -109,6 +112,7 @@ Optional arguments:
 - `fileTypes` (a list (not a tuple!) of acceptable file name extensions)
 
 ```python
+	@objc.python_method
 	def export(self, font):
 	
 		# Ask for export destination and write the file:

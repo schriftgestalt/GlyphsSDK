@@ -31,10 +31,28 @@ class ____PluginClassName____(FilterWithDialog):
 
 	@objc.python_method
 	def settings(self):
-		self.menuName = Glyphs.localize({'en': "____My Filter____", 'de': "____Mein Filter____"})
+		self.menuName = Glyphs.localize({
+			'en': 'My Filter',
+			'de': 'Mein Filter',
+			'fr': 'Mon filtre',
+			'es': 'Mi filtro',
+			'pt': 'Meu filtro',
+			'jp': '私のフィルター',
+			'ko': '내 필터',
+			'zh': '我的过滤器',
+			})
 		
 		# Word on Run Button (default: Apply)
-		self.actionButtonLabel = Glyphs.localize({'en': u'Apply', 'de': u'Anwenden'})
+		self.actionButtonLabel = Glyphs.localize({
+			'en': 'Apply',
+			'de': 'Anwenden',
+			'fr': 'Appliquer',
+			'es': 'Aplicar',
+			'pt': 'Aplique',
+			'jp': '申し込む',
+			'ko': '대다',
+			'zh': '应用',
+			})
 		
 		# Load dialog from .nib (without .extension)
 		self.loadNib('IBdialog', __file__)
@@ -57,7 +75,7 @@ class ____PluginClassName____(FilterWithDialog):
 	def setValue_( self, sender ):
 		
 		# Store value coming in from dialog
-		Glyphs.defaults['com.myname.myfilter.value'] = sender.floatValue()
+		Glyphs.defaults['com.myname.myfilter.shift'] = sender.floatValue()
 		
 		# Trigger redraw
 		self.update()
@@ -72,7 +90,7 @@ class ____PluginClassName____(FilterWithDialog):
 		
 		# Called through UI, use stored value
 		else:
-			value = float(Glyphs.defaults['com.myname.myfilter.value'])
+			value = float(Glyphs.defaults['com.myname.myfilter.shift'])
 		
 		# Shift all nodes in x and y direction by the value
 		for path in layer.paths:
@@ -81,7 +99,7 @@ class ____PluginClassName____(FilterWithDialog):
 
 	@objc.python_method
 	def generateCustomParameter( self ):
-		return "%s; shift:%s;" % (self.__class__.__name__, Glyphs.defaults['com.myname.myfilter.value'] )
+		return "%s; shift:%s;" % (self.__class__.__name__, Glyphs.defaults['com.myname.myfilter.shift'] )
 
 	@objc.python_method
 	def __file__(self):

@@ -16,7 +16,7 @@ A functional plug-in can be as small as this (in `Contents/Resources/plugin.py`)
 
 ```python
 # encoding: utf-8
-
+from __future__ import division, print_function, unicode_literals
 from GlyphsApp.plugins import *
 
 class ____PluginClassName____ (PalettePlugin):
@@ -60,6 +60,7 @@ In this method you set all attributes that describe the plug-in, such as its nam
 * `self.name` is the name of the plug-in. Can be a string (`"MyName"`), a Unicode string (`u"MyName"`), or a `Glyphs.localize()` function for multiple languages:
 
 ```python
+	@objc.python_method
 	def settings(self):
 
 		# The name as it will appear in the sidebar
@@ -158,7 +159,7 @@ Also, you may delete the two `IBdialog.xib/.nib` files from the `Resources` fold
 
 ```python
 # encoding: utf-8
-
+from __future__ import division, print_function, unicode_literals
 from GlyphsApp.plugins import *
 from vanilla import *
 

@@ -20,7 +20,13 @@ class ____PluginClassName____(GeneralPlugin):
 
 	@objc.python_method
 	def settings(self):
-		self.name = Glyphs.localize({'en': u'My General Plugin', 'de': u'Mein allgemeines Plugin'})
+		self.name = Glyphs.localize({
+			'en': 'My General Plug-in',
+			'de': 'Mein allgemeines Plug-in',
+			'fr': 'Ma extension générale',
+			'es': 'Mi plugin general',
+			'pt': 'Meu plug-in geral',
+			})
 
 	@objc.python_method
 	def start(self):
@@ -28,7 +34,7 @@ class ____PluginClassName____(GeneralPlugin):
 		Glyphs.menu[EDIT_MENU].append(newMenuItem)
 
 	def showWindow_(self, sender):
-		""" Do something like show a window"""
+		"""Do something like show a window """
 		print("show Windows")
 
 	@objc.python_method

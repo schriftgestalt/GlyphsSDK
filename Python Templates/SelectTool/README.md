@@ -21,12 +21,14 @@ from GlyphsApp.plugins import *
 
 class ____PluginClassName____(SelectTool):
 	
+	@objc.python_method
 	def settings(self):
 		self.name = 'My Select Tool'
 		self.contextMenus = [
 			{"name": "Layer info in Macro Window", "action": self.printInfo},
 		]
-
+	
+	@objc.python_method
 	def printInfo(self):
 		"""
 		Example for a method triggered by a context menu item.
@@ -39,10 +41,10 @@ class ____PluginClassName____(SelectTool):
 			layer = Glyphs.font.selectedLayers[0]
 		
 			# Do stuff:
-			print "Current layer:", layer.parent.name, layer.name
-			print "  Number of paths:", len(layer.paths)
-			print "  Number of components:", len(layer.components)
-			print "  Number of anchors:", len(layer.anchors)
+			print("Current layer:", layer.parent.name, layer.name)
+			print("  Number of paths:", len(layer.paths))
+			print("  Number of components:", len(layer.components))
+			print("  Number of anchors:", len(layer.anchors))
 ```
 
 
@@ -56,12 +58,11 @@ In this method you set all attributes that describe the plug-in, such as its nam
 
 
 ```python
+	@objc.python_method
 	def settings(self):
 
-		# The name as it will appear in Glyphs’s toolbar as a tooltip
+		# The name as it will appear in the toolbar as a tooltip
 		# You may use a simple string or Glyphs.localize() for localizations (see http://docu.glyphsapp.com#localize)
-		self.name = 'My Select Tool'
-		# or:
 		self.name = Glyphs.localize({'en': u'My Select Tool', 'de': u'Mein Auswahlwerkzeug'})
 
 		# A keyboard shortcut for adctivating/deactivating the plug-in
@@ -84,6 +85,7 @@ This method gets called when the plug-in gets initialized upon Glyphs.app start.
 You put all your initialization code here.
 
 ```python
+	@objc.python_method
 	def start(self):
 
 		# Your init code goes here...
@@ -94,6 +96,7 @@ You put all your initialization code here.
 This method gets called when the tool gets activated through the toolbar.
 
 ```python
+	@objc.python_method
 	def activate(self):
 
 		# Your init code goes here...
@@ -104,6 +107,7 @@ This method gets called when the tool gets activated through the toolbar.
 This method gets called when the tool gets deactivated through the toolbar (another tool gets activated).
 
 ```python
+	@objc.python_method
 	def deactivate(self):
 
 		# Your code goes here...
@@ -111,9 +115,10 @@ This method gets called when the tool gets deactivated through the toolbar (anot
 
 #### foreground()
 
-Use this method to draw things on top the glyph outlines in the Edit View.
+Use this method to draw things on top the glyph outlines in the Edit View. It works like in the Reporter plug-in.
 
 ```python
+	@objc.python_method
 	def foreground(self, layer):
 
 		# Draw a blue rectangle on top of the glyph as big as the glyph’s bounding box
@@ -123,9 +128,10 @@ Use this method to draw things on top the glyph outlines in the Edit View.
 
 #### background()
 
-Use this method to draw things behind the glyph outlines in the Edit View.
+Use this method to draw things behind the glyph outlines in the Edit View. It works like in the Reporter plug-in.
 
 ```python
+	@objc.python_method
 	def background(self, layer):
 
 		# Draw a red rectangle behind the glyph as big as the glyph’s bounding box
@@ -141,6 +147,7 @@ These context menu items could be based on the user’s selection of objects in 
 Return a list of context menu items described as a dictionary (see `self.generalContextMenus` in `settings()` above)
 
 ```python
+	@objc.python_method
 	def conditionalContextMenus(self):
 
 		# Empty list of context menu items
@@ -203,7 +210,7 @@ class ____PluginClassName____(SelectTool):
 	# Prints the slider’s value
 	@objc.IBAction
 	def slider_(self, sender):
-		print 'Slider value:', sender.floatValue()
+		print('Slider value:', sender.floatValue())
 ```
 
 ### Vanilla
@@ -238,7 +245,7 @@ class ____PluginClassName____(SelectTool):
 
 	# Prints the slider’s value
 	def sliderCallback(self, sender):
-		print 'Slider value:', sender.get()
+		print('Slider value:', sender.get())
 ```
 
 ## Dialogs in inspector views
@@ -325,5 +332,5 @@ class ____PluginClassName____(SelectTool):
 
 	# Prints the slider’s value
 	def sliderCallback(self, sender):
-		print 'Slider value:', sender.get()
+		print('Slider value:', sender.get())
 ```

@@ -20,10 +20,23 @@ class ____PluginClassName____(ReporterPlugin):
 
 	@objc.python_method
 	def settings(self):
-		self.menuName = Glyphs.localize({'en': 'My Plugin', 'de': 'Mein Plugin'})
-		self.generalContextMenus = [
-			{'name': Glyphs.localize({'en': 'Do something', 'de': 'Tu etwas'}), 'action': self.doSomething_},
-		]
+		self.menuName = Glyphs.localize({
+			'en': 'My Plugin',
+			'de': 'Mein Plugin',
+			'fr': 'Ma extension',
+			'es': 'Mi plugin',
+			'pt': 'Meu plug-in',
+			})
+		self.generalContextMenus = [{
+			'name': Glyphs.localize({
+				'en': 'Do something',
+				'de': 'Tu etwas',
+				'fr': 'Faire quelque chose',
+				'es': 'Hacer algo',
+				'pt': 'Faça alguma coisa',
+				}), 
+			'action': self.doSomething_
+			}]
 
 	@objc.python_method
 	def foreground(self, layer):
@@ -66,7 +79,16 @@ class ____PluginClassName____(ReporterPlugin):
 			if len(layer.selection) == 1 and type(layer.selection[0]) == GSAnchor:
 					
 				# Add context menu item
-				contextMenus.append({'name': Glyphs.localize({'en': 'Do something else', 'de': 'Tu etwas anderes'}), 'action': self.doSomethingElse_})
+				contextMenus.append({
+					'name': Glyphs.localize({
+						'en': 'Do something else',
+						'de': 'Tu etwas anderes',
+						'fr': 'Faire aute chose',
+						'es': 'Hacer algo más',
+						'pt': 'Faça outra coisa',
+						}), 
+					'action': self.doSomethingElse_
+					})
 
 		# Return list of context menu items
 		return contextMenus
