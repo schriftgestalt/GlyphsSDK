@@ -7,7 +7,7 @@ Requires Sphinx (http://sphinx-doc.org) and ynlib (https://github.com/yanone/ynl
 
 In `code2sphinx.py` point the code to the path of your version of `GlyphsApp.py`.
 
-Then execute `python code2sphinx.py`. This will combine the sphinx code from the comments in GlyphsApp.py with the headers in index.rst.original, to bake the HTML files found in `sphinx folder/_build/html/`
+Then execute `python code2sphinx.py`. This will combine the sphinx code from the comments in `GlyphsApp/__init__.py` with the headers in index.rst.original, to bake the HTML files found in `sphinx folder/_build/html/`
 
 ## Upload to FTP
 
