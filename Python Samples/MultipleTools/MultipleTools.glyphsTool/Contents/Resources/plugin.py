@@ -1,4 +1,6 @@
 # encoding: utf-8
+from __future__ import division, print_function, unicode_literals
+
 # Example tool plugin with subtools
 # Georg Seifert, 2016
 
@@ -6,8 +8,9 @@ from GlyphsApp.plugins import *
 import traceback, os
 
 class MultipleTools(SelectTool):
+	@objc.python_method
 	def settings(self):
-		self.name = u'Multiple Tools'
+		self.name = 'Multiple Tools'
 		self.keyboardShortcut = 'x'
 		self.toolbarPosition = 250
 		
