@@ -1737,15 +1737,21 @@ class MasterAxesProxy (Proxy):
 			axis = self._owner.font.axes[Key]
 			return self._owner.setAxisValueValue_forId_(Value, axis.axisId())
 	def values(self):
+		if self._owner.font is None:
+			return None
 		axisValues = GSFont.axesPositionsFromAxes_master_(self._owner.font.pyobjc_instanceMethods.axes(), self._owner)
 		values = []
 		for axisValue in axisValues:
 			values.append(axisValue.position())
 		return values
 	def __len__(self):
+		if self._owner.font is None:
+			return 0
 		return len(self._owner.font.axes)
 	def _setterMethod(self, values):
 		idx = 0
+		if self._owner.font is None:
+			return
 		for axis in self._owner.font.axes:
 			self._owner.setAxisValueValue_forId_(values[idx], axis.axisId())
 			idx += 1
