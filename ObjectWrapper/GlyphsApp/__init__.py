@@ -697,8 +697,8 @@ GSApplication.registerDefaults = __registerDefaults__
 		Please be careful with your keys. Use a prefix that uses the reverse domain name. e.g. "com.MyName.foo.bar".
 
 		.. code-block:: python
-			# Check for whether or not a preference exists, because has_key() doesn't work in this PyObjC-brigde
-			if Glyphs.defaults["com.MyName.foo.bar"] is None:
+			# Check for whether or not a preference exists
+			if "com.MyName.foo.bar" in Glyphs.defaults:
 				# do stuff
 
 			# Get and set values
@@ -963,6 +963,13 @@ NSMenuItem.insert = __NSMenuItem__insert__
 def __NSMenu__append__(self, item):
 	self.addItem_(item)
 NSMenu.append = __NSMenu__append__
+
+
+def __NSURL__new__(typ, *args, **kwargs):
+	if len(args) > 0:
+		return typ.fileURLWithPath_(args[0])
+	return typ.new()
+NSURL.__new__ = staticmethod(__NSURL__new__)
 
 '''
 	**Functions**
@@ -1572,10 +1579,8 @@ class FontGlyphsProxy (Proxy):
 			Key = Value.name
 			Items.append((Key, Value))
 		return Items
-	def has_key(self, Key):
-		return self._owner.glyphForName_(Key) is not None
 	def append(self, Glyph):
-		if not self.has_key(Glyph.name):
+		if Glyph.name not in self:
 			self._owner.addGlyph_(Glyph)
 		else:
 			raise NameError('There is a glyph with the name \"%s\" already in the font.' % Glyph.name)
@@ -1598,7 +1603,7 @@ class FontFontMasterProxy (Proxy):
 		elif isString(Key):
 			return self._owner.fontMasterForId_(Key)
 		else:
-			raise(KeyError)
+			raise KeyError("need int or str, got: %s", type(Key))
 	def __setitem__(self, Key, FontMaster):
 		if type(Key) is int:
 			if Key < 0:
@@ -1969,9 +1974,7 @@ class UserDataProxy(Proxy):
 	def __repr__(self):
 		return self._owner.pyobjc_instanceMethods.userData().__repr__()
 	def __contains__(self, item):
-		return self._owner.pyobjc_instanceMethods.userData().objectForKey_(item) is not None
-	def has_key(self, item):
-		return self._owner.pyobjc_instanceMethods.userData().objectForKey_(item) is not None
+		return self._owner.userDataForKey_(item) is not None
 	def get(self, key, default=None):
 		value = self.__getitem__(key)
 		if value is None:
@@ -1998,8 +2001,6 @@ class PathAttributesProxy(Proxy):
 	def __repr__(self):
 		return self._owner.pyobjc_instanceMethods.attributes().__repr__()
 	def __contains__(self, item):
-		return self._owner.pyobjc_instanceMethods.attributes().objectForKey_(item) is not None
-	def has_key(self, item):
 		return self._owner.pyobjc_instanceMethods.attributes().objectForKey_(item) is not None
 	def get(self, key, default=None):
 		value = self.__getitem__(key)
@@ -2460,7 +2461,7 @@ class PathNodesProxy (Proxy):
 		if idx < self.__len__():
 			return self._owner.nodeAtIndex_(idx)
 		else:
-			raise IndexError
+			raise IndexError("list index out of range (%d): %d" % (self.__len__(), idx))
 	def __setitem__(self, idx, Node):
 		if isinstance(idx, int):
 			if idx < 0:
@@ -3578,12 +3579,11 @@ GSFontMaster.__deepcopy__ = GSObject__copy__
 		xHeight
 		descender
 		italicAngle
-		verticalStems
-		horizontalStems
 		alignmentZones
 		blueValues
 		otherBlues
 		guides
+		stems
 		userData
 		customParameters
 		font
@@ -3680,26 +3680,17 @@ GSFontMaster.italicAngle = property(lambda self: self.pyobjc_instanceMethods.ita
 	:type: float
 '''
 
-GSFontMaster.stems = property(lambda self: list(self.pyobjc_instanceMethods.stems()), lambda self, value: self.setVerticalStems_(value))
+# TODO: add stems proxy
+GSFontMaster.stems = property(lambda self: list(self.pyobjc_instanceMethods.stems()), lambda self, value: self.setStems_(value))
 '''
-	.. attribute:: verticalStems
-		The vertical stems. This is a list of numbers. For the time being, this can be set only as an entire list at once.
+	.. attribute:: stems
+		The stems. This is a list of numbers. For the time being, this can be set only as an entire list at once.
 	:type: list
 	.. code-block:: python
 
 		# Set stems
-		font.masters[0].verticalStems = [10, 11, 20]
-'''
-
-GSFontMaster.horizontalStems = property(lambda self: list(self.pyobjc_instanceMethods.horizontalStems()), lambda self, value: self.setHorizontalStems_(value))
-'''
-	.. attribute:: horizontalStems
-	The horizontal stems. This is a list of numbers.  For the time being, this can be set only as an entire list at once.
-	:type: list
-	.. code-block:: python
-
-		# Set stems
-		font.masters[0].horizontalStems = [10, 11, 20]
+		TODO: Not updated yet
+		font.masters[0].stems = [10, 11, 20]
 '''
 
 GSFontMaster.alignmentZones = property(lambda self: self.defaultAlignmentZones())
@@ -3908,12 +3899,9 @@ GSInstance.mutableCopyWithZone_ = GSObject__copy__
 
 		active
 		name
-		weight
-		width
+		weightClass
+		widthClass
 		axes
-		weightValue
-		widthValue
-		customValue
 		isItalic
 		isBold
 		linkStyle
@@ -3953,22 +3941,26 @@ GSInstance.active = property(lambda self: bool(self.exports()), lambda self, val
 GSInstance.name = property(lambda self: self.pyobjc_instanceMethods.name(), lambda self, value: self.setName_(value))
 '''
 	.. attribute:: name
-	Name of instance. Corresponds to the "Style Name" field in the font info. This is used for naming the exported fonts.
+		Name of instance. Corresponds to the "Style Name" field in the font info. This is used for naming the exported fonts.
 	:type: string
 '''
 
-GSInstance.weight = property(lambda self: self.pyobjc_instanceMethods.weightClass(), lambda self, value: self.setWeightClass_(value))
+#GSInstance.weight = property(lambda self: self.pyobjc_instanceMethods.weightClass(), lambda self, value: self.setWeightClass_(value))
 GSInstance.weightClass = property(lambda self: self.pyobjc_instanceMethods.weightClass(), lambda self, value: self.setWeightClass_(value))
 '''
-	.. attribute:: weight
-	Human-readable weight name, chosen from list in Font Info. For actual position in interpolation design space, use GSInstance.weightValue.
+	.. attribute:: weightClass
+		Weight class, as set in Font Info. Values from 1 to 1000 are supported but 100–900 is recommended.
+	
+		For actual position in interpolation design space, use GSInstance.axes.
 	:type: string
 '''
-GSInstance.width = property(lambda self: self.pyobjc_instanceMethods.widthClass(), lambda self, value: self.setWidthClass_(value))
+#GSInstance.width = property(lambda self: self.pyobjc_instanceMethods.widthClass(), lambda self, value: self.setWidthClass_(value))
 GSInstance.widthClass = property(lambda self: self.pyobjc_instanceMethods.widthClass(), lambda self, value: self.setWidthClass_(value))
 '''
-	.. attribute:: width
-	Human-readable width name, chosen from list in Font Info. For actual position in interpolation design space, use GSInstance.widthValue.
+	.. attribute:: widthClass
+		Human-readable width name, chosen from list in Font Info. Values from 1 to 9 are supported
+		
+		For actual position in interpolation design space, use GSInstance.axes.
 	:type: string
 '''
 
@@ -3989,16 +3981,6 @@ GSInstance.axes = property(lambda self: MasterAxesProxy(self), lambda self, valu
 	.. versionadded:: 2.5.2
 '''
 
-GSInstance.customValue = property(lambda self: self.interpolationCustom(), lambda self, value: self.setInterpolationCustom_(value))
-'''
-	.. attribute:: customValue
-	Value for interpolation in design space.
-	
-	.. deprecated:: 2.5.2
-		Use :attr:`axes <GSInstance.axes>` instead.
-	
-	:type: float
-'''
 GSInstance.isItalic = property(lambda self: bool(self.pyobjc_instanceMethods.isItalic()), lambda self, value: self.setIsItalic_(value))
 '''
 	.. attribute:: isItalic
@@ -4893,7 +4875,7 @@ GSGlyph.__new__ = staticmethod(GSObject__new__)
 GSGlyph.__new__.__name__ = "__new__"
 
 def Glyph__init__(self, name=None, autoName=True):
-	if name and (isinstance(name, str) or isinstance(name, unicode)):
+	if name and isString(name):
 		if not autoName:
 			self.setName_changeName_(name, autoName)
 		else:
@@ -4988,7 +4970,7 @@ GSGlyph.layers = property(lambda self: GlyphLayerProxy(self),
 def GSGlyph_setName(self, name):
 	if name == self.name:
 		pass
-	elif (self.parent and not self.parent.glyphs.has_key(name)) or not self.parent:
+	elif (self.parent and name not in self.parent.glyphs) or not self.parent:
 		self.setName_changeName_update_(name, False, True)
 	else:
 		raise NameError('The glyph name \"%s\" already exists in the font.' % name)
@@ -5039,6 +5021,17 @@ GSGlyph.id = property(lambda self: str(self.pyobjc_instanceMethods.id()),
 	.. attribute:: id
 	An unique identifier for each glyph
 	:type: string
+'''
+
+GSGlyph.locked = property(lambda self: bool(self.pyobjc_instanceMethods.locked()),
+								lambda self, value: self.setLocked_(value))
+'''
+	.. attribute:: locked
+
+		If the glyph is locked
+		TODO
+
+	:type: bool
 '''
 
 GSGlyph.category = property(lambda self: self.pyobjc_instanceMethods.category(),
@@ -9071,8 +9064,10 @@ GSEditViewController.scale = property(lambda self: self.graphicView().scale(),
 
 '''
 
-GSEditViewController.viewPort = property(lambda self: self.frameView().visibleRect(),
-										 lambda self, value: self.frameView().zoomViewToRect_(value))
+GSEditViewController.viewPort = property(lambda self: self.graphicView().userVisibleRect(),
+										 lambda self, value: self.graphicView().setUserVisibleRect_(value))
+
+GSEditViewController.saveViewPort = property(lambda self: self.graphicView().saveVisibleRect())
 
 
 '''
