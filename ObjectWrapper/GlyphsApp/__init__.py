@@ -2454,7 +2454,7 @@ class LayerSelectionProxy (Proxy):
 	def insert(self, Index, object):
 		self._owner.addSelection_(object)
 	def clear(self):
-		self._owner.clearSelection(object)
+		self._owner.clearSelection()
 
 
 
@@ -3597,7 +3597,6 @@ GSFontMaster.__deepcopy__ = GSObject__copy__
 	**Properties**
 
 '''
-GSFontMaster.font = property(lambda self: self.pyobjc_instanceMethods.font(), lambda self, value: self.setFont_(value))
 
 GSFontMaster.id = property(lambda self: self.pyobjc_instanceMethods.id(), lambda self, value: self.setId_(value))
 '''

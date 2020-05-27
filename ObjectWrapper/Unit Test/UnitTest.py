@@ -20,6 +20,7 @@ if sys.version_info[0] == 3:
 	unicode = str
 
 PathToTestFile = os.path.join(os.path.dirname(__file__), 'Glyphs Unit Test Sans.glyphs')
+PathToTestFile = "/Users/gabriel/Documents/GitHub/GlyphsSDK/ObjectWrapper/Unit Test/Glyphs Unit Test Sans.glyphs"
 
 class GlyphsAppTests(unittest.TestCase):
 	
@@ -271,7 +272,7 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertIsNotNone(font.classes[-1].__repr__())
 		self.assertEqual(len(font.classes), 1)
 		self.assertIn('<GSClass "uppercaseLetters">', str(font.classes))
-		self.assertIn('A', font.classes['uppercaseLetters'].code)
+		self.assertEqual('A', font.classes['uppercaseLetters'].code)
 		del(font.classes['uppercaseLetters'])
 		newClass1 = GSClass('uppercaseLetters1', 'A')
 		newClass2 = GSClass('uppercaseLetters2', 'A')
@@ -279,9 +280,13 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertEqual(newClass1, font.classes[-2])
 		self.assertEqual(newClass2, font.classes[-1])
 		newClass = GSClass('uppercaseLetters3', 'A')
-		newClass = copy.copy(newClass)
 		font.classes.insert(0, newClass)
 		self.assertEqual(newClass, font.classes[0])
+		copyClass = copy.copy(newClass)
+		self.assertIsNone(copyClass.parent())
+		self.assertIs(newClass.parent(), font)
+		font.classes.insert(0, copyClass)
+		self.assertEqual(copyClass.parent(), newClass.parent())
 		font.classes.remove(font.classes[-1])
 		font.classes.remove(font.classes[-1])
 		font.classes.remove(font.classes[0])
@@ -294,7 +299,7 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertIsNotNone(font.features['liga'].__repr__())
 		self.assertEqual(len(font.features), 1)
 		self.assertIn('<GSFeature "liga">', str(font.features))
-		self.assertIn('sub f i by fi;', font.features['liga'].code)
+		self.assertEqual('sub f i by fi;', font.features['liga'].code)
 		del(font.features['liga'])
 		newFeature1 = GSFeature('liga', 'sub f i by fi;')
 		newFeature2 = GSFeature('liga', 'sub f l by fl;')
@@ -317,7 +322,7 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertIsNotNone(font.featurePrefixes[-1].__repr__())
 		self.assertEqual(len(font.featurePrefixes), 1)
 		self.assertIn('<GSFeaturePrefix "LanguageSystems">', str(font.featurePrefixes))
-		self.assertIn('languagesystem DFLT dflt;', font.featurePrefixes[-1].code)
+		self.assertEqual('languagesystem DFLT dflt;', font.featurePrefixes[-1].code)
 		del(font.featurePrefixes['LanguageSystems'])
 		newFeaturePrefix1 = GSFeaturePrefix('LanguageSystems1', 'languagesystem DFLT dflt;')
 		newFeaturePrefix2 = GSFeaturePrefix('LanguageSystems2', 'languagesystem DFLT dflt;')
@@ -997,7 +1002,7 @@ class GlyphsAppTests(unittest.TestCase):
 		# has its own test
 		
 		# GSLayer.selection
-		layer.selection = []
+		layer.selection.clear()
 		self.assertEqual(len(layer.selection), 0)
 		selection = 0
 		for path in layer.paths:
