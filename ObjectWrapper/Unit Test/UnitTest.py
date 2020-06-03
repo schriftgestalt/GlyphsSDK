@@ -24,9 +24,9 @@ PathToTestFile = "/Users/gabriel/Documents/GitHub/GlyphsSDK/ObjectWrapper/Unit T
 
 class GlyphsAppTests(unittest.TestCase):
 	
-	def assertString(self, stringObject, assertType = True, readOnly = False):
-		if assertType:
-			self.assertIsInstance(str(stringObject), str)
+	def assertString(self, stringObject, assertType = True, readOnly = False, allowNone = True):
+		if assertType and not (stringObject is None and allowNone):
+			self.assertIsInstance(stringObject, str)
 		if readOnly == False:
 			oldValue = stringObject
 			stringObject = 'a'
@@ -45,7 +45,7 @@ class GlyphsAppTests(unittest.TestCase):
 	
 	def assertInteger(self, intObject, assertType = True, readOnly = False):
 		if assertType:
-			assert type(int(intObject)) == int
+			self.assertIsInstance(intObject, int)
 		if readOnly == False:
 			oldValue = intObject
 			intObject = 1
@@ -54,16 +54,16 @@ class GlyphsAppTests(unittest.TestCase):
 	
 	def assertFloat(self, floatObject, assertType = True, readOnly = False):
 		if assertType:
-			self.assertIsInstance(float(floatObject), float)
+			self.assertIsInstance(floatObject, float)
 		if readOnly == False:
 			oldValue = floatObject
 			floatObject = .5
 			self.assertEqual(floatObject, .5)
 			floatObject = oldValue
 	
-	def assertUnicode(self, unicodeObject, assertType = True, readOnly = False):
-		if assertType:
-			assert unicode(unicodeObject)
+	def assertUnicode(self, unicodeObject, assertType = True, readOnly = False, allowNone = True):
+		if assertType and not (unicodeObject is None and allowNone):
+			self.assertIsInstance(unicodeObject, unicode)
 		if readOnly == False:
 			oldValue = unicodeObject
 			unicodeObject = u'Ə'
@@ -95,7 +95,23 @@ class GlyphsAppTests(unittest.TestCase):
 		# close all fonts
 		for font in Glyphs.fonts:
 			font.close()
-		
+		self.assertEqual(len(Glyphs.fonts), 0)
+
+		# AppFontProxy
+		newFont = GSFont()
+		Glyphs.fonts.append(newFont)
+		self.assertIn(newFont, Glyphs.fonts)
+		self.assertEqual(len(Glyphs.fonts), 1)
+		self.assertEqual(newFont, Glyphs.font)
+		copyfont = copy.copy(font)
+		self.assertNotIn(copyfont, Glyphs.fonts)
+		newFont.close()
+		self.assertNotIn(newFont, Glyphs.fonts)
+		self.assertEqual(len(Glyphs.fonts), 0)
+		Glyphs.fonts.extend([copyfont])
+		self.assertIn(copyfont, Glyphs.fonts)
+		copyfont.close()
+
 		# open font
 		Glyphs.open(PathToTestFile)
 		# Macro window
@@ -104,15 +120,6 @@ class GlyphsAppTests(unittest.TestCase):
 		# Assert font
 		self.assertIsNotNone(Glyphs.font)
 		self.assertEqual(len(Glyphs.fonts), 1)
-
-		# AppFontProxy
-		hiddenFont = copy.copy(font)
-		Glyphs.fonts.append(hiddenFont)
-		hiddenFont.close()
-		hiddenFont = copy.copy(font)
-		Glyphs.fonts.extend([hiddenFont])
-		hiddenFont.close()
-		
 		
 		## Attributes
 		
@@ -619,31 +626,31 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertIsNotNone(copyInstance.__repr__())
 		
 		# GSInstance.active
-		self.assertBool(instance.active, readOnly = True)
+		self.assertBool(instance.active)
 		
 		# GSInstance.name
 		self.assertString(instance.name)
 		
-		# GSInstance.weight
-		self.assertString(instance.weight, readOnly = True)
+		# GSInstance.weightClass
+		self.assertInteger(instance.weightClass)
+		with self.assertRaises(TypeError):
+			instance.weightClass = 'a'
+
+		# GSInstance.weightClassName
+		self.assertString(instance.weightClassName, readOnly = True)
 		
-		# GSInstance.width
-		self.assertString(instance.width, readOnly = True)
+		# GSInstance.widthClass
+		self.assertInteger(instance.widthClass)
+		with self.assertRaises(TypeError):
+			instance.widthClass = 'a'
+
+		# GSInstance.widthClassName
+		self.assertString(instance.widthClassName, readOnly = True)
 
 		# GSInstance.axes
 		self.assertIsNotNone(instance.axes)
 		self.assertEqual(len(instance.axes), 1)
 
-		
-		# # GSInstance.weightValue
-		# self.assertFloat(instance.weightValue)
-		#
-		# # GSInstance.widthValue
-		# self.assertFloat(instance.widthValue)
-		#
-		# # GSInstance.customValue
-		# self.assertFloat(instance.customValue)
-		
 		# GSInstance.isItalic
 		self.assertBool(instance.isItalic)
 		
@@ -697,7 +704,6 @@ class GlyphsAppTests(unittest.TestCase):
 		# GSInstance.generate()
 		path = os.path.join(os.path.dirname(__file__), 'GlyphsUnitTestSans-Thin.otf')
 		result = instance.generate(FontPath=path)
-		print("__result", result)
 		self.assertEqual(result, True)
 		self.assertTrue(os.path.exists(path))
 		if os.path.exists(path):
