@@ -1,9 +1,9 @@
 # encoding: utf-8
-from __future__ import division, print_function, unicode_literals
 
 # Example tool plugin with subtools
 # Georg Seifert, 2016
 
+from __future__ import division, print_function, unicode_literals
 from GlyphsApp.plugins import *
 import traceback, os
 
