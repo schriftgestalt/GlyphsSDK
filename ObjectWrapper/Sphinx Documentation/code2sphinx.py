@@ -12,8 +12,44 @@
 
 import re, os
 
-from ynlib.files import ReadFromFile, WriteToFile
-from ynlib.system import Execute
+#from ynlib.files import ReadFromFile, WriteToFile
+def ReadFromFile(path):
+	"""\
+	Return content of file
+	"""
+	import codecs
+	if os.path.exists(path):
+		f = codecs.open(path, encoding='utf-8', mode='r')
+		text = f.read()#.decode('utf8')
+		f.close()
+		return text
+
+	return ''
+
+def WriteToFile(path, string):
+	"""\
+	Write content to file
+	"""
+	f = open(path, 'wb')
+	f.write(string.encode())
+	f.close()
+	return True
+
+#from ynlib.system import Execute
+def Execute(command):
+	"""\
+	Execute system command, return output.
+	"""
+
+	import sys
+	import subprocess
+
+	process = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True, close_fds=True)
+	os.waitpid(process.pid, 0)
+	response = process.stdout.read().strip()
+	process.stdout.close()
+	return response
+
 
 # local path
 path = os.path.dirname(__file__)
