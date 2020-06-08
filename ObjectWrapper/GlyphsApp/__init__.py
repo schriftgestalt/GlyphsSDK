@@ -16,6 +16,7 @@ from AppKit import NSApp, NSDocumentController, NSOpenPanel, NSSavePanel, NSOKBu
 
 GSFont = objc.lookUpClass("GSFont")
 GSFontMaster = objc.lookUpClass("GSFontMaster")
+GSAxis = objc.lookUpClass("GSAxis")
 GSGlyph = objc.lookUpClass("GSGlyph")
 GSGlyphInfo = objc.lookUpClass("GSGlyphInfo")
 GSGlyphsInfo = objc.lookUpClass("GSGlyphsInfo")
@@ -90,7 +91,10 @@ __all__ = [
 	"MOUSEMOVED", "MOUSEDRAGGED", "MOUSEDOWN", "MOUSEUP", "CONTEXTMENUCALLBACK",
 	
 	"GSMetricsKeyAscender", "GSMetricsKeyCapHeight", "GSMetricsKeySlantHeight", "GSMetricsKeyxHeight", "GSMetricsKeyTopHeight", "GSMetricsKeyDescender", "GSMetricsKeyBaseline",
-	"GSNoCase", "GSUppercase", "GSLowercase", "GSSmallcaps", "GSOtherCase"
+	"GSNoCase", "GSUppercase", "GSLowercase", "GSSmallcaps", "GSOtherCase", 
+	
+	"GSShapeTypePath", "GSShapeTypeComponent"
+	
 	]
 
 
@@ -245,9 +249,9 @@ GSBottomRight = 2
 # Writing direction
 BIDI = -1
 LTR = 0
-RTL = 1
-LTRTTB = 3
-RTLTTB = 2
+RTL = 2
+LTRTTB = 4
+RTLTTB = 6
 
 # Callbacks
 DRAWFOREGROUND = "DrawForeground"
@@ -848,8 +852,8 @@ GSApplication.versionString = NSBundle.mainBundle().infoDictionary()["CFBundleSh
 def Glyphs_FloatVersion(self):
 	m = re.match(r"(\d+)\.(\d+)", self.versionString)
 	return float(str(m.group(1)) + '.' + str(m.group(2)))
-
-GSApplication.versionNumber = property(lambda self: Glyphs_FloatVersion(self))
+_versionNumber = Glyphs_FloatVersion(GSApplication)
+GSApplication.versionNumber = _versionNumber
 
 '''
 	.. attribute:: versionNumber
@@ -872,8 +876,8 @@ GSApplication.versionNumber = property(lambda self: Glyphs_FloatVersion(self))
 	
 '''
 
-
-GSApplication.buildNumber = int(NSBundle.mainBundle().infoDictionary()["CFBundleVersion"])
+_buildNumber = int(NSBundle.mainBundle().infoDictionary()["CFBundleVersion"])
+GSApplication.buildNumber = _buildNumber
 
 '''
 	.. attribute:: buildNumber
@@ -1118,6 +1122,7 @@ GSApplication.ligatureComponents = _ligatureComponents
 			    "lam-ar.medi",
 			    "heh-ar.fina"
 			)
+
 	:param string: glyph name
 	:param font: if you add a font, and the font has a local glyph info, it will be used instead of the global info data.
 	:rtype: list
@@ -1494,6 +1499,24 @@ class AppFontProxy (Proxy):
 		for font in fonts:
 			self.append(font)
 
+'''
+:mod:`GSDocument`
+===============================================================================
+
+The document class
+
+.. class:: GSDocument()
+
+	Properties
+
+	.. autosummary::
+
+		font
+		filePath
+
+	**Properties**
+'''
+
 GSDocument.font = property(lambda self: self.pyobjc_instanceMethods.font(),
 							lambda self, value: self.setFont_(value),
 							doc="")
@@ -1501,10 +1524,17 @@ GSDocument.font = property(lambda self: self.pyobjc_instanceMethods.font(),
 '''
 	.. attribute:: font
 		The active :class:`GSFont`
-	:type: list
-
+	:type: GSFont
 '''
 
+
+GSDocument.filePath = property(lambda self: self.fileURL().path(), doc="")
+
+'''
+	.. attribute:: filePath
+		The last save location
+	:type: str
+'''
 
 
 
@@ -1728,14 +1758,16 @@ class MasterAxesProxy (Proxy):
 				Key = self.__len__() + Key
 			count = self.__len__()
 			axis = self._owner.font.axes[Key]
-			return self._owner.axisValueValueForId_(axis.axisId())
+			if axis is None:
+				return None
+			return self._owner.axisValueValueForId_(axis.axisId)
 	def __setitem__(self, Key, Value):
 		if type(Key) is int:
 			if Key < 0:
 				Key = self.__len__() + Key
 			count = self.__len__()
 			axis = self._owner.font.axes[Key]
-			return self._owner.setAxisValueValue_forId_(Value, axis.axisId())
+			return self._owner.setAxisValueValue_forId_(Value, axis.axisId)
 	def values(self):
 		if self._owner.font is None:
 			return None
@@ -1753,7 +1785,7 @@ class MasterAxesProxy (Proxy):
 		if self._owner.font is None:
 			return
 		for axis in self._owner.font.axes:
-			self._owner.setAxisValueValue_forId_(values[idx], axis.axisId())
+			self._owner.setAxisValueValue_forId_(values[idx], axis.axisId)
 			idx += 1
 	def setterMethod(self):
 		return self._setterMethod
@@ -1987,11 +2019,14 @@ class UserDataProxy(Proxy):
 			return default
 		return value
 		
-class PathAttributesProxy(Proxy):
-	def __getitem__(self, Key):
-		return self._owner.attributeForKey_(Key)
-	def __setitem__(self, Key, Value):
-		self._owner.setAttribute_forKey_(objcObject(Value), Key)
+class AttributesProxy(Proxy):
+	def __getitem__(self, key):
+		if isString(key):
+			return self._owner.attributeForKey_(key)
+		else:
+			raise KeyError
+	def __setitem__(self, key, value):
+		self._owner.setAttribute_forKey_(objcObject(value), key)
 	def __delitem__(self, Key):
 		self._owner.setAttribute_forKey_(None, Key)
 	def values(self):
@@ -2005,9 +2040,9 @@ class PathAttributesProxy(Proxy):
 			return attribute.allKeys()
 		return None
 	def __repr__(self):
-		return self._owner.pyobjc_instanceMethods.attributes().__repr__()
+		return repr(self._owner.pyobjc_instanceMethods.attributes())
 	def __contains__(self, item):
-		return self._owner.pyobjc_instanceMethods.attributes().objectForKey_(item) is not None
+		return self._owner.pyobjc_instanceMethods.attributeForKey_(item) is not None
 	def get(self, key, default=None):
 		value = self.__getitem__(key)
 		if value is None:
@@ -2454,7 +2489,13 @@ class LayerSelectionProxy (Proxy):
 	def insert(self, Index, object):
 		self._owner.addSelection_(object)
 	def clear(self):
-		self._owner.clearSelection(object)
+		self._owner.clearSelection()
+	def _setSelecetion_(self, selection):
+		self.clear()
+		if selection is not None:
+			self.extend(selection)
+	def setterMethod(self):
+		return self._setSelecetion_
 
 
 
@@ -2954,15 +2995,27 @@ GSFont.note = property(lambda self: self.pyobjc_instanceMethods.note(),
 GSFont.kerning = property(lambda self: self.kerningLTR(), lambda self, value: self.setKerningLTR_(value))
 '''
 	.. attribute:: kerning
+		Kerning for LTR writing
 		A multi-level dictionary. The first level's key is the :attr:`GSFontMaster.id` (each master has its own kerning), the second level's key is the :attr:`GSGlyph.id` or class id (@MMK_L_XX) of the first glyph, the third level's key is a glyph id or class id (@MMK_R_XX) for the second glyph. The values are the actual kerning values.
 
 		To set a value, it is better to use the method :meth:`GSFont.setKerningForPair()`. This ensures a better data integrity (and is faster).
 	:type: dict
 '''
 
-GSFont.kerningRTL = property(lambda self: self.kerningRTL(), lambda self, value: self.setKerningRTL_(value))
+GSFont.kerningRTL = property(lambda self: self.pyobjc_instanceMethods.kerningRTL(), lambda self, value: self.setKerningRTL_(value))
 '''
-	.. attribute:: kerning
+	.. attribute:: kerningRTL
+		Kerning for RTL writing
+		A multi-level dictionary. The first level's key is the :attr:`GSFontMaster.id` (each master has its own kerning), the second level's key is the :attr:`GSGlyph.id` or class id (@MMK_L_XX) of the first glyph, the third level's key is a glyph id or class id (@MMK_R_XX) for the second glyph. The values are the actual kerning values.
+
+		To set a value, it is better to use the method :meth:`GSFont.setKerningForPair()`. This ensures a better data integrity (and is faster).
+	:type: dict
+'''
+
+GSFont.kerningVertical = property(lambda self: self.pyobjc_instanceMethods.kerningVertical(), lambda self, value: self.setKerningVertical_(value))
+'''
+	.. attribute:: kerningVertical
+		Kerning for vertical writing
 		A multi-level dictionary. The first level's key is the :attr:`GSFontMaster.id` (each master has its own kerning), the second level's key is the :attr:`GSGlyph.id` or class id (@MMK_L_XX) of the first glyph, the third level's key is a glyph id or class id (@MMK_R_XX) for the second glyph. The values are the actual kerning values.
 
 		To set a value, it is better to use the method :meth:`GSFont.setKerningForPair()`. This ensures a better data integrity (and is faster).
@@ -3051,13 +3104,15 @@ GSFont.keyboardIncrementBig = property(lambda self: self.pyobjc_instanceMethods.
 	.. attribute:: keyboardIncrementBig
 		Distance of movement by arrow plus Shift key. Default:10
 	:type: float
+
 	.. versionadded:: 3.0
 '''
 GSFont.keyboardIncrementHuge = property(lambda self: self.pyobjc_instanceMethods.keyboardIncrementHuge(), lambda self, value: self.setKeyboardIncrementHuge_(value))
 '''
-	.. attribute:: keyboardIncrement
-		Distance of movement by arrow plus Shift key. Default:100
+	.. attribute:: keyboardIncrementHuge
+		Distance of movement by arrow plus Command key. Default:100
 	:type: float
+
 	.. versionadded:: 3.0
 '''
 
@@ -3277,6 +3332,7 @@ GSFont.formatVersion = property(lambda self: self.pyobjc_instanceMethods.formatV
 	.. attribute:: formatVersion
 		The file-format the font should be written. possible values are '2' and '3'
 	:type: int
+
 	.. versionadded:: 3
 '''
 
@@ -3526,7 +3582,47 @@ GSFont.compileFeatures = __GSFont__compileFeatures__
 	.. versionadded:: 2.5
 '''
 
+##################################################################################
+#
+#
+#
+#           GSAxis
+#
+#
+#
+##################################################################################
 
+def _______________________(): pass
+def ____GSAxis_____________(): pass
+def _______________________(): pass
+
+'''
+
+:mod:`GSAxis`
+===============================================================================
+
+Implementation of the axis object. 
+
+.. class:: GSAxis()
+
+'''
+
+GSAxis.__new__ = staticmethod(GSObject__new__)
+
+def Axis__init__(self):
+	pass
+GSAxis.__init__ = Axis__init__
+GSAxis.__copy__ = GSObject__copy__
+GSAxis.__deepcopy__ = GSObject__copy__
+
+GSAxis.font = property(lambda self: self.pyobjc_instanceMethods.font())
+
+GSAxis.name = property(lambda self: self.pyobjc_instanceMethods.name(),
+					   lambda self, value: self.setName_(value))
+GSAxis.axisTag = property(lambda self: self.pyobjc_instanceMethods.axisTag(),
+						  lambda self, value: self.setAxisTag_(value))
+GSAxis.axisId = property(lambda self: self.pyobjc_instanceMethods.axisId(),
+					 lambda self, value: self.setAxisId_(value))
 
 ##################################################################################
 #
@@ -3597,7 +3693,6 @@ GSFontMaster.__deepcopy__ = GSObject__copy__
 	**Properties**
 
 '''
-GSFontMaster.font = property(lambda self: self.pyobjc_instanceMethods.font(), lambda self, value: self.setFont_(value))
 
 GSFontMaster.id = property(lambda self: self.pyobjc_instanceMethods.id(), lambda self, value: self.setId_(value))
 '''
@@ -5104,9 +5199,9 @@ GSGlyph.direction = property(lambda self: self.pyobjc_instanceMethods.direction(
 '''
 	.. attribute:: direction
 
-	Writing direction.
+		Writing direction.
 
-	Defined constants are: LTR (left to right), RTL (right to left), LTRTTB (left to right, vertical, top to bottom e.g. Mongolian), and RTLTTB (right to left, vertical, top to bottom e.g. Chinese, Japanese, Korean)
+		Defined constants are: LTR (left to right), RTL (right to left), LTRTTB (left to right, vertical, top to bottom e.g. Mongolian), and RTLTTB (right to left, vertical, top to bottom e.g. Chinese, Japanese, Korean)
 
 	:type: integer
 
@@ -5120,9 +5215,9 @@ GSGlyph.direction = property(lambda self: self.pyobjc_instanceMethods.direction(
 GSGlyph.storeDirection = property(lambda self: bool(self.pyobjc_instanceMethods.storeDirection()),
 									lambda self, value: self.setStoreDirection_(value))
 '''
-	.. attribute:: storeCase
-	Set to True in order to manipulate the `direction` of the glyph (see above).
-	Makes it possible to ship custom glyph data inside a .glyphs file without a separate GlyphData file. Same as Cmd-Alt-i dialog in UI.
+	.. attribute:: storeDirection
+		Set to True in order to manipulate the `direction` of the glyph (see above).
+		Makes it possible to ship custom glyph data inside a .glyphs file without a separate GlyphData file. Same as Cmd-Alt-i dialog in UI.
 	:type: bool
 
 	.. versionadded:: 3
@@ -5132,8 +5227,8 @@ GSGlyph.script = property(lambda self: self.pyobjc_instanceMethods.script(),
 									lambda self, value: self.setScript_(value))
 '''
 	.. attribute:: script
-	The script of the glyph, e.g., 'latin', 'arabic'.
-	Setting only works if `storeScript` is set (see below).
+		The script of the glyph, e.g., 'latin', 'arabic'.
+		Setting only works if `storeScript` is set (see below).
 	:type: unicode
 '''
 
@@ -5141,8 +5236,8 @@ GSGlyph.storeScript = property(lambda self: bool(self.pyobjc_instanceMethods.sto
 									lambda self, value: self.setStoreScript_(value))
 '''
 	.. attribute:: storeScript
-	Set to True in order to manipulate the `script` of the glyph (see above).
-	Makes it possible to ship custom glyph data inside a .glyphs file without a separate GlyphData file. Same as Cmd-Alt-i dialog in UI.
+		Set to True in order to manipulate the `script` of the glyph (see above).
+		Makes it possible to ship custom glyph data inside a .glyphs file without a separate GlyphData file. Same as Cmd-Alt-i dialog in UI.
 	:type: bool
 
 '''
@@ -5151,8 +5246,8 @@ GSGlyph.productionName = property(lambda self: self.pyobjc_instanceMethods.produ
 									lambda self, value: self.setProduction_(value))
 '''
 	.. attribute:: productionName
-	The productionName of the glyph.
-	Setting only works if `storeProductionName` is set (see below).
+		The productionName of the glyph.
+		Setting only works if `storeProductionName` is set (see below).
 	:type: unicode
 
 '''
@@ -5161,8 +5256,8 @@ GSGlyph.storeProductionName = property(lambda self: bool(self.storeProduction())
 									lambda self, value: self.setStoreProduction_(value))
 '''
 	.. attribute:: storeProductionName
-	Set to True in order to manipulate the `productionName` of the glyph (see above).
-	Makes it possible to ship custom glyph data inside a .glyphs file without a separate GlyphData file. Same as Cmd-Alt-i dialog in UI.
+		Set to True in order to manipulate the `productionName` of the glyph (see above).
+		Makes it possible to ship custom glyph data inside a .glyphs file without a separate GlyphData file. Same as Cmd-Alt-i dialog in UI.
 	:type: bool
 
 '''
@@ -5240,7 +5335,7 @@ GSGlyph.leftKerningKey = property(lambda self: GSGlyph__leftKerningKey(self))
 
 	The key to be used with the kerning functions (:meth:`GSFont.kerningForPair()`, :meth:`GSFont.setKerningForPair()`:meth:`GSFont.removeKerningForPair()`).
 
-	If the glyph has a :att:`leftKerningGroup <GSGlyph.leftKerningGroup>` attribute, the internally used `@MMK_R_xx` notation will be returned (note that the R in there stands for the right side of the kerning pair for LTR fonts, which corresponds to the left kerning group of the glyph). If no group is given, the glyph’s name will be returned.
+	If the glyph has a :attr:`leftKerningGroup <GSGlyph.leftKerningGroup>` attribute, the internally used `@MMK_R_xx` notation will be returned (note that the R in there stands for the right side of the kerning pair for LTR fonts, which corresponds to the left kerning group of the glyph). If no group is given, the glyph’s name will be returned.
 	:type: string
 
 	.. code-block:: python
@@ -5267,7 +5362,7 @@ GSGlyph.rightKerningKey = property(lambda self: GSGlyph__rightKerningKey(self))
 
 	The key to be used with the kerning functions (:meth:`GSFont.kerningForPair()`, :meth:`GSFont.setKerningForPair()`:meth:`GSFont.removeKerningForPair()`).
 
-	If the glyph has a  :att:`rightKerningGroup <GSGlyph.rightKerningGroup>` attribute, the internally used `@MMK_L_xx` notation will be returned (note that the L in there stands for the left side of the kerning pair for LTR fonts, which corresponds to the right kerning group of the glyph). If no group is given, the glyph’s name will be returned.
+	If the glyph has a :attr:`rightKerningGroup <GSGlyph.rightKerningGroup>` attribute, the internally used `@MMK_L_xx` notation will be returned (note that the L in there stands for the left side of the kerning pair for LTR fonts, which corresponds to the right kerning group of the glyph). If no group is given, the glyph’s name will be returned.
 
 	See above for an example.
 
@@ -5603,6 +5698,7 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 		master
 		associatedMasterId
 		layerId
+		attributes
 		color
 		colorObject
 		components
@@ -5762,6 +5858,14 @@ GSLayer.layerId = property(lambda self: self.pyobjc_instanceMethods.layerId(),
 		layer = font.glyphs['a'].layers[font.masters[0].id]
 '''
 
+GSLayer.attributes = property(lambda self: AttributesProxy(self))
+
+'''
+	.. attribute:: attributes
+		layer attributes like "axisRules", "coordinates", "colorPallete", "sbixSize", "color", "svg"
+		
+	:type: dict
+'''
 GSLayer.color = property(lambda self: __getColorIndex__(self),
 						lambda self, value: __setColorIndex(self, value))
 '''
@@ -6012,7 +6116,8 @@ GSLayer.paths = property(lambda self: self.pyobjc_instanceMethods.paths())
 		layer.paths = copy.copy(anotherlayer.paths)
 '''
 
-GSLayer.selection = property(lambda self: LayerSelectionProxy(self))
+GSLayer.selection = property(lambda self: LayerSelectionProxy(self),
+							 lambda self, value: LayerSelectionProxy(self).setter(value))
 
 '''
 	.. attribute:: selection
@@ -6427,8 +6532,7 @@ GSLayer.smartComponentPoleMapping = property(lambda self: SmartComponentPoleMapp
 '''
 
 def RemoveOverlap(self, checkSelection=False):
-	removeOverlapFilter = NSClassFromString("GlyphsFilterRemoveOverlap").alloc().init()
-	removeOverlapFilter.removeOverlapFromLayer_checkSelection_error_(self, checkSelection, None)
+	self.removeOverlapCheckSelection_error_(checkSelection, None)
 GSLayer.removeOverlap = RemoveOverlap
 
 '''
@@ -7465,6 +7569,7 @@ For details on how to access them, please see :attr:`GSLayer.shapes`
 
 		position
 		locked
+		shapeType
 '''
 
 
@@ -7474,6 +7579,15 @@ GSShape.locked = property(lambda self: bool(self.pyobjc_instanceMethods.locked()
 	.. attribute:: locked
 	Locked
 	:type: bool
+'''
+
+GSShape.shapeType = property(lambda self: bool(self.pyobjc_instanceMethods.shapeType()))
+'''
+.. attribute:: shapeType
+	
+	the type of the shapes. can be GSShapeTypePath or GSShapeTypeComponent
+
+	:type: int
 '''
 
 
@@ -7670,7 +7784,7 @@ GSPath.bezierPath = property(lambda self: self.pyobjc_instanceMethods.bezierPath
 
 '''
 
-GSPath.attributes = property(lambda self: PathAttributesProxy(self))
+GSPath.attributes = property(lambda self: AttributesProxy(self))
 
 '''
 	.. attribute:: attributes
@@ -10352,6 +10466,15 @@ The writing directions of the Edit View.
 
 	Right To Left, Top To Bottom
 
+Shape Type
+==========
+.. data:: GSShapeTypePath
+
+	Path
+
+.. data:: GSShapeTypeComponent
+
+	Component
 
 Annotation types
 ================
