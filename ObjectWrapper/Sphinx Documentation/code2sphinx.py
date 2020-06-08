@@ -71,7 +71,7 @@ doc = re.sub('((.*?)code-block(.*))', '\n\g<0>\n', doc)
 WriteToFile(os.path.join(path, 'sphinx folder', 'index.rst'), sphinxoriginal + doc)
 
 # bake HTML
-Execute('/usr/local/bin/sphinx-build "%s" "%s"' % (os.path.join(path, 'sphinx folder'), os.path.join(path, 'sphinx folder', '_build', 'html')))
+Execute('/usr/local/bin/sphinx-build -b html "%s" "%s"' % (os.path.join(path, 'sphinx folder'), os.path.join(path, '_build', 'html')))
 
 # Upload to FTP
 # not implemented
