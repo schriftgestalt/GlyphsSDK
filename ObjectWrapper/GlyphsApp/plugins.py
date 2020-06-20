@@ -131,45 +131,40 @@ def setUpMenuHelper(Menu, Items, defaultTarget):
 #  Plug-in wrapper
 
 
-GlyphsFileFormatProtocol = objc.protocolNamed("GlyphsFileFormat")
+BaseFileFormatPlugin = objc.lookUpClass("BaseFileFormatPlugin")
+class FileFormatPlugin (BaseFileFormatPlugin):
 
-class FileFormatPlugin (NSObject):
-	__pyobjc_protocols__ = [GlyphsFileFormatProtocol]
 	def init(self):
 		"""
 		Do all initializing here.
 		"""
-		try:
-			self = objc.super(FileFormatPlugin, self).init()
-			# Settings, default values
-			self.name = 'My File Format'
-			self.icon = 'ExportIcon'
-			self.toolbarPosition = 100
+		self = objc.super(FileFormatPlugin, self).init()
+		# Settings, default values
+		self.name = 'My File Format'
+		self.icon = 'ExportIcon'
+		self.toolbarPosition = 100
 
-			if hasattr(self, 'settings'):
-				self.settings()
+		if hasattr(self, 'settings'):
+			self.settings()
 
-			# Dialog stuff
-			# Initiate empty self.dialog here in case of Vanilla dialog,
-			# where .dialog is not defined at the class’s root.
-			if not hasattr(self, 'dialog'):
-				self.dialog = None
+		# Dialog stuff
+		# Initiate empty self.dialog here in case of Vanilla dialog,
+		# where .dialog is not defined at the class’s root.
+		if not hasattr(self, 'dialog'):
+			self.dialog = None
 
-			if hasattr(self, "__file__"):
-				path = self.__file__()
-				thisBundle = NSBundle.bundleWithPath_(path[:path.rfind("Contents/Resources/")])
-			else:
-				thisBundle = NSBundle.bundleForClass_(NSClassFromString(self.className()))
-			self.toolbarIcon = NSImage.alloc().initWithContentsOfFile_(thisBundle.pathForImageResource_(self.icon))
-			# Using self.toolbarIconName() instead of self.icon to
-			#   make sure registered NSImage name is unique
-			self.toolbarIcon.setName_(self.toolbarIconName())
+		if hasattr(self, "__file__"):
+			path = self.__file__()
+			thisBundle = NSBundle.bundleWithPath_(path[:path.rfind("Contents/Resources/")])
+		else:
+			thisBundle = NSBundle.bundleForClass_(NSClassFromString(self.className()))
+		self.toolbarIcon = NSImage.alloc().initWithContentsOfFile_(thisBundle.pathForImageResource_(self.icon))
+		# Using self.toolbarIconName() instead of self.icon to
+		#   make sure registered NSImage name is unique
+		self.toolbarIcon.setName_(self.toolbarIconName())
 
-			if hasattr(self, 'start'):
-				self.start()
-
-		except:
-			LogError(traceback.format_exc())
+		if hasattr(self, 'start'):
+			self.start()
 
 		return self
 
@@ -248,7 +243,7 @@ class FileFormatPlugin (NSObject):
 
 		Parameters:
 		- font: The font object to export
-		- error: PyObjc-Requirement. It is required here in order to return the error object upon export failure. Ignore its existence here.
+		//- error: PyObjc-Requirement. It is required here in order to return the error object upon export failure. Ignore its existence here.
 
 		return (True, None) if the export was successful
 		return (False, NSError) if the export failed
@@ -403,8 +398,6 @@ class FileFormatPlugin (NSObject):
 		return None, None
 
 
-FileFormatPlugin.logToConsole = LogToConsole_AsClassExtension
-FileFormatPlugin.logError = LogError_AsClassExtension
 FileFormatPlugin.loadNib = LoadNib
 
 
@@ -425,32 +418,25 @@ class FilterWithDialog (GSFilterPlugin):
 	Replace and add your own class variables.
 	"""
 
-	def init(self):
+	def loadPlugin(self):
 		"""
 		Do all initializing here.
-		This is a good place to call random.seed() if you want to use randomisation.
+		This is a good place to call random.seed() if you want to use randomization.
 		In that case, don't forget to import random at the top of this file.
 		"""
 
-		try:
-			self = objc.super(FilterWithDialog, self).init()
-			self.menuName = 'My Filter'
-			self.keyboardShortcut = None  # With Cmd+Shift
-			self.actionButtonLabel = 'Apply'
+		self.menuName = 'My Filter'
+		self.keyboardShortcut = None  # With Cmd+Shift
+		self.actionButtonLabel = 'Apply'
 
-			if hasattr(self, 'settings'):
-				self.settings()
+		if hasattr(self, 'settings'):
+			self.settings()
 
-			# Dialog stuff
-			# Initiate emtpy self.dialog here in case of Vanilla dialog,
-			# where .dialog is not defined at the class’s root.
-			if not hasattr(self, 'dialog'):
-				self.dialog = None
-
-			return self
-
-		except:
-			LogError(traceback.format_exc())
+		# Dialog stuff
+		# Initiate emtpy self.dialog here in case of Vanilla dialog,
+		# where .dialog is not defined at the class’s root.
+		if not hasattr(self, 'dialog'):
+			self.dialog = None
 
 	def setup(self):
 		try:
@@ -470,10 +456,7 @@ class FilterWithDialog (GSFilterPlugin):
 		Distinguishes the API version the plugin was built for.
 		Return 1.
 		"""
-		try:
-			return 1
-		except:
-			LogError(traceback.format_exc())
+		return 1
 
 	def title(self):
 		"""
@@ -550,7 +533,7 @@ class FilterWithDialog (GSFilterPlugin):
 			# With these values, call your code on every glyph:
 			FontMasterId = Font.fontMasterAtIndex_(0).id
 			for thisGlyph in glyphList:
-				Layer = thisGlyph.layerForKey_(FontMasterId)
+				Layer = thisGlyph.layerForId_(FontMasterId)
 
 				if hasattr(self, 'filter'):
 					self.filter(Layer, False, customParameters)
@@ -614,7 +597,7 @@ class FilterWithDialog (GSFilterPlugin):
 				ShadowLayer = ShadowLayers[k]
 				Layer = Layers[k]
 				Layer.setShapes_(NSMutableArray.alloc().initWithArray_copyItems_(ShadowLayer.pyobjc_instanceMethods.shapes(), True))
-				Layer.setSelection_(None)
+				Layer.clearSelection()
 				if len(ShadowLayer.selection) > 0 and checkSelection:
 					for idx in range(len(ShadowLayer.shapes)):
 						currShadowPath = ShadowLayer.paths[idx]
@@ -649,8 +632,6 @@ class FilterWithDialog (GSFilterPlugin):
 			return self.generateCustomParameter()
 		return objc.nil
 
-FilterWithDialog.logToConsole = LogToConsole_AsClassExtension
-FilterWithDialog.logError = LogError_AsClassExtension
 FilterWithDialog.loadNib = LoadNib
 
 
@@ -664,57 +645,42 @@ FilterWithDialog.loadNib = LoadNib
 
 
 
-GlyphsFilterWithoutDialogProtocol = objc.protocolNamed("GlyphsFilter")
 
-class FilterWithoutDialog (NSObject):
-	__pyobjc_protocols__ = [GlyphsFilterWithoutDialogProtocol]
-	def init(self):
+BaseFilterWithoutDialog = objc.lookUpClass("BaseFilterWithoutDialog")
+class FilterWithoutDialog (BaseFilterWithoutDialog):
+
+	def loadPlugin(self):
 		"""
 		Do all initializing here.
 		"""
-		try:
-			self = objc.super(FilterWithoutDialog, self).init()
-			self.menuName = 'My Filter'
-			self.keyboardShortcut = None
+		self.menuName = 'My Filter'
+		self.keyboardShortcut = None
 
-			if hasattr(self, 'settings'):
-				self.settings()
+		if hasattr(self, 'settings'):
+			self.settings()
 
-			if hasattr(self, 'start'):
-				self.start()
-
-			return self
-		except:
-			LogError(traceback.format_exc())
+		if hasattr(self, 'start'):
+			self.start()
 
 	def interfaceVersion(self):
 		"""
 		Distinguishes the API version the plugin was built for.
 		Return 1.
 		"""
-		try:
-			return 1
-		except:
-			LogError(traceback.format_exc())
+		return 1
 
 	def title(self):
 		"""
 		This is the human-readable name as it appears in the Filter menu.
 		"""
-		try:
-			return self.menuName
-		except:
-			LogError(traceback.format_exc())
+		return self.menuName
 
 	def setController_(self, Controller):
 		"""
 		Sets the controller, you can access it with controller().
 		Do not touch this.
 		"""
-		try:
-			self._controller = Controller
-		except:
-			LogError(traceback.format_exc())
+		self._controller = Controller
 
 	def controller(self):
 		"""
@@ -729,10 +695,7 @@ class FilterWithoutDialog (NSObject):
 		"""
 		Do not touch this.
 		"""
-		try:
-			return None
-		except:
-			LogError(traceback.format_exc())
+		return None
 
 	def keyEquivalent(self):
 		"""
@@ -827,7 +790,7 @@ class FilterWithoutDialog (NSObject):
 
 			FontMasterId = Font.fontMasterAtIndex_(0).id
 			for thisGlyph in glyphList:
-				Layer = thisGlyph.layerForKey_(FontMasterId)
+				Layer = thisGlyph.layerForId_(FontMasterId)
 
 				if hasattr(self, 'filter'):
 					self.filter(Layer, False, customParameters)
@@ -839,8 +802,6 @@ class FilterWithoutDialog (NSObject):
 
 			LogError(traceback.format_exc())
 
-FilterWithoutDialog.logToConsole = LogToConsole_AsClassExtension
-FilterWithoutDialog.logError = LogError_AsClassExtension
 
 
 
@@ -853,32 +814,25 @@ FilterWithoutDialog.logError = LogError_AsClassExtension
 
 
 
-GlyphsGeneralPluginProtocol = objc.protocolNamed("GlyphsPlugin")
 
-class GeneralPlugin (NSObject):
-	__pyobjc_protocols__ = [GlyphsGeneralPluginProtocol]
+BaseGeneralPlugin = objc.lookUpClass("BaseGeneralPlugin")
+class GeneralPlugin (BaseGeneralPlugin):
+
 	def interfaceVersion(self):
 		"""
 		Distinguishes the API version the plugin was built for.
 		Return 1.
 		"""
-		try:
-			return 1
-		except:
-			LogError(traceback.format_exc())
+		return 1
 
 	def loadPlugin(self):
-		try:
-			self.name = 'My General Plugin'
+		self.name = 'My General Plugin'
 
-			if hasattr(self, 'settings'):
-				self.settings()
+		if hasattr(self, 'settings'):
+			self.settings()
 
-			if hasattr(self, 'start'):
-				self.start()
-			return None
-		except:
-			LogError(traceback.format_exc())
+		if hasattr(self, 'start'):
+			self.start()
 
 	def title(self):
 		"""
@@ -890,8 +844,6 @@ class GeneralPlugin (NSObject):
 		except:
 			LogError(traceback.format_exc())
 
-GeneralPlugin.logToConsole = LogToConsole_AsClassExtension
-GeneralPlugin.logError = LogError_AsClassExtension
 GeneralPlugin.loadNib = LoadNib
 
 
@@ -904,10 +856,9 @@ GeneralPlugin.loadNib = LoadNib
 
 
 
-GlyphsPaletteProtocol = objc.protocolNamed("GlyphsPalette")
 
-class PalettePlugin (NSObject):
-	__pyobjc_protocols__ = [GlyphsPaletteProtocol]
+BasePalettePlugin = objc.lookUpClass("BasePalettePlugin")
+class PalettePlugin (BasePalettePlugin):
 	# Define all your IB outlets for your .xib after _theView:
 	_windowController = None
 	# _theView = objc.IBOutlet() # Palette view on which you can place UI elements.
@@ -917,44 +868,35 @@ class PalettePlugin (NSObject):
 		Do all initializing here, and customize the quadruple underscore items.
 		____CFBundleIdentifier____ should be the reverse domain name you specified in Info.plist.
 		"""
+
+		self = objc.super(PalettePlugin, self).init()
+		self.name = 'My Palette'
+		self.dialog = None # make sure we have that property
+		self.sortId = 0
+
+		# Call settings
+		if hasattr(self, 'settings'):
+			self.settings()
+
+		# Dialog stuff
+		if self.theView() is not None:
+			Frame = self.theView().frame()
+			# Set minimum and maximum height to height of Frame
+			if not hasattr(self, "min"):
+				self.min = Frame.size.height
+			if not hasattr(self, "max"):
+				self.max = Frame.size.height
+
+		if hasattr(self, 'start'):
+			self.start()
 		try:
-			self = objc.super(PalettePlugin, self).init()
-			# if True:
-			self.name = 'My Palette'
-
-			self.sortId = 0
-
-			# Call settings
-			if hasattr(self, 'settings'):
-				self.settings()
-
-			# Dialog stuff
-			# Initiate emtpy self.dialog here in case of Vanilla dialog,
-			# where .dialog is not defined at the class’s root.
-			Frame = None
-			if hasattr(self, 'dialog'):
-				Frame = self.dialog.frame()
-			else:
-				self.dialog = None
-
-			if self.theView() is not None:
-				Frame = self.theView().frame()
-				# Set minimum and maximum height to height of Frame
-				if not hasattr(self, "min"):
-					self.min = Frame.size.height
-				if not hasattr(self, "max"):
-					self.max = Frame.size.height
-
-			if hasattr(self, 'start'):
-				self.start()
-			try:
-				self.theView().setController_(self)
-			except:
-				pass
-			return self
+			self.theView().setController_(self)
 		except:
-			LogError(traceback.format_exc())
+			pass
+		return self
 
+	def loadPlugin(self):
+		pass
 	@objc.signature(b'L@:')
 	def interfaceVersion(self):
 		"""
@@ -1043,31 +985,6 @@ class PalettePlugin (NSObject):
 		except:
 			LogError(traceback.format_exc())
 
-	def currentWindowController(self):
-		"""
-		Returns a window controller object.
-		Use self.currentWindowController() to access it.
-		"""
-		try:
-			windowController = None
-			try:
-				windowController = NSDocumentController.sharedDocumentController().currentDocument().windowController()
-				if not windowController and self.respondsToSelector_("object"):
-					if self.object().__class__ == NSClassFromString("GSFont"):
-						Font = self.object()
-						windowController = Font.parent.windowControllers()[0]
-						self.logToConsole("__windowController1", windowController)
-					else:
-						windowController = self.object()
-						self.logToConsole("__windowController2", windowController)
-			except:
-				pass
-			return windowController
-		except:
-			LogError(traceback.format_exc())
-
-PalettePlugin.logToConsole = LogToConsole_AsClassExtension
-PalettePlugin.logError = LogError_AsClassExtension
 PalettePlugin.loadNib = LoadNib
 
 
@@ -1081,33 +998,31 @@ PalettePlugin.loadNib = LoadNib
 
 
 
-GlyphsReporterProtocol = objc.protocolNamed("GlyphsReporter")
 
-class ReporterPlugin (NSObject):
-	__pyobjc_protocols__ = [GlyphsReporterProtocol]
+BaseReporterPlugin = objc.lookUpClass("BaseReporterPlugin")
+class ReporterPlugin (BaseReporterPlugin):
+
 	def init(self):
 		"""
 		Put any initializations you want to make here.
 		"""
 		self = objc.super(ReporterPlugin, self).init()
 		self.needsExtraMainOutlineDrawingForInactiveLayers = True
-		try:
-			# Default values
-			self.menuName = 'New ReporterPlugin'
-			self.keyboardShortcut = None
-			self.keyboardShortcutModifier = 0  # Set any combination of NSShiftKeyMask | NSControlKeyMask | NSCommandKeyMask | NSAlternateKeyMask
-			self.drawDefaultInactiveLayers = True
-			self.generalContextMenus = []
 
-			if hasattr(self, 'settings'):
-				self.settings()
+		# Default values
+		self.menuName = 'New ReporterPlugin'
+		self.keyboardShortcut = None
+		self.keyboardShortcutModifier = 0  # Set any combination of NSShiftKeyMask | NSControlKeyMask | NSCommandKeyMask | NSAlternateKeyMask
+		self.drawDefaultInactiveLayers = True
+		self.generalContextMenus = []
 
-			if hasattr(self, 'start'):
-				self.start()
-			self.hasWarned = False
-			return self
-		except:
-			LogError(traceback.format_exc())
+		if hasattr(self, 'settings'):
+			self.settings()
+
+		if hasattr(self, 'start'):
+			self.start()
+		self.hasWarned = False
+		return self
 
 	@objc.signature(b'@:L')
 	def interfaceVersion(self):
@@ -1115,10 +1030,7 @@ class ReporterPlugin (NSObject):
 		Distinguishes the API version the plugin was built for.
 		Return 1.
 		"""
-		try:
-			return 1
-		except:
-			LogError(traceback.format_exc())
+		return 1
 
 	def title(self):
 		"""
@@ -1192,7 +1104,7 @@ class ReporterPlugin (NSObject):
 			layer = self.activeLayer()
 			layerPosition = self.activePosition()
 			scale = options["Scale"]
-			allLayers = self.controller.graphicView().layoutManager().cachedGlyphs()
+			allLayers = self.controller.graphicView().layoutManager().cachedLayers()
 			indexOfActiveLayer = self.controller.graphicView().activeIndex()
 			selectionRange = self.controller.graphicView().selectedRange()
 		"""
@@ -1313,12 +1225,11 @@ class ReporterPlugin (NSObject):
 			LogError(traceback.format_exc())
 
 	@objc.python_method
-	def drawTextAtPoint(self, text, textPosition, fontSize=10.0, fontColor=NSColor.blackColor(), align='bottomleft'):
+	def drawTextAtPoint(self, text, textPosition, fontSize=10.0, fontColor=NSColor.textColor(), align='bottomleft'):
 		"""
 		Use self.drawTextAtPoint("blabla", myNSPoint) to display left-aligned text at myNSPoint.
 		"""
 		try:
-
 			alignment = {
 				'topleft': 6,
 				'topcenter': 7,
@@ -1330,11 +1241,11 @@ class ReporterPlugin (NSObject):
 				'bottomcenter': 1,
 				'bottomright': 2
 			}
-
 			currentZoom = self.getScale()
 			fontAttributes = {
 				NSFontAttributeName: NSFont.labelFontOfSize_(fontSize / currentZoom),
-				NSForegroundColorAttributeName: fontColor}
+				NSForegroundColorAttributeName: fontColor,
+			}
 			displayText = NSAttributedString.alloc().initWithString_attributes_(text, fontAttributes)
 			textAlignment = alignment[align]  # top left: 6, top center: 7, top right: 8, center left: 3, center center: 4, center right: 5, bottom left: 0, bottom center: 1, bottom right: 2
 			displayText.drawAtPoint_alignment_(textPosition, textAlignment)
@@ -1390,8 +1301,6 @@ class ReporterPlugin (NSObject):
 		except:
 			LogError(traceback.format_exc())
 
-ReporterPlugin.logToConsole = LogToConsole_AsClassExtension
-ReporterPlugin.logError = LogError_AsClassExtension
 ReporterPlugin.loadNib = LoadNib
 
 
@@ -1412,40 +1321,37 @@ class SelectTool (GSToolSelect):
 		By default, toolbar.pdf will be your tool icon.
 		Use this for any initializations you need.
 		"""
+
+		self = objc.super(SelectTool, self).init()
+		self.name = 'My Select Tool'
+		self.toolbarPosition = 100
+		self._icon = 'toolbar.pdf'
+		self.keyboardShortcut = None
+		self.generalContextMenus = ()
+
+		# Inspector dialog stuff
+		# Initiate self.inspectorDialogView here in case of Vanilla dialog,
+		# where inspectorDialogView is not defined at the class’s root.
+		if not hasattr(self, 'inspectorDialogView'):
+			self.inspectorDialogView = None
+
+		if hasattr(self, 'settings'):
+			self.settings()
 		try:
-			self = objc.super(SelectTool, self).init()
-			self.name = 'My Select Tool'
-			self.toolbarPosition = 100
-			self._icon = 'toolbar.pdf'
-			self.keyboardShortcut = None
-			self.generalContextMenus = ()
-
-			# Inspector dialog stuff
-			# Initiate self.inspectorDialogView here in case of Vanilla dialog,
-			# where inspectorDialogView is not defined at the class’s root.
-			if not hasattr(self, 'inspectorDialogView'):
-				self.inspectorDialogView = None
-
-			if hasattr(self, 'settings'):
-				self.settings()
-			try:
-				if hasattr(self, "__file__"):
-					path = self.__file__()
-					Bundle = NSBundle.bundleWithPath_(path[:path.rfind("Contents/Resources/")])
-				else:
-					Bundle = NSBundle.bundleForClass_(NSClassFromString(self.className()))
-				if self._icon is not None:
-					self.tool_bar_image = Bundle.imageForResource_(self._icon)
-					self.tool_bar_image.setTemplate_(True)  # Makes the icon blend in with the toolbar.
-			except:
-				LogError(traceback.format_exc())
-			if hasattr(self, 'start'):
-				self.start()
-
-			return self
+			if hasattr(self, "__file__"):
+				path = self.__file__()
+				Bundle = NSBundle.bundleWithPath_(path[:path.rfind("Contents/Resources/")])
+			else:
+				Bundle = NSBundle.bundleForClass_(NSClassFromString(self.className()))
+			if self._icon is not None:
+				self.tool_bar_image = Bundle.imageForResource_(self._icon)
+				self.tool_bar_image.setTemplate_(True)  # Makes the icon blend in with the toolbar.
 		except:
 			LogError(traceback.format_exc())
-		return objc.nil
+		if hasattr(self, 'start'):
+			self.start()
+
+		return self
 
 	def view(self):
 		return self.inspectorDialogView
@@ -1470,10 +1376,7 @@ class SelectTool (GSToolSelect):
 		Distinguishes the API version the plugin was built for.
 		Return 1.
 		"""
-		try:
-			return 1
-		except:
-			LogError(traceback.format_exc())
+		return 1
 
 	def title(self):
 		"""
@@ -1661,6 +1564,4 @@ class SelectTool (GSToolSelect):
 			LogError(traceback.format_exc())
 
 
-SelectTool.logToConsole = LogToConsole_AsClassExtension
-SelectTool.logError = LogError_AsClassExtension
 SelectTool.loadNib = LoadNib
