@@ -510,6 +510,7 @@ GSApplication.fonts = property(lambda self: AppFontProxy(self))
 
 '''
 	.. attribute:: fonts
+	Be aware that the order is defined by last used font. append and extend generally don't insert at the end of the list.
 
 	:return: All open :class:`fonts <GSFonts>`.
 
@@ -4238,22 +4239,42 @@ GSInstance.name = property(lambda self: self.pyobjc_instanceMethods.name(), lamb
 	:type: string
 '''
 
-#GSInstance.weight = property(lambda self: self.pyobjc_instanceMethods.weightClass(), lambda self, value: self.setWeightClass_(value))
-GSInstance.weightClass = property(lambda self: self.pyobjc_instanceMethods.weightClass(), lambda self, value: self.setWeightClass_(value))
+def _setValueValidation(target, key, value, valuetype):
+	if not isinstance(value, valuetype):
+		raise TypeError("Type for {} should be {}, got {}".format(key, valuetype, type(value)))
+	target.setValue_forKey_(value, key)
+
+GSInstance.weightClass = property(lambda self: self.weightClassValue(), lambda self, value: _setValueValidation(self, "weightClassValue", value, int))
 '''
 	.. attribute:: weightClass
-		Weight class, as set in Font Info. Values from 1 to 1000 are supported but 100–900 is recommended.
+		Weight class, as set in Font Info, as an integer. Values from 1 to 1000 are supported but 100–900 is recommended.
 	
 		For actual position in interpolation design space, use GSInstance.axes.
+	:type: int
+'''
+
+GSInstance.weightClassName = property(lambda self: self.weightClassUI())
+'''
+	.. attribute:: weightClassName
+		Human readable name corresponding to the value of GSInstance.weightClass. This attribute is read-only.
+		Can be None if GSInstance.weightClass is not a multiple of 100.
 	:type: string
 '''
-#GSInstance.width = property(lambda self: self.pyobjc_instanceMethods.widthClass(), lambda self, value: self.setWidthClass_(value))
-GSInstance.widthClass = property(lambda self: self.pyobjc_instanceMethods.widthClass(), lambda self, value: self.setWidthClass_(value))
+
+GSInstance.widthClass = property(lambda self: self.widthClassValue(), lambda self, value: _setValueValidation(self, "widthClassValue", value, int))
 '''
 	.. attribute:: widthClass
-		Human-readable width name, chosen from list in Font Info. Values from 1 to 9 are supported
+		Width class, as set in Font Info, as an integer. Values from 1 to 9 are supported.
 		
 		For actual position in interpolation design space, use GSInstance.axes.
+	:type: int
+'''
+
+GSInstance.widthClassName = property(lambda self: self.widthClassUI())
+'''
+	.. attribute:: widthClassName
+		Human readable name corresponding to the value of GSInstance.widthClass. This attribute is read-only.
+
 	:type: string
 '''
 
