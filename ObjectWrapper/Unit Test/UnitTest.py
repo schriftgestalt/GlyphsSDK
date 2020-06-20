@@ -81,10 +81,11 @@ class GlyphsAppTests(unittest.TestCase):
 	def setUp(self):
 		if Glyphs.font is None:
 			Glyphs.open(PathToTestFile)
-	
+
 	def tearDown(self):
-		pass
-	
+		if Glyphs.font is not None:
+			Glyphs.font.close()
+
 	def test_GSApplication(self):
 		
 		# Main object
@@ -140,6 +141,14 @@ class GlyphsAppTests(unittest.TestCase):
 		# GSApplication.defaults
 		self.assertDict(Glyphs.defaults, assertType = False)
 		
+		del(Glyphs.defaults["TestKey"])
+		Glyphs.registerDefaults({"TestKey":12})
+		self.assertEqual(Glyphs.defaults["TestKey"], 12)
+		Glyphs.registerDefaults({"TestKey":12})
+		Glyphs.defaults["TestKey"] = 24
+		self.assertEqual(Glyphs.defaults["TestKey"], 24)
+		del(Glyphs.defaults["TestKey"])
+		self.assertEqual(Glyphs.defaults["TestKey"], 12)
 		# GSApplication.scriptAbbreviations
 		self.assertIsNotNone(dict(Glyphs.scriptAbbreviations))
 		
@@ -842,7 +851,6 @@ class GlyphsAppTests(unittest.TestCase):
 		
 		# Delete glyph
 		del Glyphs.font.glyphs['a.test']
-	
 
 	def test_GSLayer(self):
 
@@ -1065,13 +1073,13 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertIsInstance(layer.bezierPath, NSBezierPath)
 
 		# GSLayer.openBezierPath
-		self.assertIsInstance(layer.openBezierPath, NSBezierPath)
+		# self.assertIsInstance(layer.openBezierPath, NSBezierPath) # TODO: is NULL if there are no open paths
 
 		# GSLayer.completeBezierPath
 		self.assertIsInstance(layer.completeBezierPath, NSBezierPath)
 
 		# GSLayer.completeOpenBezierPath
-		self.assertIsInstance(layer.completeOpenBezierPath, NSBezierPath)
+		# self.assertIsInstance(layer.completeOpenBezierPath, NSBezierPath) # TODO: is NULL if there are no open paths
 
 		# GSLayer.userData
 		layer.userData["Hallo"] = "Welt"
@@ -1176,12 +1184,13 @@ class GlyphsAppTests(unittest.TestCase):
 		layer = Glyphs.font.glyphs['n'].layers[0]
 		layer.shapes[1].smartComponentValues['shoulderWidth'] = 30
 		layer.shapes[1].smartComponentValues['crotchDepth'] = -77
-	
-	def test_GSShapesComponents(self):
 
-		Glyphs.font.glyphs['adieresis'].duplicate('adieresis.test')
+
+	def test_GSShapesComponents(self):
+		font = Glyphs.font
+		font.glyphs['adieresis'].duplicate('adieresis.test')
 		
-		glyph = Glyphs.font.glyphs['adieresis.test']
+		glyph = font.glyphs['adieresis.test']
 		layer = glyph.layers[0]
 		component = layer.shapes[0]
 		component = copy.copy(component)
@@ -1221,11 +1230,11 @@ class GlyphsAppTests(unittest.TestCase):
 		# GSComponent.layer
 		component.componentName = 'A'
 
-		self.assertEqual(component.component, Glyphs.font.glyphs['A'])
-# not defined yet		self.assertEqual(component.layer, Glyphs.font.glyphs['A'].layers[layer.layerId])
+		self.assertEqual(component.component, font.glyphs['A'])
+# not defined yet		self.assertEqual(component.layer, font.glyphs['A'].layers[layer.layerId])
 		component.componentName = 'a'
-		self.assertEqual(component.component, Glyphs.font.glyphs['a'])
-# not defined yet		self.assertEqual(component.layer, Glyphs.font.glyphs['a'].layers[layer.layerId])
+		self.assertEqual(component.component, font.glyphs['a'])
+# not defined yet		self.assertEqual(component.layer, font.glyphs['a'].layers[layer.layerId])
 
 		component = layer.shapes[0]
 
@@ -1254,9 +1263,9 @@ class GlyphsAppTests(unittest.TestCase):
 		component.applyTransform((.5, 0, 0, .5, 0, 0))
 		component.decompose()
 		
-		del Glyphs.font.glyphs['adieresis.test']
-		self.assertIsNone(Glyphs.font.glyphs['adieresis.test'])
-		Glyphs.font.close()
+		del font.glyphs['adieresis.test']
+		self.assertIsNone(font.glyphs['adieresis.test'])
+		font.close()
 
 	def test_GSComponentLegacy(self):
 		return
@@ -1756,6 +1765,18 @@ class GlyphsAppTests(unittest.TestCase):
 		LogToConsole('Message')
 		LogError('Error message created in test code. Ignore it.')
 
+	def test_objcObject(self):
+		from GlyphsApp import objcObject
+		obj = objcObject(["a"])
+		self.assertIsInstance(obj, NSArray)
+		obj = objcObject({"a":1})
+		self.assertIsInstance(obj, NSDictionary)
+		obj = objcObject(3.145)
+		self.assertIsInstance(obj, NSNumber)
+		obj = objcObject(1)
+		self.assertIsInstance(obj, NSNumber)
+		obj = objcObject(None)
+		self.assertIsInstance(obj, NSNull)
 
 	def test_Constants(self):
 
