@@ -73,5 +73,31 @@ WriteToFile(os.path.join(path, 'sphinx folder', 'index.rst'), sphinxoriginal + d
 # bake HTML
 Execute('/usr/local/bin/sphinx-build -b html "%s" "%s"' % (os.path.join(path, 'sphinx folder'), os.path.join(path, '_build', 'html')))
 
-# Upload to FTP
-# not implemented
+html = ReadFromFile(os.path.join(path, '_build', 'html', 'index.html'))
+
+html = html.replace("\t", "")
+html = html.replace("  ", " ")
+html = html.replace("  ", " ")
+html = html.replace("  ", " ")
+html = html.replace("  ", " ")
+html = html.replace("\n\t", "\n")
+html = html.replace("\n ", "\n")
+html = html.replace("\n ", "\n")
+html = html.replace('<script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>', "")
+html = html.replace('<script src="_static/jquery.js"></script>', "")
+html = html.replace('<script src="_static/underscore.js"></script>', "")
+html = html.replace('<script src="_static/doctools.js"></script>', "")
+html = html.replace('<script src="_static/language_data.js"></script>', "")
+html = html.replace('<link rel="index" title="Index" href="genindex.html" />', "")
+html = html.replace('<link rel="search" title="Search" href="search.html" />', "")
+html = html.replace('\n<!DOCTYPE html>', '<!DOCTYPE html>')
+html = re.sub('&amp; <a href="https://github.com/bitprophet/alabaster">Alabaster ([0-9.]*)</a>', '', html)
+html = html.replace("\n\n|\n", "|")
+
+html = html.replace("\n\n", "\n")
+html = html.replace("\n\n", "\n")
+html = html.replace("\n\n", "\n")
+html = html.replace("\n\n", "\n")
+
+
+WriteToFile(os.path.join(path, '_build', 'html', 'index.html'), html)

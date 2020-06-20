@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 .. highlight:: python
-	:linenothreshold: 5
+    :linenothreshold: 500
 
 .. _module:: Glyphs
    :synopsis: The Glyphs.app Python Scripting API Documentation.
