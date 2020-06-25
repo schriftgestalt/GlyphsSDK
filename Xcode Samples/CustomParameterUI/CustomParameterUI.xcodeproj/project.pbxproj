@@ -1,0 +1,344 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		561EC7BD24A3D515000F8246 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 561EC7BC24A3D515000F8246 /* Cocoa.framework */; };
+		561EC7C324A3D515000F8246 /* GlyphsCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 561EC7C224A3D515000F8246 /* GlyphsCore.framework */; };
+		561EC7C624A3D515000F8246 /* CustomParameterUI.m in Sources */ = {isa = PBXBuildFile; fileRef = 561EC7C524A3D515000F8246 /* CustomParameterUI.m */; };
+		561EC83424A3D55C000F8246 /* CustomParameterUISheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 561EC82E24A3D55B000F8246 /* CustomParameterUISheetController.m */; };
+		561EC83524A3D55C000F8246 /* CustomParameterUIValueViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 561EC83124A3D55B000F8246 /* CustomParameterUIValueViewController.m */; };
+		561EC83724A3D55C000F8246 /* CustomParameterUISheetController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 561EC83324A3D55C000F8246 /* CustomParameterUISheetController.xib */; };
+		561EC87D24A3DE21000F8246 /* CustomParameterUIValueViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 561EC87C24A3DE21000F8246 /* CustomParameterUIValueViewController.xib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		561EC7B924A3D515000F8246 /* CustomParameterUI.glyphsPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CustomParameterUI.glyphsPlugin; sourceTree = BUILT_PRODUCTS_DIR; };
+		561EC7BC24A3D515000F8246 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		561EC7BF24A3D515000F8246 /* CustomParameterUI-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CustomParameterUI-Prefix.pch"; sourceTree = "<group>"; };
+		561EC7C224A3D515000F8246 /* GlyphsCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GlyphsCore.framework; path = /Applications/Glyphs.app/Contents/Frameworks/GlyphsCore.framework; sourceTree = "<absolute>"; };
+		561EC7C424A3D515000F8246 /* CustomParameterUI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomParameterUI.h; sourceTree = "<group>"; };
+		561EC7C524A3D515000F8246 /* CustomParameterUI.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CustomParameterUI.m; sourceTree = "<group>"; };
+		561EC7C724A3D515000F8246 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		561EC82E24A3D55B000F8246 /* CustomParameterUISheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomParameterUISheetController.m; sourceTree = "<group>"; };
+		561EC82F24A3D55B000F8246 /* CustomParameterUIValueViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomParameterUIValueViewController.h; sourceTree = "<group>"; };
+		561EC83024A3D55B000F8246 /* CustomParameterUISheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomParameterUISheetController.h; sourceTree = "<group>"; };
+		561EC83124A3D55B000F8246 /* CustomParameterUIValueViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomParameterUIValueViewController.m; sourceTree = "<group>"; };
+		561EC83324A3D55C000F8246 /* CustomParameterUISheetController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomParameterUISheetController.xib; sourceTree = "<group>"; };
+		561EC87C24A3DE21000F8246 /* CustomParameterUIValueViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomParameterUIValueViewController.xib; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		561EC7B624A3D515000F8246 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				561EC7C324A3D515000F8246 /* GlyphsCore.framework in Frameworks */,
+				561EC7BD24A3D515000F8246 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		561EC7B024A3D515000F8246 = {
+			isa = PBXGroup;
+			children = (
+				561EC7BE24A3D515000F8246 /* CustomParameterUI */,
+				561EC7BB24A3D515000F8246 /* Frameworks */,
+				561EC7BA24A3D515000F8246 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		561EC7BA24A3D515000F8246 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				561EC7B924A3D515000F8246 /* CustomParameterUI.glyphsPlugin */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		561EC7BB24A3D515000F8246 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				561EC7BC24A3D515000F8246 /* Cocoa.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		561EC7BE24A3D515000F8246 /* CustomParameterUI */ = {
+			isa = PBXGroup;
+			children = (
+				561EC7C424A3D515000F8246 /* CustomParameterUI.h */,
+				561EC7C524A3D515000F8246 /* CustomParameterUI.m */,
+				561EC83024A3D55B000F8246 /* CustomParameterUISheetController.h */,
+				561EC82E24A3D55B000F8246 /* CustomParameterUISheetController.m */,
+				561EC83324A3D55C000F8246 /* CustomParameterUISheetController.xib */,
+				561EC82F24A3D55B000F8246 /* CustomParameterUIValueViewController.h */,
+				561EC83124A3D55B000F8246 /* CustomParameterUIValueViewController.m */,
+				561EC87C24A3DE21000F8246 /* CustomParameterUIValueViewController.xib */,
+				561EC7C724A3D515000F8246 /* Info.plist */,
+				561EC7BF24A3D515000F8246 /* CustomParameterUI-Prefix.pch */,
+				561EC7C124A3D515000F8246 /* Supporting Files */,
+			);
+			path = CustomParameterUI;
+			sourceTree = "<group>";
+		};
+		561EC7C124A3D515000F8246 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				561EC7C224A3D515000F8246 /* GlyphsCore.framework */,
+			);
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		561EC7B824A3D515000F8246 /* CustomParameterUI */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 561EC7CA24A3D515000F8246 /* Build configuration list for PBXNativeTarget "CustomParameterUI" */;
+			buildPhases = (
+				561EC7B524A3D515000F8246 /* Sources */,
+				561EC7B624A3D515000F8246 /* Frameworks */,
+				561EC7B724A3D515000F8246 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CustomParameterUI;
+			productName = CustomParameterUI;
+			productReference = 561EC7B924A3D515000F8246 /* CustomParameterUI.glyphsPlugin */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		561EC7B124A3D515000F8246 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1130;
+				ORGANIZATIONNAME = Glyphs;
+				TargetAttributes = {
+					561EC7B824A3D515000F8246 = {
+						CreatedOnToolsVersion = 11.3.1;
+					};
+				};
+			};
+			buildConfigurationList = 561EC7B424A3D515000F8246 /* Build configuration list for PBXProject "CustomParameterUI" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 561EC7B024A3D515000F8246;
+			productRefGroup = 561EC7BA24A3D515000F8246 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				561EC7B824A3D515000F8246 /* CustomParameterUI */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		561EC7B724A3D515000F8246 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				561EC83724A3D55C000F8246 /* CustomParameterUISheetController.xib in Resources */,
+				561EC87D24A3DE21000F8246 /* CustomParameterUIValueViewController.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		561EC7B524A3D515000F8246 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				561EC7C624A3D515000F8246 /* CustomParameterUI.m in Sources */,
+				561EC83524A3D55C000F8246 /* CustomParameterUIValueViewController.m in Sources */,
+				561EC83424A3D55C000F8246 /* CustomParameterUISheetController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		561EC7C824A3D515000F8246 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		561EC7C924A3D515000F8246 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		561EC7CB24A3D515000F8246 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEPLOYMENT_LOCATION = YES;
+				DEVELOPMENT_TEAM = X2L8375ZQ7;
+				DSTROOT = "$(USER_LIBRARY_DIR)/Application Support/Glyphs 3/Plugins";
+				FRAMEWORK_SEARCH_PATHS = "$(SYSTEM_APPS_DIR)/Glyphs.app/Contents/Frameworks";
+				GCC_PREFIX_HEADER = "CustomParameterUI/CustomParameterUI-Prefix.pch";
+				INFOPLIST_FILE = CustomParameterUI/Info.plist;
+				INSTALL_PATH = /;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Glyphs.CustomParameterUI;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = glyphsPlugin;
+			};
+			name = Debug;
+		};
+		561EC7CC24A3D515000F8246 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = X2L8375ZQ7;
+				FRAMEWORK_SEARCH_PATHS = "$(SYSTEM_APPS_DIR)/Glyphs.app/Contents/Frameworks";
+				GCC_PREFIX_HEADER = "CustomParameterUI/CustomParameterUI-Prefix.pch";
+				INFOPLIST_FILE = CustomParameterUI/Info.plist;
+				INSTALL_PATH = /;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Glyphs.CustomParameterUI;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = glyphsPlugin;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		561EC7B424A3D515000F8246 /* Build configuration list for PBXProject "CustomParameterUI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				561EC7C824A3D515000F8246 /* Debug */,
+				561EC7C924A3D515000F8246 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		561EC7CA24A3D515000F8246 /* Build configuration list for PBXNativeTarget "CustomParameterUI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				561EC7CB24A3D515000F8246 /* Debug */,
+				561EC7CC24A3D515000F8246 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 561EC7B124A3D515000F8246 /* Project object */;
+}
