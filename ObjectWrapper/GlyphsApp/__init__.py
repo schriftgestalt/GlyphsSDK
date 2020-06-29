@@ -332,7 +332,7 @@ class Proxy(object):
 		"""Return list-lookalike of representation string of objects"""
 		strings = []
 		for currItem in self:
-			strings.append("%s" % (currItem))
+			strings.append(str(currItem))
 		return "(\n\t%s\n)" % (',\n\t'.join(strings))
 	def __len__(self):
 		Values = self.values()
@@ -340,12 +340,9 @@ class Proxy(object):
 			return len(Values)
 		return 0
 	def pop(self, i):
-		if type(i) == int:
-			node = self[i]
-			del self[i]
-			return node
-		else:
-			raise(KeyError)
+		node = self[i]
+		del self[i]
+		return node
 	def __iter__(self):
 		Values = self.values()
 		if Values is not None:
@@ -1679,6 +1676,8 @@ class FontFontMasterProxy (Proxy):
 	def remove(self, FontMaster):
 		self._owner.removeFontMasterAndContent_(FontMaster)
 	def insert(self, Index, FontMaster):
+		if Index < 0:
+			Index = self.__len__() + Index
 		self._owner.insertFontMaster_atIndex_(FontMaster, Index)
 	def extend(self, FontMasters):
 		for FontMaster in FontMasters:
@@ -1717,6 +1716,8 @@ class FontInstancesProxy (Proxy):
 	def remove(self, Instance):
 		self._owner.removeInstance_(Instance)
 	def insert(self, Index, Instance):
+		if Index < 0:
+			Index = self.__len__() + Index
 		self._owner.insertObject_inInstancesAtIndex_(Instance, Index)
 	def __len__(self):
 		return self._owner.countOfInstances()
@@ -1756,6 +1757,8 @@ class FontAxesProxy (Proxy):
 	def remove(self, axis):
 		self._owner.removeObjectFromAxes_(axis)
 	def insert(self, Index, axis):
+		if Index < 0:
+			Index = self.__len__() + Index
 		self._owner.insertObject_inAxesAtIndex_(axis, Index)
 	def __len__(self):
 		return self._owner.countOfAxes()
@@ -1791,7 +1794,7 @@ class MasterAxesProxy (Proxy):
 	def __len__(self):
 		if self._owner.font is None:
 			return 0
-		return self._owner.font.countOfAxes
+		return self._owner.font.countOfAxes()
 	def _setterMethod(self, values):
 		idx = 0
 		if self._owner.font is None:
@@ -1884,6 +1887,8 @@ class CustomParametersProxy(Proxy):
 		if type(key) == slice:
 			return self.values().__getitem__(key)
 		if type(key) is int:
+			if key < 0:
+				key = self.__len__() + key
 			return self._owner.objectInCustomParametersAtIndex_(key)
 		else:
 			return self._owner.customValueForKey_(key)
@@ -1920,6 +1925,8 @@ class CustomParametersProxy(Proxy):
 	def remove(self, Parameter):
 		self._owner.removeObjectFromCustomParametersForKey_(Parameter.name)
 	def insert(self, Index, Parameter):
+		if Index < 0:
+			Index = self.__len__() + Index
 		customParameters = copy.copy(self.values())
 		customParameters.insert(Index, Parameter)
 		self._owner.setCustomParameters_(customParameters)
@@ -1968,6 +1975,8 @@ class FontClassesProxy (Proxy):
 	def remove(self, Class):
 		self._owner.removeClass_(Class)
 	def insert(self, Index, Class):
+		if Index < 0:
+			Index = self.__len__() + Index
 		self._owner.insertObject_inClassesAtIndex_(Class, Index)
 	def __len__(self):
 		return self._owner.countOfClasses()
@@ -2014,6 +2023,8 @@ class FontFeaturesProxy (Proxy):
 	def remove(self, Class):
 		self._owner.removeFeature_(Class)
 	def insert(self, Index, Class):
+		if Index < 0:
+			Index = self.__len__() + Index
 		self._owner.insertObject_inFeaturesAtIndex_(Class, Index)
 	def __len__(self):
 		return self._owner.countOfFeatures()
@@ -2069,6 +2080,8 @@ class FontFeaturePrefixesProxy (Proxy):
 	def remove(self, FeaturePrefix):
 		self._owner.removeFeaturePrefix_(FeaturePrefix)
 	def insert(self, Index, FeaturePrefix):
+		if Index < 0:
+			Index = self.__len__() + Index
 		self._owner.insertObject_inFeaturePrefixesAtIndex_(FeaturePrefix, Index)
 	def text(self):
 		LineList = []
@@ -2342,8 +2355,12 @@ class LayerGuidesProxy (Proxy):
 			return self._owner.objectInGuidesAtIndex_(Key)
 		raise(KeyError)
 	def __setitem__(self, Key, Component):
+		if Key < 0:
+			Key = self.__len__() + Key
 		self._owner.setGuide_atIndex_(Component, Key)
 	def __delitem__(self, Key):
+		if Key < 0:
+			Key = self.__len__() + Key
 		self._owner.removeObjectFromGuidesAtIndex_(Key)
 	def __copy__(self):
 		return [x.copy() for x in self.values()]
@@ -2353,6 +2370,8 @@ class LayerGuidesProxy (Proxy):
 		for Guide in Guides:
 			self._owner.addGuide_(Guide)
 	def insert(self, Index, Guide):
+		if Index < 0:
+			Index = self.__len__() + Index
 		self._owner.insertObject_inGuidesAtIndex_(Guide, Index)
 	def remove(self, Guide):
 		self._owner.removeObjectFromGuides_(Guide)
@@ -2371,8 +2390,12 @@ class LayerAnnotationProxy (Proxy):
 			return self._owner.objectInAnnotationsAtIndex_(Key)
 		raise(KeyError)
 	def __setitem__(self, Key, Annotation):
+		if Key < 0:
+			Key = self.__len__() + Key
 		self._owner.insertObject_inAnnotationsAtIndex_(Annotation, Key)
 	def __delitem__(self, Key):
+		if Key < 0:
+			Key = self.__len__() + Key
 		self._owner.removeObjectFromAnnotationsAtIndex_(Key)
 	def __copy__(self):
 		return [x.copy() for x in self.values()]
@@ -2404,8 +2427,12 @@ class LayerHintsProxy (Proxy):
 			return self._owner.objectInHintsAtIndex_(Key)
 		raise(KeyError)
 	def __setitem__(self, key, hint):
+		if key < 0:
+			key = self.__len__() + key
 		self._owner.replaceObjectInHintsAtIndex_withObject_(key, hint)
 	def __delitem__(self, Key):
+		if Key < 0:
+			Key = self.__len__() + Key
 		self._owner.removeObjectFromHintsAtIndex_(Key)
 	def __copy__(self):
 		return [x.copy() for x in self.values()]
@@ -2415,6 +2442,8 @@ class LayerHintsProxy (Proxy):
 		for Hint in Hints:
 			self._owner.addHint_(Hint)
 	def insert(self, Index, Hint):
+		if Index < 0:
+			Index = self.__len__() + Index
 		self._owner.insertObject_inHintsAtIndex_(Hint, Index)
 	def remove(self, Hint):
 		self._owner.removeHint_(Hint)
@@ -2534,6 +2563,8 @@ class LayerShapesProxy (Proxy):
 	def remove(self, Shape):
 		self._owner.removeShape_(Shape)
 	def insert(self, Index, Shape):
+		if Index < 0:
+			Index = self.__len__() + Index
 		self._owner.insertObject_inShapesAtIndex_(Shape, Index)
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.shapes()
@@ -2609,6 +2640,8 @@ class PathNodesProxy (Proxy):
 		else:
 			raise KeyError
 	def __delitem__(self, idx):
+		if idx < 0:
+			idx = self.__len__() + idx
 		self._owner.removeObjectFromNodesAtIndex_(idx)
 	def __len__(self):
 		return self._owner.countOfNodes()
@@ -2617,6 +2650,8 @@ class PathNodesProxy (Proxy):
 	def remove(self, Node):
 		self._owner.removeNode_(Node)
 	def insert(self, Index, Node):
+		if Index < 0:
+			Index = self.__len__() + Index
 		self._owner.insertNode_atIndex_(Node, Index)
 	def extend(self, objects):
 		self._owner.addNodes_(list(objects))

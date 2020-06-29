@@ -19,7 +19,8 @@ from AppKit import *
 if sys.version_info[0] == 3:
 	unicode = str
 
-PathToTestFile = os.path.join(os.path.dirname(__file__), 'Glyphs Unit Test Sans.glyphs')
+PathToTestFile = os.path.join("/Users/gabriel/Documents/GitHub/GlyphsSDK/ObjectWrapper/Unit Test", 'Glyphs Unit Test Sans.glyphs')
+
 
 class GlyphsAppTests(unittest.TestCase):
 	
@@ -34,13 +35,45 @@ class GlyphsAppTests(unittest.TestCase):
 	
 	def assertDict(self, dictObject, assertType = True):
 		if assertType:
-			self.assertIsInstance(dict(dictObject), dict)
+			self.assertIsInstance(dictObject, dict)
 		var1 = 'abc'
 		var2 = 'def'
 		dictObject['uniTestValue'] = var1
 		self.assertEqual(dictObject['uniTestValue'], var1)
 		dictObject['uniTestValue'] = var2
 		self.assertEqual(dictObject['uniTestValue'], var2)
+		dictObject.pop('uniTestValue')
+	
+	def assertList(self, listObject, assertType = True, testValues = []):
+		if assertType:
+			self.assertIsInstance(listObject, list)
+		if testValues:
+			initial_len = len(listObject)
+			listObject.append(testValues[0])
+			self.assertEqual(listObject[-1], testValues[0])
+			self.assertEqual(len(listObject), initial_len+1)
+			self.assertEqual(listObject.index(testValues[0]), initial_len)
+			listObject[-1] = testValues[-1]
+			self.assertEqual(listObject[-1], testValues[-1])
+			del listObject[-1]
+			listObject.extend(testValues[1:])
+			listObject.insert(-(len(testValues) - 1), testValues[0])
+			for i, val in enumerate(testValues):
+				self.assertEqual(listObject[initial_len+i], val)
+			self.assertEqual(len(listObject), initial_len+len(testValues))
+			for _ in testValues:
+				listObject.remove(listObject[-1])
+			listObject.insert(0, testValues[-1])
+			self.assertEqual(listObject[0], testValues[-1])
+			self.assertEqual(listObject.index(testValues[-1]), 0)
+			self.assertEqual(listObject.pop(0), testValues[-1])
+			self.assertEqual(len(listObject), initial_len)
+		#cp = copy.copy(listObject)
+		#TODO some Proxies do a deep copy on copy.copy.
+		#for i, element in enumerate(listObject):
+		#	self.assertIs(cp[i], element)
+		self.assertEqual(len(copy.copy(listObject)), len(listObject))
+		self.assertEqual(len(copy.deepcopy(listObject)), len(listObject))
 	
 	def assertInteger(self, intObject, assertType = True, readOnly = False):
 		if assertType:
@@ -234,45 +267,15 @@ class GlyphsAppTests(unittest.TestCase):
 		
 		# GSFont.masters
 		amountLayersPerGlyph = len(font.glyphs['a'].layers)
-		amount = len(font.masters)
 		self.assertGreaterEqual(len(list(font.masters)), 1)
-		newMaster = GSFontMaster()
-		font.masters.append(newMaster)
-		self.assertEqual(newMaster, font.masters[-1])
-		del font.masters[-1]
-		newMaster1 = GSFontMaster()
-		newMaster2 = GSFontMaster()
-		font.masters.extend([newMaster1, newMaster2])
-		self.assertEqual(newMaster1, font.masters[-2])
-		self.assertEqual(newMaster2, font.masters[-1])
-		font.masters.remove(font.masters[-1])
-		font.masters.remove(font.masters[-1])
-		newMaster = GSFontMaster()
-		font.masters.insert(0, newMaster)
-		self.assertEqual(newMaster, font.masters[0])
-		font.masters.remove(font.masters[0])
-		self.assertEqual(amount, len(font.masters))
+		self.assertList(font.masters, assertType=False, testValues=[
+				GSFontMaster(), GSFontMaster(), GSFontMaster()])
 		self.assertEqual(amountLayersPerGlyph, len(font.glyphs['a'].layers))
 
 		# GSFont.instances
-		amount = len(font.instances)
 		self.assertGreaterEqual(len(list(font.instances)), 1)
-		newInstance = GSInstance()
-		font.instances.append(newInstance)
-		self.assertEqual(newInstance, font.instances[-1])
-		del font.instances[-1]
-		newInstance1 = GSInstance()
-		newInstance2 = GSInstance()
-		font.instances.extend([newInstance1, newInstance2])
-		self.assertEqual(newInstance1, font.instances[-2])
-		self.assertEqual(newInstance2, font.instances[-1])
-		font.instances.remove(font.instances[-1])
-		font.instances.remove(font.instances[-1])
-		newInstance = GSInstance()
-		font.instances.insert(0, newInstance)
-		self.assertEqual(newInstance, font.instances[0])
-		font.instances.remove(font.instances[0])
-		self.assertEqual(amount, len(font.instances))
+		self.assertList(font.instances, assertType=False, testValues=[
+				GSInstance(), GSInstance(), GSInstance()])
 		
 		# GSFont.glyphs
 		self.assertGreaterEqual(len(list(font.glyphs)), 1)
@@ -282,76 +285,48 @@ class GlyphsAppTests(unittest.TestCase):
 
 		# GSFont.classes
 		font.classes = []
+		self.assertList(font.classes, assertType=False, testValues=[
+				GSClass('uppercaseLetters0', 'A'),
+				GSClass('uppercaseLetters1', 'A'),
+				GSClass('uppercaseLetters2', 'A')])
 		amount = len(font.classes)
-		font.classes.append(GSClass('uppercaseLetters', 'A'))
+		newClass = GSClass('uppercaseLetters', 'A')
+		font.classes.append(newClass)
 		self.assertIsNotNone(font.classes[-1].__repr__())
-		self.assertEqual(len(font.classes), 1)
 		self.assertIn('<GSClass "uppercaseLetters">', str(font.classes))
 		self.assertEqual('A', font.classes['uppercaseLetters'].code)
-		del(font.classes['uppercaseLetters'])
-		newClass1 = GSClass('uppercaseLetters1', 'A')
-		newClass2 = GSClass('uppercaseLetters2', 'A')
-		font.classes.extend([newClass1, newClass2 ])
-		self.assertEqual(newClass1, font.classes[-2])
-		self.assertEqual(newClass2, font.classes[-1])
-		newClass = GSClass('uppercaseLetters3', 'A')
-		font.classes.insert(0, newClass)
-		self.assertEqual(newClass, font.classes[0])
 		copyClass = copy.copy(newClass)
 		self.assertIsNone(copyClass.parent())
 		self.assertIs(newClass.parent(), font)
 		font.classes.insert(0, copyClass)
 		self.assertEqual(copyClass.parent(), newClass.parent())
-		font.classes.remove(font.classes[-1])
-		font.classes.remove(font.classes[-1])
 		font.classes.remove(font.classes[0])
 		self.assertEqual(len(font.classes), amount)
 		
 		# GSFont.features
 		font.features = []
-		amount = len(font.features)
+		self.assertList(font.features, assertType=False, testValues=[
+				GSFeature('liga', 'sub f i by fi;'),
+				GSFeature('liga', 'sub f l by fl;')])
 		font.features.append(GSFeature('liga', 'sub f i by fi;'))
 		self.assertIsNotNone(font.features['liga'].__repr__())
 		self.assertEqual(len(font.features), 1)
 		self.assertIn('<GSFeature "liga">', str(font.features))
 		self.assertEqual('sub f i by fi;', font.features['liga'].code)
 		del(font.features['liga'])
-		newFeature1 = GSFeature('liga', 'sub f i by fi;')
-		newFeature2 = GSFeature('liga', 'sub f l by fl;')
-		font.features.extend([newFeature1, newFeature2])
-		self.assertEqual(newFeature1, font.features[-2])
-		self.assertEqual(newFeature2, font.features[-1])
-		newFeature = GSFeature('liga', 'sub f i by fi;')
-		newFeature = copy.copy(newFeature)
-		font.features.insert(0, newFeature)
-		self.assertEqual(newFeature, font.features[0])
-		font.features.remove(font.features[-1])
-		font.features.remove(font.features[-1])
-		font.features.remove(font.features[0])
-		self.assertEqual(len(font.features), amount)
 		
 		# GSFont.featurePrefixes
 		font.featurePrefixes = []
-		amount = len(font.featurePrefixes)
+		self.assertList(font.featurePrefixes, assertType=False, testValues=[
+				GSFeaturePrefix('LanguageSystems0', 'languagesystem DFLT dflt;'),
+				GSFeaturePrefix('LanguageSystems1', 'languagesystem DFLT dflt;'),
+				GSFeaturePrefix('LanguageSystems2', 'languagesystem DFLT dflt;')])
 		font.featurePrefixes.append(GSFeaturePrefix('LanguageSystems', 'languagesystem DFLT dflt;'))
 		self.assertIsNotNone(font.featurePrefixes[-1].__repr__())
 		self.assertEqual(len(font.featurePrefixes), 1)
 		self.assertIn('<GSFeaturePrefix "LanguageSystems">', str(font.featurePrefixes))
 		self.assertEqual('languagesystem DFLT dflt;', font.featurePrefixes[-1].code)
 		del(font.featurePrefixes['LanguageSystems'])
-		newFeaturePrefix1 = GSFeaturePrefix('LanguageSystems1', 'languagesystem DFLT dflt;')
-		newFeaturePrefix2 = GSFeaturePrefix('LanguageSystems2', 'languagesystem DFLT dflt;')
-		font.featurePrefixes.extend([newFeaturePrefix1, newFeaturePrefix2 ])
-		self.assertEqual(newFeaturePrefix1, font.featurePrefixes[-2])
-		self.assertEqual(newFeaturePrefix2, font.featurePrefixes[-1])
-		newFeaturePrefix = GSFeaturePrefix('LanguageSystems3', 'languagesystem DFLT dflt;')
-		newFeaturePrefix = copy.copy(newFeaturePrefix)
-		font.featurePrefixes.insert(0, newFeaturePrefix)
-		self.assertEqual(newFeaturePrefix, font.featurePrefixes[0])
-		font.featurePrefixes.remove(font.featurePrefixes[-1])
-		font.featurePrefixes.remove(font.featurePrefixes[-1])
-		font.featurePrefixes.remove(font.featurePrefixes[0])
-		self.assertEqual(len(font.featurePrefixes), amount)
 		
 		# GSFont.copyright
 		self.assertUnicode(font.copyright)
@@ -390,12 +365,7 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertIsInstance(dict(font.kerning), dict)
 		
 		# GSFont.userData
-		# self.assertDict(font.userData)
-		self.assertIsNone(font.userData["TestData"])
-		font.userData["TestData"] = 42
-		self.assertEqual(font.userData["TestData"], 42)
-		del(font.userData["TestData"])
-		self.assertIsNone(font.userData["TestData"])
+		self.assertDict(font.userData, assertType=False)
 		
 		# GSFont.disablesNiceNames
 		self.assertBool(font.disablesNiceNames)
@@ -403,24 +373,10 @@ class GlyphsAppTests(unittest.TestCase):
 		# GSFont.customParameters
 		font.customParameters['trademark'] = 'ThisFont is a trademark by MyFoundry.com'
 		self.assertEqual(font.customParameters['trademark'], 'ThisFont is a trademark by MyFoundry.com')
-		amount = len(list(font.customParameters))
-		newParameter = GSCustomParameter('hello1', 'world1')
-		font.customParameters.append(newParameter)
-		self.assertEqual(newParameter, list(font.customParameters)[-1])
-		del font.customParameters[-1]
-		newParameter1 = GSCustomParameter('hello2', 'world2')
-		newParameter2 = GSCustomParameter('hello3', 'world3')
-		newParameter2 = copy.copy(newParameter2)
-		font.customParameters.extend([newParameter1, newParameter2])
-		self.assertEqual(newParameter1, list(font.customParameters)[-2])
-		self.assertEqual(newParameter2, list(font.customParameters)[-1])
-		font.customParameters.remove(list(font.customParameters)[-1])
-		font.customParameters.remove(list(font.customParameters)[-1])
-		newParameter = GSCustomParameter('hello1', 'world1')
-		font.customParameters.insert(0, newParameter)
-		self.assertEqual(newParameter, list(font.customParameters)[0])
-		font.customParameters.remove(list(font.customParameters)[0])
-		self.assertEqual(amount, len(list(font.customParameters)))
+		self.assertList((font.customParameters), assertType=False, testValues=[
+				GSCustomParameter('hello0', 'world0'),
+				GSCustomParameter('hello1', 'world1'),
+				copy.copy(GSCustomParameter('hello2', 'world2'))])
 		del(font.customParameters['trademark'])
 		
 		# GSFont.grid
@@ -834,7 +790,7 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertIsInstance(glyph.mastersCompatible, bool)
 		
 		# GSGlyph.userData
-		self.assertDict(glyph.userData)
+		self.assertDict(glyph.userData, assertType=False)
 		
 		# GSGlyph.smartComponentAxes
 		# postponed to its own test
@@ -890,28 +846,14 @@ class GlyphsAppTests(unittest.TestCase):
 		newGuide = copy.copy(newGuide)
 		newGuide.position = NSPoint(100, 100)
 		newGuide.angle = -10.0
-		layer.guides.append(newGuide)
-		self.assertIsNotNone(layer.guides[0].__repr__())
-		self.assertEqual(len(layer.guides), 1)
-		del layer.guides[0]
-		self.assertEqual(len(layer.guides), 0)
 		newGuide1 = GSGuide()
 		newGuide1.position = NSPoint(100, 100)
 		newGuide1.angle = -10.0
 		newGuide2 = GSGuide()
 		newGuide2.position = NSPoint(100, 100)
 		newGuide2.angle = -10.0
-		layer.guides.extend([newGuide1, newGuide2])
-		self.assertEqual(layer.guides[-2], newGuide1)
-		self.assertEqual(layer.guides[-1], newGuide2)
-		newGuide = GSGuide()
-		layer.guides.insert(0, newGuide)
-		self.assertEqual(layer.guides[0], newGuide)
-		layer.guides.remove(layer.guides[-1])
-		layer.guides.remove(layer.guides[-1])
-		layer.guides.remove(layer.guides[0])
-		self.assertEqual(len(layer.guides), 0)
-
+		self.assertList(layer.guides, assertType=False, testValues=[
+				newGuide, newGuide1, newGuide2, GSGuide()])
 
 		# GSLayer.annotations
 		layer.annotations = []
@@ -919,31 +861,17 @@ class GlyphsAppTests(unittest.TestCase):
 		newAnnotation = GSAnnotation()
 		newAnnotation.type = TEXT
 		newAnnotation.text = 'Fuck, this curve is ugly!'
-		layer.annotations.append(newAnnotation)
-		self.assertIsNotNone(layer.annotations[0].__repr__())
-		self.assertEqual(len(layer.annotations), 1)
-		del layer.annotations[0]
-		self.assertEqual(len(layer.annotations), 0)
 		newAnnotation1 = GSAnnotation()
 		newAnnotation1.type = ARROW
 		newAnnotation2 = GSAnnotation()
 		newAnnotation2.type = CIRCLE
 		newAnnotation3 = GSAnnotation()
 		newAnnotation3.type = PLUS
-		layer.annotations.extend([newAnnotation1, newAnnotation2, newAnnotation3])
-		self.assertEqual(layer.annotations[-3], newAnnotation1)
-		self.assertEqual(layer.annotations[-2], newAnnotation2)
-		self.assertEqual(layer.annotations[-1], newAnnotation3)
-		newAnnotation = GSAnnotation()
-		newAnnotation = copy.copy(newAnnotation)
-		newAnnotation.type = MINUS
-		layer.annotations.insert(0, newAnnotation)
-		self.assertEqual(layer.annotations[0], newAnnotation)
-		layer.annotations.remove(layer.annotations[0])
-		layer.annotations.remove(layer.annotations[-1])
-		layer.annotations.remove(layer.annotations[-1])
-		layer.annotations.remove(layer.annotations[-1])
-		self.assertEqual(len(layer.annotations), 0)
+		newAnnotation4 = GSAnnotation()
+		newAnnotation4 = copy.copy(newAnnotation)
+		newAnnotation4.type = MINUS
+		self.assertList(layer.annotations, assertType=False, testValues=[
+			newAnnotation, newAnnotation1, newAnnotation2, newAnnotation3, newAnnotation4])
 
 		# GSLayer.hints
 		layer = Glyphs.font.glyphs['a'].layers[0]
@@ -954,11 +882,6 @@ class GlyphsAppTests(unittest.TestCase):
 		newHint.originNode = layer.shapes[0].nodes[0]
 		newHint.targetNode = layer.shapes[0].nodes[1]
 		newHint.type = STEM
-		layer.hints.append(newHint)
-		self.assertIsNotNone(layer.hints[0].__repr__())
-		self.assertEqual(len(layer.hints), 1)
-		del layer.hints[0]
-		self.assertEqual(len(layer.hints), 0)
 		newHint1 = GSHint()
 		newHint1.originNode = layer.shapes[0].nodes[0]
 		newHint1.targetNode = layer.shapes[0].nodes[1]
@@ -967,18 +890,11 @@ class GlyphsAppTests(unittest.TestCase):
 		newHint2.originNode = layer.shapes[0].nodes[0]
 		newHint2.targetNode = layer.shapes[0].nodes[1]
 		newHint2.type = STEM
-		layer.hints.extend([newHint1, newHint2])
-		newHint = GSHint()
-		newHint.originNode = layer.shapes[0].nodes[0]
-		newHint.targetNode = layer.shapes[0].nodes[1]
-		self.assertEqual(layer.hints[-2], newHint1)
-		self.assertEqual(layer.hints[-1], newHint2)
-		layer.hints.insert(0, newHint)
-		self.assertEqual(layer.hints[0], newHint)
-		layer.hints.remove(layer.hints[0])
-		layer.hints.remove(layer.hints[-1])
-		layer.hints.remove(layer.hints[-1])
-		self.assertEqual(len(layer.hints), 0)
+		newHint3 = GSHint()
+		newHint3.originNode = layer.shapes[0].nodes[0]
+		newHint3.targetNode = layer.shapes[0].nodes[1]
+		self.assertList(layer.hints, assertType=False, testValues=[
+				newHint, newHint1, newHint2, newHint3])
 
 		# GSLayer.anchors
 		amount = len(layer.anchors)
@@ -1083,7 +999,7 @@ class GlyphsAppTests(unittest.TestCase):
 
 		# GSLayer.userData
 		layer.userData["Hallo"] = "Welt"
-		self.assertDict(layer.userData)
+		self.assertDict(layer.userData, assertType=False)
 
 
 		## Methods
@@ -1354,43 +1270,23 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertIsNotNone(copyPath.__repr__())
 
 		# Proxy
-		amount = len(layer.shapes)
 		pathCopy1 = copy.copy(path)
-		layer.shapes.append(pathCopy1)
 		pathCopy2 = copy.copy(pathCopy1)
-		layer.shapes.extend([pathCopy2])
-		self.assertEqual(layer.shapes[-2], pathCopy1)
-		self.assertEqual(layer.shapes[-1], pathCopy2)
 		pathCopy3 = copy.copy(pathCopy2)
-		layer.shapes.insert(0, pathCopy3)
-		self.assertEqual(layer.shapes[0], pathCopy3)
-		layer.shapes.remove(layer.shapes[0])
-		layer.shapes.remove(layer.shapes[-1])
-		layer.shapes.remove(layer.shapes[-1])
-		self.assertEqual(amount, len(layer.shapes))
+		self.assertList(layer.shapes, assertType=False, testValues=[
+				pathCopy1, pathCopy2, pathCopy3])
 		
 		# GSPath.parent
-		#self.assertEqual(path.parent, Glyphs.font.glyphs['a'].layers[0])
+		self.assertEqual(path.parent, Glyphs.font.glyphs['a'].layers[0])
 
 		# GSPath.nodes
-		amount = len(path.nodes)
 		self.assertIsNotNone(list(path.nodes))
 		newNode = GSNode(NSPoint(20,20))
-		path.nodes.append(newNode)
-		self.assertEqual(newNode, path.nodes[-1])
-		del path.nodes[-1]
-		newNode = GSNode(NSPoint(20,20))
-		path.nodes.insert(0, newNode)
-		self.assertEqual(newNode, path.nodes[0])
-		path.nodes.remove(path.nodes[0])
 		newNode1 = GSNode(NSPoint(10,10))
 		newNode2 = GSNode(NSPoint(20,20))
-		path.nodes.extend([newNode1, newNode2])
-		self.assertEqual(newNode1, path.nodes[-2])
-		self.assertEqual(newNode2, path.nodes[-1])
-		del path.nodes[-2]
-		del path.nodes[-1]
-		self.assertEqual(amount, len(path.nodes))
+		newNode3 = copy.copy(newNode)
+		self.assertList(path.nodes, assertType=False, testValues=[
+				newNode, newNode1, newNode2, newNode3])
 
 		# GSPath.segments
 		self.assertIsNotNone(list(path.segments))
@@ -1832,13 +1728,13 @@ class GlyphsAppTests(unittest.TestCase):
 sys.argv = ["GlyphsAppTests"]
 
 if __name__ == '__main__':
-	import coverage  # pip3 install coverage
-	cov = coverage.Coverage()
-	cov.start()
+	#import coverage  # pip3 install coverage
+	#cov = coverage.Coverage()
+	#cov.start()
 
 	unittest.main(exit=False, failfast=False)
 
-	cov.stop()
-	cov.save()
+	#cov.stop()
+	#cov.save()
 
-	cov.html_report()
+	#cov.html_report()
