@@ -1896,11 +1896,9 @@ class CustomParametersProxy(Proxy):
 		if type(key) is int:
 			if key < 0:
 				key = self.__len__() + key
-			Value = self._owner.objectInCustomParametersAtIndex_(key)
-			if Value is not None:
-				Value.setValue_(objcObject(Parameter))
-			else:
-				raise ValueError
+			customParameters = copy.copy(self.values())
+			customParameters[key] = Parameter
+			self._owner.setCustomParameters_(customParameters)
 		else:
 			self._owner.setCustomValue_forKey_(objcObject(Parameter), objcObject(key))
 	def __delitem__(self, key):
@@ -2062,7 +2060,7 @@ class FontFeaturePrefixesProxy (Proxy):
 		if type(Key) is int:
 			if Key < 0:
 				Key = self.__len__() + Key
-			self._owner.replaceObjectInFeaturePrefixesAtIndex__withObject_(Key, Feature)
+			self._owner.replaceObjectInFeaturePrefixesAtIndex_withObject_(Key, Feature)
 	def __delitem__(self, Key):
 		if type(Key) is int:
 			if Key < 0:
@@ -2357,13 +2355,11 @@ class LayerGuidesProxy (Proxy):
 	def __setitem__(self, Key, Component):
 		if Key < 0:
 			Key = self.__len__() + Key
-		self._owner.setGuide_atIndex_(Component, Key)
+		self._owner.replaceObjectInGuidesAtIndex_withObject_(Key, Component)
 	def __delitem__(self, Key):
 		if Key < 0:
 			Key = self.__len__() + Key
 		self._owner.removeObjectFromGuidesAtIndex_(Key)
-	def __copy__(self):
-		return [x.copy() for x in self.values()]
 	def append(self, Guide):
 		self._owner.addGuide_(Guide)
 	def extend(self, Guides):
@@ -2392,13 +2388,12 @@ class LayerAnnotationProxy (Proxy):
 	def __setitem__(self, Key, Annotation):
 		if Key < 0:
 			Key = self.__len__() + Key
+		self._owner.removeObjectFromAnnotationsAtIndex_(Key)
 		self._owner.insertObject_inAnnotationsAtIndex_(Annotation, Key)
 	def __delitem__(self, Key):
 		if Key < 0:
 			Key = self.__len__() + Key
 		self._owner.removeObjectFromAnnotationsAtIndex_(Key)
-	def __copy__(self):
-		return [x.copy() for x in self.values()]
 	def append(self, Annotation):
 		self._owner.addAnnotation_(Annotation)
 	def extend(self, Annotations):
@@ -2434,8 +2429,6 @@ class LayerHintsProxy (Proxy):
 		if Key < 0:
 			Key = self.__len__() + Key
 		self._owner.removeObjectFromHintsAtIndex_(Key)
-	def __copy__(self):
-		return [x.copy() for x in self.values()]
 	def append(self, Hint):
 		self._owner.addHint_(Hint)
 	def extend(self, Hints):
@@ -2477,8 +2470,6 @@ class LayerAnchorsProxy (Proxy):
 		anchor = self.__getitem__(Key)
 		if anchor is not None:
 			self._owner.removeAnchor_(anchor)
-	def __copy__(self):
-		return [x.copy() for x in self.values()]
 	def items(self):
 		Items = []
 		for key in self.keys():
@@ -2544,8 +2535,6 @@ class LayerShapesProxy (Proxy):
 		if idx < 0:
 			idx = self._owner.countOfShapes() + idx
 		self._owner.removeObjectFromShapesAtIndex_(idx)
-	def __copy__(self):
-		return [x.copy() for x in self.values()]
 	def append(self, Shape):
 		if isinstance(Shape, GSShape):
 			self._owner.addShape_(Shape)
@@ -2578,8 +2567,6 @@ class LayerPathsProxy (Proxy):
 		raise ValueError
 	def __delitem__(self, idx):
 		raise ValueError
-	def __copy__(self):
-		return [x.copy() for x in self.values()]
 	def append(self, Path):
 		raise ValueError
 	def extend(self, Paths):
@@ -4166,13 +4153,13 @@ GSAlignmentZone.mutableCopyWithZone_ = GSObject__copy__
 GSAlignmentZone.position = property(lambda self: self.pyobjc_instanceMethods.position(), lambda self, value: self.setPosition_(validateNumber(value)))
 '''
 	.. attribute:: position
-	:type: int
+	:type: float
 '''
 	
 GSAlignmentZone.size = property(lambda self: self.pyobjc_instanceMethods.size(), lambda self, value: self.setSize_(value))
 '''
 	.. attribute:: size
-	:type: int
+	:type: float
 '''
 
 def __propertyListValue__(self):
@@ -4723,7 +4710,7 @@ It is best to access the custom parameters through its dictionary interface like
 .. class:: GSCustomParameter([name, value])
 
 	:param name: The name
-	:param size: The value
+	:param value: The value
 '''
 
 GSCustomParameter.__new__ = staticmethod(GSObject__new__)
