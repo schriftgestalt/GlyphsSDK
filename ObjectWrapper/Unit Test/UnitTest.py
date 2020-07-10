@@ -142,6 +142,8 @@ class GlyphsAppTests(unittest.TestCase):
 		Glyphs.fonts.extend([copyfont])
 		self.assertIn(copyfont, Glyphs.fonts)
 		copyfont.close()
+		with self.assertRaises(TypeError):
+			Glyphs.fonts['a']
 
 		# open font
 		Glyphs.open(PathToTestFile)
@@ -151,6 +153,13 @@ class GlyphsAppTests(unittest.TestCase):
 		# Assert font
 		self.assertIsNotNone(Glyphs.font)
 		self.assertEqual(len(Glyphs.fonts), 1)
+
+		# GSApplication.documents
+		self.assertEqual(len(Glyphs.documents), 1)
+		self.assertIs(Glyphs.documents[0].font, Glyphs.fonts[0])
+		with self.assertRaises(TypeError):
+			Glyphs.documents['a']
+		self.assertIsInstance(copy.copy(Glyphs.documents), list)
 		
 		## Attributes
 		
@@ -180,6 +189,25 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertEqual(Glyphs.defaults["TestKey"], 24)
 		del(Glyphs.defaults["TestKey"])
 		self.assertEqual(Glyphs.defaults["TestKey"], 12)
+		
+		# GSApplication.boolDefaults
+		self.assertIsNone(Glyphs.defaults["BoolKey"])
+		self.assertIs(Glyphs.boolDefaults["BoolKey"], False)
+		Glyphs.boolDefaults["BoolKey"] = True
+		self.assertEqual(Glyphs.boolDefaults["BoolKey"], True)
+		del Glyphs.boolDefaults["BoolKey"]
+		with self.assertRaises(TypeError):
+			Glyphs.boolDefaults["BoolKey"] = 12
+
+		# GSApplication.intDefaults
+		self.assertIsNone(Glyphs.defaults["IntKey"])
+		self.assertIs(Glyphs.intDefaults["IntKey"], 0)
+		Glyphs.intDefaults["IntKey"] = 14
+		self.assertEqual(Glyphs.intDefaults["IntKey"], 14)
+		del Glyphs.intDefaults["IntKey"]
+		with self.assertRaises(TypeError):
+			Glyphs.intDefaults["IntKey"] = 12.5
+
 		# GSApplication.scriptAbbreviations
 		self.assertIsNotNone(dict(Glyphs.scriptAbbreviations))
 		
@@ -215,7 +243,10 @@ class GlyphsAppTests(unittest.TestCase):
 			print('hello')
 		newMenuItem = NSMenuItem('B', a)
 		Glyphs.menu[EDIT_MENU].append(newMenuItem)
-
+		self.assertIsNotNone(Glyphs.menu[0])
+		with self.assertRaises(TypeError):
+			Glyphs.menu[1.5]
+		self.assertList(copy.copy(Glyphs.menu))
 		
 		## Methods
 		
@@ -269,6 +300,9 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertList(font.masters, assertType=False, testValues=[
 				GSFontMaster(), GSFontMaster(), copy.copy(GSFontMaster())])
 		self.assertEqual(amountLayersPerGlyph, len(font.glyphs['a'].layers))
+		self.assertEqual(font.masters[0], font.masters[font.masters[0].id])
+		with self.assertRaises(TypeError):
+			font.masters[2.2]
 
 		# GSFont.instances
 		self.assertGreaterEqual(len(list(font.instances)), 1)
@@ -280,6 +314,10 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertEqual(font.glyphs[u'ä'], font.glyphs['adieresis'])
 		self.assertEqual(font.glyphs['00E4'], font.glyphs['adieresis'])
 		self.assertEqual(font.glyphs['00e4'], font.glyphs['adieresis'])
+		with self.assertRaises(TypeError):
+			font.glyphs[1.4]
+		with self.assertRaises(NameError):
+			font.glyphs.append(GSGlyph('adieresis'))
 
 		# GSFont.classes
 		font.classes = []

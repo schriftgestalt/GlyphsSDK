@@ -655,17 +655,25 @@ def validateNumber(value=None):
 
 class DefaultsProxy(Proxy):
 	def __getitem__(self, key):
+		if not isString(key):
+			raise TypeError("defaults key must be str, not %s" % type(key).__name__)
 		return NSUserDefaults.standardUserDefaults().objectForKey_(key)
-	def __setitem__(self, key, Value):
-		if Value is not None:
-			NSUserDefaults.standardUserDefaults().setObject_forKey_(Value, key)
+	def __setitem__(self, key, value):
+		if not isString(key):
+			raise TypeError("defaults key must be str, not %s" % type(key).__name__)
+		if value is not None:
+			NSUserDefaults.standardUserDefaults().setObject_forKey_(value, key)
 		else:
 			NSUserDefaults.standardUserDefaults().removeObjectForKey_(key)
 	def __delitem__(self, key):
+		if not isString(key):
+			raise TypeError("defaults key must be str, not %s" % type(key).__name__)
 		NSUserDefaults.standardUserDefaults().removeObjectForKey_(key)
 	def get(self, key, default = None):
+		if not isString(key):
+			raise TypeError("defaults key must be str, not %s" % type(key).__name__)
 		value = NSUserDefaults.standardUserDefaults().objectForKey_(key)
-		if not value:
+		if value is None:
 			return default
 		return value
 	def __repr__(self):
@@ -727,25 +735,46 @@ GSApplication.registerDefaults = __registerDefaults__
 
 
 class BoolDefaultsProxy(DefaultsProxy):
-	def __getitem__(self, Key):
-		return NSUserDefaults.standardUserDefaults().boolForKey_(Key)
-	def __setitem__(self, Key, Value):
-		if Value is not None:
-			NSUserDefaults.standardUserDefaults().setBool_forKey_(Value, Key)
+	def __getitem__(self, key):
+		if not isString(key):
+			raise TypeError("defaults key must be str, not %s" % type(key).__name__)
+		return NSUserDefaults.standardUserDefaults().boolForKey_(key)
+	def __setitem__(self, key, value):
+		if not isString(key):
+			raise TypeError("defaults key must be str, not %s" % type(key).__name__)
+		if value is None:
+			NSUserDefaults.standardUserDefaults().removeObjectForKey_(key)
+		elif isinstance(value, bool):
+			NSUserDefaults.standardUserDefaults().setBool_forKey_(value, key)
 		else:
-			NSUserDefaults.standardUserDefaults().removeObjectForKey_(Key)
+			raise TypeError("boolDefaults only accepts values of type bool, not %s" % type(value).__name__)
+	def get(self, key, default = None):
+		if not isString(key):
+			raise TypeError("defaults key must be str, not %s" % type(key).__name__)
+		value = NSUserDefaults.standardUserDefaults().objectForKey_(key)
+		if not value:
+			return default
+		return value.boolValue()
 
 GSApplication.boolDefaults = property(lambda self: BoolDefaultsProxy(self))
 
 class IntDefaultsProxy(DefaultsProxy):
-	def __getitem__(self, Key):
-		return NSUserDefaults.standardUserDefaults().integerForKey_(Key)
-	def __setitem__(self, Key, Value):
-		if Value is not None:
-			NSUserDefaults.standardUserDefaults().setInteger_forKey_(Value, Key)
+	def __getitem__(self, key):
+		if not isString(key):
+			raise TypeError("defaults key must be str, not %s" % type(key).__name__)
+		return NSUserDefaults.standardUserDefaults().integerForKey_(key)
+	def __setitem__(self, key, value):
+		if not isString(key):
+			raise TypeError("defaults key must be str, not %s" % type(key).__name__)
+		if value is None:
+			NSUserDefaults.standardUserDefaults().removeObjectForKey_(key)
+		elif isinstance(value, int):
+			NSUserDefaults.standardUserDefaults().setInteger_forKey_(value, key)
 		else:
-			NSUserDefaults.standardUserDefaults().removeObjectForKey_(Key)
+			raise TypeError("intDefaults only accepts values of type int, not %s" % type(value).__name__)
 	def get(self, key, default = None):
+		if not isString(key):
+			raise TypeError("defaults key must be str, not %s" % type(key).__name__)
 		value = NSUserDefaults.standardUserDefaults().objectForKey_(key)
 		if not value:
 			return default
@@ -916,12 +945,14 @@ menuTagLookup = {
 
 class AppMenuProxy (Proxy):
 	"""Access the main menu."""
-	def __getitem__(self, Key):
-		if isinstance(Key, int):
-			return self._owner.mainMenu().itemAtIndex_(Key)
-		elif isString(Key):
-			Tag = menuTagLookup[Key]
+	def __getitem__(self, key):
+		if isinstance(key, int):
+			return self._owner.mainMenu().itemAtIndex_(key)
+		elif isString(key):
+			Tag = menuTagLookup[key]
 			return self._owner.mainMenu().itemWithTag_(Tag)
+		else:
+			raise TypeError("Expected int or str, not %s" % type(key).__name__)
 	def values(self):
 		return self._owner.mainMenu().itemArray()
 
@@ -1468,16 +1499,16 @@ def _______________________(): pass
 
 class AppDocumentProxy (Proxy):
 	"""The list of documents."""
-	def __getitem__(self, Key):
-		if type(Key) == slice:
-			return self.values().__getitem__(Key)
-		if type(Key) is int:
+	def __getitem__(self, key):
+		if isinstance(key, slice):
+			return self.values().__getitem__(key)
+		elif isinstance(key, int):
 			Values = self.values()
-			if Key < 0:
-				Key = len(Values) + Key
-			return Values[Key]
+			if key < 0:
+				key = len(Values) + key
+			return Values[key]
 		else:
-			raise(KeyError)
+			raise TypeError("list indices must be integers, not %s" % type(key).__name__)
 	def append(self, doc):
 		NSDocumentController.sharedDocumentController().addDocument_(doc)
 		doc.makeWindowControllers()
@@ -1487,16 +1518,16 @@ class AppDocumentProxy (Proxy):
 
 class AppFontProxy (Proxy):
 	"""The list of fonts."""
-	def __getitem__(self, Key):
-		if type(Key) == slice:
-			return self.values().__getitem__(Key)
-		if type(Key) is int:
+	def __getitem__(self, key):
+		if type(key) == slice:
+			return self.values().__getitem__(key)
+		if type(key) is int:
 			Values = self.values()
-			if Key < 0:
-				Key = len(Values) + Key
-			return Values[Key]
+			if key < 0:
+				key = len(Values) + key
+			return Values[key]
 		else:
-			raise(KeyError)
+			raise TypeError("list indices must be integers, not %s" % type(key).__name__)
 	def values(self):
 		fonts = []
 		for doc in self._owner.fontDocuments():
@@ -1556,55 +1587,59 @@ class FontGlyphsProxy (Proxy):
 		for glyph in Font.glyphs:
 		...
 	"""
-	def __getitem__(self, Key):
-		if Key is None:
+	def __getitem__(self, key):
+		if key is None:
 			return None
-		if type(Key) == slice:
-			return self.values().__getitem__(Key)
+		if isinstance(key, slice):
+			return self.values().__getitem__(key)
 
 		# by index
-		if type(Key) is int:
-			if Key < 0:
-				Key = self.__len__() + Key
-			return self._owner.glyphAtIndex_(Key)
+		if isinstance(key, int):
+			if key < 0:
+				key = self.__len__() + key
+			return self._owner.glyphAtIndex_(key)
+		if isString(key):
+			# by glyph name
+			if self._owner.glyphForName_(key):
+				return self._owner.glyphForName_(key)
 
-		# by glyph name
-		elif self._owner.glyphForName_(Key):
-			return self._owner.glyphForName_(Key)
+			# by string representation as u'ä'
+			elif len(key) == 1 and self._owner.glyphForCharacter_(ord(key)):
+				return self._owner.glyphForCharacter_(ord(key))
 
-		# by string representation as u'ä'
-		elif len(Key) == 1 and self._owner.glyphForCharacter_(ord(Key)):
-			return self._owner.glyphForCharacter_(ord(Key))
+			# by unicode
+			return self._owner.glyphForUnicode_(key.upper())
+		raise TypeError("key for glyphs must be int or str, not %s" % type(key).__name__)
 
-		# by unicode
-		else:
-			return self._owner.glyphForUnicode_(Key.upper())
-
-	def __setitem__(self, Key, glyph):
-		if type(Key) is int:
-			if Key < 0:
-				Key = self.__len__() + Key
-			self._owner.removeGlyph_(self._owner.glyphAtIndex_(Key))
+	def __setitem__(self, key, glyph):
+		if isinstance(key, int):
+			if key < 0:
+				key = self.__len__() + key
+			self._owner.removeGlyph_(self._owner.glyphAtIndex_(key))
 			self._owner.addGlyph_(glyph)
-		else:
+		elif isString(key):
 			self._owner.removeGlyph_(self._owner.glyphForName_(Key))
 			
 			if isinstance(glyph, GSLayer): # hack for fontParts
 				_glyph = GSGlyph()
-				_glyph.name = Key
+				_glyph.name = key
 				glyph.setLayerId_(self._owner.masters[0].id)
 				_glyph.layers[self._owner.masters[0].id] = glyph
 				glyph = _glyph
-			if glyph.name != Key:
-				glyph.name = Key
+			if glyph.name != key:
+				glyph.name = key
 			self._owner.addGlyph_(glyph)
-	def __delitem__(self, Key):
-		if type(Key) is int:
-			if Key < 0:
-				Key = self.__len__() + Key
-			self._owner.removeGlyph_(self._owner.glyphAtIndex_(Key))
 		else:
-			self._owner.removeGlyph_(self._owner.glyphForName_(Key))
+			raise TypeError("key for glyphs must be int or str, not %s" % type(key).__name__)
+	def __delitem__(self, key):
+		if isinstance(key, int):
+			if key < 0:
+				key = self.__len__() + key
+			self._owner.removeGlyph_(self._owner.glyphAtIndex_(key))
+		elif isString(key):
+			self._owner.removeGlyph_(self._owner.glyphForName_(key))
+		else:
+			raise TypeError("key for glyphs must be int or str, not %s" % type(key).__name__)
 	def __contains__(self, item):
 		if isString(item):
 			return self._owner.glyphForName_(item) is not None
@@ -1633,33 +1668,36 @@ class FontGlyphsProxy (Proxy):
 
 
 class FontFontMasterProxy (Proxy):
-	def __getitem__(self, Key):
-		if type(Key) == slice:
-			return self.values().__getitem__(Key)
-		if type(Key) is int:
-			if Key < 0:
-				Key = self.__len__() + Key
-			return self._owner.fontMasterAtIndex_(Key)
-		elif isString(Key):
-			return self._owner.fontMasterForId_(Key)
-		else:
-			raise KeyError("need int or str, got: %s", type(Key))
-	def __setitem__(self, Key, FontMaster):
-		if type(Key) is int:
-			if Key < 0:
-				Key = self.__len__() + Key
-			self._owner.replaceFontMasterAtIndex_withFontMaster_(Key, FontMaster)
-		elif isString(Key):
-			OldFontMaster = self._owner.fontMasterForId_(Key)
+	def __getitem__(self, key):
+		if isinstance(key, slice):
+			return self.values().__getitem__(key)
+		if isinstance(key, int):
+			if key < 0:
+				key = self.__len__() + key
+			return self._owner.fontMasterAtIndex_(key)
+		if isString(key):
+			return self._owner.fontMasterForId_(key)
+		raise TypeError("need int or str, got: %s", type(key).__name__)
+	def __setitem__(self, key, FontMaster):
+		if isinstance(key, int):
+			if key < 0:
+				key = self.__len__() + key
+			self._owner.replaceFontMasterAtIndex_withFontMaster_(key, FontMaster)
+		elif isString(key):
+			OldFontMaster = self._owner.fontMasterForId_(key)
 			self._owner.removeFontMaster_(OldFontMaster)
 			return self._owner.addFontMaster_(FontMaster)
-	def __delitem__(self, Key):
-		if type(Key) is int:
-			if Key < 0:
-				Key = self.__len__() + Key
-			removeFontMaster = self._owner.objectInFontMastersAtIndex_(Key)
 		else:
-			removeFontMaster = self._owner.fontMasterForId_(Key)
+			raise TypeError("need int or str, got: %s", type(key).__name__)
+	def __delitem__(self, key):
+		if isinstance(key, int):
+			if key < 0:
+				key = self.__len__() + key
+			removeFontMaster = self._owner.objectInFontMastersAtIndex_(key)
+		elif isString(key):
+			removeFontMaster = self._owner.fontMasterForId_(key)
+		else:
+			raise TypeError("need int or str, got: %s", type(key).__name__)
 		if removeFontMaster:
 			return self._owner.removeFontMasterAndContent_(removeFontMaster)
 	def __iter__(self):
@@ -4263,7 +4301,7 @@ GSInstance.name = property(lambda self: self.pyobjc_instanceMethods.name(), lamb
 
 def _setValueValidation(target, key, value, valuetype):
 	if not isinstance(value, valuetype):
-		raise TypeError("Type for {} should be {}, got {}".format(key, valuetype, type(value)))
+		raise TypeError("Type for {} should be {}, got {}".format(key, valuetype.__name__, type(value).__name__))
 	target.setValue_forKey_(value, key)
 
 GSInstance.weightClass = property(lambda self: self.weightClassValue(), lambda self, value: _setValueValidation(self, "weightClassValue", value, int))
