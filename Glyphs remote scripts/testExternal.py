@@ -19,7 +19,7 @@ def writeInstanceAsUFO():
 	intance = font.instances()[2]
 	
 	InterpolatedFont = font.generateInstance_error_(intance, None)
-	print InterpolatedFont
+	print(InterpolatedFont)
 	doc = Glyphs.objectWithClassName_("GSDocument")
 	doc.setFont_(InterpolatedFont)
 	
@@ -33,10 +33,10 @@ def exportAllInstances():
 	'''
 	path = os.path.expanduser("~/Desktop/test/file.glyphs")
 	doc = Glyphs.openDocumentWithContentsOfFile_display_(path, False)
-	print "Exporting:", doc.displayName()
+	print("Exporting:", doc.displayName())
 	font = doc.font()
 	for instance in font.instances():
-		print "Instance:", instance
+		print("Instance:", instance)
 		instance.generate_({
 			'ExportFormat': "TTF",
 			'ExportContainer': "woff",
@@ -54,9 +54,14 @@ def exportAllInstances():
 	'''
 	
 	doc.close()
-	print "Ready!"
+	print("Ready!")
+
+def classTeste():
+	pen = Glyphs.objectWithClassName_("GSSVGPen")
+	print(pen)
+	print(Glyphs.mainBundle())
 
 if __name__ == '__main__':
-	exportAllInstances()
+	#exportAllInstances()
 	#writeInstanceAsUFO()
-
+	classTeste()
