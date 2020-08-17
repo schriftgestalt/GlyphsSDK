@@ -8,7 +8,7 @@ __all__ = ["Glyphs", "currentDocument", "GSMOVE", "GSLINE", "GSCURVE", "GSOFFCUR
 NSConnection = objc.lookUpClass("NSConnection")
 
 def application(appName):
-	port = "com.GeorgSeifert.Glyphs2.JSTalk"
+	port = "com.GeorgSeifert.Glyphs3"
 	conn = None
 	tries = 0
 	
