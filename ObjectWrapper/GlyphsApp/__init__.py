@@ -1519,15 +1519,15 @@ class AppDocumentProxy (Proxy):
 class AppFontProxy (Proxy):
 	"""The list of fonts."""
 	def __getitem__(self, key):
-		if type(key) == slice:
+		if isinstance(key, slice):
 			return self.values().__getitem__(key)
-		if type(key) is int:
+		if isinstance(key, int):
 			Values = self.values()
 			if key < 0:
 				key = len(Values) + key
 			return Values[key]
 		else:
-			raise TypeError("list indices must be integers, not %s" % type(key).__name__)
+			raise TypeError("list indices must be integers or slices, not %s" % type(key).__name__)
 	def values(self):
 		fonts = []
 		for doc in self._owner.fontDocuments():
@@ -1671,13 +1671,13 @@ class FontFontMasterProxy (Proxy):
 	def __getitem__(self, key):
 		if isinstance(key, slice):
 			return self.values().__getitem__(key)
-		if isinstance(key, int):
+		elif isinstance(key, int):
 			if key < 0:
 				key = self.__len__() + key
 			return self._owner.fontMasterAtIndex_(key)
-		if isString(key):
+		elif isString(key):
 			return self._owner.fontMasterForId_(key)
-		raise TypeError("need int or str, got: %s", type(key).__name__)
+		raise TypeError("need int or str, got: %s" % type(key).__name__)
 	def __setitem__(self, key, FontMaster):
 		if isinstance(key, int):
 			if key < 0:
@@ -1688,16 +1688,19 @@ class FontFontMasterProxy (Proxy):
 			self._owner.removeFontMaster_(OldFontMaster)
 			return self._owner.addFontMaster_(FontMaster)
 		else:
-			raise TypeError("need int or str, got: %s", type(key).__name__)
+			raise TypeError("need int or str, got: %s" % type(key).__name__)
 	def __delitem__(self, key):
-		if isinstance(key, int):
+		if isinstance(key, slice):
+			for i in range(*key.indices(self.__len__())):
+				self.__delitem__(i)
+		elif isinstance(key, int):
 			if key < 0:
 				key = self.__len__() + key
 			removeFontMaster = self._owner.objectInFontMastersAtIndex_(key)
 		elif isString(key):
 			removeFontMaster = self._owner.fontMasterForId_(key)
 		else:
-			raise TypeError("need int or str, got: %s", type(key).__name__)
+			raise TypeError("need int or str, got: %s" % type(key).__name__)
 		if removeFontMaster:
 			return self._owner.removeFontMasterAndContent_(removeFontMaster)
 	def __iter__(self):
@@ -1713,10 +1716,13 @@ class FontFontMasterProxy (Proxy):
 		self._owner.addFontMaster_(FontMaster)
 	def remove(self, FontMaster):
 		self._owner.removeFontMasterAndContent_(FontMaster)
-	def insert(self, Index, FontMaster):
-		if Index < 0:
-			Index = self.__len__() + Index
-		self._owner.insertFontMaster_atIndex_(FontMaster, Index)
+	def insert(self, index, FontMaster):
+		if isinstance(index, int):
+			if index < 0:
+				index = self.__len__() + index
+			self._owner.insertFontMaster_atindex_(FontMaster, index)
+		else:
+			raise TypeError("index must be integer, got: %s" % type(key).__name__)
 	def extend(self, FontMasters):
 		for FontMaster in FontMasters:
 			self._owner.addFontMaster_(FontMaster)
@@ -1724,25 +1730,29 @@ class FontFontMasterProxy (Proxy):
 
 
 class FontInstancesProxy (Proxy):
-	def __getitem__(self, Key):
-		if type(Key) == slice:
-			return self.values().__getitem__(Key)
-		if type(Key) is int:
-			if Key < 0:
-				Key = self.__len__() + Key
-			return self._owner.objectInInstancesAtIndex_(Key)
+	def __getitem__(self, index):
+		if isinstance(index, slice):
+			return self.values().__getitem__(index)
+		if isinstance(index, int):
+			if index < 0:
+				index = self.__len__() + index
+			return self._owner.objectInInstancesAtIndex_(index)
 		else:
-			raise(KeyError)
-	def __setitem__(self, Key, Class):
-		if type(Key) is int:
-			if Key < 0:
-				Key = self.__len__() + Key
-			self._owner.replaceObjectInInstancesAtIndex_withObject_(Key, Class)
-	def __delitem__(self, Key):
-		if type(Key) is int:
-			if Key < 0:
-				Key = self.__len__() + Key
-			return self._owner.removeObjectFromInstancesAtIndex_(Key)
+			raise TypeError("list indices must be integers or slices, not %s" % type(index).__name__)
+	def __setitem__(self, index, Class):
+		if isinstance(index, int):
+			if index < 0:
+				index = self.__len__() + index
+			self._owner.replaceObjectInInstancesAtIndex_withObject_(index, Class)
+		else:
+			raise TypeError("list indices must be integers, not %s" % type(index).__name__)
+	def __delitem__(self, index):
+		if isinstance(index, int):
+			if index < 0:
+				index = self.__len__() + index
+			return self._owner.removeObjectFromInstancesAtIndex_(index)
+		else:
+			raise TypeError("list indices must be integers, not %s" % type(index).__name__)
 	def __iter__(self):
 		for index in range(self._owner.countOfInstances()):
 			yield self._owner.objectInInstancesAtIndex_(index)
@@ -1753,10 +1763,13 @@ class FontInstancesProxy (Proxy):
 			self._owner.addInstance_(Instance)
 	def remove(self, Instance):
 		self._owner.removeInstance_(Instance)
-	def insert(self, Index, Instance):
-		if Index < 0:
-			Index = self.__len__() + Index
-		self._owner.insertObject_inInstancesAtIndex_(Instance, Index)
+	def insert(self, index, Instance):
+		if isinstance(index, int):
+			if index < 0:
+				index = self.__len__() + index
+			self._owner.insertObject_inInstancesAtIndex_(Instance, index)
+		else:
+			raise TypeError("list indices must be integers, not %s" % type(index).__name__)
 	def __len__(self):
 		return self._owner.countOfInstances()
 	def values(self):
@@ -1765,25 +1778,29 @@ class FontInstancesProxy (Proxy):
 		return self._owner.setInstances_
 
 class FontAxesProxy (Proxy):
-	def __getitem__(self, Key):
-		if type(Key) == slice:
-			return self.values().__getitem__(Key)
-		if type(Key) is int:
-			if Key < 0:
-				Key = self.__len__() + Key
-			return self._owner.objectInAxesAtIndex_(Key)
+	def __getitem__(self, key):
+		if isinstance(key, slice):
+			return self.values().__getitem__(key)
+		if isinstance(key, int):
+			if key < 0:
+				key = self.__len__() + key
+			return self._owner.objectInAxesAtIndex_(key)
 		else:
-			raise(KeyError)
-	def __setitem__(self, Key, Class):
-		if type(Key) is int:
-			if Key < 0:
-				Key = self.__len__() + Key
-			self._owner.replaceObjectInAxesAtIndex_withObject_(Key, Class)
-	def __delitem__(self, Key):
-		if type(Key) is int:
-			if Key < 0:
-				Key = self.__len__() + Key
-			return self._owner.removeObjectFromAxesAtIndex_(Key)
+			raise TypeError("list indices must be integers or slices, not %s" % type(index).__name__)
+	def __setitem__(self, key, Class):
+		if isinstance(key, int):
+			if key < 0:
+				key = self.__len__() + key
+			self._owner.replaceObjectInAxesAtIndex_withObject_(key, Class)
+		else:
+			raise TypeError("list indices must be integers, not %s" % type(index).__name__)
+	def __delitem__(self, key):
+		if isinstance(key, int):
+			if key < 0:
+				key = self.__len__() + key
+			return self._owner.removeObjectFromAxesAtIndex_(key)
+		else:
+			raise TypeError("list indices must be integers, not %s" % type(index).__name__)
 	def __iter__(self):
 		for index in range(self._owner.countOfAxes()):
 			yield self._owner.objectInAxesAtIndex_(index)
@@ -1794,10 +1811,13 @@ class FontAxesProxy (Proxy):
 			self._owner.addAxis_(axis)
 	def remove(self, axis):
 		self._owner.removeObjectFromAxes_(axis)
-	def insert(self, Index, axis):
-		if Index < 0:
-			Index = self.__len__() + Index
-		self._owner.insertObject_inAxesAtIndex_(axis, Index)
+	def insert(self, index, axis):
+		if isinstance(index, int)
+			if index < 0:
+				index = self.__len__() + index
+			self._owner.insertObject_inAxesAtIndex_(axis, index)
+		else:
+			raise TypeError("list indices must be integers, not %s" % type(index).__name__)
 	def __len__(self):
 		return self._owner.countOfAxes()
 	def values(self):
@@ -1922,30 +1942,35 @@ class MasterStemsProxy(Proxy):
 
 class CustomParametersProxy(Proxy):
 	def __getitem__(self, key):
-		if type(key) == slice:
+		if isinstance(key, slice):
 			return self.values().__getitem__(key)
-		if type(key) is int:
+		elif isinstance(key, int):
 			if key < 0:
 				key = self.__len__() + key
 			return self._owner.objectInCustomParametersAtIndex_(key)
-		else:
+		elif isString(key):
 			return self._owner.customValueForKey_(key)
+		else:
+			raise TypeError("key must be integer or string, not %s" % type(key).__name__)
 	def __setitem__(self, key, Parameter):
-		if type(key) is int:
+		if isinstance(key, int):
 			if key < 0:
 				key = self.__len__() + key
-			customParameters = copy.copy(self.values())
-			customParameters[key] = Parameter
-			self._owner.setCustomParameters_(customParameters)
-		else:
+			self._owner.replaceObjectInCustomParametersAtIndex_withObject_(key, Parameter)
+		elif isString(key):
+			#TODO: This expects a value in Parameter, not a Parameter object which the list elements are
 			self._owner.setCustomValue_forKey_(objcObject(Parameter), objcObject(key))
+		else:
+			raise TypeError("key must be integer or string, not %s" % type(key).__name__)
 	def __delitem__(self, key):
-		if type(key) is int:
+		if isinstance(key, int):
 			if key < 0:
 				key = self.__len__() + key
 			self._owner.removeObjectFromCustomParametersAtIndex_(key)
-		else:
+		elif isString(key):
 			self._owner.removeObjectFromCustomParametersForKey_(key)
+		else:
+			raise TypeError("key must be integer or string, not %s" % type(key).__name__)
 	def __contains__(self, item):
 		if isString(item):
 			return self._owner.customParameterForKey_(item) is not None
@@ -6955,7 +6980,7 @@ GSLayer.addMissingAnchors = Layer_addMissingAnchors
 def Layer_replaceLayerWithInterpolation(self):
 
 	if self.parent:
-		self.parent.replaceLayerWithInterpolation_(self)
+		self.parent.replaceLayersWithInterpolation_([self])
 
 
 GSLayer.reinterpolate = Layer_replaceLayerWithInterpolation
@@ -7082,7 +7107,7 @@ def __GSLayer__add__(self, summand):
 		newLayer.width += summand.width
 		return newLayer
 	else:
-		raise TypeError("unsupported operand type(s) for +: '%s' and '%s'", type(self).__name__, type(summand).__name__)
+		raise TypeError("unsupported operand type(s) for +: '%s' and '%s'" % (type(self).__name__, type(summand).__name__))
 GSLayer.__add__ = objc.python_method(__GSLayer__add__)
 
 def __GSLayer__mul__(self, factor):
@@ -7094,7 +7119,7 @@ def __GSLayer__mul__(self, factor):
 		newLayer.transform_checkForSelection_doComponents_(transform, False, True)
 		return newLayer
 	else:
-		raise TypeError("unsupported operand type(s) for *: '%s' and '%s'", type(self).__name__, type(factor).__name__)
+		raise TypeError("unsupported operand type(s) for *: '%s' and '%s'" % (type(self).__name__, type(factor).__name__))
 GSLayer.__mul__ = objc.python_method(__GSLayer__mul__)
 
 def __GSPath__add__(self, summand):
@@ -7117,7 +7142,7 @@ def __GSPath__add__(self, summand):
 		newPath.nodes = newNodes
 		return newPath
 	else:
-		raise TypeError("unsupported operand type(s) for +: '%s' and '%s'", type(self), type(summand))
+		raise TypeError("unsupported operand type(s) for +: '%s' and '%s'" % (type(self).__name__, type(summand).__name__))
 GSPath.__add__ = objc.python_method(__GSPath__add__)
 
 def __GSNode__add__(self, summand):
@@ -7132,7 +7157,7 @@ def __GSNode__add__(self, summand):
 		newNode.position = addPoints(newNode.position, summand.position)
 		return newNode
 	else:
-		raise TypeError("unsupported operand type(s) for +: '%s' and '%s'", type(self).__name__, type(summand).__name__)
+		raise TypeError("unsupported operand type(s) for +: '%s' and '%s'" % (type(self).__name__, type(summand).__name__))
 GSNode.__add__ = objc.python_method(__GSNode__add__)
 
 def __GSComponent__add__(self, summand):
@@ -7149,7 +7174,7 @@ def __GSComponent__add__(self, summand):
 		newComponent.rotation = newComponent.rotation + summand.rotation
 		return newComponent
 	else:
-		raise TypeError("unsupported operand type(s) for +: '%s' and '%s'", type(self).__name__, type(summand).__name__)
+		raise TypeError("unsupported operand type(s) for +: '%s' and '%s'" % (type(self).__name__, type(summand).__name__))
 GSComponent.__add__ = objc.python_method(__GSComponent__add__)
 
 def __GSAnchor__add__(self, summand):
@@ -7164,7 +7189,7 @@ def __GSAnchor__add__(self, summand):
 		newAnchor.position = addPoints(newAnchor.position, summand.position)
 		return newAnchor
 	else:
-		raise TypeError("unsupported operand type(s) for +: '%s' and '%s'", type(self).__name__, type(summand).__name__)
+		raise TypeError("unsupported operand type(s) for +: '%s' and '%s'" % (type(self).__name__, type(summand).__name__))
 GSAnchor.__add__ = objc.python_method(__GSAnchor__add__)
 
 
