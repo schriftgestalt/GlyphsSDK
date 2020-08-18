@@ -1836,7 +1836,7 @@ class FontAxesProxy (Proxy):
 	def remove(self, axis):
 		self._owner.removeObjectFromAxes_(axis)
 	def insert(self, index, axis):
-		if isinstance(index, int)
+		if isinstance(index, int):
 			if index < 0:
 				index = self.__len__() + index
 			self._owner.insertObject_inAxesAtIndex_(axis, index)
@@ -1982,8 +1982,6 @@ class CustomParametersProxy(Proxy):
 				key = self.__len__() + key
 			self._owner.replaceObjectInCustomParametersAtIndex_withObject_(key, Parameter)
 		elif isString(key):
-				Value.setValue_(objcObject(Parameter))
-			else:
 			#TODO: This expects a value in Parameter, not a Parameter object which the list elements are
 			self._owner.setCustomValue_forKey_(objcObject(Parameter), objcObject(key))
 		else:
