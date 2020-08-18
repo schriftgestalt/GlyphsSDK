@@ -50,6 +50,7 @@ GSCustomParameter = objc.lookUpClass("GSCustomParameter")
 GSDocument = objc.lookUpClass("GSDocument")
 GSProjectDocument = objc.lookUpClass("GSProjectDocument")
 GSEditViewController = objc.lookUpClass("GSEditViewController")
+GSFontViewController = objc.lookUpClass("GSFontViewController")
 GSElement = objc.lookUpClass("GSElement")
 GSFeature = objc.lookUpClass("GSFeature")
 GSFeaturePrefix = objc.lookUpClass("GSFeaturePrefix")
@@ -3355,10 +3356,7 @@ GSFont.selection = property(lambda self: Font_GetSelectedGlyphs(self), lambda se
 	:type: list
 '''
 
-def Font_selectedLayers(self):
-	return self.parent.selectedLayers()
-
-GSFont.selectedLayers = property(lambda self: Font_selectedLayers(self))
+GSFont.selectedLayers = property(lambda self: self.parent.selectedLayers())
 '''
 	.. attribute:: selectedLayers
 		Returns a list of all selected layers in the active tab.
@@ -9367,12 +9365,11 @@ GSEditViewController.text = property(lambda self: self.graphicView().displayStri
 '''
 
 def __GSEditViewController__repr__(self):
-	nameString = self.text
+	nameString = self.graphicView().displayStringASCIIonly_(True)
 	if len(nameString) > 30:
 		nameString = nameString[:30] + '...'
 	nameString = nameString.replace('\n', '\\n')
-	import codecs
-	return codecs.encode("<GSEditViewController %s>" % nameString, 'ascii', 'backslashreplace')
+	return nameString
 
 GSEditViewController.__repr__ = python_method(__GSEditViewController__repr__)
 
@@ -9385,7 +9382,9 @@ GSEditViewController.masterIndex = property(lambda self: self.pyobjc_instanceMet
 	.. versionadded:: 2.6.1
 	
 '''
+GSEditViewController.selectedLayers = property(lambda self: self.pyobjc_instanceMethods.selectedLayers())
 
+GSFontViewController.selectedLayers = property(lambda self: self.pyobjc_instanceMethods.selectedLayers())
 
 class TabLayersProxy (Proxy):
 
