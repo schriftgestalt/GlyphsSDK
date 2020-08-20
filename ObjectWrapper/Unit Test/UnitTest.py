@@ -56,13 +56,14 @@ class GlyphsAppTests(unittest.TestCase):
 			listObject[-1] = testValues[-1]
 			self.assertEqual(listObject[-1], testValues[-1])
 			del listObject[-1]
+			self.assertEqual(len(listObject), initial_len)
 			listObject.extend(testValues[1:])
 			listObject.insert(-(len(testValues) - 1), testValues[0])
 			for i, val in enumerate(testValues):
 				self.assertEqual(listObject[initial_len+i], val)
 			self.assertEqual(len(listObject), initial_len+len(testValues))
-			for _ in testValues:
-				listObject.remove(listObject[-1])
+			del listObject[initial_len:-1]
+			listObject.remove(listObject[-1])
 			listObject.insert(0, testValues[-1])
 			self.assertEqual(listObject[0], testValues[-1])
 			self.assertEqual(listObject.index(testValues[-1]), 0)
