@@ -1841,13 +1841,13 @@ class GlyphsAppTests(unittest.TestCase):
 sys.argv = ["GlyphsAppTests"]
 
 if __name__ == '__main__':
-	#import coverage  # pip3 install coverage
-	#cov = coverage.Coverage()
-	#cov.start()
+	import coverage  # pip3 install coverage
+	cov = coverage.Coverage()
+	cov.start()
 
 	unittest.main(exit=False, failfast=False)
 
-	#cov.stop()
-	#cov.save()
+	cov.stop()
+	cov.save()
 
-	#cov.html_report()
+	cov.html_report()
