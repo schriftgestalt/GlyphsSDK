@@ -349,6 +349,8 @@ class Proxy(object):
 		if Values is not None:
 			for element in Values:
 				yield element
+	def values(self):
+		raise AttributeError("This collection does not support item iteration")
 	def index(self, Value):
 		return self.values().index(Value)
 	def __copy__(self):
@@ -765,17 +767,23 @@ GSApplication.boolDefaults = property(lambda self: BoolDefaultsProxy(self))
 
 class ColorDefaultsProxy(DefaultsProxy):
 	def __getitem__(self, key):
+		if not isString(key):
+			raise TypeError("defaults key must be str, not %s" % type(key).__name__)
 		archive = NSUserDefaults.standardUserDefaults().objectForKey_(key)
 		if archive and isinstance(archive, NSData):
 			archive = NSUnarchiver.unarchiveObjectWithData_(archive)
 		return archive
 	def __setitem__(self, key, value):
+		if not isString(key):
+			raise TypeError("defaults key must be str, not %s" % type(key).__name__)
 		if value is not None:
 			if isString(value):
 				color = NSColor.colorWithString_(value)
 				if color is None:
 					raise ValueError("Invalid color string: %s" % value)
 				value = color
+			if not isinstance(value, NSColor):
+				raise TypeError("color must be string or NSColor type, not %s" % type(value).__name__)
 			NSUserDefaults.standardUserDefaults().setColor_forKey_(value, key)
 		else:
 			NSUserDefaults.standardUserDefaults().removeObjectForKey_(key)
@@ -1909,7 +1917,7 @@ class FontStemsProxy(Proxy):
 		else:
 			raise TypeError("keys must be integers or strings, not %s" % type(key).__name__)
 		if stem is None:
-			raise KeyError("No stem for", key)
+			raise KeyError("No stem for key %s" % key)
 		return stem
 	def __getitem__(self, key):
 		if isinstance(key, slice):
@@ -1917,9 +1925,9 @@ class FontStemsProxy(Proxy):
 		return self._stemForKey(key)
 	def __setitem__(self, key, value):
 		if not isinstance(value, GSMetrics):
-			raise TypeError("only object of type GSMetrics, got", type(value).__name__)
+			raise TypeError("only object of type GSMetrics allowed, got %s" % type(value).__name__)
 		if not isinstance(key, int):
-			raise TypeError("only access by index", key)
+			raise TypeError("only accessable by integer index, got %s" % key)
 		self._owner.insertObject_inStemsAtIndex_(value, key)
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.stems()
@@ -1927,7 +1935,7 @@ class FontStemsProxy(Proxy):
 		return self._owner.countOfStems()
 	def append(self, value):
 		if not isinstance(value, GSMetrics):
-			raise TypeError("only object of type GSMetrics, got", type(value).__name__)
+			raise TypeError("only object of type GSMetrics allowed, got %s" % type(value).__name__)
 		self._owner.addStem_(value)
 	def __delitem__(self, key):
 		if isinstance(key, slice):
@@ -1955,7 +1963,7 @@ class MasterStemsProxy(Proxy):
 			return [self.__getitem__(i) for i in range(*key.indices(self.__len__()))]
 		stem = self._stemForKey(key)
 		if stem is None:
-			raise KeyError("No stem for", key)
+			raise KeyError("No stem for %s" % key)
 		return self._owner.valueValueForStemId_(stem.id)
 	def __setitem__(self, key, value):
 		stem = self._stemForKey(key)
@@ -4778,7 +4786,7 @@ def __Instance_Export__(self, Format=OTF, FontPath=None, AutoHint=True, RemoveOv
 		elif Format == VARIABLE:
 			Format = GSOutlineFormatVariableTT
 		else:
-			raise KeyError("Invalid format:", Format)
+			raise KeyError("Invalid format: %" % Format)
 		Exporter = NSClassFromString("GSExportInstanceOperation").alloc().initWithFont_instance_outlineFormat_containers_(Font, self, Format, ContainerList)
 		if FontPath is None:
 			FontPath = NSUserDefaults.standardUserDefaults().objectForKey_("OTFExportPath")
@@ -7237,7 +7245,7 @@ def __GSLayer__add__(self, summand):
 		return newLayer
 	elif isinstance(summand, GSLayer):
 		if self.compareString() != summand.compareString():
-			raise ValueError("Layers are not compatible", self.compareString(), summand.compareString())
+			raise ValueError("Layers are not compatible: %s, %s" % (self.compareString(), summand.compareString()))
 		newLayer = self.copy()
 		newShapes = NSMutableArray.new()
 		for i in range(len(summand.shapes)):
@@ -7283,7 +7291,7 @@ def __GSPath__add__(self, summand):
 		return newPath
 	elif isinstance(summand, GSPath):
 		if len(self.nodes) != len(summand.nodes) or self.closed != summand.closed:
-			raise ValueError("Paths are not compatible", len(self.nodes), len(summand.nodes))
+			raise ValueError("Paths are not compatible: %s, %s" % (len(self.nodes), len(summand.nodes)))
 		newPath = self.copy()
 		newNodes = NSMutableArray.new()
 		for i in range(len(summand.nodes)):
@@ -7304,7 +7312,7 @@ def __GSNode__add__(self, summand):
 		return newNode
 	elif isinstance(summand, GSNode):
 		if self.type != summand.type:
-			raise ValueError("Nodes are not compatible", self.type, summand.type)
+			raise ValueError("Nodes are not compatible: %s, %s" % (self.type, summand.type))
 		newNode = self.copy()
 		newNode.position = addPoints(newNode.position, summand.position)
 		return newNode
@@ -7319,7 +7327,7 @@ def __GSComponent__add__(self, summand):
 		return newComponent
 	elif isinstance(summand, GSComponent):
 		if self.component != summand.component:
-			raise ValueError("Components are not compatible", self, summand)
+			raise ValueError("Components are not compatible: %s, %s" % (self, summand))
 		newComponent = self.copy()
 		newComponent.position = addPoints(newComponent.position, summand.position)
 		newComponent.scale = addPoints(newComponent.scale, summand.scale)
@@ -7336,7 +7344,7 @@ def __GSAnchor__add__(self, summand):
 		return newAnchor
 	elif isinstance(summand, GSAnchor):
 		if self.name != summand.name:
-			raise ValueError("Anchors are not compatible", self, summand)
+			raise ValueError("Anchors are not compatible: %s, %s" % (self, summand))
 		newAnchor = self.copy()
 		newAnchor.position = addPoints(newAnchor.position, summand.position)
 		return newAnchor

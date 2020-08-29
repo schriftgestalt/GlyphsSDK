@@ -200,6 +200,17 @@ class GlyphsAppTests(unittest.TestCase):
 		with self.assertRaises(TypeError):
 			Glyphs.boolDefaults["BoolKey"] = 12
 
+		# GSApplication.colorDefaults
+		self.assertIsNone(Glyphs.colorDefaults["colorKey"])
+		Glyphs.colorDefaults["colorKey"] = "#ff0000"
+		self.assertIsNotNone(Glyphs.colorDefaults["colorKey"])
+		del Glyphs.colorDefaults["colorKey"]
+		self.assertIsNone(Glyphs.colorDefaults["colorKey"])
+		with self.assertRaises(ValueError):
+			Glyphs.colorDefaults["colorKey"] = "not a color"
+		with self.assertRaises(TypeError):
+			Glyphs.colorDefaults["colorKey"] = 12
+
 		# GSApplication.intDefaults
 		self.assertIsNone(Glyphs.defaults["IntKey"])
 		self.assertIs(Glyphs.intDefaults["IntKey"], 0)
@@ -294,7 +305,6 @@ class GlyphsAppTests(unittest.TestCase):
 		# GSFont.parent
 		self.assertIn('GSDocument', str(font.parent))
 
-		
 		# GSFont.masters
 		amountLayersPerGlyph = len(font.glyphs['a'].layers)
 		self.assertGreaterEqual(len(list(font.masters)), 1)
@@ -309,7 +319,21 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertGreaterEqual(len(list(font.instances)), 1)
 		self.assertList(font.instances, assertType=False, testValues=[
 				GSInstance(), GSInstance(), copy.copy(GSInstance())])
-		
+		with self.assertRaises(TypeError):
+			font.instances['a']
+
+		# GSFont.axes
+		self.assertList(font.axes, assertType=False, testValues=[
+				GSAxis(), GSAxis(), copy.copy(GSAxis())])
+		with self.assertRaises(TypeError):
+			font.axes['a']
+
+		# GSFont.stems
+		#TODO get working testvalues
+		#self.assertList(font.stems, assertType=False, testValues=[...])
+		with self.assertRaises(TypeError):
+			font.stems[12.4]
+
 		# GSFont.glyphs
 		self.assertGreaterEqual(len(list(font.glyphs)), 1)
 		self.assertEqual(font.glyphs[u'ä'], font.glyphs['adieresis'])
@@ -339,6 +363,8 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertEqual(copyClass.parent(), newClass.parent())
 		font.classes.remove(font.classes[0])
 		self.assertEqual(len(font.classes), amount)
+		with self.assertRaises(TypeError):
+			font.classes[1.23]
 		
 		# GSFont.features
 		font.features = []
@@ -351,6 +377,8 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertIn('<GSFeature "liga">', str(font.features))
 		self.assertEqual('sub f i by fi;', font.features['liga'].code)
 		del(font.features['liga'])
+		with self.assertRaises(TypeError):
+			font.features[12.43]
 		
 		# GSFont.featurePrefixes
 		font.featurePrefixes = []
@@ -364,6 +392,8 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertIn('<GSFeaturePrefix "LanguageSystems">', str(font.featurePrefixes))
 		self.assertEqual('languagesystem DFLT dflt;', font.featurePrefixes[-1].code)
 		del(font.featurePrefixes['LanguageSystems'])
+		with self.assertRaises(TypeError):
+			font.featurePrefixes[1.23]
 		
 		# GSFont.copyright
 		self.assertUnicode(font.copyright)
@@ -415,6 +445,8 @@ class GlyphsAppTests(unittest.TestCase):
 				GSCustomParameter('hello1', 'world1'),
 				copy.copy(GSCustomParameter('hello2', 'world2'))])
 		del(font.customParameters['trademark'])
+		with self.assertRaises(TypeError):
+			font.customParameters[12.3]
 		
 		# GSFont.grid
 		self.assertInteger(font.grid)
@@ -448,6 +480,8 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertEqual(font.currentText, 'a')
 		self.assertEqual(font.currentTab, font.tabs[-1])
 		font.tabs[0].close()
+		with self.assertRaises(TypeError):
+			font.tabs['a']
 		
 		# GSFont.selectedFontMaster
 		# GSFont.masterIndex
@@ -525,6 +559,8 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertIsNotNone(master.axes)
 		self.assertEqual(len(master.axes), 1)
 		self.assertFloat(master.axes[0])
+		with self.assertRaises(TypeError):
+			master.axes['a']
 		
 		# # GSFontMaster.weight
 		# self.assertIsNotNone(str(master.weight))
@@ -764,6 +800,8 @@ class GlyphsAppTests(unittest.TestCase):
 		glyph.layers.remove(glyph.layers[-1])
 		glyph.layers.remove(glyph.layers[-1])
 		self.assertEqual(amount, len(glyph.layers))
+		with self.assertRaises(TypeError):
+			glyph.layers[12.3]
 		
 		# GSGlyph.name
 		self.assertUnicode(glyph.name)
@@ -910,6 +948,8 @@ class GlyphsAppTests(unittest.TestCase):
 		newGuide2.angle = -10.0
 		self.assertList(layer.guides, assertType=False, testValues=[
 				newGuide, newGuide1, newGuide2, GSGuide()])
+		with self.assertRaises(TypeError):
+			layer.guides['a']
 
 		# GSLayer.annotations
 		layer.annotations = []
@@ -928,6 +968,8 @@ class GlyphsAppTests(unittest.TestCase):
 		newAnnotation4.type = MINUS
 		self.assertList(layer.annotations, assertType=False, testValues=[
 				newAnnotation, newAnnotation1, newAnnotation2, newAnnotation3, newAnnotation4])
+		with self.assertRaises(TypeError):
+			layer.annotations['a']
 
 		# GSLayer.hints
 		layer = Glyphs.font.glyphs['a'].layers[0]
@@ -951,6 +993,8 @@ class GlyphsAppTests(unittest.TestCase):
 		newHint3.targetNode = layer.shapes[0].nodes[1]
 		self.assertList(layer.hints, assertType=False, testValues=[
 				newHint, newHint1, newHint2, newHint3])
+		with self.assertRaises(TypeError):
+			layer.hints['a']
 
 		# GSLayer.anchors
 		amount = len(layer.anchors)
@@ -982,9 +1026,17 @@ class GlyphsAppTests(unittest.TestCase):
 		layer.anchors.remove(layer.anchors['testPosition2'])
 		layer.anchors.remove(layer.anchors['testPosition1'])
 		self.assertEqual(amount, len(layer.anchors))
+		with self.assertRaises(TypeError):
+			layer.anchors[12.3]
 
 		# GSLayer.paths
 		# has its own test
+
+		# GSLayer.shapes
+		self.assertList(layer.shapes, assertType=False, testValues=[
+				GSPath(), GSPath(), copy.copy(GSPath())])
+		with self.assertRaises(TypeError):
+			layer.shapes['a']
 		
 		# GSLayer.selection
 		layer.selection.clear()
@@ -1156,6 +1208,9 @@ class GlyphsAppTests(unittest.TestCase):
 		layer = Glyphs.font.glyphs['n'].layers[0]
 		layer.shapes[1].smartComponentValues['shoulderWidth'] = 30
 		layer.shapes[1].smartComponentValues['crotchDepth'] = -77
+
+		with self.assertRaises(TypeError):
+			glyph.smartComponentAxes[12.3]
 
 
 	def test_GSShapesComponents(self):
@@ -1343,6 +1398,8 @@ class GlyphsAppTests(unittest.TestCase):
 		newNode3 = copy.copy(newNode)
 		self.assertList(path.nodes, assertType=False, testValues=[
 				newNode, newNode1, newNode2, newNode3])
+		with self.assertRaises(TypeError):
+			path.nodes['a']
 
 		# GSPath.segments
 		self.assertIsNotNone(list(path.segments))
