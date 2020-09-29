@@ -1,5 +1,5 @@
 {
-.appVersion = "1304";
+.appVersion = "3022";
 .formatVersion = 3;
 DisplayStrings = (
 A,
@@ -110,14 +110,14 @@ visible = 1;
 glyphs = (
 {
 glyphname = A;
-lastChange = "2020-01-04 22:33:38 +0000";
+lastChange = "2020-09-29 20:59:35 +0000";
 layers = (
 {
 hints = (
 {
 horizontal = 1;
 origin = (0,0);
-target = (0,3);
+target = (0,7);
 type = Stem;
 }
 );
@@ -128,8 +128,12 @@ shapes = (
 closed = 1;
 nodes = (
 (10,66,l),
-(439,66,l),
-(439,608,l),
+(92,-21,o),
+(338,-35,o),
+(439,66,cs),
+(578,205,o),
+(522,462,o),
+(439,608,c),
 (10,608,l,{
 name = "Hallo	Welt";
 test = "Hallo
@@ -164,7 +168,7 @@ nodes = (
 );
 }
 );
-width = 600;
+width = 459;
 }
 );
 metricLeft = "=10";
@@ -203,7 +207,7 @@ layers = (
 backgroundImage = {
 angle = 3;
 imagePath = Screenshot.png;
-locked = "1";
+locked = 1;
 pos = (106,89);
 scale = (0.9,0.8);
 };
@@ -215,7 +219,7 @@ unicode = 67;
 },
 {
 glyphname = D;
-lastChange = "2020-01-04 23:28:31 +0000";
+lastChange = "2020-09-29 18:11:31 +0000";
 layers = (
 {
 layerId = m01;
@@ -227,7 +231,7 @@ Width = 29.74825;
 ref = _part.test;
 }
 );
-width = 100;
+width = 368;
 }
 );
 unicode = 68;
@@ -340,25 +344,32 @@ B = 30;
 };
 };
 };
+kerningVertical = {
+m01 = {
+A = {
+B = 30;
+};
+};
+};
 metrics = (
 {
-name = ascender;
+type = ascender;
 },
 {
-name = "cap height";
+type = "cap height";
 },
 {
-name = "x-height";
+type = "x-height";
 },
 {
-name = baseline;
+type = baseline;
 },
 {
-name = descender;
+type = descender;
 },
 {
 filter = "case == 3";
-name = "x-height";
+type = "x-height";
 }
 );
 numbers = (

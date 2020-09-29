@@ -78,6 +78,7 @@ The property list file contains a dictionary with the following structure.
     * customParameters `list>dict`: Master-wide custom parameters.
         * name `string`: Property name of the custom parameter.
         * value `string`: Value of the custom parameter.
+    * guides `list`:
     * iconName `string`: stores the selected master icon
     * id `string`: a unique id that connects the layers (associated ID) with the master.
     * metricValues `list>dict`: the metrics values, metrics settings are stored in the font object.
@@ -106,9 +107,10 @@ The property list file contains a dictionary with the following structure.
     * layers `list>dict`
         * anchors `list>dict`
             * name `string`: The name of the anchor.
-            * position `string`: format `{X, Y}`
+            * pos `tuple`: format `(X, Y)`
         * annotations `list>dict`:
         * associatedMasterId `string`: ID of the master the layer is linked to. Not present if it equals layerID, i.e. if the layer is in use as master.
+        * attr `dict`: Layer attributes (color, alternate, coordinate)
         * background `dict`: Contains the same children as the layer itself, except for background, layerId, associatedMasterId and width.
         * backgroundImage `dict`: a image.
             * angle `float`: The angle. If not set defaults to 0°
@@ -149,7 +151,7 @@ The property list file contains a dictionary with the following structure.
         * partSelection `dict`: Keys are property names, values are `1` if the layer is selected for the bottom range, `2` for the top.
         * shapes `list>dict`: Can be paths or components
             * path:
-                * attributes: `dict`: see [Attributes](*attributes)
+                * attr: `dict`: see [Attributes](*attributes)
                 * closed `bool`: Always set to `1`, otherwise omit the key
                 * nodes `tuple`: `(X,Y,TYPE[SMOOTH],{user:data})`, where X and Y are the coordinates as float, and TYPE is either `l`, `c`, `o`, `q`. when the on-curve node is smooth, add an `s`.
                 when the node has usedData store it as fourth element. Remove all newlines and extra spaces.
@@ -158,12 +160,12 @@ The property list file contains a dictionary with the following structure.
                 * anchor `string`: Should be indicated if connected to an anchor, especially if more than one possibility is available, e.g. in ligatures.
                 * anchorTo `string`: TODO
                 * angle `float`: the rotation
-                * attributes: `dict`: see [Attributes](*attributes)
+                * attr: `dict`: see [Attributes](*attributes)
                 * locked `bool`: Always set to `1`, otherwise omit the key.
-                * name `string`: The name of the linked glyph (i.e., the glyph the component is pointing to).
                 * orientation `int`: if left, center or right aligned
                 * piece `dict>string:float`: keys are the name of the smart property, values a position on the axis.
                 * pos `tuple`: the position
+                * ref `string`: The name of the linked glyph (i.e., the glyph the component is pointing to).
                 * scale `tuple`: `(scaleX,scaleY)`
                 * userData `dict`: to store custom data. Only `string`, `int`, `float`, `array`, `dict` and `date` data is allowed.
         * userDate `dict`: A dict with user defined structure
@@ -184,9 +186,9 @@ The property list file contains a dictionary with the following structure.
         * name `string`:
         * topValue `int`:
     * production `string`: manually set production name
-    * tags `list>string`: list of tags
     * script `string`: manually set script
     * subcategory `string`: manually set subcategory
+    * tags `list>string`: list of tags
     * unicode `int` or `tuple`: for a single code, use just the int value (e.g. `unicode = 65;`) and for multiple use a tuple of all values (`unicode = (65,97);`).
 * gridLength `int`: Only written if not `1`
 * gridSubDivision `int`: Only written if bigger then `1`
@@ -214,9 +216,13 @@ The property list file contains a dictionary with the following structure.
 * kerningRLT `dict`: see `kerningLTR`
 * kerningVertical `dict`: see `kerningLTR`
 * keyboardIncrement `float`: Only written if not `1`
+* keyboardIncrement `float`: Only written if not `10`
+* keyboardIncrement `float`: Only written if not `100`
 * metrics `list>dict`: definition of the (vertical) metrics
     * filter `string`: A predicate format string [(Apple Predicate Programming Guide)](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/Predicates/AdditionalChapters/Introduction.html#//apple_ref/doc/uid/TP40001789) (e.g. `"case == 3"` (No Case = 0, Uppercase = 1, Lowercase = 2, Smallcaps = 3, Other = 4))
-    * name `string`: the name of the metric. Can be anything but some keys have special meaning: "ascender", "cap height", "slant height", "x-height", "midHeight", "topHeight", "descender", "baseline"
+    * name `string`: the name of the metric. Can be anything. If the metric has a special meaning, set the type to a appropriate value
+    * type `string`: special meaning. allowed keys: "ascender", "cap height", "slant height", "x-height", "midHeight", "topHeight", "bodyHeight", "descender", "baseline", "italic angle"
+* note `string`: font note. 
 * numbers `list>dict`: definition of the numbers. Used to store interpolating numbers in each master
     * name `string`: name of the number
 * properties `list>dict`: see [Properties](#properties)
