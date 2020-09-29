@@ -341,9 +341,12 @@ class Proxy(object):
 			return len(Values)
 		return 0
 	def pop(self, i):
-		node = self[i]
-		del self[i]
-		return node
+		if isinstance(i, int):
+			node = self[i]
+			del self[i]
+			return node
+		else:
+			raise(KeyError)
 	def __iter__(self):
 		Values = self.values()
 		if Values is not None:
