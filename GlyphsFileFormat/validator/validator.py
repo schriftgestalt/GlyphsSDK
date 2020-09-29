@@ -6,7 +6,7 @@ f = open("Glyphs3FileShema.json",)
 schema = json.load(f) 
 
 p = Parser()
-fp = open("/Users/georg/Programmierung/GlyphsSDK/GlyphsFileFormat/GlyphsFileFormatv3.glyphs", "r", encoding="utf-8")
+fp = open("../GlyphsFileFormatv3.glyphs", "r", encoding="utf-8")
 data = p.parse(fp.read())
 
 validate(instance=data, schema=schema)
