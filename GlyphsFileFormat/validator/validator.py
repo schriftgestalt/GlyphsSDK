@@ -1,4 +1,4 @@
-import json 
+import json
 from jsonschema import validate, Draft7Validator
 from glyphsLib.parser import Parser
 
