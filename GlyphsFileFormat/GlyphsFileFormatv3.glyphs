@@ -422,7 +422,14 @@ value = "New Value";
 }
 );
 settings = {
+disablesAutomaticAlignment = 1;
 disablesNiceNames = 1;
+gridLength = 5;
+gridSubDivision = 2;
+keepAlternatesTogether = 1;
+keyboardIncrement = 2;
+keyboardIncrementBig = 20;
+keyboardIncrementHuge = 200;
 };
 stems = (
 {

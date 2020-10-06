@@ -1397,13 +1397,6 @@
 			"title": "The instances schema",
 			"type": "array"
 		},
-		"keepAlternatesTogether": {
-			"$id": "#/properties/keepAlternatesTogether",
-			"default": 0,
-			"description": "Always set to `1`, otherwise omit the key.",
-			"title": "The keepAlternatesTogether schema",
-			"type": ["boolean", "integer"]
-		},
 		"kerningLTR": {
 			"$ref": "#/definitions/kerning"
 		},
@@ -1412,27 +1405,6 @@
 		},
 		"kerningVertical": {
 			"$ref": "#/definitions/kerning"
-		},
-		"keyboardIncrement": {
-			"$id": "#/properties/keyboardIncrement",
-			"default": 1,
-			"description": "Only written if not `1`",
-			"title": "The keyboardIncrement schema",
-			"type": "integer"
-		},
-		"keyboardIncrementBig": {
-			"$id": "#/properties/keyboardIncrementBig",
-			"default": 10,
-			"description": "Only written if not `10`",
-			"title": "The keyboardIncrementBig schema",
-			"type": "integer"
-		},
-		"keyboardIncrementHuge": {
-			"$id": "#/properties/keyboardIncrementHuge",
-			"default": 100,
-			"description": "Only written if not `100`",
-			"title": "The keyboardIncrementHuge schema",
-			"type": "integer"
 		},
 		"metrics": {
 			"$id": "#/properties/metrics",
@@ -1567,55 +1539,67 @@
 		},
 		"settings": {
 			"$id": "#/properties/settings",
-			"additionalItems": true,
+			"description": "Settings that influence the editing behavior.",
 			"description": "An explanation about the purpose of this instance.",
-			"items": {
-				"additionalProperties": false,
-				"description": "An explanation about the purpose of this instance.",
-				"properties": {
-					"disablesAutomaticAlignment": {
+			"properties": {
+				"disablesAutomaticAlignment": {
+					"$id": "#/properties/disablesAutomaticAlignment",
+					"default": 0,
+					"description": "Always set to `1`, otherwise omit the key",
 						"default": 1,
-						"$id": "#/properties/items/settings/items/disablesAutomaticAlignment",
-						"type": ["integer", "boolean"]
-					},
-					"disablesNiceNames": {
-						"default": 1,
-						"$id": "#/properties/items/settings/items/disablesNiceNames",
-						"type": ["integer", "boolean"]
-					},
-					"gridLength": {
-						"default": 1,
-						"$id": "#/properties/items/settings/items/gridLength",
-						"type": "integer"
-					},
-					"gridSubDivision": {
-						"default": 1,
-						"$id": "#/properties/items/settings/items/gridSubDivision",
-						"type": "integer"
-					},
-					"keepAlternatesTogether": {
-						"default": 1,
-						"$id": "#/properties/items/settings/items/keepAlternatesTogether",
-						"type": ["integer", "boolean"]
-					},
-					"keyboardIncrement": {
-						"default": 1,
-						"$id": "#/properties/items/settings/items/keyboardIncrement",
-						"type": "integer"
-					},
-					"keyboardIncrementBig": {
-						"default": 1,
-						"$id": "#/properties/items/settings/items/keyboardIncrementBig",
-						"type": "integer"
-					},
-					"keyboardIncrementHuge": {
-						"default": 1,
-						"$id": "#/properties/items/settings/items/keyboardIncrementHuge",
-						"type": "integer"
-					}
+					"title": "The disablesAutomaticAlignment schema",
+					"type": ["boolean", "integer"]
 				},
-				"title": "The items schema",
-				"type": "object"
+				"disablesNiceNames": {
+					"$id": "#/properties/disablesNiceNames",
+					"default": 0,
+					"description": "Always set to `1`, otherwise omit the key",
+					"title": "The disablesNiceNames schema",
+					"type": ["boolean", "integer"]
+				},
+				"gridLength": {
+					"$id": "#/properties/gridLength",
+					"default": 1,
+					"description": "Only written if not `1`",
+					"title": "The gridLength schema",
+					"type": "integer"
+				},
+				"gridSubDivision": {
+					"$id": "#/properties/gridSubDivision",
+					"default": 1,
+					"description": "Only written if bigger then `1`",
+					"minimum": 2,
+					"title": "The gridSubDivision schema",
+					"type": "integer"
+				},
+				"keepAlternatesTogether": {
+					"$id": "#/properties/keepAlternatesTogether",
+					"default": 0,
+					"description": "Always set to `1`, otherwise omit the key.",
+					"title": "The keepAlternatesTogether schema",
+					"type": ["boolean", "integer"]
+				},
+				"keyboardIncrement": {
+					"$id": "#/properties/keyboardIncrement",
+					"default": 1,
+					"description": "Only written if not `1`",
+					"title": "The keyboardIncrement schema",
+					"type": "integer"
+				},
+				"keyboardIncrementBig": {
+					"$id": "#/properties/keyboardIncrementBig",
+					"default": 10,
+					"description": "Only written if not `10`",
+					"title": "The keyboardIncrementBig schema",
+					"type": "integer"
+				},
+				"keyboardIncrementHuge": {
+					"$id": "#/properties/keyboardIncrementHuge",
+					"default": 100,
+					"description": "Only written if not `100`",
+					"title": "The keyboardIncrementHuge schema",
+					"type": "integer"
+				}
 			},
 			"title": "The properties schema",
 			"type": "object"
