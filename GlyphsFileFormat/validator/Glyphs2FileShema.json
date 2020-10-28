@@ -1,0 +1,1249 @@
+{
+	"$schema": "http://json-schema.org/draft-06/schema",
+	"additionalProperties": false,
+	"definitions": {
+		"color": {
+			"$id": "#color",
+			"description": "\n1. If `integer`, it is the index of the internal color list\n2. If `array`, two to five numbers in the range of 0–255 denoting a Grey+A, RGBA or CMYKA values",
+			"type": ["integer", "array"]
+		},
+		"customParameters": {
+			"$id": "#customParameters",
+			"additionalItems": true,
+			"default": [],
+			"description": "An explanation about the purpose of this instance.",
+			"items": {
+				"additionalProperties": false,
+				"description": "An explanation about the purpose of this instance.",
+				"properties": {
+					"disabled": {
+						"default": 0,
+						"description": "The parameter will be ignored. Always set to `1`, otherwise omit the key.",
+						"title": "The disabled schema",
+						"type": "integer"
+					},
+					"name": {
+						"description": "Property name of the custom parameter.",
+						"title": "The name schema",
+						"type": "string"
+					},
+					"value": {
+						"description": "Value of the custom parameters.",
+						"title": "The value schema",
+						"type": ["array", "number", "object", "string"]
+					}
+				},
+				"required": [
+					"name",
+					"value"
+				],
+				"title": "The items schema",
+				"type": "object"
+			},
+			"title": "The customParameters schema",
+			"type": "array"
+		},
+		"guideLines": {
+			"$id": "#guideLines",
+			"additionalItems": true,
+			"description": "An explanation about the purpose of this instance.",
+			"items": {
+				"additionalProperties": false,
+				"properties": {
+					"angle": {
+						"$id": "#/guideLines/items/properties/angle",
+						"default": 0,
+						"description": "An explanation about the purpose of this instance.",
+						"title": "The angle schema",
+						"type": "number"
+					},
+					"locked": {
+						"default": 0,
+						"description": "Always set to `1`, otherwise omit the key",
+						"type": ["integer", "boolean"]
+					},
+					"name": {
+						"$id": "#/guideLines/items/properties/name",
+						"description": "An explanation about the purpose of this instance.",
+						"title": "The name schema",
+						"type": "string"
+					},
+					"position": {
+						"type": "string"
+					},
+					"showMeasurement": {
+						"$id": "#/guideLines/items/properties/showMeasurement",
+						"default": 0,
+						"type": ["boolean", "integer"]
+					}
+				},
+				"type": "object"
+			},
+			"title": "The guideLines schema",
+			"type": "array"
+		},
+		"kerning": {
+			"$id": "#kerning",
+			"description": "An explanation about the purpose of this instance.",
+			"title": "The kerningLTR schema",
+			"type": "object"
+		},
+		"userData": {
+			"$id": "#userData",
+			"additionalProperties": true,
+			"description": "to store custom data. Only `string`, `int`, `float`, `array`, `dict` and `date` data is allowed.",
+			"title": "The userData schema",
+			"type": "object"
+		}
+	},
+	"description": "The root schema comprises the entire JSON document.",
+	"id": "root",
+	"properties": {
+		".appVersion": {
+			"$id": "#/properties/.appVersion",
+			"description": "The build number of the app. (e.g. `\"3023\"`)",
+			"title": "The .appVersion schema",
+			"type": "string"
+		},
+		"classes": {
+			"$id": "#/properties/classes",
+			"additionalItems": true,
+			"description": "OpenType classes.",
+			"items": {
+				"$id": "#/properties/classes/items",
+				"additionalProperties": false,
+				"description": "An explanation about the purpose of this instance.",
+				"properties": {
+					"automatic": {
+						"$id": "#/properties/classes/items/properties/automatic",
+						"default": 0,
+						"description": "Always set to `1`. If the feature is not set to automatic, the key should be omitted.",
+						"title": "The automatic schema",
+						"type": ["boolean", "integer"]
+					},
+					"code": {
+						"$id": "#/properties/classes/items/properties/code",
+						"description": "A string containing space separated glyph names.",
+						"title": "The code schema",
+						"type": "string"
+					},
+					"disabled": {
+						"$id": "#/properties/classes/items/properties/disabled",
+						"default": 0,
+						"description": "The class will not be exported. Always set to `1`, otherwise omit the key",
+						"title": "The automatic schema",
+						"type": ["boolean", "integer"]
+					},
+					"name": {
+						"$id": "#/properties/classes/items/properties/name",
+						"description": "The OpenType class name. Don’t add an `@`.",
+						"title": "The name schema",
+						"type": "string"
+					},
+					"notes": {
+						"$id": "#/properties/classes/items/properties/notes",
+						"description": "Notes",
+						"title": "The notes schema",
+						"type": "string"
+					}
+				},
+				"required": [
+					"code",
+					"name"
+				],
+				"title": "The items schema",
+				"type": "object"
+			},
+			"title": "The classes schema",
+			"type": "array"
+		},
+		"customParameters": {
+			"$ref": "#/definitions/customParameters"
+		},
+		"date": {
+			"$id": "#/properties/date",
+			"description": "Format `2014-01-29 14:14:38 +0000`",
+			"title": "The date schema",
+			"type": "string"
+		},
+		"disablesAutomaticAlignment": {
+			"$id": "#/properties/disablesAutomaticAlignment",
+			"default": 0,
+			"description": "Always set to `1`, otherwise omit the key",
+			"title": "The disablesAutomaticAlignment schema",
+			"type": ["boolean", "integer"]
+		},
+		"disablesNiceNames": {
+			"$id": "#/properties/disablesNiceNames",
+			"default": 0,
+			"description": "Always set to `1`, otherwise omit the key",
+			"title": "The disablesNiceNames schema",
+			"type": ["boolean", "integer"]
+		},
+		"DisplayStrings": {
+			"$id": "#/properties/DisplayStrings",
+			"additionalItems": true,
+			"description": "The text of all open tabs",
+			"items": {
+				"$id": "#/properties/DisplayStrings/items",
+				"description": "An explanation about the purpose of this instance.",
+				"title": "The items schema",
+				"type": "string"
+			},
+			"title": "The DisplayStrings schema",
+			"type": "array"
+		},
+		"familyName": {
+			"$id": "#/properties/familyName",
+			"description": "The default family name",
+			"title": "The familyName schema",
+			"type": "string"
+		},
+		"featurePrefixes": {
+			"$id": "#/properties/featurePrefixes",
+			"additionalItems": true,
+			"description": "OpenType feature code before the class definitions.",
+			"items": {
+				"$id": "#/properties/featurePrefixes/items",
+				"additionalProperties": false,
+				"description": "An explanation about the purpose of this instance.",
+				"properties": {
+					"automatic": {
+						"$id": "#/properties/featurePrefixes/items/properties/automatic",
+						"description": "Always set to `1`, otherwise omit the key",
+						"title": "The automatic schema",
+						"type": ["integer", "boolean"]
+					},
+					"code": {
+						"$id": "#/properties/featurePrefixes/items/properties/code",
+						"description": "A string containing feature code.",
+						"title": "The code schema",
+						"type": "string"
+					},
+					"disabled": {
+						"$id": "#/properties/featurePrefixes/items/properties/disabled",
+						"default": 0,
+						"description": "The prefix will not be exported. Always set to `1`, otherwise omit the key",
+						"title": "The automatic schema",
+						"type": ["boolean", "integer"]
+					},
+					"name": {
+						"$id": "#/properties/featurePrefixes/items/properties/name",
+						"description": "The name of the prefix",
+						"title": "The name schema",
+						"type": "string"
+					},
+					"notes": {
+						"$id": "#/properties/classes/items/properties/notes",
+						"description": "Notes",
+						"title": "The notes schema",
+						"type": "string"
+					}
+				},
+				"required": [
+					"code",
+					"name"
+				],
+				"title": "The items schema",
+				"type": "object"
+			},
+			"title": "The featurePrefixes schema",
+			"type": "array"
+		},
+		"features": {
+			"$id": "#/properties/features",
+			"additionalItems": true,
+			"default": [],
+			"description": "An explanation about the purpose of this instance.",
+			"items": {
+				"$id": "#/properties/features/items",
+				"additionalProperties": false,
+				"description": "An explanation about the purpose of this instance.",
+				"properties": {
+					"automatic": {
+						"$id": "#/properties/features/items/properties/automatic",
+						"default": 0,
+						"description": "Always set to `1`, otherwise omit the key",
+						"title": "The automatic schema",
+						"type": ["integer", "boolean"]
+					},
+					"code": {
+						"$id": "#/properties/features/items/properties/code",
+						"description": "A string containing feature code.",
+						"title": "The code schema",
+						"type": "string"
+					},
+					"disabled": {
+						"$id": "#/properties/featurePrefixes/items/properties/disabled",
+						"default": 0,
+						"description": "The feature will not be exported. Always set to `1`, otherwise omit the key",
+						"title": "The automatic schema",
+						"type": ["boolean", "integer"]
+					},
+					"notes": {
+						"$id": "#/properties/features/items/properties/notes",
+						"description": "Notes",
+						"title": "The notes schema",
+						"type": "string"
+					},
+					"name": {
+						"$id": "#/properties/features/items/properties/name",
+						"description": "An explanation about the purpose of this instance.",
+						"title": "The tag schema",
+						"type": "string"
+					}
+				},
+				"required": [
+					"code",
+					"name"
+				],
+				"title": "The items schema",
+				"type": "object"
+			},
+			"title": "The features schema",
+			"type": "array"
+		},
+		"fontMaster": {
+			"$id": "#/properties/fontMaster",
+			"additionalItems": true,
+			"description": "The fontMaster object",
+			"items": {
+				"$id": "#/properties/fontMaster/items",
+				"additionalProperties": false,
+				"description": "An explanation about the purpose of this instance.",
+				"properties": {
+					"customParameters": {
+						"$ref": "#/definitions/customParameters"
+					},
+					"guideLines": {
+						"$ref": "#/definitions/guideLines"
+					},
+					"iconName": {
+						"$id": "#/properties/fontMaster/items/properties/iconName",
+						"description": "The selected master icon",
+						"title": "The iconName schema",
+						"type": "string"
+					},
+					"id": {
+						"$id": "#/properties/fontMaster/items/properties/id",
+						"description": "a unique id that connects the layers (associated ID) with the master.",
+						"title": "The id schema",
+						"type": "string"
+					},
+					"alignmentZones": {
+						"$id": "#/properties/fontMaster/items/properties/alignmentZones",
+						"additionalItems": true,
+						"description": "the metrics values, metrics settings are stored in the font object. Corresponds to `font.metrics`",
+						"items": {
+							"type": "string"
+						},
+						"title": "The alignmentZones schema",
+						"type": "array"
+					},
+					"name": {
+						"$id": "#/properties/fontMaster/items/properties/name",
+						"description": "The name of the master. Not relevant to the exported font. Only for the UI",
+						"title": "The name schema",
+						"type": "string"
+					},
+					"xHeight": {
+						"$id": "#/properties/fontMaster/items/properties/xHeight",
+						"description": "The name of the master. Not relevant to the exported font. Only for the UI",
+						"title": "The name schema",
+						"type": "number"
+					},
+					"capHeight": {
+						"$id": "#/properties/fontMaster/items/properties/capHeight",
+						"description": "The name of the master. Not relevant to the exported font. Only for the UI",
+						"title": "The name schema",
+						"type": "number"
+					},
+					"descender": {
+						"$id": "#/properties/fontMaster/items/properties/descender",
+						"description": "The name of the master. Not relevant to the exported font. Only for the UI",
+						"title": "The name schema",
+						"type": "number"
+					},
+					"ascender": {
+						"$id": "#/properties/fontMaster/items/properties/ascender",
+						"description": "The name of the master. Not relevant to the exported font. Only for the UI",
+						"title": "The name schema",
+						"type": "number"
+					},
+					"weightValue": {
+						"$id": "#/properties/fontMaster/items/properties/weightValue",
+						"description": "The name of the master. Not relevant to the exported font. Only for the UI",
+						"title": "The name schema",
+						"type": "number"
+					},
+					"horizontalStems": {
+						"$id": "#/properties/fontMaster/items/properties/horizontalStems",
+						"additionalItems": true,
+						"description": "A list of floats, stem settings are stored in the font object.",
+						"items": {
+							"type": "number"
+						},
+						"title": "The stemValues schema",
+						"type": "array"
+					},
+					"verticalStems": {
+						"$id": "#/properties/fontMaster/items/properties/verticalStems",
+						"additionalItems": true,
+						"description": "A list of floats, stem settings are stored in the font object.",
+						"items": {
+							"type": "number"
+						},
+						"title": "The stemValues schema",
+						"type": "array"
+					},
+					"userData": {
+						"$ref": "#/definitions/userData"
+					},
+					"visible": {
+						"$id": "#/properties/fontMaster/items/properties/visible",
+						"default": 0,
+						"description": "Always set to `1`, otherwise omit the key.",
+						"title": "The visible schema",
+						"type": ["integer", "boolean"]
+					}
+				},
+				"required": [
+					"id",
+					"descender",
+					"ascender",
+					"capHeight"
+				],
+				"title": "The items schema",
+				"type": "object"
+			},
+			"title": "The fontMaster schema",
+			"type": "array"
+		},
+		"glyphs": {
+			"$id": "#/properties/glyphs",
+			"additionalItems": true,
+			"description": "The glyph object",
+			"items": {
+				"$id": "#/properties/glyphs/items",
+				"additionalProperties": false,
+				"properties": {
+					"category": {
+						"$id": "#/properties/glyphs/items/properties/category",
+						"description": "manually set category",
+						"title": "The category schema",
+						"type": "string"
+					},
+					"color": {
+						"$ref": "#/definitions/color"
+					},
+					"direction": {
+						"$id": "#/properties/glyphs/items/properties/direction",
+						"description": "The writing direction when manually set. Possible values: \"BIDI\", \"LTR\", \"RTL\", \"VTL\", \"VTR\".",
+						"type": "string"
+					},
+					"export": {
+						"$id": "#/properties/glyphs/items/properties/export",
+						"default": 1,
+						"description": "Always set to `0`, otherwise omit the key.",
+						"title": "The export schema",
+						"type": ["boolean", "integer"]
+					},
+					"glyphname": {
+						"$id": "#/properties/glyphs/items/properties/case",
+						"description": "Must be unique throughout the font.",
+						"title": "The glyphname schema",
+						"type": "string"
+					},
+					"bottomKerningGroup": {
+						"$id": "#/properties/glyphs/items/properties/kernLeft",
+						"description": "Bottom kerning group",
+						"title": "The kernBottom schema",
+						"type": "string"
+					},
+					"leftKerningGroup": {
+						"$id": "#/properties/glyphs/items/properties/kernLeft",
+						"description": "Left kerning group",
+						"title": "The kernLeft schema",
+						"type": "string"
+					},
+					"rightKerningGroup": {
+						"$id": "#/properties/glyphs/items/properties/kernRight",
+						"description": "Right kerning group",
+						"title": "The kernRight schema",
+						"type": "string"
+					},
+					"topKerningGroup": {
+						"$id": "#/properties/glyphs/items/properties/kernRight",
+						"description": "Top kerning group",
+						"title": "The kernTop schema",
+						"type": "string"
+					},
+					"lastChange": {
+						"$id": "#/properties/glyphs/items/properties/lastChange",
+						"description": "Format `2014-01-29 14:14:38 +0000`.",
+						"title": "The lastChange schema",
+						"type": "string"
+					},
+					"layers": {
+						"$id": "#/properties/glyphs/items/properties/layers",
+						"additionalItems": true,
+						"description": "The layer object",
+						"items": {
+							"$id": "#/properties/glyphs/items/properties/layers/items",
+							"additionalProperties": false,
+							"properties": {
+								"anchors": {
+									"$id": "#/properties/glyphs/items/properties/layers/items/properties/anchors",
+									"additionalItems": true,
+									"description": "An explanation about the purpose of this instance.",
+									"items": {
+										"$id": "#/properties/glyphs/items/properties/layers/items/properties/anchors/items",
+										"properties": {
+											"name": {
+												"$id": "#/properties/glyphs/items/properties/layers/items/properties/anchors/items/properties/name",
+												"description": "The name of the anchor.",
+												"title": "The name schema",
+												"type": "string"
+											},
+											"position": {
+												"type": "string"
+											}
+										},
+										"required": [
+											"name",
+											"pos"
+										],
+										"title": "The items schema",
+										"type": "object"
+									},
+									"title": "The anchors schema",
+									"type": "array"
+								},
+								"annotations": {
+									"$id": "#/properties/glyphs/items/properties/layers/items/properties/annotations",
+									"additionalItems": true,
+									"description": "TODO:",
+									"items": {
+										"$id": "#/properties/glyphs/items/properties/layers/items/properties/annotations/items",
+										"properties": {
+											"angle": {
+												"type": "number"
+											},
+											"position": {
+												"type": "string"
+											},
+											"text": {
+												"type": "string"
+											},
+											"type": {
+												"type": "string"
+											},
+											"width": {
+												"type": "number"
+											}
+										},
+										"required": [
+											"name",
+											"pos"
+										],
+										"title": "The items schema",
+										"type": "object"
+									},
+									"title": "The annotations schema",
+									"type": "array"
+								},
+								"associatedMasterId": {
+									"$id": "#/properties/glyphs/items/properties/layers/items/properties/associatedMasterId",
+									"description": "ID of the master the layer is linked to. Not present if it equals layerID, i.e. if the layer is in use as master.",
+									"title": "The associatedMasterId schema",
+									"type": "string"
+								},
+								"background": {
+									"$id": "#/properties/glyphs/items/properties/layers/items/properties/background",
+									"additionalProperties": false,
+									"description": "Contains the same children as the layer itself, except for background, layerId, associatedMasterId and width.",
+									"properties": {
+										"anchors": {
+											"$ref": "#/properties/glyphs/items/properties/layers/items/properties/anchors"
+										},
+										"backgroundImage": {
+											"$ref": "#/properties/glyphs/items/properties/layers/items/properties/backgroundImage"
+										},
+										"shapes": {
+											"$ref": "#/properties/glyphs/items/properties/layers/items/properties/shapes"
+										}
+									},
+									"title": "The background schema",
+									"type": "object"
+								},
+								"backgroundImage": {
+									"$id": "#/properties/fontMaster/items/properties/backgroundImage",
+									"description": "a image.",
+									"properties": {
+										"alpha": {
+											"default": 50,
+											"description": "a value from 10–100",
+											"type": "integer"
+										},
+										"imagePath": {
+											"description": "The file path to the image. It is stored relative if close enough. Otherwise the full path.",
+											"type": "string"
+										},
+										"locked": {
+											"default": "",
+											"description": "Always set to `\"1\"`, otherwise omit the key",
+											"type": "string"
+										},
+										"transform": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"imagePath"
+									],
+									"title": "The backgroundImage schema",
+									"type": "object"
+								},
+								"color": {
+									"$ref": "#/definitions/color"
+								},
+								"guideLines": {
+									"$ref": "#/definitions/guideLines"
+								},
+								"hints": {
+									"$id": "#/properties/glyphs/items/properties/layers/items/properties/hints",
+									"additionalItems": true,
+									"description": "An explanation about the purpose of this instance.",
+									"items": {
+										"$id": "#/properties/glyphs/items/properties/layers/items/properties/hints/items",
+										"additionalProperties": false,
+										"properties": {
+											"horizontal": {
+												"$id": "#/properties/glyphs/items/properties/layers/items/properties/hints/items/properties/horizontal",
+												"description": "If set, the hint is horizontal and vertical otherwise",
+												"title": "The horizontal schema",
+												"type": ["integer", "boolean"]
+											},
+											"name": {
+												"$id": "#/properties/glyphs/items/properties/layers/items/properties/hints/items/properties/name",
+												"description": "An explanation about the purpose of this instance.",
+												"title": "The name schema",
+												"type": "string"
+											},
+											"options": {
+												"$id": "#/properties/glyphs/items/properties/layers/items/properties/hints/items/properties/options",
+												"description": "An explanation about the purpose of this instance.",
+												"title": "The options schema",
+												"type": "integer"
+											},
+											"origin": {
+												"$id": "#/properties/glyphs/items/properties/layers/items/properties/hints/items/properties/origin",
+												"description": "'(pathIndex, nodeIndex)' TODO: Explain node indexes",
+												"title": "The origin schema",
+												"type": "string"
+											},
+											"other1": {
+												"$id": "#/properties/glyphs/items/properties/layers/items/properties/hints/items/properties/other1",
+												"description": "`(pathIndex,nodeIndex)` for TT Institutions that need more than two nodes (Interpolation, Diagonal)",
+												"title": "The other1 schema",
+												"type": "string"
+											},
+											"other2": {
+												"$id": "#/properties/glyphs/items/properties/layers/items/properties/hints/items/properties/other2",
+												"description": "`(pathIndex,nodeIndex)` for TT Institutions that need more than three nodes (Diagonal)",
+												"title": "The other2 schema",
+												"type": "string"
+											},
+											"scale": {
+												"$ref": "#/definitions/scale",
+												"description": "`(scaleX,scaleY)` Only used for caps and corners"
+											},
+											"stem": {
+												"$id": "#/properties/glyphs/items/properties/layers/items/properties/hints/items/properties/stem",
+												"description": "if a stem is manually set",
+												"title": "The stem schema",
+												"type": "integer"
+											},
+											"target": {
+												"$id": "#/properties/glyphs/items/properties/layers/items/properties/hints/items/properties/target",
+												"description": "`(pathIndex,nodeIndex)`, `up` or `down`",
+												"title": "The target schema",
+												"type": "string"
+											},
+											"type": {
+												"$id": "#/properties/glyphs/items/properties/layers/items/properties/hints/items/properties/type",
+												"description": "The type of the hint. Possible value are: Tag, TopGhost, Stem, BottomGhost, Flex, TTAnchor, TTStem, TTAlign, TTInterpolate, TTDiagonal, TTDelta, Corner, Cap, Brush, Line, Auto\nIf there is no type, it defaults to Stem, or Ghost if `target` is not set",
+												"enum": ["Tag", "TopGhost", "Stem", "BottomGhost", "Flex", "TTAnchor", "TTStem", "TTAlign", "TTInterpolate", "TTDiagonal", "TTDelta", "Corner", "Cap", "Brush", "Line", "Auto"],
+												"title": "The type schema",
+												"type": "string"
+											}
+										},
+										"required": [
+											"origin",
+											"type"
+										],
+										"title": "The items schema",
+										"type": "object"
+									},
+									"title": "The hints schema",
+									"type": "array"
+								},
+								"layerId": {
+									"$id": "#/properties/glyphs/items/properties/layers/items/properties/layerId",
+									"description": "A unique (per glyph) id",
+									"title": "The layerId schema",
+									"type": "string"
+								},
+								"bottomMetricsKey": {
+									"$id": "#/properties/glyphs/items/properties/layers/items/properties/metricBottom",
+									"description": "Bottom metrics key",
+									"title": "The metricBottom schema",
+									"type": "string"
+								},
+								"leftMetricsKey": {
+									"$id": "#/properties/glyphs/items/properties/layers/items/properties/metricLeft",
+									"description": "Left metrics key",
+									"title": "The metricLeft schema",
+									"type": "string"
+								},
+								"rightMetricsKey": {
+									"$id": "#/properties/glyphs/items/properties/layers/items/properties/metricRight",
+									"description": "Right metrics key",
+									"title": "The metricRight schema",
+									"type": "string"
+								},
+								"topMetricsKey": {
+									"$id": "#/properties/glyphs/items/properties/layers/items/properties/metricTop",
+									"description": "Top metrics key",
+									"title": "The metricTop schema",
+									"type": "string"
+								},
+								"metricVertWidth": {
+									"$id": "#/properties/glyphs/items/properties/layers/items/properties/metricVertWidth",
+									"description": "Vertical Width (Height) metrics key",
+									"title": "The metricVertWidth schema",
+									"type": "string"
+								},
+								"widthMetricsKey": {
+									"$id": "#/properties/glyphs/items/properties/layers/items/properties/metricWidth",
+									"description": "Width metrics key",
+									"title": "The metricWidth schema",
+									"type": "string"
+								},
+								"name": {
+									"$id": "#/properties/glyphs/items/properties/layers/items/properties/name",
+									"description": "The name of the layer. Only stored for none master layers.",
+									"title": "The name schema",
+									"type": "string"
+								},
+								"partSelection": {
+									"description": "Keys are property names, values are `1` if the layer is selected for the bottom range, `2` for the top.",
+									"patternProperties": {
+										"^.*$": {
+											"type": "integer"
+										}
+									},
+									"type": "object"
+								},
+								"components": {
+									"$id": "#/properties/glyphs/items/properties/layers/items/properties/components",
+									"additionalItems": true,
+									"description": "Can be paths or components",
+									"items": {
+										"$id": "#/properties/glyphs/items/properties/layers/items/properties/shapes/items",
+										"properties": {
+											"$id": "#/properties/glyphs/items/properties/layers/items/properties/shapes/items/component",
+											"additionalProperties": false,
+											"description": "An explanation about the purpose of this instance.",
+											"properties": {
+												"alignment": {
+													"description": "controls the automatic alignment of this component. (-1 disables alignment, 1 forces it for glyph that are usually not aligned)",
+													"type": "integer"
+												},
+												"anchor": {
+													"description": "Should be indicated if connected to an anchor, especially if more than one possibility is available, e.g. in ligatures.",
+													"type": "string"
+												},
+												"locked": {
+													"default": 0,
+													"description": "Always set to `1`, otherwise omit the key",
+													"type": ["integer", "boolean"]
+												},
+												"name": {
+													"$id": "#/properties/glyphs/items/properties/layers/items/properties/shapes/items/properties/name",
+													"description": "The name of the linked glyph (i.e., the glyph the component is pointing to).",
+													"title": "The ref schema",
+													"type": "string"
+												},
+												"piece": {
+													"description": "keys are the name of the smart property, values a position on the axis.",
+													"patternProperties": {
+														"^.*$": {
+															"type": "number"
+														}
+													},
+													"type": "object"
+												},
+												"transform": {
+													"type": "string"
+												},
+												"userData": {
+													"$ref": "#/definitions/userData"
+												}
+											},
+											"required": [
+												"ref"
+											],
+											"title": "The GSComponent schema",
+											"type": "object"
+										}
+									},
+									"title": "The components schema",
+									"type": "array"
+								},
+								"paths": {
+									"$id": "#/properties/glyphs/items/properties/layers/items/properties/paths",
+									"additionalItems": true,
+									"description": "Can be paths or components",
+									"items": {
+										"$id": "#/properties/glyphs/items/properties/layers/items/properties/shapes/items",
+										"properties": {
+											"$id": "#/properties/glyphs/items/properties/layers/items/properties/shapes/items/path",
+											"additionalProperties": false,
+											"description": "An explanation about the purpose of this instance.",
+											"properties": {
+												"closed": {
+													"$id": "#/properties/glyphs/items/properties/layers/items/properties/paths/items/properties/closed",
+													"default": 1,
+													"description": "Always set to `1`, otherwise omit the key",
+													"title": "The closed schema",
+													"type": ["integer", "boolean"]
+												},
+												"nodes": {
+													"$id": "#/properties/glyphs/items/properties/layers/items/properties/paths/items/properties/nodes",
+													"additionalItems": true,
+													"default": [],
+													"description": "An explanation about the purpose of this instance.",
+													"items": {
+														"$id": "#/properties/glyphs/items/properties/layers/items/properties/paths/items/properties/nodes/items",
+														"additionalItems": true,
+														"description": "An explanation about the purpose of this instance.",
+														"type": "string"
+													},
+													"title": "The nodes schema",
+													"type": "array"
+												}
+											},
+											"title": "The GSPath schema",
+											"type": "object"
+										}
+									},
+									"title": "The paths schema",
+									"type": "array"
+								},
+								"userData": {
+									"$ref": "#/definitions/userData"
+								},
+								"vertOrigin": {
+									"$id": "#/properties/glyphs/items/properties/layers/items/properties/vertOrigin",
+									"description": "Offset from default (ascender). Defaults to `0`",
+									"title": "The vertOrigin schema",
+									"type": "number"
+								},
+								"vertWidth": {
+									"$id": "#/properties/glyphs/items/properties/layers/items/properties/vertWidth",
+									"description": "Only stored if other than the default (ascender+descender)",
+									"title": "The vertWidth schema",
+									"type": "number"
+								},
+								"visible": {
+									"$id": "#/properties/glyphs/items/properties/layers/items/properties/visible",
+									"default": 1,
+									"description": "The visibility setting in the layer panel (the eye symbol). Always set to `1`, otherwise omit the key.",
+									"title": "The visible schema",
+									"type": "integer"
+								},
+								"width": {
+									"$id": "#/properties/glyphs/items/properties/layers/items/properties/width",
+									"default": 600,
+									"description": "The Width of the layer",
+									"title": "The width schema",
+									"type": "number"
+								}
+							},
+							"required": [
+								"layerId",
+								"width"
+							],
+							"title": "The items schema",
+							"type": "object"
+						},
+						"title": "The layers schema",
+						"type": "array"
+					},
+					"locked": {
+						"default": 0,
+						"description": "If set the glyphs can’t be changed. Always set to `1`, otherwise omit the key",
+						"type": ["integer", "boolean"]
+					},
+					"leftMetricsKey": {
+						"$id": "#/properties/glyphs/items/properties/metricLeft",
+						"description": "Left metrics key",
+						"title": "The metricLeft schema",
+						"type": "string"
+					},
+					"rightMetricsKey": {
+						"$id": "#/properties/glyphs/items/properties/metricRight",
+						"description": "Right metrics key",
+						"title": "The metricRight schema",
+						"type": "string"
+					},
+					"topMetricsKey": {
+						"$id": "#/properties/glyphs/items/properties/metricTop",
+						"description": "Top metrics key",
+						"title": "The metricTop schema",
+						"type": "string"
+					},
+					"metricVertWidth": {
+						"$id": "#/properties/glyphs/items/properties/metricVertWidth",
+						"description": "Vertical Width (Height) metrics key",
+						"title": "The metricVertWidth schema",
+						"type": "string"
+					},
+					"widthMetricsKey": {
+						"$id": "#/properties/glyphs/items/properties/metricWidth",
+						"description": "Width metrics key",
+						"title": "The metricWidth schema",
+						"type": "string"
+					},
+					"note": {
+						"$id": "#/properties/glyphs/items/properties/note",
+						"description": "glyph note",
+						"title": "The note schema",
+						"type": "string"
+					},
+					"partsSettings": {
+						"items": {
+							"$id": "#/properties/glyphs/items/properties/partsSettings",
+							"additionalProperties": false,
+							"description": "axes of a smart component",
+							"properties": {
+								"bottomName": {
+									"type": "string"
+								},
+								"bottomValue": {
+									"type": "number"
+								},
+								"name": {
+									"type": "string"
+								},
+								"topName": {
+									"type": "string"
+								},
+								"topValue": {
+									"type": "number"
+								}
+							},
+							"required": [
+								"bottomValue",
+								"name",
+								"topValue"
+							],
+							"title": "The partsSettings schema",
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"production": {
+						"$id": "#/properties/glyphs/items/properties/production",
+						"description": "manually set production name",
+						"title": "The production schema",
+						"type": "string"
+					},
+					"script": {
+						"$id": "#/properties/glyphs/items/properties/script",
+						"description": "manually set script",
+						"title": "The script schema",
+						"type": "string"
+					},
+					"subCategory": {
+						"$id": "#/properties/glyphs/items/properties/subCategory",
+						"description": "manually set subcategory",
+						"title": "The subCategory schema",
+						"type": "string"
+					},
+					"tags": {
+						"$id": "#/properties/glyphs/items/properties/tags",
+						"description": "list of tags",
+						"items": {
+							"type": "string"
+						},
+						"title": "The tags schema",
+						"type": "array"
+					},
+					"unicode": {
+						"$id": "#/properties/glyphs/items/properties/unicode",
+						"description": "for a single code, use just the int value (e.g. `unicode = 65;`) and for multiple use a tuple of all values (`unicode = (65,97);`).",
+						"title": "The unicode schema",
+						"type": ["string", "integer"]
+					},
+					"userData": {
+						"$id": "#/definitions/userData"
+					}
+				},
+				"required": [
+					"glyphname",
+					"layers"
+				],
+				"title": "The items schema",
+				"type": "object"
+			},
+			"title": "The glyphs schema",
+			"type": "array"
+		},
+		"gridLength": {
+			"$id": "#/properties/gridLength",
+			"default": 1,
+			"description": "Only written if not `1`",
+			"title": "The gridLength schema",
+			"type": "integer"
+		},
+		"gridSubDivision": {
+			"$id": "#/properties/gridSubDivision",
+			"default": 1,
+			"description": "Only written if bigger then `1`",
+			"minimum": 2,
+			"title": "The gridSubDivision schema",
+			"type": "integer"
+		},
+		"instances": {
+			"$id": "#/properties/instances",
+			"additionalItems": true,
+			"default": [],
+			"description": "tnstance objects",
+			"items": {
+				"$id": "#/properties/instances/items",
+				"additionalProperties": false,
+				"properties": {
+					"customParameters": {
+						"$ref": "#/definitions/customParameters"
+					},
+					"exports": {
+						"default": 1,
+						"description": "Always set to `0`, otherwise omit the key.",
+						"type": ["integer", "boolean"]
+					},
+					"interpolationWeight": {
+						"$id": "#/properties/fontMaster/items/properties/interpolationWeight",
+						"description": "The name of the master. Not relevant to the exported font. Only for the UI",
+						"title": "The name schema",
+						"type": "number"
+					},
+					"interpolationWidth": {
+						"$id": "#/properties/fontMaster/items/properties/interpolationWidth",
+						"description": "The name of the master. Not relevant to the exported font. Only for the UI",
+						"title": "The name schema",
+						"type": "number"
+					},
+					"interpolationCustom": {
+						"$id": "#/properties/fontMaster/items/properties/interpolationCustom",
+						"description": "The name of the master. Not relevant to the exported font. Only for the UI",
+						"title": "The name schema",
+						"type": "number"
+					},
+					"interpolationCustom1": {
+						"$id": "#/properties/fontMaster/items/properties/interpolationCustom1",
+						"description": "The name of the master. Not relevant to the exported font. Only for the UI",
+						"title": "The name schema",
+						"type": "number"
+					},
+					"interpolationCustom2": {
+						"$id": "#/properties/fontMaster/items/properties/interpolationCustom2",
+						"description": "The name of the master. Not relevant to the exported font. Only for the UI",
+						"title": "The name schema",
+						"type": "number"
+					},
+					"interpolationCustom3": {
+						"$id": "#/properties/fontMaster/items/properties/interpolationCustom3",
+						"description": "The name of the master. Not relevant to the exported font. Only for the UI",
+						"title": "The name schema",
+						"type": "number"
+					},
+					"instanceInterpolations": {
+						"$id": "#/properties/instances/items/properties/instanceInterpolations",
+						"description": "keys are master IDs, values are the factors for that master.",
+						"patternProperties": {
+							"^.*$": {
+								"type": "number"
+							}
+						},
+						"title": "The instanceInterpolations schema",
+						"type": "object"
+					},
+					"isBold": {
+						"$id": "#/properties/instances/items/properties/isBold",
+						"default": 0,
+						"description": "for style linking. Always set to `1`, otherwise omit the key.",
+						"title": "The isBold schema",
+						"type": ["boolean", "integer"]
+					},
+					"isItalic": {
+						"$id": "#/properties/instances/items/properties/isItalic",
+						"default": 0,
+						"description": "for style linking. Always set to `1`, otherwise omit the key.",
+						"title": "The isItalic schema",
+						"type": ["boolean", "integer"]
+					},
+					"linkStyle": {
+						"$id": "#/properties/instances/items/properties/linkStyle",
+						"description": "The linked style name",
+						"title": "The linkStyle schema",
+						"type": "string"
+					},
+					"manualInterpolation": {
+						"$id": "#/properties/instances/items/properties/manualInterpolation",
+						"default": 0,
+						"description": "If set, use the `instanceInterpolations`, otherwise calculate from `axisValues`. Always set to `1`, otherwise omit the key",
+						"title": "The manualInterpolation schema",
+						"type": ["boolean", "integer"]
+					},
+					"name": {
+						"$id": "#/properties/instances/items/properties/name",
+						"description": "The style name.",
+						"title": "The name schema",
+						"type": "string"
+					},
+					"properties": {
+						"$id": "#/definitions/properties"
+					},
+					"userData": {
+						"$id": "#/definitions/userData"
+					},
+					"weightClass": {
+						"$id": "#/properties/instances/items/properties/weightClass",
+						"default": 5,
+						"description": "An explanation about the purpose of this instance.",
+						"title": "The weightClass schema",
+						"type": "integer"
+					},
+					"widthClass": {
+						"$id": "#/properties/instances/items/properties/widthClass",
+						"default": 400,
+						"description": "An explanation about the purpose of this instance.",
+						"title": "The widthClass schema",
+						"type": "integer"
+					}
+				},
+				"required": [
+					"instanceInterpolations",
+					"name"
+				],
+				"title": "The items schema",
+				"type": "object"
+			},
+			"title": "The instances schema",
+			"type": "array"
+		},
+		"keepAlternatesTogether": {
+			"$id": "#/properties/keepAlternatesTogether",
+			"default": 0,
+			"description": "Always set to `1`, otherwise omit the key.",
+			"title": "The keepAlternatesTogether schema",
+			"type": ["boolean", "integer"]
+		},
+		"kerning": {
+			"$ref": "#/definitions/kerning"
+		},
+		"vertKerning": {
+			"$ref": "#/definitions/kerning"
+		},
+		"keyboardIncrement": {
+			"$id": "#/properties/keyboardIncrement",
+			"default": 1,
+			"description": "Only written if not `1`",
+			"title": "The keyboardIncrement schema",
+			"type": "integer"
+		},
+		"keyboardIncrementBig": {
+			"$id": "#/properties/keyboardIncrementBig",
+			"default": 10,
+			"description": "Only written if not `10`",
+			"title": "The keyboardIncrementBig schema",
+			"type": "integer"
+		},
+		"keyboardIncrementHuge": {
+			"$id": "#/properties/keyboardIncrementHuge",
+			"default": 100,
+			"description": "Only written if not `100`",
+			"title": "The keyboardIncrementHuge schema",
+			"type": "integer"
+		},
+		"manufacturerURL": {
+			"$id": "#/properties/manufacturerURL",
+			"description": "An explanation about the purpose of this instance.",
+			"title": "The schema",
+			"type": "string"
+		},
+		"designerURL": {
+			"$id": "#/properties/designerURL",
+			"description": "An explanation about the purpose of this instance.",
+			"title": "The schema",
+			"type": "string"
+		},
+		"copyright": {
+			"$id": "#/properties/copyright",
+			"description": "An explanation about the purpose of this instance.",
+			"title": "The schema",
+			"type": "string"
+		},
+		"manufacturer": {
+			"$id": "#/properties/manufacturer",
+			"description": "An explanation about the purpose of this instance.",
+			"title": "The schema",
+			"type": "string"
+		},
+		"note": {
+			"$id": "#/properties/note",
+			"description": "An explanation about the purpose of this instance.",
+			"title": "The note schema",
+			"type": "string"
+		},
+		"unitsPerEm": {
+			"$id": "#/properties/unitsPerEm",
+			"description": "units per em",
+			"title": "The unitsPerEm schema",
+			"type": "integer"
+		},
+		"userData": {
+			"$ref": "#/definitions/userData"
+		},
+		"versionMajor": {
+			"$id": "#/properties/versionMajor",
+			"description": "main version",
+			"minimum": 0,
+			"title": "The versionMajor schema",
+			"type": "integer"
+		},
+		"versionMinor": {
+			"$id": "#/properties/versionMinor",
+			"description": "version minor",
+			"maximum": 999,
+			"minimum": 0,
+			"title": "The versionMinor schema",
+			"type": "integer"
+		}
+	},
+	"required": [
+		".appVersion",
+		"date",
+		"familyName",
+		"fontMaster",
+		"glyphs",
+		"instances",
+		"unitsPerEm",
+		"versionMajor",
+		"versionMinor"
+	],
+	"title": "The root schema",
+	"type": "object"
+}
