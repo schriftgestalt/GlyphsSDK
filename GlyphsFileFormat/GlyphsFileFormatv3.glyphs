@@ -1,5 +1,5 @@
 {
-.appVersion = "3022";
+.appVersion = "3027";
 .formatVersion = 3;
 DisplayStrings = (
 A,
@@ -27,7 +27,6 @@ value = {
 }
 );
 date = "2020-01-03 19:42:13 +0000";
-disablesNiceNames = 1;
 familyName = "New Font";
 featurePrefixes = (
 {
@@ -70,6 +69,14 @@ name = "Default Layer Width";
 value = "600";
 }
 );
+guides = (
+{
+angle = 24.582;
+lockAngle = 1;
+pos = (192,216);
+showMeasurement = 1;
+}
+);
 id = m01;
 metricValues = (
 {
@@ -110,9 +117,18 @@ visible = 1;
 glyphs = (
 {
 glyphname = A;
-lastChange = "2020-09-29 20:59:35 +0000";
+lastChange = "2020-10-28 20:16:36 +0000";
 layers = (
 {
+guides = (
+{
+angle = 8.1446;
+locked = 1;
+lockAngle = 1;
+pos = (151,402);
+showMeasurement = 1;
+}
+);
 hints = (
 {
 horizontal = 1;
@@ -405,6 +421,9 @@ key = versionString;
 value = "New Value";
 }
 );
+settings = {
+disablesNiceNames = 1;
+};
 stems = (
 {
 name = "New Stem h";

@@ -57,6 +57,16 @@
 						"title": "The angle schema",
 						"type": "number"
 					},
+					"lockAngle": {
+						"default": 0,
+						"description": "Always set to `1`, otherwise omit the key",
+						"type": ["integer", "boolean"]
+					},
+					"locked": {
+						"default": 0,
+						"description": "Always set to `1`, otherwise omit the key",
+						"type": ["integer", "boolean"]
+					},
 					"name": {
 						"$id": "#/guides/items/properties/name",
 						"description": "An explanation about the purpose of this instance.",
@@ -290,20 +300,6 @@
 			"description": "Format `2014-01-29 14:14:38 +0000`",
 			"title": "The date schema",
 			"type": "string"
-		},
-		"disablesAutomaticAlignment": {
-			"$id": "#/properties/disablesAutomaticAlignment",
-			"default": 0,
-			"description": "Always set to `1`, otherwise omit the key",
-			"title": "The disablesAutomaticAlignment schema",
-			"type": ["boolean", "integer"]
-		},
-		"disablesNiceNames": {
-			"$id": "#/properties/disablesNiceNames",
-			"default": 0,
-			"description": "Always set to `1`, otherwise omit the key",
-			"title": "The disablesNiceNames schema",
-			"type": ["boolean", "integer"]
 		},
 		"DisplayStrings": {
 			"$id": "#/properties/DisplayStrings",
@@ -764,6 +760,11 @@
 									"$id": "#/properties/fontMaster/items/properties/backgroundImage",
 									"description": "a image.",
 									"properties": {
+										"alpha": {
+											"default": 50,
+											"description": "a value from 10–100",
+											"type": "integer"
+										},
 										"angle": {
 											"$id": "#/properties/fontMaster/items/properties/backgroundImage/items/properties/angle",
 											"default": 0,
@@ -1279,6 +1280,9 @@
 						"description": "for a single code, use just the int value (e.g. `unicode = 65;`) and for multiple use a tuple of all values (`unicode = (65,97);`).",
 						"title": "The unicode schema",
 						"type": ["array", "integer"]
+					},
+					"userData": {
+						"$id": "#/definitions/userData"
 					}
 				},
 				"required": [
@@ -1290,21 +1294,6 @@
 			},
 			"title": "The glyphs schema",
 			"type": "array"
-		},
-		"gridLength": {
-			"$id": "#/properties/gridLength",
-			"default": 1,
-			"description": "Only written if not `1`",
-			"title": "The gridLength schema",
-			"type": "integer"
-		},
-		"gridSubDivision": {
-			"$id": "#/properties/gridSubDivision",
-			"default": 1,
-			"description": "Only written if bigger then `1`",
-			"minimum": 2,
-			"title": "The gridSubDivision schema",
-			"type": "integer"
 		},
 		"instances": {
 			"$id": "#/properties/instances",
@@ -1575,6 +1564,61 @@
 			},
 			"title": "The properties schema",
 			"type": "array"
+		},
+		"settings": {
+			"$id": "#/properties/settings",
+			"additionalItems": true,
+			"description": "An explanation about the purpose of this instance.",
+			"items": {
+				"additionalProperties": false,
+				"description": "An explanation about the purpose of this instance.",
+				"properties": {
+					"disablesAutomaticAlignment": {
+						"default": 1,
+						"$id": "#/properties/items/settings/items/disablesAutomaticAlignment",
+						"type": ["integer", "boolean"]
+					},
+					"disablesNiceNames": {
+						"default": 1,
+						"$id": "#/properties/items/settings/items/disablesNiceNames",
+						"type": ["integer", "boolean"]
+					},
+					"gridLength": {
+						"default": 1,
+						"$id": "#/properties/items/settings/items/gridLength",
+						"type": "integer"
+					},
+					"gridSubDivision": {
+						"default": 1,
+						"$id": "#/properties/items/settings/items/gridSubDivision",
+						"type": "integer"
+					},
+					"keepAlternatesTogether": {
+						"default": 1,
+						"$id": "#/properties/items/settings/items/keepAlternatesTogether",
+						"type": ["integer", "boolean"]
+					},
+					"keyboardIncrement": {
+						"default": 1,
+						"$id": "#/properties/items/settings/items/keyboardIncrement",
+						"type": "integer"
+					},
+					"keyboardIncrementBig": {
+						"default": 1,
+						"$id": "#/properties/items/settings/items/keyboardIncrementBig",
+						"type": "integer"
+					},
+					"keyboardIncrementHuge": {
+						"default": 1,
+						"$id": "#/properties/items/settings/items/keyboardIncrementHuge",
+						"type": "integer"
+					}
+				},
+				"title": "The items schema",
+				"type": "object"
+			},
+			"title": "The properties schema",
+			"type": "object"
 		},
 		"stems": {
 			"$id": "#/properties/stems",
