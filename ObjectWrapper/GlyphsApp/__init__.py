@@ -12,7 +12,7 @@ from Foundation import NSObject, NSString, NSArray, NSMutableArray, NSMutableDic
 	NSMutableAttributedString, NSLog, NSBundle, NSAffineTransform, NSPoint, NSRect, NSRange, NSUserNotification, \
 	NSUserNotificationCenter, NSDate, NSIndexSet, NSNull, NSAffineTransform
 from AppKit import NSApp, NSDocumentController, NSOpenPanel, NSSavePanel, NSOKButton, NSWorkspace, \
-	NSMenu, NSMenuItem, NSOnState, NSOffState, NSMixedState, NSColor
+	NSMenu, NSMenuItem, NSOnState, NSOffState, NSMixedState, NSColor, NSError
 
 GSFont = objc.lookUpClass("GSFont")
 
@@ -67,6 +67,7 @@ GSFeatureGenerator = objc.lookUpClass("GSFeatureGenerator")
 GSTTStem = objc.lookUpClass("GSTTStem")
 GSMacroViewController = objc.lookUpClass("GSMacroViewController")
 GSPathSegment = objc.lookUpClass("GSPathSegment")
+GSPreviewTextWindowClass = objc.lookUpClass("PreviewText")
 
 __all__ = [
 
@@ -79,7 +80,8 @@ __all__ = [
 	# Constants
 	"MOVE", "LINE", "CURVE", "OFFCURVE", "QCURVE", "HOBBYCURVE", "GSMOVE", "GSLINE", "GSCURVE", "GSOFFCURVE", "GSHOBBYCURVE", "GSSHARP", "GSSMOOTH",
 	"FILL", "FILLCOLOR", "FILLPATTERNANGLE", "FILLPATTERNBLENDMODE", "FILLPATTERNFILE", "FILLPATTERNOFFSET", "FILLPATTERNSCALE", "STROKECOLOR", "STROKELINECAPEND", "STROKELINECAPSTART", "STROKELINEJOIN", "STROKEPOSITION", "STROKEWIDTH", "GRADIENT", "SHADOW", "INNERSHADOW", "MASK", 
-	"TAG", "TOPGHOST", "STEM", "BOTTOMGHOST", "FLEX", "TTANCHOR", "TTSTEM", "TTALIGN", "TTINTERPOLATE", "TTDIAGONAL", "TTDELTA", "CORNER", "CAP", "TTDONTROUND", "TTROUND", "TTROUNDUP", "TTROUNDDOWN", "TRIPLE",
+	"TAG", "TOPGHOST", "STEM", "BOTTOMGHOST", "FLEX", "TTSNAP", "TTSTEM", "TTSHIFT", "TTINTERPOLATE", "TTDIAGONAL", "TTDELTA", "CORNER", "CAP", "TTDONTROUND", "TTROUND", "TTROUNDUP", "TTROUNDDOWN", "TRIPLE",
+	"TTANCHOR", "TTALIGN", # backwards compatibilty 
 	"TEXT", "ARROW", "CIRCLE", "PLUS", "MINUS",
 	"LTR", "RTL", "LTRTTB", "RTLTTB", "GSTopLeft", "GSTopCenter", "GSTopRight", "GSCenterLeft", "GSCenterCenter", "GSCenterRight", "GSBottomLeft", "GSBottomCenter", "GSBottomRight",
 
@@ -103,8 +105,8 @@ __all__ = [
 	"GSMetricsKeyAscender", "GSMetricsKeyCapHeight", "GSMetricsKeySlantHeight", "GSMetricsKeyxHeight", "GSMetricsKeyTopHeight", "GSMetricsKeyDescender", "GSMetricsKeyBaseline",
 	"GSNoCase", "GSUppercase", "GSLowercase", "GSSmallcaps", "GSOtherCase", 
 	
-	"GSShapeTypePath", "GSShapeTypeComponent"
-	
+	"GSShapeTypePath", "GSShapeTypeComponent",
+	"PreviewTextWindow"
 	]
 
 
@@ -178,9 +180,11 @@ TOPGHOST = -1
 STEM = 0
 BOTTOMGHOST = 1
 FLEX = 2
-TTANCHOR = 3
+TTSNAP = 3
+TTANCHOR = 3 # backwards compatibilty
 TTSTEM = 4
-TTALIGN = 5
+TTSHIFT = 5
+TTALIGN = 5 # backwards compatibilty
 TTINTERPOLATE = 6
 TTDIAGONAL = 8
 TTDELTA = 9
@@ -227,25 +231,6 @@ GSUppercase = 1
 GSLowercase = 2
 GSSmallcaps = 3
 GSOtherCase = 4 # ??
-
-
-# Reverse lookup for __repr__
-hintConstants = {
-	-2: 'Tag',
-	-1: 'TopGhost',
-	0: 'Stem',
-	1: 'BottomGhost',
-	2: 'TTAnchor',
-	3: 'TTStem',
-	4: 'TTAlign',
-	5: 'TTInterpolate',
-	6: 'TTDiagonal',
-	7: 'TTDelta',
-	16: 'Corner',
-	17: 'Cap',
-	18: 'Brush',
-	19: 'Line',
-}
 
 
 GSTopLeft = 6
@@ -340,13 +325,24 @@ class Proxy(object):
 		if Values is not None:
 			return len(Values)
 		return 0
-	def pop(self, i):
-		if isinstance(i, int):
-			node = self[i]
-			del self[i]
+	def pop(self, idx):
+		if isinstance(idx, int):
+			node = self[idx]
+			del self[idx]
 			return node
 		else:
 			raise(KeyError)
+	def __delitem__(self, key):
+		if isinstance(key, slice):
+			for i in range(*key.indices(self.__len__())):
+				self.__delitem__(i)
+			return
+		elif isinstance(key, int):
+			if key < 0:
+				key += self.__len__()
+			self.removeItemAtIndexMethod()(key)
+		else:
+			raise TypeError("list indices must be integers, not %s" % type(key).__name__)
 	def __iter__(self):
 		Values = self.values()
 		if Values is not None:
@@ -370,7 +366,7 @@ class Proxy(object):
 		elif values is None:
 			method(NSMutableArray.array())
 		else:
-			raise TypeError("Cant set value of type %s" % type(values))
+			raise TypeError("Cant set value of type %s" % type(values).__name__)
 
 class GSProxyShapesIterator:
 	def __init__(self, proxy):
@@ -568,7 +564,7 @@ GSApplication.activeReporters = property(lambda self: GSCallbackHandler.activeRe
 
 '''
 
-GSApplication.filters = property(lambda self: NSApp.delegate().filterInstances())
+GSApplication.filters = property(lambda self: list(NSApp.delegate().filterInstances()))
 
 '''
 	.. attribute:: filters
@@ -785,9 +781,10 @@ class ColorDefaultsProxy(DefaultsProxy):
 				if color is None:
 					raise ValueError("Invalid color string: %s" % value)
 				value = color
-			if not isinstance(value, NSColor):
+			elif isinstance(value, NSColor):
+				NSUserDefaults.standardUserDefaults().setColor_forKey_(value, key)
+			else:
 				raise TypeError("color must be string or NSColor type, not %s" % type(value).__name__)
-			NSUserDefaults.standardUserDefaults().setColor_forKey_(value, key)
 		else:
 			NSUserDefaults.standardUserDefaults().removeObjectForKey_(key)
 
@@ -1035,8 +1032,8 @@ def __NSMenuItem__append__(self, item):
 	self.submenu().addItem_(item)
 NSMenuItem.append = python_method(__NSMenuItem__append__)
 
-def __NSMenuItem__insert__(self, index, item):
-	self.submenu().insertItem_atIndex_(item, index)
+def __NSMenuItem__insert__(self, idx, item):
+	self.submenu().insertItem_atIndex_(item, idx)
 NSMenuItem.insert = python_method(__NSMenuItem__insert__)
 
 def __NSMenu__append__(self, item):
@@ -1106,7 +1103,7 @@ GSApplication.showGlyphInfoPanelWithSearchString = python_method(__showGlyphInfo
 '''
 
 def _glyphInfoForName(self, String, font=None):
-	if type(String) is int:
+	if isinstance(String, int):
 		return self.glyphInfoForUnicode(String)
 	if font is not None:
 		return font.glyphsInfo().glyphInfoForName_(String)
@@ -1125,7 +1122,7 @@ GSApplication.glyphInfoForName = _glyphInfoForName
 '''
 
 def _glyphInfoForUnicode(self, String, font=None):
-	if type(String) is int:
+	if isinstance(String, int):
 		String = "%04X" % String
 	if font is not None:
 		return font.glyphsInfo().glyphInfoForUnicode_(String)
@@ -1213,7 +1210,7 @@ GSApplication.ligatureComponents = _ligatureComponents
 
 
 DrawLayerCallbacks = (DRAWFOREGROUND, DRAWBACKGROUND, DRAWINACTIVE)
-Observers = (DOCUMENTOPENED, DOCUMENTACTIVATED, DOCUMENTWASSAVED, DOCUMENTEXPORTED, DOCUMENTCLOSED, TABDIDOPEN, TABWILLCLOSE, UPDATEINTERFACE, MOUSEMOVED, MOUSEDRAGGED, MOUSEDOWN, MOUSEUP, CONTEXTMENUCALLBACK)
+Observers = (DOCUMENTOPENED, DOCUMENTACTIVATED, DOCUMENTWASSAVED, DOCUMENTEXPORTED, DOCUMENTCLOSED, TABDIDOPEN, TABWILLCLOSE, UPDATEINTERFACE, MOUSEMOVED, MOUSEDRAGGED, MOUSEDOWN, MOUSEUP)
 
 callbackOperationTargets = {}
 
@@ -1247,13 +1244,6 @@ class callbackHelperClass(NSObject):
 		try:
 			if self.func:
 				self.func(Layer, options)
-		except:
-			LogError(traceback.format_exc())
-
-	def contextMenuCallback_forSelectedLayers_event_(self, menu, layers, event):
-		try:
-			if self.func:
-				self.func(menu, layers, event)
 		except:
 			LogError(traceback.format_exc())
 
@@ -1293,7 +1283,11 @@ def __addCallback__(self, target, operation):
 
 			# Redraw immediately
 			self.redraw()
-
+		elif operation == CONTEXTMENUCALLBACK:
+			if isinstance(target, objc.Class):
+				GSCallbackHandler.addCallback_forOperation_(target, operation)
+			else:
+				raise TypeError("Target must be a (objc) class, not %s" % type(target).__name__)
 		# Other observers
 		elif operation in Observers:
 			# Add class to callbackTargets dict by the function name
@@ -1600,8 +1594,12 @@ GSDocument.font = property(lambda self: self.pyobjc_instanceMethods.font(),
 	:type: GSFont
 '''
 
-
-GSDocument.filePath = property(lambda self: self.fileURL().path(), doc="")
+def __GSDocument_filePath__(self):
+	url = self.fileURL()
+	if url is not None:
+		return url.path()
+	return None
+GSDocument.filePath = property(lambda self: __GSDocument_filePath__(self))
 
 '''
 	.. attribute:: filePath
@@ -1612,9 +1610,9 @@ GSDocument.filePath = property(lambda self: self.fileURL().path(), doc="")
 
 
 class FontGlyphsProxy (Proxy):
-	"""The list of glyphs. You can access it with the index or the glyph name.
+	"""The list of glyphs. You can access it with the idx or the glyph name.
 	Usage:
-		Font.glyphs[index]
+		Font.glyphs[idx]
 		Font.glyphs[name]
 		for glyph in Font.glyphs:
 		...
@@ -1625,10 +1623,10 @@ class FontGlyphsProxy (Proxy):
 		if isinstance(key, slice):
 			return self.values().__getitem__(key)
 
-		# by index
+		# by idx
 		if isinstance(key, int):
 			if key < 0:
-				key = self.__len__() + key
+				key += self.__len__()
 			return self._owner.glyphAtIndex_(key)
 		if isString(key):
 			# by glyph name
@@ -1642,15 +1640,15 @@ class FontGlyphsProxy (Proxy):
 			# by unicode
 			return self._owner.glyphForUnicode_(key.upper())
 		raise TypeError("key for glyphs must be int or str, not %s" % type(key).__name__)
-	def __setitem__(self, key, glyph):
 
+	def __setitem__(self, key, glyph):
 		if isinstance(key, int):
 			if key < 0:
-				key = self.__len__() + key
+				key += self.__len__()
 			self._owner.removeGlyph_(self._owner.glyphAtIndex_(key))
 			self._owner.addGlyph_(glyph)
 		elif isString(key):
-			self._owner.removeGlyph_(self._owner.glyphForName_(Key))
+			self._owner.removeGlyph_(self._owner.glyphForName_(key))
 			
 			if isinstance(glyph, GSLayer): # hack for fontParts
 				_glyph = GSGlyph()
@@ -1668,9 +1666,10 @@ class FontGlyphsProxy (Proxy):
 		if isinstance(key, slice):
 			for i in sorted(range(*key.indices(self.__len__())), reverse=True):
 				self.__delitem__(i)
+			return
 		elif isinstance(key, int):
 			if key < 0:
-				key = self.__len__() + key
+				key += self.__len__()
 			self._owner.removeGlyph_(self._owner.glyphAtIndex_(key))
 		elif isString(key):
 			self._owner.removeGlyph_(self._owner.glyphForName_(key))
@@ -1687,8 +1686,8 @@ class FontGlyphsProxy (Proxy):
 	def items(self):
 		Items = []
 		for value in self._owner.pyobjc_instanceMethods.glyphs():
-			Key = value.name
-			Items.append((Key, value))
+			key = value.name
+			Items.append((key, value))
 		return Items
 	def append(self, Glyph):
 		if Glyph.name not in self:
@@ -1709,7 +1708,7 @@ class FontFontMasterProxy (Proxy):
 			return self.values().__getitem__(key)
 		elif isinstance(key, int):
 			if key < 0:
-				key = self.__len__() + key
+				key += self.__len__()
 			return self._owner.fontMasterAtIndex_(key)
 		elif isString(key):
 			return self._owner.fontMasterForId_(key)
@@ -1717,7 +1716,7 @@ class FontFontMasterProxy (Proxy):
 	def __setitem__(self, key, FontMaster):
 		if isinstance(key, int):
 			if key < 0:
-				key = self.__len__() + key
+				key += self.__len__()
 			self._owner.replaceFontMasterAtIndex_withFontMaster_(key, FontMaster)
 		elif isString(key):
 			OldFontMaster = self._owner.fontMasterForId_(key)
@@ -1732,7 +1731,7 @@ class FontFontMasterProxy (Proxy):
 			return
 		elif isinstance(key, int):
 			if key < 0:
-				key = self.__len__() + key
+				key += self.__len__()
 			removeFontMaster = self._owner.objectInFontMastersAtIndex_(key)
 		elif isString(key):
 			removeFontMaster = self._owner.fontMasterForId_(key)
@@ -1741,8 +1740,8 @@ class FontFontMasterProxy (Proxy):
 		if removeFontMaster:
 			return self._owner.removeFontMasterAndContent_(removeFontMaster)
 	def __iter__(self):
-		for index in range(self._owner.countOfFontMasters()):
-			yield self._owner.fontMasterAtIndex_(index)
+		for idx in range(self._owner.countOfFontMasters()):
+			yield self._owner.fontMasterAtIndex_(idx)
 	def __len__(self):
 		return self._owner.countOfFontMasters()
 	def values(self):
@@ -1756,7 +1755,7 @@ class FontFontMasterProxy (Proxy):
 	def insert(self, idx, FontMaster):
 		if isinstance(idx, int):
 			if idx < 0:
-				idx = self.__len__() + idx
+				idx += self.__len__()
 			self._owner.insertFontMaster_atIndex_(FontMaster, idx)
 		else:
 			raise TypeError("index must be integer, got: %s" % type(key).__name__)
@@ -1772,29 +1771,21 @@ class FontInstancesProxy (Proxy):
 			return self.values().__getitem__(idx)
 		if isinstance(idx, int):
 			if idx < 0:
-				idx = self.__len__() + idx
+				idx += self.__len__()
 			return self._owner.objectInInstancesAtIndex_(idx)
 		raise TypeError("list indices must be integers or slices, not %s" % type(idx).__name__)
 	def __setitem__(self, idx, Class):
 		if isinstance(idx, int):
 			if idx < 0:
-				idx = self.__len__() + idx
+				idx += self.__len__()
 			self._owner.replaceObjectInInstancesAtIndex_withObject_(idx, Class)
 		else:
 			raise TypeError("list indices must be integers, not %s" % type(idx).__name__)
-	def __delitem__(self, idx):
-		if isinstance(idx, slice):
-			for i in sorted(range(*idx.indices(self.__len__())), reverse=True):
-				self.__delitem__(i)
-		elif isinstance(idx, int):
-			if idx < 0:
-				idx = self.__len__() + idx
-			return self._owner.removeObjectFromInstancesAtIndex_(idx)
-		else:
-			raise TypeError("list indices must be integers or slices, not %s" % type(idx).__name__)
+	def removeItemAtIndexMethod(self):
+		return self._owner.removeObjectFromInstancesAtIndex_
 	def __iter__(self):
-		for index in range(self._owner.countOfInstances()):
-			yield self._owner.objectInInstancesAtIndex_(index)
+		for idx in range(self._owner.countOfInstances()):
+			yield self._owner.objectInInstancesAtIndex_(idx)
 	def append(self, instance):
 		self._owner.addInstance_(instance)
 	def extend(self, instances):
@@ -1805,7 +1796,7 @@ class FontInstancesProxy (Proxy):
 	def insert(self, idx, instance):
 		if isinstance(idx, int):
 			if idx < 0:
-				idx = self.__len__() + idx
+				idx += self.__len__()
 			self._owner.insertObject_inInstancesAtIndex_(instance, idx)
 		else:
 			raise TypeError("list indices must be integers, not %s" % type(idx).__name__)
@@ -1822,29 +1813,21 @@ class FontAxesProxy (Proxy):
 			return self.values().__getitem__(idx)
 		if isinstance(idx, int):
 			if idx < 0:
-				idx = self.__len__() + idx
+				idx += self.__len__()
 			return self._owner.objectInAxesAtIndex_(idx)
 		raise TypeError("list indices must be integers or slices, not %s" % type(idx).__name__)
 	def __setitem__(self, idx, Class):
 		if isinstance(idx, int):
 			if idx < 0:
-				idx = self.__len__() + idx
+				idx += self.__len__()
 			self._owner.replaceObjectInAxesAtIndex_withObject_(idx, Class)
 		else:
 			raise TypeError("list indices must be integers, not %s" % type(idx).__name__)
-	def __delitem__(self, idx):
-		if isinstance(idx, slice):
-			for i in sorted(range(*idx.indices(self.__len__())), reverse=True):
-				self.__delitem__(i)
-		elif isinstance(idx, int):
-			if idx < 0:
-				idx = self.__len__() + idx
-			return self._owner.removeObjectFromAxesAtIndex_(idx)
-		else:
-			raise TypeError("list indices must be integers or slices, not %s" % type(idx).__name__)
+	def removeItemAtIndexMethod(self):
+		return self._owner.removeObjectFromAxesAtIndex_
 	def __iter__(self):
-		for index in range(self._owner.countOfAxes()):
-			yield self._owner.objectInAxesAtIndex_(index)
+		for idx in range(self._owner.countOfAxes()):
+			yield self._owner.objectInAxesAtIndex_(idx)
 	def append(self, axis):
 		self._owner.addAxis_(axis)
 	def extend(self, axes):
@@ -1855,7 +1838,7 @@ class FontAxesProxy (Proxy):
 	def insert(self, idx, axis):
 		if isinstance(idx, int):
 			if idx < 0:
-				idx = self.__len__() + idx
+				idx += self.__len__()
 			self._owner.insertObject_inAxesAtIndex_(axis, idx)
 		else:
 			raise TypeError("list indices must be integers, not %s" % type(idx).__name__)
@@ -1872,7 +1855,7 @@ class MasterAxesProxy (Proxy):
 			return self.values().__getitem__(idx)
 		elif isinstance(idx, int):
 			if idx < 0:
-				idx = self.__len__() + idx
+				idx += self.__len__()
 			axis = self._owner.font.axes[idx]
 			if axis is None:
 				return None
@@ -1881,12 +1864,11 @@ class MasterAxesProxy (Proxy):
 	def __setitem__(self, idx, value):
 		if isinstance(idx, int):
 			if idx < 0:
-				idx = self.__len__() + idx
+				idx += self.__len__()
 			count = self.__len__()
 			axis = self._owner.font.axes[idx]
 			return self._owner.setAxisValueValue_forId_(value, axis.axisId)
-		else:
-			raise TypeError("list indices must be integers or slices, not %s" % type(idx).__name__)
+		raise TypeError("list indices must be integers or slices, not %s" % type(idx).__name__)
 	def values(self):
 		if self._owner.font is None:
 			return None
@@ -1911,9 +1893,10 @@ class MasterAxesProxy (Proxy):
 
 class FontStemsProxy(Proxy):
 	def _stemForKey(self, key):
+		stem = None
 		if isinstance(key, int):
 			if key < 0:
-				key = self.__len__() + key
+				key += self.__len__()
 			stem = self._owner.objectInStemsAtIndex_(key)
 		elif isString(key):
 			stem = self._owner.stemForName_(key)
@@ -1954,7 +1937,7 @@ class MasterStemsProxy(Proxy):
 	def _stemForKey(self, key):
 		if isinstance(key, int):
 			if key < 0:
-				key = self.__len__() + key
+				key += self.__len__()
 			stem = self._owner.font.objectInStemsAtIndex_(key)
 		elif isString(key):
 			stem = self._owner.font.stemForName_(key)
@@ -2004,7 +1987,7 @@ class CustomParametersProxy(Proxy):
 			return self.values().__getitem__(key)
 		elif isinstance(key, int):
 			if key < 0:
-				key = self.__len__() + key
+				key += self.__len__()
 			return self._owner.objectInCustomParametersAtIndex_(key)
 		elif isString(key):
 			return self._owner.customValueForKey_(key)
@@ -2012,7 +1995,7 @@ class CustomParametersProxy(Proxy):
 	def __setitem__(self, key, Parameter):
 		if isinstance(key, int):
 			if key < 0:
-				key = self.__len__() + key
+				key += self.__len__()
 			self._owner.replaceObjectInCustomParametersAtIndex_withObject_(key, Parameter)
 		elif isString(key):
 			#TODO: This expects a value in Parameter, not a Parameter object which the list elements are
@@ -2025,7 +2008,7 @@ class CustomParametersProxy(Proxy):
 				self.__delitem__(i)
 		elif isinstance(key, int):
 			if key < 0:
-				key = self.__len__() + key
+				key += self.__len__()
 			self._owner.removeObjectFromCustomParametersAtIndex_(key)
 		elif isString(key):
 			self._owner.removeObjectFromCustomParametersForKey_(key)
@@ -2036,8 +2019,8 @@ class CustomParametersProxy(Proxy):
 			return self._owner.customParameterForKey_(item) is not None
 		return self._owner.pyobjc_instanceMethods.customParameters().containsObject_(item)
 	def __iter__(self):
-		for index in range(self._owner.countOfCustomParameters()):
-			yield self._owner.objectInCustomParametersAtIndex_(index)
+		for idx in range(self._owner.countOfCustomParameters()):
+			yield self._owner.objectInCustomParametersAtIndex_(idx)
 	def append(self, parameter):
 		self._owner.addCustomParameter_(parameter)
 	def extend(self, parameters):
@@ -2047,7 +2030,7 @@ class CustomParametersProxy(Proxy):
 		self._owner.removeObjectFromCustomParametersForKey_(parameter.name)
 	def insert(self, idx, parameter):
 		if idx < 0:
-			idx = self.__len__() + idx
+			idx += self.__len__()
 		customParameters = copy.copy(self.values())
 		customParameters.insert(idx, parameter)
 		self._owner.setCustomParameters_(customParameters)
@@ -2065,7 +2048,7 @@ class FontClassesProxy (Proxy):
 			return self.values().__getitem__(key)
 		elif isinstance(key, int):
 			if key < 0:
-				key = self.__len__() + key
+				key += self.__len__()
 			return self._owner.objectInClassesAtIndex_(key)
 		elif isString(key):
 			if len(key) > 0:
@@ -2074,7 +2057,7 @@ class FontClassesProxy (Proxy):
 	def __setitem__(self, key, Class):
 		if isinstance(key, int):
 			if key < 0:
-				key = self.__len__() + key
+				key += self.__len__()
 			self._owner.replaceObjectInClassesAtIndex_withObject_(key, Class)
 		else:
 			raise TypeError("keys must be integers, not %s" % type(key).__name__)
@@ -2084,7 +2067,7 @@ class FontClassesProxy (Proxy):
 				self.__delitem__(i)
 		elif isinstance(key, int):
 			if key < 0:
-				key = self.__len__() + key
+				key += self.__len__()
 			return self._owner.removeObjectFromClassesAtIndex_(key)
 		elif isString(key):
 			Class = self._owner.classForTag_(key)
@@ -2093,8 +2076,8 @@ class FontClassesProxy (Proxy):
 		else:
 			raise TypeError("keys must be integers or strings, not %s" % type(key).__name__)
 	def __iter__(self):
-		for index in range(self._owner.countOfClasses()):
-			yield self._owner.objectInClassesAtIndex_(index)
+		for idx in range(self._owner.countOfClasses()):
+			yield self._owner.objectInClassesAtIndex_(idx)
 	def append(self, Class):
 		self._owner.addClass_(Class)
 	def extend(self, Classes):
@@ -2104,7 +2087,7 @@ class FontClassesProxy (Proxy):
 		self._owner.removeClass_(Class)
 	def insert(self, idx, Class):
 		if idx < 0:
-			idx = self.__len__() + idx
+			idx += self.__len__()
 		self._owner.insertObject_inClassesAtIndex_(Class, idx)
 	def __len__(self):
 		return self._owner.countOfClasses()
@@ -2120,7 +2103,7 @@ class FontFeaturesProxy (Proxy):
 			return self.values().__getitem__(key)
 		elif isinstance(key, int):
 			if key < 0:
-				key = self.__len__() + key
+				key += self.__len__()
 			return self._owner.objectInFeaturesAtIndex_(key)
 		elif isString(key):
 			return self._owner.featureForTag_(key)
@@ -2128,7 +2111,7 @@ class FontFeaturesProxy (Proxy):
 	def __setitem__(self, idx, feature):
 		if isinstance(idx, int):
 			if idx < 0:
-				idx = self.__len__() + idx
+				idx += self.__len__()
 			self._owner.replaceObjectInFeaturesAtIndex_withObject_(idx, feature)
 		else:
 			raise TypeError("indices must be integers, not %s" % type(idx).__name__)
@@ -2138,7 +2121,7 @@ class FontFeaturesProxy (Proxy):
 				self.__delitem__(i)
 		elif isinstance(key, int):
 			if key < 0:
-				key = self.__len__() + key
+				key += self.__len__()
 			return self._owner.removeObjectFromFeaturesAtIndex_(key)
 		elif isString(key):
 			Feature = self._owner.featureForTag_(key)
@@ -2147,8 +2130,8 @@ class FontFeaturesProxy (Proxy):
 		else:
 			raise TypeError("keys must be integers or strings, not %s" % type(key).__name__)
 	def __iter__(self):
-		for index in range(self._owner.countOfFeatures()):
-			yield self._owner.objectInFeaturesAtIndex_(index)
+		for idx in range(self._owner.countOfFeatures()):
+			yield self._owner.objectInFeaturesAtIndex_(idx)
 	def append(self, feature):
 		self._owner.addFeature_(feature)
 	def extend(self, features):
@@ -2158,7 +2141,7 @@ class FontFeaturesProxy (Proxy):
 		self._owner.removeFeature_(Class)
 	def insert(self, idx, Class):
 		if idx < 0:
-			idx = self.__len__() + idx
+			idx += self.__len__()
 		self._owner.insertObject_inFeaturesAtIndex_(Class, idx)
 	def __len__(self):
 		return self._owner.countOfFeatures()
@@ -2186,16 +2169,16 @@ class FontFeaturePrefixesProxy (Proxy):
 			return self.values().__getitem__(key)
 		elif isinstance(key, int):
 			if key < 0:
-				key = self.__len__() + key
+				key += self.__len__()
 			return self._owner.objectInFeaturePrefixesAtIndex_(key)
 		elif isString(key):
 			return self._owner.featurePrefixForTag_(key)
 		raise TypeError("keys must be integers or strings, not %s" % type(key).__name__)
-	def __setitem__(self, idx, Feature):
+	def __setitem__(self, idx, featurePrefix):
 		if isinstance(idx, int):
 			if idx < 0:
-				idx = self.__len__() + idx
-			self._owner.replaceObjectInFeaturePrefixesAtIndex_withObject_(idx, Feature)
+				idx += self.__len__()
+			self._owner.replaceObjectInFeaturePrefixesAtIndex_withObject_(idx, featurePrefix)
 		else:
 			raise TypeError("keys must be integers, not %s" % type(idx).__name__)
 	def __delitem__(self, key):
@@ -2204,7 +2187,7 @@ class FontFeaturePrefixesProxy (Proxy):
 				self.__delitem__(i)
 		elif isinstance(key, int):
 			if key < 0:
-				key = self.__len__() + key
+				key += self.__len__()
 			return self._owner.removeObjectFromFeaturePrefixesAtIndex_(key)
 		elif isString(key):
 			featurePrefix = self._owner.featurePrefixForTag_(key)
@@ -2221,7 +2204,7 @@ class FontFeaturePrefixesProxy (Proxy):
 		self._owner.removeFeaturePrefix_(featurePrefix)
 	def insert(self, idx, featurePrefix):
 		if idx < 0:
-			idx = self.__len__() + idx
+			idx += self.__len__()
 		self._owner.insertObject_inFeaturePrefixesAtIndex_(featurePrefix, idx)
 	def text(self):
 		LineList = []
@@ -2235,12 +2218,12 @@ class FontFeaturePrefixesProxy (Proxy):
 		return self._owner.setFeaturePrefixes_
 
 class UserDataProxy(Proxy):
-	def __getitem__(self, Key):
-		return self._owner.userDataForKey_(Key)
-	def __setitem__(self, Key, Value):
-		self._owner.setUserData_forKey_(objcObject(Value), Key)
-	def __delitem__(self, Key):
-		self._owner.removeUserDataForKey_(Key)
+	def __getitem__(self, key):
+		return self._owner.userDataForKey_(key)
+	def __setitem__(self, key, Value):
+		self._owner.setUserData_forKey_(objcObject(Value), key)
+	def __delitem__(self, key):
+		self._owner.removeUserDataForKey_(key)
 	def values(self):
 		userData = self._owner.pyobjc_instanceMethods.userData()
 		if userData is not None:
@@ -2260,6 +2243,33 @@ class UserDataProxy(Proxy):
 		if value is None:
 			return default
 		return value
+
+class TempDataProxy(Proxy):
+	def __getitem__(self, key):
+		return self._owner.tempDataForKey_(key)
+	def __setitem__(self, key, Value):
+		self._owner.setTempData_forKey_(objcObject(Value), key)
+	def __delitem__(self, key):
+		self._owner.setTempData_forKey_(None, key)
+	def values(self):
+		tempData = self._owner.pyobjc_instanceMethods.tempData()
+		if tempData is not None:
+			return tempData.allValues()
+		return None
+	def keys(self):
+		tempData = self._owner.pyobjc_instanceMethods.tempData()
+		if tempData is not None:
+			return tempData.allKeys()
+		return None
+	def __repr__(self):
+		return self._owner.pyobjc_instanceMethods.tempData().__repr__()
+	def __contains__(self, item):
+		return self._owner.tempDataForKey_(item) is not None
+	def get(self, key, default=None):
+		value = self.__getitem__(key)
+		if value is None:
+			return default
+		return value
 		
 class AttributesProxy(Proxy):
 	def __getitem__(self, key):
@@ -2269,7 +2279,10 @@ class AttributesProxy(Proxy):
 	def __setitem__(self, key, value):
 		if not isString(key):
 			raise TypeError("keys must be strings, not %s" % type(key).__name__)
-		self._owner.setAttribute_forKey_(objcObject(value), key)
+		if value is None:
+			self._owner.removeAttributeForKey_(objcObject(key))
+		else:
+			self._owner.setAttribute_forKey_(objcObject(value), objcObject(key))
 	def __delitem__(self, key):
 		if not isString(key):
 			raise TypeError("keys must be strings, not %s" % type(key).__name__)
@@ -2295,21 +2308,21 @@ class AttributesProxy(Proxy):
 		return value
 
 class SmartComponentPoleMappingProxy(Proxy):
-	def __getitem__(self, Key):
+	def __getitem__(self, key):
 		poleMapping = self._owner.partSelection()
 		if poleMapping is not None:
-			return poleMapping[Key]
+			return poleMapping[key]
 		return None
-	def __setitem__(self, Key, Value):
+	def __setitem__(self, key, Value):
 		poleMapping = self._owner.partSelection()
 		if poleMapping is None:
-			self._owner.setPartSelection_(NSMutableDictionary.dictionaryWithObject_forKey_(objcObject(Value), Key))
+			self._owner.setPartSelection_(NSMutableDictionary.dictionaryWithObject_forKey_(objcObject(Value), key))
 		else:
-			poleMapping[Key] = objcObject(Value)
-	def __delitem__(self, Key):
+			poleMapping[key] = objcObject(Value)
+	def __delitem__(self, key):
 		poleMapping = self._owner.partSelection()
 		if poleMapping is not None:
-			del(poleMapping[Key])
+			del(poleMapping[key])
 	def values(self):
 		poleMapping = self._owner.partSelection()
 		if poleMapping is not None:
@@ -2320,17 +2333,17 @@ class SmartComponentPoleMappingProxy(Proxy):
 		return str(poleMapping)
 
 class SmartComponentValuesProxy(Proxy):
-	def __getitem__(self, Key):
+	def __getitem__(self, key):
 		pieceSettings = self._owner.pieceSettings()
 		if pieceSettings is not None:
-			return pieceSettings[Key]
+			return pieceSettings[key]
 		return None
-	def __setitem__(self, Key, Value):
-		self._owner.setPieceValue_forKey_(float(Value), Key)
-	def __delitem__(self, Key):
+	def __setitem__(self, key, Value):
+		self._owner.setPieceValue_forKey_(float(Value), key)
+	def __delitem__(self, key):
 		pieceSettings = self._owner.pieceSettings()
 		if pieceSettings is not None:
-			del(pieceSettings[Key])
+			del(pieceSettings[key])
 	def values(self):
 		pieceSettings = self._owner.pieceSettings()
 		if pieceSettings is not None:
@@ -2357,13 +2370,13 @@ class LayersIterator:
 				if self.curInd >= self._owner.countOfLayers():
 					raise StopIteration
 				ExtraLayerIndex = self.curInd - self._owner.parent.countOfFontMasters()
-				Index = 0
+				idx = 0
 				ExtraLayer = None
 				while ExtraLayerIndex >= 0:
-					ExtraLayer = self._owner.objectInLayersAtIndex_(Index)
+					ExtraLayer = self._owner.objectInLayersAtIndex_(idx)
 					if ExtraLayer.layerId != ExtraLayer.associatedMasterId:
 						ExtraLayerIndex -= 1
-					Index += 1
+					idx += 1
 				Item = ExtraLayer
 			self.curInd += 1
 			return Item
@@ -2381,20 +2394,20 @@ class GlyphLayerProxy (Proxy):
 			return self.values().__getitem__(key)
 		elif isinstance(key, int):
 			if key < 0:
-				key = self.__len__() + key
+				key += self.__len__()
 			if self._owner.parent:
 				if key < self._owner.parent.countOfFontMasters():
 					FontMaster = self._owner.parent.fontMasterAtIndex_(key)
 					return self._owner.layerForId_(FontMaster.id)
 				else:
 					ExtraLayerIndex = key - len(self._owner.parent.masters)
-					Index = 0
+					idx = 0
 					ExtraLayer = None
 					while ExtraLayerIndex >= 0:
-						ExtraLayer = self._owner.pyobjc_instanceMethods.layers().objectAtIndex_(Index)
+						ExtraLayer = self._owner.pyobjc_instanceMethods.layers().objectAtIndex_(idx)
 						if ExtraLayer.layerId != ExtraLayer.associatedMasterId:
 							ExtraLayerIndex = ExtraLayerIndex - 1
-						Index = Index + 1
+						idx += 1
 					return ExtraLayer
 			else:
 				return self._owner.pyobjc_instanceMethods.layers().objectAtIndex_(key)
@@ -2408,7 +2421,7 @@ class GlyphLayerProxy (Proxy):
 	def __setitem__(self, key, Layer):
 		if isinstance(key, int) and self._owner.parent:
 			if key < 0:
-				key = self.__len__() + key
+				key += self.__len__()
 			FontMaster = self._owner.parent.fontMasterAtIndex_(key)
 			key = FontMaster.id
 		if not isString(key):
@@ -2422,7 +2435,7 @@ class GlyphLayerProxy (Proxy):
 			return
 		elif isinstance(key, int) and self._owner.parent:
 			if key < 0:
-				key = self.__len__() + key
+				key += self.__len__()
 			Layer = self.__getitem__(key)
 			key = Layer.layerId
 		elif not isString(key):
@@ -2444,7 +2457,7 @@ class GlyphLayerProxy (Proxy):
 			self.append(Layer)
 	def remove(self, Layer):
 		return self._owner.removeLayerForId_(Layer.layerId)
-	def insert(self, Index, Layer):
+	def insert(self, idx, Layer):
 		self.append(Layer)
 	def setter(self, values):
 		newLayers = NSMutableDictionary.dictionary()
@@ -2465,27 +2478,33 @@ class GlyphSmartComponentAxesProxy (Proxy):
 			return self.values().__getitem__(key)
 		elif isinstance(key, int):
 			if key < 0:
-				key = self.__len__() + key
+				key += self.__len__()
 			return self._owner.objectInPartsSettingsAtIndex_(key)
 		elif isString(key):
 			for partSetting in self._owner.partsSettings():
 				if partSetting.name == key:
 					return partSetting
-		raise TypeError("keys must be integers or strings, not %s" % type(key).__name__)
+			raise KeyError("no value for key: %s" % key)
+		else:
+			raise TypeError("keys must be integers or strings, not %s" % type(key).__name__)
 	def __setitem__(self, key, SmartComponentProperty):
 		if isinstance(key, int):
 			if key < 0:
-				key = self.__len__() + key
-		elif not isString(key): #TODO are strings allowed? Is insertObject correct?
-			raise TypeError("keys must be integers or strings, not %s" % type(key).__name__)
-		self._owner.insertObject_inPartsSettingsAtIndex_(SmartComponentProperty, key)
+				key += self.__len__()
+			self._owner.replaceObjectInPartsSettingsAtIndex_withObject_(key, SmartComponentProperty)
+		#elif isString(key): # TODO implement setting by name
+		#	for partSetting in self._owner.partsSettings():
+		#		if partSetting.name == key:
+		else:
+			#raise TypeError("keys must be integers or strings, not %s" % type(key).__name__)
+			raise TypeError("keys must be integers, not %s" % type(key).__name__)
 	def __delitem__(self, key):
 		if isinstance(key, slice):
 			for i in sorted(range(*key.indices(self.__len__())), reverse=True):
 				self.__delitem__(i)
 		elif isinstance(key, int):
 			if key < 0:
-				key = self.__len__() + key
+				key += self.__len__()
 		elif isString(key):
 			idx = 0
 			for partSetting in self._owner.partsSettings():
@@ -2511,26 +2530,18 @@ class LayerGuidesProxy (Proxy):
 			return self.values().__getitem__(idx)
 		elif isinstance(idx, int):
 			if idx < 0:
-				idx = self.__len__() + idx
+				idx += self.__len__()
 			return self._owner.objectInGuidesAtIndex_(idx)
 		raise TypeError("list indices must be integers or slices, not %s" % type(idx).__name__)
 	def __setitem__(self, idx, Component):
 		if isinstance(idx, int):
 			if idx < 0:
-				idx = self.__len__() + idx
+				idx += self.__len__()
 			self._owner.replaceObjectInGuidesAtIndex_withObject_(idx, Component)
 		else:
 			raise TypeError("list indices must be integers, not %s" % type(idx).__name__)
-	def __delitem__(self, idx):
-		if isinstance(idx, slice):
-			for i in sorted(range(*idx.indices(self.__len__())), reverse=True):
-				self.__delitem__(i)
-		elif isinstance(idx, int):
-			if idx < 0:
-				idx = self.__len__() + idx
-			self._owner.removeObjectFromGuidesAtIndex_(idx)
-		else:
-			raise TypeError("list indices must be integers or slices, not %s" % type(idx).__name__)
+	def removeItemAtIndexMethod(self):
+		return self._owner.removeObjectFromGuidesAtIndex_
 	def __copy__(self):
 		return [x.copy() for x in self.values()]
 	def append(self, Guide):
@@ -2541,7 +2552,7 @@ class LayerGuidesProxy (Proxy):
 	def insert(self, idx, guide):
 		if isinstance(idx, int):
 			if idx < 0:
-				idx = self.__len__() + idx
+				idx += self.__len__()
 			self._owner.insertObject_inGuidesAtIndex_(guide, idx)
 		else:
 			raise TypeError("list indices must be integers, not %s" % type(idx).__name__)
@@ -2558,27 +2569,19 @@ class LayerAnnotationProxy (Proxy):
 			return self.values().__getitem__(idx)
 		elif isinstance(idx, int):
 			if idx < 0:
-				idx = self.__len__() + idx
+				idx += self.__len__()
 			return self._owner.objectInAnnotationsAtIndex_(idx)
 		raise TypeError("list indices must be integers or slices, not %s" % type(idx).__name__)
 	def __setitem__(self, idx, Annotation):
 		if not isinstance(idx, int):
 			raise TypeError("list indices must be integers, not %s" % type(idx).__name__)
 		if idx < 0:
-			idx = self.__len__() + idx
+			idx += self.__len__()
 		# TODO: (Georg) add proper API in Glyphs
 		self._owner.removeObjectFromAnnotationsAtIndex_(idx)
 		self._owner.insertObject_inAnnotationsAtIndex_(Annotation, idx)
-	def __delitem__(self, idx):
-		if isinstance(idx, slice):
-			for i in sorted(range(*idx.indices(self.__len__())), reverse=True):
-				self.__delitem__(i)
-		elif isinstance(idx, int):
-			if idx < 0:
-				idx = self.__len__() + idx
-			self._owner.removeObjectFromAnnotationsAtIndex_(idx)
-		else:
-			raise TypeError("list indices must be integers or slices, not %s" % type(idx).__name__)
+	def removeItemAtIndexMethod(self):
+		return self._owner.removeObjectFromAnnotationsAtIndex_
 	def append(self, Annotation):
 		self._owner.addAnnotation_(Annotation)
 	def extend(self, Annotations):
@@ -2610,18 +2613,10 @@ class LayerHintsProxy (Proxy):
 		if not isinstance(idx, int):
 			raise TypeError("list indices must be integers, not %s" % type(idx).__name__)
 		if idx < 0:
-			idx = self.__len__() + idx
+			idx += self.__len__()
 		self._owner.replaceObjectInHintsAtIndex_withObject_(idx, hint)
-	def __delitem__(self, idx):
-		if isinstance(idx, slice):
-			for i in sorted(range(*idx.indices(self.__len__())), reverse=True):
-				self.__delitem__(i)
-		elif isinstance(idx, int):
-			if idx < 0:
-				idx = self.__len__() + idx
-			self._owner.removeObjectFromHintsAtIndex_(idx)
-		else:
-			raise TypeError("list indices must be integers or slices, not %s" % type(idx).__name__)
+	def removeItemAtIndexMethod(self):
+		return self._owner.removeObjectFromHintsAtIndex_
 	def append(self, hint):
 		self._owner.addHint_(hint)
 	def extend(self, hints):
@@ -2631,7 +2626,7 @@ class LayerHintsProxy (Proxy):
 		if not isinstance(idx, int):
 			raise TypeError("list indices must be integers, not %s" % type(idx).__name__)
 		if idx < 0:
-			idx = self.__len__() + idx
+			idx += self.__len__()
 		self._owner.insertObject_inHintsAtIndex_(hint, idx)
 	def remove(self, Hint):
 		self._owner.removeHint_(Hint)
@@ -2688,7 +2683,7 @@ class LayerAnchorsProxy (Proxy):
 			self._owner.addAnchor_(Anchor)
 	def remove(self, Anchor):
 		self._owner.removeAnchor_(Anchor)
-	def insert(self, Index, Anchor):
+	def insert(self, idx, Anchor):
 		self.append(Anchor)
 	def __len__(self):
 		return self._owner.countOfAnchors()
@@ -2704,7 +2699,7 @@ class LayerAnchorsProxy (Proxy):
 				newAnchors[anchor.name] = anchor
 		elif values is None:
 			pass
-		elif type(values) == type(self):
+		elif isinstance(values, type(self)):
 			for anchor in values.values():
 				newAnchors[anchor.name] = anchor
 		else:
@@ -2718,7 +2713,7 @@ class LayerShapesProxy (Proxy):
 			return self.values().__getitem__(idx)
 		elif isinstance(idx, int):
 			if idx < 0:
-				idx = self._owner.countOfShapes() + idx
+				idx += self._owner.countOfShapes()
 			if idx < self._owner.countOfShapes():
 				return self._owner.objectInShapesAtIndex_(idx)
 			else:
@@ -2731,16 +2726,8 @@ class LayerShapesProxy (Proxy):
 		if idx < 0:
 			idx = self._owner.countOfShapes() + idx
 		self._owner.replaceShapeAtIndex_withShape_(idx, Shape)
-	def __delitem__(self, idx):
-		if isinstance(idx, slice):
-			for i in sorted(range(*idx.indices(self.__len__())), reverse=True):
-				self.__delitem__(i)
-		elif isinstance(idx, int):
-			if idx < 0:
-				idx = self._owner.countOfShapes() + idx
-			self._owner.removeObjectFromShapesAtIndex_(idx)
-		else:
-			raise TypeError("list indices must be integers or slices, not %s" % type(idx).__name__)
+	def removeItemAtIndexMethod(self):
+		return self._owner.removeObjectFromShapesAtIndex_
 	def __contains__(self, item):
 		return self._owner.pyobjc_instanceMethods.shapes().containsObject_(item)
 	def append(self, Shape):
@@ -2763,7 +2750,7 @@ class LayerShapesProxy (Proxy):
 		if not isinstance(idx, int):
 			raise TypeError("list indices must be integers, not %s" % type(idx).__name__)
 		if idx < 0:
-			idx = self.__len__() + idx
+			idx += self.__len__()
 		self._owner.insertObject_inShapesAtIndex_(Shape, idx)
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.shapes()
@@ -2786,7 +2773,7 @@ class LayerPathsProxy (Proxy):
 		raise ValueError
 	def remove(self, Path):
 		raise ValueError
-	def insert(self, Index, Path):
+	def insert(self, idx, Path):
 		raise ValueError
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.paths()
@@ -2798,9 +2785,12 @@ class LayerSelectionProxy (Proxy):
 		if isinstance(idx, slice):
 			return self.values().__getitem__(idx)
 		elif isinstance(idx, int):
+			if  self._owner.countOfSelection() == 0:
+				raise IndexError("Nothing selected (%d)" % idx)		
 			if idx < 0:
-				idx = len(self) + idx
-			return self._owner.pyobjc_instanceMethods.selection().objectAtIndex_(idx)
+				idx += len(self)
+			if idx < self._owner.countOfSelection():
+				return self._owner.pyobjc_instanceMethods.selection().objectAtIndex_(idx)
 		else:
 			raise TypeError("list indices must be integers or slices, not %s" % type(idx).__name__)
 	def values(self):
@@ -2813,7 +2803,7 @@ class LayerSelectionProxy (Proxy):
 		self._owner.addObjectsFromArrayToSelection_(list(objects))
 	def remove(self, object):
 		self._owner.removeObjectFromSelection_(object)
-	def insert(self, Index, object):
+	def insert(self, idx, object):
 		self._owner.addSelection_(object)
 	def clear(self):
 		self._owner.clearSelection()
@@ -2838,45 +2828,37 @@ class PathNodesProxy (Proxy):
 				raise IndexError("list index out of range (%d): %d" % (self.__len__(), idx))
 		else:
 			raise TypeError("list indices must be integers or slices, not %s" % type(idx).__name__)
-	def __setitem__(self, idx, Node):
+	def __setitem__(self, idx, node):
 		if isinstance(idx, int):
 			if idx < 0:
 				idx += self.__len__()
 			if idx < self.__len__():
-				self._owner.replaceObjectInNodesAtIndex_withObject_(idx, Node)
+				self._owner.replaceObjectInNodesAtIndex_withObject_(idx, node)
 			else:
 				raise IndexError("list index out of range (%d): %d" % (self.__len__(), idx))
 		else:
 			raise TypeError("list indices must be integers, not %s" % type(idx).__name__)
-	def __delitem__(self, idx):
-		if isinstance(idx, slice):
-			for i in sorted(range(*idx.indices(self.__len__())), reverse=True):
-				self.__delitem__(i)
-		elif isinstance(idx, int):
-			if idx < 0:
-				idx = self.__len__() + idx
-			self._owner.removeObjectFromNodesAtIndex_(idx)
-		else:
-			raise TypeError("list indices must be integers or slices, not %s" % type(idx).__name__)
+	def removeItemAtIndexMethod(self):
+		return self._owner.removeObjectFromNodesAtIndex_
 	def __len__(self):
 		return self._owner.countOfNodes()
-	def append(self, Node):
-		self._owner.addNode_(Node)
-	def remove(self, Node):
-		self._owner.removeNode_(Node)
-	def insert(self, idx, Node):
+	def append(self, node):
+		self._owner.addNode_(node)
+	def remove(self, node):
+		self._owner.removeNode_(node)
+	def insert(self, idx, node):
 		if not isinstance(idx, int):
 			raise TypeError("list indices must be integers, not %s" % type(idx).__name__)
 		if idx < 0:
-			idx = self.__len__() + idx
-		self._owner.insertNode_atIndex_(Node, idx)
+			idx += self.__len__()
+		self._owner.insertNode_atIndex_(node, idx)
 	def extend(self, objects):
 		self._owner.addNodes_(list(objects))
 	def index(self, node):
-		index = self._owner.indexOfNode_(node)
-		if index > 100000:
+		idx = self._owner.indexOfNode_(node)
+		if idx > 100000:
 			raise ValueError("%s is not in list" % node)
-		return index
+		return idx
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.nodes()
 	def __contains__(self, item):
@@ -2887,23 +2869,23 @@ class PathNodesProxy (Proxy):
 class PathSegmentsProxy (Proxy):
 	def __getitem__(self, idx):
 		return self.values().__getitem__(idx)
-	# def __setitem__(self, idx, Node):
-	# 	self._owner.replaceObjectInNodesAtIndex_withObject_(idx, Node)
+	# def __setitem__(self, idx, node):
+	# 	self._owner.replaceObjectInNodesAtIndex_withObject_(idx, node)
 	# def __delitem__(self, idx):
 	# 	self._owner.removeObjectFromNodesAtIndex_(idx)
-	# def append(self, Node):
-	# 	self._owner.addNode_(Node)
-	# def remove(self, Node):
-	# 	self._owner.removeNode_(Node)
-	# def insert(self, Index, Node):
-	# 	self._owner.insertNode_atIndex_(Node, Index)
+	# def append(self, node):
+	# 	self._owner.addNode_(node)
+	# def remove(self, node):
+	# 	self._owner.removeNode_(node)
+	# def insert(self, idx, node):
+	# 	self._owner.insertNode_atIndex_(node, idx)
 	# def extend(self, objects):
 	# 	self._owner.addNodes_(list(objects))
 	# def index(self, node):
-	# 	index = self._owner.indexOfNode_(node)
-	# 	if index > 100000:
+	# 	idx = self._owner.indexOfNode_(node)
+	# 	if idx > 100000:
 	# 		raise ValueError("%s is not in list" % node)
-	# 	return index
+	# 	return idx
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.segments()
 	def setterMethod(self):
@@ -2918,7 +2900,7 @@ class FontTabsProxy (Proxy):
 		if self._owner.parent:
 			if isinstance(idx, int):
 				if idx < 0:
-					idx = self.__len__() + idx
+					idx += self.__len__()
 				return self._owner.parent.windowController().tabBarControl().tabItemAtIndex_(idx + 1)
 			else:
 				raise TypeError("list indices must be integers or slices, not %s" % type(idx).__name__)
@@ -2935,7 +2917,7 @@ class FontTabsProxy (Proxy):
 				self.__delitem__(i)
 		elif isinstance(idx, int):
 			if idx < 0:
-				idx = self.__len__() + idx
+				idx += self.__len__()
 			Tab = self._owner.parent.windowController().tabBarControl().tabItemAtIndex_(idx + 1)
 			self._owner.parent.windowController().tabBarControl().closeTabItem_(Tab)
 		else:
@@ -3327,8 +3309,12 @@ GSFont.date = property(lambda self: __get_date__(self), lambda self, value: __se
 
 	:type: NSDate
 '''
-GSFont.familyName = property(lambda self: self.pyobjc_instanceMethods.familyName(),
-								lambda self, value: self.setFamilyName_(value))
+GSFont.familyName = property(lambda self: self.pyobjc_instanceMethods.fontName(),
+								lambda self, value: self.setFontName_(value))
+								
+GSFont.fontName = property(lambda self: self.pyobjc_instanceMethods.fontName(),
+								lambda self, value: self.setFontName_(value))
+
 '''
 	.. attribute:: familyName
 		Family name of the typeface.
@@ -3389,6 +3375,21 @@ GSFont.userData = property(lambda self: UserDataProxy(self))
 			del font.userData['rememberToMakeCoffee']
 
 	:type: dict
+'''
+
+GSFont.tempData = property(lambda self: TempDataProxy(self))
+
+'''
+	.. attribute:: tempData
+
+	A dictionary to store data temporarily. Use a unique key. This will not be saved to file. If you need the data persistent, use layer.userData
+	:type: dict
+	.. code-block:: python
+		# set value
+		layer.tempData['rememberToMakeCoffee'] = True
+
+		# delete value
+		del layer.tempData['rememberToMakeCoffee']
 '''
 
 GSFont.disablesNiceNames = property(lambda self: bool(self.pyobjc_instanceMethods.disablesNiceNames()), lambda self, value: self.setDisablesNiceNames_(value))
@@ -3475,7 +3476,7 @@ def Font_GetSelectedGlyphs(self):
 	return self.parent.windowController().glyphsController().selectedObjects()
 
 def Font_SetSelectedGlyphs(self, value):
-	if not type(value) in (list, tuple):
+	if not isinstance(value, (list, tuple)):
 		raise ValueError('Argument needs to be a list.')
 	self.parent.windowController().glyphsController().setSelectedObjects_(value)
 
@@ -3692,7 +3693,7 @@ GSFont.formatVersion = property(lambda self: self.pyobjc_instanceMethods.formatV
 '''
 
 
-def Font__save__(self, path=None, formatVersion=3):
+def Font__save__(self, path=None, formatVersion=3, makeCopy=False):
 	if self.parent is not None:
 		if path is None:
 			self.parent.saveDocument_(None)
@@ -3702,7 +3703,10 @@ def Font__save__(self, path=None, formatVersion=3):
 				typeName = "com.schriftgestaltung.glyphs"
 			elif path.endswith('.ufo'):
 				typeName = "org.unifiedfontobject.ufo"
-			self.parent.writeSafelyToURL_ofType_forSaveOperation_error_(URL, typeName, 1, objc.nil)
+			if makeCopy:
+				self.saveToURL_error_(URL, None)
+			else:
+				self.parent.saveToURL_ofType_forSaveOperation_error_(URL, typeName, 1, objc.nil)
 	elif path is not None:
 		URL = NSURL.fileURLWithPath_(path)
 		if path.endswith('.glyphs'):
@@ -3716,16 +3720,18 @@ def Font__save__(self, path=None, formatVersion=3):
 
 GSFont.save = Font__save__
 '''
-	.. function:: save([path=None, formatVersion=3])
+	.. function:: save([path=None, formatVersion=3, makeCopy])
 		
 		Saves the font.
 		
 		If no path is given, it saves to the existing location.
 
 	:param path: Optional file path
-	:type filePath: str
+	:type path: str
 	:param formatVersion: the format of the file
-	:type filePath: int
+	:type formatVersion: int
+	:param makeCopy: saves a new file without changeing the documents file paths
+	:type makeCopy: bool
 
 '''
 
@@ -3806,8 +3812,8 @@ GSFont.kerningForPair = kerningForPair
 	:type leftKey: str
 	:param rightKey: either a glyph name or a class name
 	:type rightKey: str
-	:param direction: optional writing direction (see Constants). Default is LTR.
-	:type direction: str
+	:param direction: optional writing direction (see Constants; 'LTR' (0) or 'RTLTTB'). Default is LTR.
+	:type direction: int
 	:return: The kerning value
 	:rtype: float
 
@@ -3847,7 +3853,7 @@ GSFont.setKerningForPair = setKerningForPair
 
 '''
 
-def removeKerningForPair(self, FontMasterID, LeftKeringId, RightKerningId):
+def removeKerningForPair(self, FontMasterID, LeftKeringId, RightKerningId, direction=LTR):
 	if LeftKeringId[0] != '@':
 		try:
 			LeftKeringId = self.glyphs[LeftKeringId].id
@@ -3858,10 +3864,10 @@ def removeKerningForPair(self, FontMasterID, LeftKeringId, RightKerningId):
 			RightKerningId = self.glyphs[RightKerningId].id
 		except:
 			pass
-	self.removeKerningForFontMasterID_LeftKey_RightKey_(FontMasterID, LeftKeringId, RightKerningId)
+	self.removeKerningForFontMasterID_LeftKey_RightKey_direction_(FontMasterID, LeftKeringId, RightKerningId, direction)
 GSFont.removeKerningForPair = removeKerningForPair
 '''
-	.. function:: removeKerningForPair(FontMasterId, LeftKey, RightKey)
+	.. function:: removeKerningForPair(FontMasterId, LeftKey, RightKey, direction=LTR)
 
 		Removes the kerning for the two specified glyphs (LeftKey or RightKey is the glyphname) or a kerning group key (@MMK_X_XX).
 
@@ -3877,6 +3883,9 @@ GSFont.removeKerningForPair = removeKerningForPair
 	:type LeftKey: str
 	:param RightKey: either a glyph name or a class name
 	:type RightKey: str
+	:param direction: optional writing direction (see Constants; 'LTR' (0) or 'RTLTTB'). Default is LTR. (added in 2.6.6)
+	:type direction: int
+
 
 '''
 
@@ -3908,7 +3917,7 @@ GSFont.newTab = python_method(__GSFont__addTab__)
 '''
 
 def __GSFont__updateFeatures__(self):
-	GSFeatureGenerator.alloc().init().makeFeatures_(self)
+	GSFeatureGenerator.alloc().init().makeFeatures_error_(self, None)
 	self.compileFeatures()
 GSFont.updateFeatures = python_method(__GSFont__updateFeatures__)
 
@@ -4101,13 +4110,7 @@ GSFontMaster.__deepcopy__ = GSObject__copy__
 
 		id
 		name
-		weight
-		width
 		axes
-		weightValue
-		widthValue
-		customValue
-		customName
 		ascender
 		capHeight
 		xHeight
@@ -4651,6 +4654,36 @@ GSInstance.customParameters = property(lambda self: CustomParametersProxy(self))
 	:type: list, dict
 '''
 
+GSInstance.userData = property(lambda self: UserDataProxy(self))
+'''
+	.. attribute:: userData
+
+		A dictionary to store user data. Use a unique key and only use objects that can be stored in a property list (string, list, dict, numbers, NSData) otherwise the data will not be recoverable from the saved file.
+		.. code-block:: python
+			# set value
+			instance.userData['rememberToMakeCoffee'] = True
+
+			# delete value
+			del instance.userData['rememberToMakeCoffee']
+	:type: dict
+
+'''
+
+GSInstance.tempData = property(lambda self: TempDataProxy(self))
+
+'''
+	.. attribute:: tempData
+
+	A dictionary to store data temporarily. Use a unique key. This will not be saved to file. If you need the data persistent, use instance.userData
+	:type: dict
+	.. code-block:: python
+		# set value
+		instance.tempData['rememberToMakeCoffee'] = True
+
+		# delete value
+		del instance.tempData['rememberToMakeCoffee']
+'''
+
 GSInstance.instanceInterpolations = property(lambda self: self.pyobjc_instanceMethods.instanceInterpolations(), lambda self, value: self.setInstanceInterpolations_(value))
 '''
 	.. attribute:: instanceInterpolations
@@ -4712,7 +4745,7 @@ GSInstance.interpolatedFont = property(lambda self: Instance_FontObject(self))
 	**Functions**
 
 
-	.. function:: generate([Format, FontPath, AutoHint, RemoveOverlap, UseSubroutines, UseProductionNames, Containers])
+	.. function:: generate([Format, FontPath, AutoHint, RemoveOverlap, UseSubroutines, UseProductionNames, Containers, DecomposeSmartStuff])
 
 	Exports the instance. All parameters are optional.
 
@@ -4723,7 +4756,8 @@ GSInstance.interpolatedFont = property(lambda self: Instance_FontObject(self))
 	:param bool UseSubroutines: If to use subroutines for CFF. Default: True
 	:param bool UseProductionNames: If to use production names. Default: True
 	:param bool Containers: list of container formats. Use any of the following constants: :const:`PLAIN`, :const:`WOFF`, :const:`WOFF2`, :const:`EOT`. Default: PLAIN
-	:return: On success, True, on failure error message.
+	:param bool DecomposeSmartStuff: If smart components should be decomposed. Default: True
+	:return: On success, True; on failure, error message.
 	:rtype: bool/list
 
 
@@ -4849,12 +4883,8 @@ def __Font_Export__(self, Format=OTF, Instances=None, FontPath=None, AutoHint=Tr
 
 GSFont.export = python_method(__Font_Export__)
 
-def __set__lastExportedFilePath__(self, value):
-	if value:
-		self.tempData().setObject_forKey_(value, "lastExportedFilePath")
-	else:
-		self.tempData().removeObjectForKey_("lastExportedFilePath")
-GSInstance.lastExportedFilePath = property(lambda self: self.tempData().objectForKey_("lastExportedFilePath"), lambda self, value: __set__lastExportedFilePath__(self, value))
+GSInstance.lastExportedFilePath = property(lambda self: self.tempDataForKey_("lastExportedFilePath"), 
+										   lambda self, value: self.setTempData_forKey_(value, "lastExportedFilePath"))
 
 '''
 	.. attribute:: lastExportedFilePath
@@ -5079,6 +5109,20 @@ GSClass.active = property(lambda self: not self.disabled(),
 	.. versionadded:: 2.5
 '''
 
+GSClass.tempData = property(lambda self: TempDataProxy(self))
+
+'''
+	.. attribute:: tempData
+
+	A dictionary to store data temporarily. Use a unique key. This will not be saved to file. If you need the data persistent, use class.userData
+	:type: dict
+	.. code-block:: python
+		# set value
+		class.tempData['rememberToMakeCoffee'] = True
+
+		# delete value
+		del class.tempData['rememberToMakeCoffee']
+'''
 
 ##################################################################################
 #
@@ -5291,8 +5335,20 @@ GSFeature.active = property(lambda self: not self.disabled(),
 
 '''
 
+GSFeature.tempData = property(lambda self: TempDataProxy(self))
 
+'''
+	.. attribute:: tempData
 
+	A dictionary to store data temporarily. Use a unique key. This will not be saved to file. If you need the data persistent, use feature.userData
+	:type: dict
+	.. code-block:: python
+		# set value
+		feature.tempData['rememberToMakeCoffee'] = True
+
+		# delete value
+		del feature.tempData['rememberToMakeCoffee']
+'''
 
 
 
@@ -6169,6 +6225,7 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 		TSB
 		BSB
 		width
+		vertWidth
 		leftMetricsKey
 		rightMetricsKey
 		widthMetricsKey
@@ -6866,6 +6923,21 @@ GSLayer.userData = property(lambda self: UserDataProxy(self))
 		del layer.userData['rememberToMakeCoffee']
 '''
 
+GSLayer.tempData = property(lambda self: TempDataProxy(self))
+
+'''
+	.. attribute:: tempData
+
+	A dictionary to store data temporarily. Use a unique key. This will not be saved to file. If you need the data persistent, use layer.userData
+	:type: dict
+	.. code-block:: python
+		# set value
+		layer.tempData['rememberToMakeCoffee'] = True
+
+		# delete value
+		del layer.tempData['rememberToMakeCoffee']
+'''
+
 GSLayer.smartComponentPoleMapping = property(lambda self: SmartComponentPoleMappingProxy(self))
 
 '''
@@ -7083,7 +7155,7 @@ NSConcreteValue.x = property(lambda self: self.pointValue().x)
 NSConcreteValue.y = property(lambda self: self.pointValue().y)
 
 '''
-	.. function:: intersectionsBetweenPoints(Point1, Point2, components = False)
+	.. function:: intersectionsBetweenPoints(Point1, Point2, components=False)
 
 		Return all intersection points between a measurement line and the paths in the layer. This is basically identical to the measurement tool in the UI.
 
@@ -7815,7 +7887,7 @@ GSComponent.bezierPath = property(lambda self: self.pyobjc_instanceMethods.bezie
 	:type: NSBezierPath
 '''
 
-GSComponent.userData = property(lambda self: UserDataProxy(self))
+GSTransformableElement.userData = property(lambda self: UserDataProxy(self))
 
 '''
 	.. attribute:: userData
@@ -7830,6 +7902,21 @@ GSComponent.userData = property(lambda self: UserDataProxy(self))
 
 		# delete value
 		del component.userData['rememberToMakeCoffee']
+'''
+
+GSComponent.tempData = property(lambda self: TempDataProxy(self))
+
+'''
+	.. attribute:: tempData
+
+	A dictionary to store data temporarily. Use a unique key. This will not be saved to file. If you need the data persistent, use component.userData
+	:type: dict
+	.. code-block:: python
+		# set value
+		component.tempData['rememberToMakeCoffee'] = True
+
+		# delete value
+		del component.tempData['rememberToMakeCoffee']
 '''
 
 
@@ -7850,7 +7937,7 @@ def __GSComponent_decompose__(self, doAnchors=True, doHints=True):
 GSComponent.decompose = python_method(__GSComponent_decompose__)
 
 '''
-	.. function:: decompose(doAnchors = True, doHints = True)
+	.. function:: decompose([doAnchors=True, doHints=True])
 
 	:param doAnchors: get anchors from components
 	:param doHints: get hints from components
@@ -8258,12 +8345,12 @@ def DrawPathWithPen(self, pen):
 				Start = i + 1
 				break
 	for i in range(Start, len(self), 1):
-		Node = self.nodeAtIndex_(i)
-		GS_Type = Node.pyobjc_instanceMethods.type()
+		node = self.nodeAtIndex_(i)
+		GS_Type = node.pyobjc_instanceMethods.type()
 		if GS_Type == GSLINE_:
-			pen.lineTo(Node.pyobjc_instanceMethods.position())
+			pen.lineTo(node.pyobjc_instanceMethods.position())
 		elif GS_Type == GSCURVE_:
-			pen.curveTo(self.nodeAtIndex_(i - 2).pyobjc_instanceMethods.position(), self.nodeAtIndex_(i - 1).pyobjc_instanceMethods.position(), Node.pyobjc_instanceMethods.position())
+			pen.curveTo(self.nodeAtIndex_(i - 2).pyobjc_instanceMethods.position(), self.nodeAtIndex_(i - 1).pyobjc_instanceMethods.position(), node.pyobjc_instanceMethods.position())
 	if self.closed:
 		pen.closePath()
 	else:
@@ -8277,11 +8364,11 @@ def __GSPath__drawPoints__(self, pen):
 	'''draw the object with a fontTools pen'''
 	pen.beginPath()
 	for i in range(self.countOfNodes()):
-		Node = self.nodeAtIndex_(i)
-		node_type = Node.type
-		if Node.type == GSOFFCURVE:
+		node = self.nodeAtIndex_(i)
+		node_type = node.type
+		if node.type == GSOFFCURVE:
 			node_type = None
-		pen.addPoint(Node.position, segmentType=node_type, smooth=Node.smooth, name=Node.name)
+		pen.addPoint(node.position, segmentType=node_type, smooth=node.smooth, name=node.name)
 	pen.endPath()
 
 GSPath.drawPoints = python_method(__GSPath__drawPoints__)
@@ -8528,11 +8615,11 @@ GSNode.index = property(lambda self: __GSNode__index__(self))
 
 def __GSNode__nextNode__(self):
 	try:
-		index = self.parent.indexOfNode_(self)
-		if index == (len(self.parent.nodes) - 1):
+		idx = self.parent.indexOfNode_(self)
+		if idx == (len(self.parent.nodes) - 1):
 			return self.parent.nodes[0]
-		elif index < len(self.parent.nodes):
-			return self.parent.nodes[index + 1]
+		elif idx < len(self.parent.nodes):
+			return self.parent.nodes[idx + 1]
 	except:
 		pass
 	return None
@@ -8562,11 +8649,11 @@ GSNode.nextNode = property(lambda self: __GSNode__nextNode__(self))
 
 def __GSNode__prevNode__(self):
 	try:
-		index = self.parent.indexOfNode_(self)
-		if index == 0:
+		idx = self.parent.indexOfNode_(self)
+		if idx == 0:
 			return self.parent.nodes[-1]
-		elif index < len(self.parent.nodes):
-			return self.parent.nodes[index - 1]
+		elif idx < len(self.parent.nodes):
+			return self.parent.nodes[idx - 1]
 	except:
 		pass
 	return None
@@ -8710,6 +8797,7 @@ For details on how to access them, please see :attr:`GSLayer.guides`
 		filter
 		selected
 		locked
+		userData
 '''
 
 
@@ -8785,6 +8873,22 @@ GSGuide.filter = property(lambda self: bool(self.pyobjc_instanceMethods.filter()
 		A filter to only show the guide in certain glyphs. Only relevant in global guides
 
 	:type: NSPredicate
+'''
+
+GSGuide.userData = property(lambda self: UserDataProxy(self))
+
+'''
+	.. attribute:: userData
+
+	A dictionary to store user data. Use a unique key and only use objects that can be stored in a property list (string, list, dict, numbers, NSData) otherwise the data will not be recoverable from the saved file.
+	:type: dict
+	.. code-block:: python
+		# set value
+		guide.userData['rememberToMakeCoffee'] = True
+
+		# delete value
+		del guide.userData['rememberToMakeCoffee']
+
 '''
 
 ##################################################################################
@@ -8976,13 +9080,13 @@ def Hint__repr__(self):
 	else:
 		direction = "vert"
 	if self.type == BOTTOMGHOST or self.type == TOPGHOST:
-		return "<GSHint %s origin=(%s)>" % (hintConstants[self.type], self.position)
+		return "<GSHint %s origin=(%s)>" % (self.typeName(), self.position)
 	elif self.type == STEM:
 		return "<GSHint %s Stem origin=(%s) target=(%s)>" % (direction, self.position, self.width)
 	elif self.isCorner:
-		return "<GSHint %s %s>" % (hintConstants[self.type], self.name)
+		return "<GSHint %s %s>" % (self.typeName(), self.name)
 	else:
-		return "<GSHint %s %s>" % (hintConstants[self.type], direction)
+		return "<GSHint %s %s>" % (self.typeName(), direction)
 GSHint.__repr__ = python_method(Hint__repr__)
 
 GSHint.mutableCopyWithZone_ = GSObject__copy__
@@ -9161,6 +9265,24 @@ GSHint.isCorner = property(lambda self: self.pyobjc_instanceMethods.isCorner())
 
 		if it is a Corner (or Cap, Brush...) component
 '''
+
+GSHint.tempData = property(lambda self: TempDataProxy(self))
+
+'''
+	.. attribute:: tempData
+
+	A dictionary to store data temporarily. Use a unique key. This will not be saved to file. If you need the data persistent, use hint.userData
+	:type: dict
+	.. code-block:: python
+		# set value
+		hint.tempData['rememberToMakeCoffee'] = True
+
+		# delete value
+		del hint.tempData['rememberToMakeCoffee']
+'''
+
+
+
 ##################################################################################
 #
 #
@@ -9532,9 +9654,9 @@ class TabLayersProxy (Proxy):
 
 		self.deactivateFeatures()
 
-		if not (type(layers) is list or type(layers) is tuple or "objectAtIndex_" in layers.__class__.__dict__ or type(layers) is type(self)):
+		if not (isinstance(layers, (list, tuple, type(self))) or "objectAtIndex_" in layers.__class__.__dict__):
 			raise ValueError
-		if type(layers) is type(self):
+		if isinstance(layers, type(self)):
 			layers = layers.values()
 
 		string = NSMutableAttributedString.alloc().init()
@@ -9756,11 +9878,11 @@ class TabSelectedFeaturesProxy (Proxy):
 		self._owner._updateFeaturePopup()
 
 	def setter(self, values):
-		if not (type(values) is list or type(values) is tuple or type(values) is type(self)):
+		if not isinstance(values, (list, tuple, type(self))):
 			raise TypeError
 		self._owner.pyobjc_instanceMethods.selectedFeatures().removeAllObjects()
 
-		if type(values) is type(self):
+		if isinstance(values, type(self)):
 			otherFeaturesProxy = values
 			values = list(otherFeaturesProxy.values())
 
@@ -9821,24 +9943,7 @@ GSEditViewController.features = property(lambda self: TabSelectedFeaturesProxy(s
 '''
 
 # TODO documentation
-class TempDataProxy(Proxy):
-	def __getitem__(self, Key):
-		return self._owner.tempData().get(Key, None)
-	def __setitem__(self, Key, Value):
-		if self._owner.tempData() is None:
-			self._owner.setTempData_(NSMutableDictionary.alloc().init())
-		self._owner.tempData()[Key] = Value
-	def __delitem__(self, Key):
-		del(self._owner.tempData()[Key])
-	def values(self):
-		if self._owner.tempData() is not None:
-			return self._owner.tempData().allValues()
-		return None
-	def __repr__(self):
-		return str(self._owner.tempData())
-
-GSEditViewController.userData = property(lambda self: TempDataProxy(self))
-
+GSEditViewController.tempData = property(lambda self: TempDataProxy(self))
 
 def Get_ShowInPreview(self):
 	value = self.selectedInstance()
@@ -10092,7 +10197,7 @@ GSGlyphInfo.unicode = property(lambda self: self.pyobjc_instanceMethods.unicode(
 	:type: unicode
 '''
 
-GSGlyphInfo.unicodes = property(lambda self: self.pyobjc_instanceMethods.unicodes().array())
+GSGlyphInfo.unicodes = property(lambda self: self.unicodesArray())
 '''
 	.. attribute:: unicode2
 	a second unicode value it present
@@ -10142,6 +10247,54 @@ GSGlyphInfo.altNames = property(lambda self: self.pyobjc_instanceMethods.altName
 '''
 
 
+'''
+
+:mod:`PreviewTextWindow`
+===============================================================================
+
+The Text Preview Window
+
+.. class:: PreviewTextWindow()
+
+	Properties
+
+	.. autosummary::
+
+		text
+		font
+		instanceIndex
+		fontSize
+
+	**Properties**
+
+'''
+
+PreviewTextWindow = GSPreviewTextWindowClass.defaultInstance()
+
+GSPreviewTextWindowClass.font = property(lambda self: self.activeFont())
+
+GSPreviewTextWindowClass.text = property(lambda self: self.textView().string(),
+										 lambda self, value: self.textView().setString_(value))
+'''
+	.. attribute:: text
+	The text
+	:type: unicode
+'''
+
+GSPreviewTextWindowClass.instanceIndex = property(lambda self: self.instanceSelection().indexOfSelectedItem(),
+												  lambda self, value: self.instanceSelection().selectItemAtIndex_(value))
+'''
+	.. attribute:: instanceIndex
+	The index of the selected instance
+	:type: int
+'''
+GSPreviewTextWindowClass.fontSize = property(lambda self: Glyphs.intDefaults["GSPreviewText_fontSize"],
+											 lambda self, value: NSUserDefaults.standardUserDefaults().setObject_forKey_(value, objcObject("GSPreviewText_fontSize")))
+'''
+	.. attribute:: fontSize
+	The font size
+	:type: int
+'''
 
 
 def ____________________(): pass
@@ -10371,15 +10524,15 @@ def divideCurve(P0, P1, P2, P3, t):
 '''
 .. function:: divideCurve(P0, P1, P2, P3, t)
 
-Divides the curve using the De Casteljau's algorithm.
+	Divides the curve using the De Casteljau's algorithm.
 
-:param P0: The Start point of the Curve (NSPoint)
-:param P1: The first off curve point
-:param P2: The second off curve point
-:param P3: The End point of the Curve
-:param t: The time parameter
-:return: A list of points that represent two curves. (Q0, Q1, Q2, Q3, R1, R2, R3). Note that the "middle" point is only returned once.
-:rtype: list
+	:param P0: The Start point of the Curve (NSPoint)
+	:param P1: The first off curve point
+	:param P2: The second off curve point
+	:param P3: The End point of the Curve
+	:param t: The time parameter
+	:return: A list of points that represent two curves. (Q0, Q1, Q2, Q3, R1, R2, R3). Note that the "middle" point is only returned once.
+	:rtype: list
 '''
 
 
@@ -10388,12 +10541,12 @@ def distance(P1, P2):
 '''
 .. function:: distance(P0, P1)
 
-calculates the distance between two NSPoints
+	calculates the distance between two NSPoints
 
-:param P0: a NSPoint
-:param P1: another NSPoint
-:return: The distance
-:rtype: float
+	:param P0: a NSPoint
+	:param P1: another NSPoint
+	:return: The distance
+	:rtype: float
 '''
 
 
@@ -10402,12 +10555,12 @@ def addPoints(P1, P2):
 '''
 .. function:: addPoints(P1, P2)
 
-Add the points.
+	Add the points.
 
-:param P0: a NSPoint
-:param P1: another NSPoint
-:return: The sum of both points
-:rtype: NSPoint
+	:param P0: a NSPoint
+	:param P1: another NSPoint
+	:return: The sum of both points
+	:rtype: NSPoint
 '''
 
 
@@ -10416,12 +10569,12 @@ def subtractPoints(P1, P2):
 '''
 .. function:: subtractPoints(P1, P2)
 
-Subtracts the points.
+	Subtracts the points.
 
-:param P0: a NSPoint
-:param P1: another NSPoint
-:return: The subtracted point
-:rtype: NSPoint
+	:param P0: a NSPoint
+	:param P1: another NSPoint
+	:return: The subtracted point
+	:rtype: NSPoint
 '''
 
 def scalePoint(P, scalar):
@@ -10429,12 +10582,12 @@ def scalePoint(P, scalar):
 '''
 .. function:: scalePoint(P, scalar)
 
-Scaled a point.
+	Scaled a point.
 
-:param P: a NSPoint
-:param scalar: The Multiplier
-:return: The multiplied point
-:rtype: NSPoint
+	:param P: a NSPoint
+	:param scalar: The Multiplier
+	:return: The multiplied point
+	:rtype: NSPoint
 '''
 
 def GetSaveFile(message=None, ProposedFileName=None, filetypes=None):
@@ -10460,13 +10613,13 @@ def GetSaveFile(message=None, ProposedFileName=None, filetypes=None):
 '''
 .. function:: GetSaveFile(message=None, ProposedFileName=None, filetypes=None)
 
-Opens a file chooser dialog.
+	Opens a file chooser dialog.
 
-:param message:
-:param filetypes:
-:param ProposedFileName:
-:return: The selected file or None
-:rtype: unicode
+	:param message:
+	:param filetypes:
+	:param ProposedFileName:
+	:return: The selected file or None
+	:rtype: unicode
 '''
 
 def __allItems__(self):
@@ -10550,16 +10703,16 @@ def GetOpenFile(message=None, allowsMultipleSelection=False, filetypes=None, pat
 			return Panel.filename()
 	return None
 '''
-.. function:: GetOpenFile(message=None, allowsMultipleSelection=False, filetypes=None)
+.. function:: GetOpenFile(message=None, allowsMultipleSelection=False, filetypes=None, path=None)
 
-Opens a file chooser dialog.
+	Opens a file chooser dialog.
 
-:param message: A message string.
-:param allowsMultipleSelection: Boolean, True if user can select more than one file
-:param filetypes: list of strings indicating the filetypes, e.g., ["gif", "pdf"]
-:param path: The initial directory path
-:return: The selected file or a list of file names or None
-:rtype: unicode or list
+	:param message: A message string.
+	:param allowsMultipleSelection: Boolean, True if user can select more than one file
+	:param filetypes: list of strings indicating the filetypes, e.g., ["gif", "pdf"]
+	:param path: The initial directory path
+	:return: The selected file or a list of file names or None
+	:rtype: unicode or list
 '''
 
 def GetFolder(message=None, allowsMultipleSelection=False, path=None):
@@ -10578,28 +10731,28 @@ def GetFolder(message=None, allowsMultipleSelection=False, path=None):
 	return None
 
 '''
-.. function:: GetFolder(message=None, allowsMultipleSelection = False)
+.. function:: GetFolder(message=None, allowsMultipleSelection=False, path=None)
 
-Opens a folder chooser dialog.
+	Opens a folder chooser dialog.
 
-:param message:
-:param allowsMultipleSelection:
-:param path:
-:return: The selected folder or None
-:rtype: unicode
+	:param message:
+	:param allowsMultipleSelection:
+	:param path:
+	:return: The selected folder or None
+	:rtype: unicode
 '''
 
 def Message(message, title="Alert", OKButton=None):
 	Glyphs.showAlert_message_OKButton_(title, message, OKButton)
 
 '''
-.. function:: Message(title, message, OKButton=None)
+.. function:: Message(message, title="Alert", OKButton=None)
 
-Shows an alert panel.
+	Shows an alert panel.
 
-:param title:
-:param message:
-:param OKButton:
+	:param message:
+	:param title:
+	:param OKButton:
 '''
 
 def LogToConsole(message, title=None):
@@ -10618,9 +10771,9 @@ def LogToConsole(message, title=None):
 '''
 .. function:: LogToConsole(message)
 
-Write a message to the Mac's Console.app for debugging.
+	Write a message to the Mac's Console.app for debugging.
 
-:param message:
+	:param str message:
 '''
 
 
@@ -10634,9 +10787,9 @@ def LogError(message):
 '''
 .. function:: LogError(message)
 
-Log an error message and write it to the Macro window’s output (in red).
+	Log an error message and write it to the Macro window’s output (in red).
 
-:param message:
+	:param message:
 '''
 
 
@@ -10718,17 +10871,17 @@ Hint types
 
 	Bottom ghost for PS hints
 
-.. data:: TTANCHOR
+.. data:: TTSNAP
 
-	Anchor for TT hints
+	Snap for TT hints
 
 .. data:: TTSTEM
 
 	Stem for TT hints
 
-.. data:: TTALIGN
+.. data:: TTSHIFT
 
-	Align for TT hints
+	Shift for TT hints
 
 .. data:: TTINTERPOLATE
 
