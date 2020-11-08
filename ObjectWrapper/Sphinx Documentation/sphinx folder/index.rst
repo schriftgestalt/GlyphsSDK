@@ -1025,6 +1025,23 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 
 
 
+	.. attribute:: tempData
+
+
+	A dictionary to store data temporarily. Use a unique key. This will not be saved to file. If you need the data persistent, use layer.userData
+
+	:type: dict
+
+	.. code-block:: python
+
+		# set value
+		layer.tempData['rememberToMakeCoffee'] = True
+
+		# delete value
+		del layer.tempData['rememberToMakeCoffee']
+
+
+
 	.. attribute:: disablesNiceNames
 
 		Corresponds to the "Don't use nice names" setting from the Font Info dialog.
@@ -1261,7 +1278,7 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 	**Functions**
 
 
-	.. function:: save([path=None, formatVersion=3])
+	.. function:: save([path=None, formatVersion=3, makeCopy])
 		
 		Saves the font.
 		
@@ -1269,10 +1286,13 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 
 	:param path: Optional file path
 
-	:type filePath: str
+	:type path: str
 	:param formatVersion: the format of the file
 
-	:type filePath: int
+	:type formatVersion: int
+	:param makeCopy: saves a new file without changeing the documents file paths
+
+	:type makeCopy: bool
 
 
 
@@ -1330,9 +1350,9 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 	:param rightKey: either a glyph name or a class name
 
 	:type rightKey: str
-	:param direction: optional writing direction (see Constants). Default is LTR.
+	:param direction: optional writing direction (see Constants; 'LTR' (0) or 'RTLTTB'). Default is LTR.
 
-	:type direction: str
+	:type direction: int
 	:return: The kerning value
 	:rtype: float
 
@@ -1371,7 +1391,7 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 
 
 
-	.. function:: removeKerningForPair(FontMasterId, LeftKey, RightKey)
+	.. function:: removeKerningForPair(FontMasterId, LeftKey, RightKey, direction=LTR)
 
 		Removes the kerning for the two specified glyphs (LeftKey or RightKey is the glyphname) or a kerning group key (@MMK_X_XX).
 
@@ -1392,6 +1412,10 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 	:param RightKey: either a glyph name or a class name
 
 	:type RightKey: str
+	:param direction: optional writing direction (see Constants; 'LTR' (0) or 'RTLTTB'). Default is LTR. (added in 2.6.6)
+
+	:type direction: int
+
 
 
 
@@ -1511,13 +1535,7 @@ Implementation of the master object. This corresponds with the "Masters" pane in
 
 		id
 		name
-		weight
-		width
 		axes
-		weightValue
-		widthValue
-		customValue
-		customName
 		ascender
 		capHeight
 		xHeight
@@ -1760,14 +1778,14 @@ The zone for the baseline should have position 0 (zero) and a negative width.
 	.. attribute:: position
 
 
-	:type: int
+	:type: float
 
 
 
 	.. attribute:: size
 
 
-	:type: int
+	:type: float
 
 
 
@@ -2020,6 +2038,41 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 
 
 
+	.. attribute:: userData
+
+
+		A dictionary to store user data. Use a unique key and only use objects that can be stored in a property list (string, list, dict, numbers, NSData) otherwise the data will not be recoverable from the saved file.
+
+		.. code-block:: python
+
+			# set value
+			instance.userData['rememberToMakeCoffee'] = True
+
+			# delete value
+			del instance.userData['rememberToMakeCoffee']
+
+	:type: dict
+
+
+
+
+	.. attribute:: tempData
+
+
+	A dictionary to store data temporarily. Use a unique key. This will not be saved to file. If you need the data persistent, use instance.userData
+
+	:type: dict
+
+	.. code-block:: python
+
+		# set value
+		instance.tempData['rememberToMakeCoffee'] = True
+
+		# delete value
+		del instance.tempData['rememberToMakeCoffee']
+
+
+
 	.. attribute:: instanceInterpolations
 
 		A dict that contains the interpolation coefficients for each master.
@@ -2078,7 +2131,7 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 	**Functions**
 
 
-	.. function:: generate([Format, FontPath, AutoHint, RemoveOverlap, UseSubroutines, UseProductionNames, Containers])
+	.. function:: generate([Format, FontPath, AutoHint, RemoveOverlap, UseSubroutines, UseProductionNames, Containers, DecomposeSmartStuff])
 
 	Exports the instance. All parameters are optional.
 
@@ -2089,7 +2142,8 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 	:param bool UseSubroutines: If to use subroutines for CFF. Default: True
 	:param bool UseProductionNames: If to use production names. Default: True
 	:param bool Containers: list of container formats. Use any of the following constants: :const:`PLAIN`, :const:`WOFF`, :const:`WOFF2`, :const:`EOT`. Default: PLAIN
-	:return: On success, True, on failure error message.
+	:param bool DecomposeSmartStuff: If smart components should be decomposed. Default: True
+	:return: On success, True; on failure, error message.
 	:rtype: bool/list
 
 
@@ -2166,7 +2220,7 @@ It is best to access the custom parameters through its dictionary interface like
 .. class:: GSCustomParameter([name, value])
 
 	:param name: The name
-	:param size: The value
+	:param value: The value
 
 
 	Properties
@@ -2255,6 +2309,23 @@ For details on how to access them, please look at :class:`GSFont.classes`
 	:type: bool
 
 	.. versionadded:: 2.5
+
+
+
+	.. attribute:: tempData
+
+
+	A dictionary to store data temporarily. Use a unique key. This will not be saved to file. If you need the data persistent, use class.userData
+
+	:type: dict
+
+	.. code-block:: python
+
+		# set value
+		class.tempData['rememberToMakeCoffee'] = True
+
+		# delete value
+		del class.tempData['rememberToMakeCoffee']
 
 
 :mod:`GSFeaturePrefix`
@@ -2410,6 +2481,23 @@ For details on how to access them, please look at :class:`GSFont.features`
 			if instance.active:
 				instance.generate()
 
+
+
+
+	.. attribute:: tempData
+
+
+	A dictionary to store data temporarily. Use a unique key. This will not be saved to file. If you need the data persistent, use feature.userData
+
+	:type: dict
+
+	.. code-block:: python
+
+		# set value
+		feature.tempData['rememberToMakeCoffee'] = True
+
+		# delete value
+		del feature.tempData['rememberToMakeCoffee']
 
 
 
@@ -3053,6 +3141,7 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 		TSB
 		BSB
 		width
+		vertWidth
 		leftMetricsKey
 		rightMetricsKey
 		widthMetricsKey
@@ -3718,6 +3807,23 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 
 
 
+	.. attribute:: tempData
+
+
+	A dictionary to store data temporarily. Use a unique key. This will not be saved to file. If you need the data persistent, use layer.userData
+
+	:type: dict
+
+	.. code-block:: python
+
+		# set value
+		layer.tempData['rememberToMakeCoffee'] = True
+
+		# delete value
+		del layer.tempData['rememberToMakeCoffee']
+
+
+
 	.. attribute:: smartComponentPoleMapping
 
 
@@ -3893,7 +3999,7 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 			layer.cutBetweenPoints(NSPoint(0, 100), NSPoint(layer.width, 100))
 
 
-	.. function:: intersectionsBetweenPoints(Point1, Point2, components = False)
+	.. function:: intersectionsBetweenPoints(Point1, Point2, components=False)
 
 		Return all intersection points between a measurement line and the paths in the layer. This is basically identical to the measurement tool in the UI.
 
@@ -4021,6 +4127,25 @@ For details on how to access them, please see :attr:`GSLayer.anchors`
 
 
 	:type: bool
+
+
+
+	.. attribute:: userData
+
+
+	.. versionadded:: 3
+
+	A dictionary to store user data. Use a unique key and only use objects that can be stored in a property list (string, list, dict, numbers, NSData) otherwise the data will not be recoverable from the saved file.
+
+	:type: dict
+
+	.. code-block:: python
+
+		# set value
+		anchor.userData['rememberToMakeCoffee'] = True
+
+		# delete value
+		del component.userData['rememberToMakeCoffee']
 
 
 
@@ -4310,13 +4435,30 @@ For details on how to access them, please see :attr:`GSLayer.components`
 
 
 
+	.. attribute:: tempData
+
+
+	A dictionary to store data temporarily. Use a unique key. This will not be saved to file. If you need the data persistent, use component.userData
+
+	:type: dict
+
+	.. code-block:: python
+
+		# set value
+		component.tempData['rememberToMakeCoffee'] = True
+
+		# delete value
+		del component.tempData['rememberToMakeCoffee']
+
+
+
 
 	**Functions**
 
 
 
 
-	.. function:: decompose(doAnchors = True, doHints = True)
+	.. function:: decompose([doAnchors=True, doHints=True])
 
 	:param doAnchors: get anchors from components
 	:param doHints: get hints from components
@@ -4861,6 +5003,7 @@ For details on how to access them, please see :attr:`GSLayer.guides`
 		filter
 		selected
 		locked
+		userData
 
 
 
@@ -4923,6 +5066,24 @@ For details on how to access them, please see :attr:`GSLayer.guides`
 
 
 	:type: NSPredicate
+
+
+
+	.. attribute:: userData
+
+
+	A dictionary to store user data. Use a unique key and only use objects that can be stored in a property list (string, list, dict, numbers, NSData) otherwise the data will not be recoverable from the saved file.
+
+	:type: dict
+
+	.. code-block:: python
+
+		# set value
+		guide.userData['rememberToMakeCoffee'] = True
+
+		# delete value
+		del guide.userData['rememberToMakeCoffee']
+
 
 
 
@@ -5158,6 +5319,23 @@ For details on how to access them, please see :class:`GSLayer.hints`
 	.. versionadded:: 3
 
 		if it is a Corner (or Cap, Brush...) component
+
+
+
+	.. attribute:: tempData
+
+
+	A dictionary to store data temporarily. Use a unique key. This will not be saved to file. If you need the data persistent, use hint.userData
+
+	:type: dict
+
+	.. code-block:: python
+
+		# set value
+		hint.tempData['rememberToMakeCoffee'] = True
+
+		# delete value
+		del hint.tempData['rememberToMakeCoffee']
 
 
 
@@ -5866,6 +6044,51 @@ This contains valuable information from the glyph database. See :class:`GSGlyphs
 
 
 
+:mod:`PreviewTextWindow`
+===============================================================================
+
+The Text Preview Window
+
+.. class:: PreviewTextWindow()
+
+	Properties
+
+	.. autosummary::
+
+		text
+		font
+		instanceIndex
+		fontSize
+
+	**Properties**
+
+
+
+
+	.. attribute:: text
+
+	The text
+
+	:type: unicode
+
+
+
+	.. attribute:: instanceIndex
+
+	The index of the selected instance
+
+	:type: int
+
+
+
+	.. attribute:: fontSize
+
+	The font size
+
+	:type: int
+
+
+
 :mod:`NSAffineTransform`
 ===============================================================================
 
@@ -5958,112 +6181,112 @@ Methods
 
 .. function:: divideCurve(P0, P1, P2, P3, t)
 
-Divides the curve using the De Casteljau's algorithm.
+	Divides the curve using the De Casteljau's algorithm.
 
-:param P0: The Start point of the Curve (NSPoint)
-:param P1: The first off curve point
-:param P2: The second off curve point
-:param P3: The End point of the Curve
-:param t: The time parameter
-:return: A list of points that represent two curves. (Q0, Q1, Q2, Q3, R1, R2, R3). Note that the "middle" point is only returned once.
-:rtype: list
+	:param P0: The Start point of the Curve (NSPoint)
+	:param P1: The first off curve point
+	:param P2: The second off curve point
+	:param P3: The End point of the Curve
+	:param t: The time parameter
+	:return: A list of points that represent two curves. (Q0, Q1, Q2, Q3, R1, R2, R3). Note that the "middle" point is only returned once.
+	:rtype: list
 
 
 .. function:: distance(P0, P1)
 
-calculates the distance between two NSPoints
+	calculates the distance between two NSPoints
 
-:param P0: a NSPoint
-:param P1: another NSPoint
-:return: The distance
-:rtype: float
+	:param P0: a NSPoint
+	:param P1: another NSPoint
+	:return: The distance
+	:rtype: float
 
 
 .. function:: addPoints(P1, P2)
 
-Add the points.
+	Add the points.
 
-:param P0: a NSPoint
-:param P1: another NSPoint
-:return: The sum of both points
-:rtype: NSPoint
+	:param P0: a NSPoint
+	:param P1: another NSPoint
+	:return: The sum of both points
+	:rtype: NSPoint
 
 
 .. function:: subtractPoints(P1, P2)
 
-Subtracts the points.
+	Subtracts the points.
 
-:param P0: a NSPoint
-:param P1: another NSPoint
-:return: The subtracted point
-:rtype: NSPoint
+	:param P0: a NSPoint
+	:param P1: another NSPoint
+	:return: The subtracted point
+	:rtype: NSPoint
 
 
 .. function:: scalePoint(P, scalar)
 
-Scaled a point.
+	Scaled a point.
 
-:param P: a NSPoint
-:param scalar: The Multiplier
-:return: The multiplied point
-:rtype: NSPoint
+	:param P: a NSPoint
+	:param scalar: The Multiplier
+	:return: The multiplied point
+	:rtype: NSPoint
 
 
 .. function:: GetSaveFile(message=None, ProposedFileName=None, filetypes=None)
 
-Opens a file chooser dialog.
+	Opens a file chooser dialog.
 
-:param message:
-:param filetypes:
-:param ProposedFileName:
-:return: The selected file or None
-:rtype: unicode
-
-
-.. function:: GetOpenFile(message=None, allowsMultipleSelection=False, filetypes=None)
-
-Opens a file chooser dialog.
-
-:param message: A message string.
-:param allowsMultipleSelection: Boolean, True if user can select more than one file
-:param filetypes: list of strings indicating the filetypes, e.g., ["gif", "pdf"]
-:param path: The initial directory path
-:return: The selected file or a list of file names or None
-:rtype: unicode or list
+	:param message:
+	:param filetypes:
+	:param ProposedFileName:
+	:return: The selected file or None
+	:rtype: unicode
 
 
-.. function:: GetFolder(message=None, allowsMultipleSelection = False)
+.. function:: GetOpenFile(message=None, allowsMultipleSelection=False, filetypes=None, path=None)
 
-Opens a folder chooser dialog.
+	Opens a file chooser dialog.
 
-:param message:
-:param allowsMultipleSelection:
-:param path:
-:return: The selected folder or None
-:rtype: unicode
+	:param message: A message string.
+	:param allowsMultipleSelection: Boolean, True if user can select more than one file
+	:param filetypes: list of strings indicating the filetypes, e.g., ["gif", "pdf"]
+	:param path: The initial directory path
+	:return: The selected file or a list of file names or None
+	:rtype: unicode or list
 
 
-.. function:: Message(title, message, OKButton=None)
+.. function:: GetFolder(message=None, allowsMultipleSelection=False, path=None)
 
-Shows an alert panel.
+	Opens a folder chooser dialog.
 
-:param title:
-:param message:
-:param OKButton:
+	:param message:
+	:param allowsMultipleSelection:
+	:param path:
+	:return: The selected folder or None
+	:rtype: unicode
+
+
+.. function:: Message(message, title="Alert", OKButton=None)
+
+	Shows an alert panel.
+
+	:param message:
+	:param title:
+	:param OKButton:
 
 
 .. function:: LogToConsole(message)
 
-Write a message to the Mac's Console.app for debugging.
+	Write a message to the Mac's Console.app for debugging.
 
-:param message:
+	:param str message:
 
 
 .. function:: LogError(message)
 
-Log an error message and write it to the Macro window’s output (in red).
+	Log an error message and write it to the Macro window’s output (in red).
 
-:param message:
+	:param message:
 
 
 Constants
@@ -6139,17 +6362,17 @@ Hint types
 
 	Bottom ghost for PS hints
 
-.. data:: TTANCHOR
+.. data:: TTSNAP
 
-	Anchor for TT hints
+	Snap for TT hints
 
 .. data:: TTSTEM
 
 	Stem for TT hints
 
-.. data:: TTALIGN
+.. data:: TTSHIFT
 
-	Align for TT hints
+	Shift for TT hints
 
 .. data:: TTINTERPOLATE
 

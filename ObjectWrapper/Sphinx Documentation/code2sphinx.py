@@ -12,7 +12,6 @@
 
 import re, os
 
-#from ynlib.files import ReadFromFile, WriteToFile
 def ReadFromFile(path):
 	"""\
 	Return content of file
@@ -71,7 +70,7 @@ doc = re.sub('((.*?)code-block(.*))', '\n\g<0>\n', doc)
 WriteToFile(os.path.join(path, 'sphinx folder', 'index.rst'), sphinxoriginal + doc)
 
 # bake HTML
-Execute('/usr/local/bin/sphinx-build -b html "%s" "%s"' % (os.path.join(path, 'sphinx folder'), os.path.join(path, '_build', 'html')))
+Execute('/Library/Frameworks/Python.framework/Versions/3.9/bin/sphinx-build -b html "%s" "%s"' % (os.path.join(path, 'sphinx folder'), os.path.join(path, '_build', 'html')))
 
 html = ReadFromFile(os.path.join(path, '_build', 'html', 'index.html'))
 
