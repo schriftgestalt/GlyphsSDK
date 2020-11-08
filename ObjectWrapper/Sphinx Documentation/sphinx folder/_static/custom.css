@@ -189,6 +189,7 @@ pre {
 	color: #fff;
 	background: rgb(235,235,235);
 	background: linear-gradient(0deg, rgba(235,235,235,1) 0%, rgba(255,255,255,1) 100%);
+	height:50px;
 }
 
 .page-head a {
@@ -230,6 +231,7 @@ pre {
 .page-logo {
 	position: relative;
 	display: inline-block;
+	float:left;
 }
 
 h1.stage__title {
@@ -238,7 +240,7 @@ h1.stage__title {
 	color: #1E9192;
 	font-family: "Graublau Slab";
 	font-weight:100;
-	font-size:50px;
+	font-size:30px;
 	padding:0px;
 	margin:0px;
 	vertical-align:text-bottom;
