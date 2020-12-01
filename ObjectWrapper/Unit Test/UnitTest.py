@@ -765,7 +765,7 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertBool(instance.manualInterpolation)
 		
 		# GSInstance.interpolatedFont
-		self.assertIsInstance(instance.interpolatedFont, type(Glyphs.font))
+		self.assertIsInstance(instance.interpolatedFont, GSFont)
 		
 		# GSInstance.userData
 		self.assertIsNotNone(instance.userData)
