@@ -1,7 +1,7 @@
 {
-.appVersion = "1043";
+.appVersion = "1350";
 DisplayStrings = (
-A
+aA
 );
 classes = (
 {
@@ -64,16 +64,19 @@ customParameters = (
 name = TTFStems;
 value = (
 {
-Name = Thin;
-Width = 16;
+horizontal = 1;
+name = Thin;
+width = 16;
 },
 {
-Name = Lowercase;
-Width = 16;
+horizontal = 1;
+name = Lowercase;
+width = 16;
 },
 {
-Name = Uppercase;
-Width = 18;
+horizontal = 1;
+name = Uppercase;
+width = 18;
 }
 );
 }
@@ -130,16 +133,19 @@ customParameters = (
 name = TTFStems;
 value = (
 {
-Name = Thin;
-Width = 80;
+horizontal = 1;
+name = Thin;
+width = 80;
 },
 {
-Name = Lowercase;
-Width = 88;
+horizontal = 1;
+name = Lowercase;
+width = 88;
 },
 {
-Name = Uppercase;
-Width = 91;
+horizontal = 1;
+name = Uppercase;
+width = 91;
 }
 );
 }
@@ -202,16 +208,19 @@ customParameters = (
 name = TTFStems;
 value = (
 {
-Name = Thin;
-Width = 108;
+horizontal = 1;
+name = Thin;
+width = 108;
 },
 {
-Name = Lowercase;
-Width = 210;
+horizontal = 1;
+name = Lowercase;
+width = 210;
 },
 {
-Name = Uppercase;
-Width = 215;
+horizontal = 1;
+name = Uppercase;
+width = 215;
 }
 );
 }
@@ -398,7 +407,7 @@ paths = (
 {
 closed = 1;
 nodes = (
-"321 700 LINE {\nname = \"Hello World\";\n}",
+"321 700 LINE {name = \"Hello World\";}",
 "275 700 LINE",
 "45 0 LINE",
 "65 0 LINE",
@@ -473,7 +482,7 @@ unicode = 00C4;
 {
 color = 0;
 glyphname = a;
-lastChange = "2017-07-17 13:49:10 +0000";
+lastChange = "2020-12-01 21:07:37 +0000";
 layers = (
 {
 anchors = (
@@ -787,12 +796,18 @@ nodes = (
 }
 );
 };
+guideLines = (
+{
+angle = 11.2478;
+position = "{172, 310}";
+}
+);
 layerId = "C4872ECA-A3A9-40AB-960A-1DB2202F16DE";
 paths = (
 {
 closed = 1;
 nodes = (
-"352 147 LINE SMOOTH {\nname = Hello;\n}",
+"352 147 LINE SMOOTH {name = Hello;}",
 "352 68 OFFCURVE",
 "314 7 OFFCURVE",
 "212 7 CURVE SMOOTH",
