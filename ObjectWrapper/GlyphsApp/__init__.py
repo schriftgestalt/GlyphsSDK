@@ -9031,6 +9031,7 @@ For details on how to access them, please see :class:`GSLayer.hints`
 	.. autosummary::
 
 		parent
+		scale
 		originNode
 		targetNode
 		otherNode1
@@ -9105,6 +9106,15 @@ GSHint.parent = property(lambda self: self.pyobjc_instanceMethods.parent())
 
 GSHint.scale = property(lambda self: self.pyobjc_instanceMethods.scale(),
 						lambda self, value: self.setScale_(value))
+
+'''
+	.. attribute:: scale
+
+		Scale factor of hint.
+
+	:type: NSPoint
+
+'''
 
 GSHint.originNode = property(lambda self: self.pyobjc_instanceMethods.originNode(),
 							lambda self, value: self.setOriginNode_(value))
