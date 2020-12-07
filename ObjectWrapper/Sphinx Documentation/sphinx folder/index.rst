@@ -5169,6 +5169,7 @@ For details on how to access them, please see :class:`GSLayer.hints`
 	.. autosummary::
 
 		parent
+		scale
 		originNode
 		targetNode
 		otherNode1
@@ -5192,6 +5193,17 @@ For details on how to access them, please see :class:`GSLayer.hints`
 
 
 	:type: GSLayer
+
+
+
+
+	.. attribute:: scale
+
+
+		Scale factor of hint.
+
+
+	:type: NSPoint
 
 
 
