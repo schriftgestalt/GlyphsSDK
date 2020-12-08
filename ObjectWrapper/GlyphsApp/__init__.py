@@ -9151,7 +9151,7 @@ GSHint.targetNode = property(lambda self: self.pyobjc_instanceMethods.targetNode
 	:type: :class:`GSNode`
 '''
 
-GSHint.otherNode1 = property(lambda self: self.pyobjc_instanceMethods.otherNode1()),
+GSHint.otherNode1 = property(lambda self: self.pyobjc_instanceMethods.otherNode1(),
 							lambda self, value: self.setOtherNode1_(value))
 '''
 	.. attribute:: otherNode1
@@ -9159,7 +9159,7 @@ GSHint.otherNode1 = property(lambda self: self.pyobjc_instanceMethods.otherNode1
 
 	:type: :class:`GSNode`'''
 
-GSHint.otherNode2 = property(lambda self: self.pyobjc_instanceMethods.otherNode2()),
+GSHint.otherNode2 = property(lambda self: self.pyobjc_instanceMethods.otherNode2(),
 							lambda self, value: self.setOtherNode2_(value))
 '''
 	.. attribute:: otherNode2
