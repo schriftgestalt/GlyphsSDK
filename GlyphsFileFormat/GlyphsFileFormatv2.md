@@ -100,8 +100,14 @@ The XML file contains a dictionary with the following structure. The elements wi
         * anchors `list`
             * name `string`: The name of the anchor.
             * position `string`: format `{X, Y}`
+        * annotations `list>dict`
         * associatedMasterId `string`: ID of the master the layer is linked to. Not present if it equals layerID, i.e. if the layer is in use as master.
         * background `dict`: Contains the same children as the layer itself, except for background, layerId and associatedMasterId.
+        * backgroundImage `dict`: a image.
+            * crop `string`: Portion of the image to show in pixels, format: `{{t,l},{b,r}}`
+            * imagePath `string`: The file path to the image. It is stored relative if close enough. Otherwise the full path.
+            * locked `bool`: Always set to `1`, otherwise omit the key
+            * transform `string`: An affine transformation matrix, format: `{m11, m12, m21, m22, tX, tY}`.
         * components `list`
             * anchor `string`: Should be indicated if connected to an anchor, especially if more than one possibility is available, e.g. in ligatures.
             * name `string`: The name of the linked glyph (i.e., the glyph the component is pointing to).

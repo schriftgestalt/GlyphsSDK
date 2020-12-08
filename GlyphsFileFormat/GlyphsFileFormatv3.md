@@ -55,8 +55,6 @@ The property list file contains a dictionary with the following structure.
     * name `string`: Property name of the custom parameter.
     * value `string`: Value of the custom parameters.
 * date `string`: Format `2014-01-29 14:14:38 +0000`.
-* disablesAutomaticAlignment `bool`: Always set to `1`, otherwise omit the key
-* disablesNiceNames `bool`: Always set to `1`, otherwise omit the key
 * familyName `string`
 * featurePrefixes `list>dict`: OpenType feature code before the class definitions.
     * automatic `bool`: Always set to `1`, otherwise omit the key
@@ -190,8 +188,6 @@ The property list file contains a dictionary with the following structure.
     * subcategory `string`: manually set subcategory
     * tags `list>string`: list of tags
     * unicode `int` or `tuple`: for a single code, use just the int value (e.g. `unicode = 65;`) and for multiple use a tuple of all values (`unicode = (65,97);`).
-* gridLength `int`: Only written if not `1`
-* gridSubDivision `int`: Only written if bigger then `1`
 * instances `list>dict`
     * axesValues `list>float`: A list of float values storing the axis coordinate for each axis, Axis settings are stored in the font object.
     * customParameters `list>dict`: Instance custom parameters.
@@ -215,9 +211,6 @@ The property list file contains a dictionary with the following structure.
     * third level is either the right kerning group name or glyph name.
 * kerningRLT `dict`: see `kerningLTR`
 * kerningVertical `dict`: see `kerningLTR`
-* keyboardIncrement `float`: Only written if not `1`
-* keyboardIncrement `float`: Only written if not `10`
-* keyboardIncrement `float`: Only written if not `100`
 * metrics `list>dict`: definition of the (vertical) metrics
     * filter `string`: A predicate format string [(Apple Predicate Programming Guide)](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/Predicates/AdditionalChapters/Introduction.html#//apple_ref/doc/uid/TP40001789) (e.g. `"case == 3"` (No Case = 0, Uppercase = 1, Lowercase = 2, Smallcaps = 3, Other = 4))
     * name `string`: the name of the metric. Can be anything. If the metric has a special meaning, set the type to a appropriate value
@@ -226,6 +219,15 @@ The property list file contains a dictionary with the following structure.
 * numbers `list>dict`: definition of the numbers. Used to store interpolating numbers in each master
     * name `string`: name of the number
 * properties `list>dict`: see [Properties](#properties)
+* settings `dict`:
+    * disablesAutomaticAlignment `bool`: Always set to `1`, otherwise omit the key
+    * disablesNiceNames `bool`: Always set to `1`, otherwise omit the key
+    * gridLength `int`: Only written if not `1`
+    * gridSubDivision `int`: Only written if bigger then `1`
+    * keyboardIncrement `float`: Only written if not `1`
+    * keyboardIncrementBig `float`: Only written if not `10`
+    * keyboardIncrementHuge `float`: Only written if not `100`
+* stems `list>dict`: named stems.
 * unitsPerEm `int`
 * userData `dict`: to store custom data. Only `string`, `int`, `float`, `array`, `dict` and `date` data is allowed.
 * versionMajor `int`
@@ -257,3 +259,65 @@ The property list file contains a dictionary with the following structure.
 ### Attributes
 uses in paths and components
 TODO
+
+## Differences between version 2
+
+Glyphs format 3 files will have the following differences from equivalent format 2 files. First, the *representational* changes:
+
+* Within strings, certain characters (notably newlines) are now embedded directly, rather than escaped with octal backslash escaping. Strings are not *always* surrounded in double quotes e.g.: `imagePath = Screenshot.png;`
+
+* Point values (such as anchor position) are now expressed as tuples.
+
+
+Then the *structural* changes:
+
+* The toplevel dictionary will have an additional entry called `.formatVersion`, with a value of 3. You can use the presence and value of this entry to test whether you are dealing with a format 2 or format 3 file.
+
+* There is a new `axes` entry at top-level, which serializes a list of `GSAxis` structures.
+
+* The `copyright`, `designer`, `designerURL`, `manufacturer`, `manufacturerURL` top-level entries have been moved into new top-level `properties` dictionary and made localizable.
+
+* There is a new top-level `note` entry.
+
+* `customparameter` entries have an additional `disabled` property.
+
+* `features` entries have an additional localizable `labels` property for stylistic set names.
+
+* Within the `fontMasters` structure:
+    * Both the `alignmentZones` and `ascender`, `capheight` etc. metric values have been replaced by the `metricValues` list of dictionaries. What used to be `alignmentZones` is now a set of `over` (overshoot) properties attached to metrics. This `metricsValues` list is indexed in parallel with the toplevel `metrics` list.
+    * `guideLines` has been renamed `guides`. Its `pos` value is now a tuple.
+    * Axis position related properties (e.g. `weightValue`, `widthValue`, `customValue`) have been replaced by the `axesValues` list which is indexed in parallel with the toplevel `axes` list.
+    * `horizontalStems` and `verticalStems` are replaced by `stemValues`, which is indexed in parallel with the toplevel `stems` list.
+    * A new `numberValues` list is added, which is indexed in parallel with the toplevel `numbers` list.
+
+* Within the `glyphs` structure:
+    - The `color` entry may now take two to five numbers as a tuple, rather than just four.
+    - `leftKerningGroup` and `rightKerningGroup` are renamed `kernLeft` and `kernRight`, and there are additionally `kernTop` and `kernBottom` entries for vertical kerning.
+    - `leftMetricsKey` and `rightMetricsKey` are renamed `metricLeft` and `metricRight`, and there are additionally `metricTop` and `metricBottom` entries for vertical metrics keys, as well as `metricWidth` and `metricVertWidth`.
+    - The `unicode` entry may now take a tuple of codepoints.
+    - `case`, `direction`, `export`, `locked`, `note`, `partSettings` and `tags` entries have been added.
+
+* Within the `layers` structure for each glyph:
+    - `guideLines` has been renamed to `guides`.
+    - `leftMetricsKey`, `rightMetricsKey` and `widthMetricsKey` are renamed `metricLeft`, `metricRight` and `metricWidth` , and there are additionally `metricTop` and `metricBottom` entries for vertical metrics keys, as well as and `metricVertWidth`.
+    - Layers may also have a `color` entry similar to the one in the `glyphs` structure.
+    - The `components` and `paths` entries are now combined into the single list of `shapes`.
+    - `partSelection`, `vertOrigin` and `attr` entries have been added.
+
+* Within the `components` structure of a shape (v3) or layer (v2):
+    - The `transform` entry has been replaced by `angle`, `pos` and `scale` entries.
+    - `name` has been renamed to `ref`.
+    - The deprecated `disabledAlignment` entry has been replaced by a `alignment` (int) entry.
+    - `anchorTo`, `attr`, `locked`, `orientation`, `piece` and `userData` entries have been added.
+
+* The format of the `nodes` entry in the `paths` structure has changed and an `attr` entry has been added.
+
+* There is a new `metrics` entry at top-level, which contains a list of vertical metric definitions.
+
+* There is a new `numbers` entry at top-level, which contains a list of dictionaries representing named interpolation numbers.
+
+* `kerning` and `vertKerning` have been renamed to `kerningLTR` and `kerningVertical`, and there is a new top-level `kerningRLT` (sic.) dictionary.
+
+* There is a new `stems` entry at top-level, which contain a list of named stem definitions.
+
+* Toplevel `disablesAutomaticAlignment`, `disablesNiceNames`, `gridLength`, `gridSubDivision`, `keyboardIncrement`, `keyboardIncrementBig` and `keyboardIncrementHuge` entries have moved into the `settings` dictionary.
