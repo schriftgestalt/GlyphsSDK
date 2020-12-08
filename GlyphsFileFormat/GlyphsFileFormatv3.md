@@ -55,8 +55,6 @@ The property list file contains a dictionary with the following structure.
     * name `string`: Property name of the custom parameter.
     * value `string`: Value of the custom parameters.
 * date `string`: Format `2014-01-29 14:14:38 +0000`.
-* disablesAutomaticAlignment `bool`: Always set to `1`, otherwise omit the key
-* disablesNiceNames `bool`: Always set to `1`, otherwise omit the key
 * familyName `string`
 * featurePrefixes `list>dict`: OpenType feature code before the class definitions.
     * automatic `bool`: Always set to `1`, otherwise omit the key
@@ -190,8 +188,6 @@ The property list file contains a dictionary with the following structure.
     * subcategory `string`: manually set subcategory
     * tags `list>string`: list of tags
     * unicode `int` or `tuple`: for a single code, use just the int value (e.g. `unicode = 65;`) and for multiple use a tuple of all values (`unicode = (65,97);`).
-* gridLength `int`: Only written if not `1`
-* gridSubDivision `int`: Only written if bigger then `1`
 * instances `list>dict`
     * axesValues `list>float`: A list of float values storing the axis coordinate for each axis, Axis settings are stored in the font object.
     * customParameters `list>dict`: Instance custom parameters.
@@ -215,9 +211,6 @@ The property list file contains a dictionary with the following structure.
     * third level is either the right kerning group name or glyph name.
 * kerningRLT `dict`: see `kerningLTR`
 * kerningVertical `dict`: see `kerningLTR`
-* keyboardIncrement `float`: Only written if not `1`
-* keyboardIncrement `float`: Only written if not `10`
-* keyboardIncrement `float`: Only written if not `100`
 * metrics `list>dict`: definition of the (vertical) metrics
     * filter `string`: A predicate format string [(Apple Predicate Programming Guide)](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/Predicates/AdditionalChapters/Introduction.html#//apple_ref/doc/uid/TP40001789) (e.g. `"case == 3"` (No Case = 0, Uppercase = 1, Lowercase = 2, Smallcaps = 3, Other = 4))
     * name `string`: the name of the metric. Can be anything. If the metric has a special meaning, set the type to a appropriate value
@@ -226,6 +219,15 @@ The property list file contains a dictionary with the following structure.
 * numbers `list>dict`: definition of the numbers. Used to store interpolating numbers in each master
     * name `string`: name of the number
 * properties `list>dict`: see [Properties](#properties)
+* settings `dict`:
+    * disablesAutomaticAlignment `bool`: Always set to `1`, otherwise omit the key
+    * disablesNiceNames `bool`: Always set to `1`, otherwise omit the key
+    * gridLength `int`: Only written if not `1`
+    * gridSubDivision `int`: Only written if bigger then `1`
+    * keyboardIncrement `float`: Only written if not `1`
+    * keyboardIncrementBig `float`: Only written if not `10`
+    * keyboardIncrementHuge `float`: Only written if not `100`
+* stems `list>dict`: named stems.
 * unitsPerEm `int`
 * userData `dict`: to store custom data. Only `string`, `int`, `float`, `array`, `dict` and `date` data is allowed.
 * versionMajor `int`
