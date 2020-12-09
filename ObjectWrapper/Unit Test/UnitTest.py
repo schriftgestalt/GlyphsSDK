@@ -128,6 +128,8 @@ class GlyphsAppTests(unittest.TestCase):
 		for font in Glyphs.fonts:
 			font.close()
 		self.assertEqual(len(Glyphs.fonts), 0)
+		
+
 
 		# AppFontProxy
 		newFont = GSFont()
@@ -162,6 +164,9 @@ class GlyphsAppTests(unittest.TestCase):
 			Glyphs.documents['a']
 		self.assertIsInstance(copy.copy(Glyphs.documents), list)
 		
+		# current document #::Rafal
+		self.assertIsInstance(Glyphs.currentDocument, GSDocument)
+
 		## Attributes
 		
 		# GSApplication.reporters
@@ -187,6 +192,8 @@ class GlyphsAppTests(unittest.TestCase):
 		del(Glyphs.defaults["TestKey"])
 		Glyphs.registerDefaults({"TestKey":12})
 		self.assertEqual(Glyphs.defaults["TestKey"], 12)
+		Glyphs.registerDefault("TestKey",36) #::Rafal
+		self.assertEqual(Glyphs.defaults["TestKey"], 36)
 		Glyphs.registerDefaults({"TestKey":12})
 		Glyphs.defaults["TestKey"] = 24
 		self.assertEqual(Glyphs.defaults["TestKey"], 24)
@@ -294,6 +301,14 @@ class GlyphsAppTests(unittest.TestCase):
 			'fr':  'Bonjour tout le monde',
 			'es':  'Hola Mundo',
 			}))
+		
+		# callbacks #::Rafal # don't know if it makes sense at all
+		def testCallbackMethod(**kwrgs):
+			pass
+		callbacks = ("DrawForeground", "DrawBackground", "DrawInactive", "GSDocumentWasOpenedNotification", "GSDocumentActivateNotification", "GSDocumentWasSavedSuccessfully", "GSDocumentWasExportedNotification", "GSDocumentCloseNotification", "TabDidOpenNotification", "TabWillCloseNotification", "GSUpdateInterface", "mouseMovedNotification", "mouseDraggedNotification", "mouseDownNotification", "mouseUpNotification", "GSContextMenuCallbackName")
+		for callback in callbacks:
+			Glyphs.addCallback(testCallbackMethod, callback)
+			Glyphs.removeCallback(testCallbackMethod)
 
 
 	def test_GSFont(self):
@@ -509,13 +524,42 @@ class GlyphsAppTests(unittest.TestCase):
 		
 		# GSFont.tool
 		# GSFont.tools
+		# GSFont.toolIndex
 		oldTool = font.tool
 		for toolName in font.tools:
 			font.tool = toolName
 			self.assertEqual(font.tool, toolName)
+			self.assertInteger(font.toolIndex)
+			self.assertEqual(font.tools[font.toolIndex], toolName)
 		font.tool = oldTool
+
+		# GSFont.appVersion #::Rafal
+		self.assertUnicode(font.appVersion, readOnly = True, allowNone = False)
 		
+		# GSFont.formatVersion #::Rafal
+		self.assertInteger(font.formatVersion, readOnly = True, allowNone = False)
 		
+		# GSFont.fontView #::Rafal
+		self.assertIsInstance(font.fontView, GlyphsApp.GSFontViewController)
+		
+		# GSFont.keyboardIncrementHuge #::Rafal
+		self.assertInteger(font.keyboardIncrementHuge)
+
+		# GSFont.keyboardIncrementBig #::Rafal
+		self.assertInteger(font.keyboardIncrementBig)
+
+		# GSFont.keyboardIncrement #::Rafal
+		self.assertInteger(font.keyboardIncrement)
+
+		# GSFont.disablesAutomaticAlignment  #::Rafal
+		self.assertBool(font.disablesAutomaticAlignment)
+		
+		# GSFont.kerningVertical  #::Rafal
+		self.assertDict(font.kerningVertical)
+
+		# GSFont.kerningRTL  #::Rafal
+		self.assertDict(font.kerningRTL)
+
 		## Methods
 		
 		# GSFont.save()
@@ -542,6 +586,9 @@ class GlyphsAppTests(unittest.TestCase):
 
 		# GSFont.updateFeatures()
 		font.updateFeatures()
+
+		# GSFont.updateFeatures()  #::Rafal
+		font.compileFeatures()
 
 
 
