@@ -103,9 +103,9 @@ html_theme = 'alabaster'
 html_theme_options = {
 	"nosidebar" : "false",
 	"fixed_sidebar" : "true",
-	"font_family" : "Graublau Sans",
-	"head_font_family" : "Graublau Sans",
-	"code_font_family" : "OliveGreen",
+	"code_font_family" : "Menlo, monospace",
+	"font_family" : "ABCArizona",
+	"head_font_family" : "ABCArizona",
 	"anchor":"#1E9192",
 	'logo': 'icons/favicon.png',
 }

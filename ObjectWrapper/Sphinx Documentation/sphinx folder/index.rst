@@ -649,6 +649,7 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 		parent
 		masters
 		axes
+		properties
 		stems
 		instances
 		glyphs
@@ -672,6 +673,9 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 		gridSubDivisions
 		gridLength
 		keyboardIncrement
+		keyboardIncrementBig
+		keyboardIncrementHuge
+		snapToObjects
 		disablesNiceNames
 		customParameters
 		selection
@@ -745,6 +749,18 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 	
 	.. versionadded:: 2.5
 	.. versionchanged:: 3
+
+
+
+	.. attribute:: properties
+
+
+		Holds the fonts info properties. Can be instances of :class:`GSFontInfoValueSingle` and :class:`GSFontInfoValueLocalized`
+
+
+	:type: list
+
+	.. versionadded:: 3
 
 
 
@@ -889,34 +905,34 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 	.. attribute:: copyright
 
 
-	:type: unicode
+	:type: str
 
 
 
 	.. attribute:: designer
 
 
-	:type: unicode
+	:type: str
 
 
 
 	.. attribute:: designerURL
 
 
-	:type: unicode
+	:type: str
 
 
 
 	.. attribute:: manufacturer
 
 
-	:type: unicode
+	:type: str
 
 
 	.. attribute:: manufacturerURL
 
 
-	:type: unicode
+	:type: str
 
 
 
@@ -955,7 +971,7 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 
 		Family name of the typeface.
 
-	:type: unicode
+	:type: str
 
 
 
@@ -970,7 +986,7 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 	.. attribute:: note
 
 
-	:type: unicode
+	:type: str
 
 
 
@@ -1134,6 +1150,26 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 
 
 
+	.. attribute:: snapToObjects
+
+		disable snapping to nodes and backround
+
+	:type: bool
+
+	.. versionadded:: 3.0.1
+
+
+
+	.. attribute:: previewRemoveOverlap
+
+		disable preview remove overlap
+
+	:type: bool
+
+	.. versionadded:: 3.0.1
+
+
+
 	.. attribute:: selection
 
 		Returns a list of all selected glyphs in the Font View.
@@ -1178,7 +1214,7 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 		Unencoded and none ASCII glyphs will use a slash and the glyph name. (e.g: /a.sc). Setting unicode strings works.
 
 
-	:type: unicode
+	:type: str
 
 
 
@@ -1225,7 +1261,7 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 
 		On-disk location of GSFont object.
 
-	:type: unicode
+	:type: str
 	
 
 
@@ -1535,7 +1571,14 @@ Implementation of the master object. This corresponds with the "Masters" pane in
 
 		id
 		name
+		weight
+		width
 		axes
+		properties
+		weightValue
+		widthValue
+		customValue
+		customName
 		ascender
 		capHeight
 		xHeight
@@ -1574,7 +1617,7 @@ Implementation of the master object. This corresponds with the "Masters" pane in
 			<GSLayer "Light" (A)>
 
 
-	:type: unicode
+	:type: str
 
 
 
@@ -1614,6 +1657,18 @@ Implementation of the master object. This corresponds with the "Masters" pane in
 	:type: list
 
 	.. versionadded:: 2.5.2
+
+
+
+	.. attribute:: properties
+
+
+		Holds the fonts info properties. Can be instances of :class:`GSFontInfoValueSingle` and :class:`GSFontInfoValueLocalized`
+
+
+	:type: list
+
+	.. versionadded:: 3
 
 
 
@@ -1802,12 +1857,13 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 
 	.. autosummary::
 
-
 		active
 		name
+		visible
 		weightClass
 		widthClass
 		axes
+		properties
 		isItalic
 		isBold
 		linkStyle
@@ -1846,11 +1902,28 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 
 
 
+	.. attribute:: visible
+
+		if visible in the preview in edit view
+
+	:type: bool
+
+
+
 	.. attribute:: name
 
 		Name of instance. Corresponds to the "Style Name" field in the font info. This is used for naming the exported fonts.
 
 	:type: string
+
+
+
+	.. attribute:: type
+
+		the type of the instance. Can be either INSTANCETYPESINGLE or INSTANCETYPEVARIABLE.
+		
+
+	:type: int
 
 
 
@@ -1912,6 +1985,18 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 	:type: list
 
 	.. versionadded:: 2.5.2
+
+
+
+	.. attribute:: properties
+
+
+		Holds the fonts info properties. Can be instances of :class:`GSFontInfoValueSingle` and :class:`GSFontInfoValueLocalized`
+
+
+	:type: list
+
+	.. versionadded:: 3
 
 
 
@@ -2184,7 +2269,7 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 			(<GSInstance "Web" width 100.0 weight 75.0>)
 
 
-	:type: unicode
+	:type: str
 	
 
 	.. function:: addAsMaster()
@@ -2283,7 +2368,7 @@ For details on how to access them, please look at :class:`GSFont.classes`
 
 		The class name
 
-	:type: unicode
+	:type: str
 
 
 
@@ -2291,7 +2376,7 @@ For details on how to access them, please look at :class:`GSFont.classes`
 
 		A string with space separated glyph names.
 
-	:type: unicode
+	:type: str
 
 
 
@@ -2356,7 +2441,7 @@ For details on how to access them, please look at :class:`GSFont.featurePrefixes
 
 		The FeaturePrefix name
 
-	:type: unicode
+	:type: str
 
 
 
@@ -2364,7 +2449,7 @@ For details on how to access them, please look at :class:`GSFont.featurePrefixes
 
 		A String containing feature code.
 
-	:type: unicode
+	:type: str
 
 
 
@@ -2422,7 +2507,7 @@ For details on how to access them, please look at :class:`GSFont.features`
 
 		The feature name
 
-	:type: unicode
+	:type: str
 
 
 
@@ -2430,7 +2515,7 @@ For details on how to access them, please look at :class:`GSFont.features`
 
 		The Feature code in Adobe FDK syntax.
 
-	:type: unicode
+	:type: str
 
 
 
@@ -2446,7 +2531,7 @@ For details on how to access them, please look at :class:`GSFont.features`
 
 		Some extra text. Is shown in the bottom of the feature window. Contains the stylistic set name parameter
 
-	:type: unicode
+	:type: str
 
 
 
@@ -2643,7 +2728,7 @@ For details on how to access these glyphs, please see :class:`GSFont.glyphs`
 
 		The name of the glyph. It will be converted to a "nice name" (afii10017 to A-cy) (you can disable this behavior in font info or the app preference)
 
-	:type: unicode
+	:type: str
 
 
 
@@ -2651,7 +2736,7 @@ For details on how to access these glyphs, please see :class:`GSFont.glyphs`
 
 		String with the hex Unicode value of glyph, if encoded.
 
-	:type: unicode
+	:type: str
 
 
 
@@ -2659,7 +2744,7 @@ For details on how to access these glyphs, please see :class:`GSFont.glyphs`
 
 		List of String‚ with the hex Unicode values of glyph, if encoded.
 
-	:type: unicode
+	:type: str
 
 
 
@@ -2668,7 +2753,7 @@ For details on how to access these glyphs, please see :class:`GSFont.glyphs`
 		String representation of glyph, if encoded.
 		This is similar to the string representation that you get when copying glyphs into the clipboard.
 
-	:type: unicode
+	:type: str
 
 
 
@@ -2696,7 +2781,7 @@ For details on how to access these glyphs, please see :class:`GSFont.glyphs`
 		The category of the glyph. e.g. 'Letter', 'Symbol'
 		Setting only works if `storeCategory` is set (see below).
 
-	:type: unicode
+	:type: str
 
 
 
@@ -2714,7 +2799,7 @@ For details on how to access these glyphs, please see :class:`GSFont.glyphs`
 		The subCategory of the glyph. e.g. 'Uppercase', 'Math'
 		Setting only works if `storeSubCategory` is set (see below).
 
-	:type: unicode
+	:type: str
 
 
 
@@ -2786,7 +2871,7 @@ For details on how to access these glyphs, please see :class:`GSFont.glyphs`
 		The script of the glyph, e.g., 'latin', 'arabic'.
 		Setting only works if `storeScript` is set (see below).
 
-	:type: unicode
+	:type: str
 
 
 
@@ -2805,7 +2890,7 @@ For details on how to access these glyphs, please see :class:`GSFont.glyphs`
 		The productionName of the glyph.
 		Setting only works if `storeProductionName` is set (see below).
 
-	:type: unicode
+	:type: str
 
 
 
@@ -2832,14 +2917,14 @@ For details on how to access these glyphs, please see :class:`GSFont.glyphs`
 
 		The leftKerningGroup of the glyph. All glyphs with the same text in the kerning group end up in the same kerning class.
 
-	:type: unicode
+	:type: str
 
 
 	.. attribute:: rightKerningGroup
 
 		The rightKerningGroup of the glyph. All glyphs with the same text in the kerning group end up in the same kerning class.
 
-	:type: unicode
+	:type: str
 
 
 	.. attribute:: leftKerningKey
@@ -2890,21 +2975,21 @@ For details on how to access these glyphs, please see :class:`GSFont.glyphs`
 
 		The leftMetricsKey of the glyph. This is a reference to another glyph by name or formula. It is used to synchronize the metrics with the linked glyph.
 
-	:type: unicode
+	:type: str
 
 
 	.. attribute:: rightMetricsKey
 
 		The rightMetricsKey of the glyph. This is a reference to another glyph by name or formula. It is used to synchronize the metrics with the linked glyph.
 
-	:type: unicode
+	:type: str
 
 
 	.. attribute:: widthMetricsKey
 
 		The widthMetricsKey of the glyph. This is a reference to another glyph by name or formula. It is used to synchronize the metrics with the linked glyph.
 
-	:type: unicode
+	:type: str
 
 
 	.. attribute:: export
@@ -2983,7 +3068,7 @@ For details on how to access these glyphs, please see :class:`GSFont.glyphs`
 	.. attribute:: note
 
 
-	:type: unicode
+	:type: str
 
 
 
@@ -3198,7 +3283,7 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 
 		Name of layer
 
-	:type: unicode
+	:type: str
 
 
 
@@ -3226,7 +3311,7 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 			newLayer.associatedMasterId = font.masters[-1].id # attach to last master
 			font.glyphs['a'].layers.append(newLayer)
 
-	:type: unicode
+	:type: str
 
 
 
@@ -3254,7 +3339,7 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 			# for master layers, use ID of masters
 			layer = font.glyphs['a'].layers[font.masters[0].id]
 
-	:type: unicode
+	:type: str
 
 
 
@@ -3601,25 +3686,45 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 
 
 
+	.. attribute:: ascender
+
+	The ascender for this layer.
+
+	:type: float
+	
+	.. versionadded:: 3.0.2
+
+
+
+	.. attribute:: descender
+
+	The descender for this layer.
+
+	:type: float
+	
+	.. versionadded:: 3.0.2
+
+
+
 	.. attribute:: leftMetricsKey
 
 	The leftMetricsKey of the layer. This is a reference to another glyph by name or formula. It is used to synchronize the metrics with the linked glyph.
 
-	:type: unicode
+	:type: str
 
 
 	.. attribute:: rightMetricsKey
 
 	The rightMetricsKey of the layer. This is a reference to another glyph by name or formula. It is used to synchronize the metrics with the linked glyph.
 
-	:type: unicode
+	:type: str
 
 
 	.. attribute:: widthMetricsKey
 
 	The widthMetricsKey of the layer. This is a reference to another glyph by name or formula. It is used to synchronize the metrics with the linked glyph.
 
-	:type: unicode
+	:type: str
 
 
 
@@ -3646,6 +3751,16 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 	Bounding box of the layer's selection (nodes, anchors, components etc). Read-only.
 
 	:type: NSRect
+
+
+
+	.. attribute:: metrics
+
+	The metrics layer are a list of horizontal metrics filtered specifically for this layer. Use this instead of master.alignmentZones.
+
+	:type: :class:`GSMetricValue`
+
+	.. versionadded:: 3.0.1
 
 
 
@@ -4108,7 +4223,7 @@ For details on how to access them, please see :attr:`GSLayer.anchors`
 
 	The name of the anchor
 
-	:type: unicode
+	:type: str
 
 
 	.. attribute:: selected
@@ -4223,7 +4338,7 @@ For details on how to access them, please see :attr:`GSLayer.components`
 
 	The glyph name the component is pointing to.
 
-	:type: unicode
+	:type: str
 
 
 
@@ -4231,7 +4346,7 @@ For details on how to access them, please see :attr:`GSLayer.components`
 
 	The glyph name the component is pointing to.
 
-	:type: unicode
+	:type: str
 
 	.. versionadded:: 2.5
 
@@ -4343,7 +4458,7 @@ For details on how to access them, please see :attr:`GSLayer.components`
 	This can be set from the anchor button in the component info box in the UI
 
 
-	:type: unicode
+	:type: str
 
 
 	.. attribute:: selected
@@ -4949,7 +5064,7 @@ For details on how to access them, please see :attr:`GSPath.nodes`
 
 	Attaches a name to a node.
 
-	:type: unicode
+	:type: str
 
 
 
@@ -5027,7 +5142,7 @@ For details on how to access them, please see :attr:`GSLayer.guides`
 
 	a optional name
 
-	:type: unicode
+	:type: str
 
 
 	.. attribute:: selected
@@ -5137,7 +5252,7 @@ For details on how to access them, please see :class:`GSLayer.annotations`
 
 	The content of the annotation. Only useful if type == TEXT
 
-	:type: unicode
+	:type: str
 
 
 
@@ -5169,7 +5284,6 @@ For details on how to access them, please see :class:`GSLayer.hints`
 	.. autosummary::
 
 		parent
-		scale
 		originNode
 		targetNode
 		otherNode1
@@ -5180,6 +5294,8 @@ For details on how to access them, please see :class:`GSLayer.hints`
 		isTrueType
 		isPostScript
 		isCorner
+		name
+		stem
 
 	**Properties**
 
@@ -5193,17 +5309,6 @@ For details on how to access them, please see :class:`GSLayer.hints`
 
 
 	:type: GSLayer
-
-
-
-
-	.. attribute:: scale
-
-
-		Scale factor of hint.
-
-
-	:type: NSPoint
 
 
 
@@ -5393,7 +5498,7 @@ For details on how to access it, please see :class:`GSLayer.backgroundImage`
 
 	Path to image file.
 
-	:type: unicode
+	:type: str
 
 
 
@@ -5614,7 +5719,7 @@ For details on how to access them, please look at :class:`GSFont.tabs`
 
 	The text of the tab, either as text, or slash-escaped glyph names, or mixed. OpenType features will be applied after the text has been changed.
 
-	:type: Unicode
+	:type: str
 
 
 
@@ -5803,7 +5908,7 @@ For details on how to access them, please look at :class:`GSFont.tabs`
 
 	.. attribute:: features
 
-	List of OpenType features applied to text in Edit view.
+		List of OpenType features applied to text in Edit view.
 
 	:type: list
 
@@ -5819,9 +5924,9 @@ For details on how to access them, please look at :class:`GSFont.tabs`
 	.. attribute:: previewInstances
 
 
-	Instances to show in the Preview area.
+		Instances to show in the Preview area.
 
-	Values are ``'live'`` for the preview of the current content of the Edit view, ``'all'`` for interpolations of all instances of the current glyph, or individual GSInstance objects.
+		Values are ``'live'`` for the preview of the current content of the Edit view, ``'all'`` for interpolations of all instances of the current glyph, or individual GSInstance objects.
 
 
 	:type: string/GSInstance
@@ -5845,9 +5950,9 @@ For details on how to access them, please look at :class:`GSFont.tabs`
 	.. attribute:: previewHeight
 
 
-	Height of the preview panel in the Edit view in pixels.
+		Height of the preview panel in the Edit view in pixels.
 
-	Needs to be set to 16 or higher for the preview panel to be visible at all. Will return 0 for a closed preview panel or the current size when visible.
+		Needs to be set to 16 or higher for the preview panel to be visible at all. Will return 0 for a closed preview panel or the current size when visible.
 
 
 	:type: float
@@ -5857,7 +5962,7 @@ For details on how to access them, please look at :class:`GSFont.tabs`
 
 	.. attribute:: bottomToolbarHeight
 
-	Height of the little toolbar at the very bottom of the window. Read-only.
+		Height of the little toolbar at the very bottom of the window. Read-only.
 
 	:type: float
 
@@ -5875,7 +5980,7 @@ For details on how to access them, please look at :class:`GSFont.tabs`
 
 	.. function:: saveToPDF(path[, rect])
 
-	Save the view to a PDF file.
+		Save the view to a PDF file.
 
 	:param path: Path to the file
 	:param rect: Optional. NSRect defining the view port. If omitted, :attr:`GSEditViewController.viewPort` will be used.
@@ -5885,7 +5990,7 @@ For details on how to access them, please look at :class:`GSFont.tabs`
 
 	.. function:: redraw()
 	
-	forces a update of the edit view
+		forces a update of the edit view
 
 
 
@@ -5927,42 +6032,42 @@ This contains valuable information from the glyph database. See :class:`GSGlyphs
 
 	.. attribute:: name
 
-	Human-readable name of glyph ("nice name").
+		Human-readable name of glyph ("nice name").
 
-	:type: unicode
+	:type: str
 
 
 
 	.. attribute:: productionName
 
-	Production name of glyph. Will return a value only if production name differs from nice name, otherwise None.
+		Production name of glyph. Will return a value only if production name differs from nice name, otherwise None.
 
-	:type: unicode
+	:type: str
 
 
 
 	.. attribute:: category
 
-	This is mostly from the UnicodeData.txt file from unicode.org. Some corrections have been made (Accents, ...)
-	e.g: "Letter", "Number", "Punctuation", "Mark", "Separator", "Symbol", "Other"
+		This is mostly from the UnicodeData.txt file from unicode.org. Some corrections have been made (Accents, ...)
+		e.g: "Letter", "Number", "Punctuation", "Mark", "Separator", "Symbol", "Other"
 
-	:type: unicode
+	:type: str
 
 
 
 	.. attribute:: subCategory
 
-	This is mostly from the UnicodeData.txt file from unicode.org. Some corrections and additions have been made (Smallcaps, ...).
-	e.g: "Nonspacing", "Ligature", "Decimal Digit", ...
+		This is mostly from the UnicodeData.txt file from unicode.org. Some corrections and additions have been made (Smallcaps, ...).
+		e.g: "Nonspacing", "Ligature", "Decimal Digit", ...
 
-	:type: unicode
+	:type: str
 
 
 
 	.. attribute:: case
 
 	
-	e.g: "Uppercase", "Lowercase", "Smallcaps"
+		e.g: "Uppercase", "Lowercase", "Smallcaps"
 
 	:type: int
 
@@ -5970,7 +6075,7 @@ This contains valuable information from the glyph database. See :class:`GSGlyphs
 
 	.. attribute:: components
 
-	This glyph may be composed of the glyphs returned as a list of :class:`GSGlyphInfo` objects.
+		This glyph may be composed of the glyphs returned as a list of :class:`GSGlyphInfo` objects.
 
 	:type: list
 
@@ -5978,7 +6083,7 @@ This contains valuable information from the glyph database. See :class:`GSGlyphs
 
 	.. attribute:: accents
 
-	This glyph may be combined with these accents, returned as a list of glyph names.
+		This glyph may be combined with these accents, returned as a list of glyph names.
 
 	:type: list
 
@@ -5986,7 +6091,7 @@ This contains valuable information from the glyph database. See :class:`GSGlyphs
 
 	.. attribute:: anchors
 
-	Anchors defined for this glyph, as a list of anchor names.
+		Anchors defined for this glyph, as a list of anchor names.
 
 	:type: list
 
@@ -5994,65 +6099,246 @@ This contains valuable information from the glyph database. See :class:`GSGlyphs
 
 	.. attribute:: unicode
 
-	Unicode value
+		Unicode value
 
-	:type: unicode
+	:type: str
 
 
 
 	.. attribute:: unicode2
 
-	a second unicode value it present
+		a second unicode value it present
 
-	:type: unicode
+	:type: str
 
 
 
 	.. attribute:: script
 
-	Script of glyph, e.g: "latin", "cyrillic", "greek".
+		Script of glyph, e.g: "latin", "cyrillic", "greek".
 
-	:type: unicode
+	:type: str
 
 
 
 	.. attribute:: index
 
-	Index of glyph in database. Used for sorting in UI.
+		Index of glyph in database. Used for sorting in UI.
 
-	:type: unicode
+	:type: str
 
 
 
 	.. attribute:: sortName
 
-	Alternative name of glyph used for sorting in UI.
+		Alternative name of glyph used for sorting in UI.
 
-	:type: unicode
+	:type: str
 
 
 
 	.. attribute:: sortNameKeep
 
-	Alternative name of glyph used for sorting in UI, when using 'Keep Alternates Next to Base Glyph' from Font Info.
+		Alternative name of glyph used for sorting in UI, when using 'Keep Alternates Next to Base Glyph' from Font Info.
 
-	:type: unicode
+	:type: str
 
 
 
 	.. attribute:: desc
 
-	Unicode description of glyph.
+		Unicode description of glyph.
 
-	:type: unicode
+	:type: str
 
 
 
 	.. attribute:: altNames
 
-	Alternative names for glyphs that are not used, but should be recognized (e.g., for conversion to nice names).
+		Alternative names for glyphs that are not used, but should be recognized (e.g., for conversion to nice names).
 
-	:type: unicode
+	:type: str
+
+
+:mod:`GSFontInfoValueLocalized`
+===============================================================================
+
+The GSFontInfoValueLocalized
+
+.. class:: GSFontInfoValueLocalized()
+
+	Properties
+
+	.. autosummary::
+		
+		key
+		values
+		defaultValue
+
+	**Properties**
+
+
+
+
+	.. attribute:: key
+
+		the key
+
+	:type: str
+
+
+
+	.. attribute:: values
+
+		A list of :class:`GSFontInfoValue` objects.
+
+	:type: list
+
+
+
+	.. attribute:: defaultValue
+
+		the value that is considered the default (either the dflt or English entry)
+
+	:type: str
+
+
+:mod:`GSFontInfoValueSingle`
+===============================================================================
+
+The GSFontInfoValueSingle
+
+.. class:: GSFontInfoValueSingle()
+
+	Properties
+
+	.. autosummary::
+		
+		key
+		value
+
+	**Properties**
+
+
+
+
+	.. attribute:: key
+
+		the key
+
+	:type: str
+
+
+
+	.. attribute:: value
+
+		The value
+
+	:type: str
+
+
+:mod:`GSFontInfoValue`
+===============================================================================
+
+The GSFontInfoValue
+
+.. class:: GSFontInfoValue()
+
+	Properties
+
+	.. autosummary::
+		
+		key
+		value
+		languageTag
+
+	**Properties**
+
+
+
+
+	.. attribute:: key
+
+		the key
+
+	:type: str
+
+
+
+	.. attribute:: value
+
+		The value
+
+	:type: str
+
+
+
+	.. attribute:: languageTag
+
+		The languageTag
+
+	:type: str
+
+
+:mod:`GSMetricValue`
+===============================================================================
+
+The GSMetricValue
+
+.. class:: GSMetricValue()
+
+	Properties
+
+	.. autosummary::
+		
+		position
+		overshoot
+		name
+		filter
+		metric
+
+	**Properties**
+
+
+
+
+	.. attribute:: position
+
+		The position
+
+	:type: float
+
+
+
+	.. attribute:: overshoot
+
+		The overshoot
+
+	:type: float
+
+
+
+	.. attribute:: name
+
+		The name
+
+	:type: str
+
+
+
+	.. attribute:: filter
+
+		The filter.
+
+	:type: NSPredicate
+
+
+
+	.. attribute:: metric
+
+		The metric. see :attr:`GSFont.metrics`.
+
+	:type: str
 
 
 
@@ -6081,7 +6367,7 @@ The Text Preview Window
 
 	The text
 
-	:type: unicode
+	:type: str
 
 
 
@@ -6358,6 +6644,18 @@ Export formats
 	Write EOT
 
 .. versionadded:: 2.5
+
+Instance Types
+==============
+.. data:: INSTANCETYPESINGLE
+
+	single interpolation instance
+
+.. data:: INSTANCETYPEVARIABLE
+
+	variable font setting
+
+.. versionadded:: 3.0.1
 
 Hint types
 ==========

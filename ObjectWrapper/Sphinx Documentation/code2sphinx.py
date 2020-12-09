@@ -92,7 +92,8 @@ html = html.replace('<link rel="search" title="Search" href="search.html" />', "
 html = html.replace('\n<!DOCTYPE html>', '<!DOCTYPE html>')
 html = re.sub('&amp; <a href="https://github.com/bitprophet/alabaster">Alabaster ([0-9.]*)</a>', '', html)
 html = html.replace("\n\n|\n", "|")
-
+html = html.replace("A collection of string constants.", "")
+html = html.replace("<p></p>", "")
 html = html.replace("\n\n", "\n")
 html = html.replace("\n\n", "\n")
 html = html.replace("\n\n", "\n")
