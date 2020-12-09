@@ -10530,8 +10530,8 @@ GSFontInfoValue.value = property(lambda self: self.pyobjc_instanceMethods.value(
 GSFontInfoValue.languageTag = property(lambda self: self.pyobjc_instanceMethods.languageTag(),
 									   lambda self, value: self.setLanguageTag_(value))
 '''
-	.. attribute:: value
-		The value
+	.. attribute:: languageTag
+		The languageTag
 	:type: str
 '''
 
