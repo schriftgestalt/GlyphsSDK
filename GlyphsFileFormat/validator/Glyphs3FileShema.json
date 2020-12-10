@@ -590,6 +590,7 @@
 						"type": "string"
 					},
 					"color": {
+						"$id": "#/properties/glyphs/items/properties/color",
 						"$ref": "#/definitions/color"
 					},
 					"direction": {
@@ -605,13 +606,13 @@
 						"type": ["boolean", "integer"]
 					},
 					"glyphname": {
-						"$id": "#/properties/glyphs/items/properties/case",
+						"$id": "#/properties/glyphs/items/properties/glyphname",
 						"description": "Must be unique throughout the font.",
 						"title": "The glyphname schema",
 						"type": "string"
 					},
 					"kernBottom": {
-						"$id": "#/properties/glyphs/items/properties/kernLeft",
+						"$id": "#/properties/glyphs/items/properties/kernBottom",
 						"description": "Bottom kerning group",
 						"title": "The kernBottom schema",
 						"type": "string"
@@ -629,7 +630,7 @@
 						"type": "string"
 					},
 					"kernTop": {
-						"$id": "#/properties/glyphs/items/properties/kernRight",
+						"$id": "#/properties/glyphs/items/properties/kernTop",
 						"description": "Top kerning group",
 						"title": "The kernTop schema",
 						"type": "string"
