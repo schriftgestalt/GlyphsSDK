@@ -534,10 +534,10 @@ class GlyphsAppTests(unittest.TestCase):
 		font.tool = oldTool
 
 		# GSFont.appVersion #::Rafal
-		self.assertUnicode(font.appVersion, readOnly = True, allowNone = False)
+		self.assertUnicode(font.appVersion, readOnly=True, allowNone=False)
 		
 		# GSFont.formatVersion #::Rafal
-		self.assertInteger(font.formatVersion, readOnly = True, allowNone = False)
+		self.assertInteger(font.formatVersion, allowNone=False)
 		
 		# GSFont.fontView #::Rafal
 		self.assertIsInstance(font.fontView, GlyphsApp.GSFontViewController)
