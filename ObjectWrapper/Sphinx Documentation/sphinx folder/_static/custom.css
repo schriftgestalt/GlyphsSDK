@@ -8,6 +8,9 @@
 	src: url("https://glyphsapp.com/assets/fonts/ABCArizona.woff2") format("woff");
 }
 
+body {
+	margin:0;
+}
 pre {
 	max-width :630px;
 }
@@ -96,6 +99,7 @@ ul.list-inline {
 .document {
 	padding-top:20px;
 	font-variation-settings: "srff" 0, "wght" 70, "ital" 0;
+	font-style: normal;
 }
 
 @media screen and (max-width: 719px) {
