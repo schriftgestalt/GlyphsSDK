@@ -597,7 +597,80 @@ class GlyphsAppTests(unittest.TestCase):
 		font = copy.copy(font) # Testing this at the end because otherwise some UI-dependent tests fail (like selection of glyphs)
 
 
+	def test_GSAxis(self):
+		font = Glyphs.font
+		axis = font.axes[0]
+		
+		# axis.font
+		self.assertIsNotNone(axis.font)
+		
+		# axis.name
+		self.assertUnicode(axis.name)
+		
+		# axis.axisTag
+		self.assertUnicode(axis.axisTag)
+		
+		# axis.axisId
+		self.assertUnicode(axis.axisId)
 
+	# def test_GSMetric(self):
+	# 	font = Glyphs.font
+	# 	pass
+
+	#::Rafal
+	def test_GSCustomParameter(self):
+		font = Glyphs.font
+		font.customParameters['trademark'] = 'ThisFont is a trademark by MyFoundry.com'
+		customParameter = font.customParameters[0]
+
+		# GSCustomParameter.name
+		self.assertUnicode(customParameter.name)
+
+		# GSCustomParameter.value
+		self.assertUnicode(customParameter.value)
+
+		del(font.customParameters['trademark'])
+
+	#::Rafal
+	def test_GSClass(self):
+		font = Glyphs.font
+		feaClass = font.classes[0]
+		
+		# GSClass.name
+		self.assertUnicode(feaClass.name)
+
+		# GSClass.code
+		self.assertUnicode(feaClass.code)
+
+		# GSClass.automatic
+		self.assertInteger(feaClass.automatic)
+
+		# GSClass.active
+		self.assertBool(feaClass.active)
+
+		# GSClass.tempData
+		self.assertIsNotNone(feaClass.tempData)
+		feaClass.tempData["TestData"] = 42
+		self.assertEqual(feaClass.tempData["TestData"], 42)
+		del(feaClass.tempData["TestData"])
+		self.assertIsNone(feaClass.tempData["TestData"])
+	
+	#::Rafal
+	def test_GSFeaturePrefix(self):
+		font = Glyphs.font
+		featurePrefix = font.featurePrefixes[0]
+		
+		# GSFeaturePrefix.name
+		self.assertUnicode(featurePrefix.name)
+
+		# GSFeaturePrefix.code
+		self.assertUnicode(featurePrefix.code)
+
+		# GSFeaturePrefix.automatic
+		self.assertInteger(featurePrefix.automatic)
+
+		# GSFeaturePrefix.active
+		self.assertBool(featurePrefix.active)
 
 	def test_GSFontMaster(self):
 		font = Glyphs.font
@@ -667,6 +740,14 @@ class GlyphsAppTests(unittest.TestCase):
 		# self.assertEqual(len(list(master.horizontalStems)), 3)
 		# master.horizontalStems = oldStems
 		
+		# GSFontMaster.stems #::Rafal
+		oldStems = master.stems
+		master.stems = [10, 15, 20, 25, 30]
+		self.assertEqual(len(list(master.stems)), 5)
+		master.stems = oldStems
+		for stem in master.stems:
+			self.assertFloat(stem)
+		
 		# GSFontMaster.alignmentZones
 		self.assertIsInstance(list(master.alignmentZones), list)
 		for az in master.alignmentZones:
@@ -708,6 +789,10 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertGreaterEqual(len(list(master.customParameters)), 1)
 		del(master.customParameters['trademark'])
 
+		
+
+
+
 	def test_GSAlignmentZone(self):
 		
 		master = Glyphs.font.masters[0]
@@ -740,6 +825,9 @@ class GlyphsAppTests(unittest.TestCase):
 		instance = Glyphs.font.instances[0]
 		copyInstance = copy.copy(instance)
 		self.assertIsNotNone(copyInstance.__repr__())
+		
+		# GSInstance.font #::Rafal
+		self.assertIsInstance(instance.font, GSFont)
 		
 		# GSInstance.active
 		self.assertBool(instance.active)
@@ -838,7 +926,13 @@ class GlyphsAppTests(unittest.TestCase):
 		if os.path.exists(path):
 			os.remove(path)
 
+		# GSInstance.lastExportedFilePath #::Rafal
+		# self.assertString(insrtance.lastExportedFilePath)
 
+		# GSFontMaster.addAsMaster #::Rafal
+		oldNumbnerOfMasters = len(instance.font.masters)
+		instance.addAsMaster()
+		self.assertEqual(len(instance.font.masters), oldNumbnerOfMasters + 1)
 
 	def test_GSGlyph(self):
 		
