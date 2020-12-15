@@ -6345,11 +6345,12 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 		attributes
 		color
 		colorObject
-		components
+		shapes
 		guides
 		annotations
 		hints
 		anchors
+		components
 		paths
 		selection
 		LSB
