@@ -4067,7 +4067,15 @@ def _______________________(): pass
 Implementation of the axis object. 
 
 .. class:: GSAxis()
+	Properties
 
+	.. autosummary::
+
+		name
+		axisTag
+		axisId
+		hidden
+		font
 '''
 
 GSAxis.__new__ = staticmethod(GSObject__new__)
@@ -4079,14 +4087,49 @@ GSAxis.__copy__ = GSObject__copy__
 GSAxis.__deepcopy__ = GSObject__copy__
 
 GSAxis.font = property(lambda self: self.pyobjc_instanceMethods.font())
+'''
+	.. attribute:: font
 
+		Reference to the :class:`GSFont` object that contains the axis. Normally that is set by the app.
+
+	:type: GSFont
+'''
 GSAxis.name = property(lambda self: self.pyobjc_instanceMethods.name(),
 					   lambda self, value: self.setName_(value))
+'''
+   .. attribute:: name
+
+	   The name of the axis
+
+   :type: str
+'''
 GSAxis.axisTag = property(lambda self: self.pyobjc_instanceMethods.axisTag(),
 						  lambda self, value: self.setAxisTag_(value))
-GSAxis.axisId = property(lambda self: self.pyobjc_instanceMethods.axisId(),
-					 lambda self, value: self.setAxisId_(value))
+'''
+	.. attribute:: axisTag
 
+		The axisTag. this is a four letter string. see `OpenType Design-Variation Axis Tag Registry <https://docs.microsoft.com/en-us/typography/opentype/spec/dvaraxisreg>`_.
+
+	:type: str
+'''
+GSAxis.axisId = property(lambda self: self.pyobjc_instanceMethods.axisId(),
+						 lambda self, value: self.setAxisId_(value))
+'''
+	.. attribute:: id
+
+		The id to link the values in the masters
+
+	:type: str
+'''
+GSAxis.hidden = property(lambda self: bool(self.pyobjc_instanceMethods.hidden()),
+						 lambda self, value: self.setHidden_(value))
+'''
+	.. attribute:: hidden
+
+		If the axis should be shown to the user
+
+	:type: bool
+'''
 
 ##################################################################################
 #
@@ -4151,7 +4194,7 @@ GSMetric.id = property(lambda self: self.pyobjc_instanceMethods.id())
 '''
 	.. attribute:: id
 
-		The id to link the value in the masters
+		The id to link the values in the masters
 
 	:type: str
 '''
