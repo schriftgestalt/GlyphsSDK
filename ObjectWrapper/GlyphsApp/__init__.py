@@ -440,8 +440,8 @@ The mothership. Everything starts here.
 	Properties
 
 	.. autosummary::
-        currentDocument
-        documents
+		currentDocument
+		documents
 		font
 		fonts
 		reporters
@@ -502,7 +502,7 @@ GSApplication.documents = property(lambda self: AppDocumentProxy(self))
 	.. attribute:: documents
 
 	:return: An array of `GSDocument` open objects.
-	:rtype: :class:`AppDocumentProxy`
+	:rtype: list
 
 	.. code-block:: python
 
@@ -569,8 +569,6 @@ GSApplication.reporters = property(lambda self: GSCallbackHandler.reporterInstan
 	.. attribute:: reporters
 
 	List of available reporter plug-ins (same as bottom section in the 'View' menu). These are the actual objects. You can get hold of their names using `object.__class__.__name__`.
-	
-	Sidenote: Glyphs treats Master Compatibility reporter also as a plug-in. The difference is that this reporter is installed along with the app. Don't be suprised if you will see it in the 	`Glyphs.reporters` attribute.
 
 	Also see :meth:`GSApplication.activateReporter()` and :meth:`GSApplication.deactivateReporter()` methods below to activate/deactivate them.
 
@@ -596,7 +594,7 @@ GSApplication.activeReporters = property(lambda self: GSCallbackHandler.activeRe
 	
 	List of activated reporter plug-ins.
 
-    .. code-block:: python
+	.. code-block:: python
 
 		# Activate a plugin
 		Glyphs.activateReporter(Glyphs.reporters[0])
@@ -604,7 +602,7 @@ GSApplication.activeReporters = property(lambda self: GSCallbackHandler.activeRe
 		# list of currently active reporter plug-ins 
 		activeReporters = Glyphs.activeReporters
 	
-	:return: NSArray object
+	:return: list
 
 '''
 
@@ -768,7 +766,7 @@ GSApplication.registerDefaults = python_method(__registerDefaults__)
 
 '''
 	.. attribute:: defaults
-	
+		
 		A dict like object for storing preferences. You can get and set key-value pairs.
 
 		Please be careful with your keys. Use a prefix that uses the reverse domain name. e.g. "com.MyName.foo.bar".
@@ -5738,7 +5736,7 @@ GSGlyph.layers = property(lambda self: GlyphLayerProxy(self),
 		The layers of the glyph, collection of :class:`GSLayer` objects. You can access them either by index or by layer ID, which can be a :attr:`GSFontMaster.id`.
 		The layer IDs are usually a unique string chosen by Glyphs.app and not set manually. They may look like this: 3B85FBE0-2D2B-4203-8F3D-7112D42D745E
 
-		:type: list, dict
+	:type: list, dict
 
 		.. code-block:: python
 
