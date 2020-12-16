@@ -440,7 +440,8 @@ The mothership. Everything starts here.
 	Properties
 
 	.. autosummary::
-
+        currentDocument
+        documents
 		font
 		fonts
 		reporters
@@ -484,9 +485,31 @@ The mothership. Everything starts here.
 	**Properties**
 '''
 GSApplication.currentDocument = property(lambda self: NSApp().currentFontDocument())
+'''
+	.. attribute:: currentDocument
 
+	:return: The active :class:`GSDocument` object or None.
+	:rtype: :class:`GSDocument`
+
+	.. code-block:: python
+
+		# topmost open document
+		document = Glyphs.currentDocument
+
+'''
 GSApplication.documents = property(lambda self: AppDocumentProxy(self))
+'''
+	.. attribute:: documents
 
+	:return: An array of `GSDocument` open objects.
+	:rtype: :class:`AppDocumentProxy`
+
+	.. code-block:: python
+
+		# list of open documents
+		documents = Glyphs.documents
+
+'''
 def Glyphs__repr__(self):
 	return '<Glyphs.app>'
 GSApplication.__repr__ = python_method(Glyphs__repr__)
@@ -546,6 +569,8 @@ GSApplication.reporters = property(lambda self: GSCallbackHandler.reporterInstan
 	.. attribute:: reporters
 
 	List of available reporter plug-ins (same as bottom section in the 'View' menu). These are the actual objects. You can get hold of their names using `object.__class__.__name__`.
+	
+	Sidenote: Glyphs treats Master Compatibility reporter also as a plug-in. The difference is that this reporter is installed along with the app. Don't be suprised if you will see it in the 	`Glyphs.reporters` attribute.
 
 	Also see :meth:`GSApplication.activateReporter()` and :meth:`GSApplication.deactivateReporter()` methods below to activate/deactivate them.
 
@@ -570,6 +595,16 @@ GSApplication.activeReporters = property(lambda self: GSCallbackHandler.activeRe
 	.. attribute:: activeReporters
 	
 	List of activated reporter plug-ins.
+
+    .. code-block:: python
+
+		# Activate a plugin
+		Glyphs.activateReporter(Glyphs.reporters[0])
+
+		# list of currently active reporter plug-ins 
+		activeReporters = Glyphs.activeReporters
+	
+	:return: NSArray object
 
 '''
 
@@ -733,7 +768,7 @@ GSApplication.registerDefaults = python_method(__registerDefaults__)
 
 '''
 	.. attribute:: defaults
-
+	
 		A dict like object for storing preferences. You can get and set key-value pairs.
 
 		Please be careful with your keys. Use a prefix that uses the reverse domain name. e.g. "com.MyName.foo.bar".
@@ -6345,11 +6380,12 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 		attributes
 		color
 		colorObject
-		components
+		shapes
 		guides
 		annotations
 		hints
 		anchors
+		components
 		paths
 		selection
 		LSB
