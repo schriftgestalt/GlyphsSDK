@@ -288,6 +288,10 @@ width = 600;
 production = someSmily;
 script = "Black Letter";
 subCategory = Emoji;
+tags = (
+new,
+unfinished
+);
 },
 {
 export = 0;
