@@ -1,5 +1,5 @@
 {
-.appVersion = "1348";
+.appVersion = "1350";
 DisplayStrings = (
 A,
 AB,
@@ -235,6 +235,20 @@ width = 200;
 }
 );
 unicode = 0020;
+},
+{
+glyphname = smily;
+production = someSmily;
+lastChange = "2020-12-17 12:02:33 +0000";
+layers = (
+{
+layerId = m01;
+width = 600;
+}
+);
+script = "Black Letter";
+category = Symbol;
+subCategory = Emoji;
 },
 {
 export = 0;
