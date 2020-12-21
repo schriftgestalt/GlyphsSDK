@@ -13,8 +13,8 @@ body {
 }
 pre {
 	max-width :630px;
-    -moz-tab-size: 4;
-    tab-size: 4;
+	-moz-tab-size: 4;
+	tab-size: 4;
 }
 /*------------------------------------*\
 	#LIST-INLINE
@@ -242,14 +242,17 @@ pre {
 	padding-top: 1em;
 	padding-right: 1em;
 	padding-bottom: 1em;
-	padding-left: 1em;
+	padding-left: 17px !important;
 	background-color: #e4e6e1;
 	border-radius: 5px;
 	max-width: 100%;
 	overflow: auto;
 }
+.highlight {
+	margin-left:-15px;
+}
 dl.field-list > dt {
-	padding-left: 30px;
+	padding-left: 0;
 	padding-right: 2px;
 }
 dl.field-list, dd {

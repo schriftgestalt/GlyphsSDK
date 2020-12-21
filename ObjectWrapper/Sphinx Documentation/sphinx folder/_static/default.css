@@ -195,6 +195,8 @@ h1 .pre {
 }
 pre, .pre {
 /*	font-family: OliveGreen, monospace;*/
+	-moz-tab-size: 4;
+	tab-size: 4;
 }
 tt {
 /*	font-family: "Graublau Sans", sans-serif;*/

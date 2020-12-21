@@ -63,7 +63,7 @@ doc = '\n'.join(r.findall(code))
 
 # touch up code
 doc = re.sub('((.*?)attribute(.*))', '\n\g<0>\n', doc)
-doc = doc.replace('	:type', '\n	:type')
+#doc = doc.replace('	:type', '\n	:type')
 doc = re.sub('((.*?)code-block(.*))', '\n\g<0>\n', doc)
 
 # Export Sphinx Docu
@@ -95,10 +95,10 @@ html = re.sub('&amp; <a href="https://github.com/bitprophet/alabaster">Alabaster
 html = html.replace("\n\n|\n", "|")
 html = html.replace("A collection of string constants.", "")
 html = html.replace("<p></p>", "")
-html = html.replace("\n\n", "\n")
-html = html.replace("\n\n", "\n")
-html = html.replace("\n\n", "\n")
-html = html.replace("\n\n", "\n")
+# html = html.replace("\n\n", "\n")
+# html = html.replace("\n\n", "\n")
+# html = html.replace("\n\n", "\n")
+# html = html.replace("\n\n", "\n")
 
 
 WriteToFile(os.path.join(path, '_build', 'html', 'index.html'), html)
