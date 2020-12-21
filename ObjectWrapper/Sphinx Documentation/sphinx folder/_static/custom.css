@@ -13,6 +13,8 @@ body {
 }
 pre {
 	max-width :630px;
+    -moz-tab-size: 4;
+    tab-size: 4;
 }
 /*------------------------------------*\
 	#LIST-INLINE
