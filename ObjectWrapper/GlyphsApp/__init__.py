@@ -705,18 +705,18 @@ class DefaultsProxy(Proxy):
 	def __getitem__(self, key):
 		if not isString(key):
 			raise TypeError("defaults key must be str, not %s" % type(key).__name__)
-		return NSUserDefaults.standardUserDefaults().objectForKey_(key)
+		return NSUserDefaults.standardUserDefaults().objectForKey_(objcObject(key))
 	def __setitem__(self, key, value):
 		if not isString(key):
 			raise TypeError("defaults key must be str, not %s" % type(key).__name__)
 		if value is not None:
-			NSUserDefaults.standardUserDefaults().setObject_forKey_(value, key)
+			NSUserDefaults.standardUserDefaults().setObject_forKey_(objcObject(value), objcObject(key))
 		else:
 			NSUserDefaults.standardUserDefaults().removeObjectForKey_(key)
 	def __delitem__(self, key):
 		if not isString(key):
 			raise TypeError("defaults key must be str, not %s" % type(key).__name__)
-		NSUserDefaults.standardUserDefaults().removeObjectForKey_(key)
+		NSUserDefaults.standardUserDefaults().removeObjectForKey_(objcObject(key))
 	def get(self, key, default = None):
 		if not isString(key):
 			raise TypeError("defaults key must be str, not %s" % type(key).__name__)
@@ -750,14 +750,14 @@ def printtraceback():
 
 def __registerDefault__(self, key, value):
 	if key != None and value != None and len(key) > 2:
-		NSUserDefaults.standardUserDefaults().registerDefaults_({key : value})
+		NSUserDefaults.standardUserDefaults().registerDefaults_(objcObject({key : value}))
 	else:
 		raise KeyError
 GSApplication.registerDefault = python_method(__registerDefault__)
 
 def __registerDefaults__(self, defaults):
 	if defaults is not None:
-		NSUserDefaults.standardUserDefaults().registerDefaults_(defaults)
+		NSUserDefaults.standardUserDefaults().registerDefaults_(objcObject(defaults))
 	else:
 		raise ValueError
 GSApplication.registerDefaults = python_method(__registerDefaults__)
@@ -791,14 +791,14 @@ class BoolDefaultsProxy(DefaultsProxy):
 	def __getitem__(self, key):
 		if not isString(key):
 			raise TypeError("defaults key must be str, not %s" % type(key).__name__)
-		return NSUserDefaults.standardUserDefaults().boolForKey_(key)
+		return NSUserDefaults.standardUserDefaults().boolForKey_(objcObject(key))
 	def __setitem__(self, key, value):
 		if not isString(key):
 			raise TypeError("defaults key must be str, not %s" % type(key).__name__)
 		if value is None:
-			NSUserDefaults.standardUserDefaults().removeObjectForKey_(key)
+			NSUserDefaults.standardUserDefaults().removeObjectForKey_(objcObject(key))
 		elif isinstance(value, bool):
-			NSUserDefaults.standardUserDefaults().setBool_forKey_(value, key)
+			NSUserDefaults.standardUserDefaults().setBool_forKey_(bool(value), objcObject(key))
 		else:
 			raise TypeError("boolDefaults only accepts values of type bool, not %s" % type(value).__name__)
 	def get(self, key, default = None):
@@ -814,11 +814,12 @@ GSApplication.boolDefaults = property(lambda self: BoolDefaultsProxy(self))
 	.. attribute:: boolDefaults
 		Access to default settings cast to a bool.
 
-    :type: bool
+		:type: bool
 
 		.. code-block:: python
 			if Glyphs.boolDefaults["com.MyName.foo.bar"]:
 				print('"com.MyName.foo.bar" is set')
+
 
 '''
 
