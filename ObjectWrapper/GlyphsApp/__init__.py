@@ -6633,8 +6633,9 @@ GSLayer.layerId = property(lambda self: self.pyobjc_instanceMethods.layerId(),
 		For master layers this should be the id of the :class:`fontMaster <GSFontMaster>`.
 		It could look like this: "FBCA074D-FCF3-427E-A700-7E318A949AE5"
 
-		.. code-block:: python
+		:type: str
 
+		.. code-block:: python
 			# see ID of active layer
 			id = font.selectedLayers[0].layerId
 			print(id)
@@ -6646,8 +6647,6 @@ GSLayer.layerId = property(lambda self: self.pyobjc_instanceMethods.layerId(),
 
 			# for master layers, use ID of masters
 			layer = font.glyphs['a'].layers[font.masters[0].id]
-
-		:type: str
 
 '''
 
@@ -6666,8 +6665,9 @@ GSLayer.color = property(lambda self: __getColorIndex__(self),
 	.. attribute:: color
 		Color marking of glyph in UI
 
-		.. code-block:: python
+		:type: int
 
+		.. code-block:: python
 			glyph.color = 0		# red
 			glyph.color = 1		# orange
 			glyph.color = 2		# brown
@@ -6682,15 +6682,14 @@ GSLayer.color = property(lambda self: __getColorIndex__(self),
 			glyph.color = 11	# charcoal
 			glyph.color = None	# not colored, white (before version 1235, use -1)
 
-		:type: int
-
 '''
 
 GSLayer.colorObject = property(lambda self: self.pyobjc_instanceMethods.color(), lambda self, value: self.setColor_(value))
 '''
 	.. attribute:: colorObject
-
 		NSColor object of layer color, useful for drawing in plugins.
+
+		:type: NSColor
 
 		.. code-block:: python
 			# use layer color to draw the outline
@@ -6711,8 +6710,6 @@ GSLayer.colorObject = property(lambda self: self.pyobjc_instanceMethods.color(),
 			# set the layer color.
 			layer.colorObject = NSColor.colorWithDeviceRed_green_blue_alpha_(247.0 / 255.0, 74.0 / 255.0, 62.9 / 255.0, 1)
 
-		:type: NSColor
-
 '''
 
 
@@ -6721,11 +6718,11 @@ GSLayer.components = property(lambda self: self.pyobjc_instanceMethods.component
 	.. attribute:: components
 		Collection of :class:`GSComponent` objects. This is only a helper proxy to iterate all components (without paths). To add/remove items, use `GSLayer.shapes`.
 
+		:type: list
+
 		.. code-block:: python
 			for component in layer.component:
 				print(component)
-
-		:type: list
 
 '''
 
@@ -6737,6 +6734,8 @@ GSLayer.guideLines = GSLayer.guides
 '''
 	.. attribute:: guides
 		List of :class:`GSGuide` objects.
+
+		:type: list
 
 		.. code-block:: python
 			# access all guides
@@ -6756,8 +6755,6 @@ GSLayer.guideLines = GSLayer.guides
 			import copy
 			layer.guides = copy.copy(anotherlayer.guides)
 
-		:type: list
-
 '''
 
 GSLayer.annotations = property(lambda self: LayerAnnotationProxy(self),
@@ -6766,8 +6763,9 @@ GSLayer.annotations = property(lambda self: LayerAnnotationProxy(self),
 	.. attribute:: annotations
 		List of :class:`GSAnnotation` objects.
 
-		.. code-block:: python
+		:type: list
 
+		.. code-block:: python
 			# access all annotations
 			for annotation in layer.annotations:
 				print(annotation)
@@ -6785,8 +6783,6 @@ GSLayer.annotations = property(lambda self: LayerAnnotationProxy(self),
 			import copy
 			layer.annotations = copy.copy(anotherlayer.annotations)
 
-		:type: list
-
 '''
 
 
@@ -6796,8 +6792,9 @@ GSLayer.hints = property(lambda self: LayerHintsProxy(self),
 	.. attribute:: hints
 		List of :class:`GSHint` objects.
 
-		.. code-block:: python
+		:type: list
 
+		.. code-block:: python
 			# access all hints
 			for hint in layer.hints:
 				print(hint)
@@ -6815,7 +6812,6 @@ GSLayer.hints = property(lambda self: LayerHintsProxy(self),
 			layer.hints = copy.copy(anotherlayer.hints)
 			# remember to reconnect the hints' nodes with the new layer's nodes
 
-		:type: list
 '''
 
 GSLayer.anchors = property(lambda self: LayerAnchorsProxy(self),
@@ -6824,8 +6820,9 @@ GSLayer.anchors = property(lambda self: LayerAnchorsProxy(self),
 	.. attribute:: anchors
 		List of :class:`GSAnchor` objects.
 
-		.. code-block:: python
+		:type: list, dict
 
+		.. code-block:: python
 			# access all anchors:
 			for a in layer.anchors:
 				print(a)
@@ -6839,8 +6836,6 @@ GSLayer.anchors = property(lambda self: LayerAnchorsProxy(self),
 			# copy anchors from another layer
 			import copy
 			layer.anchors = copy.copy(anotherlayer.anchors)
-
-		:type: list, dict
 
 '''
 
@@ -6897,8 +6892,9 @@ GSLayer.selection = property(lambda self: LayerSelectionProxy(self),
 		This list contains **all selected items**, including **nodes**, **anchors**, **guides** etc.
 		If you want to work specifically with nodes, for instance, you may want to cycle through the nodes (or anchors etc.) and check whether they are selected. See example below.
 
-		.. code-block:: python
+		:type: list
 
+		.. code-block:: python
 			# access all selected nodes
 			for path in layer.paths:
 				for node in path.nodes: # (or path.anchors etc.)
@@ -6907,7 +6903,6 @@ GSLayer.selection = property(lambda self: LayerSelectionProxy(self),
 			# clear selection
 			layer.clearSelection()
 
-		:type: list
 '''
 
 GSLayer.LSB = property(lambda self: self.pyobjc_instanceMethods.LSB(),
@@ -7069,7 +7064,6 @@ GSLayer.bounds = property(lambda self: self.pyobjc_instanceMethods.bounds())
 		:type: NSRect
 
 		.. code-block:: python
-
 			# origin
 			print(layer.bounds.origin.x, layer.bounds.origin.y)
 
@@ -7114,7 +7108,6 @@ GSLayer.backgroundImage = property(lambda self: self.pyobjc_instanceMethods.back
 		:type: :class:`GSBackgroundImage`
 
 		.. code-block:: python
-
 			# set background image
 			layer.backgroundImage = GSBackgroundImage('/path/to/file.jpg')
 
@@ -7128,7 +7121,6 @@ GSLayer.bezierPath = property(lambda self: self.pyobjc_instanceMethods.bezierPat
 		The layer as an NSBezierPath object. Useful for drawing glyphs in plug-ins.
 
 		.. code-block:: python
-
 			# draw the path into the Edit view
 			NSColor.redColor().set()
 			layer.bezierPath.fill()
@@ -7141,13 +7133,13 @@ GSLayer.openBezierPath = property(lambda self: self.pyobjc_instanceMethods.openB
 	.. attribute:: openBezierPath
 		All open paths of the layer as an NSBezierPath object. Useful for drawing glyphs as outlines in plug-ins.
 
-		.. code-block:: python
+		:type: NSBezierPath
 
+		.. code-block:: python
 			# draw the path into the Edit view
 			NSColor.redColor().set()
 			layer.openBezierPath.stroke()
 
-			:type: NSBezierPath
 '''
 
 # keep for compatibility:
@@ -7159,16 +7151,15 @@ GSLayer.drawBezierPath = property(lambda self: Layer__drawBezierPath(self))
 GSLayer.completeBezierPath = property(lambda self: self.pyobjc_instanceMethods.drawBezierPath())
 '''
 	.. attribute:: completeBezierPath
-
 		The layer as an NSBezierPath object including paths from components. Useful for drawing glyphs in plug-ins.
 
-		.. code-block:: python
+		:type: NSBezierPath
 
+		.. code-block:: python
 			# draw the path into the Edit view
 			NSColor.redColor().set()
 			layer.completeBezierPath.fill()
 
-		:type: NSBezierPath
 '''
 
 # keep for compatibility:
@@ -7179,16 +7170,15 @@ GSLayer.drawOpenBezierPath = property(lambda self: Layer__drawOpenBezierPath(sel
 GSLayer.completeOpenBezierPath = property(lambda self: self.pyobjc_instanceMethods.drawOpenBezierPath())
 '''
 	.. attribute:: completeOpenBezierPath
-
 		All open paths of the layer as an NSBezierPath object including paths from components. Useful for drawing glyphs as outlines in plugins.
 
-		.. code-block:: python
+		:type: NSBezierPath
 
+		.. code-block:: python
 			# draw the path into the Edit view
 			NSColor.redColor().set()
 			layer.completeOpenBezierPath.stroke()
 
-		:type: NSBezierPath
 '''
 
 
@@ -7198,6 +7188,7 @@ GSLayer.isAligned = property(lambda self: self.pyobjc_instanceMethods.isAligned(
 		Indicates if the components are auto aligned.
 
 		:type: bool
+
 '''
 
 GSLayer.isSpecialLayer = property(lambda self: bool(self.pyobjc_instanceMethods.isSpecialLayer()))
@@ -7206,6 +7197,7 @@ GSLayer.isSpecialLayer = property(lambda self: bool(self.pyobjc_instanceMethods.
 		If the layer is a brace, bracket or a smart component layer
 
 		:type: bool
+
 '''
 
 GSLayer.isMasterLayer = property(lambda self: bool(self.pyobjc_instanceMethods.isMasterLayer()))
@@ -7213,8 +7205,8 @@ GSLayer.isMasterLayer = property(lambda self: bool(self.pyobjc_instanceMethods.i
 	.. attribute:: isMasterLayer
 		If it is a master layer
 	
-
 		:type: bool
+
 '''
 
 GSLayer.italicAngle = property(lambda self: float(self.pyobjc_instanceMethods.italicAngle()))
@@ -7223,6 +7215,7 @@ GSLayer.italicAngle = property(lambda self: float(self.pyobjc_instanceMethods.it
 		The italic angle that applies to this layer
 
 		:type: float
+
 '''
 
 
@@ -7239,6 +7232,7 @@ GSLayer.userData = property(lambda self: UserDataProxy(self))
 
 			# delete value
 			del layer.userData['rememberToMakeCoffee']
+
 '''
 
 GSLayer.tempData = property(lambda self: TempDataProxy(self))
@@ -7255,6 +7249,7 @@ GSLayer.tempData = property(lambda self: TempDataProxy(self))
 
 			# delete value
 			del layer.tempData['rememberToMakeCoffee']
+
 '''
 
 GSLayer.smartComponentPoleMapping = property(lambda self: SmartComponentPoleMappingProxy(self))
@@ -7294,17 +7289,14 @@ GSLayer.smartComponentPoleMapping = property(lambda self: SmartComponentPoleMapp
 
 
 	.. function:: decomposeComponents()
-
 		Decomposes all components of the layer at once.
 
 	.. function:: decomposeCorners()
+		Decomposes all corners of the layer at once.
 
 		.. versionadded:: 2.4
 
-		Decomposes all corners of the layer at once.
-
 	.. function:: compareString()
-
 		Returns a string representing the outline structure of the glyph, for compatibility comparison.
 
 		:return: The comparison string
@@ -7312,17 +7304,13 @@ GSLayer.smartComponentPoleMapping = property(lambda self: SmartComponentPoleMapp
 		:rtype: string
 
 		.. code-block:: python
-
 			print(layer.compareString())
-			oocoocoocoocooc_oocoocoocloocoocoocoocoocoocoocoocooc_
 
 	.. function:: connectAllOpenPaths()
-
 		Closes all open paths when end points are further than 1 unit away from each other.
 
 
 	.. function:: copyDecomposedLayer()
-
 		Returns a copy of the layer with all components decomposed.
 
 		:return: A new layer object
@@ -7330,18 +7318,16 @@ GSLayer.smartComponentPoleMapping = property(lambda self: SmartComponentPoleMapp
 		:rtype: :class:`GSLayer`
 
 	.. function:: syncMetrics()
-
 		Take over LSB and RSB from linked glyph.
 
 		.. code-block:: python
-
 			# sync metrics of all layers of this glyph
 			for layer in glyph.layers:
 				layer.syncMetrics()
 
 	.. function:: correctPathDirection()
-
 		Corrects the path direction.
+
 '''
 
 def RemoveOverlap(self, checkSelection=False):
@@ -7350,15 +7336,13 @@ GSLayer.removeOverlap = RemoveOverlap
 
 '''
 	.. function:: removeOverlap()
-
 		Joins all contours.
 
 		:param checkSelection: if the selection will be considered. Default: False
 
 	.. function:: roundCoordinates()
-
-	
 		Round the positions of all coordinates to the grid (size of which is set in the Font Info).
+
 '''
 
 def Layer_addNodesAtExtremes(self, force=False):
@@ -7368,9 +7352,8 @@ GSLayer.addNodesAtExtremes = Layer_addNodesAtExtremes
 
 '''
 	.. function:: addNodesAtExtremes()
-
-	
 		Add nodes at layer's extrema, e.g., top, bottom etc.
+
 '''
 
 def __GSLayer_applyTransform__(self, transformStruct):
@@ -7383,7 +7366,6 @@ GSLayer.applyTransform = python_method(__GSLayer_applyTransform__)
 
 '''
 	.. function:: applyTransform
-
 		Apply a transformation matrix to the layer.
 
 		.. code-block:: python
@@ -7395,6 +7377,7 @@ GSLayer.applyTransform = python_method(__GSLayer_applyTransform__)
 						0.0, # x position
 						0.0  # y position
 						])
+
 '''
 
 def __GSLayer_transform__(self, transform, selection=False, components=True):
@@ -7402,18 +7385,16 @@ def __GSLayer_transform__(self, transform, selection=False, components=True):
 GSLayer.transform = python_method(__GSLayer_transform__)
 '''
 	.. function:: transform
-
 		Apply a :attr:`NSAffineTransform` to the layer.
 
 		:param Point1: one point
 		:param Point2: the other point
 
-
 		.. code-block:: python
-		
 			transformation = NSAffineTransform()
 			transformation.rotate(45, (200, 200))
 			layer.transform(transformation)
+
 '''
 
 def BeginChanges(self):
@@ -7424,10 +7405,10 @@ GSLayer.beginChanges = BeginChanges
 
 '''
 	.. function:: beginChanges()
-
 		Call this before you do bigger changes to the Layer.
 		This will increase performance and prevent undo problems.
 		Always call layer.endChanges() if you are finished.
+
 '''
 
 def EndChanges(self):
@@ -7438,8 +7419,8 @@ GSLayer.endChanges = EndChanges
 
 '''
 	.. function:: endChanges()
-
 		Call this if you have called layer.beginChanges before. Make sure to group bot calls properly.
+
 '''
 
 def CutBetweenPoints(self, Point1, Point2):
@@ -7450,16 +7431,15 @@ GSLayer.cutBetweenPoints = CutBetweenPoints
 
 '''
 	.. function:: cutBetweenPoints(Point1, Point2)
-
 		Cuts all paths that intersect the line from Point1 to Point2
 
 		:param Point1: one point
 		:param Point2: the other point
 
 		.. code-block:: python
-
 			# cut glyph in half horizontally at y=100
 			layer.cutBetweenPoints(NSPoint(0, 100), NSPoint(layer.width, 100))
+
 '''
 
 def IntersectionsBetweenPoints(self, Point1, Point2, components=False):
@@ -7471,18 +7451,15 @@ NSConcreteValue.y = property(lambda self: self.pointValue().y)
 
 '''
 	.. function:: intersectionsBetweenPoints(Point1, Point2, components=False)
-
 		Return all intersection points between a measurement line and the paths in the layer. This is basically identical to the measurement tool in the UI.
 
 		Normally, the first returned point is the starting point, the last returned point is the end point. Thus, the second point is the first intersection, the second last point is the last intersection.
-
 
 		:param Point1: one point
 		:param Point2: the other point
 		:param components: if components should be measured. Default: False
 
 		.. code-block:: python
-
 			# show all intersections with glyph at y=100
 			intersections = layer.intersectionsBetweenPoints((-1000, 100), (layer.width+1000, 100))
 			print(intersections)
@@ -7492,6 +7469,7 @@ NSConcreteValue.y = property(lambda self: self.pointValue().y)
 
 			# right sidebearing at measurement line
 			print(layer.width - intersections[-2].x)
+
 '''
 
 def Layer_addMissingAnchors(self):
@@ -7501,29 +7479,25 @@ GSLayer.addMissingAnchors = Layer_addMissingAnchors
 
 '''
 	.. function:: addMissingAnchors()
-
 		Adds missing anchors defined in the glyph database.
+
 '''
 
 
 '''
 	.. function:: clearSelection()
-
-	
 		Unselect all selected items in this layer.
+
 '''
 
 '''
 	.. function:: clear()
-
-	
 		Remove all elements from layer.
+
 '''
 
 '''
 	.. function:: swapForegroundWithBackground()
-
-	
 		Swap Foreground layer with Background layer.
 '''
 
@@ -7537,8 +7511,6 @@ GSLayer.reinterpolate = Layer_replaceLayerWithInterpolation
 
 '''
 	.. function:: reinterpolate()
-
-	
 		Re-interpolate a layer according the other layers and its interpolation values.
 
 		Applies to both master layers as well as brace layers and is equivalent to the 'Re-Interpolate' command from the Layers palette.
@@ -7810,7 +7782,6 @@ GSAnchor.position = property(lambda self: self.pyobjc_instanceMethods.position()
 		:type: NSPoint
 
 		.. code-block:: python
-
 			# read position
 			print(layer.anchors['top'].position.x, layer.anchors['top'].position.y)
 
@@ -7819,6 +7790,7 @@ GSAnchor.position = property(lambda self: self.pyobjc_instanceMethods.position()
 
 			# increase vertical position by 50 units
 			layer.anchors['top'].position = NSPoint(layer.anchors['top'].position.x, layer.anchors['top'].position.y + 50)
+
 '''
 
 GSAnchor.name = property(lambda self: self.pyobjc_instanceMethods.name(),
@@ -7834,7 +7806,6 @@ GSAnchor.name = property(lambda self: self.pyobjc_instanceMethods.name(),
 		Selection state of anchor in UI.
 
 		.. code-block:: python
-
 			# select anchor
 			layer.anchors[0].selected = True
 
@@ -7842,6 +7813,7 @@ GSAnchor.name = property(lambda self: self.pyobjc_instanceMethods.name(),
 			print(layer.anchors[0].selected)
 
 		:type: bool
+
 '''
 
 GSAnchor.userData = property(lambda self: UserDataProxy(self))
