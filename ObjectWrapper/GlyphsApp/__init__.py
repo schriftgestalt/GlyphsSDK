@@ -7822,8 +7822,6 @@ GSAnchor.userData = property(lambda self: UserDataProxy(self))
 	.. attribute:: userData
 		A dictionary to store user data. Use a unique key and only use objects that can be stored in a property list (string, list, dict, numbers, NSData) otherwise the data will not be recoverable from the saved file.
 
-		.. versionadded:: 3
-
 		:type: dict
 
 		.. code-block:: python
@@ -7832,6 +7830,9 @@ GSAnchor.userData = property(lambda self: UserDataProxy(self))
 
 			# delete value
 			del component.userData['rememberToMakeCoffee']
+
+		.. versionadded:: 3
+
 '''
 
 def DrawAnchorWithPen(self, pen):
@@ -7951,6 +7952,7 @@ GSComponent.position = property(lambda self: self.pyobjc_instanceMethods.positio
 		The position of the component.
 
 		:type: NSPoint
+
 '''
 
 GSComponent.scale = property(lambda self: self.pyobjc_instanceMethods.scale(),
@@ -7959,12 +7961,12 @@ GSComponent.scale = property(lambda self: self.pyobjc_instanceMethods.scale(),
 
 '''
 	.. attribute:: scale
-
 		Scale factor of the component.
 
 		Set a single float to scale proportionally or a tuple for different horizontal and vertical scale.
 
 		:type: float or tuple
+
 '''
 
 GSComponent.rotation = property(lambda self: self.angle(),
@@ -7976,6 +7978,7 @@ GSComponent.rotation = property(lambda self: self.angle(),
 		Rotation angle of the component.
 
 		:type: float
+
 '''
 
 GSComponent.componentName = property(lambda self: self.pyobjc_instanceMethods.componentName(),
@@ -7986,6 +7989,7 @@ GSComponent.componentName = property(lambda self: self.pyobjc_instanceMethods.co
 		The glyph name the component is pointing to.
 
 		:type: str
+
 '''
 
 GSComponent.name = property(lambda self: self.pyobjc_instanceMethods.componentName(),
@@ -7997,7 +8001,8 @@ GSComponent.name = property(lambda self: self.pyobjc_instanceMethods.componentNa
 
 		:type: str
 
-	.. versionadded:: 2.5
+		.. versionadded:: 2.5
+
 
 '''
 
@@ -8008,6 +8013,7 @@ GSComponent.component = property(lambda self: self.pyobjc_instanceMethods.compon
 		The :class:`GSGlyph` the component is pointing to. This is read-only. In order to change the referenced base glyph, set :attr:`componentName <GSComponent.componentName>` to the new glyph name.
 
 		:type: :class:`GSGlyph`
+
 '''
 
 GSComponent.componentLayer = property(lambda self: self.pyobjc_instanceMethods.componentLayer(),
@@ -8022,6 +8028,7 @@ GSComponent.componentLayer = property(lambda self: self.pyobjc_instanceMethods.c
 		:type: :class:`GSLayer`
 
 		.. versionadded:: 2.5
+
 '''
 
 GSComponent.transform = property(lambda self: self.transformStruct(),
@@ -8033,8 +8040,9 @@ GSComponent.transform = property(lambda self: self.transformStruct(),
 		Transformation matrix of the component.
 		If Glyphs 3, this is computed from the scale, rotation and position. 
 
-		.. code-block:: python
+		:type: NSAffineTransformStruct
 
+		.. code-block:: python
 			component.transform = ((
 						0.5, # x scale factor
 						0.0, # x skew factor
@@ -8044,7 +8052,6 @@ GSComponent.transform = property(lambda self: self.transformStruct(),
 						0.0  # y position
 						))
 
-		:type: NSAffineTransformStruct
 '''
 
 
@@ -8057,7 +8064,6 @@ GSComponent.bounds = property(lambda self: self.pyobjc_instanceMethods.bounds(),
 		:type: NSRect
 
 		.. code-block:: python
-
 			component = layer.components[0] # first component
 
 			# origin
@@ -8065,6 +8071,7 @@ GSComponent.bounds = property(lambda self: self.pyobjc_instanceMethods.bounds(),
 
 			# size
 			print(component.bounds.size.width, component.bounds.size.height)
+
 '''
 
 # keep for compatibility:
@@ -8076,45 +8083,46 @@ GSComponent.automaticAlignment = property(lambda self: bool(self.doesAlign() or 
 											doc="Defines whether the component is automatically aligned.")
 '''
 	.. attribute:: automaticAlignment
-
 		Defines whether the component is automatically aligned.
 
 		:type: bool
+
 '''
 GSComponent.alignment = property(lambda self: self.pyobjc_instanceMethods.alignment(),
 								lambda self, value: self.setAlignment_(value))
 
 '''
 	.. attribute:: alignment
-
 		.. versionadded:: 2.5
 
 	TODO
+
 '''
 
 GSComponent.locked = property(lambda self: bool(self.pyobjc_instanceMethods.locked()),
 								lambda self, value: self.setLocked_(value))
 '''
 	.. attribute:: locked
-
 		.. versionadded:: 2.5
 
 		If the component is locked
 		TODO
 
 		:type: bool
+
 '''
 
 GSComponent.anchor = property(lambda self: self.pyobjc_instanceMethods.anchor(),
 								lambda self, value: self.setAnchor_(value))
 '''
 	.. attribute:: anchor
-
 		If more than one anchor/_anchor pair would match, this property can be used to set the anchor to use for automatic alignment
 
 		This can be set from the anchor button in the component info box in the UI
 
-		:type: str'''
+		:type: str
+
+'''
 
 
 
@@ -8131,6 +8139,7 @@ GSComponent.anchor = property(lambda self: self.pyobjc_instanceMethods.anchor(),
 			print(layer.components[0].selected)
 
 		:type: bool
+
 '''
 
 def DrawComponentWithPen(self, pen):
@@ -8142,8 +8151,6 @@ GSComponent.drawPoints = DrawComponentWithPen
 GSComponent.smartComponentValues = property(lambda self: SmartComponentValuesProxy(self))
 '''
 	.. attribute:: smartComponentValues
-
-
 		Dictionary of interpolations values of the Smart Component. Key are the names, values are between the top and the bottom value of the corresponding :class:`GSSmartComponentAxis` objects. Corresponds to the values of the 'Smart Component Settings' dialog. Returns None if the component is not a Smart Component.
 
 		Also see https://glyphsapp.com/tutorials/smart-components for reference.
@@ -8166,6 +8173,7 @@ GSComponent.smartComponentValues = property(lambda self: SmartComponentValuesPro
 			for component in layer.components:
 				if component.smartComponentValues is not None:
 					# do stuff
+
 '''
 
 GSComponent.bezierPath = property(lambda self: self.pyobjc_instanceMethods.bezierPath())
@@ -8180,7 +8188,6 @@ GSComponent.bezierPath = property(lambda self: self.pyobjc_instanceMethods.bezie
 			# draw the path into the Edit view
 			NSColor.redColor().set()
 			layer.components[0].bezierPath.fill()
-
 		
 '''
 
@@ -8188,25 +8195,24 @@ GSTransformableElement.userData = property(lambda self: UserDataProxy(self))
 
 '''
 	.. attribute:: userData
-
-		.. versionadded:: 2.5
-
 		A dictionary to store user data. Use a unique key and only use objects that can be stored in a property list (string, list, dict, numbers, NSData) otherwise the data will not be recoverable from the saved file.
 
 		:type: dict
+
 		.. code-block:: python
 			# set value
 			component.userData['rememberToMakeCoffee'] = True
 
 			# delete value
 			del component.userData['rememberToMakeCoffee']
+
+		.. versionadded:: 2.5
 '''
 
 GSComponent.tempData = property(lambda self: TempDataProxy(self))
 
 '''
 	.. attribute:: tempData
-
 		A dictionary to store data temporarily. Use a unique key. This will not be saved to file. If you need the data persistent, use component.userData
 
 		:type: dict
@@ -8217,6 +8223,7 @@ GSComponent.tempData = property(lambda self: TempDataProxy(self))
 
 			# delete value
 			del component.tempData['rememberToMakeCoffee']
+
 '''
 
 '''
@@ -8236,11 +8243,12 @@ GSComponent.decompose = python_method(__GSComponent_decompose__)
 
 '''
 	.. function:: decompose([doAnchors=True, doHints=True])
+		Decomposes the component.
 
-	:param doAnchors: get anchors from components
-	:param doHints: get hints from components
+		:param doAnchors: get anchors from components
+		:param doHints: get hints from components
 
-	Decomposes the component.
+
 '''
 
 def __GSComponent_applyTransform__(self, transformStruct):
@@ -8256,7 +8264,6 @@ GSComponent.applyTransform = python_method(__GSComponent_applyTransform__)
 
 '''
 	.. function:: applyTransform
-
 		Apply a transformation matrix to the component.
 
 		.. code-block:: python
@@ -8271,6 +8278,7 @@ GSComponent.applyTransform = python_method(__GSComponent_applyTransform__)
 						0.0, # x position
 						0.0  # y position
 						))
+
 '''
 
 
@@ -8341,7 +8349,7 @@ GSSmartComponentAxis.id = property(lambda self: self.pyobjc_instanceMethods.id()
 
 		:type: str
 
-	.. versionadded:: 2.5
+		.. versionadded:: 2.5
 '''
 
 GSSmartComponentAxis.topValue = property(lambda self: self.pyobjc_instanceMethods.topValue(),
@@ -8411,15 +8419,16 @@ GSShape.locked = property(lambda self: bool(self.pyobjc_instanceMethods.locked()
 		Locked
 
 		:type: bool
+
 '''
 
 GSShape.shapeType = property(lambda self: bool(self.pyobjc_instanceMethods.shapeType()))
 '''
 	.. attribute:: shapeType
-	
 		the type of the shapes. can be GSShapeTypePath or GSShapeTypeComponent
 
 		:type: int
+
 '''
 
 
