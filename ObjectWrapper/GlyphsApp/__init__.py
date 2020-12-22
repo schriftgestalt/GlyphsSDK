@@ -4462,7 +4462,7 @@ GSFontMaster.customParameters = property(lambda self: CustomParametersProxy(self
 		The custom parameters. List of :class:`GSCustomParameter` objects. You can access them by name or by index.
 
 		:type: list, dict
-		
+
 		.. code-block:: python
 			# access all parameters
 			for parameter in font.masters[0].customParameters:
@@ -4683,7 +4683,6 @@ GSInstance.type = property(lambda self: self.pyobjc_instanceMethods.type())
 	.. attribute:: type
 		the type of the instance. Can be either INSTANCETYPESINGLE or INSTANCETYPEVARIABLE.
 		
-
 		:type: int
 '''
 
@@ -4734,14 +4733,13 @@ GSInstance.axes = property(lambda self: MasterAxesProxy(self), lambda self, valu
 	.. attribute:: axes
 		List of floats specifying the positions for each axis
 	
+		:type: list
+
 		.. code-block:: python
 			# setting a value for a specific axis
 			instance.axes[2] = 12
 			# setting all values at once
 			instance.axes = [100, 12, 3.5] # make sure that the count of numbers matches the count of axes
-		
-
-		:type: list
 
 	.. versionadded:: 2.5.2
 '''
@@ -4750,7 +4748,6 @@ GSInstance.properties = property(lambda self: self.mutableArrayValueForKey_("pro
 								 lambda self, values: self.setProperties_(values))
 '''
 	.. attribute:: properties
-
 		Holds the fonts info properties. Can be instances of :class:`GSFontInfoValueSingle` and :class:`GSFontInfoValueLocalized`
 
 		:type: list
@@ -4855,7 +4852,6 @@ GSInstance.font = property(lambda self: self.pyobjc_instanceMethods.font(),
 						   lambda self, value: self.setFont_(value))
 '''
 	.. attribute:: font
-
 		Reference to the :class:`GSFont` object that contains the instance. Normally that is set by the app, only if the instance is not actually added to the font, then set this manually.
 
 		:type: GSFont
@@ -4867,6 +4863,8 @@ GSInstance.customParameters = property(lambda self: CustomParametersProxy(self))
 '''
 	.. attribute:: customParameters
 		The custom parameters. List of :class:`GSCustomParameter` objects. You can access them by name or by index.
+
+		:type: list, dict
 
 		.. code-block:: python
 
@@ -4880,7 +4878,6 @@ GSInstance.customParameters = property(lambda self: CustomParametersProxy(self))
 			# delete a parameter
 			del(font.instances[0].customParameters['hheaLineGap'])
 
-		:type: list, dict
 '''
 
 GSInstance.userData = property(lambda self: UserDataProxy(self))
@@ -4888,14 +4885,14 @@ GSInstance.userData = property(lambda self: UserDataProxy(self))
 	.. attribute:: userData
 		A dictionary to store user data. Use a unique key and only use objects that can be stored in a property list (string, list, dict, numbers, NSData) otherwise the data will not be recoverable from the saved file.
 
+		:type: dict
+
 		.. code-block:: python
 			# set value
 			instance.userData['rememberToMakeCoffee'] = True
 
 			# delete value
 			del instance.userData['rememberToMakeCoffee']
-
-		:type: dict
 
 '''
 
@@ -4954,6 +4951,8 @@ GSInstance.interpolatedFont = property(lambda self: Instance_FontObject(self))
 
 		Note: When accessing several properties of such an instance consecutively, it is advisable to create the instance once into a variable and then use that. Otherwise, the instance object will be completely interpolated upon each access. See sample below.
 
+		:type: :class:`GSFont`
+
 		.. code-block:: python
 
 			# create instance once
@@ -4966,9 +4965,7 @@ GSInstance.interpolatedFont = property(lambda self: Instance_FontObject(self))
 			(<GSFontMaster "Light" width 100.0 weight 75.0>)
 			(<GSInstance "Web" width 100.0 weight 75.0>)
 
-		:type: :class:`GSFont`
-
-	'''
+'''
 
 
 '''
@@ -4977,30 +4974,30 @@ GSInstance.interpolatedFont = property(lambda self: Instance_FontObject(self))
 
 	.. function:: generate([Format, FontPath, AutoHint, RemoveOverlap, UseSubroutines, UseProductionNames, Containers, DecomposeSmartStuff])
 
-	Exports the instance. All parameters are optional.
+		Exports the instance. All parameters are optional.
 
-	:param str The format of the outlines: :const:`OTF` or :const:`TTF`. Default: OTF
-	:param str FontPath: The destination path for the final fonts. If None, it uses the default location set in the export dialog
-	:param bool AutoHint: If autohinting should be applied. Default: True
-	:param bool RemoveOverlap: If overlaps should be removed. Default: True
-	:param bool UseSubroutines: If to use subroutines for CFF. Default: True
-	:param bool UseProductionNames: If to use production names. Default: True
-	:param bool Containers: list of container formats. Use any of the following constants: :const:`PLAIN`, :const:`WOFF`, :const:`WOFF2`, :const:`EOT`. Default: PLAIN
-	:param bool DecomposeSmartStuff: If smart components should be decomposed. Default: True
-	:return: On success, True; on failure, error message.
-	:rtype: bool/list
+		:param str The format of the outlines: :const:`OTF` or :const:`TTF`. Default: OTF
+		:param str FontPath: The destination path for the final fonts. If None, it uses the default location set in the export dialog
+		:param bool AutoHint: If autohinting should be applied. Default: True
+		:param bool RemoveOverlap: If overlaps should be removed. Default: True
+		:param bool UseSubroutines: If to use subroutines for CFF. Default: True
+		:param bool UseProductionNames: If to use production names. Default: True
+		:param bool Containers: list of container formats. Use any of the following constants: :const:`PLAIN`, :const:`WOFF`, :const:`WOFF2`, :const:`EOT`. Default: PLAIN
+		:param bool DecomposeSmartStuff: If smart components should be decomposed. Default: True
+		:return: On success, True; on failure, error message.
+		:rtype: bool/list
 
 
-	.. code-block:: python
+		.. code-block:: python
 
-		# export all instances as OpenType (.otf) and WOFF2 to user's font folder
+			# export all instances as OpenType (.otf) and WOFF2 to user's font folder
 
-		exportFolder = '/Users/myself/Library/Fonts'
+			exportFolder = '/Users/myself/Library/Fonts'
 
-		for instance in Glyphs.font.instances:
-			instance.generate(FontPath = exportFolder, Containers = [PLAIN, WOFF2])
+			for instance in Glyphs.font.instances:
+				instance.generate(FontPath = exportFolder, Containers = [PLAIN, WOFF2])
 
-		Glyphs.showNotification('Export fonts', 'The export of %s was successful.' % (Glyphs.font.familyName))
+			Glyphs.showNotification('Export fonts', 'The export of %s was successful.' % (Glyphs.font.familyName))
 '''
 
 
@@ -5130,8 +5127,9 @@ GSInstance.lastExportedFilePath = property(lambda self: self.tempDataForKey_("la
 
 		Note: When accessing several properties of such an instance consecutively, it is advisable to create the instance once into a variable and then use that. Otherwise, the instance object will be completely interpolated upon each access. See sample below.
 
-		.. code-block:: python
+		:type: str
 
+		.. code-block:: python
 			# create instance once
 			interpolated = Glyphs.font.instances[0].interpolatedFont
 
@@ -5142,7 +5140,6 @@ GSInstance.lastExportedFilePath = property(lambda self: self.tempDataForKey_("la
 			(<GSFontMaster "Light" width 100.0 weight 75.0>)
 			(<GSInstance "Web" width 100.0 weight 75.0>)
 
-		:type: str
 	'''
 
 def AddInstanceAsMaster(self):
@@ -5153,11 +5150,9 @@ GSInstance.addAsMaster = AddInstanceAsMaster
 
 '''
 	.. function:: addAsMaster()
-
-	New after 2.6.2
-
-	Add this instance as a new master to the font. Identical to "Instance as Master" menu item in the Font Info’s Instances section.
-
+		Add this instance as a new master to the font. Identical to "Instance as Master" menu item in the Font Info’s Instances section.
+	
+	.. versionadded:: 2.6.2
 '''
 
 
