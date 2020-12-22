@@ -108,107 +108,85 @@ The mothership. Everything starts here.
 	.. attribute:: currentDocument
 
 
-	:return: The active :class:`GSDocument` object or None.
-	:rtype: :class:`GSDocument`
+		The active :class:`GSDocument` object or None.
 
-
-	.. code-block:: python
-
-
-		# topmost open document
-		document = Glyphs.currentDocument
-
+		:type: :class:`GSDocument`
 
 
 
 	.. attribute:: documents
 
 
-	:return: An array of `GSDocument` open objects.
-	:rtype: list
+		An array of open `GSDocument` objects.
 
-
-	.. code-block:: python
-
-
-		# list of open documents
-		documents = Glyphs.documents
-
+		:type: list
 
 
 
 	.. attribute:: font
 
 
-	:return: The active :class:`GSFont` object or None.
-	:rtype: :class:`GSFont`
+		The active :class:`GSFont` object or None.
 
-
-	.. code-block:: python
-
-
-		# topmost open font
-		font = Glyphs.font
+		:type: :class:`GSFont`
 
 
 
 
 	.. attribute:: fonts
 
-	Be aware that the order is defined by last used font. append and extend generally don't insert at the end of the list.
+		Be aware that the order is defined by last used font. Append and extend generally don't insert at the end of the list.
 
-	:return: All open :class:`fonts <GSFonts>`.
-
-
-	.. code-block:: python
+		:type: list
 
 
-		# access all open fonts
-		for font in Glyphs.fonts:
-			print(font.familyName)
+		.. code-block:: python
 
-		# add a font
+			# access all open fonts
+			for font in Glyphs.fonts:
+				print(font.familyName)
 
-		font = GSFont()
-		font.familyName = "My New Fonts"
-		Glyphs.fonts.append(font)
+			# add a font
+			font = GSFont()
+			font.familyName = "My New Fonts"
+			Glyphs.fonts.append(font)
 
 
 
 
 	.. attribute:: reporters
 
+		List of available reporter plug-ins (same as bottom section in the 'View' menu). These are the actual objects. You can get hold of their names using `object.__class__.__name__`.
 
-	List of available reporter plug-ins (same as bottom section in the 'View' menu). These are the actual objects. You can get hold of their names using `object.__class__.__name__`.
-
-	Also see :meth:`GSApplication.activateReporter()` and :meth:`GSApplication.deactivateReporter()` methods below to activate/deactivate them.
-
-
-	.. code-block:: python
+		Also see :meth:`GSApplication.activateReporter()` and :meth:`GSApplication.deactivateReporter()` methods below to activate/deactivate them.
+		
+		:type:
 
 
-		# List of all reporter plug-ins
-		print(Glyphs.reporters)
+		.. code-block:: python
 
-		# Individual plug-in class names
-		for reporter in Glyphs.reporters:
-			print(reporter.__class__.__name__)
+			# List of all reporter plug-ins
+			print(Glyphs.reporters)
 
-		# Activate a plugin
-		Glyphs.activateReporter(Glyphs.reporters[0]) # by object
-		Glyphs.activateReporter('GlyphsMasterCompatibility') # by class name
+			# Individual plug-in class names
+			for reporter in Glyphs.reporters:
+				print(reporter.__class__.__name__)
+
+			# Activate a plugin
+			Glyphs.activateReporter(Glyphs.reporters[0]) # by object
+			Glyphs.activateReporter('GlyphsMasterCompatibility') # by class name
 
 
 
 
 	.. attribute:: activeReporters
 
-	
 		List of activated reporter plug-ins.
+
+		:type: list
 
 
 		.. code-block:: python
-
 
 			# Activate a plugin
 			Glyphs.activateReporter(Glyphs.reporters[0])
@@ -216,7 +194,6 @@ The mothership. Everything starts here.
 			# list of currently active reporter plug-ins 
 			activeReporters = Glyphs.activeReporters
 
-		:return: list
 
 
 
@@ -230,10 +207,11 @@ The mothership. Everything starts here.
 		As arguments you use the list obtained by clicking on 'Copy Custom Parameter' button in the filter’s dialog (gear icon) and convert it to a list.
 		In the `include` option you can supply a comma-separated list of glyph names.
 		Here's a catch: old plugins will only run on the first layer of a glyph, because the function `processFont_withArguments_()` was designed to run on instances upon export that have already been reduced to one layer. You can work around that by changing the order of the layers, then changing them back (not shown in the sample code).
+		
+		:type: list
 
 
 		.. code-block:: python
-
 
 			# Helper function to get filter by its class name
 			def filter(name):
@@ -261,10 +239,11 @@ The mothership. Everything starts here.
 
 	.. attribute:: defaults
 
-		
 		A dict like object for storing preferences. You can get and set key-value pairs.
 
 		Please be careful with your keys. Use a prefix that uses the reverse domain name. e.g. "com.MyName.foo.bar".
+		
+		:type: dict
 
 
 		.. code-block:: python
@@ -352,10 +331,11 @@ The mothership. Everything starts here.
 
 	.. attribute:: handleSize
 
-
 		Size of Bezier handles in Glyph Edit view. Possible value are 0–2. Corresponds to the "Handle size" setting from the Preferences.
 
 		To use the handle size for drawing in reporter plugins, you need to convert the handle size to a point size, and divide by the view's scale factor. See example below.
+
+		:type: int
 
 
 		.. code-block:: python
@@ -372,13 +352,11 @@ The mothership. Everything starts here.
 			bezierPath = NSBezierPath.bezierPathWithOvalInRect_(rect)
 			bezierPath.fill()
 
-		:type: int
 
 
 
 
 	.. attribute:: versionString
-
 
 		String containing Glyph.app's version number. May contain letters also, like '2.3b'. To check for a specific version, use .versionNumber below.
 
@@ -389,7 +367,6 @@ The mothership. Everything starts here.
 
 	.. attribute:: versionNumber
 
-
 		Glyph.app's version number. Use this to check for version in your code.
 
 
@@ -398,6 +375,8 @@ The mothership. Everything starts here.
 
 		So you must first check for the existence of the `versionNumber` attribute like so:
 
+
+		:type: float
 
 
 		.. code-block:: python
@@ -409,14 +388,11 @@ The mothership. Everything starts here.
 			# Code for older versions
 			else:
 				# do other stuff
-
-		:type: float
 	
 
 
 
 	.. attribute:: buildNumber
-
 
 		Glyph.app's build number.
 
@@ -428,7 +404,6 @@ The mothership. Everything starts here.
 
 
 	.. attribute:: menu
-
 
 		Add menu items to Glyphs’ main menus.
 
@@ -451,15 +426,14 @@ The mothership. Everything starts here.
 
 
 	.. function:: open(Path, [showInterface=True])
-
 		Opens a document
 
-	:param Path: The path where the document is located.
-	:type Path: str
-	:param showInterface: If a document window should be opened. Default: True
-	:type showInterface: bool
-	:return: The opened document object or None.
-	:rtype: :class:`GSFont`
+		:param Path: The path where the document is located.
+		:type Path: str
+		:param showInterface: If a document window should be opened. Default: True
+		:type showInterface: bool
+		:return: The opened document object or None.
+		:rtype: :class:`GSFont`
 
 
 	.. function:: showMacroWindow
@@ -471,38 +445,36 @@ The mothership. Everything starts here.
 
 
 	.. function:: showGlyphInfoPanelWithSearchString(String)
-
 		Shows the Glyph Info window with a preset search string
 
-	:param String: The search term
+		:param String: The search term
 
 
 
 	.. function:: glyphInfoForName(String)
-
 		Generates :class:`GSGlyphInfo` object for a given glyph name.
 
-	:param String: Glyph name
-	:param font: if you add a font, and the font has a local glyph info, it will be used instead of the global info data.
-	:return: :class:`GSGlyphInfo`
+		:param String: Glyph name
+		:param font: if you add a font, and the font has a local glyph info, it will be used instead of the global info data.
+		:return: :class:`GSGlyphInfo`
 
 
 	.. function:: glyphInfoForUnicode(Unicode)
 
 		Generates :class:`GSGlyphInfo` object for a given hex unicode.
 
-	:param String: Hex unicode
-	:param font: if you add a font, and the font has a local glyph info, it will be used instead of the global info data.
-	:return: :class:`GSGlyphInfo`
+		:param String: Hex unicode
+		:param font: if you add a font, and the font has a local glyph info, it will be used instead of the global info data.
+		:return: :class:`GSGlyphInfo`
 
 
 	.. function:: niceGlyphName(Name)
 
 		Converts glyph name to nice, human-readable glyph name (e.g. afii10017 or uni0410 to A-cy)
 
-	:param string: glyph name
-	:param font: if you add a font, and the font has a local glyph info, it will be used instead of the global info data.
-	:return: string
+		:param string: glyph name
+		:param font: if you add a font, and the font has a local glyph info, it will be used instead of the global info data.
+		:return: string
 
 
 	.. function:: productionGlyphName(name, [font=None])
@@ -3224,6 +3196,7 @@ For details on how to access these glyphs, please see :class:`GSFont.glyphs`
 
 
 	.. function:: duplicate([name])
+
 		Duplicate the glyph under a new name and return it.
 
 		If no name is given, .00n will be appended to it.
@@ -3585,68 +3558,68 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 
 	.. attribute:: shapes
 
-	List of :class:`GSShape` objects. That are most likely :class:`GSPath` or :class:`GSComponent` 
+		List of :class:`GSShape` objects. That are most likely :class:`GSPath` or :class:`GSComponent` 
 
 		:type: list
 
 
-	.. code-block:: python
+		.. code-block:: python
 
 
-		# access all shapes
-		for shape in layer.shapes:
-			print(shape)
+			# access all shapes
+			for shape in layer.shapes:
+				print(shape)
 
-		# delete shape
-		del(layer.shapes[0])
+			# delete shape
+			del(layer.shapes[0])
 
-		# copy shapes from another layer
-		import copy
-		layer.shapes = copy.copy(anotherlayer.shapes)
+			# copy shapes from another layer
+			import copy
+			layer.shapes = copy.copy(anotherlayer.shapes)
 
 
 
 	.. attribute:: paths
 
-	List of :class:`GSPath` objects. This is only a helper proxy to iterate all paths (without components). To add/remove items, use `GSLayer.shapes`.
+		List of :class:`GSPath` objects. This is only a helper proxy to iterate all paths (without components). To add/remove items, use `GSLayer.shapes`.
 
 		:type: list
 
 
-	.. code-block:: python
+		.. code-block:: python
 
 
-		# access all paths
-		for path in layer.paths:
-			print(path)
+			# access all paths
+			for path in layer.paths:
+				print(path)
 
-		# delete path
-		del(layer.paths[0])
+			# delete path
+			del(layer.paths[0])
 
-		# copy paths from another layer
-		import copy
-		layer.paths = copy.copy(anotherlayer.paths)
+			# copy paths from another layer
+			import copy
+			layer.paths = copy.copy(anotherlayer.paths)
 
 
 
 	.. attribute:: selection
 
-	List of all selected objects in the glyph. Read-only.
+		List of all selected objects in the glyph. Read-only.
 
-	This list contains **all selected items**, including **nodes**, **anchors**, **guides** etc.
-	If you want to work specifically with nodes, for instance, you may want to cycle through the nodes (or anchors etc.) and check whether they are selected. See example below.
-
-
-	.. code-block:: python
+		This list contains **all selected items**, including **nodes**, **anchors**, **guides** etc.
+		If you want to work specifically with nodes, for instance, you may want to cycle through the nodes (or anchors etc.) and check whether they are selected. See example below.
 
 
-		# access all selected nodes
-		for path in layer.paths:
-			for node in path.nodes: # (or path.anchors etc.)
-				print(node.selected)
+		.. code-block:: python
 
-		# clear selection
-		layer.clearSelection()
+
+			# access all selected nodes
+			for path in layer.paths:
+				for node in path.nodes: # (or path.anchors etc.)
+					print(node.selected)
+
+			# clear selection
+			layer.clearSelection()
 
 		:type: list
 
@@ -3654,7 +3627,7 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 
 	.. attribute:: LSB
 
-	Left sidebearing
+		Left sidebearing
 
 		:type: float
 
@@ -3662,7 +3635,7 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 
 	.. attribute:: RSB
 
-	Right sidebearing
+		Right sidebearing
 
 		:type: float
 
@@ -3670,7 +3643,7 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 
 	.. attribute:: TSB
 
-	Top sidebearing
+		Top sidebearing
 
 		:type: float
 
@@ -3678,7 +3651,7 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 
 	.. attribute:: BSB
 
-	Bottom sidebearing
+		Bottom sidebearing
 
 		:type: float
 
@@ -3686,7 +3659,7 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 
 	.. attribute:: width
 
-	Layer width
+		Layer width
 
 		:type: float
 
@@ -3694,65 +3667,67 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 
 	.. attribute:: vertWidth
 
-	Layer vertical width
+		Layer vertical width
 	
-	set it to None to reset it to default
+		set it to None to reset it to default
 
 		:type: float
 
-	.. versionadded:: 2.6.2
+		.. versionadded:: 2.6.2
 
 
 
 	.. attribute:: vertOrigin
 
-	Layer vertical origin
+		Layer vertical origin
 
-	set it to None to reset it to default
+		set it to None to reset it to default
 
 		:type: float
 
-	.. versionadded:: 2.6.2
+		.. versionadded:: 2.6.2
 
 
 
 	.. attribute:: ascender
 
-	The ascender for this layer.
+		The ascender for this layer.
 
 		:type: float
 	
-	.. versionadded:: 3.0.2
+		.. versionadded:: 3.0.2
 
 
 
 	.. attribute:: descender
 
-	The descender for this layer.
+		The descender for this layer.
 
 		:type: float
 	
-	.. versionadded:: 3.0.2
+		.. versionadded:: 3.0.2
 
 
 
 	.. attribute:: leftMetricsKey
 
-	The leftMetricsKey of the layer. This is a reference to another glyph by name or formula. It is used to synchronize the metrics with the linked glyph.
+		The leftMetricsKey of the layer. This is a reference to another glyph by name or formula. It is used to synchronize the metrics with the linked glyph.
 
 		:type: str
+
 
 
 	.. attribute:: rightMetricsKey
 
-	The rightMetricsKey of the layer. This is a reference to another glyph by name or formula. It is used to synchronize the metrics with the linked glyph.
+		The rightMetricsKey of the layer. This is a reference to another glyph by name or formula. It is used to synchronize the metrics with the linked glyph.
 
 		:type: str
 
 
+
 	.. attribute:: widthMetricsKey
 
-	The widthMetricsKey of the layer. This is a reference to another glyph by name or formula. It is used to synchronize the metrics with the linked glyph.
+		The widthMetricsKey of the layer. This is a reference to another glyph by name or formula. It is used to synchronize the metrics with the linked glyph.
 
 		:type: str
 
@@ -3760,25 +3735,25 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 
 	.. attribute:: bounds
 
-	Bounding box of whole glyph as NSRect. Read-only.
+		Bounding box of whole glyph as NSRect. Read-only.
 
 		:type: NSRect
 
 
-	.. code-block:: python
+		.. code-block:: python
 
 
-		# origin
-		print(layer.bounds.origin.x, layer.bounds.origin.y)
+			# origin
+			print(layer.bounds.origin.x, layer.bounds.origin.y)
 
-		# size
-		print(layer.bounds.size.width, layer.bounds.size.height)
+			# size
+			print(layer.bounds.size.width, layer.bounds.size.height)
 
 
 
 	.. attribute:: selectionBounds
 
-	Bounding box of the layer's selection (nodes, anchors, components etc). Read-only.
+		Bounding box of the layer's selection (nodes, anchors, components etc). Read-only.
 
 		:type: NSRect
 
@@ -3786,17 +3761,17 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 
 	.. attribute:: metrics
 
-	The metrics layer are a list of horizontal metrics filtered specifically for this layer. Use this instead of master.alignmentZones.
+		The metrics layer are a list of horizontal metrics filtered specifically for this layer. Use this instead of master.alignmentZones.
 
 		:type: :class:`GSMetricValue`
 
-	.. versionadded:: 3.0.1
+		.. versionadded:: 3.0.1
 
 
 
 	.. attribute:: background
 
-	The background layer
+		The background layer
 
 		:type: :class:`GSLayer`
 
@@ -3804,55 +3779,51 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 
 	.. attribute:: backgroundImage
 
-	The background image. It will be scaled so that 1 em unit equals 1 of the image's pixels.
+		The background image. It will be scaled so that 1 em unit equals 1 of the image's pixels.
 
 		:type: :class:`GSBackgroundImage`
 
 
-	.. code-block:: python
+		.. code-block:: python
 
 
-		# set background image
-		layer.backgroundImage = GSBackgroundImage('/path/to/file.jpg')
+			# set background image
+			layer.backgroundImage = GSBackgroundImage('/path/to/file.jpg')
 
-		# remove background image
-		layer.backgroundImage = None
+			# remove background image
+			layer.backgroundImage = None
 
 
 
 	.. attribute:: bezierPath
 
+		The layer as an NSBezierPath object. Useful for drawing glyphs in plug-ins.
 
 
-	The layer as an NSBezierPath object. Useful for drawing glyphs in plug-ins.
+		.. code-block:: python
 
 
-	.. code-block:: python
+			# draw the path into the Edit view
+			NSColor.redColor().set()
+			layer.bezierPath.fill()
 
-
-		# draw the path into the Edit view
-		NSColor.redColor().set()
-		layer.bezierPath.fill()
-
-		:type: NSBezierPath
+			:type: NSBezierPath
 
 
 
 	.. attribute:: openBezierPath
 
+		All open paths of the layer as an NSBezierPath object. Useful for drawing glyphs as outlines in plug-ins.
 
 
-	All open paths of the layer as an NSBezierPath object. Useful for drawing glyphs as outlines in plug-ins.
+		.. code-block:: python
 
 
-	.. code-block:: python
+			# draw the path into the Edit view
+			NSColor.redColor().set()
+			layer.openBezierPath.stroke()
 
-
-		# draw the path into the Edit view
-		NSColor.redColor().set()
-		layer.openBezierPath.stroke()
-
-		:type: NSBezierPath
+			:type: NSBezierPath
 
 
 
@@ -3892,8 +3863,7 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 
 	.. attribute:: isAligned
 
-
-	Indicates if the components are auto aligned.
+		Indicates if the components are auto aligned.
 
 		:type: bool
 
@@ -3901,8 +3871,7 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 
 	.. attribute:: isSpecialLayer
 
-
-	If the layer is a brace, bracket or a smart component layer
+		If the layer is a brace, bracket or a smart component layer
 
 		:type: bool
 
@@ -3910,8 +3879,7 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 
 	.. attribute:: isMasterLayer
 
-	
-	If it is a master layer
+		If it is a master layer
 	
 
 		:type: bool
@@ -3920,9 +3888,7 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 
 	.. attribute:: italicAngle
 
-	
-	The italic angle that applies to this layer
-	
+		The italic angle that applies to this layer
 
 		:type: float
 
@@ -3930,74 +3896,69 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 
 	.. attribute:: userData
 
-
-
-	A dictionary to store user data. Use a unique key and only use objects that can be stored in a property list (string, list, dict, numbers, NSData) otherwise the data will not be recoverable from the saved file.
+		A dictionary to store user data. Use a unique key and only use objects that can be stored in a property list (string, list, dict, numbers, NSData) otherwise the data will not be recoverable from the saved file.
 
 		:type: dict
 
-	.. code-block:: python
 
-		# set value
-		layer.userData['rememberToMakeCoffee'] = True
+		.. code-block:: python
 
-		# delete value
-		del layer.userData['rememberToMakeCoffee']
+			# set value
+			layer.userData['rememberToMakeCoffee'] = True
+
+			# delete value
+			del layer.userData['rememberToMakeCoffee']
 
 
 
 	.. attribute:: tempData
 
-
-	A dictionary to store data temporarily. Use a unique key. This will not be saved to file. If you need the data persistent, use layer.userData
+		A dictionary to store data temporarily. Use a unique key. This will not be saved to file. If you need the data persistent, use layer.userData
 
 		:type: dict
 
-	.. code-block:: python
 
-		# set value
-		layer.tempData['rememberToMakeCoffee'] = True
+		.. code-block:: python
 
-		# delete value
-		del layer.tempData['rememberToMakeCoffee']
+			# set value
+			layer.tempData['rememberToMakeCoffee'] = True
+
+			# delete value
+			del layer.tempData['rememberToMakeCoffee']
 
 
 
 	.. attribute:: smartComponentPoleMapping
 
+		Maps this layer to the poles on the interpolation axes of the Smart Glyph. The dictionary keys are the names of the :class:`GSSmartComponentAxis` objects. The values are 1 for bottom pole and 2 for top pole. Corresponds to the 'Layers' tab of the glyph's 'Show Smart Glyph Settings' dialog.
 
-
-	Maps this layer to the poles on the interpolation axes of the Smart Glyph. The dictionary keys are the names of the :class:`GSSmartComponentAxis` objects. The values are 1 for bottom pole and 2 for top pole. Corresponds to the 'Layers' tab of the glyph's 'Show Smart Glyph Settings' dialog.
-
-	Also see https://glyphsapp.com/tutorials/smart-components for reference.
+		Also see https://glyphsapp.com/tutorials/smart-components for reference.
 
 		:type: dict, int
 
 
-	.. code-block:: python
+		.. code-block:: python
 
+			# Map layers to top and bottom poles:
+			crotchDepthAxis = glyph.smartComponentAxes['crotchDepth']
+			shoulderWidthAxis = glyph.smartComponentAxes['shoulderWidth']
 
-		# Map layers to top and bottom poles:
+			for layer in glyph.layers:
 
-		crotchDepthAxis = glyph.smartComponentAxes['crotchDepth']
-		shoulderWidthAxis = glyph.smartComponentAxes['shoulderWidth']
+				# Regular layer
+				if layer.name == 'Regular':
+					layer.smartComponentPoleMapping[crotchDepthAxis.id] = 2
+					layer.smartComponentPoleMapping[shoulderWidthAxis.id] = 2
 
-		for layer in glyph.layers:
+				# NarrowShoulder layer
+				elif layer.name == 'NarrowShoulder':
+					layer.smartComponentPoleMapping[crotchDepthAxis.id] = 2
+					layer.smartComponentPoleMapping[shoulderWidthAxis.id] = 1
 
-			# Regular layer
-			if layer.name == 'Regular':
-				layer.smartComponentPoleMapping[crotchDepthAxis.id] = 2
-				layer.smartComponentPoleMapping[shoulderWidthAxis.id] = 2
-
-			# NarrowShoulder layer
-			elif layer.name == 'NarrowShoulder':
-				layer.smartComponentPoleMapping[crotchDepthAxis.id] = 2
-				layer.smartComponentPoleMapping[shoulderWidthAxis.id] = 1
-
-			# LowCrotch layer
-			elif layer.name == 'LowCrotch':
-				layer.smartComponentPoleMapping[crotchDepthAxis.id] = 1
-				layer.smartComponentPoleMapping[shoulderWidthAxis.id] = 2
+				# LowCrotch layer
+				elif layer.name == 'LowCrotch':
+					layer.smartComponentPoleMapping[crotchDepthAxis.id] = 1
+					layer.smartComponentPoleMapping[shoulderWidthAxis.id] = 2
 
 
 	**Functions**
@@ -4223,45 +4184,45 @@ For details on how to access them, please see :attr:`GSLayer.anchors`
 
 	.. attribute:: position
 
-	The position of the anchor
+		The position of the anchor
 
 		:type: NSPoint
 
 
-	.. code-block:: python
+		.. code-block:: python
 
 
-		# read position
-		print(layer.anchors['top'].position.x, layer.anchors['top'].position.y)
+			# read position
+			print(layer.anchors['top'].position.x, layer.anchors['top'].position.y)
 
-		# set position
-		layer.anchors['top'].position = NSPoint(175, 575)
+			# set position
+			layer.anchors['top'].position = NSPoint(175, 575)
 
-		# increase vertical position by 50 units
-		layer.anchors['top'].position = NSPoint(layer.anchors['top'].position.x, layer.anchors['top'].position.y + 50)
+			# increase vertical position by 50 units
+			layer.anchors['top'].position = NSPoint(layer.anchors['top'].position.x, layer.anchors['top'].position.y + 50)
 
 
 
 	.. attribute:: name
 
-	The name of the anchor
+		The name of the anchor
 
 		:type: str
 
 
 	.. attribute:: selected
 
-	Selection state of anchor in UI.
+		Selection state of anchor in UI.
 
 
-	.. code-block:: python
+		.. code-block:: python
 
 
-		# select anchor
-		layer.anchors[0].selected = True
+			# select anchor
+			layer.anchors[0].selected = True
 
-		# log selection state
-		print(layer.anchors[0].selected)
+			# log selection state
+			print(layer.anchors[0].selected)
 
 		:type: bool
 
@@ -4269,20 +4230,20 @@ For details on how to access them, please see :attr:`GSLayer.anchors`
 
 	.. attribute:: userData
 
+		A dictionary to store user data. Use a unique key and only use objects that can be stored in a property list (string, list, dict, numbers, NSData) otherwise the data will not be recoverable from the saved file.
 
-	.. versionadded:: 3
-
-	A dictionary to store user data. Use a unique key and only use objects that can be stored in a property list (string, list, dict, numbers, NSData) otherwise the data will not be recoverable from the saved file.
+		.. versionadded:: 3
 
 		:type: dict
 
-	.. code-block:: python
 
-		# set value
-		anchor.userData['rememberToMakeCoffee'] = True
+		.. code-block:: python
 
-		# delete value
-		del component.userData['rememberToMakeCoffee']
+			# set value
+			anchor.userData['rememberToMakeCoffee'] = True
+
+			# delete value
+			del component.userData['rememberToMakeCoffee']
 
 
 
@@ -4330,7 +4291,7 @@ For details on how to access them, please see :attr:`GSLayer.components`
 
 	.. attribute:: position
 
-	The position of the component.
+		The position of the component.
 
 		:type: NSPoint
 
@@ -4339,9 +4300,9 @@ For details on how to access them, please see :attr:`GSLayer.components`
 	.. attribute:: scale
 
 
-	Scale factor of the component.
+		Scale factor of the component.
 
-	Set a single float to scale proportionally or a tuple for different horizontal and vertical scale.
+		Set a single float to scale proportionally or a tuple for different horizontal and vertical scale.
 
 		:type: float or tuple
 
@@ -4349,7 +4310,7 @@ For details on how to access them, please see :attr:`GSLayer.components`
 
 	.. attribute:: rotation
 
-	Rotation angle of the component.
+		Rotation angle of the component.
 
 		:type: float
 
@@ -4357,7 +4318,7 @@ For details on how to access them, please see :attr:`GSLayer.components`
 
 	.. attribute:: componentName
 
-	The glyph name the component is pointing to.
+		The glyph name the component is pointing to.
 
 		:type: str
 
@@ -4365,7 +4326,7 @@ For details on how to access them, please see :attr:`GSLayer.components`
 
 	.. attribute:: name
 
-	The glyph name the component is pointing to.
+		The glyph name the component is pointing to.
 
 		:type: str
 
@@ -4376,7 +4337,7 @@ For details on how to access them, please see :attr:`GSLayer.components`
 
 	.. attribute:: component
 
-	The :class:`GSGlyph` the component is pointing to. This is read-only. In order to change the referenced base glyph, set :attr:`componentName <GSComponent.componentName>` to the new glyph name.
+		The :class:`GSGlyph` the component is pointing to. This is read-only. In order to change the referenced base glyph, set :attr:`componentName <GSComponent.componentName>` to the new glyph name.
 
 		:type: :class:`GSGlyph`
 
@@ -4385,34 +4346,34 @@ For details on how to access them, please see :attr:`GSLayer.components`
 	.. attribute:: componentLayer
 
 
-	The :class:`GSLayer` the component is pointing to. This is read-only. In order to change the referenced base glyph, set :attr:`componentName <GSComponent.componentName>` to the new glyph name.
+		The :class:`GSLayer` the component is pointing to. This is read-only. In order to change the referenced base glyph, set :attr:`componentName <GSComponent.componentName>` to the new glyph name.
 
-	For Smart Components, the `componentLayer` contains the interpolated result.
+		For Smart Components, the `componentLayer` contains the interpolated result.
 
 		:type: :class:`GSLayer`
 
-	.. versionadded:: 2.5
+		.. versionadded:: 2.5
 
 
 
 	.. attribute:: transform
 
 
-	Transformation matrix of the component.
-	If Glyphs 3, this is computed from the scale, rotation and position. 
+		Transformation matrix of the component.
+		If Glyphs 3, this is computed from the scale, rotation and position. 
 
 
-	.. code-block:: python
+		.. code-block:: python
 
 
-		component.transform = ((
-					0.5, # x scale factor
-					0.0, # x skew factor
-					0.0, # y skew factor
-					0.5, # y scale factor
-					0.0, # x position
-					0.0  # y position
-					))
+			component.transform = ((
+						0.5, # x scale factor
+						0.0, # x skew factor
+						0.0, # y skew factor
+						0.5, # y scale factor
+						0.0, # x position
+						0.0  # y position
+						))
 
 		:type: NSAffineTransformStruct
 
@@ -4420,36 +4381,37 @@ For details on how to access them, please see :attr:`GSLayer.components`
 
 	.. attribute:: bounds
 
-	Bounding box of the component, read-only
+		Bounding box of the component, read-only
 
 		:type: NSRect
 
 
-	.. code-block:: python
+		.. code-block:: python
 
 
-		component = layer.components[0] # first component
+			component = layer.components[0] # first component
 
-		# origin
-		print(component.bounds.origin.x, component.bounds.origin.y)
+			# origin
+			print(component.bounds.origin.x, component.bounds.origin.y)
 
-		# size
-		print(component.bounds.size.width, component.bounds.size.height)
+			# size
+			print(component.bounds.size.width, component.bounds.size.height)
 
 
 
 	.. attribute:: automaticAlignment
 
 
-	Defines whether the component is automatically aligned.
+		Defines whether the component is automatically aligned.
 
 		:type: bool
+
 
 
 	.. attribute:: alignment
 
 
-	.. versionadded:: 2.5
+		.. versionadded:: 2.5
 
 	TODO
 
@@ -4458,10 +4420,10 @@ For details on how to access them, please see :attr:`GSLayer.components`
 	.. attribute:: locked
 
 
-	.. versionadded:: 2.5
+		.. versionadded:: 2.5
 
-	If the component is locked
-	TODO
+		If the component is locked
+		TODO
 
 		:type: bool
 
@@ -4470,26 +4432,26 @@ For details on how to access them, please see :attr:`GSLayer.components`
 	.. attribute:: anchor
 
 
-	If more than one anchor/_anchor pair would match, this property can be used to set the anchor to use for automatic alignment
+		If more than one anchor/_anchor pair would match, this property can be used to set the anchor to use for automatic alignment
 
-	This can be set from the anchor button in the component info box in the UI
+		This can be set from the anchor button in the component info box in the UI
 
 		:type: str
 
 
 	.. attribute:: selected
 
-	Selection state of component in UI.
+		Selection state of component in UI.
 
 
-	.. code-block:: python
+		.. code-block:: python
 
 
-		# select component
-		layer.components[0].selected = True
+			# select component
+			layer.components[0].selected = True
 
-		# print(selection state)
-		print(layer.components[0].selected)
+			# print(selection state)
+			print(layer.components[0].selected)
 
 		:type: bool
 
@@ -4499,85 +4461,85 @@ For details on how to access them, please see :attr:`GSLayer.components`
 
 
 
-	Dictionary of interpolations values of the Smart Component. Key are the names, values are between the top and the bottom value of the corresponding :class:`GSSmartComponentAxis` objects. Corresponds to the values of the 'Smart Component Settings' dialog. Returns None if the component is not a Smart Component.
+		Dictionary of interpolations values of the Smart Component. Key are the names, values are between the top and the bottom value of the corresponding :class:`GSSmartComponentAxis` objects. Corresponds to the values of the 'Smart Component Settings' dialog. Returns None if the component is not a Smart Component.
 
-	Also see https://glyphsapp.com/tutorials/smart-components for reference.
+		Also see https://glyphsapp.com/tutorials/smart-components for reference.
 
 		:type: dict, int
 
 
-	.. code-block:: python
+		.. code-block:: python
 
 
-		# Narrow shoulders of m
-		glyph = font.glyphs['m']
-		glyph.layers[0].components[1].smartComponentValues['shoulderWidth'] = 30 # First shoulder. Index is 1, given that the stem is also a component with index 0
-		glyph.layers[0].components[2].smartComponentValues['shoulderWidth'] = 30 # Second shoulder. Index is 2, given that the stem is also a component with index 0
+			# Narrow shoulders of m
+			glyph = font.glyphs['m']
+			glyph.layers[0].components[1].smartComponentValues['shoulderWidth'] = 30 # First shoulder. Index is 1, given that the stem is also a component with index 0
+			glyph.layers[0].components[2].smartComponentValues['shoulderWidth'] = 30 # Second shoulder. Index is 2, given that the stem is also a component with index 0
 
-		# Low crotch of h
-		glyph = font.glyphs['h']
-		crotchDepthAxis = glyph.smartComponentAxes['crotchDepth']
-		glyph.layers[0].components[1].smartComponentValues[crotchDepthAxis.id] = -77  # Shoulder. Index is 1, given that the stem is also a component with index 0
+			# Low crotch of h
+			glyph = font.glyphs['h']
+			crotchDepthAxis = glyph.smartComponentAxes['crotchDepth']
+			glyph.layers[0].components[1].smartComponentValues[crotchDepthAxis.id] = -77  # Shoulder. Index is 1, given that the stem is also a component with index 0
 
-		# Check whether a component is a smart component
-		for component in layer.components:
-			if component.smartComponentValues is not None:
-				# do stuff
+			# Check whether a component is a smart component
+			for component in layer.components:
+				if component.smartComponentValues is not None:
+					# do stuff
 
 
 
 	.. attribute:: bezierPath
 
-
-
-	The component as an NSBezierPath object. Useful for drawing glyphs in plugins.
-
-
-	.. code-block:: python
-
-
-		# draw the path into the Edit view
-		NSColor.redColor().set()
-		layer.components[0].bezierPath.fill()
+		The component as an NSBezierPath object. Useful for drawing glyphs in plugins.
 
 		:type: NSBezierPath
+
+
+		.. code-block:: python
+
+
+			# draw the path into the Edit view
+			NSColor.redColor().set()
+			layer.components[0].bezierPath.fill()
+
+		
 
 
 
 	.. attribute:: userData
 
 
-	.. versionadded:: 2.5
+		.. versionadded:: 2.5
 
-	A dictionary to store user data. Use a unique key and only use objects that can be stored in a property list (string, list, dict, numbers, NSData) otherwise the data will not be recoverable from the saved file.
+		A dictionary to store user data. Use a unique key and only use objects that can be stored in a property list (string, list, dict, numbers, NSData) otherwise the data will not be recoverable from the saved file.
 
 		:type: dict
 
-	.. code-block:: python
+		.. code-block:: python
 
-		# set value
-		component.userData['rememberToMakeCoffee'] = True
+			# set value
+			component.userData['rememberToMakeCoffee'] = True
 
-		# delete value
-		del component.userData['rememberToMakeCoffee']
+			# delete value
+			del component.userData['rememberToMakeCoffee']
 
 
 
 	.. attribute:: tempData
 
 
-	A dictionary to store data temporarily. Use a unique key. This will not be saved to file. If you need the data persistent, use component.userData
+		A dictionary to store data temporarily. Use a unique key. This will not be saved to file. If you need the data persistent, use component.userData
 
 		:type: dict
 
-	.. code-block:: python
 
-		# set value
-		component.tempData['rememberToMakeCoffee'] = True
+		.. code-block:: python
 
-		# delete value
-		del component.tempData['rememberToMakeCoffee']
+			# set value
+			component.tempData['rememberToMakeCoffee'] = True
 
+			# delete value
+			del component.tempData['rememberToMakeCoffee']
 
 
 
@@ -4596,22 +4558,22 @@ For details on how to access them, please see :attr:`GSLayer.components`
 
 	.. function:: applyTransform
 
-	Apply a transformation matrix to the component.
+		Apply a transformation matrix to the component.
 
 
-	.. code-block:: python
+		.. code-block:: python
 
 
-		component = layer.components[0]
+			component = layer.components[0]
 
-		component.applyTransform((
-					0.5, # x scale factor
-					0.0, # x skew factor
-					0.0, # y skew factor
-					0.5, # y scale factor
-					0.0, # x position
-					0.0  # y position
-					))
+			component.applyTransform((
+						0.5, # x scale factor
+						0.0, # x skew factor
+						0.0, # y skew factor
+						0.5, # y scale factor
+						0.0, # x position
+						0.0  # y position
+						))
 
 
 
@@ -4640,7 +4602,7 @@ For details on how to access them, please see :attr:`GSGlyph.smartComponentAxes`
 
 	.. attribute:: name
 
-	Name of the axis. The name is for display purpose only.
+		Name of the axis. The name is for display purpose only.
 
 		:type: str
 
@@ -4648,7 +4610,7 @@ For details on how to access them, please see :attr:`GSGlyph.smartComponentAxes`
 
 	.. attribute:: id
 
-	Id of the axis. This Id will be used to map the Smart Glyph's layers to the poles of the interpolation. See :attr:`GSLayer.smartComponentPoleMapping`
+		Id of the axis. This Id will be used to map the Smart Glyph's layers to the poles of the interpolation. See :attr:`GSLayer.smartComponentPoleMapping`
 
 		:type: str
 
@@ -4658,7 +4620,7 @@ For details on how to access them, please see :attr:`GSGlyph.smartComponentAxes`
 
 	.. attribute:: topValue
 
-	Top end (pole) value on interpolation axis.
+		Top end (pole) value on interpolation axis.
 
 		:type: int, float
 
@@ -4666,7 +4628,7 @@ For details on how to access them, please see :attr:`GSGlyph.smartComponentAxes`
 
 	.. attribute:: bottomValue
 
-	Bottom end (pole) value on interpolation axis.
+		Bottom end (pole) value on interpolation axis.
 
 		:type: int, float
 
@@ -4694,16 +4656,16 @@ For details on how to access them, please see :attr:`GSLayer.shapes`
 
 	.. attribute:: locked
 
-	Locked
+		Locked
 
 		:type: bool
 
 
 
-.. attribute:: shapeType
+	.. attribute:: shapeType
 
 	
-	the type of the shapes. can be GSShapeTypePath or GSShapeTypeComponent
+		the type of the shapes. can be GSShapeTypePath or GSShapeTypeComponent
 
 		:type: int
 
@@ -4752,7 +4714,7 @@ If you build a path in code, make sure that the structure is valid. A curve node
 
 	.. attribute:: parent
 
-	Reference to the :class:`layer <GSLayer>` object.
+		Reference to the :class:`layer <GSLayer>` object.
 
 		:type: :class:`GSLayer`
 
@@ -4760,41 +4722,41 @@ If you build a path in code, make sure that the structure is valid. A curve node
 
 	.. attribute:: nodes
 
-	A list of :class:`GSNode` objects
+		A list of :class:`GSNode` objects
 
 		:type: list
 
 
-	.. code-block:: python
+		.. code-block:: python
 
 
-		# access all nodes
-		for path in layer.paths:
-			for node in path.nodes:
-				print(node)
+			# access all nodes
+			for path in layer.paths:
+				for node in path.nodes:
+					print(node)
 
 
 
 	.. attribute:: segments
 
-	A list of segments as NSPoint objects. Two objects represent a line, four represent a curve. Start point of the segment is included.
+		A list of segments as NSPoint objects. Two objects represent a line, four represent a curve. Start point of the segment is included.
 
 		:type: list
 
 
-	.. code-block:: python
+		.. code-block:: python
 
 
-		# access all segments
-		for path in layer.paths:
-			for segment in path.segments:
-				print(segment)
+			# access all segments
+			for path in layer.paths:
+				for segment in path.segments:
+					print(segment)
 
 
 
 	.. attribute:: closed
 
-	Returns True if the the path is closed
+		Returns True if the the path is closed
 
 		:type: bool
 
@@ -4802,7 +4764,7 @@ If you build a path in code, make sure that the structure is valid. A curve node
 
 	.. attribute:: direction
 
-	Path direction. -1 for counter clockwise, 1 for clockwise.
+		Path direction. -1 for counter clockwise, 1 for clockwise.
 
 		:type: int
 
@@ -4810,37 +4772,37 @@ If you build a path in code, make sure that the structure is valid. A curve node
 
 	.. attribute:: bounds
 
-	Bounding box of the path, read-only
+		Bounding box of the path, read-only
 
 		:type: NSRect
 
 
-	.. code-block:: python
+		.. code-block:: python
 
 
-		path = layer.paths[0] # first path
+			path = layer.paths[0] # first path
 
-		# origin
-		print(path.bounds.origin.x, path.bounds.origin.y)
+			# origin
+			print(path.bounds.origin.x, path.bounds.origin.y)
 
-		# size
-		print(path.bounds.size.width, path.bounds.size.height)
+			# size
+			print(path.bounds.size.width, path.bounds.size.height)
 
 
 
 	.. attribute:: selected
 
-	Selection state of path in UI.
+		Selection state of path in UI.
 
 
-	.. code-block:: python
+		.. code-block:: python
 
 
-		# select path
-		layer.paths[0].selected = True
+			# select path
+			layer.paths[0].selected = True
 
-		# print(selection state)
-		print(layer.paths[0].selected)
+			# print(selection state)
+			print(layer.paths[0].selected)
 
 		:type: bool
 
@@ -4849,16 +4811,15 @@ If you build a path in code, make sure that the structure is valid. A curve node
 	.. attribute:: bezierPath
 
 
-
-	The same path as an NSBezierPath object. Useful for drawing glyphs in plugins.
-
-
-	.. code-block:: python
+		The same path as an NSBezierPath object. Useful for drawing glyphs in plugins.
 
 
-		# draw the path into the Edit view
-		NSColor.redColor().set()
-		layer.paths[0].bezierPath.fill()
+		.. code-block:: python
+
+
+			# draw the path into the Edit view
+			NSColor.redColor().set()
+			layer.paths[0].bezierPath.fill()
 
 		:type: NSBezierPath
 
@@ -4874,7 +4835,6 @@ If you build a path in code, make sure that the structure is valid. A curve node
 	.. attribute:: attributes
 
 	
-
 		:type: dict
 
 	TODO Add doc and examples
@@ -4883,28 +4843,28 @@ draw the object with a fontTools pen
 
 	.. function:: addNodesAtExtremes()
 
-	Add nodes at path's extrema, e.g., top, bottom etc.
+		Add nodes at path's extrema, e.g., top, bottom etc.
 	
 
 
 	.. function:: applyTransform
 
-	Apply a transformation matrix to the path.
+		Apply a transformation matrix to the path.
 
 
-	.. code-block:: python
+		.. code-block:: python
 
 
-		path = layer.paths[0]
+			path = layer.paths[0]
 
-		path.applyTransform((
-					0.5, # x scale factor
-					0.0, # x skew factor
-					0.0, # y skew factor
-					0.5, # y scale factor
-					0.0, # x position
-					0.0  # y position
-					))
+			path.applyTransform((
+						0.5, # x scale factor
+						0.0, # x skew factor
+						0.0, # y skew factor
+						0.5, # y scale factor
+						0.0, # x position
+						0.0  # y position
+						))
 
 
 
@@ -4948,7 +4908,7 @@ For details on how to access them, please see :attr:`GSPath.nodes`
 
 	.. attribute:: position
 
-	The position of the node.
+		The position of the node.
 
 		:type: NSPoint
 
@@ -4956,9 +4916,9 @@ For details on how to access them, please see :attr:`GSPath.nodes`
 
 	.. attribute:: type
 
-	The type of the node, LINE, CURVE or OFFCURVE
+		The type of the node, LINE, CURVE or OFFCURVE
 
-	Always compare against the constants, never against the actual value.
+		Always compare against the constants, never against the actual value.
 
 		:type: str
 
@@ -4966,7 +4926,7 @@ For details on how to access them, please see :attr:`GSPath.nodes`
 
 	.. attribute:: smooth
 
-	If it is a smooth connection or not
+		If it is a smooth connection or not
 
 		:type: BOOL
 
@@ -4975,28 +4935,28 @@ For details on how to access them, please see :attr:`GSPath.nodes`
 
 	.. attribute:: connection
 
-	The type of the connection, SHARP or SMOOTH
+		The type of the connection, SHARP or SMOOTH
 
 		:type: string
 
-	.. deprecated:: 2.3
-		Use :attr:`smooth <GSNode.smooth>` instead.
+		.. deprecated:: 2.3
+			Use :attr:`smooth <GSNode.smooth>` instead.
 
 
 
 	.. attribute:: selected
 
-	Selection state of node in UI.
+		Selection state of node in UI.
 
 
-	.. code-block:: python
+		.. code-block:: python
 
 
-		# select node
-		layer.paths[0].nodes[0].selected = True
+			# select node
+			layer.paths[0].nodes[0].selected = True
 
-		# print(selection state)
-		print(layer.paths[0].nodes[0].selected)
+			# print(selection state)
+			print(layer.paths[0].nodes[0].selected)
 
 		:type: bool
 
@@ -5005,7 +4965,7 @@ For details on how to access them, please see :attr:`GSPath.nodes`
 	.. attribute:: index
 
 
-	Returns the index of the node in the containing path or maxint if it is not in a path.
+		Returns the index of the node in the containing path or maxint if it is not in a path.
 
 		:type: int
 	
@@ -5015,24 +4975,24 @@ For details on how to access them, please see :attr:`GSPath.nodes`
 	.. attribute:: nextNode
 
 	
-	Returns the next node in the path.
+		Returns the next node in the path.
 
-	Please note that this is regardless of the position of the node in the path and will jump across the path border to the beginning of the path if the current node is the last.
-
-
-	If you need to take into consideration the position of the node in the path, use the node’s index attribute and check it against the path length.
+		Please note that this is regardless of the position of the node in the path and will jump across the path border to the beginning of the path if the current node is the last.
 
 
+		If you need to take into consideration the position of the node in the path, use the node’s index attribute and check it against the path length.
 
-	.. code-block:: python
 
 
-		print(layer.paths[0].nodes[0].nextNode # returns the second node in the path (index 0 + 1))
-		print(layer.paths[0].nodes[-1].nextNode # returns the first node in the path (last node >> jumps to beginning of path))
+		.. code-block:: python
 
-		# check if node is last node in path (with at least two nodes)
-		print(layer.paths[0].nodes[0].index == (len(layer.paths[0].nodes) - 1)) # returns False for first node
-		print(layer.paths[0].nodes[-1].index == (len(layer.paths[0].nodes) - 1)) # returns True for last node
+
+			print(layer.paths[0].nodes[0].nextNode # returns the second node in the path (index 0 + 1))
+			print(layer.paths[0].nodes[-1].nextNode # returns the first node in the path (last node >> jumps to beginning of path))
+
+			# check if node is last node in path (with at least two nodes)
+			print(layer.paths[0].nodes[0].index == (len(layer.paths[0].nodes) - 1)) # returns False for first node
+			print(layer.paths[0].nodes[-1].index == (len(layer.paths[0].nodes) - 1)) # returns True for last node
 
 		:type: GSNode
 	
@@ -5042,24 +5002,24 @@ For details on how to access them, please see :attr:`GSPath.nodes`
 	.. attribute:: prevNode
 
 
-	Returns the previous node in the path.
+		Returns the previous node in the path.
 
-	Please note that this is regardless of the position of the node in the path, and will jump across the path border to the end of the path if the current node is the first.
-
-
-	If you need to take into consideration the position of the node in the path, use the node’s index attribute and check it against the path length.
+		Please note that this is regardless of the position of the node in the path, and will jump across the path border to the end of the path if the current node is the first.
 
 
+		If you need to take into consideration the position of the node in the path, use the node’s index attribute and check it against the path length.
 
-	.. code-block:: python
 
 
-		print(layer.paths[0].nodes[0].prevNode) # returns the last node in the path (first node >> jumps to end of path)
-		print(layer.paths[0].nodes[-1].prevNode) # returns second last node in the path
+		.. code-block:: python
 
-		# check if node is first node in path (with at least two nodes)
-		print(layer.paths[0].nodes[0].index == 0) # returns True for first node
-		print(layer.paths[0].nodes[-1].index == 0) # returns False for last node
+
+			print(layer.paths[0].nodes[0].prevNode) # returns the last node in the path (first node >> jumps to end of path)
+			print(layer.paths[0].nodes[-1].prevNode) # returns second last node in the path
+
+			# check if node is first node in path (with at least two nodes)
+			print(layer.paths[0].nodes[0].index == 0) # returns True for first node
+			print(layer.paths[0].nodes[-1].index == 0) # returns False for last node
 
 		:type: GSNode
 	
@@ -5069,7 +5029,7 @@ For details on how to access them, please see :attr:`GSPath.nodes`
 	.. attribute:: name
 
 
-	Attaches a name to a node.
+		Attaches a name to a node.
 
 		:type: str
 
@@ -5079,17 +5039,18 @@ For details on how to access them, please see :attr:`GSPath.nodes`
 	.. attribute:: userData
 
 
-	A dictionary to store user data. Use a unique key and only use objects that can be stored in a property list (string, list, dict, numbers, NSData) otherwise the data will not be recoverable from the saved file.
+		A dictionary to store user data. Use a unique key and only use objects that can be stored in a property list (string, list, dict, numbers, NSData) otherwise the data will not be recoverable from the saved file.
 
 		:type: dict
 
-	.. code-block:: python
 
-		# set value
-		node.userData['rememberToMakeCoffee'] = True
+		.. code-block:: python
 
-		# delete value
-		del node.userData['rememberToMakeCoffee']
+			# set value
+			node.userData['rememberToMakeCoffee'] = True
+
+			# delete value
+			del node.userData['rememberToMakeCoffee']
 
 	.. versionadded:: 2.4.1
 
@@ -5131,7 +5092,7 @@ For details on how to access them, please see :attr:`GSLayer.guides`
 
 	.. attribute:: lockAngle
 
-	locks the angle
+		locks the angle
 
 		:type: bool
 
@@ -5139,7 +5100,7 @@ For details on how to access them, please see :attr:`GSLayer.guides`
 
 	.. attribute:: angle
 
-	Angle
+		Angle
 
 		:type: float
 
@@ -5147,24 +5108,24 @@ For details on how to access them, please see :attr:`GSLayer.guides`
 
 	.. attribute:: name
 
-	a optional name
+		a optional name
 
 		:type: str
 
 
 	.. attribute:: selected
 
-	Selection state of guide in UI.
+		Selection state of guide in UI.
 
 
-	.. code-block:: python
+		.. code-block:: python
 
 
-		# select guide
-		layer.guides[0].selected = True
+			# select guide
+			layer.guides[0].selected = True
 
-		# print(selection state)
-		print(layer.guides[0].selected)
+			# print(selection state)
+			print(layer.guides[0].selected)
 
 		:type: bool
 
@@ -5191,17 +5152,18 @@ For details on how to access them, please see :attr:`GSLayer.guides`
 	.. attribute:: userData
 
 
-	A dictionary to store user data. Use a unique key and only use objects that can be stored in a property list (string, list, dict, numbers, NSData) otherwise the data will not be recoverable from the saved file.
+		A dictionary to store user data. Use a unique key and only use objects that can be stored in a property list (string, list, dict, numbers, NSData) otherwise the data will not be recoverable from the saved file.
 
 		:type: dict
 
-	.. code-block:: python
 
-		# set value
-		guide.userData['rememberToMakeCoffee'] = True
+		.. code-block:: python
 
-		# delete value
-		del guide.userData['rememberToMakeCoffee']
+			# set value
+			guide.userData['rememberToMakeCoffee'] = True
+
+			# delete value
+			del guide.userData['rememberToMakeCoffee']
 
 
 
@@ -5230,7 +5192,7 @@ For details on how to access them, please see :class:`GSLayer.annotations`
 
 	.. attribute:: position
 
-	The position of the annotation.
+		The position of the annotation.
 
 		:type: NSPoint
 
@@ -5238,14 +5200,14 @@ For details on how to access them, please see :class:`GSLayer.annotations`
 
 	.. attribute:: type
 
-	The type of the annotation.
+		The type of the annotation.
 
-	Available constants are:
-	:const:`TEXT`
-	:const:`ARROW`
-	:const:`CIRCLE`
-	:const:`PLUS`
-	:const:`MINUS`
+		Available constants are:
+		:const:`TEXT`
+		:const:`ARROW`
+		:const:`CIRCLE`
+		:const:`PLUS`
+		:const:`MINUS`
 
 		:type: int
 
@@ -5253,7 +5215,7 @@ For details on how to access them, please see :class:`GSLayer.annotations`
 
 	.. attribute:: text
 
-	The content of the annotation. Only useful if type == TEXT
+		The content of the annotation. Only useful if type == TEXT
 
 		:type: str
 
@@ -5261,7 +5223,7 @@ For details on how to access them, please see :class:`GSLayer.annotations`
 
 	.. attribute:: angle
 
-	The angle of the annotation.
+		The angle of the annotation.
 
 		:type: float
 
@@ -5269,7 +5231,7 @@ For details on how to access them, please see :class:`GSLayer.annotations`
 
 	.. attribute:: width
 
-	The width of the annotation.
+		The width of the annotation.
 
 		:type: float
 
@@ -5396,6 +5358,7 @@ For details on how to access them, please see :class:`GSLayer.hints`
 		:type: string
 
 
+
 	.. attribute:: stem
 
 
@@ -5408,47 +5371,52 @@ For details on how to access them, please see :class:`GSLayer.hints`
 		:type: integer
 
 
+
 	.. attribute:: isTrueType
 
-
-	.. versionadded:: 3
-
 		if it is a TrueType instruction
+
+		:type: bool
+
+		.. versionadded:: 3
 
 
 
 	.. attribute:: isPostScript
 
-
-	.. versionadded:: 3
-
 		if it is a PostScript hint
+
+		:type: bool
+
+		.. versionadded:: 3
+
 
 
 
 	.. attribute:: isCorner
 
-
-	.. versionadded:: 3
-
 		if it is a Corner (or Cap, Brush...) component
+
+		:type: bool
+
+		.. versionadded:: 3
 
 
 
 	.. attribute:: tempData
 
-
-	A dictionary to store data temporarily. Use a unique key. This will not be saved to file. If you need the data persistent, use hint.userData
+		A dictionary to store data temporarily. Use a unique key. This will not be saved to file. If you need the data persistent, use hint.userData
 
 		:type: dict
 
-	.. code-block:: python
 
-		# set value
-		hint.tempData['rememberToMakeCoffee'] = True
+		.. code-block:: python
 
-		# delete value
-		del hint.tempData['rememberToMakeCoffee']
+			# set value
+			hint.tempData['rememberToMakeCoffee'] = True
+
+			# delete value
+			del hint.tempData['rememberToMakeCoffee']
 
 
 
@@ -5492,7 +5460,7 @@ For details on how to access it, please see :class:`GSLayer.backgroundImage`
 
 	.. attribute:: path
 
-	Path to image file.
+		Path to image file.
 
 		:type: str
 
@@ -5501,7 +5469,7 @@ For details on how to access it, please see :class:`GSLayer.backgroundImage`
 	.. attribute:: image
 
 
-	:class:`NSImage` object of background image, read-only (as in: not settable)
+		:class:`NSImage` object of background image, read-only (as in: not settable)
 
 		:type: :class:`NSImage`
 
@@ -5510,23 +5478,23 @@ For details on how to access it, please see :class:`GSLayer.backgroundImage`
 	.. attribute:: crop
 
 
-	Crop rectangle. This is relative to the image size in pixels, not the font's em units (just in case the image is scaled to something other than 100%).
+		Crop rectangle. This is relative to the image size in pixels, not the font's em units (just in case the image is scaled to something other than 100%).
 
 		:type: :class:`NSRect`
 
 
-	.. code-block:: python
+		.. code-block:: python
 
 
-		# change cropping
-		layer.backgroundImage.crop = NSRect(NSPoint(0, 0), NSPoint(1200, 1200))
+			# change cropping
+			layer.backgroundImage.crop = NSRect(NSPoint(0, 0), NSPoint(1200, 1200))
 
 
 
 
 	.. attribute:: locked
 
-	Defines whether image is locked for access in UI.
+		Defines whether image is locked for access in UI.
 
 		:type: bool
 
@@ -5535,9 +5503,9 @@ For details on how to access it, please see :class:`GSLayer.backgroundImage`
 	.. attribute:: alpha
 
 
-	Defines the transparence of the image in the Edit view. Default is 50%, possible values are 10–100.
+		Defines the transparence of the image in the Edit view. Default is 50%, possible values are 10–100.
 
-	To reset it to default, set it to anything other than the allowed values.
+		To reset it to default, set it to anything other than the allowed values.
 
 		:type: int
 
@@ -5548,7 +5516,7 @@ For details on how to access it, please see :class:`GSLayer.backgroundImage`
 	.. attribute:: position
 
 
-	Position of image in font units.
+		Position of image in font units.
 
 		:type: :class:`NSPoint`
 
@@ -5565,19 +5533,19 @@ For details on how to access it, please see :class:`GSLayer.backgroundImage`
 	.. attribute:: scale
 
 
-	Scale factor of image.
+		Scale factor of image.
 
-	A scale factor of 1.0 (100%) means that 1 font unit is equal to 1 point.
+		A scale factor of 1.0 (100%) means that 1 font unit is equal to 1 point.
 
-	Set the scale factor for x and y scale simultaneously with an integer or a float value. For separate scale factors, please use a tuple.
-
-
-	.. code-block:: python
+		Set the scale factor for x and y scale simultaneously with an integer or a float value. For separate scale factors, please use a tuple.
 
 
-		# change scale
-		layer.backgroundImage.scale = 1.2 # changes x and y to 120%
-		layer.backgroundImage.scale = (1.1, 1.2) # changes x to 110% and y to 120%
+		.. code-block:: python
+
+
+			# change scale
+			layer.backgroundImage.scale = 1.2 # changes x and y to 120%
+			layer.backgroundImage.scale = (1.1, 1.2) # changes x to 110% and y to 120%
 
 		:type: tuple
 
@@ -5586,7 +5554,7 @@ For details on how to access it, please see :class:`GSLayer.backgroundImage`
 	.. attribute:: rotation
 
 
-	Rotation angle of image.
+		Rotation angle of image.
 
 		:type: float
 
@@ -5595,23 +5563,23 @@ For details on how to access it, please see :class:`GSLayer.backgroundImage`
 	.. attribute:: transform
 
 
-	Transformation matrix.
+		Transformation matrix.
 
 		:type: :class:`NSAffineTransformStruct`
 
 
-	.. code-block:: python
+		.. code-block:: python
 
 
-		# change transformation
-		layer.backgroundImage.transform = ((
-			1.0, # x scale factor
-			0.0, # x skew factor
-			0.0, # y skew factor
-			1.0, # y scale factor
-			0.0, # x position
-			0.0  # y position
-			))
+			# change transformation
+			layer.backgroundImage.transform = ((
+				1.0, # x scale factor
+				0.0, # x skew factor
+				0.0, # y skew factor
+				1.0, # y scale factor
+				0.0, # x position
+				0.0  # y position
+				))
 
 	**Functions**
 

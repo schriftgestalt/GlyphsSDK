@@ -488,27 +488,17 @@ GSApplication.currentDocument = property(lambda self: NSApp().currentFontDocumen
 '''
 	.. attribute:: currentDocument
 
-	:return: The active :class:`GSDocument` object or None.
-	:rtype: :class:`GSDocument`
+		The active :class:`GSDocument` object or None.
 
-	.. code-block:: python
-
-		# topmost open document
-		document = Glyphs.currentDocument
-
+		:type: :class:`GSDocument`
 '''
 GSApplication.documents = property(lambda self: AppDocumentProxy(self))
 '''
 	.. attribute:: documents
 
-	:return: An array of `GSDocument` open objects.
-	:rtype: list
+		An array of open `GSDocument` objects.
 
-	.. code-block:: python
-
-		# list of open documents
-		documents = Glyphs.documents
-
+		:type: list
 '''
 def Glyphs__repr__(self):
 	return '<Glyphs.app>'
@@ -528,13 +518,9 @@ GSApplication.font = property(lambda self: currentFont())
 '''
 	.. attribute:: font
 
-	:return: The active :class:`GSFont` object or None.
-	:rtype: :class:`GSFont`
+		The active :class:`GSFont` object or None.
 
-	.. code-block:: python
-
-		# topmost open font
-		font = Glyphs.font
+		:type: :class:`GSFont`
 
 '''
 
@@ -545,21 +531,19 @@ GSApplication.fonts = property(lambda self: AppFontProxy(self))
 
 '''
 	.. attribute:: fonts
-	Be aware that the order is defined by last used font. append and extend generally don't insert at the end of the list.
+		Be aware that the order is defined by last used font. Append and extend generally don't insert at the end of the list.
 
-	:return: All open :class:`fonts <GSFonts>`.
+		:type: list
 
-	.. code-block:: python
+		.. code-block:: python
+			# access all open fonts
+			for font in Glyphs.fonts:
+				print(font.familyName)
 
-		# access all open fonts
-		for font in Glyphs.fonts:
-			print(font.familyName)
-
-		# add a font
-
-		font = GSFont()
-		font.familyName = "My New Fonts"
-		Glyphs.fonts.append(font)
+			# add a font
+			font = GSFont()
+			font.familyName = "My New Fonts"
+			Glyphs.fonts.append(font)
 
 '''
 
@@ -567,23 +551,23 @@ GSApplication.reporters = property(lambda self: GSCallbackHandler.reporterInstan
 
 '''
 	.. attribute:: reporters
+		List of available reporter plug-ins (same as bottom section in the 'View' menu). These are the actual objects. You can get hold of their names using `object.__class__.__name__`.
 
-	List of available reporter plug-ins (same as bottom section in the 'View' menu). These are the actual objects. You can get hold of their names using `object.__class__.__name__`.
+		Also see :meth:`GSApplication.activateReporter()` and :meth:`GSApplication.deactivateReporter()` methods below to activate/deactivate them.
+		
+		:type:
 
-	Also see :meth:`GSApplication.activateReporter()` and :meth:`GSApplication.deactivateReporter()` methods below to activate/deactivate them.
+		.. code-block:: python
+			# List of all reporter plug-ins
+			print(Glyphs.reporters)
 
-	.. code-block:: python
+			# Individual plug-in class names
+			for reporter in Glyphs.reporters:
+				print(reporter.__class__.__name__)
 
-		# List of all reporter plug-ins
-		print(Glyphs.reporters)
-
-		# Individual plug-in class names
-		for reporter in Glyphs.reporters:
-			print(reporter.__class__.__name__)
-
-		# Activate a plugin
-		Glyphs.activateReporter(Glyphs.reporters[0]) # by object
-		Glyphs.activateReporter('GlyphsMasterCompatibility') # by class name
+			# Activate a plugin
+			Glyphs.activateReporter(Glyphs.reporters[0]) # by object
+			Glyphs.activateReporter('GlyphsMasterCompatibility') # by class name
 
 '''
 
@@ -591,18 +575,17 @@ GSApplication.activeReporters = property(lambda self: GSCallbackHandler.activeRe
 
 '''
 	.. attribute:: activeReporters
-	
 		List of activated reporter plug-ins.
 
-		.. code-block:: python
+		:type: list
 
+		.. code-block:: python
 			# Activate a plugin
 			Glyphs.activateReporter(Glyphs.reporters[0])
 
 			# list of currently active reporter plug-ins 
 			activeReporters = Glyphs.activeReporters
 
-		:return: list
 
 '''
 
@@ -617,9 +600,10 @@ GSApplication.filters = property(lambda self: list(NSApp.delegate().filterInstan
 		As arguments you use the list obtained by clicking on 'Copy Custom Parameter' button in the filter’s dialog (gear icon) and convert it to a list.
 		In the `include` option you can supply a comma-separated list of glyph names.
 		Here's a catch: old plugins will only run on the first layer of a glyph, because the function `processFont_withArguments_()` was designed to run on instances upon export that have already been reduced to one layer. You can work around that by changing the order of the layers, then changing them back (not shown in the sample code).
+		
+		:type: list
 
 		.. code-block:: python
-
 			# Helper function to get filter by its class name
 			def filter(name):
 				for filter in Glyphs.filters:
@@ -766,10 +750,11 @@ GSApplication.registerDefaults = python_method(__registerDefaults__)
 
 '''
 	.. attribute:: defaults
-		
 		A dict like object for storing preferences. You can get and set key-value pairs.
 
 		Please be careful with your keys. Use a prefix that uses the reverse domain name. e.g. "com.MyName.foo.bar".
+		
+		:type: dict
 
 		.. code-block:: python
 			# Check for whether or not a preference exists
@@ -941,10 +926,11 @@ GSApplication.editViewWidth = property(lambda self: self.intDefaults["GSFontView
 GSApplication.handleSize = property(lambda self: self.intDefaults["GSHandleSize"], lambda self, value: Glyphs_setUserDefaults(self, "GSHandleSize", int(value)))
 '''
 	.. attribute:: handleSize
-
 		Size of Bezier handles in Glyph Edit view. Possible value are 0–2. Corresponds to the "Handle size" setting from the Preferences.
 
 		To use the handle size for drawing in reporter plugins, you need to convert the handle size to a point size, and divide by the view's scale factor. See example below.
+
+		:type: int
 
 		.. code-block:: python
 
@@ -959,7 +945,6 @@ GSApplication.handleSize = property(lambda self: self.intDefaults["GSHandleSize"
 			bezierPath = NSBezierPath.bezierPathWithOvalInRect_(rect)
 			bezierPath.fill()
 
-		:type: int
 
 '''
 
@@ -968,7 +953,6 @@ GSApplication.versionString = NSBundle.mainBundle().infoDictionary()["CFBundleSh
 
 '''
 	.. attribute:: versionString
-
 		String containing Glyph.app's version number. May contain letters also, like '2.3b'. To check for a specific version, use .versionNumber below.
 
 		:type: string
@@ -984,11 +968,12 @@ GSApplication.versionNumber = _versionNumber
 
 '''
 	.. attribute:: versionNumber
-
 		Glyph.app's version number. Use this to check for version in your code.
 
 		Here’s the catch: Since we only added this `versionNumber` attribute in Glyphs v2.3, it is not possible to use this attribute to check for versions of Glyphs older than 2.3. We’re deeply sorry for this inconvenience. Development is a slow and painful process.
 		So you must first check for the existence of the `versionNumber` attribute like so:
+
+		:type: float
 
 		.. code-block:: python
 			# Code valid for Glyphs.app v2.3 and above:
@@ -998,8 +983,6 @@ GSApplication.versionNumber = _versionNumber
 			# Code for older versions
 			else:
 				# do other stuff
-
-		:type: float
 	
 '''
 
@@ -1008,7 +991,6 @@ GSApplication.buildNumber = _buildNumber
 
 '''
 	.. attribute:: buildNumber
-
 		Glyph.app's build number.
 
 		Especially if you're using preview builds, this number may be more important to you than the version number. The build number increases with every released build and is the most significant evidence of new Glyphs versions, while the version number is set arbitrarily and stays the same until the next stable release.
@@ -1047,7 +1029,6 @@ GSApplication.menu = property(lambda self: AppMenuProxy(self))
 
 '''
 	.. attribute:: menu
-
 		Add menu items to Glyphs’ main menus.
 
 		Following constants for accessing the menus are defined:
@@ -1118,15 +1099,14 @@ GSApplication.open = OpenFont
 
 '''
 	.. function:: open(Path, [showInterface=True])
-
 		Opens a document
 
-	:param Path: The path where the document is located.
-	:type Path: str
-	:param showInterface: If a document window should be opened. Default: True
-	:type showInterface: bool
-	:return: The opened document object or None.
-	:rtype: :class:`GSFont`
+		:param Path: The path where the document is located.
+		:type Path: str
+		:param showInterface: If a document window should be opened. Default: True
+		:type showInterface: bool
+		:return: The opened document object or None.
+		:rtype: :class:`GSFont`
 '''
 
 def __ShowMacroWindow__(self):
@@ -1151,10 +1131,9 @@ GSApplication.showGlyphInfoPanelWithSearchString = python_method(__showGlyphInfo
 
 '''
 	.. function:: showGlyphInfoPanelWithSearchString(String)
-
 		Shows the Glyph Info window with a preset search string
 
-	:param String: The search term
+		:param String: The search term
 
 '''
 
@@ -1169,12 +1148,11 @@ GSApplication.glyphInfoForName = _glyphInfoForName
 
 '''
 	.. function:: glyphInfoForName(String)
-
 		Generates :class:`GSGlyphInfo` object for a given glyph name.
 
-	:param String: Glyph name
-	:param font: if you add a font, and the font has a local glyph info, it will be used instead of the global info data.
-	:return: :class:`GSGlyphInfo`
+		:param String: Glyph name
+		:param font: if you add a font, and the font has a local glyph info, it will be used instead of the global info data.
+		:return: :class:`GSGlyphInfo`
 '''
 
 def _glyphInfoForUnicode(self, String, font=None):
@@ -1191,9 +1169,9 @@ GSApplication.glyphInfoForUnicode = _glyphInfoForUnicode
 
 		Generates :class:`GSGlyphInfo` object for a given hex unicode.
 
-	:param String: Hex unicode
-	:param font: if you add a font, and the font has a local glyph info, it will be used instead of the global info data.
-	:return: :class:`GSGlyphInfo`
+		:param String: Hex unicode
+		:param font: if you add a font, and the font has a local glyph info, it will be used instead of the global info data.
+		:return: :class:`GSGlyphInfo`
 '''
 
 def _niceGlyphName(self, String, font=None):
@@ -1207,9 +1185,9 @@ GSApplication.niceGlyphName = _niceGlyphName
 
 		Converts glyph name to nice, human-readable glyph name (e.g. afii10017 or uni0410 to A-cy)
 
-	:param string: glyph name
-	:param font: if you add a font, and the font has a local glyph info, it will be used instead of the global info data.
-	:return: string
+		:param string: glyph name
+		:param font: if you add a font, and the font has a local glyph info, it will be used instead of the global info data.
+		:return: string
 '''
 
 def _productionGlyphName(self, name, font=None):
@@ -1223,9 +1201,9 @@ GSApplication.productionGlyphName = _productionGlyphName
 
 		Converts glyph name to production glyph name (e.g. afii10017 or A-cy to uni0410)
 
-	:param name: glyph name
-	:param font: if you add a font, and the font has a local glyph info, it will be used instead of the global info data.
-	:return: string
+		:param name: glyph name
+		:param font: if you add a font, and the font has a local glyph info, it will be used instead of the global info data.
+		:return: string
 
 '''
 
@@ -1240,6 +1218,10 @@ GSApplication.ligatureComponents = _ligatureComponents
 
 		If defined as a ligature in the glyph database, this function returns a list of glyph names that this ligature could be composed of.
 	
+		:param string: glyph name
+		:param font: if you add a font, and the font has a local glyph info, it will be used instead of the global info data.
+		:rtype: list
+		
 		.. code-block:: python
 
 			print(Glyphs.ligatureComponents('allah-ar'))
@@ -1251,9 +1233,6 @@ GSApplication.ligatureComponents = _ligatureComponents
 			    "heh-ar.fina"
 			)
 
-	:param string: glyph name
-	:param font: if you add a font, and the font has a local glyph info, it will be used instead of the global info data.
-	:rtype: list
 
 '''
 
