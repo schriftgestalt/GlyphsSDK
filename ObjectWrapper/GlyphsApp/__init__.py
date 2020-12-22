@@ -5183,8 +5183,8 @@ Implementation of the Custom Parameter object. It stores a name/value pair.
 
 You can append GSCustomParameter objects for example to GSFont.customParameters, but this way you may end up with duplicates.
 It is best to access the custom parameters through its dictionary interface like this:
-.. code-block:: python
 
+.. code-block:: python
 	# access all parameters
 	for parameter in font.customParameters:
 		print(parameter)
@@ -5353,15 +5353,16 @@ GSClass.tempData = property(lambda self: TempDataProxy(self))
 '''
 	.. attribute:: tempData
 
-	A dictionary to store data temporarily. Use a unique key. This will not be saved to file. If you need the data persistent, use class.userData
+		A dictionary to store data temporarily. Use a unique key. This will not be saved to file. If you need the data persistent, use class.userData
 
 		:type: dict
-	.. code-block:: python
-		# set value
-		class.tempData['rememberToMakeCoffee'] = True
 
-		# delete value
-		del class.tempData['rememberToMakeCoffee']
+		.. code-block:: python
+			# set value
+			class.tempData['rememberToMakeCoffee'] = True
+
+			# delete value
+			del class.tempData['rememberToMakeCoffee']
 '''
 
 ##################################################################################
@@ -5564,23 +5565,19 @@ GSFeature.active = property(lambda self: not self.disabled(),
 	**Functions**
 
 	.. function:: update()
+		Calls the automatic feature code generator for this feature.
+		You can use this to update all OpenType features before export.
 
-	Calls the automatic feature code generator for this feature.
-	You can use this to update all OpenType features before export.
+		.. code-block:: python
+			# first update all features
+			for feature in font.features:
+				if feature.automatic:
+					feature.update()
 
-	:return: None
-
-	.. code-block:: python
-
-		# first update all features
-		for feature in font.features:
-			if feature.automatic:
-				feature.update()
-
-		# then export fonts
-		for instance in font.instances:
-			if instance.active:
-				instance.generate()
+			# then export fonts
+			for instance in font.instances:
+				if instance.active:
+					instance.generate()
 
 '''
 
@@ -5588,16 +5585,16 @@ GSFeature.tempData = property(lambda self: TempDataProxy(self))
 
 '''
 	.. attribute:: tempData
-
-	A dictionary to store data temporarily. Use a unique key. This will not be saved to file. If you need the data persistent, use feature.userData
+		A dictionary to store data temporarily. Use a unique key. This will not be saved to file. If you need the data persistent, use feature.userData
 
 		:type: dict
-	.. code-block:: python
-		# set value
-		feature.tempData['rememberToMakeCoffee'] = True
 
-		# delete value
-		del feature.tempData['rememberToMakeCoffee']
+		.. code-block:: python
+			# set value
+			feature.tempData['rememberToMakeCoffee'] = True
+
+			# delete value
+			del feature.tempData['rememberToMakeCoffee']
 '''
 
 
@@ -5774,7 +5771,6 @@ GSGlyph.layers = property(lambda self: GlyphLayerProxy(self),
 
 '''
 	.. attribute:: layers
-
 		The layers of the glyph, collection of :class:`GSLayer` objects. You can access them either by index or by layer ID, which can be a :attr:`GSFontMaster.id`.
 		The layer IDs are usually a unique string chosen by Glyphs.app and not set manually. They may look like this: 3B85FBE0-2D2B-4203-8F3D-7112D42D745E
 
@@ -5950,7 +5946,6 @@ GSGlyph.case = property(lambda self: self.pyobjc_instanceMethods.case(),
 						lambda self, value: self.setCase_(value))
 '''
 	.. attribute:: case
-	
 		e.g: "Uppercase", "Lowercase", "Smallcaps"
 
 		:type: int
@@ -5974,16 +5969,14 @@ GSGlyph.direction = property(lambda self: self.pyobjc_instanceMethods.direction(
 						lambda self, value: self.setDirection_(value))
 '''
 	.. attribute:: direction
-
 		Writing direction.
 
 		Defined constants are: LTR (left to right), RTL (right to left), LTRTTB (left to right, vertical, top to bottom e.g. Mongolian), and RTLTTB (right to left, vertical, top to bottom e.g. Chinese, Japanese, Korean)
 
 		:type: integer
 
-	.. code-block:: python
-
-		glyph.direction = RTL
+		.. code-block:: python
+			glyph.direction = RTL
 
 	.. versionadded:: 3
 '''
@@ -6040,7 +6033,6 @@ GSGlyph.storeProductionName = property(lambda self: bool(self.storeProduction())
 		Makes it possible to ship custom glyph data inside a .glyphs file without a separate GlyphData file. Same as Cmd-Alt-i dialog in UI.
 
 		:type: bool
-
 '''
 
 
@@ -6098,7 +6090,8 @@ GSGlyph.leftKerningGroup = property(lambda self: self.pyobjc_instanceMethods.lef
 	.. attribute:: leftKerningGroup
 		The leftKerningGroup of the glyph. All glyphs with the same text in the kerning group end up in the same kerning class.
 
-		:type: str'''
+		:type: str
+'''
 GSGlyph.rightKerningGroup = property(lambda self: self.pyobjc_instanceMethods.rightKerningGroup(),
 									lambda self, value: self.setRightKerningGroup_(NSStr(value)))
 '''
@@ -6116,13 +6109,13 @@ GSGlyph.leftKerningKey = property(lambda self: GSGlyph__leftKerningKey(self))
 
 '''
 	.. attribute:: leftKerningKey
-
 		The key to be used with the kerning functions (:meth:`GSFont.kerningForPair()`, :meth:`GSFont.setKerningForPair()`:meth:`GSFont.removeKerningForPair()`).
 
 		If the glyph has a :attr:`leftKerningGroup <GSGlyph.leftKerningGroup>` attribute, the internally used `@MMK_R_xx` notation will be returned (note that the R in there stands for the right side of the kerning pair for LTR fonts, which corresponds to the left kerning group of the glyph). If no group is given, the glyph’s name will be returned.
 
-		.. code-block:: python
+		:type: string
 
+		.. code-block:: python
 			# Set kerning for 'T' and all members of kerning class 'a'
 			# For LTR fonts, always use the .rightKerningKey for the first (left) glyph of the pair, .leftKerningKey for the second (right) glyph.
 			font.setKerningForPair(font.selectedFontMaster.id, font.glyphs['T'].rightKerningKey, font.glyphs['a'].leftKerningKey, -60)
@@ -6130,7 +6123,6 @@ GSGlyph.leftKerningKey = property(lambda self: GSGlyph__leftKerningKey(self))
 			# which corresponds to:
 			font.setKerningForPair(font.selectedFontMaster.id, 'T', '@MMK_R_a', -60)
 
-		:type: string
 
 '''
 
@@ -6143,7 +6135,6 @@ GSGlyph.rightKerningKey = property(lambda self: GSGlyph__rightKerningKey(self))
 
 '''
 	.. attribute:: rightKerningKey
-
 		The key to be used with the kerning functions (:meth:`GSFont.kerningForPair()`, :meth:`GSFont.setKerningForPair()`:meth:`GSFont.removeKerningForPair()`).
 
 		If the glyph has a :attr:`rightKerningGroup <GSGlyph.rightKerningGroup>` attribute, the internally used `@MMK_L_xx` notation will be returned (note that the L in there stands for the left side of the kerning pair for LTR fonts, which corresponds to the right kerning group of the glyph). If no group is given, the glyph’s name will be returned.
@@ -6161,21 +6152,24 @@ GSGlyph.leftMetricsKey = property(lambda self: self.pyobjc_instanceMethods.leftM
 	.. attribute:: leftMetricsKey
 		The leftMetricsKey of the glyph. This is a reference to another glyph by name or formula. It is used to synchronize the metrics with the linked glyph.
 
-		:type: str'''
+		:type: str
+'''
 GSGlyph.rightMetricsKey = property(lambda self: self.pyobjc_instanceMethods.rightMetricsKey(),
 									lambda self, value: self.setRightMetricsKey_(NSStr(value)))
 '''
 	.. attribute:: rightMetricsKey
 		The rightMetricsKey of the glyph. This is a reference to another glyph by name or formula. It is used to synchronize the metrics with the linked glyph.
 
-		:type: str'''
+		:type: str
+'''
 GSGlyph.widthMetricsKey = property(lambda self: self.pyobjc_instanceMethods.widthMetricsKey(),
 									lambda self, value: self.setWidthMetricsKey_(NSStr(value)))
 '''
 	.. attribute:: widthMetricsKey
 		The widthMetricsKey of the glyph. This is a reference to another glyph by name or formula. It is used to synchronize the metrics with the linked glyph.
 
-		:type: str'''
+		:type: str
+'''
 GSGlyph.export = property(lambda self: bool(self.pyobjc_instanceMethods.export()),
 							lambda self, value: self.setExport_(value))
 
@@ -6203,6 +6197,8 @@ GSGlyph.color = property(lambda self: __getColorIndex__(self),
 	.. attribute:: color
 		Color marking of glyph in UI
 
+		:type: int
+
 		.. code-block:: python
 			glyph.color = 0		# red
 			glyph.color = 1		# orange
@@ -6218,7 +6214,6 @@ GSGlyph.color = property(lambda self: __getColorIndex__(self),
 			glyph.color = 11	# charcoal
 			glyph.color = None	# not colored, white (before version 1235, use -1)
 
-		:type: int
 '''
 
 def _set_Glyph_setColor(self, colorValue):
@@ -6235,8 +6230,9 @@ GSGlyph.colorObject = property(lambda self: self.pyobjc_instanceMethods.color(),
 								lambda self, value: _set_Glyph_setColor(self, value))
 '''
 	.. attribute:: colorObject
-
 		NSColor object of glyph color, useful for drawing in plugins.
+
+		:type: NSColor
 
 		.. code-block:: python
 			# use glyph color to draw the outline
@@ -6265,7 +6261,6 @@ GSGlyph.colorObject = property(lambda self: self.pyobjc_instanceMethods.color(),
 			or
 			glyph.colorObject = (0.968, 0.29, 0.247, 1) #
 
-		:type: NSColor
 '''
 
 
@@ -6296,14 +6291,14 @@ GSGlyph.selected = property(lambda self: _get_Glyphs_is_selected(self),
 		Return True if the Glyph is selected in the Font View.
 		This is different to the property font.selectedLayers which returns the selection from the active tab.
 
-		.. code-block:: python
+		:type: bool
 
+		.. code-block:: python
 			# access all selected glyphs in the Font View
 			for glyph in font.glyphs:
 				if glyph.selected:
 					print(glyph)
 
-		:type: bool
 
 '''
 
@@ -6322,6 +6317,8 @@ GSGlyph.userData = property(lambda self: UserDataProxy(self))
 	.. attribute:: userData
 		A dictionary to store user data. Use a unique key and only use objects that can be stored in a property list (string, list, dict, numbers, NSData) otherwise the data will not be recoverable from the saved file.
 
+		:type: dict
+
 		.. code-block:: python
 			# set value
 			glyph.userData['rememberToMakeCoffee'] = True
@@ -6329,7 +6326,6 @@ GSGlyph.userData = property(lambda self: UserDataProxy(self))
 			# delete value
 			del glyph.userData['rememberToMakeCoffee']
 
-		:type: dict
 
 '''
 
@@ -6341,6 +6337,8 @@ GSGlyph.smartComponentAxes = property(lambda self: GlyphSmartComponentAxesProxy(
 		These are the axis definitions for the interpolations that take place within the Smart Components. Corresponds to the 'Properties' tab of the glyph's 'Show Smart Glyph Settings' dialog.
 
 		Also see https://glyphsapp.com/tutorials/smart-components for reference.
+
+		:type: list
 
 		.. code-block:: python
 			# Adding two interpolation axes to the glyph
@@ -6359,8 +6357,6 @@ GSGlyph.smartComponentAxes = property(lambda self: GlyphSmartComponentAxesProxy(
 
 			# Deleting one axis
 			del g.smartComponentAxes[1]
-
-		:type: list
 
 '''
 
@@ -6407,7 +6403,6 @@ GSGlyph.endUndo = python_method(__EndUndo__)
 
 '''
 	.. function:: endUndo()
-
 		This closes a undo group that was opened by a previous call of Glyph.beginUndo(). Make sure that you call this for each beginUndo() call.
 
 '''
@@ -6421,7 +6416,6 @@ GSGlyph.updateGlyphInfo = python_method(__updateGlyphInfo__)
 
 '''
 	.. function:: updateGlyphInfo(changeName = True)
-
 		Updates all information like name, unicode etc. for this glyph.
 
 '''
@@ -6443,7 +6437,6 @@ GSGlyph.duplicate = Glyph_Duplicate
 
 '''
 	.. function:: duplicate([name])
-
 		Duplicate the glyph under a new name and return it.
 
 		If no name is given, .00n will be appended to it.
