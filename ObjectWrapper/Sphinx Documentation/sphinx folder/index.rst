@@ -107,15 +107,20 @@ The mothership. Everything starts here.
 
 	.. attribute:: currentDocument
 
-
 		The active :class:`GSDocument` object or None.
 
 		:type: :class:`GSDocument`
 
 
+		.. code-block:: python
+
+			# topmost open document
+			document = Glyphs.currentDocument
+
+
+
 
 	.. attribute:: documents
-
 
 		An array of open `GSDocument` objects.
 
@@ -124,7 +129,6 @@ The mothership. Everything starts here.
 
 
 	.. attribute:: font
-
 
 		The active :class:`GSFont` object or None.
 
@@ -159,8 +163,8 @@ The mothership. Everything starts here.
 		List of available reporter plug-ins (same as bottom section in the 'View' menu). These are the actual objects. You can get hold of their names using `object.__class__.__name__`.
 
 		Also see :meth:`GSApplication.activateReporter()` and :meth:`GSApplication.deactivateReporter()` methods below to activate/deactivate them.
-		
-		:type:
+
+		:type: list
 
 
 		.. code-block:: python
@@ -200,14 +204,12 @@ The mothership. Everything starts here.
 
 	.. attribute:: filters
 
-
 		List of available filters (same as 'Filter' menu). These are the actual objects.
 
 		Below sample code shows how to get hold of a particular filter and use it. You invoke it using the `processFont_withArguments_()` function for old plugins, or the `filter()` function for newer plugins.
 		As arguments you use the list obtained by clicking on 'Copy Custom Parameter' button in the filter’s dialog (gear icon) and convert it to a list.
 		In the `include` option you can supply a comma-separated list of glyph names.
-		Here's a catch: old plugins will only run on the first layer of a glyph, because the function `processFont_withArguments_()` was designed to run on instances upon export that have already been reduced to one layer. You can work around that by changing the order of the layers, then changing them back (not shown in the sample code).
-		
+
 		:type: list
 
 
@@ -242,7 +244,7 @@ The mothership. Everything starts here.
 		A dict like object for storing preferences. You can get and set key-value pairs.
 
 		Please be careful with your keys. Use a prefix that uses the reverse domain name. e.g. "com.MyName.foo.bar".
-		
+
 		:type: dict
 
 
@@ -340,7 +342,6 @@ The mothership. Everything starts here.
 
 		.. code-block:: python
 
-
 			# Calculate handle size
 			handSizeInPoints = 5 + Glyphs.handleSize * 2.5 # (= 5.0 or 7.5 or 10.0)
 			scaleCorrectedHandleSize = handSizeInPoints / Glyphs.font.currentTab.scale
@@ -369,25 +370,7 @@ The mothership. Everything starts here.
 
 		Glyph.app's version number. Use this to check for version in your code.
 
-
-		Here’s the catch: Since we only added this `versionNumber` attribute in Glyphs v2.3, it is not possible to use this attribute to check for versions of Glyphs older than 2.3. We’re deeply sorry for this inconvenience. Development is a slow and painful process.
-
-
-		So you must first check for the existence of the `versionNumber` attribute like so:
-
-
 		:type: float
-
-
-		.. code-block:: python
-
-			# Code valid for Glyphs.app v2.3 and above:
-			if hasattr(Glyphs, 'versionNumber') and Glyphs.versionNumber >= 2.3:
-				# do stuff
-
-			# Code for older versions
-			else:
-				# do other stuff
 	
 
 
@@ -412,7 +395,6 @@ The mothership. Everything starts here.
 
 
 		.. code-block:: python
-
 
 			def doStuff(sender):
 				# do stuff
@@ -452,6 +434,7 @@ The mothership. Everything starts here.
 
 
 	.. function:: glyphInfoForName(String)
+
 		Generates :class:`GSGlyphInfo` object for a given glyph name.
 
 		:param String: Glyph name
@@ -481,9 +464,9 @@ The mothership. Everything starts here.
 
 		Converts glyph name to production glyph name (e.g. afii10017 or A-cy to uni0410)
 
-	:param name: glyph name
-	:param font: if you add a font, and the font has a local glyph info, it will be used instead of the global info data.
-	:return: string
+		:param name: glyph name
+		:param font: if you add a font, and the font has a local glyph info, it will be used instead of the global info data.
+		:return: string
 
 
 
@@ -491,9 +474,12 @@ The mothership. Everything starts here.
 
 		If defined as a ligature in the glyph database, this function returns a list of glyph names that this ligature could be composed of.
 	
+		:param string: glyph name
+		:param font: if you add a font, and the font has a local glyph info, it will be used instead of the global info data.
+		:rtype: list
+
 
 		.. code-block:: python
-
 
 			print(Glyphs.ligatureComponents('allah-ar'))
 
@@ -504,9 +490,6 @@ The mothership. Everything starts here.
 			    "heh-ar.fina"
 			)
 
-	:param string: glyph name
-	:param font: if you add a font, and the font has a local glyph info, it will be used instead of the global info data.
-	:rtype: list
 
 
 
@@ -759,50 +742,47 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 
 	.. attribute:: axes
 
-
 		Collection of :class:`GSAxis`:
-	
 
 		:type: list
 	
-	.. versionadded:: 2.5
-	.. versionchanged:: 3
+		.. versionadded:: 2.5
+		.. versionchanged:: 3
 
 
 
 	.. attribute:: properties
 
-
 		Holds the fonts info properties. Can be instances of :class:`GSFontInfoValueSingle` and :class:`GSFontInfoValueLocalized`
 
 		:type: list
 
-	.. versionadded:: 3
+		.. versionadded:: 3
 
 
 
 	.. attribute:: stems
 
-
 		The stems. A list of :class:`GSMetric` objects. For each metric, there is a metricsValue in the masters, linked by the `id`.
+
+		:type: list, dict
+		
 
 		.. code-block:: python
 
-
 			font.stems[0].horizontal = False
 
-		:type: list, dict
 
 
 
 	.. attribute:: glyphs
 
-	
 		Collection of :class:`GSGlyph` objects. Returns a list, but you may also call glyphs using index or glyph name or character as key.
-	
+
+		:type: list, dict
+
 
 		.. code-block:: python
-
 
 			# Access all glyphs
 			for glyph in font.glyphs:
@@ -835,17 +815,17 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 			# Delete a glyph
 			del(font.glyphs['A.alt'])
 
-		:type: list, dict
 
 
 
 	.. attribute:: classes
 
 		Collection of :class:`GSClass` objects, representing OpenType glyph classes.
-	
+
+		:type: list
+
 
 		.. code-block:: python
-
 
 			# add a class
 			font.classes.append(GSClass('uppercaseLetters', 'A B C D E'))
@@ -860,7 +840,6 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 			# delete a class
 			del(font.classes['uppercaseLetters'])
 
-		:type: list
 
 
 
@@ -868,10 +847,11 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 	.. attribute:: features
 
 		Collection of :class:`GSFeature` objects, representing OpenType features.
-	
+
+		:type: list
+
 
 		.. code-block:: python
-
 
 			# add a feature
 			font.features.append(GSFeature('liga', 'sub f i by fi;'))
@@ -886,7 +866,6 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 			# delete a feature
 			del(font.features['liga'])
 
-		:type: list
 
 
 
@@ -894,9 +873,10 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 
 		Collection of :class:`GSFeaturePrefix` objects, containing stuff that needs to be outside of the OpenType features.
 
+		:type: list
+
 
 		.. code-block:: python
-
 
 			# add a prefix
 			font.featurePrefixes.append(GSFeaturePrefix('LanguageSystems', 'languagesystem DFLT dflt;'))
@@ -910,8 +890,6 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 
 			# delete
 			del(font.featurePrefixes['LanguageSystems'])
-
-		:type: list
 
 
 
@@ -943,6 +921,7 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 		:type: str
 
 
+
 	.. attribute:: manufacturerURL
 
 
@@ -967,6 +946,8 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 	.. attribute:: date
 
 
+		:type: NSDate
+
 
 		.. code-block:: python
 
@@ -976,7 +957,6 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 			# set date to now
 			font.date = NSDate.date()
 
-		:type: NSDate
 
 
 
@@ -1040,6 +1020,8 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 
 		A dictionary to store user data. Use a unique key and only use objects that can be stored in a property list (string, list, dict, numbers, NSData) otherwise the data will not be recoverable from the saved file.
 
+		:type: dict
+
 
 		.. code-block:: python
 
@@ -1049,24 +1031,23 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 			# delete value
 			del font.userData['rememberToMakeCoffee']
 
-		:type: dict
 
 
 
 	.. attribute:: tempData
 
-
-	A dictionary to store data temporarily. Use a unique key. This will not be saved to file. If you need the data persistent, use layer.userData
+		A dictionary to store data temporarily. Use a unique key. This will not be saved to file. If you need the data persistent, use layer.userData
 
 		:type: dict
 
-	.. code-block:: python
 
-		# set value
-		layer.tempData['rememberToMakeCoffee'] = True
+		.. code-block:: python
 
-		# delete value
-		del layer.tempData['rememberToMakeCoffee']
+			# set value
+			layer.tempData['rememberToMakeCoffee'] = True
+
+			# delete value
+			del layer.tempData['rememberToMakeCoffee']
 
 
 
@@ -1083,9 +1064,10 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 
 		The custom parameters. List of :class:`GSCustomParameter` objects. You can access them by name or by index.
 
+		:type: list, dict
+
 
 		.. code-block:: python
-
 
 			# access all parameters
 			for parameter in font.customParameters:
@@ -1097,7 +1079,6 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 			# delete a parameter
 			del(font.customParameters['trademark'])
 
-		:type: list, dict
 
 
 
@@ -1146,7 +1127,7 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 
 		:type: float
 
-	.. versionadded:: 3.0
+		.. versionadded:: 3.0
 
 
 
@@ -1156,7 +1137,7 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 
 		:type: float
 
-	.. versionadded:: 3.0
+		.. versionadded:: 3.0
 
 
 
@@ -1166,7 +1147,7 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 
 		:type: bool
 
-	.. versionadded:: 3.0.1
+		.. versionadded:: 3.0.1
 
 
 
@@ -1176,7 +1157,7 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 
 		:type: bool
 
-	.. versionadded:: 3.0.1
+		.. versionadded:: 3.0.1
 
 
 
@@ -1230,9 +1211,10 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 
 		List of open Edit view tabs in UI, as list of :class:`GSEditViewController` objects.
 
+		:type: list
+
 
 		.. code-block:: python
-
 
 			# open new tab with text
 			font.newTab('hello')
@@ -1243,8 +1225,6 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 
 			# close last tab
 			font.tabs[-1].close()
-
-		:type: list
 
 
 
@@ -1279,13 +1259,14 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 
 		For available names including third-party plug-ins that come in the form of selectable tools, see `GSFont.tools` below.
 
+		:type: string
+
 
 		.. code-block:: python
 
 			font.tool = 'SelectTool' # Built-in tool
 			font.tool = 'GlyphsAppSpeedPunkTool' # Third party plug-in
 
-		:type: string
 
 
 
@@ -1301,7 +1282,7 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 
 		Returns the version that the file was last saved
 
-	.. versionadded:: 2.5
+		.. versionadded:: 2.5
 
 
 
@@ -1314,7 +1295,7 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 
 		:type: int
 
-	.. versionadded:: 3
+		.. versionadded:: 3
 
 
 	**Functions**
@@ -1326,12 +1307,12 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 		
 		If no path is given, it saves to the existing location.
 
-	:param path: Optional file path
-	:type path: str
-	:param formatVersion: the format of the file
-	:type formatVersion: int
-	:param makeCopy: saves a new file without changeing the documents file paths
-	:type makeCopy: bool
+		:param path: Optional file path
+		:type path: str
+		:param formatVersion: the format of the file
+		:type formatVersion: int
+		:param makeCopy: saves a new file without changeing the documents file paths
+		:type makeCopy: bool
 
 
 
@@ -1339,8 +1320,8 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 
 		Closes the font.
 
-	:param ignoreChanges: Optional. Ignore changes to the font upon closing
-	:type ignoreChanges: bool
+		:param ignoreChanges: Optional. Ignore changes to the font upon closing
+		:type ignoreChanges: bool
 
 	.. function:: disableUpdateInterface()
 
@@ -1356,12 +1337,23 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 
 		Makes font visible in the application, either by bringing an already open font window to the front or by appending a formerly invisible font object (such as the result of a `copy()` operation) as a window to the application.
 
-	.. versionadded:: 2.4.1
+		.. versionadded:: 2.4.1
 
 
 	.. function:: kerningForPair(fontMasterId, leftKey, rightKey [, direction = LTR])
 
 		This returns the kerning value for the two specified glyphs (leftKey or rightKey is the glyph name) or a kerning group key (@MMK_X_XX).
+
+		:param fontMasterId: The id of the FontMaster
+		:type fontMasterId: str
+		:param leftKey: either a glyph name or a class name
+		:type leftKey: str
+		:param rightKey: either a glyph name or a class name
+		:type rightKey: str
+		:param direction: optional writing direction (see Constants; 'LTR' (0) or 'RTLTTB'). Default is LTR.
+		:type direction: int
+		:return: The kerning value
+		:rtype: float
 
 
 		.. code-block:: python
@@ -1379,16 +1371,6 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 			font.kerningForPair(font.selectedFontMaster.id, 'T', 'A')
 			9.22337203685e+18 # (this is the maximum number for 64 bit. It is used as an empty value)
 
-	:param fontMasterId: The id of the FontMaster
-	:type fontMasterId: str
-	:param leftKey: either a glyph name or a class name
-	:type leftKey: str
-	:param rightKey: either a glyph name or a class name
-	:type rightKey: str
-	:param direction: optional writing direction (see Constants; 'LTR' (0) or 'RTLTTB'). Default is LTR.
-	:type direction: int
-	:return: The kerning value
-	:rtype: float
 
 	
 
@@ -1398,6 +1380,17 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 
 		This sets the kerning for the two specified glyphs (leftKey or rightKey is the glyphname) or a kerning group key (@MMK_X_XX).
 	
+		:param fontMasterId: The id of the FontMaster
+		:type fontMasterId: str
+		:param leftKey: either a glyph name or a class name
+		:type leftKey: str
+		:param rightKey: either a glyph name or a class name
+		:type rightKey: str
+		:param value: kerning value
+		:type value: float
+		:param direction: optional writing direction (see Constants). Default is LTR.
+		:type direction: str
+
 
 		.. code-block:: python
 
@@ -1405,24 +1398,20 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 			# ('L' = left side of the pair and 'R' = left side of the pair)
 			font.setKerningForPair(font.selectedFontMaster.id, '@MMK_L_T', '@MMK_R_A', -75)
 
-	:param fontMasterId: The id of the FontMaster
-	:type fontMasterId: str
-	:param leftKey: either a glyph name or a class name
-	:type leftKey: str
-	:param rightKey: either a glyph name or a class name
-	:type rightKey: str
-	:param value: kerning value
-	:type value: float
-	:param direction: optional writing direction (see Constants). Default is LTR.
-	:type direction: str
-
-	
-
 
 
 	.. function:: removeKerningForPair(FontMasterId, LeftKey, RightKey, direction=LTR)
 
 		Removes the kerning for the two specified glyphs (LeftKey or RightKey is the glyphname) or a kerning group key (@MMK_X_XX).
+
+		:param FontMasterId: The id of the FontMaster
+		:type FontMasterId: str
+		:param LeftKey: either a glyph name or a class name
+		:type LeftKey: str
+		:param RightKey: either a glyph name or a class name
+		:type RightKey: str
+		:param direction: optional writing direction (see Constants; 'LTR' (0) or 'RTLTTB'). Default is LTR. (added in 2.6.6)
+		:type direction: int
 
 
 		.. code-block:: python
@@ -1432,22 +1421,15 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 			for master in font.masters:
 				font.removeKerningForPair(master.id, '@MMK_L_T', '@MMK_R_A')
 
-	:param FontMasterId: The id of the FontMaster
-	:type FontMasterId: str
-	:param LeftKey: either a glyph name or a class name
-	:type LeftKey: str
-	:param RightKey: either a glyph name or a class name
-	:type RightKey: str
-	:param direction: optional writing direction (see Constants; 'LTR' (0) or 'RTLTTB'). Default is LTR. (added in 2.6.6)
-	:type direction: int
 
 
 
 
 	.. function:: newTab([tabText])
-
 		Opens a new tab in the current document window, optionally with text, and return that tab object
 	
+		:param tabText: Text or glyph names escaped with '/' OR list of layers
+
 
 		.. code-block:: python
 
@@ -1459,7 +1441,6 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 			tab = font.newTab([layer1, layer2])
 			print(tab)
 
-	:param tabText: Text or glyph names escaped with '/' OR list of layers
 	
 
 
@@ -1467,13 +1448,13 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 
 		Updates all OpenType features and classes at once, including generating necessary new features and classes. Equivalent to the "Update" button in the features panel. This already includes the compilation of the features (see :meth:`font.compileFeatures() <GSFont.compileFeatures()>`).
 
-	.. versionadded:: 2.4
+		.. versionadded:: 2.4
 
 
 	.. function:: compileFeatures()
 		Compiles the features, thus making the new feature code functionally available in the editor. Equivalent to the "Test" button in the features panel.
 
-	.. versionadded:: 2.5
+		.. versionadded:: 2.5
 
 
 
@@ -1497,7 +1478,6 @@ Implementation of the axis object.
 
 	.. attribute:: font
 
-
 		Reference to the :class:`GSFont` object that contains the axis. Normally that is set by the app.
 
 		:type: GSFont
@@ -1506,15 +1486,13 @@ Implementation of the axis object.
 
    .. attribute:: name
 
-
 	   The name of the axis
 
-   :type: str
+	   :type: str
 
 
 
 	.. attribute:: axisTag
-
 
 		The axisTag. this is a four letter string. see `OpenType Design-Variation Axis Tag Registry <https://docs.microsoft.com/en-us/typography/opentype/spec/dvaraxisreg>`_.
 
@@ -1524,7 +1502,6 @@ Implementation of the axis object.
 
 	.. attribute:: id
 
-
 		The id to link the values in the masters
 
 		:type: str
@@ -1532,7 +1509,6 @@ Implementation of the axis object.
 
 
 	.. attribute:: hidden
-
 
 		If the axis should be shown to the user
 
@@ -1561,7 +1537,6 @@ Implementation of the metric object. It is used to link the metrics and stems in
 
 	.. attribute:: font
 
-
 		Reference to the :class:`GSFont` object that contains the metric. Normally that is set by the app.
 
 		:type: GSFont
@@ -1569,7 +1544,6 @@ Implementation of the metric object. It is used to link the metrics and stems in
 
 
 	.. attribute:: name
-
 
 		The name of the metric or stem
 
@@ -1579,7 +1553,6 @@ Implementation of the metric object. It is used to link the metrics and stems in
 
 	.. attribute:: id
 
-
 		The id to link the values in the masters
 
 		:type: str
@@ -1587,7 +1560,6 @@ Implementation of the metric object. It is used to link the metrics and stems in
 
 
 	.. attribute:: filter
-
 
 		A filter to limit the scope of the metric.
 
@@ -1638,10 +1610,11 @@ Implementation of the master object. This corresponds with the "Masters" pane in
 
 	.. attribute:: id
 
-
 		Used to identify :class:`Layers` in the Glyph
 
 		see :attr:`GSGlyph.layers`
+
+		:type: str
 
 
 		.. code-block:: python
@@ -1654,18 +1627,16 @@ Implementation of the master object. This corresponds with the "Masters" pane in
 			print(glyph.layers[font.masters[0].id])
 			<GSLayer "Light" (A)>
 
-		:type: str
 
 
 
 	.. attribute:: font
 
-
 		Reference to the :class:`GSFont` object that contains the master. Normally that is set by the app, only if the instance is not actually added to the font, then set this manually.
 
 		:type: GSFont
 
-	.. versionadded:: 2.5.2
+		.. versionadded:: 2.5.2
 
 
 
@@ -1681,6 +1652,8 @@ Implementation of the master object. This corresponds with the "Masters" pane in
 
 		List of floats specifying the positions for each axis
 
+		:type: list
+
 
 		.. code-block:: python
 
@@ -1689,20 +1662,18 @@ Implementation of the master object. This corresponds with the "Masters" pane in
 			# setting all values at once
 			master.axes = [100, 12, 3.5]
 
-		:type: list
 
-	.. versionadded:: 2.5.2
+		.. versionadded:: 2.5.2
 
 
 
 	.. attribute:: properties
 
-
 		Holds the fonts info properties. Can be instances of :class:`GSFontInfoValueSingle` and :class:`GSFontInfoValueLocalized`
 
 		:type: list
 
-	.. versionadded:: 3
+		.. versionadded:: 3
 
 
 
@@ -1751,17 +1722,16 @@ Implementation of the master object. This corresponds with the "Masters" pane in
 
 		:type: list
 
-	.. code-block:: python
 
+		.. code-block:: python
 
-		# Set stems
-		TODO: Not updated yet
-		font.masters[0].stems = [10, 11, 20]
+			# Set stems
+			TODO: Not updated yet
+			font.masters[0].stems = [10, 11, 20]
 
 
 
 	.. attribute:: alignmentZones
-
 
 		Collection of :class:`GSAlignmentZone` objects.
 
@@ -1771,7 +1741,6 @@ Implementation of the master object. This corresponds with the "Masters" pane in
 
 	.. attribute:: blueValues
 
-
 		PS hinting Blue Values calculated from the master's alignment zones. Read-only.
 
 		:type: list
@@ -1779,7 +1748,6 @@ Implementation of the master object. This corresponds with the "Masters" pane in
 
 
 	.. attribute:: otherBlues
-
 
 		PS hinting Other Blues calculated from the master's alignment zones. Read-only.
 
@@ -1801,6 +1769,7 @@ Implementation of the master object. This corresponds with the "Masters" pane in
 
 		:type: dict
 
+
 		.. code-block:: python
 
 			# set value
@@ -1815,9 +1784,10 @@ Implementation of the master object. This corresponds with the "Masters" pane in
 
 		The custom parameters. List of :class:`GSCustomParameter` objects. You can access them by name or by index.
 
+		:type: list, dict
+
 
 		.. code-block:: python
-
 
 			# access all parameters
 			for parameter in font.masters[0].customParameters:
@@ -1829,7 +1799,6 @@ Implementation of the master object. This corresponds with the "Masters" pane in
 			# delete a parameter
 			del(font.masters[0].customParameters['underlinePosition'])
 
-		:type: list, dict
 
 
 
@@ -1951,7 +1920,6 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 	.. attribute:: type
 
 		the type of the instance. Can be either INSTANCETYPESINGLE or INSTANCETYPEVARIABLE.
-		
 
 		:type: int
 
@@ -2001,7 +1969,9 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 	.. attribute:: axes
 
 		List of floats specifying the positions for each axis
-	
+
+		:type: list
+
 
 		.. code-block:: python
 
@@ -2009,22 +1979,18 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 			instance.axes[2] = 12
 			# setting all values at once
 			instance.axes = [100, 12, 3.5] # make sure that the count of numbers matches the count of axes
-		
 
-		:type: list
-
-	.. versionadded:: 2.5.2
+		.. versionadded:: 2.5.2
 
 
 
 	.. attribute:: properties
 
-
 		Holds the fonts info properties. Can be instances of :class:`GSFontInfoValueSingle` and :class:`GSFontInfoValueLocalized`
 
 		:type: list
 
-	.. versionadded:: 3
+		.. versionadded:: 3
 
 
 
@@ -2118,12 +2084,11 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 
 	.. attribute:: font
 
-
 		Reference to the :class:`GSFont` object that contains the instance. Normally that is set by the app, only if the instance is not actually added to the font, then set this manually.
 
 		:type: GSFont
 
-	.. versionadded:: 2.5.1
+		.. versionadded:: 2.5.1
 
 
 
@@ -2131,9 +2096,10 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 
 		The custom parameters. List of :class:`GSCustomParameter` objects. You can access them by name or by index.
 
+		:type: list, dict
+
 
 		.. code-block:: python
-
 
 			# access all parameters
 			for parameter in font.instances[0].customParameters:
@@ -2145,13 +2111,14 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 			# delete a parameter
 			del(font.instances[0].customParameters['hheaLineGap'])
 
-		:type: list, dict
 
 
 
 	.. attribute:: userData
 
 		A dictionary to store user data. Use a unique key and only use objects that can be stored in a property list (string, list, dict, numbers, NSData) otherwise the data will not be recoverable from the saved file.
+
+		:type: dict
 
 
 		.. code-block:: python
@@ -2161,8 +2128,6 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 
 			# delete value
 			del instance.userData['rememberToMakeCoffee']
-
-		:type: dict
 
 
 
@@ -2206,6 +2171,7 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 	.. attribute:: interpolatedFontProxy
 
 		a proxy font that acts similar to a normal font object but only interpolates the glyphs you ask it for.
+
 		It is not properly wrapped yet. So you need to use the ObjectiveC methods directly.
 
 
@@ -2217,9 +2183,10 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 
 		Note: When accessing several properties of such an instance consecutively, it is advisable to create the instance once into a variable and then use that. Otherwise, the instance object will be completely interpolated upon each access. See sample below.
 
+		:type: :class:`GSFont`
+
 
 		.. code-block:: python
-
 
 			# create instance once
 			interpolated = Glyphs.font.instances[0].interpolatedFont
@@ -2231,54 +2198,51 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 			(<GSFontMaster "Light" width 100.0 weight 75.0>)
 			(<GSInstance "Web" width 100.0 weight 75.0>)
 
-		:type: :class:`GSFont`
 
-	
 
 	**Functions**
 
 
 	.. function:: generate([Format, FontPath, AutoHint, RemoveOverlap, UseSubroutines, UseProductionNames, Containers, DecomposeSmartStuff])
 
-	Exports the instance. All parameters are optional.
+		Exports the instance. All parameters are optional.
 
-	:param str The format of the outlines: :const:`OTF` or :const:`TTF`. Default: OTF
-	:param str FontPath: The destination path for the final fonts. If None, it uses the default location set in the export dialog
-	:param bool AutoHint: If autohinting should be applied. Default: True
-	:param bool RemoveOverlap: If overlaps should be removed. Default: True
-	:param bool UseSubroutines: If to use subroutines for CFF. Default: True
-	:param bool UseProductionNames: If to use production names. Default: True
-	:param bool Containers: list of container formats. Use any of the following constants: :const:`PLAIN`, :const:`WOFF`, :const:`WOFF2`, :const:`EOT`. Default: PLAIN
-	:param bool DecomposeSmartStuff: If smart components should be decomposed. Default: True
-	:return: On success, True; on failure, error message.
-	:rtype: bool/list
-
-
-
-	.. code-block:: python
+		:param str The format of the outlines: :const:`OTF` or :const:`TTF`. Default: OTF
+		:param str FontPath: The destination path for the final fonts. If None, it uses the default location set in the export dialog
+		:param bool AutoHint: If autohinting should be applied. Default: True
+		:param bool RemoveOverlap: If overlaps should be removed. Default: True
+		:param bool UseSubroutines: If to use subroutines for CFF. Default: True
+		:param bool UseProductionNames: If to use production names. Default: True
+		:param bool Containers: list of container formats. Use any of the following constants: :const:`PLAIN`, :const:`WOFF`, :const:`WOFF2`, :const:`EOT`. Default: PLAIN
+		:param bool DecomposeSmartStuff: If smart components should be decomposed. Default: True
+		:return: On success, True; on failure, error message.
+		:rtype: bool/list
 
 
-		# export all instances as OpenType (.otf) and WOFF2 to user's font folder
 
-		exportFolder = '/Users/myself/Library/Fonts'
+		.. code-block:: python
 
-		for instance in Glyphs.font.instances:
-			instance.generate(FontPath = exportFolder, Containers = [PLAIN, WOFF2])
+			# export all instances as OpenType (.otf) and WOFF2 to user's font folder
 
-		Glyphs.showNotification('Export fonts', 'The export of %s was successful.' % (Glyphs.font.familyName))
+			exportFolder = '/Users/myself/Library/Fonts'
+
+			for instance in Glyphs.font.instances:
+				instance.generate(FontPath = exportFolder, Containers = [PLAIN, WOFF2])
+
+			Glyphs.showNotification('Export fonts', 'The export of %s was successful.' % (Glyphs.font.familyName))
 
 
 
 	.. attribute:: lastExportedFilePath
 
-
 		Returns a ready interpolated :class:`GSFont` object representing this instance. Other than the source object, this interpolated font will contain only one master and one instance.
 
 		Note: When accessing several properties of such an instance consecutively, it is advisable to create the instance once into a variable and then use that. Otherwise, the instance object will be completely interpolated upon each access. See sample below.
 
+		:type: str
+
 
 		.. code-block:: python
-
 
 			# create instance once
 			interpolated = Glyphs.font.instances[0].interpolatedFont
@@ -2290,15 +2254,13 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 			(<GSFontMaster "Light" width 100.0 weight 75.0>)
 			(<GSInstance "Web" width 100.0 weight 75.0>)
 
-		:type: str
 	
 
 	.. function:: addAsMaster()
 
-	New after 2.6.2
-
-	Add this instance as a new master to the font. Identical to "Instance as Master" menu item in the Font Info’s Instances section.
-
+		Add this instance as a new master to the font. Identical to "Instance as Master" menu item in the Font Info’s Instances section.
+	
+		.. versionadded:: 2.6.2
 
 
 
@@ -2310,8 +2272,8 @@ Implementation of the Custom Parameter object. It stores a name/value pair.
 You can append GSCustomParameter objects for example to GSFont.customParameters, but this way you may end up with duplicates.
 It is best to access the custom parameters through its dictionary interface like this:
 
-.. code-block:: python
 
+.. code-block:: python
 
 	# access all parameters
 	for parameter in font.customParameters:
@@ -2414,24 +2376,24 @@ For details on how to access them, please look at :class:`GSFont.classes`
 
 		:type: bool
 
-	.. versionadded:: 2.5
+		.. versionadded:: 2.5
 
 
 
 	.. attribute:: tempData
 
-
-	A dictionary to store data temporarily. Use a unique key. This will not be saved to file. If you need the data persistent, use class.userData
+		A dictionary to store data temporarily. Use a unique key. This will not be saved to file. If you need the data persistent, use class.userData
 
 		:type: dict
 
-	.. code-block:: python
 
-		# set value
-		class.tempData['rememberToMakeCoffee'] = True
+		.. code-block:: python
 
-		# delete value
-		del class.tempData['rememberToMakeCoffee']
+			# set value
+			class.tempData['rememberToMakeCoffee'] = True
+
+			# delete value
+			del class.tempData['rememberToMakeCoffee']
 
 
 :mod:`GSFeaturePrefix`
@@ -2487,7 +2449,7 @@ For details on how to access them, please look at :class:`GSFont.featurePrefixes
 
 		:type: bool
 
-	.. versionadded:: 2.5
+		.. versionadded:: 2.5
 
 
 
@@ -2561,49 +2523,46 @@ For details on how to access them, please look at :class:`GSFont.features`
 
 		:type: bool
 
-	.. versionadded:: 2.5
+		.. versionadded:: 2.5
 
 
 	**Functions**
 
 	.. function:: update()
 
-	Calls the automatic feature code generator for this feature.
-	You can use this to update all OpenType features before export.
-
-	:return: None
+		Calls the automatic feature code generator for this feature.
+		You can use this to update all OpenType features before export.
 
 
-	.. code-block:: python
+		.. code-block:: python
 
+			# first update all features
+			for feature in font.features:
+				if feature.automatic:
+					feature.update()
 
-		# first update all features
-		for feature in font.features:
-			if feature.automatic:
-				feature.update()
-
-		# then export fonts
-		for instance in font.instances:
-			if instance.active:
-				instance.generate()
+			# then export fonts
+			for instance in font.instances:
+				if instance.active:
+					instance.generate()
 
 
 
 
 	.. attribute:: tempData
 
-
-	A dictionary to store data temporarily. Use a unique key. This will not be saved to file. If you need the data persistent, use feature.userData
+		A dictionary to store data temporarily. Use a unique key. This will not be saved to file. If you need the data persistent, use feature.userData
 
 		:type: dict
 
-	.. code-block:: python
 
-		# set value
-		feature.tempData['rememberToMakeCoffee'] = True
+		.. code-block:: python
 
-		# delete value
-		del feature.tempData['rememberToMakeCoffee']
+			# set value
+			feature.tempData['rememberToMakeCoffee'] = True
+
+			# delete value
+			del feature.tempData['rememberToMakeCoffee']
 
 
 
@@ -2681,7 +2640,6 @@ For details on how to access these glyphs, please see :class:`GSFont.glyphs`
 
 	.. attribute:: layers
 
-
 		The layers of the glyph, collection of :class:`GSLayer` objects. You can access them either by index or by layer ID, which can be a :attr:`GSFontMaster.id`.
 		The layer IDs are usually a unique string chosen by Glyphs.app and not set manually. They may look like this: 3B85FBE0-2D2B-4203-8F3D-7112D42D745E
 
@@ -2689,7 +2647,6 @@ For details on how to access these glyphs, please see :class:`GSFont.glyphs`
 
 
 		.. code-block:: python
-
 
 			# get active layer
 			layer = font.selectedLayers[0]
@@ -2786,7 +2743,6 @@ For details on how to access these glyphs, please see :class:`GSFont.glyphs`
 
 	.. attribute:: locked
 
-
 		If the glyph is locked
 		TODO
 
@@ -2833,12 +2789,11 @@ For details on how to access these glyphs, please see :class:`GSFont.glyphs`
 
 	.. attribute:: case
 
-	
 		e.g: "Uppercase", "Lowercase", "Smallcaps"
 
 		:type: int
 	
-	.. versionadded:: 3
+		.. versionadded:: 3
 
 
 
@@ -2849,12 +2804,11 @@ For details on how to access these glyphs, please see :class:`GSFont.glyphs`
 
 		:type: bool
 	
-	.. versionadded:: 3
+		.. versionadded:: 3
 
 
 
 	.. attribute:: direction
-
 
 		Writing direction.
 
@@ -2863,12 +2817,11 @@ For details on how to access these glyphs, please see :class:`GSFont.glyphs`
 		:type: integer
 
 
-	.. code-block:: python
+		.. code-block:: python
 
+			glyph.direction = RTL
 
-		glyph.direction = RTL
-
-	.. versionadded:: 3
+		.. versionadded:: 3
 
 
 
@@ -2879,7 +2832,7 @@ For details on how to access these glyphs, please see :class:`GSFont.glyphs`
 
 		:type: bool
 
-	.. versionadded:: 3
+		.. versionadded:: 3
 
 
 
@@ -2921,7 +2874,6 @@ For details on how to access these glyphs, please see :class:`GSFont.glyphs`
 
 
 
-
 	.. attribute:: glyphInfo
 
 		:class:`GSGlyphInfo` object for this glyph with detailed information.
@@ -2937,6 +2889,7 @@ For details on how to access these glyphs, please see :class:`GSFont.glyphs`
 		:type: str
 
 
+
 	.. attribute:: rightKerningGroup
 
 		The rightKerningGroup of the glyph. All glyphs with the same text in the kerning group end up in the same kerning class.
@@ -2946,16 +2899,16 @@ For details on how to access these glyphs, please see :class:`GSFont.glyphs`
 
 	.. attribute:: leftKerningKey
 
-
 		The key to be used with the kerning functions (:meth:`GSFont.kerningForPair()`, :meth:`GSFont.setKerningForPair()`:meth:`GSFont.removeKerningForPair()`).
 
 
 		If the glyph has a :attr:`leftKerningGroup <GSGlyph.leftKerningGroup>` attribute, the internally used `@MMK_R_xx` notation will be returned (note that the R in there stands for the right side of the kerning pair for LTR fonts, which corresponds to the left kerning group of the glyph). If no group is given, the glyph’s name will be returned.
 
 
+		:type: string
+
 
 		.. code-block:: python
-
 
 			# Set kerning for 'T' and all members of kerning class 'a'
 			# For LTR fonts, always use the .rightKerningKey for the first (left) glyph of the pair, .leftKerningKey for the second (right) glyph.
@@ -2964,13 +2917,11 @@ For details on how to access these glyphs, please see :class:`GSFont.glyphs`
 			# which corresponds to:
 			font.setKerningForPair(font.selectedFontMaster.id, 'T', '@MMK_R_a', -60)
 
-		:type: string
 
 
 
 
 	.. attribute:: rightKerningKey
-
 
 		The key to be used with the kerning functions (:meth:`GSFont.kerningForPair()`, :meth:`GSFont.setKerningForPair()`:meth:`GSFont.removeKerningForPair()`).
 
@@ -2982,7 +2933,7 @@ For details on how to access these glyphs, please see :class:`GSFont.glyphs`
 
 		:type: string
 
-	.. versionadded:: 2.4
+		.. versionadded:: 2.4
 
 
 
@@ -2993,6 +2944,7 @@ For details on how to access these glyphs, please see :class:`GSFont.glyphs`
 		:type: str
 
 
+
 	.. attribute:: rightMetricsKey
 
 		The rightMetricsKey of the glyph. This is a reference to another glyph by name or formula. It is used to synchronize the metrics with the linked glyph.
@@ -3000,11 +2952,13 @@ For details on how to access these glyphs, please see :class:`GSFont.glyphs`
 		:type: str
 
 
+
 	.. attribute:: widthMetricsKey
 
 		The widthMetricsKey of the glyph. This is a reference to another glyph by name or formula. It is used to synchronize the metrics with the linked glyph.
 
 		:type: str
+
 
 
 	.. attribute:: export
@@ -3018,6 +2972,8 @@ For details on how to access these glyphs, please see :class:`GSFont.glyphs`
 	.. attribute:: color
 
 		Color marking of glyph in UI
+
+		:type: int
 
 
 		.. code-block:: python
@@ -3036,14 +2992,14 @@ For details on how to access these glyphs, please see :class:`GSFont.glyphs`
 			glyph.color = 11	# charcoal
 			glyph.color = None	# not colored, white (before version 1235, use -1)
 
-		:type: int
 
 
 
 	.. attribute:: colorObject
 
-
 		NSColor object of glyph color, useful for drawing in plugins.
+
+		:type: NSColor
 
 
 		.. code-block:: python
@@ -3074,7 +3030,6 @@ For details on how to access these glyphs, please see :class:`GSFont.glyphs`
 			or
 			glyph.colorObject = (0.968, 0.29, 0.247, 1) #
 
-		:type: NSColor
 
 
 
@@ -3090,16 +3045,16 @@ For details on how to access these glyphs, please see :class:`GSFont.glyphs`
 		Return True if the Glyph is selected in the Font View.
 		This is different to the property font.selectedLayers which returns the selection from the active tab.
 
+		:type: bool
+
 
 		.. code-block:: python
-
 
 			# access all selected glyphs in the Font View
 			for glyph in font.glyphs:
 				if glyph.selected:
 					print(glyph)
 
-		:type: bool
 
 
 
@@ -3117,6 +3072,8 @@ For details on how to access these glyphs, please see :class:`GSFont.glyphs`
 
 		A dictionary to store user data. Use a unique key and only use objects that can be stored in a property list (string, list, dict, numbers, NSData) otherwise the data will not be recoverable from the saved file.
 
+		:type: dict
+
 
 		.. code-block:: python
 
@@ -3126,7 +3083,6 @@ For details on how to access these glyphs, please see :class:`GSFont.glyphs`
 			# delete value
 			del glyph.userData['rememberToMakeCoffee']
 
-		:type: dict
 
 
 
@@ -3138,6 +3094,8 @@ For details on how to access these glyphs, please see :class:`GSFont.glyphs`
 		These are the axis definitions for the interpolations that take place within the Smart Components. Corresponds to the 'Properties' tab of the glyph's 'Show Smart Glyph Settings' dialog.
 
 		Also see https://glyphsapp.com/tutorials/smart-components for reference.
+
+		:type: list
 
 
 		.. code-block:: python
@@ -3158,8 +3116,6 @@ For details on how to access these glyphs, please see :class:`GSFont.glyphs`
 
 			# Deleting one axis
 			del g.smartComponentAxes[1]
-
-		:type: list
 
 
 
@@ -3315,7 +3271,6 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 
 		.. code-block:: python
 
-
 			# add a new layer
 			newLayer = GSLayer()
 			newLayer.name = '{125, 100}' # (example for glyph-level intermediate master)
@@ -3336,9 +3291,10 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 		For master layers this should be the id of the :class:`fontMaster <GSFontMaster>`.
 		It could look like this: "FBCA074D-FCF3-427E-A700-7E318A949AE5"
 
+		:type: str
+
 
 		.. code-block:: python
-
 
 			# see ID of active layer
 			id = font.selectedLayers[0].layerId
@@ -3352,8 +3308,6 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 			# for master layers, use ID of masters
 			layer = font.glyphs['a'].layers[font.masters[0].id]
 
-		:type: str
-
 
 
 
@@ -3362,7 +3316,6 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 
 		layer attributes like "axisRules", "coordinates", "colorPalette", "sbixSize", "color", "svg"
 
-		
 
 		:type: dict
 
@@ -3372,9 +3325,10 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 
 		Color marking of glyph in UI
 
+		:type: int
+
 
 		.. code-block:: python
-
 
 			glyph.color = 0		# red
 			glyph.color = 1		# orange
@@ -3390,15 +3344,14 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 			glyph.color = 11	# charcoal
 			glyph.color = None	# not colored, white (before version 1235, use -1)
 
-		:type: int
-
 
 
 
 	.. attribute:: colorObject
 
-
 		NSColor object of layer color, useful for drawing in plugins.
+
+		:type: NSColor
 
 
 		.. code-block:: python
@@ -3421,8 +3374,6 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 			# set the layer color.
 			layer.colorObject = NSColor.colorWithDeviceRed_green_blue_alpha_(247.0 / 255.0, 74.0 / 255.0, 62.9 / 255.0, 1)
 
-		:type: NSColor
-
 
 
 
@@ -3430,13 +3381,13 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 
 		Collection of :class:`GSComponent` objects. This is only a helper proxy to iterate all components (without paths). To add/remove items, use `GSLayer.shapes`.
 
+		:type: list
+
 
 		.. code-block:: python
 
 			for component in layer.component:
 				print(component)
-
-		:type: list
 
 
 
@@ -3444,6 +3395,8 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 	.. attribute:: guides
 
 		List of :class:`GSGuide` objects.
+
+		:type: list
 
 
 		.. code-block:: python
@@ -3465,8 +3418,6 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 			import copy
 			layer.guides = copy.copy(anotherlayer.guides)
 
-		:type: list
-
 
 
 
@@ -3474,9 +3425,10 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 
 		List of :class:`GSAnnotation` objects.
 
+		:type: list
+
 
 		.. code-block:: python
-
 
 			# access all annotations
 			for annotation in layer.annotations:
@@ -3495,8 +3447,6 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 			import copy
 			layer.annotations = copy.copy(anotherlayer.annotations)
 
-		:type: list
-
 
 
 
@@ -3504,9 +3454,10 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 
 		List of :class:`GSHint` objects.
 
+		:type: list
+
 
 		.. code-block:: python
-
 
 			# access all hints
 			for hint in layer.hints:
@@ -3525,7 +3476,6 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 			layer.hints = copy.copy(anotherlayer.hints)
 			# remember to reconnect the hints' nodes with the new layer's nodes
 
-		:type: list
 
 
 
@@ -3533,9 +3483,10 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 
 		List of :class:`GSAnchor` objects.
 
+		:type: list, dict
+
 
 		.. code-block:: python
-
 
 			# access all anchors:
 			for a in layer.anchors:
@@ -3551,8 +3502,6 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 			import copy
 			layer.anchors = copy.copy(anotherlayer.anchors)
 
-		:type: list, dict
-
 
 
 
@@ -3564,7 +3513,6 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 
 
 		.. code-block:: python
-
 
 			# access all shapes
 			for shape in layer.shapes:
@@ -3588,7 +3536,6 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 
 		.. code-block:: python
 
-
 			# access all paths
 			for path in layer.paths:
 				print(path)
@@ -3609,9 +3556,10 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 		This list contains **all selected items**, including **nodes**, **anchors**, **guides** etc.
 		If you want to work specifically with nodes, for instance, you may want to cycle through the nodes (or anchors etc.) and check whether they are selected. See example below.
 
+		:type: list
+
 
 		.. code-block:: python
-
 
 			# access all selected nodes
 			for path in layer.paths:
@@ -3621,7 +3569,6 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 			# clear selection
 			layer.clearSelection()
 
-		:type: list
 
 
 
@@ -3742,7 +3689,6 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 
 		.. code-block:: python
 
-
 			# origin
 			print(layer.bounds.origin.x, layer.bounds.origin.y)
 
@@ -3786,7 +3732,6 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 
 		.. code-block:: python
 
-
 			# set background image
 			layer.backgroundImage = GSBackgroundImage('/path/to/file.jpg')
 
@@ -3799,15 +3744,16 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 
 		The layer as an NSBezierPath object. Useful for drawing glyphs in plug-ins.
 
+		:type: NSBezierPath
+
 
 		.. code-block:: python
-
 
 			# draw the path into the Edit view
 			NSColor.redColor().set()
 			layer.bezierPath.fill()
 
-			:type: NSBezierPath
+			
 
 
 
@@ -3815,49 +3761,47 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 
 		All open paths of the layer as an NSBezierPath object. Useful for drawing glyphs as outlines in plug-ins.
 
+		:type: NSBezierPath
+
 
 		.. code-block:: python
-
 
 			# draw the path into the Edit view
 			NSColor.redColor().set()
 			layer.openBezierPath.stroke()
 
-			:type: NSBezierPath
 
 
 
 	.. attribute:: completeBezierPath
 
-
 		The layer as an NSBezierPath object including paths from components. Useful for drawing glyphs in plug-ins.
+
+		:type: NSBezierPath
 
 
 		.. code-block:: python
-
 
 			# draw the path into the Edit view
 			NSColor.redColor().set()
 			layer.completeBezierPath.fill()
 
-		:type: NSBezierPath
 
 
 
 	.. attribute:: completeOpenBezierPath
 
-
 		All open paths of the layer as an NSBezierPath object including paths from components. Useful for drawing glyphs as outlines in plugins.
+
+		:type: NSBezierPath
 
 
 		.. code-block:: python
-
 
 			# draw the path into the Edit view
 			NSColor.redColor().set()
 			layer.completeOpenBezierPath.stroke()
 
-		:type: NSBezierPath
 
 
 
@@ -3869,6 +3813,7 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 
 
 
+
 	.. attribute:: isSpecialLayer
 
 		If the layer is a brace, bracket or a smart component layer
@@ -3877,12 +3822,13 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 
 
 
+
 	.. attribute:: isMasterLayer
 
 		If it is a master layer
-	
 
 		:type: bool
+
 
 
 
@@ -3891,6 +3837,7 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 		The italic angle that applies to this layer
 
 		:type: float
+
 
 
 
@@ -3911,6 +3858,7 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 
 
 
+
 	.. attribute:: tempData
 
 		A dictionary to store data temporarily. Use a unique key. This will not be saved to file. If you need the data persistent, use layer.userData
@@ -3925,6 +3873,7 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 
 			# delete value
 			del layer.tempData['rememberToMakeCoffee']
+
 
 
 
@@ -3969,10 +3918,9 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 		Decomposes all components of the layer at once.
 
 	.. function:: decomposeCorners()
+		Decomposes all corners of the layer at once.
 
 		.. versionadded:: 2.4
-
-		Decomposes all corners of the layer at once.
 
 	.. function:: compareString()
 
@@ -3985,9 +3933,7 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 
 		.. code-block:: python
 
-
 			print(layer.compareString())
-			oocoocoocoocooc_oocoocoocloocoocoocoocoocoocoocoocooc_
 
 	.. function:: connectAllOpenPaths()
 
@@ -4009,7 +3955,6 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 
 		.. code-block:: python
 
-
 			# sync metrics of all layers of this glyph
 			for layer in glyph.layers:
 				layer.syncMetrics()
@@ -4017,6 +3962,7 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 	.. function:: correctPathDirection()
 
 		Corrects the path direction.
+
 
 
 	.. function:: removeOverlap()
@@ -4027,14 +3973,14 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 
 	.. function:: roundCoordinates()
 
-	
 		Round the positions of all coordinates to the grid (size of which is set in the Font Info).
+
 
 
 	.. function:: addNodesAtExtremes()
 
-	
 		Add nodes at layer's extrema, e.g., top, bottom etc.
+
 
 
 	.. function:: applyTransform
@@ -4054,6 +4000,7 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 						])
 
 
+
 	.. function:: transform
 
 		Apply a :attr:`NSAffineTransform` to the layer.
@@ -4062,13 +4009,12 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 		:param Point2: the other point
 
 
-
 		.. code-block:: python
 
-		
 			transformation = NSAffineTransform()
 			transformation.rotate(45, (200, 200))
 			layer.transform(transformation)
+
 
 
 	.. function:: beginChanges()
@@ -4078,9 +4024,11 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 		Always call layer.endChanges() if you are finished.
 
 
+
 	.. function:: endChanges()
 
 		Call this if you have called layer.beginChanges before. Make sure to group bot calls properly.
+
 
 
 	.. function:: cutBetweenPoints(Point1, Point2)
@@ -4093,9 +4041,9 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 
 		.. code-block:: python
 
-
 			# cut glyph in half horizontally at y=100
 			layer.cutBetweenPoints(NSPoint(0, 100), NSPoint(layer.width, 100))
+
 
 
 	.. function:: intersectionsBetweenPoints(Point1, Point2, components=False)
@@ -4104,14 +4052,12 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 
 		Normally, the first returned point is the starting point, the last returned point is the end point. Thus, the second point is the first intersection, the second last point is the last intersection.
 
-
 		:param Point1: one point
 		:param Point2: the other point
 		:param components: if components should be measured. Default: False
 
 
 		.. code-block:: python
-
 
 			# show all intersections with glyph at y=100
 			intersections = layer.intersectionsBetweenPoints((-1000, 100), (layer.width+1000, 100))
@@ -4124,31 +4070,31 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 			print(layer.width - intersections[-2].x)
 
 
+
 	.. function:: addMissingAnchors()
 
 		Adds missing anchors defined in the glyph database.
 
 
-	.. function:: clearSelection()
 
+	.. function:: clearSelection()
 	
 		Unselect all selected items in this layer.
 
 
-	.. function:: clear()
 
+	.. function:: clear()
 	
 		Remove all elements from layer.
 
 
-	.. function:: swapForegroundWithBackground()
 
+	.. function:: swapForegroundWithBackground()
 	
 		Swap Foreground layer with Background layer.
 
 
 	.. function:: reinterpolate()
-
 	
 		Re-interpolate a layer according the other layers and its interpolation values.
 
@@ -4191,7 +4137,6 @@ For details on how to access them, please see :attr:`GSLayer.anchors`
 
 		.. code-block:: python
 
-
 			# read position
 			print(layer.anchors['top'].position.x, layer.anchors['top'].position.y)
 
@@ -4200,6 +4145,7 @@ For details on how to access them, please see :attr:`GSLayer.anchors`
 
 			# increase vertical position by 50 units
 			layer.anchors['top'].position = NSPoint(layer.anchors['top'].position.x, layer.anchors['top'].position.y + 50)
+
 
 
 
@@ -4217,7 +4163,6 @@ For details on how to access them, please see :attr:`GSLayer.anchors`
 
 		.. code-block:: python
 
-
 			# select anchor
 			layer.anchors[0].selected = True
 
@@ -4228,11 +4173,10 @@ For details on how to access them, please see :attr:`GSLayer.anchors`
 
 
 
+
 	.. attribute:: userData
 
 		A dictionary to store user data. Use a unique key and only use objects that can be stored in a property list (string, list, dict, numbers, NSData) otherwise the data will not be recoverable from the saved file.
-
-		.. versionadded:: 3
 
 		:type: dict
 
@@ -4244,6 +4188,9 @@ For details on how to access them, please see :attr:`GSLayer.anchors`
 
 			# delete value
 			del component.userData['rememberToMakeCoffee']
+
+		.. versionadded:: 3
+
 
 
 
@@ -4297,14 +4244,15 @@ For details on how to access them, please see :attr:`GSLayer.components`
 
 
 
-	.. attribute:: scale
 
+	.. attribute:: scale
 
 		Scale factor of the component.
 
 		Set a single float to scale proportionally or a tuple for different horizontal and vertical scale.
 
 		:type: float or tuple
+
 
 
 
@@ -4316,11 +4264,13 @@ For details on how to access them, please see :attr:`GSLayer.components`
 
 
 
+
 	.. attribute:: componentName
 
 		The glyph name the component is pointing to.
 
 		:type: str
+
 
 
 
@@ -4330,7 +4280,7 @@ For details on how to access them, please see :attr:`GSLayer.components`
 
 		:type: str
 
-	.. versionadded:: 2.5
+		.. versionadded:: 2.5
 
 
 
@@ -4343,8 +4293,8 @@ For details on how to access them, please see :attr:`GSLayer.components`
 
 
 
-	.. attribute:: componentLayer
 
+	.. attribute:: componentLayer
 
 		The :class:`GSLayer` the component is pointing to. This is read-only. In order to change the referenced base glyph, set :attr:`componentName <GSComponent.componentName>` to the new glyph name.
 
@@ -4356,15 +4306,16 @@ For details on how to access them, please see :attr:`GSLayer.components`
 
 
 
-	.. attribute:: transform
 
+	.. attribute:: transform
 
 		Transformation matrix of the component.
 		If Glyphs 3, this is computed from the scale, rotation and position. 
 
+		:type: NSAffineTransformStruct
+
 
 		.. code-block:: python
-
 
 			component.transform = ((
 						0.5, # x scale factor
@@ -4375,7 +4326,6 @@ For details on how to access them, please see :attr:`GSLayer.components`
 						0.0  # y position
 						))
 
-		:type: NSAffineTransformStruct
 
 
 
@@ -4388,7 +4338,6 @@ For details on how to access them, please see :attr:`GSLayer.components`
 
 		.. code-block:: python
 
-
 			component = layer.components[0] # first component
 
 			# origin
@@ -4399,8 +4348,8 @@ For details on how to access them, please see :attr:`GSLayer.components`
 
 
 
-	.. attribute:: automaticAlignment
 
+	.. attribute:: automaticAlignment
 
 		Defines whether the component is automatically aligned.
 
@@ -4410,15 +4359,14 @@ For details on how to access them, please see :attr:`GSLayer.components`
 
 	.. attribute:: alignment
 
-
 		.. versionadded:: 2.5
 
 	TODO
 
 
 
-	.. attribute:: locked
 
+	.. attribute:: locked
 
 		.. versionadded:: 2.5
 
@@ -4431,7 +4379,6 @@ For details on how to access them, please see :attr:`GSLayer.components`
 
 	.. attribute:: anchor
 
-
 		If more than one anchor/_anchor pair would match, this property can be used to set the anchor to use for automatic alignment
 
 		This can be set from the anchor button in the component info box in the UI
@@ -4439,13 +4386,15 @@ For details on how to access them, please see :attr:`GSLayer.components`
 		:type: str
 
 
+
 	.. attribute:: selected
 
 		Selection state of component in UI.
 
+		:type: bool
+
 
 		.. code-block:: python
-
 
 			# select component
 			layer.components[0].selected = True
@@ -4453,13 +4402,10 @@ For details on how to access them, please see :attr:`GSLayer.components`
 			# print(selection state)
 			print(layer.components[0].selected)
 
-		:type: bool
 
 
 
 	.. attribute:: smartComponentValues
-
-
 
 		Dictionary of interpolations values of the Smart Component. Key are the names, values are between the top and the bottom value of the corresponding :class:`GSSmartComponentAxis` objects. Corresponds to the values of the 'Smart Component Settings' dialog. Returns None if the component is not a Smart Component.
 
@@ -4469,7 +4415,6 @@ For details on how to access them, please see :attr:`GSLayer.components`
 
 
 		.. code-block:: python
-
 
 			# Narrow shoulders of m
 			glyph = font.glyphs['m']
@@ -4488,6 +4433,7 @@ For details on how to access them, please see :attr:`GSLayer.components`
 
 
 
+
 	.. attribute:: bezierPath
 
 		The component as an NSBezierPath object. Useful for drawing glyphs in plugins.
@@ -4497,23 +4443,19 @@ For details on how to access them, please see :attr:`GSLayer.components`
 
 		.. code-block:: python
 
-
 			# draw the path into the Edit view
 			NSColor.redColor().set()
 			layer.components[0].bezierPath.fill()
-
 		
 
 
 
 	.. attribute:: userData
 
-
-		.. versionadded:: 2.5
-
 		A dictionary to store user data. Use a unique key and only use objects that can be stored in a property list (string, list, dict, numbers, NSData) otherwise the data will not be recoverable from the saved file.
 
 		:type: dict
+
 
 		.. code-block:: python
 
@@ -4523,10 +4465,11 @@ For details on how to access them, please see :attr:`GSLayer.components`
 			# delete value
 			del component.userData['rememberToMakeCoffee']
 
+		.. versionadded:: 2.5
+
 
 
 	.. attribute:: tempData
-
 
 		A dictionary to store data temporarily. Use a unique key. This will not be saved to file. If you need the data persistent, use component.userData
 
@@ -4543,6 +4486,7 @@ For details on how to access them, please see :attr:`GSLayer.components`
 
 
 
+
 	**Functions**
 
 
@@ -4550,10 +4494,12 @@ For details on how to access them, please see :attr:`GSLayer.components`
 
 	.. function:: decompose([doAnchors=True, doHints=True])
 
-	:param doAnchors: get anchors from components
-	:param doHints: get hints from components
+		Decomposes the component.
 
-	Decomposes the component.
+		:param doAnchors: get anchors from components
+		:param doHints: get hints from components
+
+
 
 
 	.. function:: applyTransform
@@ -4562,7 +4508,6 @@ For details on how to access them, please see :attr:`GSLayer.components`
 
 
 		.. code-block:: python
-
 
 			component = layer.components[0]
 
@@ -4574,6 +4519,7 @@ For details on how to access them, please see :attr:`GSLayer.components`
 						0.0, # x position
 						0.0  # y position
 						))
+
 
 
 
@@ -4614,7 +4560,7 @@ For details on how to access them, please see :attr:`GSGlyph.smartComponentAxes`
 
 		:type: str
 
-	.. versionadded:: 2.5
+		.. versionadded:: 2.5
 
 
 
@@ -4664,7 +4610,6 @@ For details on how to access them, please see :attr:`GSLayer.shapes`
 
 	.. attribute:: shapeType
 
-	
 		the type of the shapes. can be GSShapeTypePath or GSShapeTypeComponent
 
 		:type: int
@@ -4729,11 +4674,11 @@ If you build a path in code, make sure that the structure is valid. A curve node
 
 		.. code-block:: python
 
-
 			# access all nodes
 			for path in layer.paths:
 				for node in path.nodes:
 					print(node)
+
 
 
 
@@ -4746,11 +4691,11 @@ If you build a path in code, make sure that the structure is valid. A curve node
 
 		.. code-block:: python
 
-
 			# access all segments
 			for path in layer.paths:
 				for segment in path.segments:
 					print(segment)
+
 
 
 
@@ -4779,7 +4724,6 @@ If you build a path in code, make sure that the structure is valid. A curve node
 
 		.. code-block:: python
 
-
 			path = layer.paths[0] # first path
 
 			# origin
@@ -4790,13 +4734,15 @@ If you build a path in code, make sure that the structure is valid. A curve node
 
 
 
+
 	.. attribute:: selected
 
 		Selection state of path in UI.
 
+		:type: bool
+
 
 		.. code-block:: python
-
 
 			# select path
 			layer.paths[0].selected = True
@@ -4804,24 +4750,22 @@ If you build a path in code, make sure that the structure is valid. A curve node
 			# print(selection state)
 			print(layer.paths[0].selected)
 
-		:type: bool
 
 
 
 	.. attribute:: bezierPath
 
-
 		The same path as an NSBezierPath object. Useful for drawing glyphs in plugins.
+
+		:type: NSBezierPath
 
 
 		.. code-block:: python
-
 
 			# draw the path into the Edit view
 			NSColor.redColor().set()
 			layer.paths[0].bezierPath.fill()
 
-		:type: NSBezierPath
 
 	**Functions**
 
@@ -4834,7 +4778,7 @@ If you build a path in code, make sure that the structure is valid. A curve node
 
 	.. attribute:: attributes
 
-	
+
 		:type: dict
 
 	TODO Add doc and examples
@@ -4853,7 +4797,6 @@ draw the object with a fontTools pen
 
 
 		.. code-block:: python
-
 
 			path = layer.paths[0]
 
@@ -4944,13 +4887,15 @@ For details on how to access them, please see :attr:`GSPath.nodes`
 
 
 
+
 	.. attribute:: selected
 
 		Selection state of node in UI.
 
+		:type: bool
+
 
 		.. code-block:: python
-
 
 			# select node
 			layer.paths[0].nodes[0].selected = True
@@ -4958,12 +4903,11 @@ For details on how to access them, please see :attr:`GSPath.nodes`
 			# print(selection state)
 			print(layer.paths[0].nodes[0].selected)
 
-		:type: bool
+
 
 
 
 	.. attribute:: index
-
 
 		Returns the index of the node in the containing path or maxint if it is not in a path.
 
@@ -4974,7 +4918,6 @@ For details on how to access them, please see :attr:`GSPath.nodes`
 
 	.. attribute:: nextNode
 
-	
 		Returns the next node in the path.
 
 		Please note that this is regardless of the position of the node in the path and will jump across the path border to the beginning of the path if the current node is the last.
@@ -4983,9 +4926,10 @@ For details on how to access them, please see :attr:`GSPath.nodes`
 		If you need to take into consideration the position of the node in the path, use the node’s index attribute and check it against the path length.
 
 
+		:type: GSNode
+
 
 		.. code-block:: python
-
 
 			print(layer.paths[0].nodes[0].nextNode # returns the second node in the path (index 0 + 1))
 			print(layer.paths[0].nodes[-1].nextNode # returns the first node in the path (last node >> jumps to beginning of path))
@@ -4994,13 +4938,10 @@ For details on how to access them, please see :attr:`GSPath.nodes`
 			print(layer.paths[0].nodes[0].index == (len(layer.paths[0].nodes) - 1)) # returns False for first node
 			print(layer.paths[0].nodes[-1].index == (len(layer.paths[0].nodes) - 1)) # returns True for last node
 
-		:type: GSNode
-	
 
 
 
 	.. attribute:: prevNode
-
 
 		Returns the previous node in the path.
 
@@ -5010,9 +4951,10 @@ For details on how to access them, please see :attr:`GSPath.nodes`
 		If you need to take into consideration the position of the node in the path, use the node’s index attribute and check it against the path length.
 
 
+		:type: GSNode
+
 
 		.. code-block:: python
-
 
 			print(layer.paths[0].nodes[0].prevNode) # returns the last node in the path (first node >> jumps to end of path)
 			print(layer.paths[0].nodes[-1].prevNode) # returns second last node in the path
@@ -5021,13 +4963,11 @@ For details on how to access them, please see :attr:`GSPath.nodes`
 			print(layer.paths[0].nodes[0].index == 0) # returns True for first node
 			print(layer.paths[0].nodes[-1].index == 0) # returns False for last node
 
-		:type: GSNode
 	
 
 
 
 	.. attribute:: name
-
 
 		Attaches a name to a node.
 
@@ -5037,7 +4977,6 @@ For details on how to access them, please see :attr:`GSPath.nodes`
 
 
 	.. attribute:: userData
-
 
 		A dictionary to store user data. Use a unique key and only use objects that can be stored in a property list (string, list, dict, numbers, NSData) otherwise the data will not be recoverable from the saved file.
 
@@ -5052,7 +4991,7 @@ For details on how to access them, please see :attr:`GSPath.nodes`
 			# delete value
 			del node.userData['rememberToMakeCoffee']
 
-	.. versionadded:: 2.4.1
+		.. versionadded:: 2.4.1
 
 	**Functions**
 
@@ -5063,6 +5002,7 @@ For details on how to access them, please see :attr:`GSPath.nodes`
 	.. function:: toggleConnection()
 
 		Toggle between sharp and smooth connections.
+
 
 
 
@@ -5117,9 +5057,10 @@ For details on how to access them, please see :attr:`GSLayer.guides`
 
 		Selection state of guide in UI.
 
+		:type: bool
+
 
 		.. code-block:: python
-
 
 			# select guide
 			layer.guides[0].selected = True
@@ -5127,13 +5068,11 @@ For details on how to access them, please see :attr:`GSLayer.guides`
 			# print(selection state)
 			print(layer.guides[0].selected)
 
-		:type: bool
 
 
 
 	.. attribute:: locked
 
-		
 		Locked
 
 		:type: bool
@@ -5142,7 +5081,6 @@ For details on how to access them, please see :attr:`GSLayer.guides`
 
 	.. attribute:: filter
 
-
 		A filter to only show the guide in certain glyphs. Only relevant in global guides
 
 		:type: NSPredicate
@@ -5150,7 +5088,6 @@ For details on how to access them, please see :attr:`GSLayer.guides`
 
 
 	.. attribute:: userData
-
 
 		A dictionary to store user data. Use a unique key and only use objects that can be stored in a property list (string, list, dict, numbers, NSData) otherwise the data will not be recoverable from the saved file.
 
@@ -5213,11 +5150,13 @@ For details on how to access them, please see :class:`GSLayer.annotations`
 
 
 
+
 	.. attribute:: text
 
 		The content of the annotation. Only useful if type == TEXT
 
 		:type: str
+
 
 
 
@@ -5269,7 +5208,6 @@ For details on how to access them, please see :class:`GSLayer.hints`
 
 	.. attribute:: parent
 
-
 		Parent layer of hint.
 
 		:type: GSLayer
@@ -5300,6 +5238,8 @@ For details on how to access them, please see :class:`GSLayer.hints`
 		:type: :class:`GSNode`
 
 
+
+
 	.. attribute:: otherNode2
 
 		A fourth node this hint is attached to. Used for Diagonal hints.
@@ -5307,11 +5247,13 @@ For details on how to access them, please see :class:`GSLayer.hints`
 		:type: :class:`GSNode`
 
 
+
 	.. attribute:: type
 
 		See Constants section at the bottom of the page.
 
 		:type: int
+
 
 
 	.. attribute:: options
@@ -5336,9 +5278,10 @@ For details on how to access them, please see :class:`GSLayer.hints`
 
 		Selection state of hint in UI.
 
+		:type: bool
+
 
 		.. code-block:: python
-
 
 			# select hint
 			layer.hints[0].selected = True
@@ -5346,12 +5289,11 @@ For details on how to access them, please see :class:`GSLayer.hints`
 			# print(selection state)
 			print(layer.hints[0].selected)
 
-		:type: bool
+
 
 
 
 	.. attribute:: name
-
 
 		Name of the hint. This is the referenced glyph for corner and cap components.
 
@@ -5361,14 +5303,13 @@ For details on how to access them, please see :class:`GSLayer.hints`
 
 	.. attribute:: stem
 
-
 		Index of TrueType stem that this hint is attached to. The stems are defined in the custom parameter "TTFStems" per master.
 
 		For no stem, value is -1.
 
 		For automatic, value is -2.
 
-		:type: integer
+		:type: int
 
 
 
@@ -5379,6 +5320,7 @@ For details on how to access them, please see :class:`GSLayer.hints`
 		:type: bool
 
 		.. versionadded:: 3
+
 
 
 
@@ -5403,6 +5345,7 @@ For details on how to access them, please see :class:`GSLayer.hints`
 
 
 
+
 	.. attribute:: tempData
 
 		A dictionary to store data temporarily. Use a unique key. This will not be saved to file. If you need the data persistent, use hint.userData
@@ -5417,6 +5360,7 @@ For details on how to access them, please see :class:`GSLayer.hints`
 
 			# delete value
 			del hint.tempData['rememberToMakeCoffee']
+
 
 
 
@@ -5468,7 +5412,6 @@ For details on how to access it, please see :class:`GSLayer.backgroundImage`
 
 	.. attribute:: image
 
-
 		:class:`NSImage` object of background image, read-only (as in: not settable)
 
 		:type: :class:`NSImage`
@@ -5477,14 +5420,12 @@ For details on how to access it, please see :class:`GSLayer.backgroundImage`
 
 	.. attribute:: crop
 
-
 		Crop rectangle. This is relative to the image size in pixels, not the font's em units (just in case the image is scaled to something other than 100%).
 
 		:type: :class:`NSRect`
 
 
 		.. code-block:: python
-
 
 			# change cropping
 			layer.backgroundImage.crop = NSRect(NSPoint(0, 0), NSPoint(1200, 1200))
@@ -5502,7 +5443,6 @@ For details on how to access it, please see :class:`GSLayer.backgroundImage`
 
 	.. attribute:: alpha
 
-
 		Defines the transparence of the image in the Edit view. Default is 50%, possible values are 10–100.
 
 		To reset it to default, set it to anything other than the allowed values.
@@ -5512,9 +5452,7 @@ For details on how to access it, please see :class:`GSLayer.backgroundImage`
 
 
 
-
 	.. attribute:: position
-
 
 		Position of image in font units.
 
@@ -5522,7 +5460,6 @@ For details on how to access it, please see :class:`GSLayer.backgroundImage`
 
 
 	.. code-block:: python
-
 
 		# change position
 		layer.backgroundImage.position = NSPoint(50, 50)
@@ -5532,27 +5469,25 @@ For details on how to access it, please see :class:`GSLayer.backgroundImage`
 
 	.. attribute:: scale
 
-
 		Scale factor of image.
 
 		A scale factor of 1.0 (100%) means that 1 font unit is equal to 1 point.
 
 		Set the scale factor for x and y scale simultaneously with an integer or a float value. For separate scale factors, please use a tuple.
 
+		:type: tuple
+
 
 		.. code-block:: python
-
 
 			# change scale
 			layer.backgroundImage.scale = 1.2 # changes x and y to 120%
 			layer.backgroundImage.scale = (1.1, 1.2) # changes x to 110% and y to 120%
 
-		:type: tuple
 
 
 
 	.. attribute:: rotation
-
 
 		Rotation angle of image.
 
@@ -5562,14 +5497,12 @@ For details on how to access it, please see :class:`GSLayer.backgroundImage`
 
 	.. attribute:: transform
 
-
 		Transformation matrix.
 
 		:type: :class:`NSAffineTransformStruct`
 
 
 		.. code-block:: python
-
 
 			# change transformation
 			layer.backgroundImage.transform = ((
@@ -5587,35 +5520,35 @@ For details on how to access it, please see :class:`GSLayer.backgroundImage`
 
 	.. function:: resetCrop
 
-	Resets the cropping to the image's original dimensions.
+		Resets the cropping to the image's original dimensions.
+
 
 
 	.. function:: scaleWidthToEmUnits
 
-	Scale the image's cropped width to a certain em unit value, retaining its aspect ratio.
+		Scale the image's cropped width to a certain em unit value, retaining its aspect ratio.
 
 
-	.. code-block:: python
+		.. code-block:: python
 
-
-		# fit image in layer's width
-		layer.backgroundImage.scaleWidthToEmUnits(layer.width)
+			# fit image in layer's width
+			layer.backgroundImage.scaleWidthToEmUnits(layer.width)
 
 
 
 	.. function:: scaleHeightToEmUnits
 
-	Scale the image's cropped height to a certain em unit value, retaining its aspect ratio.
+		Scale the image's cropped height to a certain em unit value, retaining its aspect ratio.
 
 
-	.. code-block:: python
+		.. code-block:: python
 
+			# position image's origin at descender line
+			layer.backgroundImage.position = NSPoint(0, font.masters[0].descender)
 
-		# position image's origin at descender line
-		layer.backgroundImage.position = NSPoint(0, font.masters[0].descender)
+			# scale image to UPM value
+			layer.backgroundImage.scaleHeightToEmUnits(font.upm)
 
-		# scale image to UPM value
-		layer.backgroundImage.scaleHeightToEmUnits(font.upm)
 
 
 
@@ -5666,7 +5599,7 @@ For details on how to access them, please look at :class:`GSFont.tabs`
 
 	.. attribute:: parent
 
-	The :class:`GSFont` object that this tab belongs to.
+		The :class:`GSFont` object that this tab belongs to.
 
 		:type: :class:`GSFont`
 
@@ -5674,7 +5607,7 @@ For details on how to access them, please look at :class:`GSFont.tabs`
 
 	.. attribute:: text
 
-	The text of the tab, either as text, or slash-escaped glyph names, or mixed. OpenType features will be applied after the text has been changed.
+		The text of the tab, either as text, or slash-escaped glyph names, or mixed. OpenType features will be applied after the text has been changed.
 
 		:type: str
 
@@ -5682,73 +5615,67 @@ For details on how to access them, please look at :class:`GSFont.tabs`
 
 	.. attribute:: masterIndex
 
-	The index of the active master (selected in the toolbar).
+		The index of the active master (selected in the toolbar).
 
 		:type: int
 	
-	.. versionadded:: 2.6.1
+		.. versionadded:: 2.6.1
 	
 
 
 
 	.. attribute:: layers
 
-
-	Alternatively, you can set (and read) a list of :class:`GSLayer` objects. These can be any of the layers of a glyph. OpenType features will be applied after the layers have been changed.
+		Alternatively, you can set (and read) a list of :class:`GSLayer` objects. These can be any of the layers of a glyph. OpenType features will be applied after the layers have been changed.
 
 		:type: list
 
 
-	.. code-block:: python
+		.. code-block:: python
 
+			font.tabs[0].layers = []
 
+			# display all layers of one glyph next to each other
+			for layer in font.glyphs['a'].layers:
+				font.tabs[0].layers.append(layer)
 
-		font.tabs[0].layers = []
-
-		# display all layers of one glyph next to each other
-		for layer in font.glyphs['a'].layers:
-			font.tabs[0].layers.append(layer)
-
-		# append line break
-		font.tabs[0].layers.append(GSControlLayer(10)) # 10 being the ASCII code of the new line character (\n)
+			# append line break
+			font.tabs[0].layers.append(GSControlLayer(10)) # 10 being the ASCII code of the new line character (\n)
 
 
 
 
 	.. attribute:: composedLayers
 
-
-	Similar to the above, but this list contains the :class:`GSLayer` objects after the OpenType features have been applied (see :class:`GSEditViewController.features`). Read-only.
+		Similar to the above, but this list contains the :class:`GSLayer` objects after the OpenType features have been applied (see :class:`GSEditViewController.features`). Read-only.
 
 		:type: list
 
-	.. versionadded:: 2.4
+		.. versionadded:: 2.4
+
 
 
 
 	.. attribute:: scale
 
+		Scale (zoom factor) of the Edit view. Useful for drawing activity in plugins.
 
-	Scale (zoom factor) of the Edit view. Useful for drawing activity in plugins.
-
-	The scale changes with every zoom step of the Edit view. So if you want to draw objects (e.g. text, stroke thickness etc.) into the Edit view at a constant size relative to the UI (e.g. constant text size on screen), you need to calculate the object's size relative to the scale factor. See example below.
-
-
-	.. code-block:: python
-
-
-		print(font.currentTab.scale)
-		0.414628537193
-
-		# Calculate text size
-		desiredTextSizeOnScreen = 10 #pt
-		scaleCorrectedTextSize = desiredTextSizeOnScreen / font.currentTab.scale
-
-		print(scaleCorrectedTextSize)
-		24.1179733255
-
+		The scale changes with every zoom step of the Edit view. So if you want to draw objects (e.g. text, stroke thickness etc.) into the Edit view at a constant size relative to the UI (e.g. constant text size on screen), you need to calculate the object's size relative to the scale factor. See example below.
 
 		:type: float
+
+
+		.. code-block:: python
+
+			print(font.currentTab.scale)
+			0.414628537193
+
+			# Calculate text size
+			desiredTextSizeOnScreen = 10 #pt
+			scaleCorrectedTextSize = desiredTextSizeOnScreen / font.currentTab.scale
+
+			print(scaleCorrectedTextSize)
+			24.1179733255
 
 
 
@@ -5756,45 +5683,43 @@ For details on how to access them, please look at :class:`GSFont.tabs`
 
 	.. attribute:: viewPort
 
+		The visible area of the Edit view in screen pixel coordinates (view coordinates).
 
-	The visible area of the Edit view in screen pixel coordinates (view coordinates).
+		The NSRect’s origin value describes the top-left corner (top-right for RTL, both at ascender height) of the combined glyphs’ bounding box (see :attr:`bounds <GSEditViewController.bounds>`), which also serves as the origin of the view plane.
 
-	The NSRect’s origin value describes the top-left corner (top-right for RTL, both at ascender height) of the combined glyphs’ bounding box (see :attr:`bounds <GSEditViewController.bounds>`), which also serves as the origin of the view plane.
+		The NSRect’s size value describes the width and height of the visible area.
 
-	The NSRect’s size value describes the width and height of the visible area.
-
-	When using drawing methods such as the view-coordinate-relative method in the Reporter Plugin, use these coordinates.
-
-
-	.. code-block:: python
-
-
-		# The far corners of the Edit view:
-
-		# Lower left corner of the screen
-		x = font.currentTab.viewPort.origin.x
-		y = font.currentTab.viewPort.origin.y
-
-		# Top left corner of the screen
-		x = font.currentTab.viewPort.origin.x
-		y = font.currentTab.viewPort.origin.y + font.currentTab.viewPort.size.height
-
-		# Top right corner of the screen
-		x = font.currentTab.viewPort.origin.x + font.currentTab.viewPort.size.width
-		y = font.currentTab.viewPort.origin.y + font.currentTab.viewPort.size.height
-
-		# Bottom right corner of the screen
-		x = font.currentTab.viewPort.origin.x + font.currentTab.viewPort.size.width
-		y = font.currentTab.viewPort.origin.y
+		When using drawing methods such as the view-coordinate-relative method in the Reporter Plugin, use these coordinates.
 
 		:type: NSRect
+
+
+		.. code-block:: python
+
+			# The far corners of the Edit view:
+
+			# Lower left corner of the screen
+			x = font.currentTab.viewPort.origin.x
+			y = font.currentTab.viewPort.origin.y
+
+			# Top left corner of the screen
+			x = font.currentTab.viewPort.origin.x
+			y = font.currentTab.viewPort.origin.y + font.currentTab.viewPort.size.height
+
+			# Top right corner of the screen
+			x = font.currentTab.viewPort.origin.x + font.currentTab.viewPort.size.width
+			y = font.currentTab.viewPort.origin.y + font.currentTab.viewPort.size.height
+
+			# Bottom right corner of the screen
+			x = font.currentTab.viewPort.origin.x + font.currentTab.viewPort.size.width
+			y = font.currentTab.viewPort.origin.y
 
 
 
 
 	.. attribute:: bounds
 
-	Bounding box of all glyphs in the Edit view in view coordinate values.
+		Bounding box of all glyphs in the Edit view in view coordinate values.
 
 		:type: NSRect
 
@@ -5803,7 +5728,7 @@ For details on how to access them, please look at :class:`GSFont.tabs`
 
 	.. attribute:: selectedLayerOrigin
 
-	Position of the active layer’s origin (0,0) relative to the origin of the view plane (see :attr:`bounds <GSEditViewController.bounds>`), in view coordinates.
+		Position of the active layer’s origin (0,0) relative to the origin of the view plane (see :attr:`bounds <GSEditViewController.bounds>`), in view coordinates.
 
 		:type: NSPoint
 
@@ -5812,7 +5737,7 @@ For details on how to access them, please look at :class:`GSFont.tabs`
 
 	.. attribute:: textCursor
 
-	Position of text cursor in text, starting with 0.
+		Position of text cursor in text, starting with 0.
 
 		:type: integer
 
@@ -5821,7 +5746,7 @@ For details on how to access them, please look at :class:`GSFont.tabs`
 
 	.. attribute:: textRange
 
-	Amount of selected glyphs in text, starting at cursor position (see above).
+		Amount of selected glyphs in text, starting at cursor position (see above).
 
 		:type: integer
 
@@ -5830,30 +5755,28 @@ For details on how to access them, please look at :class:`GSFont.tabs`
 
 	.. attribute:: layersCursor
 
-	Position of cursor in the layers list, starting with 0.
-	
-	.. seealso:: `GSEditViewController.layers`
+		Position of cursor in the layers list, starting with 0.
+		
+		.. seealso:: `GSEditViewController.layers`
 
 		:type: integer
 
-	.. versionadded:: 2.4
+		.. versionadded:: 2.4
 
 
 
 	.. attribute:: direction
 
+		Writing direction.
 
-	Writing direction.
-
-	Defined constants are: LTR (left to right), RTL (right to left), LTRTTB (left to right, vertical, top to bottom e.g. Mongolian), and RTLTTB (right to left, vertical, top to bottom e.g. Chinese, Japanese, Korean)
+		Defined constants are: LTR (left to right), RTL (right to left), LTRTTB (left to right, vertical, top to bottom e.g. Mongolian), and RTLTTB (right to left, vertical, top to bottom e.g. Chinese, Japanese, Korean)
 
 		:type: integer
 
 
-	.. code-block:: python
+		.. code-block:: python
 
-
-		font.currentTab.direction = RTL
+			font.currentTab.direction = RTL
 
 
 
@@ -5875,7 +5798,6 @@ For details on how to access them, please look at :class:`GSFont.tabs`
 
 	.. attribute:: previewInstances
 
-
 		Instances to show in the Preview area.
 
 		Values are ``'live'`` for the preview of the current content of the Edit view, ``'all'`` for interpolations of all instances of the current glyph, or individual GSInstance objects.
@@ -5883,23 +5805,21 @@ For details on how to access them, please look at :class:`GSFont.tabs`
 		:type: string/GSInstance
 
 
-	.. code-block:: python
+		.. code-block:: python
 
+			# Live preview of Edit view
+			font.currentTab.previewInstances = 'live'
 
-		# Live preview of Edit view
-		font.currentTab.previewInstances = 'live'
+			# Text of Edit view shown in particular Instance interpolation (last defined instance)
+			font.currentTab.previewInstances = font.instances[-1]
 
-		# Text of Edit view shown in particular Instance interpolation (last defined instance)
-		font.currentTab.previewInstances = font.instances[-1]
-
-		# All instances of interpolation
-		font.currentTab.previewInstances = 'all'
+			# All instances of interpolation
+			font.currentTab.previewInstances = 'all'
 
 
 
 
 	.. attribute:: previewHeight
-
 
 		Height of the preview panel in the Edit view in pixels.
 
@@ -5916,7 +5836,7 @@ For details on how to access them, please look at :class:`GSFont.tabs`
 
 		:type: float
 
-	.. versionadded:: 2.4
+		.. versionadded:: 2.4
 
 
 	**Functions**
@@ -5925,17 +5845,18 @@ For details on how to access them, please look at :class:`GSFont.tabs`
 
 	.. function:: close()
 
-	Close this tab.
+		Close this tab.
 
 
 	.. function:: saveToPDF(path[, rect])
 
 		Save the view to a PDF file.
 
-	:param path: Path to the file
-	:param rect: Optional. NSRect defining the view port. If omitted, :attr:`GSEditViewController.viewPort` will be used.
+		:param path: Path to the file
+		:param rect: Optional. NSRect defining the view port. If omitted, :attr:`GSEditViewController.viewPort` will be used.
 
-	.. versionadded:: 2.4
+		.. versionadded:: 2.4
+
 
 
 	.. function:: redraw()
@@ -6016,7 +5937,6 @@ This contains valuable information from the glyph database. See :class:`GSGlyphs
 
 	.. attribute:: case
 
-	
 		e.g: "Uppercase", "Lowercase", "Smallcaps"
 
 		:type: int
@@ -6315,7 +6235,7 @@ The Text Preview Window
 
 	.. attribute:: text
 
-	The text
+		The text
 
 		:type: str
 
@@ -6323,7 +6243,7 @@ The Text Preview Window
 
 	.. attribute:: instanceIndex
 
-	The index of the selected instance
+		The index of the selected instance
 
 		:type: int
 
@@ -6331,7 +6251,7 @@ The Text Preview Window
 
 	.. attribute:: fontSize
 
-	The font size
+		The font size
 
 		:type: int
 
@@ -6361,7 +6281,7 @@ The NSAffineTransform object.
 
 	.. attribute:: shift
 
-	shift by x, y
+		shift by x, y
 
 		:type: tuple or NSPoint
 
@@ -6369,9 +6289,8 @@ The NSAffineTransform object.
 
 	.. attribute:: scale
 
-	if a single number, scale uniformly, otherwise scale by x, y
-	if center is given, that is used as the origin of the scale
-	
+		if a single number, scale uniformly, otherwise scale by x, y
+		if center is given, that is used as the origin of the scale
 
 		:type: int/float or tuple
 	
@@ -6380,9 +6299,8 @@ The NSAffineTransform object.
 
 	.. attribute:: rotate
 
-	The angle of the rotation. In degree, positive angles are CCW
-	if center is given, that is used as the origin of the rotation
-	
+		The angle of the rotation. In degree, positive angles are CCW
+		if center is given, that is used as the origin of the rotation
 
 		:type: int/float
 	
@@ -6391,9 +6309,8 @@ The NSAffineTransform object.
 
 	.. attribute:: skew
 
-	if a single number, skew in x-direction otherwise skew by x, y
-	if center is given, that is used as the origin of the skew
-	
+		if a single number, skew in x-direction otherwise skew by x, y
+		if center is given, that is used as the origin of the skew
 
 		:type: int/float or tuple
 	
@@ -6402,7 +6319,7 @@ The NSAffineTransform object.
 
 	.. attribute:: matrix
 
-	The transformation matrix.
+		The transformation matrix.
 
 		:type: tuple
 
@@ -6439,6 +6356,7 @@ Methods
 	:rtype: list
 
 
+
 .. function:: distance(P0, P1)
 
 	calculates the distance between two NSPoints
@@ -6447,6 +6365,7 @@ Methods
 	:param P1: another NSPoint
 	:return: The distance
 	:rtype: float
+
 
 
 .. function:: addPoints(P1, P2)
@@ -6459,6 +6378,7 @@ Methods
 	:rtype: NSPoint
 
 
+
 .. function:: subtractPoints(P1, P2)
 
 	Subtracts the points.
@@ -6467,6 +6387,7 @@ Methods
 	:param P1: another NSPoint
 	:return: The subtracted point
 	:rtype: NSPoint
+
 
 
 .. function:: scalePoint(P, scalar)
@@ -6479,6 +6400,7 @@ Methods
 	:rtype: NSPoint
 
 
+
 .. function:: GetSaveFile(message=None, ProposedFileName=None, filetypes=None)
 
 	Opens a file chooser dialog.
@@ -6488,6 +6410,7 @@ Methods
 	:param ProposedFileName:
 	:return: The selected file or None
 	:rtype: unicode
+
 
 
 .. function:: GetOpenFile(message=None, allowsMultipleSelection=False, filetypes=None, path=None)
@@ -6502,6 +6425,7 @@ Methods
 	:rtype: unicode or list
 
 
+
 .. function:: GetFolder(message=None, allowsMultipleSelection=False, path=None)
 
 	Opens a folder chooser dialog.
@@ -6513,6 +6437,7 @@ Methods
 	:rtype: unicode
 
 
+
 .. function:: Message(message, title="Alert", OKButton=None)
 
 	Shows an alert panel.
@@ -6522,11 +6447,13 @@ Methods
 	:param OKButton:
 
 
+
 .. function:: LogToConsole(message)
 
 	Write a message to the Mac's Console.app for debugging.
 
 	:param str message:
+
 
 
 .. function:: LogError(message)
@@ -6536,60 +6463,49 @@ Methods
 	:param message:
 
 
+
 Constants
 =========
 
 Node types
 
 .. data:: LINE
-
 	Line node.
 
 .. data:: CURVE
-
 	Curve node. Make sure that each curve node is preceded by two off-curve nodes.
 
 .. data:: QCURVE
-
 	Quadratic curve node. Make sure that each curve node is preceded by at least one off-curve node.
 
 .. data:: OFFCURVE
-
 	Off-cuve node
 
 Export formats
 ==============
 
 .. data:: OTF
-
 	Write CFF based font
 
 .. data:: TTF
-
 	Write CFF based font
 
 .. data:: VARIABLE
-
 	Write Variable font
 
 .. data:: UFO
-
 	Write UFO based font
 
 .. data:: WOFF
-
 	Write WOFF
 
 .. data:: WOFF2
-
 	Write WOFF
 
 .. data:: PLAIN
-
 	do not package as webfont
 
 .. data:: EOT
-
 	Write EOT
 
 .. versionadded:: 2.5
@@ -6597,11 +6513,9 @@ Export formats
 Instance Types
 ==============
 .. data:: INSTANCETYPESINGLE
-
 	single interpolation instance
 
 .. data:: INSTANCETYPEVARIABLE
-
 	variable font setting
 
 .. versionadded:: 3.0.1
@@ -6610,46 +6524,36 @@ Hint types
 ==========
 
 .. data:: TOPGHOST
-
 	Top ghost for PS hints
 
 .. data:: STEM
-
 	Stem for PS hints
 
 .. data:: BOTTOMGHOST
-
 	Bottom ghost for PS hints
 
 .. data:: TTSNAP
-
 	Snap for TT hints
 
 .. data:: TTSTEM
-
 	Stem for TT hints
 
 .. data:: TTSHIFT
-
 	Shift for TT hints
 
 .. data:: TTINTERPOLATE
-
 	Interpolation for TT hints
 
 .. data:: TTDIAGONAL
-
 	Diagonal for TT hints
 
 .. data:: TTDELTA
 	Delta TT hints
 
 .. data:: CORNER
-
 	Corner Component
 
 .. data:: CAP
-
 	Cap Component
 
 Hint Option
@@ -6658,23 +6562,18 @@ Hint Option
 This is only used for TrueType hints.
 
 .. data:: TTROUND
-
 	Round to grid
 
 .. data:: TTROUNDUP
-
 	Round up
 
 .. data:: TTROUNDDOWN
-
 	Round down
 
 .. data:: TTDONTROUND
-
 	Don’t round at all
 
 .. data:: TRIPLE = 128
-
 	Indicates a triple hint group. There need to be exactly three horizontal TTStem hints with this setting to take effect.
 
 Menu Tags
@@ -6683,58 +6582,45 @@ Menu Tags
 This are tags to access the menu items in the apps main menu. Please see :attr:`GSApplication.menu` for details
 
 .. data:: APP_MENU
-
 	The 'Glyphs' menu
 
 .. data:: FILE_MENU
-
 	The File menu
 
 .. data:: EDIT_MENU
-
 	The Edit menu
 
 .. data:: GLYPH_MENU
-
 	The Glyph menu
 
 .. data:: PATH_MENU
-
 	The Path menu
 
 .. data:: FILTER_MENU
-
 	The Filter menu
 
 .. data:: VIEW_MENU
-
 	The View menu
 
 .. data:: SCRIPT_MENU
-
 	The Script menu
 
 .. data:: WINDOW_MENU
-
 	The Window menu
 
 .. data:: HELP_MENU
-
 	The Help menu
 
 Menu States
 ===========
 
 .. data:: ONSTATE
-
 	The menu entry will have a checkbox
 
 .. data:: OFFSTATE
-
 	The menu entry will have no checkbox
 
 .. data:: MIXEDSTATE
-
 	The menu entry will have horizontal line
 
 Callback Keys
@@ -6743,67 +6629,54 @@ Callback Keys
 This are the available callbacks
 
 .. data:: DRAWFOREGROUND
-
 	to draw in the foreground
 
 .. data:: DRAWBACKGROUND
-
 	to draw in the background
 
 .. data:: DRAWINACTIVE
-
 	draw inactive glyphs
 
 .. data:: DOCUMENTOPENED
-
 	is called if a new document is opened
 
 .. data:: DOCUMENTACTIVATED
-
 	is called when the document becomes the active document
 
 .. data:: DOCUMENTWASSAVED
-
 	is called when the document is saved.
 	The document itself is passed in notification.object()
 
 .. data:: DOCUMENTEXPORTED
-
 	if a font is exported. This is called for every instance and ``notification.object()`` will contain the path to the final font file.
 
 
-.. code-block:: python
+	.. code-block:: python
 
-	def exportCallback(info):
-		try:
-			print(info.object())
-		except:
-			# Error. Print exception.
-			import traceback
-			print(traceback.format_exc())
+		def exportCallback(info):
+			try:
+				print(info.object())
+			except:
+				# Error. Print exception.
+				import traceback
+				print(traceback.format_exc())
 
-	# add your function to the hook
-	Glyphs.addCallback(exportCallback, DOCUMENTEXPORTED)
-
+		# add your function to the hook
+		Glyphs.addCallback(exportCallback, DOCUMENTEXPORTED)
 
 .. data:: DOCUMENTCLOSED
-
 	is called when the document is closed
 
 .. data:: TABDIDOPEN
-
 	if a new tab is opened
 
 .. data:: TABWILLCLOSE
-
 	if a tab is closed
 
 .. data:: UPDATEINTERFACE
-
 	if some thing changed in the edit view. Maybe the selection or the glyph data.
 
 .. data:: MOUSEMOVED
-
 	is called if the mouse is moved. If you need to draw something, you need to call `Glyphs.redraw()` and also register to one of the drawing callbacks.
 
 Writing Directions
@@ -6812,29 +6685,23 @@ Writing Directions
 The writing directions of the Edit View.
 
 .. data:: LTR
-
 	Left To Right (e.g. Latin)
 
 .. data:: RTL
-
 	Right To Left (e.g. Arabic, Hebrew)
 
 .. data:: LTRTTB
-
 	Left To Right, Top To Bottom
 
 .. data:: RTLTTB
-
 	Right To Left, Top To Bottom
 
 Shape Type
 ==========
 .. data:: GSShapeTypePath
-
 	Path
 
 .. data:: GSShapeTypeComponent
-
 	Component
 
 Annotation types
