@@ -27,6 +27,12 @@ pre {
 	padding: 0;
 	list-style: none;
 }
+ul.simple {
+	padding-left:0;
+}
+.simple li {
+	list-style: none;
+}
 
 .list-inline > li {
 	display: block;
@@ -237,7 +243,7 @@ div.sphinxsidebar a {
 	border:0;
 }
 pre {
-	margin-top: 0;
+	margin-top: 0.5em;
 	margin-bottom: 1em;
 	padding-top: 1em;
 	padding-right: 1em;
