@@ -1,0 +1,326 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		56A776FF22C130EA002811B2 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56A776FE22C130EA002811B2 /* Cocoa.framework */; };
+		56A7776D22C13166002811B2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 56A7776C22C13166002811B2 /* main.m */; };
+		56A7783222C207CA002811B2 /* plugin.py in Resources */ = {isa = PBXBuildFile; fileRef = 56A7783122C207CA002811B2 /* plugin.py */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		56A776FB22C130EA002811B2 /* plugin.glyphsPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = plugin.glyphsPlugin; sourceTree = BUILT_PRODUCTS_DIR; };
+		56A776FE22C130EA002811B2 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		56A7770922C130EA002811B2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		56A7776C22C13166002811B2 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		56A7783122C207CA002811B2 /* plugin.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = plugin.py; sourceTree = "<group>"; };
+		56CB6D3E245DC7E300A85160 /* debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = debug.xcconfig; path = ../../../debug.xcconfig; sourceTree = "<group>"; };
+		56CB6D3F245DC7E300A85160 /* common.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = common.xcconfig; path = ../../../common.xcconfig; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		56A776F822C130EA002811B2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				56A776FF22C130EA002811B2 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		56A776F222C130EA002811B2 = {
+			isa = PBXGroup;
+			children = (
+				56A7770022C130EA002811B2 /* pythonWrapper */,
+				56A776FD22C130EA002811B2 /* Frameworks */,
+				56A776FC22C130EA002811B2 /* Products */,
+			);
+			sourceTree = "<group>";
+			usesTabs = 1;
+		};
+		56A776FC22C130EA002811B2 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				56A776FB22C130EA002811B2 /* plugin.glyphsPlugin */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		56A776FD22C130EA002811B2 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				56A776FE22C130EA002811B2 /* Cocoa.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		56A7770022C130EA002811B2 /* pythonWrapper */ = {
+			isa = PBXGroup;
+			children = (
+				56A7783122C207CA002811B2 /* plugin.py */,
+				56A7776C22C13166002811B2 /* main.m */,
+				56A7770922C130EA002811B2 /* Info.plist */,
+				56CB6D3F245DC7E300A85160 /* common.xcconfig */,
+				56CB6D3E245DC7E300A85160 /* debug.xcconfig */,
+			);
+			path = pythonWrapper;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		56A776FA22C130EA002811B2 /* pythonWrapper */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 56A7770C22C130EA002811B2 /* Build configuration list for PBXNativeTarget "pythonWrapper" */;
+			buildPhases = (
+				56A776F722C130EA002811B2 /* Sources */,
+				56A776F822C130EA002811B2 /* Frameworks */,
+				56A776F922C130EA002811B2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = pythonWrapper;
+			productName = pythonWrapper;
+			productReference = 56A776FB22C130EA002811B2 /* plugin.glyphsPlugin */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		56A776F322C130EA002811B2 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1220;
+				ORGANIZATIONNAME = schriftgestalt;
+				TargetAttributes = {
+					56A776FA22C130EA002811B2 = {
+						CreatedOnToolsVersion = 10.1;
+					};
+				};
+			};
+			buildConfigurationList = 56A776F622C130EA002811B2 /* Build configuration list for PBXProject "pythonWrapper" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 56A776F222C130EA002811B2;
+			productRefGroup = 56A776FC22C130EA002811B2 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				56A776FA22C130EA002811B2 /* pythonWrapper */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		56A776F922C130EA002811B2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				56A7783222C207CA002811B2 /* plugin.py in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		56A776F722C130EA002811B2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				56A7776D22C13166002811B2 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		56A7770A22C130EA002811B2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 56CB6D3E245DC7E300A85160 /* debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		56A7770B22C130EA002811B2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 56CB6D3F245DC7E300A85160 /* common.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		56A7770D22C130EA002811B2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 56CB6D3E245DC7E300A85160 /* debug.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = NO;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
+				CODE_SIGN_STYLE = Manual;
+				DEPLOYMENT_LOCATION = YES;
+				DSTROOT = "$(USER_LIBRARY_DIR)/Application Support/Glyphs 3/Plugins";
+				FRAMEWORK_SEARCH_PATHS = "$(SYSTEM_APPS_DIR)/Glyphs.app/Contents/Frameworks";
+				INFOPLIST_FILE = pythonWrapper/Info.plist;
+				INSTALL_PATH = /;
+				PRODUCT_BUNDLE_IDENTIFIER = com.schriftgestalt.pythonWrapper;
+				PRODUCT_NAME = plugin;
+				SKIP_INSTALL = NO;
+				WRAPPER_EXTENSION = glyphsPlugin;
+			};
+			name = Debug;
+		};
+		56A7770E22C130EA002811B2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 56CB6D3F245DC7E300A85160 /* common.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = NO;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
+				CODE_SIGN_STYLE = Manual;
+				COPY_PHASE_STRIP = YES;
+				DEAD_CODE_STRIPPING = YES;
+				DEPLOYMENT_POSTPROCESSING = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(SYSTEM_APPS_DIR)/Glyphs.app/Contents/Frameworks";
+				INFOPLIST_FILE = pythonWrapper/Info.plist;
+				INSTALL_PATH = /;
+				PRODUCT_BUNDLE_IDENTIFIER = com.schriftgestalt.pythonWrapper;
+				PRODUCT_NAME = plugin;
+				SKIP_INSTALL = NO;
+				WRAPPER_EXTENSION = glyphsPlugin;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		56A776F622C130EA002811B2 /* Build configuration list for PBXProject "pythonWrapper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				56A7770A22C130EA002811B2 /* Debug */,
+				56A7770B22C130EA002811B2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		56A7770C22C130EA002811B2 /* Build configuration list for PBXNativeTarget "pythonWrapper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				56A7770D22C130EA002811B2 /* Debug */,
+				56A7770E22C130EA002811B2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 56A776F322C130EA002811B2 /* Project object */;
+}
