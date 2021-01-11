@@ -174,9 +174,7 @@ Entries must be separated by commas. So don’t forget a comma right after the c
 
 ## Further reading
 
-For a quick introduction to using Interface Builder with the PyObjC bridge, read http://blog.adamw523.com/os-x-cocoa-application-python-pyobjc/
-
-For the complete reference for the UI elements, see Apple's AppKit Framework Reference: https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ApplicationKit/ObjC_classic/index.html
+For the complete reference for the UI elements, see Apple's AppKit Framework Reference: https://developer.apple.com/documentation/appkit/views_and_controls?language=objc
 
 ## Troubleshooting and Debugging
 
