@@ -867,7 +867,7 @@ GSApplication.scriptAbbrevations = property(lambda self: _old_scriptAbbreviation
 
 		:type: dict
 
-	'''
+'''
 
 GSApplication.scriptSuffixes = property(lambda self: GSGlyphsInfo.scriptSuffixes())
 '''
@@ -970,7 +970,7 @@ GSApplication.versionNumber = _versionNumber
 		Glyph.app's version number. Use this to check for version in your code.
 
 		:type: float
-	
+
 '''
 
 _buildNumber = int(NSBundle.mainBundle().infoDictionary()["CFBundleVersion"])
@@ -2428,7 +2428,7 @@ class GlyphLayerProxy(Proxy):
 					ExtraLayer = None
 					while ExtraLayerIndex >= 0:
 						ExtraLayer = self._owner.pyobjc_instanceMethods.layers().objectAtIndex_(idx)
-						if ExtraLayer.layerId != ExtraLayer.associatedMasterId:
+						if not ExtraLayer.isMasterLayer:
 							ExtraLayerIndex = ExtraLayerIndex - 1
 						idx += 1
 					return ExtraLayer
@@ -2740,7 +2740,7 @@ class LayerShapesProxy(Proxy):
 			if idx < self._owner.countOfShapes():
 				return self._owner.objectInShapesAtIndex_(idx)
 			else:
-				raise IndexError
+				raise IndexError("list index out of range (%d): %d" % (self._owner.countOfShapes(), idx))
 		else:
 			raise TypeError("list indices must be integers or slices, not %s" % type(idx).__name__)
 	def __setitem__(self, idx, Shape):
@@ -3291,15 +3291,17 @@ GSFont.featurePrefixes = property(lambda self: FontFeaturePrefixesProxy(self),
 
 '''
 
-GSFont.copyright = property(lambda self: self.defaultPropertyForName_("copyright"), lambda self, value: self.setProperty_value_languageTag_("copyright", value, None))
+GSFont.copyright = property(lambda self: self.defaultPropertyForName_("copyrights"), lambda self, value: self.setProperty_value_languageTag_("copyrights", value, None))
 '''
 	.. attribute:: copyright
+		This accesses the default value only. The localisations can be accessed by :attr:`GSFont.properties`
 
 		:type: str
 '''
-GSFont.designer = property(lambda self: self.defaultPropertyForName_("designer"), lambda self, value: self.setProperty_value_languageTag_("designer", value, None))
+GSFont.designer = property(lambda self: self.defaultPropertyForName_("designers"), lambda self, value: self.setProperty_value_languageTag_("designers", value, None))
 '''
 	.. attribute:: designer
+		This accesses the default value only. The localisations can be accessed by :attr:`GSFont.properties`
 
 		:type: str
 '''
@@ -3309,9 +3311,10 @@ GSFont.designerURL = property(lambda self: self.defaultPropertyForName_("designe
 
 		:type: str
 '''
-GSFont.manufacturer = property(lambda self: self.defaultPropertyForName_("manufacturer"), lambda self, value: self.setProperty_value_languageTag_("manufacturer", value, None))
+GSFont.manufacturer = property(lambda self: self.defaultPropertyForName_("manufacturers"), lambda self, value: self.setProperty_value_languageTag_("manufacturers", value, None))
 '''
 	.. attribute:: manufacturer
+		This accesses the default value only. The localisations can be accessed by :attr:`GSFont.properties`
 
 		:type: str
 '''
@@ -4637,6 +4640,11 @@ GSInstance.mutableCopyWithZone_ = GSObject__copy__
 		windowsLinkedToStyle
 		fontName
 		fullName
+		copyright
+		designer
+		designerURL
+		manufacturer
+		manufacturerURL
 		font
 		customParameters
 		instanceInterpolations
@@ -4849,6 +4857,50 @@ GSInstance.fullName = property(lambda self: self.pyobjc_instanceMethods.fullName
 		:type: string
 '''
 
+GSInstance.copyright = property(lambda self: self.defaultPropertyForName_("copyrights"), lambda self, value: self.setProperty_value_languageTag_("copyrights", value, None))
+'''
+	.. attribute:: copyright
+		This accesses the default value only. The localisations can be accessed by :attr:`GSInstance.properties`
+
+		:type: str
+		
+		.. versionadded:: 3.0.2
+'''
+GSInstance.designer = property(lambda self: self.defaultPropertyForName_("designers"), lambda self, value: self.setProperty_value_languageTag_("designers", value, None))
+'''
+	.. attribute:: designer
+		This accesses the default value only. The localisations can be accessed by :attr:`GSInstance.properties`
+
+		:type: str
+
+		.. versionadded:: 3.0.2
+'''
+GSInstance.designerURL = property(lambda self: self.defaultPropertyForName_("designerURL"), lambda self, value: self.setProperty_value_languageTag_("designerURL", value, None))
+'''
+	.. attribute:: designerURL
+
+		:type: str
+
+		.. versionadded:: 3.0.2
+'''
+GSInstance.manufacturer = property(lambda self: self.defaultPropertyForName_("manufacturers"), lambda self, value: self.setProperty_value_languageTag_("manufacturers", value, None))
+'''
+	.. attribute:: manufacturer
+		This accesses the default value only. The localisations can be accessed by :attr:`GSInstance.properties`
+
+		:type: str
+
+		.. versionadded:: 3.0.2
+'''
+GSInstance.manufacturerURL = property(lambda self: self.defaultPropertyForName_("manufacturerURL"), lambda self, value: self.setProperty_value_languageTag_("manufacturerURL", value, None))
+'''
+	.. attribute:: manufacturerURL
+
+		:type: str
+
+		.. versionadded:: 3.0.2
+'''
+
 GSInstance.font = property(lambda self: self.pyobjc_instanceMethods.font(),
 						   lambda self, value: self.setFont_(value))
 '''
@@ -5000,7 +5052,7 @@ GSInstance.interpolatedFont = property(lambda self: Instance_FontObject(self))
 '''
 
 
-class _ExporterDelegate_ (NSObject):
+class _ExporterDelegate_(NSObject):
 	def init(self):
 		self = super(_ExporterDelegate_, self).init()
 		self.result = True
@@ -6590,13 +6642,7 @@ GSBackgroundLayer.name = property(lambda self: self.pyobjc_instanceMethods.name(
 		:type: str
 '''
 
-def GSLayer__master__(self):
-	if self.associatedMasterId:
-		master = self.parent.parent.masters[self.associatedMasterId]
-		return master
-
-
-GSLayer.master = property(lambda self: GSLayer__master__(self))
+GSLayer.master = property(lambda self: self.associatedFontMaster())
 '''
 	.. attribute:: master
 		Master that this layer is connected to. Read only.
@@ -8352,7 +8398,7 @@ GSSmartComponentAxis.name = property(lambda self: self.pyobjc_instanceMethods.na
 
 		:type: str
 '''
-GSSmartComponentAxis.id = property(lambda self: self.pyobjc_instanceMethods.id())
+GSSmartComponentAxis.id = property(lambda self: self.axisId())
 '''
 	.. attribute:: id
 		Id of the axis. This Id will be used to map the Smart Glyph's layers to the poles of the interpolation. See :attr:`GSLayer.smartComponentPoleMapping`
@@ -9074,6 +9120,29 @@ def ____GSPathSegment_____(): pass
 def ______________________(): pass
 
 
+'''
+
+:mod:`GSPathSegment`
+===============================================================================
+
+Implementation of the segment object.
+
+For details on how to access them, please see :attr:`GSPath.segments`
+
+
+.. class:: GSPathSegment()
+
+	**Properties**
+
+	.. autosummary::
+
+		type
+		bounds
+		count
+		points
+		length
+'''
+
 def __GSPathSegment__getitem__(self, idx):
 	return self.pointAtIndex_(idx)
 GSPathSegment.__getitem__ = python_method(__GSPathSegment__getitem__)
@@ -9087,6 +9156,17 @@ def GSPathSegment__new__(typ, p1=NSPoint(0, 0), p2=NSPoint(0, 0), p3=None, p4=No
 		return typ.alloc().initWithLinePoint1_point2_options_(p1, p2, 0)
 	
 GSPathSegment.__new__ = staticmethod(GSPathSegment__new__)
+ 
+GSPathSegment.type = property(__GSNode_get_type__)
+
+'''
+	.. attribute:: type
+		The type of the node, LINE, CURVE or QCURVE
+
+		Always compare against the constants, never against the actual value.
+
+		:type: str
+'''
 
 ##################################################################################
 #
@@ -9449,7 +9529,7 @@ GSHint.originNode = property(lambda self: self.pyobjc_instanceMethods.originNode
 	.. attribute:: originNode
 		The first node the hint is attached to.
 
-		:type: :class:`GSNode`
+		:type: :class:`GSNode` or :class:`GSHandle` (e.g. when attached to intersections)
 '''
 GSHint.position = property(Hint__origin__pos,
 						lambda self, value: self.setOrigin_(value))
@@ -9475,7 +9555,7 @@ GSHint.targetNode = property(lambda self: self.pyobjc_instanceMethods.targetNode
 	.. attribute:: targetNode
 		The the second node this hint is attached to. In the case of a ghost hint, this value will be empty.
 
-		:type: :class:`GSNode`
+		:type: :class:`GSNode` or :class:`GSHandle` (e.g. when attached to intersections)
 '''
 
 GSHint.otherNode1 = property(lambda self: self.pyobjc_instanceMethods.otherNode1(),
@@ -9484,7 +9564,7 @@ GSHint.otherNode1 = property(lambda self: self.pyobjc_instanceMethods.otherNode1
 	.. attribute:: otherNode1
 		A third node this hint is attached to. Used for Interpolation or Diagonal hints.
 
-		:type: :class:`GSNode`
+		:type: :class:`GSNode` or :class:`GSHandle` (e.g. when attached to intersections)
 
 '''
 
@@ -9494,7 +9574,7 @@ GSHint.otherNode2 = property(lambda self: self.pyobjc_instanceMethods.otherNode2
 	.. attribute:: otherNode2
 		A fourth node this hint is attached to. Used for Diagonal hints.
 
-		:type: :class:`GSNode`
+		:type: :class:`GSNode` or :class:`GSHandle` (e.g. when attached to intersections)
 '''
 
 GSHint.type = property(lambda self: self.pyobjc_instanceMethods.type(),
@@ -9516,7 +9596,7 @@ GSHint.options = property(lambda self: self.pyobjc_instanceMethods.options(),
 		:type: int
 '''
 
-GSHint.horizontal = property(lambda self: self.pyobjc_instanceMethods.horizontal(),
+GSHint.horizontal = property(lambda self: bool(self.pyobjc_instanceMethods.horizontal()),
 							lambda self, value: self.setHorizontal_(value))
 '''
 	.. attribute:: horizontal
