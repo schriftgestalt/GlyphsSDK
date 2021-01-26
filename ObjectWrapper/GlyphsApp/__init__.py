@@ -343,7 +343,7 @@ class Proxy(object):
 			raise(KeyError)
 	def __delitem__(self, key):
 		if isinstance(key, slice):
-			for i in range(*key.indices(self.__len__())):
+			for i in sorted(range(*key.indices(self.__len__())), reverse=True):
 				self.__delitem__(i)
 			return
 		elif isinstance(key, int):
@@ -365,7 +365,47 @@ class Proxy(object):
 		return list(self)
 	def __deepcopy__(self, memo):
 		return [x.copy() for x in self.values()]
+	def copy(self):
+		return self.__copy__()
+	def count(self, value):
+		return list(self).count(value)
+	def __contains__(self, key):
+		return key in self.values()
 
+	def clear(self):
+		for i in range(len(self)-1, -1, -1):
+			self.__delitem__(i)
+
+	def __add__(self, value):
+		return list(self).__add__(list(other))
+	def __iadd__(self, value):
+		self.extend(value)
+	def __mul__(self, value):
+		return list(self).__mul__(value)
+	def __imul__(self, value):
+		for _ in range(value):
+			self.extend(self.values())
+
+	def extend(self, value):
+		for e in value:
+			self.append(e)
+
+	def __eq__(self, other):
+		""" Support comparison to other proxies, NSArrays or lists"""
+		return list(self).__eq__(list(other))
+	def __ne__(self, other):
+		return list(self).__ne__(list(other))
+	def __lt__(self, other):
+		return list(self).__lt__(list(other))
+	def __le__(self, other):
+		return list(self).__le__(list(other))
+	def __gt__(self, other):
+		return list(self).__gt__(list(other))
+	def __ge__(self, other):
+		return list(self).__ge__(list(other))
+
+	def setterMethod(self):
+		raise AttributeError("This collection cannot be directly overwritten")
 	def setter(self, values):
 		method = self.setterMethod()
 		if isinstance(values, (list, NSArray)):
@@ -1583,9 +1623,6 @@ class AppFontProxy(Proxy):
 	def append(self, font):
 		doc = Glyphs.documentController().openUntitledDocumentAndDisplay_error_(True, None)[0]
 		doc.setFont_(font)
-	def extend(self, fonts):
-		for font in fonts:
-			self.append(font)
 
 '''
 :mod:`GSDocument`
@@ -2475,9 +2512,6 @@ class GlyphLayerProxy(Proxy):
 		if not Layer.associatedMasterId:
 			Layer.associatedMasterId = self._owner.parent.masters[0].id
 		self._owner.setLayer_forId_(Layer, NSString.UUID())
-	def extend(self, Layers):
-		for Layer in Layers:
-			self.append(Layer)
 	def remove(self, Layer):
 		return self._owner.removeLayerForId_(Layer.layerId)
 	def insert(self, idx, Layer):
