@@ -354,9 +354,7 @@ class Proxy(object):
 			raise TypeError("list indices must be integers, not %s" % type(key).__name__)
 	def __iter__(self):
 		Values = self.values()
-		if Values is not None:
-			for element in Values:
-				yield element
+		return iter(Values)
 	def values(self):
 		raise AttributeError("This collection does not support item iteration")
 	def index(self, Value):
@@ -377,14 +375,23 @@ class Proxy(object):
 			self.__delitem__(i)
 
 	def __add__(self, value):
-		return list(self).__add__(list(other))
+		return list(self).__add__(list(value))
 	def __iadd__(self, value):
 		self.extend(value)
+		return self
 	def __mul__(self, value):
 		return list(self).__mul__(value)
 	def __imul__(self, value):
-		for _ in range(value):
-			self.extend(self.values())
+		if not isinstance(value, int):
+			raise TypeError("can't multiply sequence by non-int of type %s" %type(value).__name__)
+		if value <= 0:
+			self.clear()
+		if value <= 1:
+			return self
+		old_values = self.copy()
+		for _ in range(value-1):
+			self.extend(old_values)
+		return self
 
 	def extend(self, value):
 		for e in value:
@@ -1702,6 +1709,8 @@ class FontGlyphsProxy(Proxy):
 		raise TypeError("key for glyphs must be int or str, not %s" % type(key).__name__)
 
 	def __setitem__(self, key, glyph):
+		if not isinstance(glyph, GSGlyph):
+			raise TypeError("Cannot add %s, not a Glyph" % glyph)
 		if isinstance(key, int):
 			if key < 0:
 				key += self.__len__()
@@ -1744,17 +1753,22 @@ class FontGlyphsProxy(Proxy):
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.glyphs()
 	def items(self):
-		Items = []
 		for value in self._owner.pyobjc_instanceMethods.glyphs():
 			key = value.name
-			Items.append((key, value))
-		return Items
+			yield (key, value)
 	def append(self, Glyph):
+		if not isinstance(Glyph, GSGlyph):
+			raise TypeError("Cannot add %s, not a Glyph" % Glyph)
 		if Glyph.name not in self:
 			self._owner.addGlyph_(Glyph)
 		else:
 			raise NameError('There is a glyph with the name \"%s\" already in the font.' % Glyph.name)
 	def extend(self, objects):
+		for glyph in objects:
+			if not isinstance(glyph, GSGlyph):
+				raise TypeError("Cannot add %s, not a Glyph" % glyph)
+			if glyph.name in self:
+				raise NameError('There is a glyph with the name \"%s\" already in the font.' % Glyph.name)
 		self._owner.addGlyphsFromArray_(list(objects))
 	def __len__(self):
 		return self._owner.count()
@@ -1774,6 +1788,8 @@ class FontFontMasterProxy(Proxy):
 			return self._owner.fontMasterForId_(key)
 		raise TypeError("need int or str, got: %s" % type(key).__name__)
 	def __setitem__(self, key, FontMaster):
+		if not isinstance(FontMaster, GSFontMaster):
+			raise TypeError("Cannot add %s, not a FontMaster" % FontMaster)
 		if isinstance(key, int):
 			if key < 0:
 				key += self.__len__()
@@ -1809,20 +1825,20 @@ class FontFontMasterProxy(Proxy):
 	def setterMethod(self):
 		return self._owner.setFontMasters_
 	def append(self, FontMaster):
+		if not isinstance(FontMaster, GSFontMaster):
+			raise TypeError("Cannot add %s, not a FontMaster" % FontMaster)
 		self._owner.addFontMaster_(FontMaster)
 	def remove(self, FontMaster):
 		self._owner.removeFontMasterAndContent_(FontMaster)
 	def insert(self, idx, FontMaster):
+		if not isinstance(FontMaster, GSFontMaster):
+			raise TypeError("Cannot add %s, not a FontMaster" % FontMaster)
 		if isinstance(idx, int):
 			if idx < 0:
 				idx += self.__len__()
 			self._owner.insertFontMaster_atIndex_(FontMaster, idx)
 		else:
 			raise TypeError("index must be integer, got: %s" % type(key).__name__)
-	def extend(self, FontMasters):
-		for FontMaster in FontMasters:
-			self._owner.addFontMaster_(FontMaster)
-
 
 
 class FontInstancesProxy(Proxy):
