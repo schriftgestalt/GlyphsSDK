@@ -207,19 +207,6 @@ static NSString *getErrorTitle(NSString *bundleName) {
 	return [NSString stringWithFormat:ERR_TITLEFORMAT, bundleName];
 }
 
-static NSString *getPythonInterpreter(NSString *pyLocation) {
-	NSBundle *bndl;
-	NSString *auxName;
-
-	bndl = bundleBundle();
-
-	auxName = [[bndl infoDictionary] objectForKey:@"PyExecutableName"];
-	if (!auxName) {
-		auxName = @"python";
-	}
-	return [bndl pathForAuxiliaryExecutable:auxName];
-}
-
 static NSArray *getPythonPathArray(NSDictionary *infoDictionary, NSString *resourcePath) {
 	NSMutableArray *pythonPathArray = [NSMutableArray arrayWithObject:resourcePath];
 	NSArray *pyResourcePackages = [infoDictionary objectForKey:@"PyResourcePackages"];
@@ -497,9 +484,6 @@ int pyobjc_main(int argc, char *const *argv, char *const *envp) {
 cleanup:
 	if (mainPyFile) {
 		fclose(mainPyFile);
-	}
-	if (isPy3k && module) {
-		(*Py_DecRefPtr)(module);
 	}
 	if ((*PyErr_OccurredPtr)()) {
 		rval = -1;

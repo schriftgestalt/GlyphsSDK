@@ -41,4 +41,3 @@ class ____PluginClassName____(GeneralPlugin):
 	def __file__(self):
 		"""Please leave this method unchanged"""
 		return __file__
-	
