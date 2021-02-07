@@ -9,9 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import <GlyphsCore/GlyphsPaletteProtocol.h>
 
-@interface ___FILEBASENAMEASIDENTIFIER___ : NSObject <GlyphsPalette> {
-	NSView *					__unsafe_unretained _theView;
+@interface ___FILEBASENAMEASIDENTIFIER___ : NSViewController <GlyphsPalette>
 
-}
-@property (assign, nonatomic) IBOutlet NSView *theView;
+
 @end

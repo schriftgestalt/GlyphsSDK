@@ -9,9 +9,8 @@
 #import <Cocoa/Cocoa.h>
 #import <GlyphsCore/GSFilterPlugin.h>
 
-@interface ___FILEBASENAMEASIDENTIFIER___ : GSFilterPlugin {
-	CGFloat _firstValue;
-	NSTextField * __unsafe_unretained _firstValueField;
-}
-@property (nonatomic, assign) IBOutlet NSTextField* firstValueField;
+@interface ___FILEBASENAMEASIDENTIFIER___ : GSFilterPlugin
+
+@property (nonatomic, assign) IBOutlet NSTextField *firstValueField;
+
 @end

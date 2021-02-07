@@ -46,8 +46,6 @@
 		<dict>
 			<key>Path</key>
 			<string>___PACKAGENAMEASIDENTIFIER___View.xib</string>
-			<key>Group</key>
-			<string>Supporting Files</string>
 		</dict>
 	</dict>
 </dict>

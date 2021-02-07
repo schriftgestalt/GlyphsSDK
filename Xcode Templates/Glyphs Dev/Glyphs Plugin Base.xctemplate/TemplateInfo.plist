@@ -29,7 +29,7 @@
 				<key>WRAPPER_EXTENSION</key>
 				<string>glyphsPlugin</string>
 				<key>FRAMEWORK_SEARCH_PATHS</key>
-				<string>$(SYSTEM_APPS_DIR)/Glyphs.app/Contents/Frameworks</string>
+				<string>"$(SYSTEM_APPS_DIR)/Glyphs 3.app/Contents/Frameworks"</string>
 				<key>COMBINE_HIDPI_IMAGES</key>
 				<string>YES</string>
 			</dict>
@@ -38,7 +38,7 @@
 				<key>Debug</key>
 				<dict>
 					<key>DSTROOT</key>
-					<string>$(USER_LIBRARY_DIR)/Application Support/Glyphs/Plugins</string>
+					<string>$(USER_LIBRARY_DIR)/Application Support/Glyphs 3/Plugins</string>
 					<key>DEPLOYMENT_LOCATION</key>
 					<string>YES</string>
 					<key>GCC_PREFIX_HEADER</key>
@@ -75,20 +75,19 @@
 	<array/>
 	<key>Nodes</key>
 	<array>
-		<string>___PACKAGENAME___-Prefix.pch:CustomCode</string>
+		<string>___PACKAGENAME___-Prefix.pch</string>
 		<string>Info.plist:PrincipalClass</string>
 		<string>GlyphsCore</string>
 	</array>
 	<key>Definitions</key>
 	<dict>
-		<key>___PACKAGENAME___-Prefix.pch:CustomCode</key>
-		<string><![CDATA[
-#if DEBUG
-#define	GSLog(args...)			(void)printf("%i %s: %s\n", __LINE__, __PRETTY_FUNCTION__, [[NSString stringWithFormat:args] UTF8String])
-#else
-#define	GSLog(args...)			// stubbed out
-#endif
-]]></string>
+		<key>___PACKAGENAME___-Prefix.pch</key>
+		<dict>
+			<key>Path</key>
+			<string>___PACKAGENAME___-Prefix.pch</string>
+			<key>SortOrder</key>
+			<integer>100</integer>
+		</dict>
 		<key>Info.plist:PrincipalClass</key>
 		<string><![CDATA[<key>NSPrincipalClass</key>
 <string>___PACKAGENAMEASIDENTIFIER___</string>
@@ -96,11 +95,11 @@
 		<key>GlyphsCore</key>
 		<dict>
 			<key>Path</key>
-			<string>/Applications/Glyphs.app/Contents/Frameworks/GlyphsCore.framework</string>
+			<string>/Applications/Glyphs 3.app/Contents/Frameworks/GlyphsCore.framework</string>
 			<key>PathType</key>
 			<string>Absolute</string>
-			<key>Group</key>
-			<string>Supporting Files</string>
+			<key>SortOrder</key>
+			<integer>99</integer>
 		</dict>
 	</dict>
 </dict>

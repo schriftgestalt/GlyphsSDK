@@ -10,15 +10,7 @@
 #import <GlyphsCore/GlyphsFileFormatProtocol.h>
 
 @class GSFont;
-@class GSProgressWindow;
 
-@interface GlyphsFileFormat___FILEBASENAMEASIDENTIFIER___ : NSObject <GlyphsFileFormat> {
-	NSImage*			_toolbarIcon;
-	IBOutlet NSView*	_exportSettingsView;
-	GSFont*				__unsafe_unretained _font;
-}
-@property(readonly) NSView *exportSettingsView;
-@property(unsafe_unretained) GSFont *font;
-@property(readonly) GSProgressWindow *progressWindow;
+@interface ___FILEBASENAMEASIDENTIFIER___ : NSViewController <GlyphsFileFormat>
 
 @end

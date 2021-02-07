@@ -74,8 +74,7 @@
 		<string>___PACKAGENAMEASIDENTIFIER___.h</string>
 		<string>___PACKAGENAMEASIDENTIFIER___.m</string>
 		<string>en.lproj/___PACKAGENAMEASIDENTIFIER___Dialog.xib</string>
-		<string>ExportIcon.tif</string>
-		<string>ExportIcon@2x.tif</string>
+		<string>GenericExportTemplate.pdf</string>
 		<string>Info.plist:CFBundleDocumentTypes</string>
 		<string>Info.plist:CFBundleTypeExtensions</string>
 		<string>Info.plist:CFBundleTypeRole</string>
@@ -97,19 +96,10 @@
 			<key>Path</key>
 			<string>___PACKAGENAMEASIDENTIFIER___Dialog.xib</string>
 		</dict>
-		<key>ExportIcon.tif</key>
+		<key>GenericExportTemplate.pdf</key>
 		<dict>
 			<key>Path</key>
-			<string>ExportIcon.tif</string>
-			<key>Group</key>
-			<string>Supporting Files</string>
-		</dict>
-		<key>ExportIcon@2x.tif</key>
-		<dict>
-			<key>Path</key>
-			<string>ExportIcon@2x.tif</string>
-			<key>Group</key>
-			<string>Supporting Files</string>
+			<string>GenericExportTemplate.pdf</string>
 		</dict>
 		<key>Info.plist:CFBundleDocumentTypes</key>
 		<string><![CDATA[<key>CFBundleDocumentTypes</key>
