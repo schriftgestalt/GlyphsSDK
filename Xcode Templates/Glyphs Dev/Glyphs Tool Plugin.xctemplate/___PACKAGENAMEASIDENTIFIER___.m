@@ -10,12 +10,12 @@
 
 @implementation ___FILEBASENAMEASIDENTIFIER___
 
-- (id)init {
+- (instancetype)init {
 	self = [super init];
-	NSBundle *thisBundle = [NSBundle bundleForClass:[self class]];
-	if (thisBundle) {
+	NSBundle *bundle = [NSBundle bundleForClass:[self class]];
+	if (bundle) {
 		// The toolbar icon:
-		_toolBarIcon = [[NSImage alloc] initWithContentsOfFile:[thisBundle pathForImageResource:@"ToolbarIconTemplate"]];
+		_toolBarIcon = [[NSImage alloc] initWithContentsOfFile:[bundle pathForImageResource:@"ToolbarIconTemplate"]];
 		[_toolBarIcon setTemplate:YES];
 	}
 	return self;
@@ -93,11 +93,11 @@
 	// editViewController.graphicView.cursor = [NSCursor openHandCursor];
 }
 
-- (void)drawBackground {
+- (void)drawBackgroundInRect:(NSRect)dirtyRect {
 	// Draw in the background, concerns the complete view.
 }
 
-- (void)drawForeground {
+- (void)drawForegroundInRect:(NSRect)dirtyRect {
 	// Draw in the foreground, concerns the complete view.
 }
 

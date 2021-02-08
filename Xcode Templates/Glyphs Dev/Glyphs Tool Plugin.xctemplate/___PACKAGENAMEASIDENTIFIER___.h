@@ -11,8 +11,6 @@
 #import <GlyphsCore/GlyphsToolEventProtocol.h>
 #import <GlyphsCore/GlyphsPathPlugin.h>
 
-@interface ___FILEBASENAMEASIDENTIFIER___ : GlyphsPathPlugin {
-
-}
+@interface ___FILEBASENAMEASIDENTIFIER___ : GlyphsPathPlugin
 
 @end

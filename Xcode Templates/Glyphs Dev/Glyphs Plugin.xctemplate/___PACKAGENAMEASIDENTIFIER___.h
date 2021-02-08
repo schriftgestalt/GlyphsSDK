@@ -10,6 +10,6 @@
 
 #import <GlyphsCore/GlyphsPluginProtocol.h>
 
-@interface ___FILEBASENAMEASIDENTIFIER___ : NSObject <GlyphsPlugin> {}
+@interface ___FILEBASENAMEASIDENTIFIER___ : NSObject <GlyphsPlugin>
 
 @end
