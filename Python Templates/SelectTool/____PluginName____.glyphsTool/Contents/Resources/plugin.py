@@ -45,6 +45,37 @@ class ____PluginClassName____(SelectTool):
 	def deactivate(self):
 		pass
 	
+	def mouseDown_(self, theEvent):
+		objc.super(____PluginClassName____, self).mouseDown_(theEvent)
+		"""
+		Do more stuff that you need on mouseDown_(). Like custom selection 
+		"""
+		loc = self.editViewController.graphicView.getActiveLocation_(theEvent)
+		layer = self.editViewController.graphicView.activeLayer()
+		self.clickedElement = self.elementAtPoint_atLayer_(loc, layer)
+
+	def mouseDragged_(self, theEvent):
+		objc.super(____PluginClassName____, self).mouseDragged_(theEvent)
+		"""
+		Do more stuff that you need on mouseDragged_(). Like moving custom objects
+		"""
+		loc = self.editViewController.graphicView.getActiveLocation_(theEvent)
+		layer = self.editViewController.graphicView.activeLayer()
+		offset = subtractPoints(loc, self.draggStart)
+		# now you can move stuff with that offset.
+		
+	def mouseUp_(self, theEvent):
+		objc.super(____PluginClassName____, self).mouseUp_(theEvent)
+		"""
+		Do more stuff that you need on mouseUp_(). Like custom selection 
+		"""
+		# some selection is only done on mouseUp_
+		loc = self.editViewController.graphicView.getActiveLocation_(theEvent)
+		layer = self.editViewController.graphicView.activeLayer()
+		clickedElement = self.elementAtPoint_atLayer_(loc, layer)
+		if clickedElement is not None:
+			layer.selection.append(clickedElement)
+	
 	@objc.python_method
 	def conditionalContextMenus(self):
 
