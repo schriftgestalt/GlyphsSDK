@@ -60,7 +60,7 @@ class ____PluginClassName____(FilterWithDialog):
 
 	# Action triggered by UI
 	@objc.IBAction
-	def setValue_( self, sender ):
+	def setValue_(self, sender):
 
 		# Store value coming in from dialog
 		Glyphs.defaults['com.myname.myfilter.value'] = sender.floatValue()
@@ -174,10 +174,10 @@ Paste into Custom Parameters field:
 
 ```python
 	@objc.python_method
-	def generateCustomParameter( self ):
+	def generateCustomParameter(self):
 
 		# Copy plug-in name (by its class name) with a 'shift' value
-		return "%s; shift:%s;" % (self.__class__.__name__, Glyphs.defaults['com.myname.myfilter.value'] )
+		return "%s; shift:%s;" % (self.__class__.__name__, Glyphs.defaults['com.myname.myfilter.value'])
 ```
 
 # Other useful methods
@@ -191,7 +191,7 @@ This already happens directly after you activate the filter through the menu, an
 ```python
 	# Action triggered by UI
 	@objc.IBAction
-	def setValue_( self, sender ):
+	def setValue_(self, sender):
 		
 		# Store value coming in from dialog
 		Glyphs.defaults['com.myname.myfilter.value'] = sender.floatValue()
@@ -247,7 +247,7 @@ class ____PluginClassName____(SelectTool):
 
 	# Action triggered by UI
 	@objc.python_method
-	def editTextCallback( self, sender ):
+	def editTextCallback(self, sender):
 
 		# Store value coming in from dialog
 		Glyphs.defaults['com.myname.myfilter.value'] = sender.get()
