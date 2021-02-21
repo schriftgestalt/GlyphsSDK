@@ -13,8 +13,6 @@
 #import <GlyphsCore/GSLayer.h>
 #import <GlyphsCore/GSFont.h>
 #import <GlyphsCore/GSFontMaster.h>
-// #import "GSEditViewController.h"
-// #import "GSWindowController.h"
 #import <GlyphsCore/GSComponent.h>
 
 @implementation ___FILEBASENAMEASIDENTIFIER___  {
@@ -28,12 +26,6 @@
 	}
 	return self;
 }
-
-- (void)loadPlugin {
-	// Is called when the plugin is loaded.
-	
-}
-
 
 - (NSUInteger)interfaceVersion {
 	// Distinguishes the API verison the plugin was built for. Return 1.
@@ -53,7 +45,7 @@
 	return nil;
 }
 
-- (int)modifierMask {
+- (NSEventModifierFlags)modifierMask {
 	// Use any combination of these to determine the modifier keys for your default shortcut:
 	// return NSShiftKeyMask | NSControlKeyMask | NSCommandKeyMask | NSAlternateKeyMask;
 	// Or:
