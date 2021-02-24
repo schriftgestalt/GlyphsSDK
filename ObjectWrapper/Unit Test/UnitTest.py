@@ -934,6 +934,77 @@ class GlyphsAppTests(unittest.TestCase):
 		instance.addAsMaster()
 		self.assertEqual(len(instance.font.masters), oldNumbnerOfMasters + 1)
 
+		#::Rafal
+		# GSInstance properties tests
+		propertyKeys = ['compatibleFullName',
+		'compatibleFullNames',
+		'copyright',
+		'copyrights',
+		'description',
+		'descriptions',
+		'designer',
+		'designers',
+		'familyName',
+		'familyNames',
+		'license',
+		'licenses',
+		'manufacturer',
+		'manufacturers',
+		'preferredFamilyName',
+		'preferredFamilyNames',
+		'preferredSubfamilyName',
+		'preferredSubfamilyNames',
+		'sampleText',
+		'sampleTexts',
+		'styleMapFamilyName',
+		'styleMapFamilyNames',
+		'styleMapStyleName',
+		'styleMapStyleNames',
+		'styleName',
+		'styleNames',
+		'trademark',
+		'trademarks',
+		'variableStyleName',
+		'variableStyleNames']
+
+		# testing ammount of properties
+		self.assertEqual(len(instance.properties), len(propertyKeys)/2)
+
+		# testing if empty properties return None
+
+		for k in propertyKeys:
+			a = getattr(instance, k)
+			self.assertEqual(a, None)
+
+		# testing assignment for properties
+
+		for k in propertyKeys:
+			if k[-1] != "s":
+				a = setattr(instance, k, "test singlular")
+			else:
+				a = getattr(instance, k)
+				a["ENG"] = "test localised"
+		
+		# testing assignment for properties
+
+		for k in propertyKeys:
+			if k[-1] != "s":
+				a = setattr(instance, k, "test singlular")
+				self.assertString(a)
+			else:
+				a = getattr(instance, k)
+				self.assertString(a["ENG"])
+
+		# testing deletion of prular properties
+		for i in f.instances:
+			for k in propertyKeys:
+				if k[-1] == "s":
+					a = getattr(i, k)
+					del a['ENG']
+
+
+
+
 	def test_GSGlyph(self):
 		
 		font = Glyphs.font
