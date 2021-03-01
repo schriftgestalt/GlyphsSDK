@@ -1,0 +1,78 @@
+{
+glyphname = A;
+layers = (
+{
+guides = (
+{
+angle = 8.1446;
+lockAngle = 1;
+locked = 1;
+pos = (151,402);
+showMeasurement = 1;
+}
+);
+hints = (
+{
+horizontal = 1;
+origin = (0,0);
+target = (0,7);
+type = Stem;
+}
+);
+layerId = m01;
+metricRight = "=20";
+shapes = (
+{
+closed = 1;
+nodes = (
+(10,66,l),
+(92,-21,o),
+(338,-35,o),
+(439,66,cs),
+(578,205,o),
+(522,462,o),
+(439,608,c),
+(10,608,l,{
+name = "Hallo	Welt";
+test = "Hallo
+Welt";
+})
+);
+}
+);
+width = 459;
+},
+{
+associatedMasterId = m01;
+attr = {
+color = 1;
+};
+layerId = "B53B276E-7ED6-4F56-94FF-4162BC3B585A";
+shapes = (
+{
+attr = {
+strokeColor = (0,84);
+strokeWidth = 21;
+};
+closed = 0;
+nodes = (
+(20,35,l),
+(91,35,o),
+(97,35,o),
+(100,5,c),
+(103,35,o),
+(109,35,o),
+(180,35,c)
+);
+}
+);
+width = 459;
+}
+);
+metricLeft = "=10";
+tags = (
+tag1,
+tag2
+);
+unicode = (65,97);
+}

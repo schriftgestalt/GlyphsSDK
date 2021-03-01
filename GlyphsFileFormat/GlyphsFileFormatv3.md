@@ -6,6 +6,8 @@ Glyphs saves its files in plaintext format. So the files can be viewed and edite
 - There are some small deviations from the default format. More about that in Notes.
 
 ## Changes
+### 1. March 2021
+- add description of .glyphspackage files
 ### September – December 2020 
 - several fixes and additions
 - add JSON schema for Glyphs 2 and 3 files
@@ -22,6 +24,18 @@ Glyphs saves its files in plaintext format. So the files can be viewed and edite
 ### 4. Feb. 2016:
 - added hints
 - updated and added a few field in layers
+
+## File Structure
+Glyphs can save in two different file formats. The data structure is very similar. 
+### Single file .glyphs files
+This is what glyphs was always using. One file containing all the data as described below.
+### Multi files package .glyphspackage
+To make reading/writing big files easier and help with version control, there is now a package format. It contains the same information divided in several file. This uses a bundle (folder structure) that contains files and folders. (on MacOS, right click and choose "Show Package content")
+The bundle contains this:
+- A folder `glyphs` that contains one `.glyph` file per glyph. It contains the same structure than the `glyphs` elements in the single file.
+- a file `fontinfo.plist` that contains the rest of the font data (kerning, masters, instances …)
+- a file `UIState.plist` that contains some user state. It is in an extra file that you can ignore it in version control if you don’t like the noise.
+- a file `order.plist` that contains a properties list array with glyph names to store the order of the glyphs in the font.
 
 ## Notes
 - It is written without indentation. That is to save file size.

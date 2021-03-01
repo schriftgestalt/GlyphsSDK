@@ -1,0 +1,17 @@
+{
+glyphname = C;
+layers = (
+{
+backgroundImage = {
+angle = 3;
+imagePath = Screenshot.png;
+locked = 1;
+pos = (106,89);
+scale = (0.9,0.8);
+};
+layerId = m01;
+width = 600;
+}
+);
+unicode = 67;
+}

@@ -1,0 +1,18 @@
+{
+category = Icon;
+glyphname = Smily;
+layers = (
+{
+layerId = m01;
+vertWidth = 600;
+width = 600;
+}
+);
+production = someSmily;
+script = "Black Letter";
+subCategory = Emoji;
+tags = (
+new,
+unfinished
+);
+}

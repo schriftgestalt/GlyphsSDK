@@ -1,0 +1,229 @@
+{
+.appVersion = "3066";
+.formatVersion = 3;
+axes = (
+{
+hidden = 1;
+name = Weight;
+tag = wght;
+}
+);
+classes = (
+{
+code = "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+";
+name = Uppercase;
+}
+);
+customParameters = (
+{
+name = "Import Font";
+value = {
+};
+}
+);
+date = "2020-01-03 19:42:13 +0000";
+familyName = "New Font";
+featurePrefixes = (
+{
+automatic = 1;
+code = "languagesystem DFLT dflt;
+";
+name = Languagesystems;
+}
+);
+features = (
+{
+code = "sub C by D;
+";
+tag = test;
+},
+{
+code = "sub A by B;
+";
+labels = (
+{
+language = dflt;
+value = "Stylistic Set Name 1";
+},
+{
+language = DEU;
+value = "Formatsatzname 1";
+}
+);
+tag = ss01;
+}
+);
+fontMaster = (
+{
+axesValues = (
+0
+);
+customParameters = (
+{
+name = "Default Layer Width";
+value = "600";
+}
+);
+guides = (
+{
+angle = 24.582;
+lockAngle = 1;
+pos = (192,216);
+showMeasurement = 1;
+}
+);
+id = m01;
+metricValues = (
+{
+over = 15;
+pos = 800;
+},
+{
+over = 15;
+pos = 700;
+},
+{
+over = 15;
+pos = 500;
+},
+{
+over = -15;
+},
+{
+over = -15;
+pos = -200;
+},
+{
+over = 15;
+pos = 550;
+}
+);
+name = Regular;
+numberValues = (
+123
+);
+stemValues = (
+123,
+321
+);
+visible = 1;
+}
+);
+instances = (
+{
+axesValues = (
+123
+);
+customParameters = (
+{
+name = familyName;
+value = "Instance Family Name";
+},
+{
+disabled = 1;
+name = "Remove Glyphs";
+value = (
+B
+);
+}
+);
+instanceInterpolations = {
+m01 = 1;
+};
+isBold = 1;
+isItalic = 1;
+name = Regular;
+}
+);
+kerningLTR = {
+m01 = {
+A = {
+B = 30;
+};
+};
+};
+kerningVertical = {
+m01 = {
+A = {
+B = 30;
+};
+};
+};
+metrics = (
+{
+type = ascender;
+},
+{
+type = "cap height";
+},
+{
+type = "x-height";
+},
+{
+type = baseline;
+},
+{
+type = descender;
+},
+{
+filter = "case == 3";
+type = "x-height";
+}
+);
+numbers = (
+{
+name = "Some Number";
+}
+);
+properties = (
+{
+key = copyrights;
+values = (
+{
+language = dflt;
+value = "Default Copyright1";
+},
+{
+language = DEU;
+value = "Deutsches Copyright";
+}
+);
+},
+{
+key = compatibleFullNames;
+values = (
+{
+language = dflt;
+value = "Compatible Full Name 1";
+}
+);
+},
+{
+key = versionString;
+value = "New Value";
+}
+);
+settings = {
+disablesAutomaticAlignment = 1;
+disablesNiceNames = 1;
+gridLength = 5;
+gridSubDivision = 2;
+keepAlternatesTogether = 1;
+keyboardIncrement = 2;
+keyboardIncrementBig = 20;
+keyboardIncrementHuge = 200;
+};
+stems = (
+{
+name = "New Stem h";
+},
+{
+horizontal = 1;
+name = "New Stem v";
+}
+);
+unitsPerEm = 1000;
+versionMajor = 1;
+versionMinor = 0;
+}

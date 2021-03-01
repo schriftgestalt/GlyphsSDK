@@ -1,0 +1,18 @@
+{
+glyphname = D;
+layers = (
+{
+layerId = m01;
+shapes = (
+{
+piece = {
+Width = 29.74825;
+};
+ref = _part.test;
+}
+);
+width = 368;
+}
+);
+unicode = 68;
+}
