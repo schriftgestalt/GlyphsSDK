@@ -6,6 +6,9 @@ Glyphs saves its files in plaintext format. So the files can be viewed and edite
 - There are some small deviations from the default format. More about that in Notes.
 
 ## Changes
+### September – December 2020 
+- several fixes and additions
+- add JSON schema for Glyphs 2 and 3 files
 ### 4. Jan. 2019
 - First Draft for version 3
 ### 1. Oct. 2018:
