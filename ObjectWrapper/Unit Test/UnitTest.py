@@ -1049,11 +1049,10 @@ class GlyphsAppTests(unittest.TestCase):
 				self.assertString(a["ENG"])
 
 		# testing deletion of prular properties
-		for i in f.instances:
-			for k in propertyKeys:
-				if k[-1] == "s":
-					a = getattr(i, k)
-					del a['ENG']
+		for k in propertyKeys:
+			if k[-1] == "s":
+				a = getattr(instance, k)
+				del a['ENG']
 
 
 
