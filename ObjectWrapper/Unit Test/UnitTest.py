@@ -592,7 +592,60 @@ class GlyphsAppTests(unittest.TestCase):
 
 
 
+		#::Rafal
+		# GSFont properties tests
+		propertyKeys = [
+		"familyName",
+		"familyNames",
+		"designer",
+		"designers",
+		"manufacturer",
+		"manufacturers",
+		"copyright",
+		"copyrights",
+		"license",
+		"licenses",
+		"trademark",
+		"trademarks",
+		"description",
+		"descriptions",
+		"sampleText",
+		"sampleTexts",
+		"compatibleFullName",
+		"compatibleFullNames",
+		]
+		# testing ammount of properties
+		self.assertEqual(len(font.properties), len(propertyKeys)/2)
 
+		# testing if empty properties return None
+
+		for k in keys:
+			a = getattr(font, k)
+			self.assertEqual(a, None)
+
+		# testing assignment for properties
+
+		for k in propertyKeys:
+			if k[-1] != "s":
+				a = setattr(font, k, "test singlular")
+			else:
+				a = getattr(font, k)
+				a["ENG"] = "test localised"
+		
+		# testing assignment for properties
+		for k in propertyKeys:
+			if k[-1] != "s":
+				a = setattr(font, k, "test singlular")
+				self.assertString(a)
+			else:
+				a = getattr(font, k)
+				self.assertString(a["ENG"])
+
+		# testing deletion of prular properties
+		for k in propertyKeys:
+			if k[-1] == "s":
+				a = getattr(font, k)
+				del a['ENG']
 
 		font = copy.copy(font) # Testing this at the end because otherwise some UI-dependent tests fail (like selection of glyphs)
 
@@ -996,11 +1049,10 @@ class GlyphsAppTests(unittest.TestCase):
 				self.assertString(a["ENG"])
 
 		# testing deletion of prular properties
-		for i in f.instances:
-			for k in propertyKeys:
-				if k[-1] == "s":
-					a = getattr(i, k)
-					del a['ENG']
+		for k in propertyKeys:
+			if k[-1] == "s":
+				a = getattr(instance, k)
+				del a['ENG']
 
 
 

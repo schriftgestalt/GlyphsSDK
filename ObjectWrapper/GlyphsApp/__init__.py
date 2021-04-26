@@ -343,20 +343,17 @@ class Proxy(object):
 			raise(KeyError)
 	def __delitem__(self, key):
 		if isinstance(key, slice):
-			for i in range(*key.indices(self.__len__())):
+			for i in sorted(range(*key.indices(self.__len__())), reverse=True):
 				self.__delitem__(i)
 			return
 		elif isinstance(key, int):
-			if key < 0:
-				key += self.__len__()
-			self.removeItemAtIndexMethod()(key)
+			idx = self._validate_idx(key)
+			self.removeItemAtIndexMethod()(idx)
 		else:
 			raise TypeError("list indices must be integers, not %s" % type(key).__name__)
 	def __iter__(self):
 		Values = self.values()
-		if Values is not None:
-			for element in Values:
-				yield element
+		return iter(Values)
 	def values(self):
 		raise AttributeError("This collection does not support item iteration")
 	def index(self, Value):
@@ -365,7 +362,68 @@ class Proxy(object):
 		return list(self)
 	def __deepcopy__(self, memo):
 		return [x.copy() for x in self.values()]
+	def copy(self):
+		return self.__copy__()
+	def count(self, value):
+		return list(self).count(value)
+	def __contains__(self, key):
+		return key in self.values()
 
+	def clear(self):
+		for i in range(len(self)-1, -1, -1):
+			self.__delitem__(i)
+
+	def __add__(self, value):
+		return list(self).__add__(list(value))
+	def __iadd__(self, value):
+		self.extend(value)
+		return self
+	def __mul__(self, value):
+		return list(self).__mul__(value)
+	def __imul__(self, value):
+		if not isinstance(value, int):
+			raise TypeError("can't multiply sequence by non-int of type %s" %type(value).__name__)
+		if value <= 0:
+			self.clear()
+		if value <= 1:
+			return self
+		old_values = self.copy()
+		for _ in range(value-1):
+			self.extend(old_values)
+		return self
+
+	def extend(self, value):
+		for e in value:
+			self.append(e)
+
+	def __eq__(self, other):
+		""" Support comparison to other proxies, NSArrays or lists"""
+		return list(self).__eq__(list(other))
+	def __ne__(self, other):
+		return list(self).__ne__(list(other))
+	def __lt__(self, other):
+		return list(self).__lt__(list(other))
+	def __le__(self, other):
+		return list(self).__le__(list(other))
+	def __gt__(self, other):
+		return list(self).__gt__(list(other))
+	def __ge__(self, other):
+		return list(self).__ge__(list(other))
+
+	def _validate_idx(self, idx, offset=0):
+		"""Handle negative indices and check for IndexError
+		Use offset to adjust the valid range, e.g. for insert len(self) is
+		still a valid index.
+		"""
+		if not isinstance(idx, int):
+			raise TypeError("indices must be integers, not %s" % type(idx).__name__)
+		if idx < 0:
+			idx += self.__len__()
+		if not (0 <= idx < self.__len__()+offset):
+			raise IndexError("list index %s out of range %s" % (idx, self.__len__()+offset))
+		return idx
+	def setterMethod(self):
+		raise AttributeError("This collection cannot be directly overwritten")
 	def setter(self, values):
 		method = self.setterMethod()
 		if isinstance(values, (list, NSArray)):
@@ -1004,7 +1062,8 @@ class AppMenuProxy(Proxy):
 	"""Access the main menu."""
 	def __getitem__(self, key):
 		if isinstance(key, int):
-			return self._owner.mainMenu().itemAtIndex_(key)
+			idx = self._validate_idx(key)
+			return self._owner.mainMenu().itemAtIndex_(idx)
 		elif isString(key):
 			Tag = menuTagLookup[key]
 			return self._owner.mainMenu().itemWithTag_(Tag)
@@ -1549,14 +1608,7 @@ def _______________________(): pass
 class AppDocumentProxy(Proxy):
 	"""The list of documents."""
 	def __getitem__(self, key):
-		if isinstance(key, slice):
-			return self.values().__getitem__(key)
-		elif isinstance(key, int):
-			values = self.values()
-			if key < 0:
-				key = len(values) + key
-			return values[key]
-		raise TypeError("list indices must be integers, not %s" % type(key).__name__)
+		return self.values().__getitem__(key)
 	def append(self, doc):
 		NSDocumentController.sharedDocumentController().addDocument_(doc)
 		doc.makeWindowControllers()
@@ -1567,14 +1619,7 @@ class AppDocumentProxy(Proxy):
 class AppFontProxy(Proxy):
 	"""The list of fonts."""
 	def __getitem__(self, key):
-		if isinstance(key, slice):
-			return self.values().__getitem__(key)
-		if isinstance(key, int):
-			values = self.values()
-			if key < 0:
-				key = len(values) + key
-			return values[key]
-		raise TypeError("list indices must be integers or slices, not %s" % type(key).__name__)
+		return self.values().__getitem__(key)
 	def values(self):
 		fonts = []
 		for doc in self._owner.fontDocuments():
@@ -1583,9 +1628,6 @@ class AppFontProxy(Proxy):
 	def append(self, font):
 		doc = Glyphs.documentController().openUntitledDocumentAndDisplay_error_(True, None)[0]
 		doc.setFont_(font)
-	def extend(self, fonts):
-		for font in fonts:
-			self.append(font)
 
 '''
 :mod:`GSDocument`
@@ -1641,16 +1683,13 @@ class FontGlyphsProxy(Proxy):
 		...
 	"""
 	def __getitem__(self, key):
-		if key is None:
-			return None
 		if isinstance(key, slice):
 			return self.values().__getitem__(key)
 
 		# by idx
 		if isinstance(key, int):
-			if key < 0:
-				key += self.__len__()
-			return self._owner.glyphAtIndex_(key)
+			idx = self._validate_idx(key)
+			return self._owner.glyphAtIndex_(idx)
 		if isString(key):
 			# by glyph name
 			if self._owner.glyphForName_(key):
@@ -1665,10 +1704,11 @@ class FontGlyphsProxy(Proxy):
 		raise TypeError("key for glyphs must be int or str, not %s" % type(key).__name__)
 
 	def __setitem__(self, key, glyph):
+		if not isinstance(glyph, GSGlyph):
+			raise TypeError("Cannot add %s, not a Glyph" % glyph)
 		if isinstance(key, int):
-			if key < 0:
-				key += self.__len__()
-			self._owner.removeGlyph_(self._owner.glyphAtIndex_(key))
+			idx = self._validate_idx(key)
+			self._owner.removeGlyph_(self._owner.glyphAtIndex_(idx))
 			self._owner.addGlyph_(glyph)
 		elif isString(key):
 			self._owner.removeGlyph_(self._owner.glyphForName_(key))
@@ -1691,9 +1731,8 @@ class FontGlyphsProxy(Proxy):
 				self.__delitem__(i)
 			return
 		elif isinstance(key, int):
-			if key < 0:
-				key += self.__len__()
-			self._owner.removeGlyph_(self._owner.glyphAtIndex_(key))
+			idx = self._validate_idx(key)
+			self._owner.removeGlyph_(self._owner.glyphAtIndex_(idx))
 		elif isString(key):
 			self._owner.removeGlyph_(self._owner.glyphForName_(key))
 		else:
@@ -1707,17 +1746,22 @@ class FontGlyphsProxy(Proxy):
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.glyphs()
 	def items(self):
-		Items = []
 		for value in self._owner.pyobjc_instanceMethods.glyphs():
 			key = value.name
-			Items.append((key, value))
-		return Items
+			yield (key, value)
 	def append(self, Glyph):
+		if not isinstance(Glyph, GSGlyph):
+			raise TypeError("Cannot add %s, not a Glyph" % Glyph)
 		if Glyph.name not in self:
 			self._owner.addGlyph_(Glyph)
 		else:
 			raise NameError('There is a glyph with the name \"%s\" already in the font.' % Glyph.name)
 	def extend(self, objects):
+		for glyph in objects:
+			if not isinstance(glyph, GSGlyph):
+				raise TypeError("Cannot add %s, not a Glyph" % glyph)
+			if glyph.name in self:
+				raise NameError('There is a glyph with the name \"%s\" already in the font.' % Glyph.name)
 		self._owner.addGlyphsFromArray_(list(objects))
 	def __len__(self):
 		return self._owner.count()
@@ -1730,17 +1774,17 @@ class FontFontMasterProxy(Proxy):
 		if isinstance(key, slice):
 			return self.values().__getitem__(key)
 		elif isinstance(key, int):
-			if key < 0:
-				key += self.__len__()
-			return self._owner.fontMasterAtIndex_(key)
+			idx = self._validate_idx(key)
+			return self._owner.fontMasterAtIndex_(idx)
 		elif isString(key):
 			return self._owner.fontMasterForId_(key)
 		raise TypeError("need int or str, got: %s" % type(key).__name__)
 	def __setitem__(self, key, FontMaster):
+		if not isinstance(FontMaster, GSFontMaster):
+			raise TypeError("Cannot add %s, not a FontMaster" % FontMaster)
 		if isinstance(key, int):
-			if key < 0:
-				key += self.__len__()
-			self._owner.replaceFontMasterAtIndex_withFontMaster_(key, FontMaster)
+			idx = self._validate_idx(key)
+			self._owner.replaceFontMasterAtIndex_withFontMaster_(idx, FontMaster)
 		elif isString(key):
 			OldFontMaster = self._owner.fontMasterForId_(key)
 			self._owner.removeFontMaster_(OldFontMaster)
@@ -1753,9 +1797,8 @@ class FontFontMasterProxy(Proxy):
 				self.__delitem__(i)
 			return
 		elif isinstance(key, int):
-			if key < 0:
-				key += self.__len__()
-			removeFontMaster = self._owner.objectInFontMastersAtIndex_(key)
+			idx = self._validate_idx(key)
+			removeFontMaster = self._owner.objectInFontMastersAtIndex_(idx)
 		elif isString(key):
 			removeFontMaster = self._owner.fontMasterForId_(key)
 		else:
@@ -1772,20 +1815,19 @@ class FontFontMasterProxy(Proxy):
 	def setterMethod(self):
 		return self._owner.setFontMasters_
 	def append(self, FontMaster):
+		if not isinstance(FontMaster, GSFontMaster):
+			raise TypeError("Cannot add %s, not a FontMaster" % FontMaster)
 		self._owner.addFontMaster_(FontMaster)
 	def remove(self, FontMaster):
 		self._owner.removeFontMasterAndContent_(FontMaster)
 	def insert(self, idx, FontMaster):
+		if not isinstance(FontMaster, GSFontMaster):
+			raise TypeError("Cannot add %s, not a FontMaster" % FontMaster)
 		if isinstance(idx, int):
-			if idx < 0:
-				idx += self.__len__()
+			idx = self._validate_idx(idx, offset=1)
 			self._owner.insertFontMaster_atIndex_(FontMaster, idx)
 		else:
 			raise TypeError("index must be integer, got: %s" % type(key).__name__)
-	def extend(self, FontMasters):
-		for FontMaster in FontMasters:
-			self._owner.addFontMaster_(FontMaster)
-
 
 
 class FontInstancesProxy(Proxy):
@@ -1793,14 +1835,12 @@ class FontInstancesProxy(Proxy):
 		if isinstance(idx, slice):
 			return self.values().__getitem__(idx)
 		if isinstance(idx, int):
-			if idx < 0:
-				idx += self.__len__()
+			idx = self._validate_idx(idx)
 			return self._owner.objectInInstancesAtIndex_(idx)
 		raise TypeError("list indices must be integers or slices, not %s" % type(idx).__name__)
 	def __setitem__(self, idx, Class):
 		if isinstance(idx, int):
-			if idx < 0:
-				idx += self.__len__()
+			idx = self._validate_idx(idx)
 			self._owner.replaceObjectInInstancesAtIndex_withObject_(idx, Class)
 		else:
 			raise TypeError("list indices must be integers, not %s" % type(idx).__name__)
@@ -1818,8 +1858,7 @@ class FontInstancesProxy(Proxy):
 		self._owner.removeInstance_(instance)
 	def insert(self, idx, instance):
 		if isinstance(idx, int):
-			if idx < 0:
-				idx += self.__len__()
+			idx = self._validate_idx(idx, offset=1)
 			self._owner.insertObject_inInstancesAtIndex_(instance, idx)
 		else:
 			raise TypeError("list indices must be integers, not %s" % type(idx).__name__)
@@ -1835,14 +1874,12 @@ class FontAxesProxy(Proxy):
 		if isinstance(idx, slice):
 			return self.values().__getitem__(idx)
 		if isinstance(idx, int):
-			if idx < 0:
-				idx += self.__len__()
+			idx = self._validate_idx(idx)
 			return self._owner.objectInAxesAtIndex_(idx)
 		raise TypeError("list indices must be integers or slices, not %s" % type(idx).__name__)
 	def __setitem__(self, idx, Class):
 		if isinstance(idx, int):
-			if idx < 0:
-				idx += self.__len__()
+			idx = self._validate_idx(idx)
 			self._owner.replaceObjectInAxesAtIndex_withObject_(idx, Class)
 		else:
 			raise TypeError("list indices must be integers, not %s" % type(idx).__name__)
@@ -1860,8 +1897,7 @@ class FontAxesProxy(Proxy):
 		self._owner.removeObjectFromAxes_(axis)
 	def insert(self, idx, axis):
 		if isinstance(idx, int):
-			if idx < 0:
-				idx += self.__len__()
+			idx = self._validate_idx(idx, offset=1)
 			self._owner.insertObject_inAxesAtIndex_(axis, idx)
 		else:
 			raise TypeError("list indices must be integers, not %s" % type(idx).__name__)
@@ -1877,8 +1913,7 @@ class MasterAxesProxy(Proxy):
 		if isinstance(idx, slice):
 			return self.values().__getitem__(idx)
 		elif isinstance(idx, int):
-			if idx < 0:
-				idx += self.__len__()
+			idx = self._validate_idx(idx)
 			axis = self._owner.font.axes[idx]
 			if axis is None:
 				return None
@@ -1886,15 +1921,14 @@ class MasterAxesProxy(Proxy):
 		raise TypeError("list indices must be integers or slices, not %s" % type(idx).__name__)
 	def __setitem__(self, idx, value):
 		if isinstance(idx, int):
-			if idx < 0:
-				idx += self.__len__()
+			idx = self._validate_idx(idx)
 			count = self.__len__()
 			axis = self._owner.font.axes[idx]
 			return self._owner.setAxisValueValue_forId_(value, axis.axisId)
 		raise TypeError("list indices must be integers or slices, not %s" % type(idx).__name__)
 	def values(self):
 		if self._owner.font is None:
-			return None
+			return []
 		axisValues = GSFont.axesPositionsFromAxes_master_(self._owner.font.pyobjc_instanceMethods.axes(), self._owner)
 		values = []
 		for axisValue in axisValues:
@@ -1918,8 +1952,7 @@ class FontStemsProxy(Proxy):
 	def _stemForKey(self, key):
 		stem = None
 		if isinstance(key, int):
-			if key < 0:
-				key += self.__len__()
+			idx = self._validate_idx(key)
 			stem = self._owner.objectInStemsAtIndex_(key)
 		elif isString(key):
 			stem = self._owner.stemForName_(key)
@@ -1936,8 +1969,9 @@ class FontStemsProxy(Proxy):
 		if not isinstance(value, GSMetrics):
 			raise TypeError("only object of type GSMetrics allowed, got %s" % type(value).__name__)
 		if not isinstance(key, int):
-			raise TypeError("only accessable by integer index, got %s" % key)
-		self._owner.insertObject_inStemsAtIndex_(value, key)
+			raise TypeError("only accessible by integer index, got %s" % key)
+		idx = self._validate_idx(key)
+		self._owner.insertObject_inStemsAtIndex_(value, idx)
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.stems()
 	def __len__(self):
@@ -2009,17 +2043,15 @@ class CustomParametersProxy(Proxy):
 		if isinstance(key, slice):
 			return self.values().__getitem__(key)
 		elif isinstance(key, int):
-			if key < 0:
-				key += self.__len__()
-			return self._owner.objectInCustomParametersAtIndex_(key)
+			idx = self._validate_idx(key)
+			return self._owner.objectInCustomParametersAtIndex_(idx)
 		elif isString(key):
 			return self._owner.customValueForKey_(key)
 		raise TypeError("key must be integer or string, not %s" % type(key).__name__)
 	def __setitem__(self, key, Parameter):
 		if isinstance(key, int):
-			if key < 0:
-				key += self.__len__()
-			self._owner.replaceObjectInCustomParametersAtIndex_withObject_(key, Parameter)
+			idx = self._validate_idx(key)
+			self._owner.replaceObjectInCustomParametersAtIndex_withObject_(idx, Parameter)
 		elif isString(key):
 			#TODO: This expects a value in Parameter, not a Parameter object which the list elements are
 			self._owner.setCustomValue_forKey_(objcObject(Parameter), objcObject(key))
@@ -2030,9 +2062,8 @@ class CustomParametersProxy(Proxy):
 			for i in sorted(range(*key.indices(self.__len__())), reverse=True):
 				self.__delitem__(i)
 		elif isinstance(key, int):
-			if key < 0:
-				key += self.__len__()
-			self._owner.removeObjectFromCustomParametersAtIndex_(key)
+			idx = self._validate_idx(key)
+			self._owner.removeObjectFromCustomParametersAtIndex_(idx)
 		elif isString(key):
 			self._owner.removeObjectFromCustomParametersForKey_(key)
 		else:
@@ -2052,8 +2083,6 @@ class CustomParametersProxy(Proxy):
 	def remove(self, parameter):
 		self._owner.removeObjectFromCustomParametersForKey_(parameter.name)
 	def insert(self, idx, parameter):
-		if idx < 0:
-			idx += self.__len__()
 		customParameters = copy.copy(self.values())
 		customParameters.insert(idx, parameter)
 		self._owner.setCustomParameters_(customParameters)
@@ -2070,8 +2099,7 @@ class FontClassesProxy(Proxy):
 		if isinstance(key, slice):
 			return self.values().__getitem__(key)
 		elif isinstance(key, int):
-			if key < 0:
-				key += self.__len__()
+			idx = self._validate_idx(key)
 			return self._owner.objectInClassesAtIndex_(key)
 		elif isString(key):
 			if len(key) > 0:
@@ -2079,9 +2107,8 @@ class FontClassesProxy(Proxy):
 		raise TypeError("keys must be integers or strings, not %s" % type(key).__name__)
 	def __setitem__(self, key, Class):
 		if isinstance(key, int):
-			if key < 0:
-				key += self.__len__()
-			self._owner.replaceObjectInClassesAtIndex_withObject_(key, Class)
+			idx = self._validate_idx(key)
+			self._owner.replaceObjectInClassesAtIndex_withObject_(idx, Class)
 		else:
 			raise TypeError("keys must be integers, not %s" % type(key).__name__)
 	def __delitem__(self, key):
@@ -2089,9 +2116,8 @@ class FontClassesProxy(Proxy):
 			for i in sorted(range(*key.indices(self.__len__())), reverse=True):
 				self.__delitem__(i)
 		elif isinstance(key, int):
-			if key < 0:
-				key += self.__len__()
-			return self._owner.removeObjectFromClassesAtIndex_(key)
+			idx = self._validate_idx(key)
+			return self._owner.removeObjectFromClassesAtIndex_(idx)
 		elif isString(key):
 			Class = self._owner.classForTag_(key)
 			if Class is not None:
@@ -2109,8 +2135,7 @@ class FontClassesProxy(Proxy):
 	def remove(self, Class):
 		self._owner.removeClass_(Class)
 	def insert(self, idx, Class):
-		if idx < 0:
-			idx += self.__len__()
+		idx = self._validate_idx(idx, offset=1)
 		self._owner.insertObject_inClassesAtIndex_(Class, idx)
 	def __len__(self):
 		return self._owner.countOfClasses()
@@ -2125,27 +2150,21 @@ class FontFeaturesProxy(Proxy):
 		if isinstance(key, slice):
 			return self.values().__getitem__(key)
 		elif isinstance(key, int):
-			if key < 0:
-				key += self.__len__()
-			return self._owner.objectInFeaturesAtIndex_(key)
+			idx = self._validate_idx(key)
+			return self._owner.objectInFeaturesAtIndex_(idx)
 		elif isString(key):
 			return self._owner.featureForTag_(key)
 		raise TypeError("keys must be integers or strings, not %s" % type(key).__name__)
 	def __setitem__(self, idx, feature):
-		if isinstance(idx, int):
-			if idx < 0:
-				idx += self.__len__()
-			self._owner.replaceObjectInFeaturesAtIndex_withObject_(idx, feature)
-		else:
-			raise TypeError("indices must be integers, not %s" % type(idx).__name__)
+		idx = self._validate_idx(idx)
+		self._owner.replaceObjectInFeaturesAtIndex_withObject_(idx, feature)
 	def __delitem__(self, key):
 		if isinstance(key, slice):
 			for i in sorted(range(*key.indices(self.__len__())), reverse=True):
 				self.__delitem__(i)
 		elif isinstance(key, int):
-			if key < 0:
-				key += self.__len__()
-			return self._owner.removeObjectFromFeaturesAtIndex_(key)
+			idx = self._validate_idx(key)
+			return self._owner.removeObjectFromFeaturesAtIndex_(idx)
 		elif isString(key):
 			Feature = self._owner.featureForTag_(key)
 			if Feature is not None:
@@ -2163,22 +2182,21 @@ class FontFeaturesProxy(Proxy):
 	def remove(self, Class):
 		self._owner.removeFeature_(Class)
 	def insert(self, idx, Class):
-		if idx < 0:
-			idx += self.__len__()
+		idx = self._validate_idx(idx, offset=1)
 		self._owner.insertObject_inFeaturesAtIndex_(Class, idx)
 	def __len__(self):
 		return self._owner.countOfFeatures()
 	def text(self):
-		LineList = []
+		text = ""
 		for Feature in self._owner.pyobjc_instanceMethods.features():
-			LineList.append("feature ")
-			LineList.append(Feature.name)
-			LineList.append(" {\n")
-			LineList.append("    " + Feature.code)
-			LineList.append("\n} ")
-			LineList.append(Feature.name)
-			LineList.append(" ;\n")
-		return "".join(LineList)
+			text += "feature "
+			text += Feature.name
+			text += " {\n"
+			text += "    " + Feature.code
+			text += "\n} "
+			text += Feature.name
+			text += " ;\n"
+		return text
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.features()
 	def setterMethod(self):
@@ -2191,16 +2209,14 @@ class FontFeaturePrefixesProxy(Proxy):
 		if isinstance(key, slice):
 			return self.values().__getitem__(key)
 		elif isinstance(key, int):
-			if key < 0:
-				key += self.__len__()
-			return self._owner.objectInFeaturePrefixesAtIndex_(key)
+			idx = self._validate_idx(key)
+			return self._owner.objectInFeaturePrefixesAtIndex_(idx)
 		elif isString(key):
 			return self._owner.featurePrefixForTag_(key)
 		raise TypeError("keys must be integers or strings, not %s" % type(key).__name__)
 	def __setitem__(self, idx, featurePrefix):
 		if isinstance(idx, int):
-			if idx < 0:
-				idx += self.__len__()
+			idx = self._validate_idx(idx)
 			self._owner.replaceObjectInFeaturePrefixesAtIndex_withObject_(idx, featurePrefix)
 		else:
 			raise TypeError("keys must be integers, not %s" % type(idx).__name__)
@@ -2209,9 +2225,8 @@ class FontFeaturePrefixesProxy(Proxy):
 			for i in sorted(range(*key.indices(self.__len__())), reverse=True):
 				self.__delitem__(i)
 		elif isinstance(key, int):
-			if key < 0:
-				key += self.__len__()
-			return self._owner.removeObjectFromFeaturePrefixesAtIndex_(key)
+			idx = self._validate_idx(key)
+			return self._owner.removeObjectFromFeaturePrefixesAtIndex_(idx)
 		elif isString(key):
 			featurePrefix = self._owner.featurePrefixForTag_(key)
 			if featurePrefix is not None:
@@ -2226,8 +2241,7 @@ class FontFeaturePrefixesProxy(Proxy):
 	def remove(self, featurePrefix):
 		self._owner.removeFeaturePrefix_(featurePrefix)
 	def insert(self, idx, featurePrefix):
-		if idx < 0:
-			idx += self.__len__()
+		idx = self._validate_idx(idx, offset=1)
 		self._owner.insertObject_inFeaturePrefixesAtIndex_(featurePrefix, idx)
 	def text(self):
 		LineList = []
@@ -2416,8 +2430,7 @@ class GlyphLayerProxy(Proxy):
 		if isinstance(key, slice):
 			return self.values().__getitem__(key)
 		elif isinstance(key, int):
-			if key < 0:
-				key += self.__len__()
+			key = self._validate_idx(key)
 			if self._owner.parent:
 				if key < self._owner.parent.countOfFontMasters():
 					FontMaster = self._owner.parent.fontMasterAtIndex_(key)
@@ -2429,7 +2442,7 @@ class GlyphLayerProxy(Proxy):
 					while ExtraLayerIndex >= 0:
 						ExtraLayer = self._owner.pyobjc_instanceMethods.layers().objectAtIndex_(idx)
 						if not ExtraLayer.isMasterLayer:
-							ExtraLayerIndex = ExtraLayerIndex - 1
+							ExtraLayerIndex -= 1
 						idx += 1
 					return ExtraLayer
 			else:
@@ -2443,9 +2456,8 @@ class GlyphLayerProxy(Proxy):
 			raise TypeError("keys must be integers or strings, not %s" % type(key).__name__)
 	def __setitem__(self, key, Layer):
 		if isinstance(key, int) and self._owner.parent:
-			if key < 0:
-				key += self.__len__()
-			FontMaster = self._owner.parent.fontMasterAtIndex_(key)
+			idx = self._validate_idx(key)
+			FontMaster = self._owner.parent.fontMasterAtIndex_(idx)
 			key = FontMaster.id
 		if not isString(key):
 			raise TypeError("keys must be integers or strings, not %s" % type(key).__name__)
@@ -2457,9 +2469,8 @@ class GlyphLayerProxy(Proxy):
 				self.__delitem__(i)
 			return
 		elif isinstance(key, int) and self._owner.parent:
-			if key < 0:
-				key += self.__len__()
-			Layer = self.__getitem__(key)
+			idx = self._validate_idx(key)
+			Layer = self.__getitem__(idx)
 			key = Layer.layerId
 		elif not isString(key):
 			raise TypeError("keys must be integers or strings, not %s" % type(key).__name__)
@@ -2475,12 +2486,10 @@ class GlyphLayerProxy(Proxy):
 		if not Layer.associatedMasterId:
 			Layer.associatedMasterId = self._owner.parent.masters[0].id
 		self._owner.setLayer_forId_(Layer, NSString.UUID())
-	def extend(self, Layers):
-		for Layer in Layers:
-			self.append(Layer)
 	def remove(self, Layer):
 		return self._owner.removeLayerForId_(Layer.layerId)
 	def insert(self, idx, Layer):
+		idx = self._validate_idx(idx, offset=1)
 		self.append(Layer)
 	def setter(self, values):
 		newLayers = NSMutableDictionary.dictionary()
@@ -2500,9 +2509,8 @@ class GlyphSmartComponentAxesProxy(Proxy):
 		if isinstance(key, slice):
 			return self.values().__getitem__(key)
 		elif isinstance(key, int):
-			if key < 0:
-				key += self.__len__()
-			return self._owner.objectInPartsSettingsAtIndex_(key)
+			idx = self._validate_idx(key)
+			return self._owner.objectInPartsSettingsAtIndex_(idx)
 		elif isString(key):
 			for partSetting in self._owner.partsSettings():
 				if partSetting.name == key:
@@ -2512,9 +2520,8 @@ class GlyphSmartComponentAxesProxy(Proxy):
 			raise TypeError("keys must be integers or strings, not %s" % type(key).__name__)
 	def __setitem__(self, key, SmartComponentProperty):
 		if isinstance(key, int):
-			if key < 0:
-				key += self.__len__()
-			self._owner.replaceObjectInPartsSettingsAtIndex_withObject_(key, SmartComponentProperty)
+			idx = self._validate_idx(key)
+			self._owner.replaceObjectInPartsSettingsAtIndex_withObject_(idx, SmartComponentProperty)
 		#elif isString(key): # TODO implement setting by name
 		#	for partSetting in self._owner.partsSettings():
 		#		if partSetting.name == key:
@@ -2526,8 +2533,7 @@ class GlyphSmartComponentAxesProxy(Proxy):
 			for i in sorted(range(*key.indices(self.__len__())), reverse=True):
 				self.__delitem__(i)
 		elif isinstance(key, int):
-			if key < 0:
-				key += self.__len__()
+			key = self._validate_idx(key)
 		elif isString(key):
 			idx = 0
 			for partSetting in self._owner.partsSettings():
@@ -2552,17 +2558,12 @@ class LayerGuidesProxy(Proxy):
 		if isinstance(idx, slice):
 			return self.values().__getitem__(idx)
 		elif isinstance(idx, int):
-			if idx < 0:
-				idx += self.__len__()
+			idx = self._validate_idx(idx)
 			return self._owner.objectInGuidesAtIndex_(idx)
 		raise TypeError("list indices must be integers or slices, not %s" % type(idx).__name__)
 	def __setitem__(self, idx, Component):
-		if isinstance(idx, int):
-			if idx < 0:
-				idx += self.__len__()
-			self._owner.replaceObjectInGuidesAtIndex_withObject_(idx, Component)
-		else:
-			raise TypeError("list indices must be integers, not %s" % type(idx).__name__)
+		idx = self._validate_idx(idx)
+		self._owner.replaceObjectInGuidesAtIndex_withObject_(idx, Component)
 	def removeItemAtIndexMethod(self):
 		return self._owner.removeObjectFromGuidesAtIndex_
 	def __copy__(self):
@@ -2573,12 +2574,8 @@ class LayerGuidesProxy(Proxy):
 		for Guide in Guides:
 			self._owner.addGuide_(Guide)
 	def insert(self, idx, guide):
-		if isinstance(idx, int):
-			if idx < 0:
-				idx += self.__len__()
-			self._owner.insertObject_inGuidesAtIndex_(guide, idx)
-		else:
-			raise TypeError("list indices must be integers, not %s" % type(idx).__name__)
+		idx = self._validate_idx(idx, offset=1)
+		self._owner.insertObject_inGuidesAtIndex_(guide, idx)
 	def remove(self, Guide):
 		self._owner.removeObjectFromGuides_(Guide)
 	def values(self):
@@ -2591,15 +2588,11 @@ class LayerAnnotationProxy(Proxy):
 		if isinstance(idx, slice):
 			return self.values().__getitem__(idx)
 		elif isinstance(idx, int):
-			if idx < 0:
-				idx += self.__len__()
+			idx = self._validate_idx(idx)
 			return self._owner.objectInAnnotationsAtIndex_(idx)
 		raise TypeError("list indices must be integers or slices, not %s" % type(idx).__name__)
 	def __setitem__(self, idx, Annotation):
-		if not isinstance(idx, int):
-			raise TypeError("list indices must be integers, not %s" % type(idx).__name__)
-		if idx < 0:
-			idx += self.__len__()
+		idx = self._validate_idx(idx)
 		# TODO: (Georg) add proper API in Glyphs
 		self._owner.removeObjectFromAnnotationsAtIndex_(idx)
 		self._owner.insertObject_inAnnotationsAtIndex_(Annotation, idx)
@@ -2628,15 +2621,11 @@ class LayerHintsProxy(Proxy):
 		if isinstance(idx, slice):
 			return self.values().__getitem__(idx)
 		elif isinstance(idx, int):
-			if idx < 0:
-				idx += self.__len__()
+			idx = self._validate_idx(idx)
 			return self._owner.objectInHintsAtIndex_(idx)
 		raise TypeError("list indices must be integers or slices, not %s" % type(idx).__name__)
 	def __setitem__(self, idx, hint):
-		if not isinstance(idx, int):
-			raise TypeError("list indices must be integers, not %s" % type(idx).__name__)
-		if idx < 0:
-			idx += self.__len__()
+		idx = self._validate_idx(idx)
 		self._owner.replaceObjectInHintsAtIndex_withObject_(idx, hint)
 	def removeItemAtIndexMethod(self):
 		return self._owner.removeObjectFromHintsAtIndex_
@@ -2646,10 +2635,7 @@ class LayerHintsProxy(Proxy):
 		for hint in hints:
 			self._owner.addHint_(hint)
 	def insert(self, idx, hint):
-		if not isinstance(idx, int):
-			raise TypeError("list indices must be integers, not %s" % type(idx).__name__)
-		if idx < 0:
-			idx += self.__len__()
+		idx = self._validate_idx(idx, offset=1)
 		self._owner.insertObject_inHintsAtIndex_(hint, idx)
 	def remove(self, Hint):
 		self._owner.removeHint_(Hint)
@@ -2735,20 +2721,15 @@ class LayerShapesProxy(Proxy):
 		if isinstance(idx, slice):
 			return self.values().__getitem__(idx)
 		elif isinstance(idx, int):
-			if idx < 0:
-				idx += self._owner.countOfShapes()
-			if idx < self._owner.countOfShapes():
-				return self._owner.objectInShapesAtIndex_(idx)
-			else:
-				raise IndexError("list index out of range (%d): %d" % (self._owner.countOfShapes(), idx))
+			idx = self._validate_idx(idx)
+			return self._owner.objectInShapesAtIndex_(idx)
 		else:
 			raise TypeError("list indices must be integers or slices, not %s" % type(idx).__name__)
 	def __setitem__(self, idx, Shape):
-		if not isinstance(idx, int):
-			raise TypeError("list indices must be integers, not %s" % type(idx).__name__)
-		if idx < 0:
-			idx = self._owner.countOfShapes() + idx
+		idx = self._validate_idx(idx)
 		self._owner.replaceShapeAtIndex_withShape_(idx, Shape)
+	def __len__(self):
+		return self._owner.countOfShapes()
 	def removeItemAtIndexMethod(self):
 		return self._owner.removeObjectFromShapesAtIndex_
 	def __contains__(self, item):
@@ -2770,10 +2751,7 @@ class LayerShapesProxy(Proxy):
 	def remove(self, Shape):
 		self._owner.removeShape_(Shape)
 	def insert(self, idx, Shape):
-		if not isinstance(idx, int):
-			raise TypeError("list indices must be integers, not %s" % type(idx).__name__)
-		if idx < 0:
-			idx += self.__len__()
+		idx = self._validate_idx(idx, offset=1)
 		self._owner.insertObject_inShapesAtIndex_(Shape, idx)
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.shapes()
@@ -2810,12 +2788,12 @@ class LayerSelectionProxy(Proxy):
 		elif isinstance(idx, int):
 			if  self._owner.countOfSelection() == 0:
 				raise IndexError("Nothing selected (%d)" % idx)		
-			if idx < 0:
-				idx += len(self)
-			if idx < self._owner.countOfSelection():
-				return self._owner.pyobjc_instanceMethods.selection().objectAtIndex_(idx)
+			idx = self._validate_idx(idx)
+			return self._owner.pyobjc_instanceMethods.selection().objectAtIndex_(idx)
 		else:
 			raise TypeError("list indices must be integers or slices, not %s" % type(idx).__name__)
+	def __len__(self):
+		return self._owner.countOfSelection()
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.selection().array()
 	def __contains__(self, item):
@@ -2843,24 +2821,13 @@ class PathNodesProxy(Proxy):
 		if isinstance(idx, slice):
 			return self.values().__getitem__(idx)
 		elif isinstance(idx, int):
-			if idx < 0:
-				idx += self.__len__()
-			if idx < self.__len__():
-				return self._owner.nodeAtIndex_(idx)
-			else:
-				raise IndexError("list index out of range (%d): %d" % (self.__len__(), idx))
+			idx = self._validate_idx(idx)
+			return self._owner.nodeAtIndex_(idx)
 		else:
 			raise TypeError("list indices must be integers or slices, not %s" % type(idx).__name__)
 	def __setitem__(self, idx, node):
-		if isinstance(idx, int):
-			if idx < 0:
-				idx += self.__len__()
-			if idx < self.__len__():
-				self._owner.replaceObjectInNodesAtIndex_withObject_(idx, node)
-			else:
-				raise IndexError("list index out of range (%d): %d" % (self.__len__(), idx))
-		else:
-			raise TypeError("list indices must be integers, not %s" % type(idx).__name__)
+		idx = self._validate_idx(idx)
+		self._owner.replaceObjectInNodesAtIndex_withObject_(idx, node)
 	def removeItemAtIndexMethod(self):
 		return self._owner.removeObjectFromNodesAtIndex_
 	def __len__(self):
@@ -2870,10 +2837,7 @@ class PathNodesProxy(Proxy):
 	def remove(self, node):
 		self._owner.removeNode_(node)
 	def insert(self, idx, node):
-		if not isinstance(idx, int):
-			raise TypeError("list indices must be integers, not %s" % type(idx).__name__)
-		if idx < 0:
-			idx += self.__len__()
+		idx = self._validate_idx(idx, offset=1)
 		self._owner.insertNode_atIndex_(node, idx)
 	def extend(self, objects):
 		self._owner.addNodes_(list(objects))
@@ -2922,8 +2886,7 @@ class FontTabsProxy(Proxy):
 			return self.values().__getitem__(idx)
 		if self._owner.parent:
 			if isinstance(idx, int):
-				if idx < 0:
-					idx += self.__len__()
+				idx = self._validate_idx(idx)
 				return self._owner.parent.windowController().tabBarControl().tabItemAtIndex_(idx + 1)
 			else:
 				raise TypeError("list indices must be integers or slices, not %s" % type(idx).__name__)
@@ -2939,8 +2902,7 @@ class FontTabsProxy(Proxy):
 			for i in sorted(range(*idx.indices(self.__len__())), reverse=True):
 				self.__delitem__(i)
 		elif isinstance(idx, int):
-			if idx < 0:
-				idx += self.__len__()
+			idx = self._validate_idx(idx)
 			Tab = self._owner.parent.windowController().tabBarControl().tabItemAtIndex_(idx + 1)
 			self._owner.parent.windowController().tabBarControl().closeTabItem_(Tab)
 		else:
