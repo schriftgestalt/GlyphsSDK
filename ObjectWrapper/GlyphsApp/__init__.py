@@ -107,7 +107,7 @@ __all__ = [
 	"MOUSEMOVED", "MOUSEDRAGGED", "MOUSEDOWN", "MOUSEUP", "CONTEXTMENUCALLBACK",
 	
 	"GSMetricsKeyAscender", "GSMetricsKeyCapHeight", "GSMetricsKeySlantHeight", "GSMetricsKeyxHeight", "GSMetricsKeyTopHeight", "GSMetricsKeyDescender", "GSMetricsKeyBaseline",
-	"GSNoCase", "GSUppercase", "GSLowercase", "GSSmallcaps", "GSOtherCase", 
+	"GSNoCase", "GSUppercase", "GSLowercase", "GSSmallcaps", "GSMinor", "GSOtherCase", 
 	
 	"GSShapeTypePath", "GSShapeTypeComponent",
 	"PreviewTextWindow"
@@ -239,7 +239,8 @@ GSNoCase = 0
 GSUppercase = 1
 GSLowercase = 2
 GSSmallcaps = 3
-GSOtherCase = 4 # ??
+GSMinor = 4
+GSOtherCase = 5 # ??
 
 
 GSTopLeft = 6
@@ -3034,6 +3035,11 @@ def Font__new__(typ, *args, **kwargs):
 	if len(args) > 0 and isString(args[0]):
 		path = args[0]
 		URL = NSURL.fileURLWithPath_(path)
+		if path.endswith(".glyphs"):
+			result = GSFont.alloc().initWithURL_error_(URL, None)
+			if isinstance(result, tuple):
+				result = result[0]
+			return result
 		typeName = NSWorkspace.sharedWorkspace().typeOfFile_error_(path, None)[0]
 		if typeName is not None:
 			Doc = GSDocument.alloc().initWithContentsOfURL_ofType_error_(URL, typeName, None)
@@ -3253,14 +3259,16 @@ GSFont.featurePrefixes = property(lambda self: FontFeaturePrefixesProxy(self),
 
 '''
 
-GSFont.copyright = property(lambda self: self.defaultPropertyForName_("copyrights"), lambda self, value: self.setProperty_value_languageTag_("copyrights", value, None))
+GSFont.copyright = property(lambda self: self.defaultPropertyForName_("copyrights"),
+							lambda self, value: self.setProperty_value_languageTag_("copyrights", value, None))
 '''
 	.. attribute:: copyright
 		This accesses the default value only. The localisations can be accessed by :attr:`GSFont.properties`
 
 		:type: str
 '''
-GSFont.designer = property(lambda self: self.defaultPropertyForName_("designers"), lambda self, value: self.setProperty_value_languageTag_("designers", value, None))
+GSFont.designer = property(lambda self: self.defaultPropertyForName_("designers"),
+						   lambda self, value: self.setProperty_value_languageTag_("designers", value, None))
 '''
 	.. attribute:: designer
 		This accesses the default value only. The localisations can be accessed by :attr:`GSFont.properties`
@@ -5716,11 +5724,18 @@ For details on how to access these glyphs, please see :class:`GSFont.glyphs`
 		storeScript
 		productionName
 		storeProductionName
+		sortName
+		sortNameKeep
+		storeSortName
 		glyphInfo
 		leftKerningGroup
 		rightKerningGroup
 		leftKerningKey
+		topKerningGroup
+		bottomKerningKey
 		rightKerningKey
+		topKerningKey
+		bottomKerningKey
 		leftMetricsKey
 		rightMetricsKey
 		widthMetricsKey
@@ -5732,6 +5747,7 @@ For details on how to access these glyphs, please see :class:`GSFont.glyphs`
 		mastersCompatible
 		userData
 		smartComponentAxes
+		tags
 		lastChange
 
 
@@ -5957,7 +5973,7 @@ GSGlyph.case = property(lambda self: self.pyobjc_instanceMethods.case(),
 						lambda self, value: self.setCase_(value))
 '''
 	.. attribute:: case
-		e.g: "Uppercase", "Lowercase", "Smallcaps"
+		e.g: GSUppercase, GSLowercase, GSSmallcaps
 
 		:type: int
 	
@@ -6046,6 +6062,15 @@ GSGlyph.storeProductionName = property(lambda self: bool(self.storeProduction())
 		:type: bool
 '''
 
+GSGlyph.tags = property(lambda self: self.mutableArrayValueForKey_("tags"),
+						lambda self, value: self.setTags_(value))
+
+'''
+	.. attribute:: tags
+		store strings that can be used to filter glyphs or build OT-classes with token filters
+
+		:type: list
+'''
 
 GSGlyph.glyphInfo = property(lambda self: self.parent.glyphsInfo().glyphInfoForGlyph_(self))
 '''
@@ -6054,6 +6079,35 @@ GSGlyph.glyphInfo = property(lambda self: self.parent.glyphsInfo().glyphInfoForG
 
 		:type: :class:`GSGlyphInfo`
 '''
+
+GSGlyph.sortName = property(lambda self: self.pyobjc_instanceMethods.sortName(),
+							lambda self, value: self.setSortName_(value))
+'''
+	.. attribute:: sortName
+		Alternative name of glyph used for sorting in UI.
+
+		:type: str
+'''
+
+GSGlyph.sortNameKeep = property(lambda self: self.pyobjc_instanceMethods.sortNameKeep(),
+								lambda self, value: self.setSortNameKeep_(value))
+'''
+	.. attribute:: sortNameKeep
+		Alternative name of glyph used for sorting in UI, when using 'Keep Alternates Next to Base Glyph' from Font Info.
+		see :attr:`GSGlyph.storeSortName`
+		:type: str
+'''
+
+GSGlyph.storeSortName = property(lambda self: bool(self.pyobjc_instanceMethods.storeSortName()),
+								 lambda self, value: self.setStoreSortName_(value))
+'''
+	.. attribute:: storeSortName
+		Set to True in order to manipulate the `sortName` and `sortNameKeep` of the glyph (see above).
+		Makes it possible to ship custom glyph data inside a .glyphs file without a separate GlyphData file. Same as Cmd-Alt-i dialog in UI.
+
+		:type: bool
+'''
+
 
 def __GSGlyph_glyphDataEntryString__(self):
 	Unicode = self.unicode
@@ -6111,11 +6165,28 @@ GSGlyph.rightKerningGroup = property(lambda self: self.pyobjc_instanceMethods.ri
 
 		:type: str'''
 
+GSGlyph.topKerningGroup = property(lambda self: self.pyobjc_instanceMethods.topKerningGroup(),
+									lambda self, value: self.setTopKerningGroup_(NSStr(value)))
+'''
+	.. attribute:: topKerningGroup
+		The topKerningGroup of the glyph. All glyphs with the same text in the kerning group end up in the same kerning class.
+
+		:type: str'''
+
+GSGlyph.bottomKerningGroup = property(lambda self: self.pyobjc_instanceMethods.bottomKerningGroup(),
+									lambda self, value: self.setBottomKerningGroup_(NSStr(value)))
+'''
+	.. attribute:: bottomKerningGroup
+		The bottomKerningGroup of the glyph. All glyphs with the same text in the kerning group end up in the same kerning class.
+
+		:type: str'''
+
 def GSGlyph__leftKerningKey(self):
 	if self.leftKerningGroupId():
 		return self.leftKerningGroupId()
 	else:
 		return self.name
+
 GSGlyph.leftKerningKey = property(lambda self: GSGlyph__leftKerningKey(self))
 
 '''
@@ -6142,6 +6213,7 @@ def GSGlyph__rightKerningKey(self):
 		return self.rightKerningGroupId()
 	else:
 		return self.name
+
 GSGlyph.rightKerningKey = property(lambda self: GSGlyph__rightKerningKey(self))
 
 '''
@@ -6155,6 +6227,36 @@ GSGlyph.rightKerningKey = property(lambda self: GSGlyph__rightKerningKey(self))
 		:type: string
 
 		.. versionadded:: 2.4
+'''
+
+def GSGlyph__topKerningKey(self):
+	if self.topKerningGroupId():
+		return self.topKerningGroupId()
+	else:
+		return self.name
+
+GSGlyph.topKerningKey = property(lambda self: GSGlyph__topKerningKey(self))
+
+'''
+	.. attribute:: topKerningKey
+		The key to be used with the kerning functions (:meth:`GSFont.kerningForPair()`, :meth:`GSFont.setKerningForPair()`:meth:`GSFont.removeKerningForPair()`).
+
+		.. versionadded:: 3
+'''
+
+def GSGlyph__bottomKerningKey(self):
+	if self.bottomKerningGroupId():
+		return self.bottomKerningGroupId()
+	else:
+		return self.name
+
+GSGlyph.bottomKerningKey = property(lambda self: GSGlyph__bottomKerningKey(self))
+
+'''
+	.. attribute:: topKerningKey
+		The key to be used with the kerning functions (:meth:`GSFont.kerningForPair()`, :meth:`GSFont.setKerningForPair()`:meth:`GSFont.removeKerningForPair()`).
+
+		.. versionadded:: 3
 '''
 
 GSGlyph.leftMetricsKey = property(lambda self: self.pyobjc_instanceMethods.leftMetricsKey(),
@@ -8432,6 +8534,8 @@ For details on how to access them, please see :attr:`GSLayer.shapes`
 
 GSShape.locked = property(lambda self: bool(self.pyobjc_instanceMethods.locked()),
 						  lambda self, value: self.setLocked_(value))
+GSPath.locked = property(lambda self: bool(self.pyobjc_instanceMethods.locked()),
+						  lambda self, value: self.setLocked_(value))
 '''
 	.. attribute:: locked
 		Locked
@@ -8439,7 +8543,9 @@ GSShape.locked = property(lambda self: bool(self.pyobjc_instanceMethods.locked()
 		:type: bool
 '''
 
-GSShape.shapeType = property(lambda self: bool(self.pyobjc_instanceMethods.shapeType()))
+GSPath.shapeType = property(lambda self: bool(self.pyobjc_instanceMethods.shapeType()))
+GSComponent.shapeType = property(lambda self: bool(self.pyobjc_instanceMethods.shapeType()))
+
 '''
 	.. attribute:: shapeType
 		the type of the shapes. can be GSShapeTypePath or GSShapeTypeComponent
@@ -10556,7 +10662,7 @@ GSGlyphInfo.subCategory = property(lambda self: self.pyobjc_instanceMethods.subC
 GSGlyphInfo.case = property(lambda self: self.pyobjc_instanceMethods.case())
 '''
 	.. attribute:: case
-		e.g: "Uppercase", "Lowercase", "Smallcaps"
+		e.g: GSUppercase, GSLowercase, GSSmallcaps
 
 		:type: int
 '''
@@ -10621,14 +10727,6 @@ GSGlyphInfo.sortName = property(lambda self: self.pyobjc_instanceMethods.sortNam
 '''
 	.. attribute:: sortName
 		Alternative name of glyph used for sorting in UI.
-
-		:type: str
-'''
-
-GSGlyphInfo.sortNameKeep = property(lambda self: self.pyobjc_instanceMethods.sortNameKeep())
-'''
-	.. attribute:: sortNameKeep
-		Alternative name of glyph used for sorting in UI, when using 'Keep Alternates Next to Base Glyph' from Font Info.
 
 		:type: str
 '''
