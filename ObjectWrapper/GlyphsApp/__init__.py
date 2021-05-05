@@ -2605,9 +2605,7 @@ class LayerAnnotationProxy(Proxy):
 		raise TypeError("list indices must be integers or slices, not %s" % type(idx).__name__)
 	def __setitem__(self, idx, Annotation):
 		idx = self._validate_idx(idx)
-		# TODO: (Georg) add proper API in Glyphs
-		self._owner.removeObjectFromAnnotationsAtIndex_(idx)
-		self._owner.insertObject_inAnnotationsAtIndex_(Annotation, idx)
+		self._owner.replaceObjectInAnnotationsAtIndex_withObject_(idx, Annotation)
 	def removeItemAtIndexMethod(self):
 		return self._owner.removeObjectFromAnnotationsAtIndex_
 	def append(self, Annotation):
