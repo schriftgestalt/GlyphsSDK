@@ -125,8 +125,9 @@ except ImportError:
 	objc.python_method = python_method
 
 
-def _______________________(): pass
+def _________________(): pass
 def ____CONSTANTS____(): pass
+def _________________(): pass
 
 GSFormatVersion1 = 1
 GSFormatVersion3 = 3
@@ -474,9 +475,9 @@ GSProxyShapes.extend = python_method(lambda self, items: self.layer().addShapes_
 #
 ##################################################################################
 
-def _______________________(): pass
+def _____________________(): pass
 def ____GSApplication____(): pass
-def _______________________(): pass
+def _____________________(): pass
 
 
 Glyphs = NSApp()
@@ -973,7 +974,8 @@ def NSStr(string):
 	else:
 		return None
 
-GSApplication.editViewWidth = property(lambda self: self.intDefaults["GSFontViewWidth"], lambda self, value: Glyphs_setUserDefaults(self, "GSFontViewWidth", int(value)))
+GSApplication.editViewWidth = property(lambda self: self.intDefaults["GSFontViewWidth"],
+									   lambda self, value: Glyphs_setUserDefaults(self, "GSFontViewWidth", int(value)))
 '''
 	.. attribute:: editViewWidth
 		Width of glyph Edit view. Corresponds to the "Width of editor" setting from the Preferences.
@@ -982,7 +984,8 @@ GSApplication.editViewWidth = property(lambda self: self.intDefaults["GSFontView
 
 '''
 
-GSApplication.handleSize = property(lambda self: self.intDefaults["GSHandleSize"], lambda self, value: Glyphs_setUserDefaults(self, "GSHandleSize", int(value)))
+GSApplication.handleSize = property(lambda self: self.intDefaults["GSHandleSize"],
+									lambda self, value: Glyphs_setUserDefaults(self, "GSHandleSize", int(value)))
 '''
 	.. attribute:: handleSize
 		Size of Bezier handles in Glyph Edit view. Possible value are 0–2. Corresponds to the "Handle size" setting from the Preferences.
@@ -1600,8 +1603,9 @@ GSElement.__new__ = staticmethod(GSObject__new__)
 GSElement.__new__.__name__ = "__new__"
 
 
+def _______________(): pass
 def ____PROXIES____(): pass
-def _______________________(): pass
+def _______________(): pass
 
 
 
@@ -2084,9 +2088,8 @@ class CustomParametersProxy(Proxy):
 	def remove(self, parameter):
 		self._owner.removeObjectFromCustomParametersForKey_(parameter.name)
 	def insert(self, idx, parameter):
-		customParameters = copy.copy(self.values())
-		customParameters.insert(idx, parameter)
-		self._owner.setCustomParameters_(customParameters)
+		idx = self._validate_idx(idx, offset=1)
+		self._owner.insertObject_inCustomParametersAtIndex_(parameter, idx)
 	def __len__(self):
 		return self._owner.countOfCustomParameters()
 	def values(self):
@@ -2339,6 +2342,65 @@ class AttributesProxy(Proxy):
 		return repr(self._owner.pyobjc_instanceMethods.attributes())
 	def __contains__(self, item):
 		return self._owner.pyobjc_instanceMethods.attributeForKey_(item) is not None
+	def get(self, key, default=None):
+		value = self.__getitem__(key)
+		if value is None:
+			return default
+		return value
+
+class FontInfoPropertiesProxy(Proxy):
+	def __init__(self, owner, propertyKey):
+		self._owner = owner
+		self._propertyKey = propertyKey
+	
+	def __getitem__(self, languageKey):
+		if not isString(key):
+			raise TypeError("keys must be strings, not %s" % type(key).__name__)
+		return self._owner.propertyForName_languageTag_(self._propertyKey, languageKey)
+	
+	def __setitem__(self, languageKey, value):
+		if not isString(languageKey):
+			raise TypeError("keys must be strings, not %s" % type(languageKey).__name__)
+		self._owner.setProperty_value_languageTag_(self._propertyKey, objcObject(value), objcObject(languageKey))
+	
+	def __delitem__(self, languageKey):
+		###RB
+		if not isString(languageKey):
+			raise TypeError("keys must be strings, not %s" % type(languageKey).__name__)
+		self._owner.removeObject_fromPropertyWithKey_(
+			self._owner.propertyForName_languageTag_(self._propertyKey, languageKey),
+			self._propertyKey
+			)
+	
+	def values(self):
+		###RB
+		_property = self._owner.propertyForName_(self._propertyKey)
+		if _property is not None:
+			return [value.value for value in _property.values]
+		return None
+	
+	def keys(self):
+		###RB
+		_property = self._owner.propertyForName_(self._propertyKey)
+		if _property is not None:
+			return [value.languageTag for value in _property.values]
+		return None	
+	
+	def __repr__(self):
+		###RB
+		_property = self._owner.propertyForName_(self._propertyKey)
+		if _property is None:
+			return None.__repr__()
+		reprValue = "".join([f'\t{value.languageTag}, {value.value}\n' for value in _property.values])
+		return f"(\n{reprValue}\n)"
+	
+	def __contains__(self, item):
+		###RB
+		_property = self._owner.propertyForName_(self._propertyKey)
+		if _property is not None:
+			return item in [value.key for value in _property.values]
+		return None
+	
 	def get(self, key, default=None):
 		value = self.__getitem__(key)
 		if value is None:
@@ -2946,9 +3008,9 @@ def SetObjectInLayer_selected(self, state):
 #
 ##################################################################################
 
-def ________________(): pass
+def ______________(): pass
 def ____GSFont____(): pass
-def ________________(): pass
+def ______________(): pass
 
 
 '''
@@ -2976,10 +3038,24 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 		features
 		featurePrefixes
 		copyright
+		copyrights
+		license 
+		licenses 
 		designer
+		designers
 		designerURL
 		manufacturer
+		manufacturers
 		manufacturerURL
+		familyNames
+		trademark
+		trademarks
+		sampleText
+		sampleTexts
+		description
+		descriptions
+		compatibleFullName
+		compatibleFullNames
 		versionMajor
 		versionMinor
 		date
@@ -3117,7 +3193,10 @@ GSFont.properties = property(lambda self: self.mutableArrayValueForKey_("propert
 							 lambda self, values: self.setProperties_(values))
 '''
 	.. attribute:: properties
-		Holds the fonts info properties. Can be instances of :class:`GSFontInfoValueSingle` and :class:`GSFontInfoValueLocalized`
+		Holds the fonts info properties. Can be instances of :class:`GSFontInfoValueSingle` and :class:`GSFontInfoValueLocalized`.
+		
+		To access localised values use language tags defined in the middle column of `Language System Tags table`: <https://docs.microsoft.com/en-us/typography/opentype/spec/languagetags>.
+		
 
 		:type: list
 
@@ -3267,6 +3346,138 @@ GSFont.copyright = property(lambda self: self.defaultPropertyForName_("copyright
 
 		:type: str
 '''
+
+GSFont.copyrights = property(lambda self: FontInfoPropertiesProxy(self, "copyrights"))
+'''
+	.. attribute:: copyrights
+		This accesses all localised copyright values.
+		For details :attr:`GSFont.properties`
+
+
+		:type: dict
+		.. code-bloack:: python
+			Font.copyrights["ENG"] = "All rights reserved"
+
+		
+		.. versionadded:: 3.1
+'''
+
+GSFont.license = property(lambda self: self.defaultPropertyForName_("licenses"),
+						  lambda self, value: self.setProperty_value_languageTag_("licenses", value, None))
+
+'''
+	.. attribute:: license
+		This accesses the default value only. The localisations can be accessed by :attr:`GSFont.properties`
+
+		:type: str
+
+		.. versionadded:: 3.1
+'''
+
+GSFont.licenses = property(lambda self: FontInfoPropertiesProxy(self, "licenses"))
+
+'''
+	.. attribute:: licenses
+		This accesses all localised license values.
+		For details :attr:`GSFont.properties`
+
+
+		:type: dict
+
+		.. code-bloack:: python
+			Font.licenses["ENG"] = "This font may be installed on all of your machines and printers, but you may not sell or give these fonts to anyone else."
+
+		
+		.. versionadded:: 3.1
+'''
+
+GSFont.compatibleFullName = property(lambda self: self.defaultPropertyForName_("compatibleFullNames"),
+									 lambda self, value: self.setProperty_value_languageTag_("compatibleFullNames", value, None))
+
+'''
+	.. attribute:: compatibleFullName
+		This accesses the default value only. The localisations can be accessed by :attr:`GSFont.properties`
+
+		:type: str
+
+		.. versionadded:: 3.1
+'''
+
+GSFont.compatibleFullNames = property(lambda self: FontInfoPropertiesProxy(self, "compatibleFullNames"))
+
+'''
+	.. attribute:: compatibleFullNames
+		This accesses all localised designer values.
+		For details :attr:`GSFont.properties`
+
+
+		:type: dict
+
+		.. code-bloack:: python
+			Font.compatibleFullNames["ENG"] = "MyFont Condensed Bold"
+
+		
+		.. versionadded:: 3.1
+'''
+
+GSFont.sampleText = property(lambda self: self.defaultPropertyForName_("sampleTexts"),
+							 lambda self, value: self.setProperty_value_languageTag_("sampleTexts", value, None))
+
+'''
+	.. attribute:: sampleText
+		This accesses the default value only. The localisations can be accessed by :attr:`GSFont.properties`
+
+		:type: str
+
+		.. versionadded:: 3.1
+'''
+
+GSFont.sampleTexts = property(lambda self: FontInfoPropertiesProxy(self, "sampleTexts"))
+
+'''
+	.. attribute:: sampleTexts
+		This accesses all localised designer values.
+		For details :attr:`GSFont.properties`
+
+
+		:type: dict
+
+		.. code-bloack:: python
+			Font.sampleTexts["ENG"] = "This is my sample text"
+
+		
+		.. versionadded:: 3.1
+'''
+
+GSFont.description = property(lambda self: self.defaultPropertyForName_("descriptions"),
+							  lambda self, value: self.setProperty_value_languageTag_("descriptions", value, None))
+
+'''
+	.. attribute:: description
+		This accesses the default value only. The localisations can be accessed by :attr:`GSFont.properties`
+
+		:type: str
+
+		.. versionadded:: 3.1
+'''
+
+GSFont.descriptions = property(lambda self: FontInfoPropertiesProxy(self, "descriptions"))
+
+'''
+	.. attribute:: descriptions
+		This accesses all localised designer values.
+		For details :attr:`GSFont.properties`
+
+
+		:type: dict
+
+		.. code-bloack:: python
+			Font.descriptions["ENG"] = "This is my description"
+
+		
+		.. versionadded:: 3.1
+'''
+
 GSFont.designer = property(lambda self: self.defaultPropertyForName_("designers"),
 						   lambda self, value: self.setProperty_value_languageTag_("designers", value, None))
 '''
@@ -3275,32 +3486,99 @@ GSFont.designer = property(lambda self: self.defaultPropertyForName_("designers"
 
 		:type: str
 '''
-GSFont.designerURL = property(lambda self: self.defaultPropertyForName_("designerURL"), lambda self, value: self.setProperty_value_languageTag_("designerURL", value, None))
+
+GSFont.designers = property(lambda self: FontInfoPropertiesProxy(self, "designers"))
+
+'''
+	.. attribute:: designers
+		This accesses all localised designer values.
+		For details :attr:`GSFont.properties`
+
+
+		:type: dict
+
+		.. code-bloack:: python
+			Font.designers["ENG"] = "John Smith"
+
+		
+		.. versionadded:: 3.1
+'''
+
+GSFont.trademark = property(lambda self: self.defaultPropertyForName_("trademarks"),
+							lambda self, value: self.setProperty_value_languageTag_("trademarks", value, None))
+
+'''
+	.. attribute:: trademark
+		This accesses the default value only. The localisations can be accessed by :attr:`GSFont.properties`
+
+		:type: str
+
+		.. versionadded:: 3.1
+'''
+
+GSFont.trademarks = property(lambda self: FontInfoPropertiesProxy(self, "trademarks"))
+
+'''
+	.. attribute:: trademarks
+		This accesses all localised trademark values.
+		For details :attr:`GSFont.properties`
+
+
+		:type: dict
+
+		.. code-bloack:: python
+			Font.trademarks["ENG"] = "ThisFont is a trademark by MyFoundry.com"
+
+
+		.. versionadded:: 3.1
+'''
+GSFont.designerURL = property(lambda self: self.defaultPropertyForName_("designerURL"),
+							  lambda self, value: self.setProperty_value_languageTag_("designerURL", value, None))
 '''
 	.. attribute:: designerURL
 
 		:type: str
 '''
-GSFont.manufacturer = property(lambda self: self.defaultPropertyForName_("manufacturers"), lambda self, value: self.setProperty_value_languageTag_("manufacturers", value, None))
+GSFont.manufacturer = property(lambda self: self.defaultPropertyForName_("manufacturers"),
+							   lambda self, value: self.setProperty_value_languageTag_("manufacturers", value, None))
 '''
 	.. attribute:: manufacturer
 		This accesses the default value only. The localisations can be accessed by :attr:`GSFont.properties`
 
 		:type: str
 '''
-GSFont.manufacturerURL = property(lambda self: self.defaultPropertyForName_("manufacturerURL"), lambda self, value: self.setProperty_value_languageTag_("manufacturerURL", value, None))
+
+GSFont.manufacturers = property(lambda self: FontInfoPropertiesProxy(self, "manufacturers"))
+'''
+	.. attribute:: manufacturers
+		This accesses all localised manufacturer values.
+		For details :attr:`GSFont.properties`
+
+		:type: dict
+
+		.. code-bloack:: python
+			Font.manufacturers["ENG"] = "My English Corporation"
+
+		
+		.. versionadded:: 3.1
+'''
+
+GSFont.manufacturerURL = property(lambda self: self.defaultPropertyForName_("manufacturerURL"),
+								  lambda self, value: self.setProperty_value_languageTag_("manufacturerURL", value, None))
 '''
 	.. attribute:: manufacturerURL
 
 		:type: str
 '''
-GSFont.versionMajor = property(lambda self: self.pyobjc_instanceMethods.versionMajor(), lambda self, value: self.setVersionMajor_(value))
+GSFont.versionMajor = property(lambda self: self.pyobjc_instanceMethods.versionMajor(),
+							   lambda self, value: self.setVersionMajor_(value))
 '''
 	.. attribute:: versionMajor
 
 		:type: int
 '''
-GSFont.versionMinor = property(lambda self: self.pyobjc_instanceMethods.versionMinor(), lambda self, value: self.setVersionMinor_(value))
+GSFont.versionMinor = property(lambda self: self.pyobjc_instanceMethods.versionMinor(),
+							   lambda self, value: self.setVersionMinor_(value))
 '''
 	.. attribute:: versionMinor
 
@@ -3315,7 +3593,8 @@ def __set_date__(self, date):
 	if isinstance(date, datetime.datetime):
 		date = NSDate.alloc().initWithTimeIntervalSince1970_(time.mktime(date.timetuple()))
 	self.setDate_(date)
-GSFont.date = property(lambda self: __get_date__(self), lambda self, value: __set_date__(self, value))
+GSFont.date = property(lambda self: __get_date__(self),
+					   lambda self, value: __set_date__(self, value))
 '''
 	.. attribute:: date
 
@@ -3341,7 +3620,25 @@ GSFont.fontName = property(lambda self: self.pyobjc_instanceMethods.fontName(),
 
 		:type: str
 '''
-GSFont.upm = property(lambda self: self.unitsPerEm(), lambda self, value: self.setUnitsPerEm_(value))
+GSFont.familyNames = property(lambda self: FontInfoPropertiesProxy(self, "familyNames"))
+
+'''
+	.. attribute:: familyNames
+		This accesses all localised family name values.
+		For details :attr:`GSFont.properties`
+
+
+		:type: dict
+		.. code-bloack:: python
+			Font.familyNames["ENG"] = "MyFamilyName"
+
+		
+		.. versionadded:: 3.1
+'''
+
+
+GSFont.upm = property(lambda self: self.unitsPerEm(),
+					  lambda self, value: self.setUnitsPerEm_(value))
 '''
 	.. attribute:: upm
 		Units per Em
@@ -3355,7 +3652,8 @@ GSFont.note = property(lambda self: self.pyobjc_instanceMethods.note(),
 
 		:type: str
 '''
-GSFont.kerning = property(lambda self: self.kerningLTR(), lambda self, value: self.setKerningLTR_(value))
+GSFont.kerning = property(lambda self: self.kerningLTR(),
+						  lambda self, value: self.setKerningLTR_(value))
 '''
 	.. attribute:: kerning
 		Kerning for LTR writing
@@ -3366,7 +3664,8 @@ GSFont.kerning = property(lambda self: self.kerningLTR(), lambda self, value: se
 		:type: dict
 '''
 
-GSFont.kerningRTL = property(lambda self: self.pyobjc_instanceMethods.kerningRTL(), lambda self, value: self.setKerningRTL_(value))
+GSFont.kerningRTL = property(lambda self: self.pyobjc_instanceMethods.kerningRTL(),
+							 lambda self, value: self.setKerningRTL_(value))
 '''
 	.. attribute:: kerningRTL
 		Kerning for RTL writing
@@ -3377,7 +3676,8 @@ GSFont.kerningRTL = property(lambda self: self.pyobjc_instanceMethods.kerningRTL
 		:type: dict
 '''
 
-GSFont.kerningVertical = property(lambda self: self.pyobjc_instanceMethods.kerningVertical(), lambda self, value: self.setKerningVertical_(value))
+GSFont.kerningVertical = property(lambda self: self.pyobjc_instanceMethods.kerningVertical(),
+								  lambda self, value: self.setKerningVertical_(value))
 '''
 	.. attribute:: kerningVertical
 		Kerning for vertical writing
@@ -3420,7 +3720,8 @@ GSFont.tempData = property(lambda self: TempDataProxy(self))
 			del layer.tempData['rememberToMakeCoffee']
 '''
 
-GSFont.disablesNiceNames = property(lambda self: bool(self.pyobjc_instanceMethods.disablesNiceNames()), lambda self, value: self.setDisablesNiceNames_(value))
+GSFont.disablesNiceNames = property(lambda self: bool(self.pyobjc_instanceMethods.disablesNiceNames()),
+									lambda self, value: self.setDisablesNiceNames_(value))
 '''
 	.. attribute:: disablesNiceNames
 		Corresponds to the "Don't use nice names" setting from the Font Info dialog.
@@ -3442,13 +3743,14 @@ GSFont.customParameters = property(lambda self: CustomParametersProxy(self))
 				print(parameter)
 
 			# set a parameter
-			font.customParameters['trademark'] = 'ThisFont is a trademark by MyFoundry.com'
+			font.customParameters['glyphOrder'] = ["a", "b", "c"]
 
 			# delete a parameter
-			del(font.customParameters['trademark'])
+			del(font.customParameters['glyphOrder'])
 
 '''
-GSFont.grid = property(lambda self: self.pyobjc_instanceMethods.gridMain(), lambda self, value: self.setGridMain_(value))
+GSFont.grid = property(lambda self: self.pyobjc_instanceMethods.gridMain(),
+					   lambda self, value: self.setGridMain_(value))
 '''
 	.. attribute:: grid
 		Corresponds to the "Grid spacing" setting from the Info dialog.
@@ -3456,7 +3758,8 @@ GSFont.grid = property(lambda self: self.pyobjc_instanceMethods.gridMain(), lamb
 		:type: int
 '''
 
-GSFont.gridSubDivisions = property(lambda self: self.pyobjc_instanceMethods.gridSubDivision(), lambda self, value: self.setGridSubDivision_(value))
+GSFont.gridSubDivisions = property(lambda self: self.pyobjc_instanceMethods.gridSubDivision(),
+								   lambda self, value: self.setGridSubDivision_(value))
 '''
 	.. attribute:: gridSubDivisions
 		Corresponds to the "Grid sub divisions" setting from the Info dialog.
@@ -3472,14 +3775,16 @@ GSFont.gridLength = property(lambda self: self.pyobjc_instanceMethods.gridLength
 		:type: float
 '''
 
-GSFont.disablesAutomaticAlignment = property(lambda self: bool(self.pyobjc_instanceMethods.disablesAutomaticAlignment()), lambda self, value: self.setDisablesAutomaticAlignment_(value))
+GSFont.disablesAutomaticAlignment = property(lambda self: bool(self.pyobjc_instanceMethods.disablesAutomaticAlignment()),
+											 lambda self, value: self.setDisablesAutomaticAlignment_(value))
 '''
 	.. attribute:: disablesAutomaticAlignment
 
 		:type: bool
 '''
 
-GSFont.keyboardIncrement = property(lambda self: self.pyobjc_instanceMethods.keyboardIncrement(), lambda self, value: self.setKeyboardIncrement_(value))
+GSFont.keyboardIncrement = property(lambda self: self.pyobjc_instanceMethods.keyboardIncrement(),
+									lambda self, value: self.setKeyboardIncrement_(value))
 '''
 	.. attribute:: keyboardIncrement
 		Distance of movement by arrow keys. Default:1
@@ -3539,7 +3844,8 @@ def Font_SetSelectedGlyphs(self, value):
 		raise ValueError('Argument needs to be a list.')
 	self.parent.windowController().glyphsController().setSelectedObjects_(value)
 
-GSFont.selection = property(lambda self: Font_GetSelectedGlyphs(self), lambda self, value: Font_SetSelectedGlyphs(self, value))
+GSFont.selection = property(lambda self: Font_GetSelectedGlyphs(self),
+							lambda self, value: Font_SetSelectedGlyphs(self, value))
 '''
 	.. attribute:: selection
 		Returns a list of all selected glyphs in the Font View.
@@ -3566,7 +3872,8 @@ GSFont.selectedFontMaster = property(lambda self: self.parent.selectedFontMaster
 
 '''
 
-GSFont.masterIndex = property(lambda self: self.parent.windowController().masterIndex(), lambda self, value: self.parent.windowController().setMasterIndex_(value))
+GSFont.masterIndex = property(lambda self: self.parent.windowController().masterIndex(),
+							  lambda self, value: self.parent.windowController().setMasterIndex_(value))
 '''
 	.. attribute:: masterIndex
 		Returns the index of the active master (selected in the toolbar).
@@ -3648,16 +3955,17 @@ def Font_filepath(self):
 		return self.parent.fileURL().path()
 	else:
 		return None
+
 GSFont.filepath = property(lambda self: Font_filepath(self))
 '''
 	.. attribute:: filepath
 		On-disk location of GSFont object.
 
 		:type: str
-	
 '''
 
-GSFont.toolIndex = property(lambda self: self.parent.windowController().selectedToolIndex(), lambda self, value: self.parent.windowController().setSelectedToolIndex_(value))
+GSFont.toolIndex = property(lambda self: self.parent.windowController().selectedToolIndex(),
+							lambda self, value: self.parent.windowController().setSelectedToolIndex_(value))
 
 toolClassAbrevations = {  # abrevation : className
 	"SelectTool": "GlyphsToolSelect",
@@ -3697,7 +4005,8 @@ def __GSFont_setTool__(self, toolName):
 		sys.stderr.write('No tool found by the name "%s"' % (toolName))
 
 
-GSFont.tool = property(lambda self: __GSFont_tool__(self), lambda self, value: __GSFont_setTool__(self, value))
+GSFont.tool = property(lambda self: __GSFont_tool__(self),
+					   lambda self, value: __GSFont_setTool__(self, value))
 
 '''
 	.. attribute:: tool
@@ -4037,9 +4346,9 @@ GSFont.compileFeatures = python_method(__GSFont__compileFeatures__)
 #
 ##################################################################################
 
-def _______________________(): pass
-def ____GSAxis_____________(): pass
-def _______________________(): pass
+def ______________(): pass
+def ____GSAxis____(): pass
+def ______________(): pass
 
 '''
 
@@ -4118,9 +4427,9 @@ GSAxis.hidden = property(lambda self: bool(self.pyobjc_instanceMethods.hidden())
 #
 ##################################################################################
 
-def _______________________(): pass
-def ____GSMetric___________(): pass
-def _______________________(): pass
+def ________________(): pass
+def ____GSMetric____(): pass
+def ________________(): pass
 
 '''
 
@@ -4194,9 +4503,9 @@ GSMetric.horizontal = property(lambda self: self.pyobjc_instanceMethods.horizont
 #
 ##################################################################################
 
-def _______________________(): pass
+def ____________________(): pass
 def ____GSFontMaster____(): pass
-def _______________________(): pass
+def ____________________(): pass
 
 '''
 
@@ -4255,7 +4564,8 @@ GSFontMaster.__deepcopy__ = GSObject__copy__
 
 '''
 
-GSFontMaster.id = property(lambda self: self.pyobjc_instanceMethods.id(), lambda self, value: self.setId_(value))
+GSFontMaster.id = property(lambda self: self.pyobjc_instanceMethods.id(),
+						   lambda self, value: self.setId_(value))
 '''
 	.. attribute:: id
 		Used to identify :class:`Layers` in the Glyph
@@ -4275,7 +4585,8 @@ GSFontMaster.id = property(lambda self: self.pyobjc_instanceMethods.id(), lambda
 
 '''
 
-GSFontMaster.font = property(lambda self: self.pyobjc_instanceMethods.font(), lambda self, value: self.setFont_(value))
+GSFontMaster.font = property(lambda self: self.pyobjc_instanceMethods.font(),
+							 lambda self, value: self.setFont_(value))
 '''
 	.. attribute:: font
 		Reference to the :class:`GSFont` object that contains the master. Normally that is set by the app, only if the instance is not actually added to the font, then set this manually.
@@ -4322,7 +4633,8 @@ GSFontMaster.properties = property(lambda self: self.mutableArrayValueForKey_("p
 		.. versionadded:: 3
 '''
 
-GSFontMaster.ascender = property(lambda self: self.defaultAscender(), lambda self, value: self.setDefaultAscender_(value))
+GSFontMaster.ascender = property(lambda self: self.defaultAscender(),
+								 lambda self, value: self.setDefaultAscender_(value))
 '''
 	.. attribute:: ascender
 		This is the default ascender of the master. There might be other values that are for specific glyphs. See :attr:`layer.metrics <GSLayer.metrics>`
@@ -4330,7 +4642,8 @@ GSFontMaster.ascender = property(lambda self: self.defaultAscender(), lambda sel
 		:type: float
 '''
 
-GSFontMaster.capHeight = property(lambda self: self.defaultCapHeight(), lambda self, value: self.setDefaultCapHeight_(value))
+GSFontMaster.capHeight = property(lambda self: self.defaultCapHeight(),
+								  lambda self, value: self.setDefaultCapHeight_(value))
 '''
 	.. attribute:: capHeight
 		This is the default capHeight of the master. There might be other values that are for specific glyphs. See :attr:`layer.metrics <GSLayer.metrics>`
@@ -4338,7 +4651,8 @@ GSFontMaster.capHeight = property(lambda self: self.defaultCapHeight(), lambda s
 		:type: float
 '''
 
-GSFontMaster.xHeight = property(lambda self: self.defaultXHeight(), lambda self, value: self.setDefaultXHeight_(value))
+GSFontMaster.xHeight = property(lambda self: self.defaultXHeight(),
+								lambda self, value: self.setDefaultXHeight_(value))
 '''
 	.. attribute:: xHeight
 		This is the default xHeight of the master. There might be other values that are for specific glyphs. See :attr:`layer.metrics <GSLayer.metrics>`
@@ -4346,7 +4660,8 @@ GSFontMaster.xHeight = property(lambda self: self.defaultXHeight(), lambda self,
 		:type: float
 '''
 
-GSFontMaster.descender = property(lambda self: self.defaultDescender(), lambda self, value: self.setDefaultDescender_(value))
+GSFontMaster.descender = property(lambda self: self.defaultDescender(),
+								  lambda self, value: self.setDefaultDescender_(value))
 '''
 	.. attribute:: descender
 		This is the default descender of the master. There might be other values that are for specific glyphs. See :attr:`layer.metrics <GSLayer.metrics>`
@@ -4354,7 +4669,8 @@ GSFontMaster.descender = property(lambda self: self.defaultDescender(), lambda s
 		:type: float
 '''
 
-GSFontMaster.italicAngle = property(lambda self: self.defaultItalicAngle(), lambda self, value: self.setDefaultItalicAngle_(value))
+GSFontMaster.italicAngle = property(lambda self: self.defaultItalicAngle(),
+									lambda self, value: self.setDefaultItalicAngle_(value))
 '''
 	.. attribute:: italicAngle
 
@@ -4386,6 +4702,7 @@ GSFontMaster.alignmentZones = property(lambda self: self.defaultAlignmentZones()
 
 def FontMaster_blueValues(self):
 	return GSGlyphsInfo.blueValues_(self.alignmentZones)
+
 GSFontMaster.blueValues = property(lambda self: FontMaster_blueValues(self))
 '''
 	.. attribute:: blueValues
@@ -4396,6 +4713,7 @@ GSFontMaster.blueValues = property(lambda self: FontMaster_blueValues(self))
 
 def FontMaster_otherBlues(self):
 	return GSGlyphsInfo.otherBlues_(self.alignmentZones)
+
 GSFontMaster.otherBlues = property(lambda self: FontMaster_otherBlues(self))
 '''
 	.. attribute:: otherBlues
@@ -4461,7 +4779,8 @@ GSFontMaster.customParameters = property(lambda self: CustomParametersProxy(self
 ##################################################################################
 
 
-GSElement.selected = property(lambda self: ObjectInLayer_selected(self), lambda self, value: SetObjectInLayer_selected(self, value))
+GSElement.selected = property(lambda self: ObjectInLayer_selected(self),
+							  lambda self, value: SetObjectInLayer_selected(self, value))
 
 
 ##################################################################################
@@ -4475,9 +4794,9 @@ GSElement.selected = property(lambda self: ObjectInLayer_selected(self), lambda 
 ##################################################################################
 
 
-def ___________________________(): pass
+def _______________________(): pass
 def ____GSAlignmentZone____(): pass
-def ___________________________(): pass
+def _______________________(): pass
 
 '''
 
@@ -4523,14 +4842,16 @@ GSAlignmentZone.mutableCopyWithZone_ = GSObject__copy__
 
 '''
 
-GSAlignmentZone.position = property(lambda self: self.pyobjc_instanceMethods.position(), lambda self, value: self.setPosition_(validateNumber(value)))
+GSAlignmentZone.position = property(lambda self: self.pyobjc_instanceMethods.position(),
+									lambda self, value: self.setPosition_(validateNumber(value)))
 '''
 	.. attribute:: position
 
 		:type: float
 '''
 	
-GSAlignmentZone.size = property(lambda self: self.pyobjc_instanceMethods.size(), lambda self, value: self.setSize_(value))
+GSAlignmentZone.size = property(lambda self: self.pyobjc_instanceMethods.size(),
+								lambda self, value: self.setSize_(value))
 '''
 	.. attribute:: size
 
@@ -4553,9 +4874,9 @@ GSTTStem.plistValue = python_method(__propertyListValue__)
 ##################################################################################
 
 
-def ____________________(): pass
+def __________________(): pass
 def ____GSInstance____(): pass
-def ____________________(): pass
+def __________________(): pass
 
 
 '''
@@ -4602,7 +4923,6 @@ GSInstance.mutableCopyWithZone_ = GSObject__copy__
 		isItalic
 		isBold
 		linkStyle
-		familyName
 		preferredFamily
 		preferredSubfamilyName
 		windowsFamily
@@ -4610,11 +4930,38 @@ GSInstance.mutableCopyWithZone_ = GSObject__copy__
 		windowsLinkedToStyle
 		fontName
 		fullName
+		compatibleFullName
+		compatibleFullNames
 		copyright
+		copyrights
+		description
+		descriptions
 		designer
+		designers
 		designerURL
+		familyName
+		familyNames
+		license
+		licenses
 		manufacturer
+		manufacturers
 		manufacturerURL
+		preferredFamilyName
+		preferredFamilyNames
+		preferredSubfamilyName
+		preferredSubfamilyNames
+		sampleText
+		sampleTexts
+		styleMapFamilyName
+		styleMapFamilyNames
+		styleMapStyleName
+		styleMapStyleNames
+		styleName
+		styleNames
+		trademark
+		trademarks
+		variableStyleName
+		variableStyleNames
 		font
 		customParameters
 		instanceInterpolations
@@ -4634,14 +4981,16 @@ GSInstance.mutableCopyWithZone_ = GSObject__copy__
 
 '''
 
-GSInstance.active = property(lambda self: bool(self.exports()), lambda self, value: self.setExports_(value))
+GSInstance.active = property(lambda self: bool(self.exports()),
+							 lambda self, value: self.setExports_(value))
 '''
 	.. attribute:: active
 
 		:type: bool
 '''
 
-GSInstance.visible = property(lambda self: bool(self.pyobjc_instanceMethods.visible()), lambda self, value: self.setVisible_(value))
+GSInstance.visible = property(lambda self: bool(self.pyobjc_instanceMethods.visible()),
+							  lambda self, value: self.setVisible_(value))
 '''
 	.. attribute:: visible
 		if visible in the preview in edit view
@@ -4649,7 +4998,8 @@ GSInstance.visible = property(lambda self: bool(self.pyobjc_instanceMethods.visi
 		:type: bool
 '''
 
-GSInstance.name = property(lambda self: self.pyobjc_instanceMethods.name(), lambda self, value: self.setName_(value))
+GSInstance.name = property(lambda self: self.pyobjc_instanceMethods.name(),
+						   lambda self, value: self.setName_(value))
 '''
 	.. attribute:: name
 		Name of instance. Corresponds to the "Style Name" field in the font info. This is used for naming the exported fonts.
@@ -4670,7 +5020,8 @@ def _setValueValidation(target, key, value, valuetype):
 		raise TypeError("Type for {} should be {}, got {}".format(key, valuetype.__name__, type(value).__name__))
 	target.setValue_forKey_(value, key)
 
-GSInstance.weightClass = property(lambda self: self.weightClassValue(), lambda self, value: _setValueValidation(self, "weightClassValue", value, int))
+GSInstance.weightClass = property(lambda self: self.weightClassValue(),
+								  lambda self, value: _setValueValidation(self, "weightClassValue", value, int))
 '''
 	.. attribute:: weightClass
 		Weight class, as set in Font Info, as an integer. Values from 1 to 1000 are supported but 100–900 is recommended.
@@ -4689,7 +5040,8 @@ GSInstance.weightClassName = property(lambda self: self.weightClassUI())
 		:type: string
 '''
 
-GSInstance.widthClass = property(lambda self: self.widthClassValue(), lambda self, value: _setValueValidation(self, "widthClassValue", value, int))
+GSInstance.widthClass = property(lambda self: self.widthClassValue(),
+								 lambda self, value: _setValueValidation(self, "widthClassValue", value, int))
 '''
 	.. attribute:: widthClass
 		Width class, as set in Font Info, as an integer. Values from 1 to 9 are supported.
@@ -4707,7 +5059,8 @@ GSInstance.widthClassName = property(lambda self: self.widthClassUI())
 		:type: string
 '''
 
-GSInstance.axes = property(lambda self: MasterAxesProxy(self), lambda self, value: MasterAxesProxy(self).setter(value))
+GSInstance.axes = property(lambda self: MasterAxesProxy(self),
+						   lambda self, value: MasterAxesProxy(self).setter(value))
 '''
 	.. attribute:: axes
 		List of floats specifying the positions for each axis
@@ -4734,7 +5087,9 @@ GSInstance.properties = property(lambda self: self.mutableArrayValueForKey_("pro
 		.. versionadded:: 3
 '''
 
-GSInstance.isItalic = property(lambda self: bool(self.pyobjc_instanceMethods.isItalic()), lambda self, value: self.setIsItalic_(value))
+GSInstance.isItalic = property(lambda self: bool(self.pyobjc_instanceMethods.isItalic()),
+							   lambda self, value: self.setIsItalic_(value))
+
 '''
 	.. attribute:: isItalic
 		Italic flag for style linking
@@ -4742,7 +5097,9 @@ GSInstance.isItalic = property(lambda self: bool(self.pyobjc_instanceMethods.isI
 		:type: bool
 '''
 
-GSInstance.isBold = property(lambda self: bool(self.pyobjc_instanceMethods.isBold()), lambda self, value: self.setIsBold_(value))
+GSInstance.isBold = property(lambda self: bool(self.pyobjc_instanceMethods.isBold()),
+							 lambda self, value: self.setIsBold_(value))
+
 '''
 	.. attribute:: isBold
 		Bold flag for style linking
@@ -4750,7 +5107,9 @@ GSInstance.isBold = property(lambda self: bool(self.pyobjc_instanceMethods.isBol
 		:type: bool
 '''
 
-GSInstance.linkStyle = property(lambda self: self.pyobjc_instanceMethods.linkStyle(), lambda self, value: self.setLinkStyle_(value))
+GSInstance.linkStyle = property(lambda self: self.pyobjc_instanceMethods.linkStyle(),
+								lambda self, value: self.setLinkStyle_(value))
+
 '''
 	.. attribute:: linkStyle
 		Linked style
@@ -4758,15 +5117,10 @@ GSInstance.linkStyle = property(lambda self: self.pyobjc_instanceMethods.linkSty
 		:type: string
 '''
 
-GSInstance.familyName = property(lambda self: self.pyobjc_instanceMethods.familyName(), lambda self, value: self.setProperty_value_languageTag_("familyName", value))
-'''
-	.. attribute:: familyName
-		familyName
 
-		:type: string
-'''
 
-GSInstance.preferredFamily = property(lambda self: self.pyobjc_instanceMethods.preferredFamily(), lambda self, value: self.setProperty_value_languageTag_("preferredFamily", value))
+GSInstance.preferredFamily = property(lambda self: self.pyobjc_instanceMethods.preferredFamily(),
+									  lambda self, value: self.setProperty_value_languageTag_("preferredFamilyNames", value, None))
 '''
 	.. attribute:: preferredFamily
 		preferredFamily
@@ -4774,17 +5128,8 @@ GSInstance.preferredFamily = property(lambda self: self.pyobjc_instanceMethods.p
 		:type: string
 '''
 
-GSInstance.preferredSubfamilyName = property(lambda self: self.pyobjc_instanceMethods.preferredSubfamilyName(),
-						lambda self, value: self.setProperty_value_languageTag_("preferredSubfamilyName", value))
-'''
-	.. attribute:: preferredSubfamilyName
-		preferredSubfamilyName
-
-		:type: string
-'''
-
 GSInstance.windowsFamily = property(lambda self: self.styleMapFamilyName(),
-									lambda self, value: self.setProperty_value_languageTag_("styleMapFamilyName", value))
+									lambda self, value: self.setProperty_value_languageTag_("styleMapFamilyNames", value, None))
 '''
 	.. attribute:: windowsFamily
 		windowsFamily
@@ -4793,7 +5138,7 @@ GSInstance.windowsFamily = property(lambda self: self.styleMapFamilyName(),
 '''
 
 GSInstance.windowsStyle = property(lambda self: self.styleMapStyleName(),
-								   lambda self, value: self.setProperty_value_languageTag_("styleMapStyleNames", value))
+								   lambda self, value: self.setProperty_value_languageTag_("styleMapStyleNames", value, None))
 '''
 	.. attribute:: windowsStyle
 		This is computed from "isBold" and "isItalic". Read-only.
@@ -4810,7 +5155,7 @@ GSInstance.windowsLinkedToStyle = property(lambda self: self.pyobjc_instanceMeth
 '''
 
 GSInstance.fontName = property(lambda self: self.pyobjc_instanceMethods.fontName_(None)[0],
-							   lambda self, value: self.setProperty_value_languageTag_("postscriptFontName", value))
+							   lambda self, value: self.setProperty_value_languageTag_("postscriptFontName", value, None))
 '''
 	.. attribute:: fontName
 		fontName (postscriptFontName)
@@ -4819,7 +5164,7 @@ GSInstance.fontName = property(lambda self: self.pyobjc_instanceMethods.fontName
 '''
 
 GSInstance.fullName = property(lambda self: self.pyobjc_instanceMethods.fullName_(None)[0],
-							   lambda self, value: self.setProperty_value_languageTag_("postscriptFullName", value))
+							   lambda self, value: self.setProperty_value_languageTag_("postscriptFullName", value, None))
 '''
 	.. attribute:: fullName
 		fullName (postscriptFullName)
@@ -4827,7 +5172,36 @@ GSInstance.fullName = property(lambda self: self.pyobjc_instanceMethods.fullName
 		:type: string
 '''
 
-GSInstance.copyright = property(lambda self: self.defaultPropertyForName_("copyrights"), lambda self, value: self.setProperty_value_languageTag_("copyrights", value, None))
+GSInstance.compatibleFullName = property(lambda self: self.defaultPropertyForName_("compatibleFullNames"),
+										 lambda self, value: self.setProperty_value_languageTag_("compatibleFullNames", value, None))
+'''
+	.. attribute:: compatibleFullName
+		This accesses the default value only. The localisations can be accessed by :attr:`GSInstance.properties`
+
+		:type: str
+		
+		.. versionadded:: 3.1
+'''
+
+GSInstance.compatibleFullNames = property(lambda self: FontInfoPropertiesProxy(self, "compatibleFullNames"))
+
+'''
+	.. attribute:: descriptions
+		This accesses all localised description values.
+		For details :attr:`GSInstance.properties`
+
+
+		:type: dict
+
+		.. code-bloack:: python
+			Instance.compatibleFullNames["ENG"] = "MyFont Condensed Bold"
+
+		
+		.. versionadded:: 3.1
+'''
+
+GSInstance.copyright = property(lambda self: self.defaultPropertyForName_("copyrights"),
+							    lambda self, value: self.setProperty_value_languageTag_("copyrights", value, None))
 '''
 	.. attribute:: copyright
 		This accesses the default value only. The localisations can be accessed by :attr:`GSInstance.properties`
@@ -4836,7 +5210,55 @@ GSInstance.copyright = property(lambda self: self.defaultPropertyForName_("copyr
 		
 		.. versionadded:: 3.0.2
 '''
-GSInstance.designer = property(lambda self: self.defaultPropertyForName_("designers"), lambda self, value: self.setProperty_value_languageTag_("designers", value, None))
+
+GSInstance.copyrights = property(lambda self: FontInfoPropertiesProxy(self, "copyrights"))
+
+'''
+	.. attribute:: copyrights
+		This accesses all localised copyright values.
+		For details :attr:`GSInstance.properties`
+
+
+		:type: dict
+
+		.. code-bloack:: python
+			Instance.copyrights["ENG"] = "All rights reserved"
+
+		
+		.. versionadded:: 3.1
+'''
+
+GSInstance.description = property(lambda self: self.defaultPropertyForName_("descriptions"),
+								  lambda self, value: self.setProperty_value_languageTag_("descriptions", value, None))
+
+'''
+	.. attribute:: description
+		This accesses the default value only. The localisations can be accessed by :attr:`GSInstance.properties`
+
+		:type: str
+
+		.. versionadded:: 3.1
+'''
+
+
+GSInstance.descriptions = property(lambda self: FontInfoPropertiesProxy(self, "descriptions"))
+
+'''
+	.. attribute:: descriptions
+		This accesses all localised description values.
+		For details :attr:`GSInstance.properties`
+
+
+		:type: dict
+
+		.. code-bloack:: python
+			Instance.descriptions["ENG"] = "This is my description"
+
+		
+		.. versionadded:: 3.1
+'''
+GSInstance.designer = property(lambda self: self.defaultPropertyForName_("designers"),
+							   lambda self, value: self.setProperty_value_languageTag_("designers", value, None))
 '''
 	.. attribute:: designer
 		This accesses the default value only. The localisations can be accessed by :attr:`GSInstance.properties`
@@ -4845,7 +5267,8 @@ GSInstance.designer = property(lambda self: self.defaultPropertyForName_("design
 
 		.. versionadded:: 3.0.2
 '''
-GSInstance.designerURL = property(lambda self: self.defaultPropertyForName_("designerURL"), lambda self, value: self.setProperty_value_languageTag_("designerURL", value, None))
+GSInstance.designerURL = property(lambda self: self.defaultPropertyForName_("designerURL"),
+								  lambda self, value: self.setProperty_value_languageTag_("designerURL", value, None))
 '''
 	.. attribute:: designerURL
 
@@ -4853,7 +5276,76 @@ GSInstance.designerURL = property(lambda self: self.defaultPropertyForName_("des
 
 		.. versionadded:: 3.0.2
 '''
-GSInstance.manufacturer = property(lambda self: self.defaultPropertyForName_("manufacturers"), lambda self, value: self.setProperty_value_languageTag_("manufacturers", value, None))
+
+
+GSInstance.designers = property(lambda self: FontInfoPropertiesProxy(self, "designers"))
+
+'''
+	.. attribute:: designers
+		This accesses all localised designer values.
+		For details :attr:`GSInstance.properties`
+
+
+		:type: dict
+
+		.. code-bloack:: python
+			Instance.designers["ENG"] = "John Smith"
+
+		
+		.. versionadded:: 3.1
+'''
+
+GSInstance.familyName = property(lambda self: self.defaultPropertyForName_("familyNames"),
+								 lambda self, value: self.setProperty_value_languageTag_("familyNames", value, None))
+'''
+	.. attribute:: familyName
+		familyName
+
+		:type: string
+'''
+
+GSInstance.familyNames = property(lambda self: FontInfoPropertiesProxy(self, "familyNames"))
+'''
+	.. attribute:: familyNames
+		This accesses all localised family name values.
+		For details :attr:`GSInstance.properties`
+
+		:type: dict
+		.. code-bloack:: python
+			Instance.familyNames["ENG"] = "MyFamilyName"
+
+		.. versionadded:: 3.1
+'''
+
+GSInstance.license = property(lambda self: self.defaultPropertyForName_("licenses"),
+							  lambda self, value: self.setProperty_value_languageTag_("licenses", value, None))
+'''
+	.. attribute:: license
+		This accesses the default value only. The localisations can be accessed by :attr:`GSInstance.properties`
+
+		:type: str
+
+		.. versionadded:: 3.1
+'''
+
+GSInstance.licenses = property(lambda self: FontInfoPropertiesProxy(self, "licenses"))
+'''
+	.. attribute:: licenses
+		This accesses all localised family name values.
+		For details :attr:`GSInstance.properties`
+
+
+		:type: dict
+		.. code-bloack:: python
+			Instance.licenses["ENG"] = "This font may be installed on all of your machines and printers, but you may not sell or give these fonts to anyone else."
+
+		
+		.. versionadded:: 3.1
+'''
+
+GSInstance.manufacturer = property(lambda self: self.defaultPropertyForName_("manufacturers"),
+								   lambda self, value: self.setProperty_value_languageTag_("manufacturers", value, None))
+
 '''
 	.. attribute:: manufacturer
 		This accesses the default value only. The localisations can be accessed by :attr:`GSInstance.properties`
@@ -4862,7 +5354,255 @@ GSInstance.manufacturer = property(lambda self: self.defaultPropertyForName_("ma
 
 		.. versionadded:: 3.0.2
 '''
-GSInstance.manufacturerURL = property(lambda self: self.defaultPropertyForName_("manufacturerURL"), lambda self, value: self.setProperty_value_languageTag_("manufacturerURL", value, None))
+
+GSInstance.manufacturers = property(lambda self: FontInfoPropertiesProxy(self, "manufacturers"))
+
+'''
+	.. attribute:: manufacturers
+		This accesses all localised family name values.
+		For details :attr:`GSInstance.properties`
+
+		:type: dict
+
+		.. code-bloack:: python
+			Instance.manufacturers["ENG"] = "My English Corporation"
+
+		.. versionadded:: 3.1
+'''
+
+GSInstance.preferredFamilyName = property(lambda self: self.defaultPropertyForName_("preferredFamilyNames"),
+										  lambda self, value: self.setProperty_value_languageTag_("preferredFamilyNames", value, None))
+
+'''
+	.. attribute:: preferredFamilyName
+		This accesses the default value only. The localisations can be accessed by :attr:`GSInstance.properties`
+
+		:type: str
+
+		.. versionadded:: 3.1
+'''
+
+GSInstance.preferredFamilyNames = property(lambda self: FontInfoPropertiesProxy(self, "preferredFamilyNames"))
+
+'''
+	.. attribute:: preferredFamilyNames
+		This accesses all localised designer values.
+		For details :attr:`GSInstance.properties`
+
+
+		:type: dict
+
+		.. code-bloack:: python
+			Instance.preferredFamilyNames["ENG"] = "MyFamilyName"
+
+		
+		.. versionadded:: 3.1
+'''
+
+GSInstance.preferredSubfamilyName = property(lambda self: self.defaultPropertyForName_("preferredSubfamilyNames"),
+											 lambda self, value: self.setProperty_value_languageTag_("preferredSubfamilyNames", value, None))
+'''
+	.. attribute:: preferredSubfamilyName
+		preferredSubfamilyName
+
+		:type: string
+'''
+
+GSInstance.preferredSubfamilyNames = property(lambda self: FontInfoPropertiesProxy(self, "preferredSubfamilyNames"))
+
+'''
+	.. attribute:: preferredSubfamilyNames
+		This accesses all localised designer values.
+		For details :attr:`GSInstance.properties`
+
+
+		:type: dict
+
+		.. code-bloack:: python
+			Instance.preferredSubfamilyNames["ENG"] = "Regular"
+
+		
+		.. versionadded:: 3.1
+'''
+
+GSInstance.sampleText = property(lambda self: self.defaultPropertyForName_("sampleTexts"),
+								 lambda self, value: self.setProperty_value_languageTag_("sampleTexts", value, None))
+
+'''
+	.. attribute:: sampleText
+		This accesses the default value only. The localisations can be accessed by :attr:`GSInstance.properties`
+
+		:type: str
+
+		.. versionadded:: 3.1
+'''
+
+GSInstance.sampleTexts = property(lambda self: FontInfoPropertiesProxy(self, "sampleTexts"))
+
+'''
+	.. attribute:: sampleTexts
+		This accesses all localised designer values.
+		For details :attr:`GSInstance.properties`
+
+
+		:type: dict
+
+		.. code-bloack:: python
+			Instance.sampleTexts["ENG"] = "This is my sample text"
+
+		
+		.. versionadded:: 3.1
+'''
+ 
+
+GSInstance.styleMapFamilyName = property(lambda self: self.defaultPropertyForName_("styleMapFamilyNames"),
+										 lambda self, value: self.setProperty_value_languageTag_("styleMapFamilyNames", value, None))
+
+'''
+	.. attribute:: styleMapFamilyName
+		This accesses the default value only. The localisations can be accessed by :attr:`GSInstance.properties`
+
+		:type: str
+
+		.. versionadded:: 3.1
+'''
+
+GSInstance.styleMapFamilyNames = property(lambda self: FontInfoPropertiesProxy(self, "styleMapFamilyNames"))
+
+'''
+	.. attribute:: styleMapFamilyNames
+		This accesses all localised designer values.
+		For details :attr:`GSInstance.properties`
+
+
+		:type: dict
+
+		.. code-bloack:: python
+			Instance.styleMapFamilyNames["ENG"] = "MyFamily Bold"
+
+		
+		.. versionadded:: 3.1
+'''
+
+GSInstance.styleMapStyleName = property(lambda self: self.defaultPropertyForName_("styleMapStyleNames"),
+										lambda self, value: self.setProperty_value_languageTag_("styleMapStyleNames", value, None))
+
+'''
+	.. attribute:: styleMapStyleName
+		This accesses the default value only. The localisations can be accessed by :attr:`GSInstance.properties`
+
+		:type: str
+
+		.. versionadded:: 3.1
+'''
+
+GSInstance.styleMapStyleNames = property(lambda self: FontInfoPropertiesProxy(self, "styleMapStyleNames"))
+
+'''
+	.. attribute:: styleMapStyleNames
+		This accesses all localised designer values.
+		For details :attr:`GSInstance.properties`
+
+
+		:type: dict
+
+		.. code-bloack:: python
+			Instance.styleMapStyleNames["ENG"] = "Bold"
+
+		
+		.. versionadded:: 3.1
+'''
+
+GSInstance.styleName = property(lambda self: self.defaultPropertyForName_("styleNames"),
+								lambda self, value: self.setProperty_value_languageTag_("styleNames", value, None))
+
+'''
+	.. attribute:: styleName
+		This accesses the default value only. The localisations can be accessed by :attr:`GSInstance.properties`
+
+		:type: str
+
+		.. versionadded:: 3.1
+'''
+
+GSInstance.styleNames = property(lambda self: FontInfoPropertiesProxy(self, "styleNames"))
+
+'''
+	.. attribute:: styleNames
+		This accesses all localised styleName values.
+		For details :attr:`GSInstance.properties`
+
+
+		:type: dict
+
+		.. code-bloack:: python
+			Instance.styleNames["ENG"] = "Regular"
+
+		
+		.. versionadded:: 3.1
+'''
+
+
+GSInstance.trademark = property(lambda self: self.defaultPropertyForName_("trademarks"),
+								lambda self, value: self.setProperty_value_languageTag_("trademarks", value, None))
+
+'''
+	.. attribute:: trademark
+		This accesses the default value only. The localisations can be accessed by :attr:`GSInstance.properties`
+
+		:type: str
+
+		.. versionadded:: 3.1
+'''
+
+GSInstance.trademarks = property(lambda self: FontInfoPropertiesProxy(self, "trademarks"))
+
+'''
+	.. attribute:: trademarks
+		This accesses all localised trademark values.
+		For details :attr:`GSInstance.properties`
+
+
+		:type: dict
+
+		.. code-bloack:: python
+			Instance.trademarks["ENG"] = "ThisFont is a trademark by MyFoundry.com"
+
+		
+		.. versionadded:: 3.1
+'''
+
+GSInstance.variableStyleName = property(lambda self: self.defaultPropertyForName_("variableStyleNames"),
+										lambda self, value: self.setProperty_value_languageTag_("variableStyleNames", value, None))
+
+'''
+	.. attribute:: variableStyleName
+		This accesses the default value only. The localisations can be accessed by :attr:`GSInstance.properties`
+
+		:type: str
+
+		.. versionadded:: 3.1
+'''
+
+GSInstance.variableStyleNames = property(lambda self: FontInfoPropertiesProxy(self, "variableStyleNames"))
+
+'''
+	.. attribute:: variableStyleNames
+		This accesses all localised variableStyleName values.
+		For details :attr:`GSInstance.properties`
+
+
+		:type: dict
+
+		.. code-bloack:: python
+			Instance.variableStyleNames["ENG"] = "Roman"
+
+		
+		.. versionadded:: 3.1
+'''
+
+GSInstance.manufacturerURL = property(lambda self: self.defaultPropertyForName_("manufacturerURL"),
+									  lambda self, value: self.setProperty_value_languageTag_("manufacturerURL", value, None))
 '''
 	.. attribute:: manufacturerURL
 
@@ -4934,7 +5674,8 @@ GSInstance.tempData = property(lambda self: TempDataProxy(self))
 			del instance.tempData['rememberToMakeCoffee']
 '''
 
-GSInstance.instanceInterpolations = property(lambda self: self.pyobjc_instanceMethods.instanceInterpolations(), lambda self, value: self.setInstanceInterpolations_(value))
+GSInstance.instanceInterpolations = property(lambda self: self.pyobjc_instanceMethods.instanceInterpolations(),
+											 lambda self, value: self.setInstanceInterpolations_(value))
 '''
 	.. attribute:: instanceInterpolations
 		A dict that contains the interpolation coefficients for each master.
@@ -4944,7 +5685,8 @@ GSInstance.instanceInterpolations = property(lambda self: self.pyobjc_instanceMe
 		:type: dict
 	'''
 
-GSInstance.manualInterpolation = property(lambda self: bool(self.pyobjc_instanceMethods.manualInterpolation()), lambda self, value: self.setManualInterpolation_(value))
+GSInstance.manualInterpolation = property(lambda self: bool(self.pyobjc_instanceMethods.manualInterpolation()),
+										  lambda self, value: self.setManualInterpolation_(value))
 '''
 	.. attribute:: manualInterpolation
 		Disables automatic calculation of instanceInterpolations
@@ -5190,9 +5932,9 @@ GSInstance.addAsMaster = AddInstanceAsMaster
 ##################################################################################
 
 
-def ______________________________(): pass
+def _________________________(): pass
 def ____GSCustomParameter____(): pass
-def ______________________________(): pass
+def _________________________(): pass
 
 
 '''
@@ -5249,13 +5991,15 @@ GSCustomParameter.mutableCopyWithZone_ = GSObject__copy__
 
 '''
 
-GSCustomParameter.name = property(lambda self: self.pyobjc_instanceMethods.name(), lambda self, value: self.setName_(value))
+GSCustomParameter.name = property(lambda self: self.pyobjc_instanceMethods.name(),
+								  lambda self, value: self.setName_(value))
 '''
 	.. attribute:: name
 
 		:type: str
 '''
-GSCustomParameter.value = property(lambda self: self.pyobjc_instanceMethods.value(), lambda self, value: self.setValue_(value))
+GSCustomParameter.value = property(lambda self: self.pyobjc_instanceMethods.value(),
+								   lambda self, value: self.setValue_(value))
 '''
 	.. attribute:: value
 
@@ -5287,9 +6031,9 @@ GSCustomParameter.parent = property(lambda self: self.pyobjc_instanceMethods.par
 ##################################################################################
 
 
-def _________________(): pass
+def _______________(): pass
 def ____GSClass____(): pass
-def _________________(): pass
+def _______________(): pass
 
 '''
 :mod:`GSClass`
@@ -5395,9 +6139,9 @@ GSClass.tempData = property(lambda self: TempDataProxy(self))
 #
 ##################################################################################
 
-def _________________________(): pass
+def _______________________(): pass
 def ____GSFeaturePrefix____(): pass
-def _________________________(): pass
+def _______________________(): pass
 
 
 '''
@@ -5482,9 +6226,9 @@ GSFeaturePrefix.active = property(lambda self: not self.disabled(),
 #
 ##################################################################################
 
-def ___________________(): pass
+def _________________(): pass
 def ____GSFeature____(): pass
-def ___________________(): pass
+def _________________(): pass
 
 '''
 
@@ -5632,9 +6376,9 @@ GSFeature.tempData = property(lambda self: TempDataProxy(self))
 #
 ##################################################################################
 
-def ________________________(): pass
+def ______________________(): pass
 def ____GSSubstitution____(): pass
-def ________________________(): pass
+def ______________________(): pass
 
 
 """
@@ -5686,9 +6430,9 @@ GSSubstitution.scriptTag = property(lambda self: self.pyobjc_instanceMethods.scr
 ##################################################################################
 
 
-def _________________(): pass
+def _______________(): pass
 def ____GSGlyph____(): pass
-def _________________(): pass
+def _______________(): pass
 
 
 '''
@@ -6442,7 +7186,8 @@ GSGlyph.userData = property(lambda self: UserDataProxy(self))
 
 '''
 
-GSGlyph.smartComponentAxes = property(lambda self: GlyphSmartComponentAxesProxy(self), lambda self, value: GlyphSmartComponentAxesProxy(self).setter(value))
+GSGlyph.smartComponentAxes = property(lambda self: GlyphSmartComponentAxesProxy(self),
+									  lambda self, value: GlyphSmartComponentAxesProxy(self).setter(value))
 '''
 	.. attribute:: smartComponentAxes
 		A list of :class:`GSSmartComponentAxis` objects.
@@ -6571,9 +7316,9 @@ GSGlyph.duplicate = Glyph_Duplicate
 #
 ##################################################################################
 
-def _________________(): pass
+def _______________(): pass
 def ____GSLayer____(): pass
-def _________________(): pass
+def _______________(): pass
 
 
 '''
@@ -6792,7 +7537,8 @@ GSLayer.color = property(lambda self: __getColorIndex__(self),
 
 '''
 
-GSLayer.colorObject = property(lambda self: self.pyobjc_instanceMethods.color(), lambda self, value: self.setColor_(value))
+GSLayer.colorObject = property(lambda self: self.pyobjc_instanceMethods.color(),
+							   lambda self, value: self.setColor_(value))
 '''
 	.. attribute:: colorObject
 		NSColor object of layer color, useful for drawing in plugins.
@@ -7415,6 +8161,7 @@ GSLayer.smartComponentPoleMapping = property(lambda self: SmartComponentPoleMapp
 
 		.. code-block:: python
 			print(layer.compareString())
+			oocoocoocoocooc_oocoocoocloocoocoocoocoocoocoocoocooc_
 
 	.. function:: connectAllOpenPaths()
 
@@ -7853,9 +8600,9 @@ GSAnchor.__add__ = python_method(__GSAnchor__add__)
 #
 ##################################################################################
 
-def ___________________(): pass
+def ________________(): pass
 def ____GSAnchor____(): pass
-def ___________________(): pass
+def ________________(): pass
 
 '''
 
@@ -7990,9 +8737,9 @@ GSAnchor.drawPoints.__name__ = "drawPoints"
 #
 ##################################################################################
 
-def _______________________(): pass
+def ___________________(): pass
 def ____GSComponent____(): pass
-def _______________________(): pass
+def ___________________(): pass
 
 
 
@@ -8413,9 +9160,9 @@ GSComponent.applyTransform = python_method(__GSComponent_applyTransform__)
 #
 ##################################################################################
 
-def __________________________________(): pass
+def ____________________________(): pass
 def ____GSSmartComponentAxis____(): pass
-def __________________________________(): pass
+def ____________________________(): pass
 
 
 '''
@@ -8505,9 +9252,9 @@ GSSmartComponentAxis.bottomValue = property(lambda self: self.pyobjc_instanceMet
 ##################################################################################
 
 
-def ________________(): pass
+def _______________(): pass
 def ____GSShape____(): pass
-def ________________(): pass
+def _______________(): pass
 
 
 '''
@@ -8565,9 +9312,9 @@ GSComponent.shapeType = property(lambda self: bool(self.pyobjc_instanceMethods.s
 ##################################################################################
 
 
-def ________________(): pass
+def ______________(): pass
 def ____GSPath____(): pass
-def ________________(): pass
+def ______________(): pass
 
 
 '''
@@ -8715,7 +9462,8 @@ def Path_SetSelected(self, state):
 	else:
 		layer.removeObjectsFromSelection_(self.pyobjc_instanceMethods.nodes())
 
-GSPath.selected = property(lambda self: Path_selected(self), lambda self, value: Path_SetSelected(self, value))
+GSPath.selected = property(lambda self: Path_selected(self),
+						   lambda self, value: Path_SetSelected(self, value))
 '''
 	.. attribute:: selected
 		Selection state of path in UI.
@@ -8861,9 +9609,9 @@ GSPath.applyTransform = python_method(__CGPath_applyTransform__)
 #
 ##################################################################################
 
-def ________________(): pass
+def ______________(): pass
 def ____GSNode____(): pass
-def ________________(): pass
+def ______________(): pass
 
 '''
 
@@ -9183,9 +9931,9 @@ GSNode.userData = property(lambda self: UserDataProxy(self))
 #
 ##################################################################################
 
-def ______________________(): pass
-def ____GSPathSegment_____(): pass
-def ______________________(): pass
+def _____________________(): pass
+def ____GSPathSegment____(): pass
+def _____________________(): pass
 
 
 '''
@@ -9246,9 +9994,9 @@ GSPathSegment.type = property(__GSNode_get_type__)
 #
 ##################################################################################
 
-def ______________________(): pass
-def ____GSGuide___________(): pass
-def ______________________(): pass
+def _______________(): pass
+def ____GSGuide____(): pass
+def _______________(): pass
 
 
 '''
@@ -9379,9 +10127,9 @@ GSGuide.userData = property(lambda self: UserDataProxy(self))
 #
 ##################################################################################
 
-def _______________________(): pass
+def ____________________(): pass
 def ____GSAnnotation____(): pass
-def _______________________(): pass
+def ____________________(): pass
 
 '''
 
@@ -9497,9 +10245,9 @@ GSAnnotation.width = property(lambda self: self.pyobjc_instanceMethods.width(),
 #
 ##################################################################################
 
-def ________________(): pass
+def ______________(): pass
 def ____GSHint____(): pass
-def ________________(): pass
+def ______________(): pass
 
 '''
 
@@ -9690,7 +10438,8 @@ GSHint.horizontal = property(lambda self: bool(self.pyobjc_instanceMethods.horiz
 
 '''
 
-GSHint.name = property(lambda self: self.pyobjc_instanceMethods.name(), lambda self, value: self.setName_(objcObject(value)))
+GSHint.name = property(lambda self: self.pyobjc_instanceMethods.name(),
+					   lambda self, value: self.setName_(objcObject(value)))
 '''
 	.. attribute:: name
 		Name of the hint. This is the referenced glyph for corner and cap components.
@@ -9797,9 +10546,9 @@ GSHint.tempData = property(lambda self: TempDataProxy(self))
 #
 ##################################################################################
 
-def ______________________________(): pass
+def _________________________(): pass
 def ____GSBackgroundImage____(): pass
-def ______________________________(): pass
+def _________________________(): pass
 
 
 '''
@@ -10045,9 +10794,9 @@ GSBackgroundImage.scaleHeightToEmUnits = BackgroundImage_scaleHeightToEmUnits
 #
 ##################################################################################
 
-def _______________________________(): pass
+def ____________________________(): pass
 def ____GSEditViewController____(): pass
-def _______________________________(): pass
+def ____________________________(): pass
 
 '''
 
@@ -10123,7 +10872,8 @@ def __GSEditViewController__repr__(self):
 
 GSEditViewController.__repr__ = python_method(__GSEditViewController__repr__)
 
-GSEditViewController.masterIndex = property(lambda self: self.pyobjc_instanceMethods.masterIndex(), lambda self, value: self.setMasterIndex_(value))
+GSEditViewController.masterIndex = property(lambda self: self.pyobjc_instanceMethods.masterIndex(),
+											lambda self, value: self.setMasterIndex_(value))
 '''
 	.. attribute:: masterIndex
 		The index of the active master (selected in the toolbar).
@@ -10196,7 +10946,8 @@ class TabLayersProxy(Proxy):
 		self.setter(values)
 
 
-GSEditViewController.layers = property(lambda self: TabLayersProxy(self), lambda self, value: TabLayersProxy(self).setter(value))
+GSEditViewController.layers = property(lambda self: TabLayersProxy(self),
+									   lambda self, value: TabLayersProxy(self).setter(value))
 
 '''
 	.. attribute:: layers
@@ -10348,7 +11099,8 @@ GSEditViewController.layersCursor = property(lambda self: self.graphicView().cac
 '''
 
 
-GSEditViewController.direction = property(lambda self: self.writingDirection(), lambda self, value: self.setWritingDirection_(value))
+GSEditViewController.direction = property(lambda self: self.writingDirection(),
+										  lambda self, value: self.setWritingDirection_(value))
 
 '''
 	.. attribute:: direction
@@ -10423,7 +11175,8 @@ class TabSelectedFeaturesProxy(Proxy):
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.selectedFeatures()
 
-GSEditViewController.features = property(lambda self: TabSelectedFeaturesProxy(self), lambda self, value: TabSelectedFeaturesProxy(self).setter(value))
+GSEditViewController.features = property(lambda self: TabSelectedFeaturesProxy(self),
+										 lambda self, value: TabSelectedFeaturesProxy(self).setter(value))
 
 '''
 	.. attribute:: features
@@ -10572,9 +11325,9 @@ GSMacroViewController.title = property(lambda self: self.pyobjc_instanceMethods.
 ##################################################################################
 
 
-def _____________________(): pass
+def ___________________(): pass
 def ____GSGlyphInfo____(): pass
-def _____________________(): pass
+def ___________________(): pass
 
 
 GSGlyphInfo.__new__ = staticmethod(GSObject__new__)
@@ -10727,6 +11480,14 @@ GSGlyphInfo.sortName = property(lambda self: self.pyobjc_instanceMethods.sortNam
 '''
 	.. attribute:: sortName
 		Alternative name of glyph used for sorting in UI.
+
+		:type: str
+'''
+
+GSGlyphInfo.sortNameKeep = property(lambda self: self.pyobjc_instanceMethods.sortNameKeep())
+'''
+	.. attribute:: sortNameKeep
+		Alternative name of glyph used for sorting in UI, when using 'Keep Alternates Next to Base Glyph' from Font Info.
 
 		:type: str
 '''
@@ -11001,9 +11762,9 @@ GSPreviewTextWindowClass.fontSize = property(lambda self: Glyphs.intDefaults["GS
 '''
 
 
-def ____________________(): pass
+def _______________(): pass
 def ____METHODS____(): pass
-def ____________________(): pass
+def _______________(): pass
 
 
 def __GSPathPen_beginPath__(self, identifier=None, **kwargs):
