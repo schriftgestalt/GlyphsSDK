@@ -9099,8 +9099,8 @@ GSPath.locked = property(lambda self: bool(self.pyobjc_instanceMethods.locked())
 		:type: bool
 '''
 
-GSPath.shapeType = property(lambda self: bool(self.pyobjc_instanceMethods.shapeType()))
-GSComponent.shapeType = property(lambda self: bool(self.pyobjc_instanceMethods.shapeType()))
+GSPath.shapeType = property(lambda self: self.pyobjc_instanceMethods.shapeType())
+GSComponent.shapeType = property(lambda self: self.pyobjc_instanceMethods.shapeType())
 
 '''
 	.. attribute:: shapeType
