@@ -2055,7 +2055,7 @@ class FontClassesProxy(Proxy):
 			return self.values().__getitem__(key)
 		elif isinstance(key, int):
 			idx = self._validate_idx(key)
-			return self._owner.objectInClassesAtIndex_(key)
+			return self._owner.objectInClassesAtIndex_(idx)
 		elif isString(key):
 			if len(key) > 0:
 				return self._owner.classForTag_(key)
@@ -2308,8 +2308,8 @@ class FontInfoPropertiesProxy(Proxy):
 		self._propertyKey = propertyKey
 	
 	def __getitem__(self, languageKey):
-		if not isString(key):
-			raise TypeError("keys must be strings, not %s" % type(key).__name__)
+		if not isString(languageKey):
+			raise TypeError("keys must be strings, not %s" % type(languageKey).__name__)
 		return self._owner.propertyForName_languageTag_(self._propertyKey, languageKey)
 	
 	def __setitem__(self, languageKey, value):
@@ -5028,7 +5028,7 @@ GSInstance.preferredFamily = property(lambda self: self.pyobjc_instanceMethods.p
 		:type: string
 '''
 
-GSInstance.windowsFamily = property(lambda self: self.styleMapFamilyName(),
+GSInstance.windowsFamily = property(lambda self: self.pyobjc_instanceMethods.styleMapFamilyName(),
 									lambda self, value: self.setProperty_value_languageTag_("styleMapFamilyNames", value, None))
 '''
 	.. attribute:: windowsFamily
@@ -5037,7 +5037,7 @@ GSInstance.windowsFamily = property(lambda self: self.styleMapFamilyName(),
 		:type: string
 '''
 
-GSInstance.windowsStyle = property(lambda self: self.styleMapStyleName(),
+GSInstance.windowsStyle = property(lambda self: self.pyobjc_instanceMethods.styleMapStyleName(),
 								   lambda self, value: self.setProperty_value_languageTag_("styleMapStyleNames", value, None))
 '''
 	.. attribute:: windowsStyle
