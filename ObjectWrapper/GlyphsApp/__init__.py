@@ -3139,6 +3139,14 @@ GSFont.properties = property(lambda self: self.mutableArrayValueForKey_("propert
 		.. versionadded:: 3
 '''
 
+GSFont.metrics = property(lambda self: self.pyobjc_instanceMethods.metrics())
+'''
+	.. attribute:: metrics
+		a list of all :class:`GSMetric` objects.
+
+		:type: list
+'''
+
 GSFont.stems = property(lambda self: FontStemsProxy(self),
 						lambda self, value: FontStemsProxy(self).setter(value))
 '''
@@ -4537,6 +4545,14 @@ GSFontMaster.properties = property(lambda self: self.mutableArrayValueForKey_("p
 		:type: list
 
 		.. versionadded:: 3
+'''
+
+GSFontMaster.metrics = property(lambda self: self.pyobjc_instanceMethods.metrics())
+'''
+	.. attribute:: metrics
+		a list of all :class:`GSMetricValue` objects.
+
+		:type: list
 '''
 
 GSFontMaster.ascender = property(lambda self: self.defaultAscender(),
