@@ -8,6 +8,8 @@
 
 #import "___FILEBASENAME___.h"
 
+static NSImage *_toolBarIcon = nil;
+
 @implementation ___FILEBASENAMEASIDENTIFIER___
 
 - (instancetype)init {
