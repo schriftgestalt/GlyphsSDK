@@ -803,7 +803,7 @@ GSApplication.registerDefaults = python_method(__registerDefaults__)
 	.. attribute:: defaults
 		A dict like object for storing preferences. You can get and set key-value pairs.
 
-		Please be careful with your keys. Use a prefix that uses the reverse domain name. e.g. "com.MyName.foo.bar".
+		Please be careful with your keys. Use a prefix that uses the reverse domain name. e.g. :samp:`com.MyName.foo.bar`.
 
 		:type: dict
 
@@ -1124,6 +1124,7 @@ GSApplication.open = OpenFont
 
 '''
 	.. function:: open(Path, [showInterface=True])
+
 		Opens a document
 
 		:param Path: The path where the document is located.
@@ -1141,9 +1142,11 @@ GSApplication.showMacroWindow = python_method(__ShowMacroWindow__)
 
 '''
 	.. function:: showMacroWindow
+
 		Opens the macro window
 
 	.. function:: clearLog
+
 		Deletes the content of the console in the macro window
 '''
 
@@ -1155,6 +1158,7 @@ GSApplication.showGlyphInfoPanelWithSearchString = python_method(__showGlyphInfo
 
 '''
 	.. function:: showGlyphInfoPanelWithSearchString(String)
+
 		Shows the Glyph Info window with a preset search string
 
 		:param String: The search term
@@ -1489,9 +1493,9 @@ GSApplication.localize = Glyphs_localize
 
 		The argument is a dictionary in the `languageCode: translatedString` format.
 
-		You don’t need to supply strings in all languages that the Glyphs.app UI supports. A subset will do. Just make sure that you add at least an English string to default to next to all your other translated strings. Also don’t forget to mark strings as unicode strings (`u'öäüß'`) when they contain non-ASCII content for proper encoding, and add a `# encoding: utf-8` to the top of all your .py files.
+		You don’t need to supply strings in all languages that the Glyphs.app UI supports. A subset will do. Just make sure that you add at least an English string to default to next to all your other translated strings. Also don’t forget to mark strings as unicode strings (:samp:`u'öäüß'`) when they contain non-ASCII content for proper encoding, and add a `# encoding: utf-8` to the top of all your .py files.
 
-		Tip: You can find Glyphs’ localized languages here `Glyphs.defaults["AppleLanguages"]`.
+		Tip: You can find Glyphs’ localized languages here :samp:`Glyphs.defaults["AppleLanguages"]`.
 
 		.. code-block:: python
 			print(Glyphs.localize({
@@ -4210,6 +4214,7 @@ def __GSFont__addTab__(self, tabText=""):
 GSFont.newTab = python_method(__GSFont__addTab__)
 '''
 	.. function:: newTab([tabText])
+
 		Opens a new tab in the current document window, optionally with text, and return that tab object
 	
 		:param tabText: Text or glyph names escaped with '/' OR list of layers
@@ -4246,6 +4251,7 @@ GSFont.compileFeatures = python_method(__GSFont__compileFeatures__)
 
 '''
 	.. function:: compileFeatures()
+
 		Compiles the features, thus making the new feature code functionally available in the editor. Equivalent to the "Test" button in the features panel.
 
 		.. versionadded:: 2.5
@@ -4273,6 +4279,7 @@ def ______________(): pass
 Implementation of the axis object. 
 
 .. class:: GSAxis()
+
 	Properties
 
 	.. autosummary::
@@ -4282,6 +4289,8 @@ Implementation of the axis object.
 		axisId
 		hidden
 		font
+
+	**Properties**
 '''
 
 GSAxis.__new__ = staticmethod(GSObject__new__)
@@ -4302,10 +4311,10 @@ GSAxis.font = property(lambda self: self.pyobjc_instanceMethods.font())
 GSAxis.name = property(lambda self: self.pyobjc_instanceMethods.name(),
 					   lambda self, value: self.setName_(value))
 '''
-   .. attribute:: name
-	   The name of the axis
+	.. attribute:: name
+		The name of the axis
 
-	   :type: str
+		:type: str
 '''
 GSAxis.axisTag = property(lambda self: self.pyobjc_instanceMethods.axisTag(),
 						  lambda self, value: self.setAxisTag_(value))
@@ -4364,6 +4373,7 @@ Implementation of the metric object. It is used to link the metrics and stems in
 		filter
 		horizontal
 
+	**Properties**
 '''
 
 GSMetric.__new__ = staticmethod(GSObject__new__)
@@ -5102,8 +5112,8 @@ GSInstance.compatibleFullName = property(lambda self: self.defaultPropertyForNam
 GSInstance.compatibleFullNames = property(lambda self: FontInfoPropertiesProxy(self, "compatibleFullNames"))
 
 '''
-	.. attribute:: descriptions
-		This accesses all localised description values.
+	.. attribute:: compatibleFullNames
+		This accesses all localised compatibleFullNames values.
 		For details :attr:`GSInstance.properties`
 
 		:type: dict
@@ -6119,7 +6129,6 @@ For details on how to access them, please look at :class:`GSFont.features`
 	Properties
 
 	.. autosummary::
-
 		name
 		code
 		automatic
@@ -6853,7 +6862,7 @@ def GSGlyph__bottomKerningKey(self):
 GSGlyph.bottomKerningKey = property(lambda self: GSGlyph__bottomKerningKey(self))
 
 '''
-	.. attribute:: topKerningKey
+	.. attribute:: bottomKerningKey
 		The key to be used with the kerning functions (:meth:`GSFont.kerningForPair()`, :meth:`GSFont.setKerningForPair()`:meth:`GSFont.removeKerningForPair()`).
 
 		.. versionadded:: 3
@@ -7325,7 +7334,7 @@ GSLayer.layerId = property(lambda self: self.pyobjc_instanceMethods.layerId(),
 		The unique layer ID is used to access the layer in the :class:`glyphs <GSGlyph>` layer dictionary.
 
 		For master layers this should be the id of the :class:`fontMaster <GSFontMaster>`.
-		It could look like this: "FBCA074D-FCF3-427E-A700-7E318A949AE5"
+		It could look like this: :samp:`FBCA074D-FCF3-427E-A700-7E318A949AE5`
 
 		:type: str
 
@@ -7348,7 +7357,13 @@ GSLayer.attributes = property(lambda self: AttributesProxy(self))
 
 '''
 	.. attribute:: attributes
-		layer attributes like "axisRules", "coordinates", "colorPalette", "sbixSize", "color", "svg"
+		layer attributes like :samp:`axisRules`, :samp:`coordinates`, :samp:`colorPalette`, :samp:`sbixSize`, :samp:`color`, :samp:`svg`
+
+		.. code-block:: python
+
+			axis = font.axes[0]
+			layer.attributes['axisRules'] = {axis.axisId: {'min': 100}}
+			layer.attributes['coordinates'] = {axis.axisId: 99}
 
 		:type: dict
 '''
@@ -7987,6 +8002,7 @@ GSLayer.smartComponentPoleMapping = property(lambda self: SmartComponentPoleMapp
 		Decomposes all components of the layer at once.
 
 	.. function:: decomposeCorners()
+
 		Decomposes all corners of the layer at once.
 
 		.. versionadded:: 2.4
