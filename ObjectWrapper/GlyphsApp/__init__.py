@@ -3299,7 +3299,7 @@ GSFont.copyrights = property(lambda self: FontInfoPropertiesProxy(self, "copyrig
 		.. code-block:: python
 			Font.copyrights["ENG"] = "All rights reserved"
 
-		.. versionadded:: 3.1
+		.. versionadded:: 3.0.3
 '''
 
 GSFont.license = property(lambda self: self.defaultPropertyForName_("licenses"),
@@ -3311,7 +3311,7 @@ GSFont.license = property(lambda self: self.defaultPropertyForName_("licenses"),
 
 		:type: str
 
-		.. versionadded:: 3.1
+		.. versionadded:: 3.0.3
 '''
 
 GSFont.licenses = property(lambda self: FontInfoPropertiesProxy(self, "licenses"))
@@ -3327,7 +3327,7 @@ GSFont.licenses = property(lambda self: FontInfoPropertiesProxy(self, "licenses"
 			Font.licenses["ENG"] = "This font may be installed on all of your machines and printers, but you may not sell or give these fonts to anyone else."
 
 		
-		.. versionadded:: 3.1
+		.. versionadded:: 3.0.3
 '''
 
 GSFont.compatibleFullName = property(lambda self: self.defaultPropertyForName_("compatibleFullNames"),
@@ -3339,7 +3339,7 @@ GSFont.compatibleFullName = property(lambda self: self.defaultPropertyForName_("
 
 		:type: str
 
-		.. versionadded:: 3.1
+		.. versionadded:: 3.0.3
 '''
 
 GSFont.compatibleFullNames = property(lambda self: FontInfoPropertiesProxy(self, "compatibleFullNames"))
@@ -3355,7 +3355,7 @@ GSFont.compatibleFullNames = property(lambda self: FontInfoPropertiesProxy(self,
 			Font.compatibleFullNames["ENG"] = "MyFont Condensed Bold"
 
 		
-		.. versionadded:: 3.1
+		.. versionadded:: 3.0.3
 '''
 
 GSFont.sampleText = property(lambda self: self.defaultPropertyForName_("sampleTexts"),
@@ -3367,7 +3367,7 @@ GSFont.sampleText = property(lambda self: self.defaultPropertyForName_("sampleTe
 
 		:type: str
 
-		.. versionadded:: 3.1
+		.. versionadded:: 3.0.3
 '''
 
 GSFont.sampleTexts = property(lambda self: FontInfoPropertiesProxy(self, "sampleTexts"))
@@ -3383,7 +3383,7 @@ GSFont.sampleTexts = property(lambda self: FontInfoPropertiesProxy(self, "sample
 			Font.sampleTexts["ENG"] = "This is my sample text"
 
 		
-		.. versionadded:: 3.1
+		.. versionadded:: 3.0.3
 '''
 
 GSFont.description = property(lambda self: self.defaultPropertyForName_("descriptions"),
@@ -3395,7 +3395,7 @@ GSFont.description = property(lambda self: self.defaultPropertyForName_("descrip
 
 		:type: str
 
-		.. versionadded:: 3.1
+		.. versionadded:: 3.0.3
 '''
 
 GSFont.descriptions = property(lambda self: FontInfoPropertiesProxy(self, "descriptions"))
@@ -3411,7 +3411,7 @@ GSFont.descriptions = property(lambda self: FontInfoPropertiesProxy(self, "descr
 			Font.descriptions["ENG"] = "This is my description"
 
 		
-		.. versionadded:: 3.1
+		.. versionadded:: 3.0.3
 '''
 
 GSFont.designer = property(lambda self: self.defaultPropertyForName_("designers"),
@@ -3435,7 +3435,7 @@ GSFont.designers = property(lambda self: FontInfoPropertiesProxy(self, "designer
 		.. code-block:: python
 			Font.designers["ENG"] = "John Smith"
 
-		.. versionadded:: 3.1
+		.. versionadded:: 3.0.3
 '''
 
 GSFont.trademark = property(lambda self: self.defaultPropertyForName_("trademarks"),
@@ -3447,7 +3447,7 @@ GSFont.trademark = property(lambda self: self.defaultPropertyForName_("trademark
 
 		:type: str
 
-		.. versionadded:: 3.1
+		.. versionadded:: 3.0.3
 '''
 
 GSFont.trademarks = property(lambda self: FontInfoPropertiesProxy(self, "trademarks"))
@@ -3462,7 +3462,7 @@ GSFont.trademarks = property(lambda self: FontInfoPropertiesProxy(self, "tradema
 		.. code-block:: python
 			Font.trademarks["ENG"] = "ThisFont is a trademark by MyFoundry.com"
 
-		.. versionadded:: 3.1
+		.. versionadded:: 3.0.3
 '''
 GSFont.designerURL = property(lambda self: self.defaultPropertyForName_("designerURL"),
 							  lambda self, value: self.setProperty_value_languageTag_("designerURL", value, None))
@@ -3492,7 +3492,7 @@ GSFont.manufacturers = property(lambda self: FontInfoPropertiesProxy(self, "manu
 			Font.manufacturers["ENG"] = "My English Corporation"
 
 		
-		.. versionadded:: 3.1
+		.. versionadded:: 3.0.3
 '''
 
 GSFont.manufacturerURL = property(lambda self: self.defaultPropertyForName_("manufacturerURL"),
@@ -3564,7 +3564,7 @@ GSFont.familyNames = property(lambda self: FontInfoPropertiesProxy(self, "family
 			Font.familyNames["ENG"] = "MyFamilyName"
 
 		
-		.. versionadded:: 3.1
+		.. versionadded:: 3.0.3
 '''
 
 GSFont.upm = property(lambda self: self.unitsPerEm(),
@@ -5096,7 +5096,7 @@ GSInstance.compatibleFullName = property(lambda self: self.defaultPropertyForNam
 
 		:type: str
 		
-		.. versionadded:: 3.1
+		.. versionadded:: 3.0.3
 '''
 
 GSInstance.compatibleFullNames = property(lambda self: FontInfoPropertiesProxy(self, "compatibleFullNames"))
@@ -5111,7 +5111,7 @@ GSInstance.compatibleFullNames = property(lambda self: FontInfoPropertiesProxy(s
 		.. code-block:: python
 			Instance.compatibleFullNames["ENG"] = "MyFont Condensed Bold"
 
-		.. versionadded:: 3.1
+		.. versionadded:: 3.0.3
 '''
 
 GSInstance.copyright = property(lambda self: self.defaultPropertyForName_("copyrights"),
@@ -5138,7 +5138,7 @@ GSInstance.copyrights = property(lambda self: FontInfoPropertiesProxy(self, "cop
 			Instance.copyrights["ENG"] = "All rights reserved"
 
 		
-		.. versionadded:: 3.1
+		.. versionadded:: 3.0.3
 '''
 
 GSInstance.description = property(lambda self: self.defaultPropertyForName_("descriptions"),
@@ -5149,7 +5149,7 @@ GSInstance.description = property(lambda self: self.defaultPropertyForName_("des
 
 		:type: str
 
-		.. versionadded:: 3.1
+		.. versionadded:: 3.0.3
 '''
 
 GSInstance.descriptions = property(lambda self: FontInfoPropertiesProxy(self, "descriptions"))
@@ -5164,7 +5164,7 @@ GSInstance.descriptions = property(lambda self: FontInfoPropertiesProxy(self, "d
 		.. code-block:: python
 			Instance.descriptions["ENG"] = "This is my description"
 
-		.. versionadded:: 3.1
+		.. versionadded:: 3.0.3
 '''
 GSInstance.designer = property(lambda self: self.defaultPropertyForName_("designers"),
 							   lambda self, value: self.setProperty_value_languageTag_("designers", value, None))
@@ -5198,7 +5198,7 @@ GSInstance.designers = property(lambda self: FontInfoPropertiesProxy(self, "desi
 		.. code-block:: python
 			Instance.designers["ENG"] = "John Smith"
 
-		.. versionadded:: 3.1
+		.. versionadded:: 3.0.3
 '''
 
 GSInstance.familyName = property(lambda self: self.defaultPropertyForName_("familyNames"),
@@ -5221,7 +5221,7 @@ GSInstance.familyNames = property(lambda self: FontInfoPropertiesProxy(self, "fa
 		.. code-block:: python
 			Instance.familyNames["ENG"] = "MyFamilyName"
 
-		.. versionadded:: 3.1
+		.. versionadded:: 3.0.3
 '''
 
 GSInstance.license = property(lambda self: self.defaultPropertyForName_("licenses"),
@@ -5232,7 +5232,7 @@ GSInstance.license = property(lambda self: self.defaultPropertyForName_("license
 
 		:type: str
 
-		.. versionadded:: 3.1
+		.. versionadded:: 3.0.3
 '''
 
 GSInstance.licenses = property(lambda self: FontInfoPropertiesProxy(self, "licenses"))
@@ -5245,7 +5245,7 @@ GSInstance.licenses = property(lambda self: FontInfoPropertiesProxy(self, "licen
 		.. code-block:: python
 			Instance.licenses["ENG"] = "This font may be installed on all of your machines and printers, but you may not sell or give these fonts to anyone else."
 
-		.. versionadded:: 3.1
+		.. versionadded:: 3.0.3
 '''
 
 GSInstance.manufacturer = property(lambda self: self.defaultPropertyForName_("manufacturers"),
@@ -5272,7 +5272,7 @@ GSInstance.manufacturers = property(lambda self: FontInfoPropertiesProxy(self, "
 		.. code-block:: python
 			Instance.manufacturers["ENG"] = "My English Corporation"
 
-		.. versionadded:: 3.1
+		.. versionadded:: 3.0.3
 '''
 
 GSInstance.preferredFamilyName = property(lambda self: self.defaultPropertyForName_("preferredFamilyNames"),
@@ -5284,7 +5284,7 @@ GSInstance.preferredFamilyName = property(lambda self: self.defaultPropertyForNa
 
 		:type: str
 
-		.. versionadded:: 3.1
+		.. versionadded:: 3.0.3
 '''
 
 GSInstance.preferredFamilyNames = property(lambda self: FontInfoPropertiesProxy(self, "preferredFamilyNames"))
@@ -5299,7 +5299,7 @@ GSInstance.preferredFamilyNames = property(lambda self: FontInfoPropertiesProxy(
 		.. code-block:: python
 			Instance.preferredFamilyNames["ENG"] = "MyFamilyName"
 
-		.. versionadded:: 3.1
+		.. versionadded:: 3.0.3
 '''
 
 GSInstance.preferredSubfamilyName = property(lambda self: self.defaultPropertyForName_("preferredSubfamilyNames"),
@@ -5323,7 +5323,7 @@ GSInstance.preferredSubfamilyNames = property(lambda self: FontInfoPropertiesPro
 		.. code-block:: python
 			Instance.preferredSubfamilyNames["ENG"] = "Regular"
 
-		.. versionadded:: 3.1
+		.. versionadded:: 3.0.3
 '''
 
 GSInstance.sampleText = property(lambda self: self.defaultPropertyForName_("sampleTexts"),
@@ -5335,7 +5335,7 @@ GSInstance.sampleText = property(lambda self: self.defaultPropertyForName_("samp
 
 		:type: str
 
-		.. versionadded:: 3.1
+		.. versionadded:: 3.0.3
 '''
 
 GSInstance.sampleTexts = property(lambda self: FontInfoPropertiesProxy(self, "sampleTexts"))
@@ -5350,7 +5350,7 @@ GSInstance.sampleTexts = property(lambda self: FontInfoPropertiesProxy(self, "sa
 		.. code-block:: python
 			Instance.sampleTexts["ENG"] = "This is my sample text"
 
-		.. versionadded:: 3.1
+		.. versionadded:: 3.0.3
 '''
  
 
@@ -5362,7 +5362,7 @@ GSInstance.styleMapFamilyName = property(lambda self: self.defaultPropertyForNam
 
 		:type: str
 
-		.. versionadded:: 3.1
+		.. versionadded:: 3.0.3
 '''
 
 GSInstance.styleMapFamilyNames = property(lambda self: FontInfoPropertiesProxy(self, "styleMapFamilyNames"))
@@ -5375,7 +5375,7 @@ GSInstance.styleMapFamilyNames = property(lambda self: FontInfoPropertiesProxy(s
 		.. code-block:: python
 			Instance.styleMapFamilyNames["ENG"] = "MyFamily Bold"
 
-		.. versionadded:: 3.1
+		.. versionadded:: 3.0.3
 '''
 
 GSInstance.styleMapStyleName = property(lambda self: self.defaultPropertyForName_("styleMapStyleNames"),
@@ -5387,7 +5387,7 @@ GSInstance.styleMapStyleName = property(lambda self: self.defaultPropertyForName
 
 		:type: str
 
-		.. versionadded:: 3.1
+		.. versionadded:: 3.0.3
 '''
 
 GSInstance.styleMapStyleNames = property(lambda self: FontInfoPropertiesProxy(self, "styleMapStyleNames"))
@@ -5402,7 +5402,7 @@ GSInstance.styleMapStyleNames = property(lambda self: FontInfoPropertiesProxy(se
 		.. code-block:: python
 			Instance.styleMapStyleNames["ENG"] = "Bold"
 
-		.. versionadded:: 3.1
+		.. versionadded:: 3.0.3
 '''
 
 GSInstance.styleName = property(lambda self: self.defaultPropertyForName_("styleNames"),
@@ -5414,7 +5414,7 @@ GSInstance.styleName = property(lambda self: self.defaultPropertyForName_("style
 
 		:type: str
 
-		.. versionadded:: 3.1
+		.. versionadded:: 3.0.3
 '''
 
 GSInstance.styleNames = property(lambda self: FontInfoPropertiesProxy(self, "styleNames"))
@@ -5429,7 +5429,7 @@ GSInstance.styleNames = property(lambda self: FontInfoPropertiesProxy(self, "sty
 		.. code-block:: python
 			Instance.styleNames["ENG"] = "Regular"
 
-		.. versionadded:: 3.1
+		.. versionadded:: 3.0.3
 '''
 
 
@@ -5441,7 +5441,7 @@ GSInstance.trademark = property(lambda self: self.defaultPropertyForName_("trade
 
 		:type: str
 
-		.. versionadded:: 3.1
+		.. versionadded:: 3.0.3
 '''
 
 GSInstance.trademarks = property(lambda self: FontInfoPropertiesProxy(self, "trademarks"))
@@ -5456,7 +5456,7 @@ GSInstance.trademarks = property(lambda self: FontInfoPropertiesProxy(self, "tra
 		.. code-block:: python
 			Instance.trademarks["ENG"] = "ThisFont is a trademark by MyFoundry.com"
 
-		.. versionadded:: 3.1
+		.. versionadded:: 3.0.3
 '''
 
 GSInstance.variableStyleName = property(lambda self: self.defaultPropertyForName_("variableStyleNames"),
@@ -5468,7 +5468,7 @@ GSInstance.variableStyleName = property(lambda self: self.defaultPropertyForName
 
 		:type: str
 
-		.. versionadded:: 3.1
+		.. versionadded:: 3.0.3
 '''
 
 GSInstance.variableStyleNames = property(lambda self: FontInfoPropertiesProxy(self, "variableStyleNames"))
@@ -5483,7 +5483,7 @@ GSInstance.variableStyleNames = property(lambda self: FontInfoPropertiesProxy(se
 		.. code-block:: python
 			Instance.variableStyleNames["ENG"] = "Roman"
 
-		.. versionadded:: 3.1
+		.. versionadded:: 3.0.3
 '''
 
 GSInstance.manufacturerURL = property(lambda self: self.defaultPropertyForName_("manufacturerURL"),
