@@ -3296,7 +3296,7 @@ GSFont.copyrights = property(lambda self: FontInfoPropertiesProxy(self, "copyrig
 		For details :attr:`GSFont.properties`
 
 		:type: dict
-		.. code-bloack:: python
+		.. code-block:: python
 			Font.copyrights["ENG"] = "All rights reserved"
 
 		.. versionadded:: 3.1
@@ -3323,7 +3323,7 @@ GSFont.licenses = property(lambda self: FontInfoPropertiesProxy(self, "licenses"
 
 		:type: dict
 
-		.. code-bloack:: python
+		.. code-block:: python
 			Font.licenses["ENG"] = "This font may be installed on all of your machines and printers, but you may not sell or give these fonts to anyone else."
 
 		
@@ -3351,7 +3351,7 @@ GSFont.compatibleFullNames = property(lambda self: FontInfoPropertiesProxy(self,
 
 		:type: dict
 
-		.. code-bloack:: python
+		.. code-block:: python
 			Font.compatibleFullNames["ENG"] = "MyFont Condensed Bold"
 
 		
@@ -3379,7 +3379,7 @@ GSFont.sampleTexts = property(lambda self: FontInfoPropertiesProxy(self, "sample
 
 		:type: dict
 
-		.. code-bloack:: python
+		.. code-block:: python
 			Font.sampleTexts["ENG"] = "This is my sample text"
 
 		
@@ -3407,7 +3407,7 @@ GSFont.descriptions = property(lambda self: FontInfoPropertiesProxy(self, "descr
 
 		:type: dict
 
-		.. code-bloack:: python
+		.. code-block:: python
 			Font.descriptions["ENG"] = "This is my description"
 
 		
@@ -3432,7 +3432,7 @@ GSFont.designers = property(lambda self: FontInfoPropertiesProxy(self, "designer
 
 		:type: dict
 
-		.. code-bloack:: python
+		.. code-block:: python
 			Font.designers["ENG"] = "John Smith"
 
 		.. versionadded:: 3.1
@@ -3459,7 +3459,7 @@ GSFont.trademarks = property(lambda self: FontInfoPropertiesProxy(self, "tradema
 
 		:type: dict
 
-		.. code-bloack:: python
+		.. code-block:: python
 			Font.trademarks["ENG"] = "ThisFont is a trademark by MyFoundry.com"
 
 		.. versionadded:: 3.1
@@ -3488,7 +3488,7 @@ GSFont.manufacturers = property(lambda self: FontInfoPropertiesProxy(self, "manu
 
 		:type: dict
 
-		.. code-bloack:: python
+		.. code-block:: python
 			Font.manufacturers["ENG"] = "My English Corporation"
 
 		
@@ -3560,7 +3560,7 @@ GSFont.familyNames = property(lambda self: FontInfoPropertiesProxy(self, "family
 		For details :attr:`GSFont.properties`
 
 		:type: dict
-		.. code-bloack:: python
+		.. code-block:: python
 			Font.familyNames["ENG"] = "MyFamilyName"
 
 		
@@ -5108,7 +5108,7 @@ GSInstance.compatibleFullNames = property(lambda self: FontInfoPropertiesProxy(s
 
 		:type: dict
 
-		.. code-bloack:: python
+		.. code-block:: python
 			Instance.compatibleFullNames["ENG"] = "MyFont Condensed Bold"
 
 		.. versionadded:: 3.1
@@ -5134,7 +5134,7 @@ GSInstance.copyrights = property(lambda self: FontInfoPropertiesProxy(self, "cop
 
 		:type: dict
 
-		.. code-bloack:: python
+		.. code-block:: python
 			Instance.copyrights["ENG"] = "All rights reserved"
 
 		
@@ -5161,7 +5161,7 @@ GSInstance.descriptions = property(lambda self: FontInfoPropertiesProxy(self, "d
 
 		:type: dict
 
-		.. code-bloack:: python
+		.. code-block:: python
 			Instance.descriptions["ENG"] = "This is my description"
 
 		.. versionadded:: 3.1
@@ -5195,7 +5195,7 @@ GSInstance.designers = property(lambda self: FontInfoPropertiesProxy(self, "desi
 
 		:type: dict
 
-		.. code-bloack:: python
+		.. code-block:: python
 			Instance.designers["ENG"] = "John Smith"
 
 		.. versionadded:: 3.1
@@ -5218,7 +5218,7 @@ GSInstance.familyNames = property(lambda self: FontInfoPropertiesProxy(self, "fa
 
 		:type: dict
 
-		.. code-bloack:: python
+		.. code-block:: python
 			Instance.familyNames["ENG"] = "MyFamilyName"
 
 		.. versionadded:: 3.1
@@ -5242,7 +5242,7 @@ GSInstance.licenses = property(lambda self: FontInfoPropertiesProxy(self, "licen
 		For details :attr:`GSInstance.properties`
 
 		:type: dict
-		.. code-bloack:: python
+		.. code-block:: python
 			Instance.licenses["ENG"] = "This font may be installed on all of your machines and printers, but you may not sell or give these fonts to anyone else."
 
 		.. versionadded:: 3.1
@@ -5269,7 +5269,7 @@ GSInstance.manufacturers = property(lambda self: FontInfoPropertiesProxy(self, "
 
 		:type: dict
 
-		.. code-bloack:: python
+		.. code-block:: python
 			Instance.manufacturers["ENG"] = "My English Corporation"
 
 		.. versionadded:: 3.1
@@ -5296,7 +5296,7 @@ GSInstance.preferredFamilyNames = property(lambda self: FontInfoPropertiesProxy(
 
 		:type: dict
 
-		.. code-bloack:: python
+		.. code-block:: python
 			Instance.preferredFamilyNames["ENG"] = "MyFamilyName"
 
 		.. versionadded:: 3.1
@@ -5320,7 +5320,7 @@ GSInstance.preferredSubfamilyNames = property(lambda self: FontInfoPropertiesPro
 
 		:type: dict
 
-		.. code-bloack:: python
+		.. code-block:: python
 			Instance.preferredSubfamilyNames["ENG"] = "Regular"
 
 		.. versionadded:: 3.1
@@ -5347,7 +5347,7 @@ GSInstance.sampleTexts = property(lambda self: FontInfoPropertiesProxy(self, "sa
 
 		:type: dict
 
-		.. code-bloack:: python
+		.. code-block:: python
 			Instance.sampleTexts["ENG"] = "This is my sample text"
 
 		.. versionadded:: 3.1
@@ -5372,7 +5372,7 @@ GSInstance.styleMapFamilyNames = property(lambda self: FontInfoPropertiesProxy(s
 		This accesses all localised designer values.
 		For details :attr:`GSInstance.properties`		:type: dict
 
-		.. code-bloack:: python
+		.. code-block:: python
 			Instance.styleMapFamilyNames["ENG"] = "MyFamily Bold"
 
 		.. versionadded:: 3.1
@@ -5399,7 +5399,7 @@ GSInstance.styleMapStyleNames = property(lambda self: FontInfoPropertiesProxy(se
 
 		:type: dict
 
-		.. code-bloack:: python
+		.. code-block:: python
 			Instance.styleMapStyleNames["ENG"] = "Bold"
 
 		.. versionadded:: 3.1
@@ -5426,7 +5426,7 @@ GSInstance.styleNames = property(lambda self: FontInfoPropertiesProxy(self, "sty
 
 		:type: dict
 
-		.. code-bloack:: python
+		.. code-block:: python
 			Instance.styleNames["ENG"] = "Regular"
 
 		.. versionadded:: 3.1
@@ -5453,7 +5453,7 @@ GSInstance.trademarks = property(lambda self: FontInfoPropertiesProxy(self, "tra
 
 		:type: dict
 
-		.. code-bloack:: python
+		.. code-block:: python
 			Instance.trademarks["ENG"] = "ThisFont is a trademark by MyFoundry.com"
 
 		.. versionadded:: 3.1
@@ -5480,7 +5480,7 @@ GSInstance.variableStyleNames = property(lambda self: FontInfoPropertiesProxy(se
 
 		:type: dict
 
-		.. code-bloack:: python
+		.. code-block:: python
 			Instance.variableStyleNames["ENG"] = "Roman"
 
 		.. versionadded:: 3.1
