@@ -3525,23 +3525,31 @@ def __get_date__(self):
 	return datetime.datetime.fromtimestamp(self.pyobjc_instanceMethods.date().timeIntervalSince1970())
 
 def __set_date__(self, date):
-	import datetime
 	if isinstance(date, datetime.datetime):
-		date = NSDate.alloc().initWithTimeIntervalSince1970_(time.mktime(date.timetuple()))
-	self.setDate_(date)
+		self.setDate_(NSDate.alloc().initWithTimeIntervalSince1970_(time.mktime(date.timetuple())))
+	elif isinstance(date, (int, float)):
+		self.setDate_(NSDate.alloc().initWithTimeIntervalSince1970_(date))
+	elif isinstance(date, NSDate):
+		self.setDate_(date)
+	else:
+		raise TypeError("date must be a datetime object, NSDate object, int or float, not %s" % type(date).__name__)
 GSFont.date = property(lambda self: __get_date__(self),
 					   lambda self, value: __set_date__(self, value))
 '''
 	.. attribute:: date
 
-		:type: NSDate
+		:type: datetime.datetime
 
 		.. code-block:: python
 			print(font.date)
-			2015-06-08 09:39:05 +0000
+			2015-06-08 09:39:05
 
 			# set date to now
+			font.date = datetime.datetime.now()
+			# using NSDate
 			font.date = NSDate.date()
+			# or in seconds since Epoch
+			font.date = time.time()
 '''
 
 GSFont.familyName = property(lambda self: self.pyobjc_instanceMethods.fontName(),
@@ -3751,7 +3759,7 @@ GSFont.snapToObjects = property(lambda self: self.pyobjc_instanceMethods.snapToO
 								lambda self, value: self.setSnapToObjects_(value))
 '''
 	.. attribute:: snapToObjects
-		disable snapping to nodes and backround
+		disable snapping to nodes and background
 
 		:type: bool
 

@@ -71,6 +71,8 @@ class GlyphsAppTests(unittest.TestCase):
 			self.assertEqual(len(listObject), initial_len)
 		with self.assertRaises(IndexError):
 			listObject[len(listObject)]
+		with self.assertRaises(IndexError):
+			listObject[-len(listObject)-1]
 		cp = copy.copy(listObject)
 		for i, element in enumerate(listObject):
 			self.assertIs(cp[i], element)
@@ -355,6 +357,7 @@ class GlyphsAppTests(unittest.TestCase):
 
 		# GSFont.glyphs
 		self.assertGreaterEqual(len(list(font.glyphs)), 1)
+		self.assertIs(font['a'], font.glyphs['a'])  # direct access
 		self.assertEqual(font.glyphs[u'ä'], font.glyphs['adieresis'])
 		self.assertEqual(font.glyphs['00E4'], font.glyphs['adieresis'])
 		self.assertEqual(font.glyphs['00e4'], font.glyphs['adieresis'])
@@ -437,9 +440,23 @@ class GlyphsAppTests(unittest.TestCase):
 		
 		# GSFont.date
 		self.assertIsInstance(font.date, datetime.datetime)
+		old_date = font.date
+		dt = datetime.datetime.now()
+		font.date = dt
+		self.assertEqual(font.date, dt.replace(microsecond=0))
+		unixtime = time.time()
+		font.date = unixtime
+		self.assertEqual(font.date, datetime.datetime.fromtimestamp(unixtime))
+		nsdate = NSDate.alloc().init()
+		font.date = nsdate
+		self.assertEqual(font.date, datetime.datetime.fromtimestamp(nsdate.timeIntervalSince1970()))
+		font.date = old_date
 		
 		# GSFont.familyName
 		self.assertUnicode(font.familyName)
+
+		# GSFont.fontName
+		self.assertEqual(font.fontName, font.familyName)
 		
 		# GSFont.upm
 		self.assertInteger(font.upm)
@@ -447,9 +464,28 @@ class GlyphsAppTests(unittest.TestCase):
 		# GSFont.note
 		self.assertUnicode(font.note)
 		
+		test_kerning = {"C4872ECA-A3A9-40AB-960A-1DB2202F16DE": {"@MMK_L_A": {"@MMK_R_J": -22}}}
 		# GSFont.kerning
-		self.assertIsInstance(dict(font.kerning), dict)
+		self.assertDict(font.kerning, assertType=False)
+		old_kerning = font.kerning
+		font.kerning = test_kerning
+		self.assertEqual(font.kerning, test_kerning)
+		font.kerning = old_kerning
 		
+		# GSFont.kerningVertical  #::Rafal
+		self.assertDict(font.kerningVertical, assertType=False)
+		old_kerning = font.kerningVertical
+		font.kerningVertical = test_kerning
+		self.assertEqual(font.kerningVertical, test_kerning)
+		font.kerningVertical = old_kerning
+
+		# GSFont.kerningRTL  #::Rafal
+		self.assertDict(font.kerningRTL, assertType=False)
+		old_kerning = font.kerningRTL
+		font.kerningRTL = test_kerning
+		self.assertEqual(font.kerningRTL, test_kerning)
+		font.kerningRTL = old_kerning
+
 		# GSFont.userData
 		self.assertIsNotNone(font.userData)
 		font.userData["TestData"] = 42
@@ -480,12 +516,23 @@ class GlyphsAppTests(unittest.TestCase):
 		
 		# GSFont.grid
 		self.assertInteger(font.grid)
+		old_grid = font.grid
+		font.grid = 9
+		self.assertEqual(font.grid, 9)
 		
 		# GSFont.gridSubDivisions
 		self.assertInteger(font.gridSubDivisions)
+		old_gridSubDivisions = font.gridSubDivisions
+		font.gridSubDivisions = 11
+		self.assertEqual(font.gridSubDivisions, 11)
 		
 		# GSFont.gridLength
 		self.assertFloat(font.gridLength, readOnly = True)
+		# assert that gridLength == grid / gridSubDivisions
+		self.assertAlmostEqual(font.gridLength, 9./11)
+		font.grid = old_grid
+		font.gridSubDivisions = old_gridSubDivisions
+		self.assertAlmostEqual(font.gridLength, float(font.grid)/font.gridSubDivisions)
 		
 		# GSFont.selection
 		for glyph in font.glyphs:
@@ -523,6 +570,8 @@ class GlyphsAppTests(unittest.TestCase):
 		
 		# GSFont.filepath
 		self.assertIsNotNone(font.filepath)
+		# make sure this is a valid and existing path
+		self.assertTrue(os.path.exists(font.filepath))
 		
 		# GSFont.tool
 		# GSFont.tools
@@ -555,12 +604,12 @@ class GlyphsAppTests(unittest.TestCase):
 
 		# GSFont.disablesAutomaticAlignment  #::Rafal
 		self.assertBool(font.disablesAutomaticAlignment)
-		
-		# GSFont.kerningVertical  #::Rafal
-		self.assertDict(font.kerningVertical, assertType=False)
 
-		# GSFont.kerningRTL  #::Rafal
-		self.assertDict(font.kerningRTL, assertType=False)
+		# GSFont.snapToObjects
+		self.assertBool(font.snapToObjects)
+
+		# GSFont.previewRemoveOverlap
+		self.assertBool(font.previewRemoveOverlap)
 
 		## Methods
 		
