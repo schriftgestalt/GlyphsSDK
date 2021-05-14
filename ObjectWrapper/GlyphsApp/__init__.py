@@ -3086,7 +3086,6 @@ GSFont.__deepcopy__ = Font__copy__
 
 def GSFont__contains__(self, key):
 	raise NotImplementedError("Font can't access values like this")
-	return False
 GSFont.__contains__ = GSFont__contains__
 
 GSFont.parent = property(lambda self: self.pyobjc_instanceMethods.parent())
@@ -3755,7 +3754,7 @@ GSFont.keyboardIncrementHuge = property(lambda self: self.pyobjc_instanceMethods
 		.. versionadded:: 3.0
 '''
 
-GSFont.snapToObjects = property(lambda self: self.pyobjc_instanceMethods.snapToObjects(),
+GSFont.snapToObjects = property(lambda self: bool(self.pyobjc_instanceMethods.snapToObjects()),
 								lambda self, value: self.setSnapToObjects_(value))
 '''
 	.. attribute:: snapToObjects
@@ -3766,7 +3765,7 @@ GSFont.snapToObjects = property(lambda self: self.pyobjc_instanceMethods.snapToO
 		.. versionadded:: 3.0.1
 '''
 
-GSFont.previewRemoveOverlap = property(lambda self: self.pyobjc_instanceMethods.previewRemoveOverlap(),
+GSFont.previewRemoveOverlap = property(lambda self: bool(self.pyobjc_instanceMethods.previewRemoveOverlap()),
 								lambda self, value: self.setPreviewRemoveOverlap_(value))
 '''
 	.. attribute:: previewRemoveOverlap
@@ -3778,12 +3777,11 @@ GSFont.previewRemoveOverlap = property(lambda self: self.pyobjc_instanceMethods.
 '''
 
 def Font_GetSelectedGlyphs(self):
-
 	return self.parent.windowController().glyphsController().selectedObjects()
 
 def Font_SetSelectedGlyphs(self, value):
 	if not isinstance(value, (list, tuple)):
-		raise ValueError('Argument needs to be a list.')
+		raise TypeError('Argument needs to be a list, not %s' % type(value).__name__)
 	self.parent.windowController().glyphsController().setSelectedObjects_(value)
 
 GSFont.selection = property(lambda self: Font_GetSelectedGlyphs(self),
@@ -3828,8 +3826,8 @@ def __current_Text__(self):
 	try:
 		return self.parent.windowController().activeEditViewController().graphicView().displayStringASCIIonly_(False)
 	except:
-		pass
-	return None
+		return None
+
 def __set__current_Text__(self, String):
 	self.parent.windowController().activeEditViewController().graphicView().setDisplayString_(String)
 
@@ -4015,6 +4013,9 @@ def Font__save__(self, path=None, formatVersion=3, makeCopy=False):
 				typeName = "com.schriftgestaltung.glyphs"
 			elif path.endswith('.ufo'):
 				typeName = "org.unifiedfontobject.ufo"
+			else:
+				raise ValueError("Save file must have file extension .glyphs or .ufo")
+
 			if makeCopy:
 				self.saveToURL_error_(URL, None)
 			else:
@@ -4027,8 +4028,10 @@ def Font__save__(self, path=None, formatVersion=3, makeCopy=False):
 			GlyphsFileFormatUFO = objc.lookUpClass("GlyphsFileFormatUFO")
 			ufoWriter = GlyphsFileFormatUFO.new()
 			ufoWriter.writeFont_toURL_error_(self, URL, None)
+		else:
+			raise ValueError("Save file must have file extension .glyphs or .ufo")
 	else:
-		raise("Now path set")
+		raise ValueError("No path set")
 
 GSFont.save = Font__save__
 '''
@@ -4423,7 +4426,7 @@ GSMetric.filter = property(lambda self: self.pyobjc_instanceMethods.filter(),
 
 		:type: NSPredicate
 '''
-GSMetric.horizontal = property(lambda self: self.pyobjc_instanceMethods.horizontal(),
+GSMetric.horizontal = property(lambda self: bool(self.pyobjc_instanceMethods.horizontal()),
 							   lambda self, value: self.setHorizontal_(value))
 
 ##################################################################################

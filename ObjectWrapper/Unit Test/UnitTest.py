@@ -541,7 +541,11 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertEqual(len(list(font.selection)), 1)
 		for glyph in font.glyphs:
 			glyph.selected = True
-		self.assertEqual(len(list(font.selection)), len(font.glyphs))
+		self.assertEqual(set(font.selection), set(font.glyphs))
+		font.selection = [font.glyphs['a']]
+		self.assertEqual(list(font.selection), [font.glyphs['a']])
+		with self.assertRaises(TypeError):
+			font.selection = 0
 		
 		# GSFont.selectedLayers
 		# GSFont.currentText
@@ -555,10 +559,21 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertEqual(len(list(font.selectedLayers)), 1)
 		self.assertEqual(len(list(font.tabs)), 1)
 		self.assertEqual(font.currentText, 'a')
+		font.currentText = 'A'
+		self.assertEqual(font.currentText, 'A')
 		self.assertEqual(font.currentTab, font.tabs[-1])
+		tab2 = font.newTab('n')
+		self.assertEqual(font.currentTab, tab2)
+		font.currentTab = tab
+		self.assertEqual(font.currentTab, tab)
 		font.tabs[0].close()
+		self.assertEqual(font.currentTab, tab2)
+		font.tabs[0].close()
+		# values are None when no tabs are open
+		self.assertIsNone(font.currentText)
+		self.assertIsNone(font.currentTab)
 		with self.assertRaises(TypeError):
-			font.tabs['a']
+			font.tabs['']
 		
 		# GSFont.selectedFontMaster
 		# GSFont.masterIndex
@@ -615,6 +630,12 @@ class GlyphsAppTests(unittest.TestCase):
 		
 		# GSFont.save()
 		font.save()
+		copypath = PathToTestFile[:-7] + "-copy.glyphs"
+		copypath_ufo = PathToTestFile[:-7] + "-copy.ufo"
+		font.save(path=copypath, makeCopy=True)
+		font.save(path=copypath_ufo, makeCopy=True)
+		with self.assertRaises(ValueError):
+			font.save(path="wrong.extension")
 		
 		# GSFont.close()
 		font.close()
@@ -708,21 +729,36 @@ class GlyphsAppTests(unittest.TestCase):
 		font = Glyphs.font
 		axis = font.axes[0]
 		
-		# axis.font
-		self.assertIsNotNone(axis.font)
+		# GSAxis.font
+		self.assertIs(axis.font, font)
 		
-		# axis.name
+		# GSAxis.name
 		self.assertUnicode(axis.name)
 		
-		# axis.axisTag
+		# GSAxis.axisTag
 		self.assertUnicode(axis.axisTag)
 		
-		# axis.axisId
+		# GSAxis.axisId
 		self.assertUnicode(axis.axisId)
 
-	# def test_GSMetric(self):
-	# 	font = Glyphs.font
-	# 	pass
+		# GSAxis.hidden
+		self.assertBool(axis.hidden)
+
+	def test_GSMetric(self):
+		font = Glyphs.font
+		metric = font.metrics[0]
+
+		# GSMetric.font
+		self.assertIs(metric.font, font)
+
+		# GSMetric.name
+		self.assertUnicode(metric.name)
+
+		# GSMetric.id
+		self.assertUnicode(metric.id, readOnly=True)
+
+		# GSMetric.horizontal
+		self.assertBool(metric.horizontal)
 
 	#::Rafal
 	def test_GSCustomParameter(self):
@@ -735,6 +771,9 @@ class GlyphsAppTests(unittest.TestCase):
 
 		# GSCustomParameter.value
 		self.assertUnicode(customParameter.value)
+
+		# GSCustomParameter.parent
+		self.assertEqual(customParameter.parent, font)
 
 		del(font.customParameters['trademark'])
 
@@ -798,7 +837,8 @@ class GlyphsAppTests(unittest.TestCase):
 		# GSFontMaster.axes
 		self.assertIsNotNone(master.axes)
 		self.assertEqual(len(master.axes), 1)
-		self.assertFloat(master.axes[0])
+		for val in master.axes:
+			self.assertFloat(val)
 		with self.assertRaises(TypeError):
 			master.axes['a']
 		
@@ -819,6 +859,11 @@ class GlyphsAppTests(unittest.TestCase):
 		#
 		# # GSFontMaster.customValue
 		# self.assertFloat(master.customValue)
+
+		# GSFontMaster.metrics
+		self.assertList(master.metrics, assertType=False)
+		for metric in master.metrics:
+			self.assertIsInstance(metric, GSMetricValue)
 		
 		# GSFontMaster.ascender
 		self.assertFloat(master.ascender)
@@ -871,19 +916,17 @@ class GlyphsAppTests(unittest.TestCase):
 			self.assertFloat(ob)
 		
 		# GSFontMaster.guides
-		self.assertIsInstance(list(master.guides), list)
 		master.guides = []
 		self.assertEqual(len(master.guides), 0)
 		newGuide = GSGuide()
 		newGuide.position = NSPoint(100, 100)
 		newGuide.angle = -10.0
-		master.guides.append(newGuide)
-		self.assertIsNotNone(master.guides[0].__repr__())
-		self.assertEqual(len(master.guides), 1)
-		del master.guides[0]
-		self.assertEqual(len(master.guides), 0)
+		newGuide2 = GSGuide()
+		newGuide2.position = NSPoint(50, 150)
+		newGuide2.angle = 15.0
+		self.assertList(master.guides, assertType=False,
+						testValues=[newGuide, newGuide2])
 
-		
 		# GSFontMaster.userData
 		self.assertIsNotNone(master.userData)
 		master.userData["TestData"] = 42
@@ -2267,7 +2310,7 @@ sys.argv = ["GlyphsAppTests"]
 
 if __name__ == '__main__':
 	import coverage  # pip3 install coverage
-	cov = coverage.Coverage()
+	cov = coverage.Coverage(include=["*/GlyphsApp/__init__.py"])
 	cov.start()
 
 	unittest.main(exit=False, failfast=False)
