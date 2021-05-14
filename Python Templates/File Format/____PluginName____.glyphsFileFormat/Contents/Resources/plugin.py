@@ -121,7 +121,8 @@ class ____PluginClassName____(FileFormatPlugin):
 		
 		else:
 			return (False, 'No file chosen')
-	
+
+	@objc.python_method
 	def __file__(self):
 		"""Please leave this method unchanged"""
 		return __file__
