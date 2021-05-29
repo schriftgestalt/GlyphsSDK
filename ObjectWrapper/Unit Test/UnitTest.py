@@ -981,6 +981,9 @@ class GlyphsAppTests(unittest.TestCase):
 		
 		# GSInstance.active
 		self.assertBool(instance.active)
+
+		# GSInstance.visible
+		self.assertBool(instance.visible)
 		
 		# GSInstance.name
 		self.assertString(instance.name)
@@ -1037,6 +1040,12 @@ class GlyphsAppTests(unittest.TestCase):
 		
 		# GSInstance.fullName
 		self.assertString(instance.fullName)
+
+		# GSInstance.designerURL
+		self.assertString(instance.designerURL)
+
+		# GSInstance.manufacturerURL
+		self.assertString(instance.manufacturerURL)
 		
 		# GSInstance.customParameters
 		instance.customParameters['trademark'] = 'ThisFont is a trademark by MyFoundry.com'
@@ -1164,8 +1173,12 @@ class GlyphsAppTests(unittest.TestCase):
 		glyph = font.glyphs['a'].duplicate('a.test')
 		glyph = copy.copy(glyph)
 		glyph.parent = font
+
 		# GSGlyph.parent
-		self.assertEqual(glyph.parent, Glyphs.font)
+		self.assertIs(glyph.parent, Glyphs.font)
+
+		# GSGlyph.font
+		self.assertIs(glyph.font, Glyphs.font)
 		
 		# GSGlyph.layers
 		self.assertIsNotNone(glyph.layers)
@@ -1196,43 +1209,84 @@ class GlyphsAppTests(unittest.TestCase):
 		
 		# GSGlyph.name
 		self.assertUnicode(glyph.name)
+		with self.assertRaises(NameError):
+			glyph.name = 'A'
 		
+		# Get a glyph directly, because the duplicated glyph a.test does not have its unicode values set
+		realglyph = font.glyphs['a']
 		# GSGlyph.unicode
 		self.assertUnicode(glyph.unicode)
+		self.assertEqual(realglyph.unicode, '0061')
+
+		# GSGlyph.unicodes
+		self.assertIn(realglyph.unicode, realglyph.unicodes)
+
+		# GSGlyph.production
+		self.assertString(glyph.production)
 		
 		# GSGlyph.string
-		if glyph.unicode:
-			self.assertIsInstance(glyph.string, unicode)
+		self.assertIsInstance(realglyph.string, unicode)
+		self.assertEqual(realglyph.string, 'a')
 		
 		# GSGlyph.id
 		self.assertIsInstance(glyph.id, str)
+
+		# GSGlyph.locked
+		self.assertBool(glyph.locked)
 		
 		# GSGlyph.category
-		self.assertTrue(type(glyph.category) == unicode or type(glyph.category) == objc.pyobjc_unicode or type(glyph.category) == type(None))
+		self.assertIsInstance(glyph.category, (unicode, objc.pyobjc_unicode, type(None)))
 		
 		# GSGlyph.storeCategory
 		self.assertBool(glyph.storeCategory)
 		
 		# GSGlyph.subCategory
-		self.assertTrue(type(glyph.subCategory) == unicode or type(glyph.category) == objc.pyobjc_unicode or type(glyph.subCategory) == type(None))
+		self.assertIsInstance(glyph.subCategory, (unicode, objc.pyobjc_unicode, type(None)))
 		
 		# GSGlyph.storeSubCategory
 		self.assertBool(glyph.storeSubCategory)
-		
+
+		# GSGlyph.case
+		self.assertInteger(glyph.case)
+
+		# GSGlyph.storeCase
+		self.assertBool(glyph.storeCase)
+
+		# GSGlyph.direction
+		self.assertInteger(glyph.direction)
+
+		# GSGlyph.storeDirection
+		self.assertBool(glyph.storeDirection)
+
 		# GSGlyph.script
-		self.assertTrue(type(glyph.category) == unicode or type(glyph.category) == objc.pyobjc_unicode or type(glyph.category) == type(None))
-		
+		self.assertIsInstance(glyph.script, (unicode, objc.pyobjc_unicode, type(None)))
+
 		# GSGlyph.storeScript
 		self.assertBool(glyph.storeScript)
 		
 		# GSGlyph.productionName
-		self.assertTrue(type(glyph.productionName) == unicode or type(glyph.category) == objc.pyobjc_unicode or type(glyph.productionName) == type(None))
+		self.assertIsInstance(glyph.productionName, (unicode, objc.pyobjc_unicode, type(None)))
 		
 		# GSGlyph.storeProductionName
 		self.assertBool(glyph.storeProductionName)
+
+		# GSGlyph.tags
+		self.assertList(glyph.tags, assertType=False, testValues=["tag1", "tag2", "tag3"])
 		
 		# GSGlyph.glyphInfo
-		self.assertTrue(glyph.glyphInfo != None or glyph.glyphInfo == None)
+		self.assertIsInstance(glyph.glyphInfo, (GSGlyphInfo, type(None)))
+
+		# GSGlyph.sortName
+		self.assertString(glyph.sortName)
+
+		# GSGlyph.sortNameKeep
+		self.assertString(glyph.sortNameKeep)
+
+		# GSGlyph.storeSortName
+		self.assertBool(glyph.storeSortName)
+
+		# GSGlyph.glyphDataEntryString
+		self.assertString(glyph.glyphDataEntryString())
 		
 		# GSGlyph.leftKerningGroup
 		self.assertUnicode(glyph.leftKerningGroup)
@@ -1240,15 +1294,27 @@ class GlyphsAppTests(unittest.TestCase):
 		# GSGlyph.rightKerningGroup
 		self.assertUnicode(glyph.rightKerningGroup)
 		
+		# GSGlyph.topKerningGroup
+		self.assertUnicode(glyph.topKerningGroup)
+		
+		# GSGlyph.bottomKerningGroup
+		self.assertUnicode(glyph.bottomKerningGroup)
+
 		# GSGlyph.leftKerningKey
 		self.assertString(glyph.leftKerningKey)
-		
+
 		# GSGlyph.rightKerningKey
 		self.assertString(glyph.rightKerningKey)
 
+		# GSGlyph.topKerningKey
+		self.assertString(glyph.topKerningKey)
+
+		# GSGlyph.bottomKerningKey
+		self.assertString(glyph.bottomKerningKey)
+
 		# GSGlyph.leftMetricsKey
 		self.assertUnicode(glyph.leftMetricsKey)
-		
+
 		# GSGlyph.rightMetricsKey
 		self.assertUnicode(glyph.rightMetricsKey)
 		
@@ -1264,6 +1330,7 @@ class GlyphsAppTests(unittest.TestCase):
 		# GSGlyph.colorObject
 		glyph.color = 1
 		self.assertIsInstance(glyph.colorObject, NSColor)
+		glyph.colorObject = (255, 255, 0)
 		
 		# GSGlyph.note
 		self.assertUnicode(glyph.note)

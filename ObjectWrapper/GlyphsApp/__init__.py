@@ -6514,9 +6514,9 @@ GSGlyph.unicodes = property(lambda self: __glyph__unicode__(self),
 							lambda self, value: self.setUnicodes_(value))
 '''
 	.. attribute:: unicodes
-		List of String‚ with the hex Unicode values of glyph, if encoded.
+		List of Strings‚ with the hex Unicode values of glyph, if encoded.
 
-		:type: str
+		:type: list
 '''
 
 GSGlyph.production = property(lambda self: self.pyobjc_instanceMethods.production(),
@@ -6736,15 +6736,15 @@ def __GSGlyph_glyphDataEntryString__(self):
 		Unicode = ""
 	Decompose = self.layers[0].componentNamesText()
 	if Decompose is not None and len(Decompose) > 0:
-		Decompose = "decompose=\"%s\" " % Decompose
+		Decompose = 'decompose="%s" ' % Decompose
 	else:
 		Decompose = ""
 	SubCategory = ""
 	if self.subCategory != "Other":
-		SubCategory = "subCategory=\"%s\" " % self.subCategory
+		SubCategory = 'subCategory="%s" ' % self.subCategory
 	Anchors = self.layers[0].anchors.keys()
 	if Anchors is not None and len(Anchors) > 0:
-		Anchors = "anchors=\"%s\" " % ", ".join(sorted(Anchors))
+		Anchors = 'anchors="%s" ' % ", ".join(sorted(Anchors))
 	else:
 		Anchors = ""
 	GlyphInfo = self.glyphInfo
@@ -6752,7 +6752,7 @@ def __GSGlyph_glyphDataEntryString__(self):
 	if GlyphInfo is not None:
 		Accents = GlyphInfo.accents
 	if Accents is not None and len(Accents) > 0:
-		Accents = "accents=\"%s\"" % ", ".join(sorted(Accents))
+		Accents = 'accents="%s" ' % ", ".join(sorted(Accents))
 	else:
 		Accents = ""
 	Production = ""
@@ -6761,12 +6761,12 @@ def __GSGlyph_glyphDataEntryString__(self):
 	else:
 		Production = Glyphs.productionGlyphName(self.name)
 	if len(Production) > 0:
-		Production = "production=\"%s\"" % Production
+		Production = 'production="%s" ' % Production
 	else:
 		Production = ""
 	if self.note is not None and len(self.note) > 0:
-		Production += " altNames=\"%s\"" % self.note
-	return "	<glyph unicode=\"%s\" name=\"%s\" %scategory=\"%s\" %sscript=\"%s\" description=\"\" %s%s%s />" % (Unicode, self.name, Decompose, self.category, SubCategory, self.script, Production, Anchors, Accents)
+		Production += ' altNames="%s" ' % self.note
+	return '	<glyph unicode="%s" name="%s" %scategory="%s" %sscript="%s" description="" %s%s%s/>' % (Unicode, self.name, Decompose, self.category, SubCategory, self.script, Production, Anchors, Accents)
 
 GSGlyph.glyphDataEntryString = python_method(__GSGlyph_glyphDataEntryString__)
 
@@ -6955,8 +6955,7 @@ def _set_Glyph_setColor(self, colorValue):
 			colorValue = [c / 255.0 if c > 1 else c for c in colorValue]
 		colorValue = list(colorValue)
 		colorValue.extend((1, 1, 1))
-		print(colorValue)
-		colorValue = NSColor.colorWithDeviceRed_green_blue_alpha_(colorValue[0], colorValue[1], colorValue[2], colorValue[3])
+		colorValue = NSColor.colorWithDeviceRed_green_blue_alpha_(*colorValue[:4])
 	self.setColor_(colorValue)
 
 GSGlyph.colorObject = property(lambda self: self.pyobjc_instanceMethods.color(),
