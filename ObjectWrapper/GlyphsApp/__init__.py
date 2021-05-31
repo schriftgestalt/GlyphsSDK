@@ -2446,8 +2446,12 @@ class GlyphLayerProxy(Proxy):
 		if isinstance(key, slice):
 			return self.values().__getitem__(key)
 		elif isinstance(key, int):
-			key = self._validate_idx(key)
 			if self._owner.parent:
+				count = max(self._owner.countOfLayers(), self._owner.parent.countOfFontMasters())
+				if key < 0:
+					key += count
+				if key >= count:
+					raise IndexError("list index %s out of range %s" % (key, count))
 				if key < self._owner.parent.countOfFontMasters():
 					FontMaster = self._owner.parent.fontMasterAtIndex_(key)
 					return self._owner.layerForId_(FontMaster.id)
@@ -2456,13 +2460,14 @@ class GlyphLayerProxy(Proxy):
 					idx = 0
 					ExtraLayer = None
 					while ExtraLayerIndex >= 0:
-						ExtraLayer = self._owner.pyobjc_instanceMethods.layers().objectAtIndex_(idx)
+						ExtraLayer = self._owner.objectInLayersAtIndex_(idx)
 						if not ExtraLayer.isMasterLayer:
 							ExtraLayerIndex -= 1
 						idx += 1
 					return ExtraLayer
 			else:
-				return self._owner.pyobjc_instanceMethods.layers().objectAtIndex_(key)
+				key = self._validate_idx(key)
+				return self._owner.objectInLayersAtIndex_(key)
 		elif isString(key):
 			layer = self._owner.layerForId_(key)
 			if layer is None:
