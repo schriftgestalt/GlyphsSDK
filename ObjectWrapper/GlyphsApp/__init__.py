@@ -81,7 +81,7 @@ __all__ = [
 	"GSGlyph", "GSGlyphInfo", "GSGlyphsInfo", "GSGuide", "GSHint", "GSInstance", "GSLayer", "GSNode", "GSPath", "GSShape", "GSSubstitution", "GSPartProperty", "GSNotifyingDictionary",
 	"GSPathFinder", "GSPathPen", "GSCallbackHandler", "GSFeatureGenerator", "GSTTStem", "GSPathSegment",
 	# Constants
-	"MOVE", "LINE", "CURVE", "OFFCURVE", "QCURVE", "HOBBYCURVE", "GSMOVE", "GSLINE", "GSCURVE", "GSOFFCURVE", "GSHOBBYCURVE", "GSSHARP", "GSSMOOTH",
+	"MOVE", "LINE", "CURVE", "OFFCURVE", "QCURVE", "HOBBYCURVE", "GSMOVE", "GSLINE", "GSCURVE", "GSQCURVE", "GSOFFCURVE", "GSHOBBYCURVE", "GSSHARP", "GSSMOOTH",
 	"FILL", "FILLCOLOR", "FILLPATTERNANGLE", "FILLPATTERNBLENDMODE", "FILLPATTERNFILE", "FILLPATTERNOFFSET", "FILLPATTERNSCALE", "STROKECOLOR", "STROKELINECAPEND", "STROKELINECAPSTART", "STROKELINEJOIN", "STROKEPOSITION", "STROKEWIDTH", "GRADIENT", "SHADOW", "INNERSHADOW", "MASK", 
 	"INSTANCETYPESINGLE", "INSTANCETYPEVARIABLE",
 	"TAG", "TOPGHOST", "STEM", "BOTTOMGHOST", "FLEX", "TTSNAP", "TTSTEM", "TTSHIFT", "TTINTERPOLATE", "TTDIAGONAL", "TTDELTA", "CORNER", "CAP", "TTDONTROUND", "TTROUND", "TTROUNDUP", "TTROUNDDOWN", "TRIPLE",
@@ -309,7 +309,6 @@ Changes in the API
 These changes could possibly break your code, so you need to keep track of them. Please see :attr:`GSApplication.versionNumber` for how to check for the app version in your code. Really, read it. There’s a catch.
 '''
 
-
 def GSObject__copy__(self, memo=None):
 	return self.copy()
 	
@@ -420,8 +419,8 @@ class Proxy(object):
 			raise TypeError("indices must be integers, not %s" % type(idx).__name__)
 		if idx < 0:
 			idx += self.__len__()
-		if not (0 <= idx < self.__len__()+offset):
-			raise IndexError("list index %s out of range %s" % (idx, self.__len__()+offset))
+		if not (0 <= idx < self.__len__() + offset):
+			raise IndexError("list index %s out of range %s" % (idx, self.__len__() + offset))
 		return idx
 	def setterMethod(self):
 		raise AttributeError("This collection cannot be directly overwritten")
@@ -819,7 +818,7 @@ GSApplication.registerDefaults = python_method(__registerDefaults__)
 			# Remove value
 			# This will restore the default value
 			del(Glyphs.defaults["com.MyName.foo.bar"])
-	'''
+'''
 
 class BoolDefaultsProxy(DefaultsProxy):
 	def __getitem__(self, key):
@@ -1067,7 +1066,7 @@ GSApplication.menu = property(lambda self: AppMenuProxy(self))
 
 			newMenuItem = NSMenuItem('My menu title', doStuff)
 			Glyphs.menu[EDIT_MENU].append(newMenuItem)
-	'''
+'''
 
 NSMenuItem.__new__ = staticmethod(GSObject__new__)
 
@@ -1149,7 +1148,6 @@ GSApplication.showMacroWindow = python_method(__ShowMacroWindow__)
 
 		Deletes the content of the console in the macro window
 '''
-
 
 def __showGlyphInfoPanelWithSearchString__(self, String):
 	Glyphs.delegate().showGlyphInfoPanelWithSearchString_(String)
@@ -1509,7 +1507,7 @@ GSApplication.localize = Glyphs_localize
 			# and Glyphs.app UI is set to use localization (change in preferences),
 			# it will print:
 			> Hallöle Welt
-	'''
+'''
 
 def __GSApplication_activateReporter__(self, Reporter):
 	if isString(Reporter):
@@ -1557,7 +1555,7 @@ GSProjectDocument.__new__ = staticmethod(GSObject__new__)
 GSProjectDocument.__new__.__name__ = "__new__"
 
 GSElement.x = property(lambda self: self.pyobjc_instanceMethods.position().x,
-	lambda self, value: self.setPosition_(NSMakePoint(validateNumber(value), self.y)))
+					   lambda self, value: self.setPosition_(NSMakePoint(validateNumber(value), self.y)))
 
 GSElement.y = property(lambda self: self.pyobjc_instanceMethods.position().y,
 					   lambda self, value: self.setPosition_(NSMakePoint(self.x, validateNumber(value))))
@@ -1616,8 +1614,8 @@ The document class
 '''
 
 GSDocument.font = property(lambda self: self.pyobjc_instanceMethods.font(),
-							lambda self, value: self.setFont_(value),
-							doc="")
+						   lambda self, value: self.setFont_(value),
+						   doc="")
 '''
 	.. attribute:: font
 		The active :class:`GSFont`
@@ -2267,7 +2265,7 @@ class TempDataProxy(Proxy):
 		if value is None:
 			return default
 		return value
-		
+
 
 class AttributesProxy(Proxy):
 	def __getitem__(self, key):
@@ -3102,7 +3100,7 @@ GSFont.parent = property(lambda self: self.pyobjc_instanceMethods.parent())
 '''
 
 GSFont.masters = property(lambda self: FontFontMasterProxy(self),
-							lambda self, value: FontFontMasterProxy(self).setter(value))
+						  lambda self, value: FontFontMasterProxy(self).setter(value))
 '''
 	.. attribute:: masters
 		Collection of :class:`GSFontMaster` objects.
@@ -3120,10 +3118,13 @@ GSFont.instances = property(lambda self: FontInstancesProxy(self),
 		:type: list
 '''
 
+GSProjectDocument.instances = property(lambda self: FontInstancesProxy(self),
+									   lambda self, value: FontInstancesProxy(self).setter(value))
+
 # TODO: This needs to be updated to reflect the change to a dedicated GSAxis class (elsewhere too?!)
 
 GSFont.axes = property(lambda self: FontAxesProxy(self),
-						lambda self, value: FontAxesProxy(self).setter(value))
+					   lambda self, value: FontAxesProxy(self).setter(value))
 '''
 	.. attribute:: axes
 		Collection of :class:`GSAxis`:
@@ -3173,10 +3174,10 @@ def __GSFont_getitem__(self, value):
 GSFont.__getitem__ = python_method(__GSFont_getitem__)
 
 GSFont.glyphs = property(lambda self: FontGlyphsProxy(self),
-						lambda self, value: FontGlyphsProxy(self).setter(value))
+						 lambda self, value: FontGlyphsProxy(self).setter(value))
 
 GSInterpolationFontProxy.glyphs = property(lambda self: FontGlyphsProxy(self),
-											lambda self, value: FontGlyphsProxy(self).setter(value))
+										   lambda self, value: FontGlyphsProxy(self).setter(value))
 '''
 	.. attribute:: glyphs
 		Collection of :class:`GSGlyph` objects. Returns a list, but you may also call glyphs using index or glyph name or character as key.
@@ -3218,7 +3219,7 @@ GSInterpolationFontProxy.glyphs = property(lambda self: FontGlyphsProxy(self),
 '''
 
 GSFont.classes = property(lambda self: FontClassesProxy(self),
-							lambda self, value: FontClassesProxy(self).setter(value))
+						  lambda self, value: FontClassesProxy(self).setter(value))
 '''
 	.. attribute:: classes
 		Collection of :class:`GSClass` objects, representing OpenType glyph classes.
@@ -3241,7 +3242,7 @@ GSFont.classes = property(lambda self: FontClassesProxy(self),
 '''
 
 GSFont.features = property(lambda self: FontFeaturesProxy(self),
-							lambda self, value: FontFeaturesProxy(self).setter(value))
+						   lambda self, value: FontFeaturesProxy(self).setter(value))
 '''
 	.. attribute:: features
 		Collection of :class:`GSFeature` objects, representing OpenType features.
@@ -3265,7 +3266,7 @@ GSFont.features = property(lambda self: FontFeaturesProxy(self),
 '''
 
 GSFont.featurePrefixes = property(lambda self: FontFeaturePrefixesProxy(self),
-									lambda self, value: FontFeaturePrefixesProxy(self).setter(value))
+								  lambda self, value: FontFeaturePrefixesProxy(self).setter(value))
 '''
 	.. attribute:: featurePrefixes
 		Collection of :class:`GSFeaturePrefix` objects, containing stuff that needs to be outside of the OpenType features.
@@ -3557,10 +3558,10 @@ GSFont.date = property(lambda self: __get_date__(self),
 '''
 
 GSFont.familyName = property(lambda self: self.pyobjc_instanceMethods.fontName(),
-								lambda self, value: self.setFontName_(value))
-								
+							 lambda self, value: self.setFontName_(value))
+
 GSFont.fontName = property(lambda self: self.pyobjc_instanceMethods.fontName(),
-								lambda self, value: self.setFontName_(value))
+						   lambda self, value: self.setFontName_(value))
 '''
 	.. attribute:: familyName
 		Family name of the typeface.
@@ -3771,7 +3772,7 @@ GSFont.snapToObjects = property(lambda self: bool(self.pyobjc_instanceMethods.sn
 '''
 
 GSFont.previewRemoveOverlap = property(lambda self: bool(self.pyobjc_instanceMethods.previewRemoveOverlap()),
-								lambda self, value: self.setPreviewRemoveOverlap_(value))
+									   lambda self, value: self.setPreviewRemoveOverlap_(value))
 '''
 	.. attribute:: previewRemoveOverlap
 		disable preview remove overlap
@@ -3831,13 +3832,14 @@ def __current_Text__(self):
 	try:
 		return self.parent.windowController().activeEditViewController().graphicView().displayStringASCIIonly_(False)
 	except:
-		return None
+		pass
+	return None
 
 def __set__current_Text__(self, String):
 	self.parent.windowController().activeEditViewController().graphicView().setDisplayString_(String)
 
 GSFont.currentText = property(lambda self: __current_Text__(self),
-								lambda self, value: __set__current_Text__(self, value))
+							  lambda self, value: __set__current_Text__(self, value))
 '''
 	.. attribute:: currentText
 		The text of the current Edit view.
@@ -3887,7 +3889,7 @@ def __GSFont__set_currentTab__(self, TabItem):
 	self.parent.windowController().tabBarControl().selectTabItem_(TabItem)
 
 GSFont.currentTab = property(lambda self: __GSFont__currentTab__(self),
-							lambda self, value: __GSFont__set_currentTab__(self, value))
+							 lambda self, value: __GSFont__set_currentTab__(self, value))
 '''
 	.. attribute:: currentTab
 		Active Edit view tab.
@@ -4408,7 +4410,7 @@ GSMetric.font = property(lambda self: self.pyobjc_instanceMethods.font())
 		:type: GSFont
 '''
 GSMetric.name = property(lambda self: self.pyobjc_instanceMethods.name(),
-					   lambda self, value: self.setName_(value))
+						 lambda self, value: self.setName_(value))
 '''
 	.. attribute:: name
 		The name of the metric or stem
@@ -4671,7 +4673,7 @@ GSFontMaster.otherBlues = property(lambda self: FontMaster_otherBlues(self))
 '''
 
 GSFontMaster.guides = property(lambda self: LayerGuidesProxy(self),
-						  lambda self, value: LayerGuidesProxy(self).setter(value))
+							   lambda self, value: LayerGuidesProxy(self).setter(value))
 # keep for compatibility
 GSFontMaster.guideLines = GSFontMaster.guides
 '''
@@ -5396,7 +5398,10 @@ GSInstance.styleMapFamilyNames = property(lambda self: FontInfoPropertiesProxy(s
 '''
 	.. attribute:: styleMapFamilyNames
 		This accesses all localised designer values.
-		For details :attr:`GSInstance.properties`		:type: dict
+		For details :attr:`GSInstance.properties`
+
+		:type: dict
+
 
 		.. code-block:: python
 			Instance.styleMapFamilyNames["ENG"] = "MyFamily Bold"
@@ -5457,7 +5462,6 @@ GSInstance.styleNames = property(lambda self: FontInfoPropertiesProxy(self, "sty
 
 		.. versionadded:: 3.0.3
 '''
-
 
 GSInstance.trademark = property(lambda self: self.defaultPropertyForName_("trademarks"),
 								lambda self, value: self.setProperty_value_languageTag_("trademarks", value, None))
@@ -5824,7 +5828,6 @@ GSInstance.addAsMaster = AddInstanceAsMaster
 		.. versionadded:: 2.6.2
 '''
 
-
 ##################################################################################
 #
 #
@@ -5915,12 +5918,6 @@ GSCustomParameter.parent = property(lambda self: self.pyobjc_instanceMethods.par
 		:type: GSFont, GSFontMaster or GSInstance
 '''
 
-
-
-
-
-
-
 ##################################################################################
 #
 #
@@ -5995,7 +5992,7 @@ GSClass.code = property(lambda self: self.pyobjc_instanceMethods.code(),
 '''
 
 GSClass.automatic = property(lambda self: self.pyobjc_instanceMethods.automatic(),
-							lambda self, value: self.setAutomatic_(value))
+							 lambda self, value: self.setAutomatic_(value))
 '''
 	.. attribute:: automatic
 		Define whether this class should be auto-generated when pressing the 'Update' button in the Font Info.
@@ -6004,7 +6001,7 @@ GSClass.automatic = property(lambda self: self.pyobjc_instanceMethods.automatic(
 '''
 
 GSClass.active = property(lambda self: not self.disabled(),
-									lambda self, value: self.setDisabled_(not value))
+						  lambda self, value: self.setDisabled_(not value))
 '''
 	.. attribute:: active
 
@@ -6077,7 +6074,7 @@ GSFeaturePrefix.__repr__ = python_method(FeaturePrefix__repr__)
 GSFeaturePrefix.mutableCopyWithZone_ = GSObject__copy__
 
 GSFeaturePrefix.name = property(lambda self: self.pyobjc_instanceMethods.name(),
-						lambda self, value: self.setName_(value))
+								lambda self, value: self.setName_(value))
 '''
 	.. attribute:: name
 		The FeaturePrefix name
@@ -6086,7 +6083,7 @@ GSFeaturePrefix.name = property(lambda self: self.pyobjc_instanceMethods.name(),
 '''
 
 GSFeaturePrefix.code = property(lambda self: self.pyobjc_instanceMethods.code(),
-						lambda self, value: self.setCode_(value))
+								lambda self, value: self.setCode_(value))
 '''
 	.. attribute:: code
 		A String containing feature code.
@@ -6095,7 +6092,7 @@ GSFeaturePrefix.code = property(lambda self: self.pyobjc_instanceMethods.code(),
 '''
 
 GSFeaturePrefix.automatic = property(lambda self: self.pyobjc_instanceMethods.automatic(),
-									lambda self, value: self.setAutomatic_(value))
+									 lambda self, value: self.setAutomatic_(value))
 '''
 	.. attribute:: automatic
 		Define whether this should be auto-generated when pressing the 'Update' button in the Font Info.
@@ -6104,7 +6101,7 @@ GSFeaturePrefix.automatic = property(lambda self: self.pyobjc_instanceMethods.au
 '''
 
 GSFeaturePrefix.active = property(lambda self: not self.disabled(),
-									lambda self, value: self.setDisabled_(not value))
+								  lambda self, value: self.setDisabled_(not value))
 '''
 	.. attribute:: active
 
@@ -6112,7 +6109,6 @@ GSFeaturePrefix.active = property(lambda self: not self.disabled(),
 
 		.. versionadded:: 2.5
 '''
-
 
 ##################################################################################
 #
@@ -6145,6 +6141,7 @@ For details on how to access them, please look at :class:`GSFont.features`
 	Properties
 
 	.. autosummary::
+
 		name
 		code
 		automatic
@@ -6178,7 +6175,7 @@ GSFeature.__eq__ = python_method(lambda self, other: self.isEqualToFeature_(othe
 GSFeature.mutableCopyWithZone_ = GSObject__copy__
 
 GSFeature.name = property(lambda self: self.tag(),
-							lambda self, value: self.setTag_(value))
+						  lambda self, value: self.setTag_(value))
 '''
 	.. attribute:: name
 		The feature name
@@ -6187,7 +6184,7 @@ GSFeature.name = property(lambda self: self.tag(),
 '''
 
 GSFeature.code = property(lambda self: self.pyobjc_instanceMethods.code(),
-							lambda self, value: self.setCode_(value))
+						  lambda self, value: self.setCode_(value))
 '''
 	.. attribute:: code
 		The Feature code in Adobe FDK syntax.
@@ -6195,7 +6192,7 @@ GSFeature.code = property(lambda self: self.pyobjc_instanceMethods.code(),
 		:type: str
 '''
 GSFeature.automatic = property(lambda self: self.pyobjc_instanceMethods.automatic(),
-								lambda self, value: self.setAutomatic_(value))
+							   lambda self, value: self.setAutomatic_(value))
 '''
 	.. attribute:: automatic
 		Define whether this feature should be auto-generated when pressing the 'Update' button in the Font Info.
@@ -6204,7 +6201,7 @@ GSFeature.automatic = property(lambda self: self.pyobjc_instanceMethods.automati
 '''
 
 GSFeature.notes = property(lambda self: self.pyobjc_instanceMethods.notes(),
-							lambda self, value: self.setNotes_(value))
+						   lambda self, value: self.setNotes_(value))
 '''
 	.. attribute:: notes
 		Some extra text. Is shown in the bottom of the feature window. Contains the stylistic set name parameter
@@ -6257,8 +6254,6 @@ GSFeature.tempData = property(lambda self: TempDataProxy(self))
 			del feature.tempData['rememberToMakeCoffee']
 '''
 
-
-
 ##################################################################################
 #
 #
@@ -6287,21 +6282,18 @@ def Substitution__init__(self):
 GSSubstitution.__init__ = python_method(Substitution__init__)
 
 GSSubstitution.source = property(lambda self: self.pyobjc_instanceMethods.back(),
-								lambda self, value: self.setBack_(value))
+								 lambda self, value: self.setBack_(value))
 GSSubstitution.source = property(lambda self: self.pyobjc_instanceMethods.source(),
-								lambda self, value: self.setSource_(value))
+								 lambda self, value: self.setSource_(value))
 GSSubstitution.forward = property(lambda self: self.pyobjc_instanceMethods.fwd(),
-								lambda self, value: self.setFwd_(value))
+								  lambda self, value: self.setFwd_(value))
 
 GSSubstitution.target = property(lambda self: self.pyobjc_instanceMethods.target(),
-								lambda self, value: self.setTarget_(value))
+								 lambda self, value: self.setTarget_(value))
 GSSubstitution.languageTag = property(lambda self: self.pyobjc_instanceMethods.languageTag(),
-								lambda self, value: self.setLanguageTag_(value))
+									  lambda self, value: self.setLanguageTag_(value))
 GSSubstitution.scriptTag = property(lambda self: self.pyobjc_instanceMethods.scriptTag(),
-								lambda self, value: self.setScriptTag_(value))
-
-
-
+									lambda self, value: self.setScriptTag_(value))
 
 
 ##################################################################################
@@ -6321,7 +6313,6 @@ def _______________(): pass
 
 
 '''
-
 
 :mod:`GSGlyph`
 ===============================================================================
@@ -6414,7 +6405,7 @@ GSGlyph.__deepcopy__ = GSObject__copy__
 GSGlyph.__eq__ = python_method(lambda self, other: self.isEqualToGlyph_(other))
 
 GSGlyph.parent = property(lambda self: self.pyobjc_instanceMethods.parent(),
-									lambda self, value: self.setParent_(value))
+						  lambda self, value: self.setParent_(value))
 GSGlyph.font = GSGlyph.parent
 '''
 	.. attribute:: parent
@@ -6423,7 +6414,7 @@ GSGlyph.font = GSGlyph.parent
 		:type: :class:`GSFont`
 '''
 GSGlyph.layers = property(lambda self: GlyphLayerProxy(self),
-							lambda self, value: GlyphLayerProxy(self).setter(value))
+						  lambda self, value: GlyphLayerProxy(self).setter(value))
 
 '''
 	.. attribute:: layers
@@ -6493,7 +6484,7 @@ def GSGlyph_setName(self, name):
 		raise NameError('The glyph name \"%s\" already exists in the font.' % name)
 
 GSGlyph.name = property(lambda self: self.pyobjc_instanceMethods.name(),
-									lambda self, value: GSGlyph_setName(self, value))
+						lambda self, value: GSGlyph_setName(self, value))
 '''
 	.. attribute:: name
 		The name of the glyph. It will be converted to a "nice name" (afii10017 to A-cy) (you can disable this behavior in font info or the app preference)
@@ -6502,7 +6493,7 @@ GSGlyph.name = property(lambda self: self.pyobjc_instanceMethods.name(),
 '''
 
 GSGlyph.unicode = property(lambda self: self.pyobjc_instanceMethods.unicode(),
-									lambda self, value: self.setUnicode_(value))
+						   lambda self, value: self.setUnicode_(value))
 '''
 	.. attribute:: unicode
 		String with the hex Unicode value of glyph, if encoded.
@@ -6525,7 +6516,7 @@ GSGlyph.unicodes = property(lambda self: __glyph__unicode__(self),
 '''
 
 GSGlyph.production = property(lambda self: self.pyobjc_instanceMethods.production(),
-									lambda self, value: self.setProduction_(self, value))
+							  lambda self, value: self.setProduction_(self, value))
 
 GSGlyph.string = property(lambda self: self.charString())
 '''
@@ -6537,7 +6528,7 @@ GSGlyph.string = property(lambda self: self.charString())
 '''
 
 GSGlyph.id = property(lambda self: str(self.pyobjc_instanceMethods.id()),
-									lambda self, value: self.setId_(value))
+					  lambda self, value: self.setId_(value))
 '''
 	.. attribute:: id
 		An unique identifier for each glyph
@@ -6546,7 +6537,7 @@ GSGlyph.id = property(lambda self: str(self.pyobjc_instanceMethods.id()),
 '''
 
 GSGlyph.locked = property(lambda self: bool(self.pyobjc_instanceMethods.locked()),
-								lambda self, value: self.setLocked_(value))
+						  lambda self, value: self.setLocked_(value))
 '''
 	.. attribute:: locked
 		If the glyph is locked
@@ -6556,7 +6547,7 @@ GSGlyph.locked = property(lambda self: bool(self.pyobjc_instanceMethods.locked()
 '''
 
 GSGlyph.category = property(lambda self: self.pyobjc_instanceMethods.category(),
-									lambda self, value: self.setCategory_(value))
+							lambda self, value: self.setCategory_(value))
 '''
 	.. attribute:: category
 		The category of the glyph. e.g. 'Letter', 'Symbol'
@@ -6566,7 +6557,7 @@ GSGlyph.category = property(lambda self: self.pyobjc_instanceMethods.category(),
 '''
 
 GSGlyph.storeCategory = property(lambda self: bool(self.pyobjc_instanceMethods.storeCategory()),
-									lambda self, value: self.setStoreCategory_(value))
+								 lambda self, value: self.setStoreCategory_(value))
 '''
 	.. attribute:: storeCategory
 		Set to True in order to manipulate the `category` of the glyph (see above).
@@ -6576,7 +6567,7 @@ GSGlyph.storeCategory = property(lambda self: bool(self.pyobjc_instanceMethods.s
 '''
 
 GSGlyph.subCategory = property(lambda self: self.pyobjc_instanceMethods.subCategory(),
-									lambda self, value: self.setSubCategory_(value))
+							   lambda self, value: self.setSubCategory_(value))
 '''
 	.. attribute:: subCategory
 		The subCategory of the glyph. e.g. 'Uppercase', 'Math'
@@ -6608,7 +6599,7 @@ GSGlyph.case = property(lambda self: self.pyobjc_instanceMethods.case(),
 '''
 
 GSGlyph.storeCase = property(lambda self: bool(self.pyobjc_instanceMethods.storeCase()),
-									lambda self, value: self.setStoreCase_(value))
+							 lambda self, value: self.setStoreCase_(value))
 '''
 	.. attribute:: storeCase
 		Set to True in order to manipulate the `case` of the glyph (see above).
@@ -6620,7 +6611,7 @@ GSGlyph.storeCase = property(lambda self: bool(self.pyobjc_instanceMethods.store
 '''
 
 GSGlyph.direction = property(lambda self: self.pyobjc_instanceMethods.direction(),
-						lambda self, value: self.setDirection_(value))
+							 lambda self, value: self.setDirection_(value))
 '''
 	.. attribute:: direction
 		Writing direction.
@@ -6636,7 +6627,7 @@ GSGlyph.direction = property(lambda self: self.pyobjc_instanceMethods.direction(
 '''
 
 GSGlyph.storeDirection = property(lambda self: bool(self.pyobjc_instanceMethods.storeDirection()),
-									lambda self, value: self.setStoreDirection_(value))
+								  lambda self, value: self.setStoreDirection_(value))
 '''
 	.. attribute:: storeDirection
 		Set to True in order to manipulate the `direction` of the glyph (see above).
@@ -6648,7 +6639,7 @@ GSGlyph.storeDirection = property(lambda self: bool(self.pyobjc_instanceMethods.
 '''
 
 GSGlyph.script = property(lambda self: self.pyobjc_instanceMethods.script(),
-									lambda self, value: self.setScript_(value))
+						  lambda self, value: self.setScript_(value))
 '''
 	.. attribute:: script
 		The script of the glyph, e.g., 'latin', 'arabic'.
@@ -6658,7 +6649,7 @@ GSGlyph.script = property(lambda self: self.pyobjc_instanceMethods.script(),
 '''
 
 GSGlyph.storeScript = property(lambda self: bool(self.pyobjc_instanceMethods.storeScript()),
-									lambda self, value: self.setStoreScript_(value))
+							   lambda self, value: self.setStoreScript_(value))
 '''
 	.. attribute:: storeScript
 		Set to True in order to manipulate the `script` of the glyph (see above).
@@ -6669,7 +6660,7 @@ GSGlyph.storeScript = property(lambda self: bool(self.pyobjc_instanceMethods.sto
 '''
 
 GSGlyph.productionName = property(lambda self: self.pyobjc_instanceMethods.production(),
-									lambda self, value: self.setProduction_(value))
+								  lambda self, value: self.setProduction_(value))
 '''
 	.. attribute:: productionName
 		The productionName of the glyph.
@@ -6680,7 +6671,7 @@ GSGlyph.productionName = property(lambda self: self.pyobjc_instanceMethods.produ
 '''
 
 GSGlyph.storeProductionName = property(lambda self: bool(self.storeProduction()),
-									lambda self, value: self.setStoreProduction_(value))
+									   lambda self, value: self.setStoreProduction_(value))
 '''
 	.. attribute:: storeProductionName
 		Set to True in order to manipulate the `productionName` of the glyph (see above).
@@ -6784,7 +6775,7 @@ GSGlyph.leftKerningGroup = property(lambda self: self.pyobjc_instanceMethods.lef
 		:type: str
 '''
 GSGlyph.rightKerningGroup = property(lambda self: self.pyobjc_instanceMethods.rightKerningGroup(),
-									lambda self, value: self.setRightKerningGroup_(NSStr(value)))
+									 lambda self, value: self.setRightKerningGroup_(NSStr(value)))
 '''
 	.. attribute:: rightKerningGroup
 		The rightKerningGroup of the glyph. All glyphs with the same text in the kerning group end up in the same kerning class.
@@ -6792,7 +6783,7 @@ GSGlyph.rightKerningGroup = property(lambda self: self.pyobjc_instanceMethods.ri
 		:type: str'''
 
 GSGlyph.topKerningGroup = property(lambda self: self.pyobjc_instanceMethods.topKerningGroup(),
-									lambda self, value: self.setTopKerningGroup_(NSStr(value)))
+								   lambda self, value: self.setTopKerningGroup_(NSStr(value)))
 '''
 	.. attribute:: topKerningGroup
 		The topKerningGroup of the glyph. All glyphs with the same text in the kerning group end up in the same kerning class.
@@ -6800,7 +6791,7 @@ GSGlyph.topKerningGroup = property(lambda self: self.pyobjc_instanceMethods.topK
 		:type: str'''
 
 GSGlyph.bottomKerningGroup = property(lambda self: self.pyobjc_instanceMethods.bottomKerningGroup(),
-									lambda self, value: self.setBottomKerningGroup_(NSStr(value)))
+									  lambda self, value: self.setBottomKerningGroup_(NSStr(value)))
 '''
 	.. attribute:: bottomKerningGroup
 		The bottomKerningGroup of the glyph. All glyphs with the same text in the kerning group end up in the same kerning class.
@@ -6885,7 +6876,7 @@ GSGlyph.bottomKerningKey = property(lambda self: GSGlyph__bottomKerningKey(self)
 '''
 
 GSGlyph.leftMetricsKey = property(lambda self: self.pyobjc_instanceMethods.leftMetricsKey(),
-									lambda self, value: self.setLeftMetricsKey_(NSStr(value)))
+								  lambda self, value: self.setLeftMetricsKey_(NSStr(value)))
 '''
 	.. attribute:: leftMetricsKey
 		The leftMetricsKey of the glyph. This is a reference to another glyph by name or formula. It is used to synchronize the metrics with the linked glyph.
@@ -6893,7 +6884,7 @@ GSGlyph.leftMetricsKey = property(lambda self: self.pyobjc_instanceMethods.leftM
 		:type: str
 '''
 GSGlyph.rightMetricsKey = property(lambda self: self.pyobjc_instanceMethods.rightMetricsKey(),
-									lambda self, value: self.setRightMetricsKey_(NSStr(value)))
+								   lambda self, value: self.setRightMetricsKey_(NSStr(value)))
 '''
 	.. attribute:: rightMetricsKey
 		The rightMetricsKey of the glyph. This is a reference to another glyph by name or formula. It is used to synchronize the metrics with the linked glyph.
@@ -6901,7 +6892,7 @@ GSGlyph.rightMetricsKey = property(lambda self: self.pyobjc_instanceMethods.righ
 		:type: str
 '''
 GSGlyph.widthMetricsKey = property(lambda self: self.pyobjc_instanceMethods.widthMetricsKey(),
-									lambda self, value: self.setWidthMetricsKey_(NSStr(value)))
+								   lambda self, value: self.setWidthMetricsKey_(NSStr(value)))
 '''
 	.. attribute:: widthMetricsKey
 		The widthMetricsKey of the glyph. This is a reference to another glyph by name or formula. It is used to synchronize the metrics with the linked glyph.
@@ -6909,7 +6900,7 @@ GSGlyph.widthMetricsKey = property(lambda self: self.pyobjc_instanceMethods.widt
 		:type: str
 '''
 GSGlyph.export = property(lambda self: bool(self.pyobjc_instanceMethods.export()),
-							lambda self, value: self.setExport_(value))
+						  lambda self, value: self.setExport_(value))
 
 '''
 	.. attribute:: export
@@ -6930,7 +6921,7 @@ def __setColorIndex(self, value):
 	self.setColorIndex_(value)
 	
 GSGlyph.color = property(lambda self: __getColorIndex__(self),
-						lambda self, value: __setColorIndex(self, value))
+						 lambda self, value: __setColorIndex(self, value))
 '''
 	.. attribute:: color
 		Color marking of glyph in UI
@@ -6964,7 +6955,7 @@ def _set_Glyph_setColor(self, colorValue):
 	self.setColor_(colorValue)
 
 GSGlyph.colorObject = property(lambda self: self.pyobjc_instanceMethods.color(),
-								lambda self, value: _set_Glyph_setColor(self, value))
+							   lambda self, value: _set_Glyph_setColor(self, value))
 '''
 	.. attribute:: colorObject
 		NSColor object of glyph color, useful for drawing in plugins.
@@ -7168,9 +7159,6 @@ GSGlyph.duplicate = Glyph_Duplicate
 		If no name is given, .00n will be appended to it.
 '''
 
-
-
-
 ##################################################################################
 #
 #
@@ -7262,8 +7250,8 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 		reinterpolate()
 		applyTransform()
 
-		**Properties**
-	'''
+	**Properties**
+'''
 
 GSLayer.__new__ = staticmethod(GSObject__new__)
 GSLayer.__new__.__name__ = "__new__"
@@ -7291,7 +7279,7 @@ GSLayer.mutableCopyWithZone_ = GSObject__copy__
 GSLayer.__eq__ = python_method(lambda self, other: self.isEqualToLayer_(other))
 
 GSLayer.parent = property(lambda self: self.pyobjc_instanceMethods.parent(),
-									lambda self, value: self.setParent_(value))
+						  lambda self, value: self.setParent_(value))
 GSBackgroundLayer.parent = property(lambda self: self.pyobjc_instanceMethods.parent(),
 									lambda self, value: self.setParent_(value))
 GSControlLayer.parent = property(lambda self: self.pyobjc_instanceMethods.parent())
@@ -7303,10 +7291,10 @@ GSControlLayer.parent = property(lambda self: self.pyobjc_instanceMethods.parent
 '''
 
 GSLayer.name = property(lambda self: self.pyobjc_instanceMethods.name(),
-									lambda self, value: self.setName_(value), doc="Name of layer.")
+						lambda self, value: self.setName_(value), doc="Name of layer.")
 
 GSBackgroundLayer.name = property(lambda self: self.pyobjc_instanceMethods.name(),
-									lambda self, value: self.setName_(value))
+								  lambda self, value: self.setName_(value))
 
 '''
 	.. attribute:: name
@@ -7324,7 +7312,7 @@ GSLayer.master = property(lambda self: self.associatedFontMaster())
 '''
 
 GSLayer.associatedMasterId = property(lambda self: self.pyobjc_instanceMethods.associatedMasterId(),
-										lambda self, value: self.setAssociatedMasterId_(value))
+									  lambda self, value: self.setAssociatedMasterId_(value))
 '''
 	.. attribute:: associatedMasterId
 		The ID of the :class:`fontMaster <GSFontMaster>` this layer belongs to, in case this isn't a master layer. Every layer that isn't a master layer needs to be attached to one master layer.
@@ -7343,7 +7331,7 @@ GSLayer.associatedMasterId = property(lambda self: self.pyobjc_instanceMethods.a
 '''
 
 GSLayer.layerId = property(lambda self: self.pyobjc_instanceMethods.layerId(),
-							lambda self, value: self.setLayerId_(value))
+						   lambda self, value: self.setLayerId_(value))
 '''
 	.. attribute:: layerId
 		The unique layer ID is used to access the layer in the :class:`glyphs <GSGlyph>` layer dictionary.
@@ -7451,7 +7439,7 @@ GSLayer.components = property(lambda self: self.pyobjc_instanceMethods.component
 '''
 
 GSLayer.guides = property(lambda self: LayerGuidesProxy(self),
-							lambda self, value: LayerGuidesProxy(self).setter(value))
+						  lambda self, value: LayerGuidesProxy(self).setter(value))
 
 GSLayer.guideLines = GSLayer.guides
 
@@ -7482,7 +7470,7 @@ GSLayer.guideLines = GSLayer.guides
 '''
 
 GSLayer.annotations = property(lambda self: LayerAnnotationProxy(self),
-								lambda self, value: LayerAnnotationProxy(self).setter(value))
+							   lambda self, value: LayerAnnotationProxy(self).setter(value))
 '''
 	.. attribute:: annotations
 		List of :class:`GSAnnotation` objects.
@@ -7511,7 +7499,7 @@ GSLayer.annotations = property(lambda self: LayerAnnotationProxy(self),
 
 
 GSLayer.hints = property(lambda self: LayerHintsProxy(self),
-						lambda self, value: LayerHintsProxy(self).setter(value))
+						 lambda self, value: LayerHintsProxy(self).setter(value))
 '''
 	.. attribute:: hints
 		List of :class:`GSHint` objects.
@@ -7539,7 +7527,7 @@ GSLayer.hints = property(lambda self: LayerHintsProxy(self),
 '''
 
 GSLayer.anchors = property(lambda self: LayerAnchorsProxy(self),
-							lambda self, value: LayerAnchorsProxy(self).setter(value))
+						   lambda self, value: LayerAnchorsProxy(self).setter(value))
 '''
 	.. attribute:: anchors
 		List of :class:`GSAnchor` objects.
@@ -7564,7 +7552,7 @@ GSLayer.anchors = property(lambda self: LayerAnchorsProxy(self),
 '''
 
 GSLayer.shapes = property(lambda self: LayerShapesProxy(self),
-						lambda self, value: LayerShapesProxy(self).setter(value))
+						  lambda self, value: LayerShapesProxy(self).setter(value))
 '''
 	.. attribute:: shapes
 		List of :class:`GSShape` objects. That are most likely :class:`GSPath` or :class:`GSComponent` 
@@ -7628,7 +7616,7 @@ GSLayer.selection = property(lambda self: LayerSelectionProxy(self),
 '''
 
 GSLayer.LSB = property(lambda self: self.pyobjc_instanceMethods.LSB(),
-						lambda self, value: self.setLSB_(float(value)))
+					   lambda self, value: self.setLSB_(float(value)))
 '''
 	.. attribute:: LSB
 		Left sidebearing
@@ -7637,7 +7625,7 @@ GSLayer.LSB = property(lambda self: self.pyobjc_instanceMethods.LSB(),
 '''
 
 GSLayer.RSB = property(lambda self: self.pyobjc_instanceMethods.RSB(),
-						lambda self, value: self.setRSB_(float(value)))
+					   lambda self, value: self.setRSB_(float(value)))
 '''
 	.. attribute:: RSB
 		Right sidebearing
@@ -7671,7 +7659,7 @@ GSLayer.width = property(lambda self: self.pyobjc_instanceMethods.width(),
 						 GSLayer__setWidth)
 
 GSBackgroundLayer.width = property(lambda self: self.pyobjc_instanceMethods.width(),
-									lambda self, value: None)
+								   lambda self, value: None)
 '''
 	.. attribute:: width
 		Layer width
@@ -7693,7 +7681,7 @@ def __GSLayer_setVertWidth__(self, value):
 	self.setVertWidth_(value)
 	
 GSLayer.vertWidth = property(lambda self: __GSLayer_vertWidth__(self),
-						lambda self, value: __GSLayer_setVertWidth__(self, value))
+							 lambda self, value: __GSLayer_setVertWidth__(self, value))
 '''
 	.. attribute:: vertWidth
 		Layer vertical width
@@ -7719,7 +7707,7 @@ def __GSLayer_setVertOrigin__(self, value):
 	self.setVertOrigin_(value)
 
 GSLayer.vertOrigin = property(lambda self: __GSLayer_vertOrigin__(self),
-						lambda self, value: __GSLayer_setVertOrigin__(self, value))
+							  lambda self, value: __GSLayer_setVertOrigin__(self, value))
 '''
 	.. attribute:: vertOrigin
 		Layer vertical origin
@@ -7753,8 +7741,8 @@ GSLayer.descender = property(lambda self: self.pyobjc_instanceMethods.descender(
 '''
 
 GSLayer.leftMetricsKey = property(lambda self: self.pyobjc_instanceMethods.leftMetricsKey(),
-									lambda self, value: self.setLeftMetricsKey_(NSStr(value)),
-									doc="The leftMetricsKey of the layer.\n\nThis is a reference to another glyph by name or formula. It is used to synchronize the metrics with the linked glyph.")
+								  lambda self, value: self.setLeftMetricsKey_(NSStr(value)),
+								  doc="The leftMetricsKey of the layer.\n\nThis is a reference to another glyph by name or formula. It is used to synchronize the metrics with the linked glyph.")
 '''
 	.. attribute:: leftMetricsKey
 		The leftMetricsKey of the layer. This is a reference to another glyph by name or formula. It is used to synchronize the metrics with the linked glyph.
@@ -7762,7 +7750,7 @@ GSLayer.leftMetricsKey = property(lambda self: self.pyobjc_instanceMethods.leftM
 		:type: str
 '''
 GSLayer.rightMetricsKey = property(lambda self: self.pyobjc_instanceMethods.rightMetricsKey(),
-									lambda self, value: self.setRightMetricsKey_(NSStr(value)))
+								   lambda self, value: self.setRightMetricsKey_(NSStr(value)))
 '''
 	.. attribute:: rightMetricsKey
 		The rightMetricsKey of the layer. This is a reference to another glyph by name or formula. It is used to synchronize the metrics with the linked glyph.
@@ -7770,7 +7758,7 @@ GSLayer.rightMetricsKey = property(lambda self: self.pyobjc_instanceMethods.righ
 		:type: str
 '''
 GSLayer.widthMetricsKey = property(lambda self: self.pyobjc_instanceMethods.widthMetricsKey(),
-									lambda self, value: self.setWidthMetricsKey_(NSStr(value)))
+								   lambda self, value: self.setWidthMetricsKey_(NSStr(value)))
 '''
 	.. attribute:: widthMetricsKey
 		The widthMetricsKey of the layer. This is a reference to another glyph by name or formula. It is used to synchronize the metrics with the linked glyph.
@@ -7813,7 +7801,7 @@ GSLayer.metrics =  property(lambda self: self.pyobjc_instanceMethods.metrics())
 '''
 
 GSLayer.background = property(lambda self: self.pyobjc_instanceMethods.background(),
-								lambda self, value: self.setBackground_(value))
+							  lambda self, value: self.setBackground_(value))
 '''
 	.. attribute:: background
 		The background layer
@@ -7822,7 +7810,7 @@ GSLayer.background = property(lambda self: self.pyobjc_instanceMethods.backgroun
 '''
 
 GSLayer.backgroundImage = property(lambda self: self.pyobjc_instanceMethods.backgroundImage(),
-									lambda self, value: self.setBackgroundImage_(value))
+								   lambda self, value: self.setBackgroundImage_(value))
 '''
 	.. attribute:: backgroundImage
 		The background image. It will be scaled so that 1 em unit equals 1 of the image's pixels.
@@ -7905,7 +7893,6 @@ GSLayer.completeOpenBezierPath = property(lambda self: self.pyobjc_instanceMetho
 
 '''
 
-
 GSLayer.isAligned = property(lambda self: self.pyobjc_instanceMethods.isAligned())
 '''
 	.. attribute:: isAligned
@@ -7941,7 +7928,6 @@ GSLayer.italicAngle = property(lambda self: float(self.pyobjc_instanceMethods.it
 		:type: float
 
 '''
-
 
 GSLayer.userData = property(lambda self: UserDataProxy(self))
 '''
@@ -8225,7 +8211,6 @@ GSLayer.addMissingAnchors = Layer_addMissingAnchors
 
 '''
 
-
 '''
 	.. function:: clearSelection()
 	
@@ -8262,7 +8247,6 @@ GSLayer.reinterpolate = Layer_replaceLayerWithInterpolation
 		Applies to both master layers as well as brace layers and is equivalent to the 'Re-Interpolate' command from the Layers palette.
 
 '''
-
 
 def ControlLayer__new__(typ, *args, **kwargs):
 	if len(args) > 0:
@@ -8516,8 +8500,8 @@ GSAnchor.__eq__ = python_method(lambda self, other: self.isEqualToAnchor_(other)
 GSAnchor.mutableCopyWithZone_ = GSObject__copy__
 
 GSAnchor.position = property(lambda self: self.pyobjc_instanceMethods.position(),
-							lambda self, value: self.setPosition_(value),
-							doc="The position of the anchor.")
+							 lambda self, value: self.setPosition_(value),
+							 doc="The position of the anchor.")
 '''
 	.. attribute:: position
 		The position of the anchor
@@ -8537,8 +8521,8 @@ GSAnchor.position = property(lambda self: self.pyobjc_instanceMethods.position()
 '''
 
 GSAnchor.name = property(lambda self: self.pyobjc_instanceMethods.name(),
-						lambda self, value: self.setName_(value),
-						doc="The name of the anchor.")
+						 lambda self, value: self.setName_(value),
+						 doc="The name of the anchor.")
 '''
 	.. attribute:: name
 		The name of the anchor
@@ -8734,8 +8718,8 @@ GSComponent.componentName = property(lambda self: self.pyobjc_instanceMethods.co
 '''
 
 GSComponent.name = property(lambda self: self.pyobjc_instanceMethods.componentName(),
-									lambda self, value: self.setComponentName_(value),
-									doc="The glyph name the component is pointing to.")
+							lambda self, value: self.setComponentName_(value),
+							doc="The glyph name the component is pointing to.")
 '''
 	.. attribute:: name
 		The glyph name the component is pointing to.
@@ -8747,7 +8731,7 @@ GSComponent.name = property(lambda self: self.pyobjc_instanceMethods.componentNa
 '''
 
 GSComponent.component = property(lambda self: self.pyobjc_instanceMethods.component(),
-							doc="The glyph the component is pointing to.")
+								 doc="The glyph the component is pointing to.")
 '''
 	.. attribute:: component
 		The :class:`GSGlyph` the component is pointing to. This is read-only. In order to change the referenced base glyph, set :attr:`componentName <GSComponent.componentName>` to the new glyph name.
@@ -8757,7 +8741,7 @@ GSComponent.component = property(lambda self: self.pyobjc_instanceMethods.compon
 '''
 
 GSComponent.componentLayer = property(lambda self: self.pyobjc_instanceMethods.componentLayer(),
-							doc="The layer the component is pointing to.")
+									  doc="The layer the component is pointing to.")
 '''
 	.. attribute:: componentLayer
 		The :class:`GSLayer` the component is pointing to. This is read-only. In order to change the referenced base glyph, set :attr:`componentName <GSComponent.componentName>` to the new glyph name.
@@ -8792,9 +8776,8 @@ GSComponent.transform = property(lambda self: self.transformStruct(),
 
 '''
 
-
 GSComponent.bounds = property(lambda self: self.pyobjc_instanceMethods.bounds(),
-								doc="Bounding box of the component. (read-only)")
+							  doc="Bounding box of the component. (read-only)")
 '''
 	.. attribute:: bounds
 		Bounding box of the component, read-only
@@ -8817,8 +8800,8 @@ GSComponent.disableAlignment = property(lambda self: bool(self.pyobjc_instanceMe
 										lambda self, value: self.setDisableAlignment_(value))
 # new:
 GSComponent.automaticAlignment = property(lambda self: bool(self.doesAlign() or self.doesAttach()),
-											lambda self, value: self.setDisableAlignment_(not bool(value)),
-											doc="Defines whether the component is automatically aligned.")
+										  lambda self, value: self.setDisableAlignment_(not bool(value)),
+										  doc="Defines whether the component is automatically aligned.")
 '''
 	.. attribute:: automaticAlignment
 		Defines whether the component is automatically aligned.
@@ -8826,7 +8809,7 @@ GSComponent.automaticAlignment = property(lambda self: bool(self.doesAlign() or 
 		:type: bool
 '''
 GSComponent.alignment = property(lambda self: self.pyobjc_instanceMethods.alignment(),
-								lambda self, value: self.setAlignment_(value))
+								 lambda self, value: self.setAlignment_(value))
 
 '''
 	.. attribute:: alignment
@@ -8837,7 +8820,7 @@ GSComponent.alignment = property(lambda self: self.pyobjc_instanceMethods.alignm
 '''
 
 GSComponent.locked = property(lambda self: bool(self.pyobjc_instanceMethods.locked()),
-								lambda self, value: self.setLocked_(value))
+							  lambda self, value: self.setLocked_(value))
 '''
 	.. attribute:: locked
 		.. versionadded:: 2.5
@@ -8849,7 +8832,7 @@ GSComponent.locked = property(lambda self: bool(self.pyobjc_instanceMethods.lock
 '''
 
 GSComponent.anchor = property(lambda self: self.pyobjc_instanceMethods.anchor(),
-								lambda self, value: self.setAnchor_(value))
+							  lambda self, value: self.setAnchor_(value))
 '''
 	.. attribute:: anchor
 		If more than one anchor/_anchor pair would match, this property can be used to set the anchor to use for automatic alignment
@@ -8858,8 +8841,6 @@ GSComponent.anchor = property(lambda self: self.pyobjc_instanceMethods.anchor(),
 
 		:type: str
 '''
-
-
 
 '''
 	.. attribute:: selected
@@ -8966,7 +8947,7 @@ GSComponent.tempData = property(lambda self: TempDataProxy(self))
 '''
 
 GSComponent.parent = property(lambda self: self.pyobjc_instanceMethods.parent(),
-								lambda self, value: self.setParent_(value))
+							  lambda self, value: self.setParent_(value))
 
 def __GSComponent_decompose__(self, doAnchors=True, doHints=True):
 	assert(self.parent is not None)
@@ -9013,8 +8994,6 @@ GSComponent.applyTransform = python_method(__GSComponent_applyTransform__)
 						))
 
 '''
-
-
 
 ##################################################################################
 #
@@ -9066,7 +9045,7 @@ def SmartComponentProperty__repr__(self):
 GSSmartComponentAxis.__repr__ = python_method(SmartComponentProperty__repr__)
 
 GSSmartComponentAxis.name = property(lambda self: self.pyobjc_instanceMethods.name(),
-								lambda self, value: self.setName_(objcObject(value)))
+									 lambda self, value: self.setName_(objcObject(value)))
 '''
 	.. attribute:: name
 		Name of the axis. The name is for display purpose only.
@@ -9084,7 +9063,7 @@ GSSmartComponentAxis.id = property(lambda self: self.axisId())
 '''
 
 GSSmartComponentAxis.topValue = property(lambda self: self.pyobjc_instanceMethods.topValue(),
-								lambda self, value: self.setTopValue_(value))
+										 lambda self, value: self.setTopValue_(value))
 '''
 	.. attribute:: topValue
 		Top end (pole) value on interpolation axis.
@@ -9093,7 +9072,7 @@ GSSmartComponentAxis.topValue = property(lambda self: self.pyobjc_instanceMethod
 '''
 
 GSSmartComponentAxis.bottomValue = property(lambda self: self.pyobjc_instanceMethods.bottomValue(),
-								lambda self, value: self.setBottomValue_(value))
+											lambda self, value: self.setBottomValue_(value))
 '''
 	.. attribute:: bottomValue
 		Bottom end (pole) value on interpolation axis.
@@ -9138,7 +9117,7 @@ For details on how to access them, please see :attr:`GSLayer.shapes`
 GSShape.locked = property(lambda self: bool(self.pyobjc_instanceMethods.locked()),
 						  lambda self, value: self.setLocked_(value))
 GSPath.locked = property(lambda self: bool(self.pyobjc_instanceMethods.locked()),
-						  lambda self, value: self.setLocked_(value))
+						 lambda self, value: self.setLocked_(value))
 '''
 	.. attribute:: locked
 		Locked
@@ -9225,7 +9204,7 @@ GSPath.__eq__ = python_method(lambda self, other: self.isEqualToPath_(other))
 GSPath.mutableCopyWithZone_ = GSObject__copy__
 
 GSPath.parent = property(lambda self: self.pyobjc_instanceMethods.parent(),
-						lambda self, value: self.setParent_(value))
+						 lambda self, value: self.setParent_(value))
 '''
 	.. attribute:: parent
 		Reference to the :class:`layer <GSLayer>` object.
@@ -9252,7 +9231,7 @@ def Path__len__(self):
 GSPath.__len__ = python_method(Path__len__)
 
 GSPath.segments = property(lambda self: PathSegmentsProxy(self),
-						lambda self, value: PathSegmentsProxy(self).setter(value))
+						   lambda self, value: PathSegmentsProxy(self).setter(value))
 '''
 	.. attribute:: segments
 		A list of segments as NSPoint objects. Two objects represent a line, four represent a curve. Start point of the segment is included.
@@ -9267,7 +9246,7 @@ GSPath.segments = property(lambda self: PathSegmentsProxy(self),
 '''
 
 GSPath.closed = property(lambda self: bool(self.pyobjc_instanceMethods.closed()),
-						lambda self, value: self.setClosed_(value))
+						 lambda self, value: self.setClosed_(value))
 '''
 	.. attribute:: closed
 		Returns True if the the path is closed
@@ -9276,7 +9255,6 @@ GSPath.closed = property(lambda self: bool(self.pyobjc_instanceMethods.closed())
 '''
 
 GSPath.direction = property(lambda self: self.pyobjc_instanceMethods.direction())
-
 '''
 	.. attribute:: direction
 		Path direction. -1 for counter clockwise, 1 for clockwise.
@@ -9414,7 +9392,6 @@ GSPath.addNodesAtExtremes = Path_addNodesAtExtremes
 		Add nodes at path's extrema, e.g., top, bottom etc.
 '''
 
-
 def __CGPath_applyTransform__(self, transformStruct):
 	Transform = NSAffineTransform.transform()
 	Transform.setTransformStruct_(transformStruct)
@@ -9518,7 +9495,7 @@ GSNode.__eq__ = python_method(lambda self, other: self.isEqualToNode_(other))
 GSNode.mutableCopyWithZone_ = GSObject__copy__
 
 GSElement.position = property(lambda self: self.pyobjc_instanceMethods.position(),
-							lambda self, value: self.setPosition_(validatePoint(value)))
+							  lambda self, value: self.setPosition_(validatePoint(value)))
 '''
 	.. attribute:: position
 		The position of the node.
@@ -9681,7 +9658,6 @@ def __GSNode__prevNode__(self):
 	return None
 
 GSNode.prevNode = property(lambda self: __GSNode__prevNode__(self))
-
 '''
 	.. attribute:: prevNode
 		Returns the previous node in the path.
@@ -9866,7 +9842,7 @@ GSGuide.__eq__ = python_method(lambda self, other: self.isEqualToGuide_(other))
 GSGuide.mutableCopyWithZone_ = GSObject__copy__
 
 GSGuide.lockAngle = property(lambda self: self.pyobjc_instanceMethods.lockAngle(),
-							lambda self, value: self.setLockAngle_(value))
+							 lambda self, value: self.setLockAngle_(value))
 '''
 	.. attribute:: lockAngle
 		locks the angle
@@ -10030,7 +10006,7 @@ GSAnnotation.type = property(lambda self: self.pyobjc_instanceMethods.type(),
 '''
 
 GSAnnotation.text = property(lambda self: self.pyobjc_instanceMethods.text(),
-							lambda self, value: self.setText_(value))
+							 lambda self, value: self.setText_(value))
 '''
 	.. attribute:: text
 		The content of the annotation. Only useful if type == TEXT
@@ -10039,7 +10015,7 @@ GSAnnotation.text = property(lambda self: self.pyobjc_instanceMethods.text(),
 '''
 
 GSAnnotation.angle = property(lambda self: self.pyobjc_instanceMethods.angle(),
-							lambda self, value: self.setAngle_(value))
+							  lambda self, value: self.setAngle_(value))
 '''
 	.. attribute:: angle
 		The angle of the annotation.
@@ -10048,7 +10024,7 @@ GSAnnotation.angle = property(lambda self: self.pyobjc_instanceMethods.angle(),
 '''
 
 GSAnnotation.width = property(lambda self: self.pyobjc_instanceMethods.width(),
-							lambda self, value: self.setWidth_(value))
+							  lambda self, value: self.setWidth_(value))
 '''
 	.. attribute:: width
 		The width of the annotation.
@@ -10098,7 +10074,7 @@ For details on how to access them, please see :class:`GSLayer.hints`
 		stem
 
 	**Properties**
-	'''
+'''
 
 GSHint.__new__ = staticmethod(GSObject__new__)
 GSHint.__new__.__name__ = "__new__"
@@ -10158,7 +10134,7 @@ GSHint.scale = property(lambda self: self.pyobjc_instanceMethods.scale(),
 						lambda self, value: self.setScale_(value))
 
 GSHint.originNode = property(lambda self: self.pyobjc_instanceMethods.originNode(),
-							lambda self, value: self.setOriginNode_(value))
+							 lambda self, value: self.setOriginNode_(value))
 '''
 	.. attribute:: originNode
 		The first node the hint is attached to.
@@ -10167,7 +10143,7 @@ GSHint.originNode = property(lambda self: self.pyobjc_instanceMethods.originNode
 '''
 
 GSHint.position = property(Hint__origin__pos,
-						lambda self, value: self.setOrigin_(value))
+						   lambda self, value: self.setOrigin_(value))
 GSHint.width = property(lambda self: Hint__width__pos(self),
 						lambda self, value: self.setOrigin_(value))
 
@@ -10185,7 +10161,7 @@ GSHint.other1 = property(lambda self: __indexPathToIndexes__(self.otherIndex1())
 GSHint.other2 = property(lambda self: __indexPathToIndexes__(self.otherIndex2()))
 
 GSHint.targetNode = property(lambda self: self.pyobjc_instanceMethods.targetNode(),
-							lambda self, value: self.setTargetNode_(value))
+							 lambda self, value: self.setTargetNode_(value))
 '''
 	.. attribute:: targetNode
 		The the second node this hint is attached to. In the case of a ghost hint, this value will be empty.
@@ -10194,7 +10170,7 @@ GSHint.targetNode = property(lambda self: self.pyobjc_instanceMethods.targetNode
 '''
 
 GSHint.otherNode1 = property(lambda self: self.pyobjc_instanceMethods.otherNode1(),
-							lambda self, value: self.setOtherNode1_(value))
+							 lambda self, value: self.setOtherNode1_(value))
 '''
 	.. attribute:: otherNode1
 		A third node this hint is attached to. Used for Interpolation or Diagonal hints.
@@ -10203,7 +10179,7 @@ GSHint.otherNode1 = property(lambda self: self.pyobjc_instanceMethods.otherNode1
 '''
 
 GSHint.otherNode2 = property(lambda self: self.pyobjc_instanceMethods.otherNode2(),
-							lambda self, value: self.setOtherNode2_(value))
+							 lambda self, value: self.setOtherNode2_(value))
 '''
 	.. attribute:: otherNode2
 		A fourth node this hint is attached to. Used for Diagonal hints.
@@ -10212,7 +10188,7 @@ GSHint.otherNode2 = property(lambda self: self.pyobjc_instanceMethods.otherNode2
 '''
 
 GSHint.type = property(lambda self: self.pyobjc_instanceMethods.type(),
-						lambda self, value: self.setType_(value))
+					   lambda self, value: self.setType_(value))
 '''
 	.. attribute:: type
 		See Constants section at the bottom of the page.
@@ -10221,7 +10197,7 @@ GSHint.type = property(lambda self: self.pyobjc_instanceMethods.type(),
 '''
 
 GSHint.options = property(lambda self: self.pyobjc_instanceMethods.options(),
-							lambda self, value: self.setOptions_(value))
+						  lambda self, value: self.setOptions_(value))
 '''
 	.. attribute:: options
 		Stores extra options for the hint. For TT hints, that might be the rounding settings.
@@ -10231,7 +10207,7 @@ GSHint.options = property(lambda self: self.pyobjc_instanceMethods.options(),
 '''
 
 GSHint.horizontal = property(lambda self: bool(self.pyobjc_instanceMethods.horizontal()),
-							lambda self, value: self.setHorizontal_(value))
+							 lambda self, value: self.setHorizontal_(value))
 '''
 	.. attribute:: horizontal
 		True if hint is horizontal, False if vertical.
@@ -10583,8 +10559,6 @@ GSBackgroundImage.scaleHeightToEmUnits = BackgroundImage_scaleHeightToEmUnits
 			layer.backgroundImage.scaleHeightToEmUnits(font.upm)
 '''
 
-
-
 ##################################################################################
 #
 #
@@ -10653,7 +10627,7 @@ GSFontViewController.parent = property(lambda self: self.representedObject())
 '''
 
 GSEditViewController.text = property(lambda self: self.graphicView().displayStringASCIIonly_(False),
-									lambda self, value: self.graphicView().setDisplayString_(value))
+									 lambda self, value: self.graphicView().setDisplayString_(value))
 '''
 	.. attribute:: text
 		The text of the tab, either as text, or slash-escaped glyph names, or mixed. OpenType features will be applied after the text has been changed.
@@ -10680,7 +10654,7 @@ GSEditViewController.masterIndex = property(lambda self: self.pyobjc_instanceMet
 	
 		.. versionadded:: 2.6.1
 '''
-	
+
 GSEditViewController.selectedLayers = property(lambda self: self.pyobjc_instanceMethods.selectedLayers())
 
 GSFontViewController.selectedLayers = property(lambda self: self.pyobjc_instanceMethods.selectedLayers())
@@ -10854,7 +10828,7 @@ GSEditViewController.selectedLayerOrigin = property(lambda self: self.graphicVie
 '''
 
 GSEditViewController.textCursor = property(lambda self: self.graphicView().selectedRange().location,
-											lambda self, value: self.graphicView().setSelectedRange_(NSRange(value, self.graphicView().selectedRange().length)))
+										   lambda self, value: self.graphicView().setSelectedRange_(NSRange(value, self.graphicView().selectedRange().length)))
 '''
 	.. attribute:: textCursor
 		Position of text cursor in text, starting with 0.
@@ -11054,7 +11028,6 @@ GSEditViewController.close = Close_Tab
 		Close this tab.
 '''
 
-
 def GSEditViewController_saveToPDF(self, path, rect=None):
 
 	if rect is None:
@@ -11076,7 +11049,6 @@ GSEditViewController.saveToPDF = GSEditViewController_saveToPDF
 
 		.. versionadded:: 2.4
 '''
-
 
 '''
 	.. function:: redraw()
@@ -11443,7 +11415,7 @@ GSMetricValue.position = property(lambda self: self.pyobjc_instanceMethods.posit
 '''
 
 GSMetricValue.overshoot = property(lambda self: self.pyobjc_instanceMethods.overshoot(),
-								  lambda self, value: self.setOvershoot_(value))
+								   lambda self, value: self.setOvershoot_(value))
 '''
 	.. attribute:: overshoot
 		The overshoot
@@ -11475,8 +11447,6 @@ GSMetricValue.metric = property(lambda self: self.pyobjc_instanceMethods.metric(
 
 		:type: str
 '''
-
-
 
 '''
 
@@ -11707,7 +11677,7 @@ NSAffineTransform.skew = python_method(NSAffineTransform__skew)
 '''
 
 NSAffineTransform.matrix = property(lambda self: tuple(self.transformStruct()),
-									   lambda self, value: self.setTransformStruct_(value))
+									lambda self, value: self.setTransformStruct_(value))
 
 '''
 	.. attribute:: matrix
@@ -11902,19 +11872,21 @@ def __Dict__del__(self, key):
 MGOrderedDictionary.__delattr__ = python_method(__Dict__del__)
 
 
-def GetFile(message=None, allowsMultipleSelection=False, filetypes=None):
-	return GetOpenFile(message, allowsMultipleSelection, filetypes)
+def GetFile(message=None, title=None, allowsMultipleSelection=False, filetypes=None):
+	return GetOpenFile(message, title, allowsMultipleSelection, filetypes)
 
-def GetOpenFile(message=None, allowsMultipleSelection=False, filetypes=None, path=None):
+def GetOpenFile(message=None, title=None, allowsMultipleSelection=False, filetypes=None, path=None):
 	if filetypes is None:
 		filetypes = []
-	Panel = NSOpenPanel.openPanel().retain()
+	Panel = NSOpenPanel.new()
 	Panel.setCanChooseFiles_(True)
 	Panel.setCanChooseDirectories_(False)
 	Panel.setAllowsMultipleSelection_(allowsMultipleSelection)
 	if path is not None:
 		Panel.setDirectory_(path)
 	if message is not None:
+		Panel.setMessage_(message)
+	if title is not None:
 		Panel.setTitle_(message)
 	if filetypes is not None:
 		if isString(filetypes):
