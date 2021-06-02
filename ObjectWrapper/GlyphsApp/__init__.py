@@ -11490,6 +11490,12 @@ The Text Preview Window
 		font
 		instanceIndex
 		fontSize
+	
+	Functions
+
+	.. autosummary::
+
+		openWindow()
 
 	**Properties**
 
@@ -11523,6 +11529,25 @@ GSPreviewTextWindowClass.fontSize = property(lambda self: Glyphs.intDefaults["GS
 		The font size
 
 		:type: int
+'''
+
+'''
+	.. function:: openWindow()
+		opens PreviewTextWindow
+
+	.. code-block:: python
+		# open PreviewTextWindow
+		PreviewTextWindow.openWindow()
+
+		# setting instance in PreviewTextWindow to "Regular"
+		font = PreviewTextWindow.font
+		instanceNames = [instance.name for instance in font.instances]
+		regularIndex = instanceNames.index("Regular")
+		PreviewTextWindow.instanceIndex = regularIndex
+
+		# setting text and font size value
+		PreviewTextWindow.text = 'hamburgefontsiv'
+		PreviewTextWindow.fontSize = 200
 '''
 
 def _______________(): pass
