@@ -11280,6 +11280,12 @@ GSFontInfoValueLocalized.key = property(lambda self: self.pyobjc_instanceMethods
 		the key
 
 		:type: str
+
+	.. code-block:: python
+		# searching for GSFontInfoValueLocalized with given "designers" key
+		for fontInfo in font.properties:
+			if fontInfo.key == "designers":
+				print(fontInfo)
 '''
 
 GSFontInfoValueLocalized.values = property(lambda self: self.mutableArrayValueForKey_("values"),
@@ -11289,6 +11295,11 @@ GSFontInfoValueLocalized.values = property(lambda self: self.mutableArrayValueFo
 		A list of :class:`GSFontInfoValue` objects.
 
 		:type: list
+
+	.. code-block:: python
+		# listing values of GSFontInfoValueLocalized
+		for fontInfoValue in fontInfoValueLocalized.values:
+			print(fontInfoValue)
 '''
 
 GSFontInfoValueLocalized.defaultValue = property(lambda self: self.pyobjc_instanceMethods.defaultValue())
@@ -11297,6 +11308,20 @@ GSFontInfoValueLocalized.defaultValue = property(lambda self: self.pyobjc_instan
 		the value that is considered the default (either the dflt or English entry)
 
 		:type: str
+
+	.. code-block:: python
+		# prints the default value for given GSFontInfoValueLocalized instance
+		print(fontInfoValueLocalized.defaultValue)
+		
+		# The print below will always return True, because 
+		# font.designer represent the same value
+		
+		fontInfoValueLocalized = None
+		for fontInfo in font.properties:
+			if fontInfo.key == "designers":
+				fontInfoValueLocalized = fontInfo
+
+		print(fontInfoValueLocalized.defaultValue == font.designer) 
 '''
 
 '''
