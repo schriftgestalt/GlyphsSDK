@@ -11391,7 +11391,7 @@ GSFontInfoValue.key = property(lambda self: self.pyobjc_instanceMethods.key(),
 		:type: str
 
 	.. code-block:: python
-		# GSFontInfoValue is stored in values attribute of font.properties
+		# GSFontInfoValue is stored in e.g. values attribute of font.properties
 		for fontProperty in font.properties:
 			
 			# not all of font.properties contains this attribute
@@ -11413,7 +11413,7 @@ GSFontInfoValue.value = property(lambda self: self.pyobjc_instanceMethods.value(
 		:type: str
 
 	.. code-block:: python
-		# GSFontInfoValue is stored in values attribute of font.properties
+		# GSFontInfoValue is stored in e.g. values attribute of font.properties
 		for fontProperty in font.properties:
 			
 			# not all of font.properties contains this attribute
@@ -11434,7 +11434,7 @@ GSFontInfoValue.languageTag = property(lambda self: self.pyobjc_instanceMethods.
 		:type: str
 
 	.. code-block:: python
-		# GSFontInfoValue is stored in values attribute of font.properties
+		# GSFontInfoValue is stored in e.g. values attribute of font.properties
 		for fontProperty in font.properties:
 			
 			# not all of font.properties contains this attribute
