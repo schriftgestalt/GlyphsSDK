@@ -11389,6 +11389,19 @@ GSFontInfoValue.key = property(lambda self: self.pyobjc_instanceMethods.key(),
 		the key
 
 		:type: str
+
+	.. code-block:: python
+		# GSFontInfoValue is stored in values attribute of font.properties
+		for fontProperty in font.properties:
+			
+			# not all of font.properties contains this attribute
+			# so we are going to look for those, that have it
+			if hasattr(fontProperty, "values"):
+				for fontInfoValue in fontProperty.values:
+
+					# this line prints out the key attribute of
+					# found GSFontInfoValue instance
+					print(fontInfoValue.key)
 '''
 
 GSFontInfoValue.value = property(lambda self: self.pyobjc_instanceMethods.value(),
@@ -11398,6 +11411,19 @@ GSFontInfoValue.value = property(lambda self: self.pyobjc_instanceMethods.value(
 		The value
 
 		:type: str
+
+	.. code-block:: python
+		# GSFontInfoValue is stored in values attribute of font.properties
+		for fontProperty in font.properties:
+			
+			# not all of font.properties contains this attribute
+			# so we are going to look for those, that have it
+			if hasattr(fontProperty, "values"):
+				for fontInfoValue in fontProperty.values:
+
+					# this line prints out the value attribute of
+					# found GSFontInfoValue instance
+					print(fontInfoValue.value)
 '''
 GSFontInfoValue.languageTag = property(lambda self: self.pyobjc_instanceMethods.languageTag(),
 									   lambda self, value: self.setLanguageTag_(value))
@@ -11406,6 +11432,19 @@ GSFontInfoValue.languageTag = property(lambda self: self.pyobjc_instanceMethods.
 		The languageTag
 
 		:type: str
+
+	.. code-block:: python
+		# GSFontInfoValue is stored in values attribute of font.properties
+		for fontProperty in font.properties:
+			
+			# not all of font.properties contains this attribute
+			# so we are going to look for those, that have it
+			if hasattr(fontProperty, "values"):
+				for fontInfoValue in fontProperty.values:
+
+					# this line prints out the languageTag attribute of
+					# found GSFontInfoValue instance
+					print(fontInfoValue.languageTag)
 '''
 
 '''
