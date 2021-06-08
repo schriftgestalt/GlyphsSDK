@@ -7893,7 +7893,7 @@ GSLayer.completeOpenBezierPath = property(lambda self: self.pyobjc_instanceMetho
 
 '''
 
-GSLayer.isAligned = property(lambda self: self.pyobjc_instanceMethods.isAligned())
+GSLayer.isAligned = property(lambda self: bool(self.pyobjc_instanceMethods.isAligned()))
 '''
 	.. attribute:: isAligned
 		Indicates if the components are auto aligned.

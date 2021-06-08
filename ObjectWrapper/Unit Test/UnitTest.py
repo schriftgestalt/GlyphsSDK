@@ -87,8 +87,8 @@ class GlyphsAppTests(unittest.TestCase):
 			self.assertEqual(intObject, 1)
 			intObject = oldValue
 	
-	def assertFloat(self, floatObject, assertType = True, readOnly = False):
-		if assertType:
+	def assertFloat(self, floatObject, assertType = True, readOnly = False, allowNone = False):
+		if assertType and not (floatObject is None and allowNone):
 			self.assertIsInstance(floatObject, float)
 		if readOnly == False:
 			oldValue = floatObject
@@ -1534,6 +1534,18 @@ class GlyphsAppTests(unittest.TestCase):
 		# GSLayer.width
 		self.assertFloat(layer.width)
 
+		# GSLayer.vertWidth
+		self.assertFloat(layer.vertWidth, allowNone=True)
+
+		# GSLayer.vertOrigin
+		self.assertFloat(layer.vertOrigin, allowNone=True)
+
+		# GSLayer.ascender
+		self.assertFloat(layer.ascender)
+
+		# GSLayer.descender
+		self.assertFloat(layer.descender)
+
 		# GSLayer.leftMetricsKey
 		self.assertUnicode(layer.leftMetricsKey)
 
@@ -1548,6 +1560,13 @@ class GlyphsAppTests(unittest.TestCase):
 
 		# GSLayer.selectionBounds
 		self.assertIsInstance(layer.selectionBounds, NSRect)
+
+		# GSLayer.metrics
+		for m in layer.metrics:
+			if m.name == "Ascender":
+				self.assertEqual(m.position, layer.ascender)
+			elif m.name == "Descender":
+				self.assertEqual(m.position, layer.descender)
 
 		# GSLayer.background
 		self.assertIn('GSBackgroundLayer', layer.background.__repr__())
@@ -1566,6 +1585,18 @@ class GlyphsAppTests(unittest.TestCase):
 
 		# GSLayer.completeOpenBezierPath
 		# self.assertIsInstance(layer.completeOpenBezierPath, NSBezierPath) # TODO: is NULL if there are no open paths
+
+		# GSLayer.isAligned
+		self.assertBool(layer.isAligned, readOnly=True)
+
+		# GSLayer.isSpecialLayer
+		self.assertBool(layer.isSpecialLayer, readOnly=True)
+
+		# GSLayer.isMasterLayer
+		self.assertBool(layer.isMasterLayer, readOnly=True)
+
+		# GSLayer.italicAngle
+		self.assertFloat(layer.italicAngle, readOnly=True)
 
 		# GSLayer.userData
 		self.assertIsNotNone(layer.userData)
@@ -1603,8 +1634,8 @@ class GlyphsAppTests(unittest.TestCase):
 
 		layer.addNodesAtExtremes()
 		
-		transform = NSAffineTransform()
-		transform.scale = (0.5, 0.5)
+		transform = NSAffineTransform.new()
+		transform.scaleXBy_yBy_(0.5, 0.5)
 		layer.applyTransform(transform.transformStruct())
 
 		layer.beginChanges()
