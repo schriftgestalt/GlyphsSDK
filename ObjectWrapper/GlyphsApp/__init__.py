@@ -12102,55 +12102,71 @@ def LogError(message):
 Constants
 =========
 
-Node types
+Node Types
+==============
 
 .. data:: LINE
+
 	Line node.
 
 .. data:: CURVE
+
 	Curve node. Make sure that each curve node is preceded by two off-curve nodes.
 
 .. data:: QCURVE
+
 	Quadratic curve node. Make sure that each curve node is preceded by at least one off-curve node.
 
 .. data:: OFFCURVE
+
 	Off-cuve node
 
 Export formats
 ==============
 
 .. data:: OTF
+
 	Write CFF based font
 
 .. data:: TTF
+
 	Write CFF based font
 
 .. data:: VARIABLE
+
 	Write Variable font
 
 .. data:: UFO
+
 	Write UFO based font
 
 .. data:: WOFF
+
 	Write WOFF
 
 .. data:: WOFF2
+
 	Write WOFF
 
 .. data:: PLAIN
+
 	do not package as webfont
 
 .. data:: EOT
+
 	Write EOT
 
 .. versionadded:: 2.5
 
 Instance Types
 ==============
+
 .. data:: INSTANCETYPESINGLE
+
 	single interpolation instance
 
 .. data:: INSTANCETYPEVARIABLE
+
 	variable font setting
 
 .. versionadded:: 3.0.1
@@ -12159,36 +12175,47 @@ Hint types
 ==========
 
 .. data:: TOPGHOST
+
 	Top ghost for PS hints
 
 .. data:: STEM
+
 	Stem for PS hints
 
 .. data:: BOTTOMGHOST
+
 	Bottom ghost for PS hints
 
 .. data:: TTSNAP
+
 	Snap for TT hints
 
 .. data:: TTSTEM
+
 	Stem for TT hints
 
 .. data:: TTSHIFT
+
 	Shift for TT hints
 
 .. data:: TTINTERPOLATE
+
 	Interpolation for TT hints
 
 .. data:: TTDIAGONAL
+
 	Diagonal for TT hints
 
 .. data:: TTDELTA
+
 	Delta TT hints
 
 .. data:: CORNER
+
 	Corner Component
 
 .. data:: CAP
+
 	Cap Component
 
 Hint Option
@@ -12197,18 +12224,23 @@ Hint Option
 This is only used for TrueType hints.
 
 .. data:: TTROUND
+
 	Round to grid
 
 .. data:: TTROUNDUP
+
 	Round up
 
 .. data:: TTROUNDDOWN
+
 	Round down
 
 .. data:: TTDONTROUND
+
 	Don’t round at all
 
 .. data:: TRIPLE = 128
+
 	Indicates a triple hint group. There need to be exactly three horizontal TTStem hints with this setting to take effect.
 
 Menu Tags
@@ -12217,45 +12249,58 @@ Menu Tags
 This are tags to access the menu items in the apps main menu. Please see :attr:`GSApplication.menu` for details
 
 .. data:: APP_MENU
+
 	The 'Glyphs' menu
 
 .. data:: FILE_MENU
+
 	The File menu
 
 .. data:: EDIT_MENU
+
 	The Edit menu
 
 .. data:: GLYPH_MENU
+
 	The Glyph menu
 
 .. data:: PATH_MENU
+
 	The Path menu
 
 .. data:: FILTER_MENU
+
 	The Filter menu
 
 .. data:: VIEW_MENU
+
 	The View menu
 
 .. data:: SCRIPT_MENU
+
 	The Script menu
 
 .. data:: WINDOW_MENU
+
 	The Window menu
 
 .. data:: HELP_MENU
+
 	The Help menu
 
 Menu States
 ===========
 
 .. data:: ONSTATE
+
 	The menu entry will have a checkbox
 
 .. data:: OFFSTATE
+
 	The menu entry will have no checkbox
 
 .. data:: MIXEDSTATE
+
 	The menu entry will have horizontal line
 
 Callback Keys
@@ -12264,25 +12309,32 @@ Callback Keys
 This are the available callbacks
 
 .. data:: DRAWFOREGROUND
+
 	to draw in the foreground
 
 .. data:: DRAWBACKGROUND
+
 	to draw in the background
 
 .. data:: DRAWINACTIVE
+
 	draw inactive glyphs
 
 .. data:: DOCUMENTOPENED
+
 	is called if a new document is opened
 
 .. data:: DOCUMENTACTIVATED
+
 	is called when the document becomes the active document
 
 .. data:: DOCUMENTWASSAVED
+
 	is called when the document is saved.
 	The document itself is passed in notification.object()
 
 .. data:: DOCUMENTEXPORTED
+
 	if a font is exported. This is called for every instance and ``notification.object()`` will contain the path to the final font file.
 
 	.. code-block:: python
@@ -12298,18 +12350,23 @@ This are the available callbacks
 		Glyphs.addCallback(exportCallback, DOCUMENTEXPORTED)
 
 .. data:: DOCUMENTCLOSED
+
 	is called when the document is closed
 
 .. data:: TABDIDOPEN
+
 	if a new tab is opened
 
 .. data:: TABWILLCLOSE
+
 	if a tab is closed
 
 .. data:: UPDATEINTERFACE
+
 	if some thing changed in the edit view. Maybe the selection or the glyph data.
 
 .. data:: MOUSEMOVED
+
 	is called if the mouse is moved. If you need to draw something, you need to call `Glyphs.redraw()` and also register to one of the drawing callbacks.
 
 Writing Directions
@@ -12318,23 +12375,29 @@ Writing Directions
 The writing directions of the Edit View.
 
 .. data:: LTR
+
 	Left To Right (e.g. Latin)
 
 .. data:: RTL
+
 	Right To Left (e.g. Arabic, Hebrew)
 
 .. data:: LTRTTB
+
 	Left To Right, Top To Bottom
 
 .. data:: RTLTTB
+
 	Right To Left, Top To Bottom
 
 Shape Type
 ==========
 .. data:: GSShapeTypePath
+
 	Path
 
 .. data:: GSShapeTypeComponent
+
 	Component
 
 Annotation types
