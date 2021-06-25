@@ -8688,9 +8688,9 @@ GSComponent.scale = property(lambda self: self.pyobjc_instanceMethods.scale(),
 	.. attribute:: scale
 		Scale factor of the component.
 
-		Set a single float to scale proportionally or a tuple for different horizontal and vertical scale.
+		A tuple containing the horizontal and vertical scale.
 
-		:type: float or tuple
+		:type: tuple
 
 '''
 

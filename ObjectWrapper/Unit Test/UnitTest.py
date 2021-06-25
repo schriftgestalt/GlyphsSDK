@@ -1742,9 +1742,15 @@ class GlyphsAppTests(unittest.TestCase):
 
 		# GSComponent.position
 		self.assertIsInstance(component.position, NSPoint)
+		# Setting the position does not work as expected unless the component is copied first
+		copy_component = copy.copy(component)
+		copy_component.position = (20, 10)
+		self.assertEqual(copy_component.position, NSPoint(20, 10))
 
 		# GSComponent.scale
-		self.assertTrue(isinstance(component.scale, NSPoint))
+		self.assertIsInstance(component.scale, NSPoint)
+		component.scale = (2, 3)
+		self.assertEqual(component.scale, NSPoint(2, 3))
 		
 		# GSComponent.rotation
 		self.assertFloat(component.rotation)
@@ -1758,18 +1764,22 @@ class GlyphsAppTests(unittest.TestCase):
 		
 		# GSComponent.componentName
 		# GSComponent.component
-		# GSComponent.layer
+		# GSComponent.componentLayer
 		component.componentName = 'A'
 
 		self.assertEqual(component.component, font.glyphs['A'])
-# not defined yet		self.assertEqual(component.layer, font.glyphs['A'].layers[layer.layerId])
+		self.assertEqual(component.componentLayer, font.glyphs['A'].layers[layer.layerId])
 		component.componentName = 'a'
 		self.assertEqual(component.component, font.glyphs['a'])
-# not defined yet		self.assertEqual(component.layer, font.glyphs['a'].layers[layer.layerId])
+		self.assertEqual(component.componentLayer, font.glyphs['a'].layers[layer.layerId])
 
 		component = layer.shapes[0]
 
 		# GSComponent.transform
+		component.transform = (1.0, 0, 0, 1.0, 0, 0)
+		self.assertEqual(component.transform, (1.0, 0, 0, 1.0, 0, 0))
+		component.scale = (3, 5)
+		self.assertEqual(component.transform, (3.0, 0, 0, 5.0, 0, 0))
 		component.transform = (1.0, 0, 0, 1.0, 0, 0)
 
 		# GSComponent.bounds
@@ -1777,6 +1787,13 @@ class GlyphsAppTests(unittest.TestCase):
 
 		# GSComponent.automaticAlignment
 		self.assertBool(component.automaticAlignment)
+
+		# GSComponent.alignment
+		#TODO
+		self.assertIsNotNone(component.alignment)
+
+		# GSComponent.locked
+		self.assertBool(component.locked)
 
 		# GSComponent.anchor
 		self.assertUnicode(component.anchor)
@@ -1789,6 +1806,11 @@ class GlyphsAppTests(unittest.TestCase):
 		
 		# GSComponent.bezierPath
 		self.assertIsInstance(component.bezierPath, NSBezierPath)
+
+		# GSComponent.tempData
+		component.tempData['testKey'] = font
+		self.assertIs(component.tempData['testKey'], font)
+		del component.tempData['testKey']
 
 		## Methods
 		component.applyTransform((.5, 0, 0, .5, 0, 0))
