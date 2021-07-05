@@ -4645,7 +4645,7 @@ GSFontMaster.stems = property(lambda self: MasterStemsProxy(self),
 GSFontMaster.alignmentZones = property(lambda self: self.defaultAlignmentZones())
 '''
 	.. attribute:: alignmentZones
-		Collection of :class:`GSAlignmentZone` objects.
+		Collection of :class:`GSAlignmentZone` objects. Read-only.
 
 		:type: list
 '''
