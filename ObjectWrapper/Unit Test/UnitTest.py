@@ -815,10 +815,37 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertUnicode(featurePrefix.code)
 
 		# GSFeaturePrefix.automatic
-		self.assertInteger(featurePrefix.automatic)
+		self.assertBool(featurePrefix.automatic)
 
 		# GSFeaturePrefix.active
 		self.assertBool(featurePrefix.active)
+
+	def test_GSFeature(self):
+		font = Glyphs.font
+		feature = font.features[0]
+
+		# GSFeature.name
+		self.assertUnicode(feature.name)
+
+		# GSFeature.code
+		self.assertUnicode(feature.code)
+
+		# GSFeature.automatic
+		self.assertBool(feature.automatic)
+
+		# GSFeature.notes
+		self.assertUnicode(feature.notes)
+
+		# GSFeature.active
+		self.assertBool(feature.active)
+
+		# GSFeature.tempData
+		tempData_len = len(feature.tempData)
+		feature.tempData["test_key"] = 45
+		self.assertEqual(feature.tempData["test_key"], 45)
+		self.assertEqual(len(feature.tempData), tempData_len + 1)
+		del feature.tempData["test_key"]
+		self.assertEqual(len(feature.tempData), tempData_len)
 
 	def test_GSFontMaster(self):
 		font = Glyphs.font
@@ -2119,11 +2146,20 @@ class GlyphsAppTests(unittest.TestCase):
 		
 		# GSGuide.position
 		self.assertIsInstance(guide.position, NSPoint)
+
+		# GSGuide.lockAngle
+		self.assertBool(guide.lockAngle)
+
+		# GSGuide.angle
+		self.assertFloat(guide.angle)
 		
 		# GSGuide.name
 		self.assertIsNone(guide.name)
 		guide.name = "test_guide"
 		self.assertEqual(guide.name, "test_guide")
+
+		# GSGuide.locked
+		self.assertBool(guide.locked)
 		
 		# GSGuide.userData
 		self.assertIsNotNone(guide.userData)

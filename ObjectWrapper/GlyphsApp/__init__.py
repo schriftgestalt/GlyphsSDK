@@ -6091,7 +6091,7 @@ GSFeaturePrefix.code = property(lambda self: self.pyobjc_instanceMethods.code(),
 		:type: str
 '''
 
-GSFeaturePrefix.automatic = property(lambda self: self.pyobjc_instanceMethods.automatic(),
+GSFeaturePrefix.automatic = property(lambda self: bool(self.pyobjc_instanceMethods.automatic()),
 									 lambda self, value: self.setAutomatic_(value))
 '''
 	.. attribute:: automatic
@@ -6191,7 +6191,7 @@ GSFeature.code = property(lambda self: self.pyobjc_instanceMethods.code(),
 
 		:type: str
 '''
-GSFeature.automatic = property(lambda self: self.pyobjc_instanceMethods.automatic(),
+GSFeature.automatic = property(lambda self: bool(self.pyobjc_instanceMethods.automatic()),
 							   lambda self, value: self.setAutomatic_(value))
 '''
 	.. attribute:: automatic
@@ -9841,7 +9841,7 @@ GSGuide.__eq__ = python_method(lambda self, other: self.isEqualToGuide_(other))
 
 GSGuide.mutableCopyWithZone_ = GSObject__copy__
 
-GSGuide.lockAngle = property(lambda self: self.pyobjc_instanceMethods.lockAngle(),
+GSGuide.lockAngle = property(lambda self: bool(self.pyobjc_instanceMethods.lockAngle()),
 							 lambda self, value: self.setLockAngle_(value))
 '''
 	.. attribute:: lockAngle
