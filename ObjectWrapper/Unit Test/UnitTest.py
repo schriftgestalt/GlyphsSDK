@@ -321,6 +321,17 @@ class GlyphsAppTests(unittest.TestCase):
 		font.show()
 		self.assertIsNotNone(font.__repr__())
 		
+		# GSFont.save()
+		# Test saving early to not save in a bad state.
+		# This still slightly mutates the test file.
+		font.save()
+		copypath = PathToTestFile[:-7] + "-copy.glyphs"
+		copypath_ufo = PathToTestFile[:-7] + "-copy.ufo"
+		font.save(path=copypath, makeCopy=True)
+		font.save(path=copypath_ufo, makeCopy=True)
+		with self.assertRaises(ValueError):
+			font.save(path="wrong.extension")
+
 		## Attributes
 		
 		# GSFont.parent
@@ -627,15 +638,6 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertBool(font.previewRemoveOverlap)
 
 		## Methods
-		
-		# GSFont.save()
-		font.save()
-		copypath = PathToTestFile[:-7] + "-copy.glyphs"
-		copypath_ufo = PathToTestFile[:-7] + "-copy.ufo"
-		font.save(path=copypath, makeCopy=True)
-		font.save(path=copypath_ufo, makeCopy=True)
-		with self.assertRaises(ValueError):
-			font.save(path="wrong.extension")
 		
 		# GSFont.close()
 		font.close()
@@ -1742,10 +1744,8 @@ class GlyphsAppTests(unittest.TestCase):
 
 		# GSComponent.position
 		self.assertIsInstance(component.position, NSPoint)
-		# Setting the position does not work as expected unless the component is copied first
-		copy_component = copy.copy(component)
-		copy_component.position = (20, 10)
-		self.assertEqual(copy_component.position, NSPoint(20, 10))
+		component.position = (20, 10)
+		self.assertEqual(component.position, NSPoint(20, 10))
 
 		# GSComponent.scale
 		self.assertIsInstance(component.scale, NSPoint)
@@ -1939,10 +1939,10 @@ class GlyphsAppTests(unittest.TestCase):
 		# GSPath.bounds
 		self.assertIsInstance(path.bounds, NSRect)
 
-		# GSPath.closed
+		# GSPath.selected
 		self.assertBool(path.selected)
 
-		# GSPath.bounds
+		# GSPath.bezierPath
 		self.assertIsInstance(path.bezierPath, NSBezierPath)
 
 		## Methods

@@ -8576,7 +8576,7 @@ def __GSAnchor_drawPoints__(self, pen):
 	pen.beginPath()
 	pen.addPoint((self.x, self.y), segmentType="move", smooth=False, name=self.name)
 	pen.endPath()
-GSAnchor.drawPoints = staticmethod(__GSAnchor_drawPoints__)
+GSAnchor.drawPoints = python_method(__GSAnchor_drawPoints__)
 GSAnchor.drawPoints.__name__ = "drawPoints"
 
 ##################################################################################
