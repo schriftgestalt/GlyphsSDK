@@ -67,7 +67,7 @@ GSFeatureGenerator = objc.lookUpClass("GSFeatureGenerator")
 GSTTStem = objc.lookUpClass("GSTTStem")
 GSMacroViewController = objc.lookUpClass("GSMacroViewController")
 GSPathSegment = objc.lookUpClass("GSPathSegment")
-GSPreviewTextWindowClass = objc.lookUpClass("PreviewText")
+PreviewTextWindow = objc.lookUpClass("PreviewText")
 GSFontInfoValueLocalized = objc.lookUpClass("GSFontInfoValueLocalized")
 GSFontInfoValueSingle = objc.lookUpClass("GSFontInfoValueSingle")
 GSFontInfoValue = objc.lookUpClass("GSFontInfoValue")
@@ -76,9 +76,9 @@ __all__ = [
 
 	"Glyphs", "GetFile",
 	"wrapperVersion",
-	"GSAlignmentZone", "GSAnchor", "GSAnnotation", "GSApplication", "GSBackgroundImage", "GSBackgroundLayer", "GSClass", "GSComponent", "GSControlLayer",
+	"GSAlignmentZone", "GSAnchor", "GSAnnotation", "GSApplication", "GSBackgroundImage", "GSBackgroundLayer", "GSClass", "GSComponent", "GSControlLayer", "GSGlyphReference",
 	"GSCustomParameter", "GSDocument", "GSProjectDocument", "GSEditViewController", "GSElement", "GSFeature", "GSFeaturePrefix", "GSFont", "GSFontMaster",
-	"GSGlyph", "GSGlyphInfo", "GSGlyphsInfo", "GSGuide", "GSHint", "GSInstance", "GSLayer", "GSNode", "GSPath", "GSShape", "GSSubstitution", "GSPartProperty", "GSNotifyingDictionary",
+	"GSGlyph", "GSGlyphInfo", "GSGlyphsInfo", "GSGuide", "GSGuideLine", "GSHint", "GSInstance", "GSLayer", "GSNode", "GSPath", "GSShape", "GSSubstitution", "GSPartProperty", "GSAxis", "GSMetric", "GSMetricValue", "GSFontInfoValue", "GSFontInfoValueLocalized", "GSFontInfoValueSingle", "GSInfoValue", "GSNotifyingDictionary",
 	"GSPathFinder", "GSPathPen", "GSCallbackHandler", "GSFeatureGenerator", "GSTTStem", "GSPathSegment",
 	# Constants
 	"MOVE", "LINE", "CURVE", "OFFCURVE", "QCURVE", "HOBBYCURVE", "GSMOVE", "GSLINE", "GSCURVE", "GSQCURVE", "GSOFFCURVE", "GSHOBBYCURVE", "GSSHARP", "GSSMOOTH",
@@ -103,7 +103,7 @@ __all__ = [
 
 	# Callbacks:
 
-	"DRAWFOREGROUND", "DRAWBACKGROUND", "DRAWINACTIVE", "DOCUMENTOPENED", "DOCUMENTACTIVATED", "DOCUMENTWASSAVED", "DOCUMENTEXPORTED", "DOCUMENTCLOSED", "TABDIDOPEN", "TABWILLCLOSE", "UPDATEINTERFACE",
+	"DRAWFOREGROUND", "DRAWBACKGROUND", "DRAWINACTIVE", "DOCUMENTOPENED", "DOCUMENTACTIVATED", "DOCUMENTWASSAVED", "DOCUMENTEXPORTED", "DOCUMENTCLOSED", "DOCUMENTWILLCLOSE", "DOCUMENTDIDCLOSE", "TABDIDOPEN", "TABWILLCLOSE", "UPDATEINTERFACE",
 	"MOUSEMOVED", "MOUSEDRAGGED", "MOUSEDOWN", "MOUSEUP", "CONTEXTMENUCALLBACK",
 	
 	"GSMetricsKeyAscender", "GSMetricsKeyCapHeight", "GSMetricsKeySlantHeight", "GSMetricsKeyxHeight", "GSMetricsKeyTopHeight", "GSMetricsKeyDescender", "GSMetricsKeyBaseline",
@@ -270,7 +270,9 @@ DOCUMENTOPENED = "GSDocumentWasOpenedNotification"
 DOCUMENTACTIVATED = "GSDocumentActivateNotification"
 DOCUMENTWASSAVED = "GSDocumentWasSavedSuccessfully"
 DOCUMENTEXPORTED = "GSDocumentWasExportedNotification"
-DOCUMENTCLOSED = "GSDocumentCloseNotification"
+DOCUMENTCLOSED = "GSDocumentCloseNotification" # deprecated use DOCUMENTWILLCLOSE
+DOCUMENTWILLCLOSE = "GSDocumentCloseNotification"
+DOCUMENTDIDCLOSE = "GSDocumentDidCloseNotification"
 TABDIDOPEN = "TabDidOpenNotification"
 TABWILLCLOSE = "TabWillCloseNotification"
 UPDATEINTERFACE = "GSUpdateInterface"
@@ -656,13 +658,13 @@ GSApplication.filters = property(lambda self: list(NSApp.delegate().filterInstan
 
 		.. code-block:: python
 			# Helper function to get filter by its class name
-			def filter(name):
+			def filterForName(name):
 				for filter in Glyphs.filters:
 					if filter.__class__.__name__ == name:
 						return filter
 
 			# Get the filter
-			offsetCurveFilter = filter('GlyphsFilterOffsetCurve')
+			offsetCurveFilter = filterForName('GlyphsFilterOffsetCurve')
 
 			# Run the filter (old plugins)
 			# The arguments came from the 'Copy Custom Parameter' as:
@@ -1013,7 +1015,7 @@ GSApplication.versionNumber = _versionNumber
 		:type: float
 '''
 
-_buildNumber = int(NSBundle.mainBundle().infoDictionary()["CFBundleVersion"])
+_buildNumber = float(NSBundle.mainBundle().infoDictionary()["CFBundleVersion"])
 GSApplication.buildNumber = _buildNumber
 
 '''
@@ -1022,7 +1024,7 @@ GSApplication.buildNumber = _buildNumber
 
 		Especially if you're using preview builds, this number may be more important to you than the version number. The build number increases with every released build and is the most significant evidence of new Glyphs versions, while the version number is set arbitrarily and stays the same until the next stable release.
 
-		:type: int
+		:type: float
 '''
 
 menuTagLookup = {
@@ -1267,7 +1269,7 @@ GSApplication.ligatureComponents = _ligatureComponents
 
 
 DrawLayerCallbacks = (DRAWFOREGROUND, DRAWBACKGROUND, DRAWINACTIVE)
-Observers = (DOCUMENTOPENED, DOCUMENTACTIVATED, DOCUMENTWASSAVED, DOCUMENTEXPORTED, DOCUMENTCLOSED, TABDIDOPEN, TABWILLCLOSE, UPDATEINTERFACE, MOUSEMOVED, MOUSEDRAGGED, MOUSEDOWN, MOUSEUP)
+Observers = (DOCUMENTOPENED, DOCUMENTACTIVATED, DOCUMENTWASSAVED, DOCUMENTEXPORTED, DOCUMENTCLOSED, DOCUMENTWILLCLOSE, DOCUMENTDIDCLOSE, TABDIDOPEN, TABWILLCLOSE, UPDATEINTERFACE, MOUSEMOVED, MOUSEDRAGGED, MOUSEDOWN, MOUSEUP)
 
 callbackOperationTargets = {}
 
@@ -1312,9 +1314,32 @@ class callbackHelperClass(NSObject):
 		desc = super(callbackHelperClass, self).description()
 		return "%s %s" % (desc, str(self.func))
 
+hasWarned__addCallback = False
 
-def __addCallback__(self, target, operation):
+def __addCallback__(self, target=None, operation=None, callbackType=None, callee=None, selector=None):
+	if callbackType is None:
+		global hasWarned__addCallback
+		if not hasWarned__addCallback:
+			print("You are using a deprecated API. Please switch to the new argument format")
+			hasWarned__addCallback = True
+		__addCallback__Old__(self, target, operation)
+		return
 
+	if not isinstance(callee, NSObject):
+		raise TypeError("Target must be a subclass of NSObject, not %s" % type(callee).__name__)
+
+	if callbackType in DrawLayerCallbacks or callbackType == CONTEXTMENUCALLBACK:
+
+		# Add to stack
+		GSCallbackHandler.addCallback_forOperation_(callee, callbackType)
+
+		# Redraw immediately
+		self.redraw()
+
+	elif callbackType in Observers:
+		NSNotificationCenter.defaultCenter().addObserver_selector_name_object_(callee, selector, callbackType, objc.nil)
+
+def __addCallback__Old__(self, target, operation):
 	# Remove possible old function by the same name
 	targetName = str(target)
 
@@ -1387,7 +1412,7 @@ GSApplication.addCallback = python_method(__addCallback__)
 			Glyphs.addCallback(drawGlyphIntoBackground, DRAWBACKGROUND)
 '''
 
-def __do__removeCallback___(self, target, operation):
+def __do__removeCallback__(self, target, operation):
 
 	targetName = str(target)
 	callbackTargets = None
@@ -1408,15 +1433,29 @@ def __do__removeCallback___(self, target, operation):
 			NSNotificationCenter.defaultCenter().removeObserver_(callbackTargets[targetName])
 			del(callbackTargets[targetName])
 
-def __removeCallback___(self, target, operation=None):
-	if operation is not None:
-		__do__removeCallback___(self, target, operation)
-	else:
-		for operation in callbackOperationTargets.keys():
-			__do__removeCallback___(self, target, operation)
+def __removeCallback__(self, target=None, operation=None, callbackType=None, callee=None):
+	print("__remove", target, operation, callbackType, callee)
+	if callee is None:
+		if operation is not None:
+			__do__removeCallback__(self, target, operation)
+		else:
+			for operation in callbackOperationTargets.keys():
+				__do__removeCallback__(self, target, operation)
 
+	if callbackType is None:
+		raise ValueError("You need to supply the callbackType to remove it")
 
-GSApplication.removeCallback = python_method(__removeCallback___)
+	if callbackType in DrawLayerCallbacks or callbackType == CONTEXTMENUCALLBACK:
+
+		GSCallbackHandler.removeCallback_forOperation_(callee, callbackType)
+
+		# Redraw immediately
+		self.redraw()
+
+	elif callbackType in Observers:
+		NSNotificationCenter.defaultCenter().removeObserver_(callee)
+
+GSApplication.removeCallback = python_method(__removeCallback__)
 
 '''
 	.. function:: removeCallback(function)
@@ -2387,7 +2426,7 @@ class SmartComponentValuesProxy(Proxy):
 	def __getitem__(self, key):
 		pieceSettings = self._owner.pieceSettings()
 		if pieceSettings is not None:
-			return pieceSettings[key]
+			return pieceSettings.objectForKey_(key)
 		return None
 	def __setitem__(self, key, Value):
 		self._owner.setPieceValue_forKey_(float(Value), key)
@@ -3130,7 +3169,7 @@ GSFont.axes = property(lambda self: FontAxesProxy(self),
 		Collection of :class:`GSAxis`:
 
 		:type: list
-	
+
 		.. versionadded:: 2.5
 		.. versionchanged:: 3
 '''
@@ -3141,8 +3180,10 @@ GSFont.properties = property(lambda self: self.mutableArrayValueForKey_("propert
 	.. attribute:: properties
 		Holds the fonts info properties. Can be instances of :class:`GSFontInfoValueSingle` and :class:`GSFontInfoValueLocalized`.
 		
-		To access localised values use language tags defined in the middle column of `Language System Tags table`: <https://docs.microsoft.com/en-us/typography/opentype/spec/languagetags>.
-		
+		The localised values use language tags defined in the middle column of `Language System Tags table`: <https://docs.microsoft.com/en-us/typography/opentype/spec/languagetags>.
+
+		To find specific values, use font.propertyForName_(name) or font.propertyForName_languageTag_(name, languageTag).
+
 		:type: list
 
 		.. versionadded:: 3
@@ -4263,7 +4304,7 @@ GSFont.updateFeatures = python_method(__GSFont__updateFeatures__)
 '''
 
 def __GSFont__compileFeatures__(self):
-	self.compileTempFontError_(None)
+	return self.compileTempFontError_(None)
 
 GSFont.compileFeatures = python_method(__GSFont__compileFeatures__)
 
@@ -4569,6 +4610,10 @@ GSFontMaster.properties = property(lambda self: self.mutableArrayValueForKey_("p
 '''
 	.. attribute:: properties
 		Holds the fonts info properties. Can be instances of :class:`GSFontInfoValueSingle` and :class:`GSFontInfoValueLocalized`
+
+		The localised values use language tags defined in the middle column of `Language System Tags table`: <https://docs.microsoft.com/en-us/typography/opentype/spec/languagetags>.
+
+		To find specific values, use master.propertyForName_(name) or master.propertyForName_languageTag_(name, languageTag).
 
 		:type: list
 
@@ -5027,6 +5072,10 @@ GSInstance.properties = property(lambda self: self.mutableArrayValueForKey_("pro
 '''
 	.. attribute:: properties
 		Holds the fonts info properties. Can be instances of :class:`GSFontInfoValueSingle` and :class:`GSFontInfoValueLocalized`
+
+		The localised values use language tags defined in the middle column of `Language System Tags table`: <https://docs.microsoft.com/en-us/typography/opentype/spec/languagetags>.
+		
+		To find specific values, use instance.propertyForName_(name) or instance.propertyForName_languageTag_(name, languageTag).
 
 		:type: list
 
@@ -5681,7 +5730,7 @@ class _ExporterDelegate_(NSObject):
 		self.result = True
 		return self
 
-	def collectResults_(self, Error): # Error might be a NSString or a NSError
+	def collectResult_instance_(self, Error, instancePath): # Error might be a NSString or a NSError
 		if Error.__class__.__name__ == "NSError":
 			String = Error.localizedDescription()
 			if Error.localizedRecoverySuggestion() and Error.localizedRecoverySuggestion().length() > 0:
@@ -7433,7 +7482,7 @@ GSLayer.components = property(lambda self: self.pyobjc_instanceMethods.component
 		:type: list
 
 		.. code-block:: python
-			for component in layer.component:
+			for component in layer.components:
 				print(component)
 
 '''
@@ -8314,7 +8363,7 @@ def DrawPointsWithPen(self, pen, contours=True, components=True):
 		for c in self.components:
 			c.drawPoints(pen)
 
-GSLayer.drawPoints = DrawPointsWithPen
+GSLayer.drawPoints = python_method(DrawPointsWithPen)
 
 
 def _getPen_(self):
@@ -8860,8 +8909,8 @@ GSComponent.anchor = property(lambda self: self.pyobjc_instanceMethods.anchor(),
 def DrawComponentWithPen(self, pen):
 	pen.addComponent(self.componentName, self.transform)
 
-GSComponent.draw = DrawComponentWithPen
-GSComponent.drawPoints = DrawComponentWithPen
+GSComponent.draw = python_method(DrawComponentWithPen)
+GSComponent.drawPoints = python_method(DrawComponentWithPen)
 
 GSComponent.smartComponentValues = property(lambda self: SmartComponentValuesProxy(self))
 '''
@@ -8992,6 +9041,48 @@ GSComponent.applyTransform = python_method(__GSComponent_applyTransform__)
 						0.0, # x position
 						0.0  # y position
 						))
+
+'''
+
+GSGlyphReference = objc.lookUpClass("GSGlyphReference")
+
+def GSGlyphReference__new__(typ, glyph):
+	return typ.alloc().initWithGlyph_(glyph)
+
+GSGlyphReference.__new__ = staticmethod(GSGlyphReference__new__)
+GSGlyphReference.__new__.__name__ = "__new__"
+
+'''
+
+:mod:`GSGlyphReference`
+===============================================================================
+
+a small helper class to store a reference to a glyph in userData that will keep track of changes to the glyph name.
+
+.. versionadded:: 3.0.4
+
+.. class:: GSGlyphReference()
+
+	Properties
+
+	.. autosummary::
+
+		glyph
+
+	**Properties**
+'''
+
+GSGlyphReference.glyph = property(lambda self: self.pyobjc_instanceMethods.glyph(),
+								  lambda self, value: self.setGlyph_(value))
+'''
+	.. attribute:: glyph
+	the GSGlyph to keep track of
+
+	:type: GSGlyph
+
+	.. code-block:: python
+
+		glyphReference = GSGlyphReference(Font.glyphs["A"])
 
 '''
 
@@ -10202,6 +10293,8 @@ GSHint.options = property(lambda self: self.pyobjc_instanceMethods.options(),
 	.. attribute:: options
 		Stores extra options for the hint. For TT hints, that might be the rounding settings.
 		See Constants section at the bottom of the page.
+
+		For corner components, it stores the alingment settings: left = 0, center = 2, right = 1, auto (for caps) = alignment | 8
 
 		:type: int
 '''
@@ -11547,23 +11640,28 @@ The Text Preview Window
 		font
 		instanceIndex
 		fontSize
-	
+
 	Functions
 
 	.. autosummary::
 
-		openWindow()
+		open()
+		close()
 
 	**Properties**
 
 '''
 
-PreviewTextWindow = GSPreviewTextWindowClass.defaultInstance()
+PreviewTextWindow.__class__.font = property(lambda self: self.defaultInstance().activeFont())
+'''
+	.. attribute:: text
+		The font
 
-GSPreviewTextWindowClass.font = property(lambda self: self.activeFont())
+		:type: GSFont
+'''
 
-GSPreviewTextWindowClass.text = property(lambda self: self.textView().string(),
-										 lambda self, value: self.textView().setString_(value))
+PreviewTextWindow.__class__.text = property(lambda self: self.defaultInstance().textView().string(),
+												lambda self, value: self.defaultInstance().textView().setString_(value))
 '''
 	.. attribute:: text
 		The text
@@ -11571,30 +11669,32 @@ GSPreviewTextWindowClass.text = property(lambda self: self.textView().string(),
 		:type: str
 '''
 
-GSPreviewTextWindowClass.instanceIndex = property(lambda self: self.instanceSelection().indexOfSelectedItem(),
-												  lambda self, value: self.instanceSelection().selectItemAtIndex_(value))
+PreviewTextWindow.__class__.instanceIndex = property(lambda self: Glyphs.intDefaults["GSPreviewText_instanceIndex"],
+													 lambda self, value: NSUserDefaults.standardUserDefaults().setObject_forKey_(value, objcObject("GSPreviewText_instanceIndex")))
 '''
 	.. attribute:: instanceIndex
 		The index of the selected instance
 
 		:type: int
 '''
-GSPreviewTextWindowClass.fontSize = property(lambda self: Glyphs.intDefaults["GSPreviewText_fontSize"],
-											 lambda self, value: NSUserDefaults.standardUserDefaults().setObject_forKey_(value, objcObject("GSPreviewText_fontSize")))
+PreviewTextWindow.__class__.fontSize = property(lambda self: Glyphs.intDefaults["GSPreviewText_fontSize"],
+													lambda self, value: NSUserDefaults.standardUserDefaults().setObject_forKey_(value, objcObject("GSPreviewText_fontSize")))
 '''
 	.. attribute:: fontSize
 		The font size
 
 		:type: int
 '''
-
+def PreviewTextWindow__open(self):
+	PreviewTextWindow.defaultInstance().openWindow()
+PreviewTextWindow.open = classmethod(PreviewTextWindow__open)
 '''
-	.. function:: openWindow()
-		opens PreviewTextWindow
+	.. function:: open()
+		opens the Preview Text Window
 
 	.. code-block:: python
 		# open PreviewTextWindow
-		PreviewTextWindow.openWindow()
+		PreviewTextWindow.open()
 
 		# setting instance in PreviewTextWindow to "Regular"
 		font = PreviewTextWindow.font
@@ -11605,6 +11705,14 @@ GSPreviewTextWindowClass.fontSize = property(lambda self: Glyphs.intDefaults["GS
 		# setting text and font size value
 		PreviewTextWindow.text = 'hamburgefontsiv'
 		PreviewTextWindow.fontSize = 200
+'''
+
+def PreviewTextWindow__close(self):
+	PreviewTextWindow.defaultInstance().closeWindow_(None)
+PreviewTextWindow.close = classmethod(PreviewTextWindow__close)
+'''
+	.. function:: close()
+		closes the Preview Text Window
 '''
 
 def _______________(): pass
@@ -11647,20 +11755,18 @@ def __GSPathPen_addPoint__(self, pt, segmentType=None, smooth=False, name=None, 
 	path.nodes.append(node)
 GSPathPen.addPoint = python_method(__GSPathPen_addPoint__)
 
-def __PathOperator_removeOverlap__(paths):
+def removeOverlap(paths):
 	try:
 		Paths = NSMutableArray.arrayWithArray_(paths)
 	except:
 		Paths = NSMutableArray.arrayWithArray_(paths.values())
 
-	result = GSPathFinder.alloc().init().removeOverlapPaths_error_(Paths, None)
+	result = GSPathFinder.removeOverlapPaths_error_(Paths, None)
 	if result[0] != 1:
 		return None
 	return Paths
 
-removeOverlap = python_method(__PathOperator_removeOverlap__)
-
-def __PathOperator_subtractPaths__(paths, subtract):
+def subtractPaths(paths, subtract):
 	try:
 		Paths = NSMutableArray.arrayWithArray_(paths)
 	except:
@@ -11669,14 +11775,12 @@ def __PathOperator_subtractPaths__(paths, subtract):
 		Subtract = NSMutableArray.arrayWithArray_(subtract)
 	except:
 		Subtract = NSMutableArray.arrayWithArray_(subtract.values())
-	result = GSPathFinder.alloc().init().subtractPaths_from_error_(Subtract, Paths, None)
+	result = GSPathFinder.subtractPaths_from_error_(Subtract, Paths, None)
 	if result[0] != 1:
 		return None
 	return Paths
 
-subtractPaths = python_method(__PathOperator_subtractPaths__)
-
-def __PathOperator_intersectPaths__(paths, otherPaths):
+def intersectPaths(paths, otherPaths):
 	try:
 		Paths = NSMutableArray.arrayWithArray_(paths)
 	except:
@@ -11685,12 +11789,10 @@ def __PathOperator_intersectPaths__(paths, otherPaths):
 		OtherPaths = NSMutableArray.arrayWithArray_(otherPaths)
 	except:
 		OtherPaths = NSMutableArray.arrayWithArray_(otherPaths.values())
-	result = GSPathFinder.alloc().init().intersectPaths_from_error_(Paths, OtherPaths, None)
+	result = GSPathFinder.intersectPaths_from_error_(Paths, OtherPaths, None)
 	if result[0] != 1:
 		return None
 	return OtherPaths
-
-intersectPaths = python_method(__PathOperator_intersectPaths__)
 
 '''
 
@@ -12353,6 +12455,25 @@ This are the available callbacks
 
 	is called when the document is closed
 
+	.. deprecated:: 3.0.4
+		please use DOCUMENTWILLCLOSE
+
+.. data:: DOCUMENTWILLCLOSE
+
+	is called just before a document will be closed
+	
+	the info object contains the GSWindowController object
+	
+	.. versionadded:: 3.0.4
+
+.. data:: DOCUMENTDIDCLOSE
+
+	is called after a document was closed
+	
+	the info object contains the NSDocument object
+	
+	.. versionadded:: 3.0.4
+
 .. data:: TABDIDOPEN
 
 	if a new tab is opened
@@ -12392,6 +12513,7 @@ The writing directions of the Edit View.
 
 Shape Type
 ==========
+
 .. data:: GSShapeTypePath
 
 	Path
