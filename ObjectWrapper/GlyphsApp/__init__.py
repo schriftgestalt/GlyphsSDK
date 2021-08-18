@@ -4476,7 +4476,12 @@ GSMetric.filter = property(lambda self: self.pyobjc_instanceMethods.filter(),
 '''
 GSMetric.horizontal = property(lambda self: bool(self.pyobjc_instanceMethods.horizontal()),
 							   lambda self, value: self.setHorizontal_(value))
+'''
+	.. attribute:: horizontal
+		This is used for stem metrics. so only use this for font.stems
 
+		:type: bool
+'''
 ##################################################################################
 #
 #
