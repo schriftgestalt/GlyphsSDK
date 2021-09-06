@@ -9990,7 +9990,7 @@ GSGuide.locked = property(lambda self: bool(self.pyobjc_instanceMethods.locked()
 		:type: bool
 '''
 
-GSGuide.filter = property(lambda self: bool(self.pyobjc_instanceMethods.filter()),
+GSGuide.filter = property(lambda self: self.pyobjc_instanceMethods.filter(),
 						  lambda self, value: self.setFilter_(value))
 '''
 	.. attribute:: filter
