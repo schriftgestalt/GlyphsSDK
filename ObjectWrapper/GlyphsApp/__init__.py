@@ -1314,14 +1314,8 @@ class callbackHelperClass(NSObject):
 		desc = super(callbackHelperClass, self).description()
 		return "%s %s" % (desc, str(self.func))
 
-hasWarned__addCallback = False
-
 def __addCallback__(self, target=None, operation=None, callbackType=None, callee=None, selector=None):
 	if callbackType is None:
-		global hasWarned__addCallback
-		if not hasWarned__addCallback:
-			print("You are using a deprecated API. Please switch to the new argument format")
-			hasWarned__addCallback = True
 		__addCallback__Old__(self, target, operation)
 		return
 
