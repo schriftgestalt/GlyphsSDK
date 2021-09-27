@@ -167,7 +167,7 @@ See the GSEditViewController attributes `viewPort`, `bounds`, and `selectedLayer
 
 ```python
 	@objc.python_method
-	def foregroundInViewCoords(self, layer):
+	def foregroundInViewCoords(self):
 
 		tab = Glyphs.font.currentTab
 
