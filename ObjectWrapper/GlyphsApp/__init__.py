@@ -1428,13 +1428,13 @@ def __do__removeCallback__(self, target, operation):
 			del(callbackTargets[targetName])
 
 def __removeCallback__(self, target=None, operation=None, callbackType=None, callee=None):
-	print("__remove", target, operation, callbackType, callee)
 	if callee is None:
 		if operation is not None:
 			__do__removeCallback__(self, target, operation)
 		else:
 			for operation in callbackOperationTargets.keys():
 				__do__removeCallback__(self, target, operation)
+		return
 
 	if callbackType is None:
 		raise ValueError("You need to supply the callbackType to remove it")
