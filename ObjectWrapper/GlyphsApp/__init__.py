@@ -173,6 +173,7 @@ STROKELINECAPSTART = "lineCapStart"
 STROKELINEJOIN = "lineJoin"
 STROKEPOSITION = "strokePos"
 STROKEWIDTH = "strokeWidth"
+STROKEHEIGHT = "strokeHeight"
 GRADIENT = "gradient"
 SHADOW = "shadow"
 INNERSHADOW = "shadowIn"
@@ -1505,8 +1506,8 @@ def Glyphs_localize(self, localization):
 		for language in self.defaults["AppleLanguages"]:
 			if language in localization:
 				return localization[language]
-			if "-" in language:
-				language = language.split("-")[0]
+			while "-" in language:
+				language = "-".join(language.split("-")[0:-1])
 				if language in localization:
 					return localization[language]
 		language = localization.get("en", None)  # first look if there is a english entry.
@@ -3240,6 +3241,10 @@ GSInterpolationFontProxy.glyphs = property(lambda self: FontGlyphsProxy(self),
 			print(font.glyphs['01AF'])
 			<GSGlyph "Uhorn" with 4 layers>
 
+			# Access a glyph by index
+			print(font.glyphs[145])
+			<GSGlyph "Uhorn" with 4 layers>
+
 			# Add a glyph
 			font.glyphs.append(GSGlyph('adieresis'))
 
@@ -4424,6 +4429,7 @@ Implementation of the metric object. It is used to link the metrics and stems in
 		name
 		id
 		filter
+		type
 		horizontal
 
 	**Properties**
@@ -4458,6 +4464,15 @@ GSMetric.id = property(lambda self: self.pyobjc_instanceMethods.id())
 		The id to link the values in the masters
 
 		:type: str
+'''
+
+GSMetric.type = property(lambda self: self.pyobjc_instanceMethods.type(),
+						 lambda self, value: self.setType_(value))
+'''
+	.. attribute:: type
+		The metrics type
+
+		:type: int
 '''
 
 GSMetric.filter = property(lambda self: self.pyobjc_instanceMethods.filter(),
@@ -4686,7 +4701,7 @@ GSFontMaster.stems = property(lambda self: MasterStemsProxy(self),
 			font.masters[0].stems = [10, 11, 20]
 '''
 
-GSFontMaster.alignmentZones = property(lambda self: self.defaultAlignmentZones())
+GSFontMaster.alignmentZones = property(lambda self: tuple(self.defaultAlignmentZones()))
 '''
 	.. attribute:: alignmentZones
 		Collection of :class:`GSAlignmentZone` objects. Read-only.
@@ -8216,8 +8231,8 @@ GSLayer.cutBetweenPoints = CutBetweenPoints
 
 '''
 
-def IntersectionsBetweenPoints(self, Point1, Point2, components=False):
-	return self.calculateIntersectionsStartPoint_endPoint_decompose_(Point1, Point2, components)
+def IntersectionsBetweenPoints(self, Point1, Point2, components=False, ignoreLocked=False):
+	return self.calculateIntersectionsStartPoint_endPoint_decompose_ignoreLocked_(Point1, Point2, components, ignoreLocked)
 GSLayer.intersectionsBetweenPoints = IntersectionsBetweenPoints
 
 NSConcreteValue.x = property(lambda self: self.pointValue().x)
@@ -8233,6 +8248,7 @@ NSConcreteValue.y = property(lambda self: self.pointValue().y)
 		:param Point1: one point
 		:param Point2: the other point
 		:param components: if components should be measured. Default: False
+		:param ignoreLocked: ignore locked or unfocused paths. Default: False
 
 		.. code-block:: python
 			# show all intersections with glyph at y=100
@@ -8905,6 +8921,20 @@ GSComponent.anchor = property(lambda self: self.pyobjc_instanceMethods.anchor(),
 
 '''
 
+GSComponent.attributes = property(lambda self: AttributesProxy(self))
+
+'''
+	.. attribute:: attributes
+		attributes attributes like :samp:`mask` or :samp:`reversePaths`
+
+		.. code-block:: python
+
+			component.attributes['mask'] = True
+			component.attributes['reversePaths'] = True
+
+		:type: dict
+'''
+
 def DrawComponentWithPen(self, pen):
 	pen.addComponent(self.componentName, self.transform)
 
@@ -9419,6 +9449,20 @@ GSPath.attributes = property(lambda self: AttributesProxy(self))
 
 '''
 	.. attribute:: attributes
+		path attributes like :samp:`fill`, :samp:`mask`, :samp:`strokeWidth`, :samp:`strokeHeight`, :samp:`strokeColor'`, :samp:`strokePos`
+
+		.. code-block:: python
+
+			# in B/W layers:
+			path.attributes['fill'] = True
+			path.attributes['mask'] = True
+			path.attributes['strokeWidth'] = 100
+			path.attributes['strokeHeight'] = 80
+			
+			# in color layers:
+			path.attributes['strokeColor'] = NSColor.redColor()
+			path.attributes['fillColor'] = NSColor.blueColor()
+			path.attributes['strokePos'] = 1 # or 0, -1
 
 		:type: dict
 
@@ -9632,16 +9676,13 @@ GSNode.type = property(__GSNode_get_type__, __GSNode_set_type__, doc="")
 		:type: str
 '''
 
-def __GSNode__get_smooth(self):
-	return self.connection == GSSMOOTH
-
 def __GSNode__set_smooth(self, value):
 	if value is True:
 		self.setConnection_(GSSMOOTH)
 	else:
 		self.setConnection_(GSSHARP)
 
-GSNode.smooth = property(__GSNode__get_smooth, __GSNode__set_smooth, doc="")
+GSNode.smooth = property(lambda self: bool(self.isSmooth()), __GSNode__set_smooth, doc="")
 '''
 	.. attribute:: smooth
 		If it is a smooth connection or not
@@ -9649,20 +9690,9 @@ GSNode.smooth = property(__GSNode__get_smooth, __GSNode__set_smooth, doc="")
 		:type: BOOL
 '''
 
-def __GSNode_get_connection(self):
-	GS_Type = self.pyobjc_instanceMethods.connection()
-	if GS_Type == GSSHARP:
-		return GSSHARP
-	else:
-		return GSSMOOTH
+GSNode.connection = property(lambda self: self.pyobjc_instanceMethods.connection(),
+							 lambda self, value: self.setConnection_(value))
 
-def __GSNode_set_connection(self, value):
-	if value == GSSHARP:
-		self.setConnection_(GSSHARP)
-	else:
-		self.setConnection_(GSSMOOTH)
-
-GSNode.connection = property(__GSNode_get_connection, __GSNode_set_connection, doc="")
 '''
 	.. attribute:: connection
 		The type of the connection, SHARP or SMOOTH
@@ -12221,6 +12251,82 @@ Node Types
 .. data:: OFFCURVE
 
 	Off-cuve node
+
+Path attributes
+==============
+
+.. data:: FILL
+
+	fill
+
+.. data:: FILLCOLOR
+
+	fillColor
+
+.. data:: FILLPATTERNANGLE
+
+	fillPatternAngle
+
+.. data:: FILLPATTERNBLENDMODE
+
+	fillPatternBlendMode
+
+.. data:: FILLPATTERNFILE
+
+	fillPatternFile
+
+.. data:: FILLPATTERNOFFSET
+
+	fillPatternOffset
+
+.. data:: FILLPATTERNSCALE
+
+	fillPatternScale
+
+.. data:: STROKECOLOR
+
+	strokeColor
+
+.. data:: STROKELINECAPEND
+
+	lineCapEnd
+
+.. data:: STROKELINECAPSTART
+
+	lineCapStart
+
+.. data:: STROKELINEJOIN
+
+	lineJoin
+
+.. data:: STROKEPOSITION
+
+	strokePos
+
+.. data:: STROKEWIDTH
+
+	strokeWidth
+
+.. data:: STROKEHEIGHT
+
+	strokeHeight
+
+.. data:: GRADIENT
+
+	gradient
+
+.. data:: SHADOW
+
+	shadow
+
+.. data:: INNERSHADOW
+
+	shadowIn
+
+.. data:: MASK
+
+	mask
+
 
 Export formats
 ==============
