@@ -11561,7 +11561,7 @@ GSFontInfoValue.languageTag = property(lambda self: self.pyobjc_instanceMethods.
 :mod:`GSMetricValue`
 ===============================================================================
 
-The GSMetricValue
+The GSMetricValue objects represent vertical metrics values and theirs overshoots.
 
 .. class:: GSMetricValue()
 
@@ -11583,7 +11583,7 @@ GSMetricValue.position = property(lambda self: self.pyobjc_instanceMethods.posit
 								  lambda self, value: self.setPosition_(value))
 '''
 	.. attribute:: position
-		The position
+		The y position of the metric.
 
 		:type: float
 '''
@@ -11592,7 +11592,7 @@ GSMetricValue.overshoot = property(lambda self: self.pyobjc_instanceMethods.over
 								   lambda self, value: self.setOvershoot_(value))
 '''
 	.. attribute:: overshoot
-		The overshoot
+		Value of overshoot's width.
 
 		:type: float
 '''
@@ -11601,7 +11601,7 @@ GSMetricValue.size = GSMetricValue.overshoot # compatibilty
 GSMetricValue.name = property(lambda self: self.title())
 '''
 	.. attribute:: name
-		The name
+		The name of the metric value. Eg. Descender, Small Cap, Cap Height etc.
 
 		:type: str
 '''
@@ -11609,7 +11609,7 @@ GSMetricValue.name = property(lambda self: self.title())
 GSMetricValue.filter = property(lambda self: self.pyobjc_instanceMethods.filter())
 '''
 	.. attribute:: filter
-		The filter.
+		A filter to limit the scope of the metric.
 
 		:type: NSPredicate
 '''
@@ -11617,9 +11617,9 @@ GSMetricValue.filter = property(lambda self: self.pyobjc_instanceMethods.filter(
 GSMetricValue.metric = property(lambda self: self.pyobjc_instanceMethods.metric())
 '''
 	.. attribute:: metric
-		The metric. see :attr:`GSFont.metrics`.
+		Corresponding GSMetric object. see :attr:`GSFont.metrics`.
 
-		:type: str
+		:type: GSMetric
 '''
 
 '''
