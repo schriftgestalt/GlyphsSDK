@@ -7867,9 +7867,16 @@ GSLayer.background = property(lambda self: self.pyobjc_instanceMethods.backgroun
 							  lambda self, value: self.setBackground_(value))
 '''
 	.. attribute:: background
-		The background layer
+		The background layer of GSLayer object.
 
 		:type: :class:`GSLayer`
+
+		.. code-block:: python
+			# copy layer to its background
+			layer.background = layer.copy()
+
+			# remove background layer
+			layer.background = None
 '''
 
 GSLayer.backgroundImage = property(lambda self: self.pyobjc_instanceMethods.backgroundImage(),
