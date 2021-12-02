@@ -10,39 +10,33 @@
 ###############################################################################################
 
 
-import re, os
+import re, os, codecs
 
 def ReadFromFile(path):
-	"""\
+	"""
 	Return content of file
 	"""
-	import codecs
 	if os.path.exists(path):
 		f = codecs.open(path, encoding='utf-8', mode='r')
-		text = f.read()#.decode('utf8')
+		text = f.read()
 		f.close()
 		return text
-
 	return ''
 
 def WriteToFile(path, string):
-	"""\
+	"""
 	Write content to file
 	"""
-	f = open(path, 'wb')
-	f.write(string.encode())
+	f = codecs.open(path, 'w', "utf-8")
+	f.write(string)
 	f.close()
-	return True
 
 #from ynlib.system import Execute
 def Execute(command):
-	"""\
+	"""
 	Execute system command, return output.
 	"""
-
-	import sys
 	import subprocess
-
 	process = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True, close_fds=True)
 	os.waitpid(process.pid, 0)
 	response = process.stdout.read().strip()
@@ -75,14 +69,6 @@ Execute('/Library/Frameworks/Python.framework/Versions/3.9/bin/sphinx-build -b h
 html = ReadFromFile(os.path.join(path, '_build', 'html', 'index.html'))
 
 html = html.replace("        ", "\t")
-# html = html.replace("\t", "")
-# html = html.replace("  ", " ")
-# html = html.replace("  ", " ")
-# html = html.replace("  ", " ")
-# html = html.replace("  ", " ")
-# html = html.replace("\n\t", "\n")
-# html = html.replace("\n ", "\n")
-# html = html.replace("\n ", "\n")
 html = html.replace('<script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>', "")
 html = html.replace('<script src="_static/jquery.js"></script>', "")
 html = html.replace('<script src="_static/underscore.js"></script>', "")
