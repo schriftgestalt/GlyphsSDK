@@ -82,7 +82,7 @@ __all__ = [
 	"GSPathFinder", "GSPathPen", "GSCallbackHandler", "GSFeatureGenerator", "GSTTStem", "GSPathSegment",
 	# Constants
 	"MOVE", "LINE", "CURVE", "OFFCURVE", "QCURVE", "HOBBYCURVE", "GSMOVE", "GSLINE", "GSCURVE", "GSQCURVE", "GSOFFCURVE", "GSHOBBYCURVE", "GSSHARP", "GSSMOOTH",
-	"FILL", "FILLCOLOR", "FILLPATTERNANGLE", "FILLPATTERNBLENDMODE", "FILLPATTERNFILE", "FILLPATTERNOFFSET", "FILLPATTERNSCALE", "STROKECOLOR", "STROKELINECAPEND", "STROKELINECAPSTART", "STROKELINEJOIN", "STROKEPOSITION", "STROKEWIDTH", "GRADIENT", "SHADOW", "INNERSHADOW", "MASK", 
+	"FILL", "FILLCOLOR", "FILLPATTERNANGLE", "FILLPATTERNBLENDMODE", "FILLPATTERNFILE", "FILLPATTERNOFFSET", "FILLPATTERNSCALE", "STROKECOLOR", "STROKELINECAPEND", "STROKELINECAPSTART", "STROKELINEJOIN", "STROKEPOSITION", "STROKEWIDTH", "STROKEHEIGHT", "GRADIENT", "SHADOW", "INNERSHADOW", "MASK", 
 	"INSTANCETYPESINGLE", "INSTANCETYPEVARIABLE",
 	"TAG", "TOPGHOST", "STEM", "BOTTOMGHOST", "FLEX", "TTSNAP", "TTSTEM", "TTSHIFT", "TTINTERPOLATE", "TTDIAGONAL", "TTDELTA", "CORNER", "CAP", "TTDONTROUND", "TTROUND", "TTROUNDUP", "TTROUNDDOWN", "TRIPLE",
 	"TTANCHOR", "TTALIGN", # backwards compatibilty 
@@ -92,7 +92,7 @@ __all__ = [
 	"OTF", "TTF", "VARIABLE", "UFO", "WOFF", "WOFF2", "PLAIN", "EOT",
 
 	# Methods
-	"divideCurve", "distance", "addPoints", "subtractPoints", "GetFolder", "GetSaveFile", "GetOpenFile", "Message", "LogToConsole", "LogError", "removeOverlap", "subtractPaths", "intersectPaths", "scalePoint",
+	"divideCurve", "distance", "addPoints", "subtractPoints", "GetFolder", "GetSaveFile", "GetOpenFile", "Message", "AskString", "LogToConsole", "LogError", "removeOverlap", "subtractPaths", "intersectPaths", "scalePoint",
 
 	# Classes
 	"GSSmartComponentAxis",
@@ -108,7 +108,9 @@ __all__ = [
 	
 	"GSMetricsKeyAscender", "GSMetricsKeyCapHeight", "GSMetricsKeySlantHeight", "GSMetricsKeyxHeight", "GSMetricsKeyTopHeight", "GSMetricsKeyDescender", "GSMetricsKeyBaseline",
 	"GSNoCase", "GSUppercase", "GSLowercase", "GSSmallcaps", "GSMinor", "GSOtherCase", 
-	
+
+	"GSFormatVersion1", "GSFormatVersion3", "GSFormatVersionCurrent",
+
 	"GSShapeTypePath", "GSShapeTypeComponent",
 	"PreviewTextWindow"
 	]
@@ -315,8 +317,8 @@ These changes could possibly break your code, so you need to keep track of them.
 def GSObject__copy__(self, memo=None):
 	return self.copy()
 	
-NSObject.__copy__ = GSObject__copy__
-NSObject.__deepcopy__ = GSObject__copy__
+NSObject.__copy__ = python_method(GSObject__copy__)
+NSObject.__deepcopy__ = python_method(GSObject__copy__)
 
 def GSObject__new__(typ, *args, **kwargs):
 	"""__new__(...)"""
@@ -560,7 +562,7 @@ GSApplication.currentDocument = property(lambda self: NSApp().currentFontDocumen
 GSApplication.documents = property(lambda self: AppDocumentProxy(self))
 '''
 	.. attribute:: documents
-		An array of open `GSDocument` objects.
+		An array of open :class:`GSDocument` objects.
 
 		:type: list
 '''
@@ -975,9 +977,9 @@ GSApplication.handleSize = property(lambda self: self.intDefaults["GSHandleSize"
 									lambda self, value: Glyphs_setUserDefaults(self, "GSHandleSize", int(value)))
 '''
 	.. attribute:: handleSize
-		Size of Bezier handles in Glyph Edit view. Possible value are 0–2. Corresponds to the "Handle size" setting from the Preferences.
+		Size of Bezier handles in Glyph Edit view. Possible value are 0–2. Corresponds to the ‘Handle size’ setting from the Preferences.
 
-		To use the handle size for drawing in reporter plugins, you need to convert the handle size to a point size, and divide by the view's scale factor. See example below.
+		To use the handle size for drawing in reporter plugins, you need to convert the handle size to a point size, and divide by the view’s scale factor. See example below.
 
 		:type: int
 
@@ -998,7 +1000,7 @@ GSApplication.versionString = NSBundle.mainBundle().infoDictionary()["CFBundleSh
 
 '''
 	.. attribute:: versionString
-		String containing Glyph.app's version number. May contain letters also, like '2.3b'. To check for a specific version, use .versionNumber below.
+		String containing Glyph.app’s version number. May contain letters also, like ‘2.3b’. To check for a specific version, use :attr:`Glyphs.versionNumber <GSApplication.versionNumber>` below.
 
 		:type: string
 '''
@@ -1011,7 +1013,7 @@ GSApplication.versionNumber = _versionNumber
 
 '''
 	.. attribute:: versionNumber
-		Glyph.app's version number. Use this to check for version in your code.
+		Glyph.app’s version number. Use this to check for version in your code.
 
 		:type: float
 '''
@@ -1021,9 +1023,9 @@ GSApplication.buildNumber = _buildNumber
 
 '''
 	.. attribute:: buildNumber
-		Glyph.app's build number.
+		Glyph.app’s build number.
 
-		Especially if you're using preview builds, this number may be more important to you than the version number. The build number increases with every released build and is the most significant evidence of new Glyphs versions, while the version number is set arbitrarily and stays the same until the next stable release.
+		Especially if you’re using preview builds, this number may be more important to you than the version number. The build number increases with every released build and is the most significant evidence of new Glyphs versions, while the version number is set arbitrarily and stays the same until the next stable release.
 
 		:type: float
 '''
@@ -1122,7 +1124,7 @@ def OpenFont(self, Path, showInterface=True):
 		return Doc.font
 	return None
 
-GSApplication.open = OpenFont
+GSApplication.open = python_method(OpenFont)
 
 '''
 	.. function:: open(Path, [showInterface=True])
@@ -1172,7 +1174,7 @@ def _glyphInfoForName(self, String, font=None):
 		return font.glyphsInfo().glyphInfoForName_(String)
 	return GSGlyphsInfo.sharedManager().glyphInfoForName_(String)
 
-GSApplication.glyphInfoForName = _glyphInfoForName
+GSApplication.glyphInfoForName = python_method(_glyphInfoForName)
 
 '''
 	.. function:: glyphInfoForName(String)
@@ -1191,7 +1193,7 @@ def _glyphInfoForUnicode(self, String, font=None):
 		return font.glyphsInfo().glyphInfoForUnicode_(String)
 	return GSGlyphsInfo.sharedManager().glyphInfoForUnicode_(String)
 
-GSApplication.glyphInfoForUnicode = _glyphInfoForUnicode
+GSApplication.glyphInfoForUnicode = python_method(_glyphInfoForUnicode)
 
 '''
 	.. function:: glyphInfoForUnicode(Unicode)
@@ -1207,7 +1209,7 @@ def _niceGlyphName(self, String, font=None):
 	if font is not None:
 		return font.glyphsInfo().niceGlyphNameForName_(String)
 	return GSGlyphsInfo.sharedManager().niceGlyphNameForName_(String)
-GSApplication.niceGlyphName = _niceGlyphName
+GSApplication.niceGlyphName = python_method(_niceGlyphName)
 
 '''
 	.. function:: niceGlyphName(Name)
@@ -1223,7 +1225,7 @@ def _productionGlyphName(self, name, font=None):
 	if font is not None:
 		return font.glyphsInfo().productionGlyphNameForName_(name)
 	return GSGlyphsInfo.sharedManager().productionGlyphNameForName_(name)
-GSApplication.productionGlyphName = _productionGlyphName
+GSApplication.productionGlyphName = python_method(_productionGlyphName)
 
 '''
 	.. function:: productionGlyphName(name, [font=None])
@@ -1239,7 +1241,7 @@ def _ligatureComponents(self, String, font=None):
 	if font is not None:
 		return font.glyphsInfo().componentsForLigaName_font_(String, font)
 	return GSGlyphsInfo.sharedManager().componentsForLigaName_font_(String, None)
-GSApplication.ligatureComponents = _ligatureComponents
+GSApplication.ligatureComponents = python_method(_ligatureComponents)
 
 '''
 	.. function:: ligatureComponents(String)
@@ -1379,11 +1381,11 @@ GSApplication.addCallback = python_method(__addCallback__)
 '''
 	.. function:: addCallback(function, hook)
 
-		Add a user-defined function to the glyph window's drawing operations, in the foreground and background for the active glyph as well as in the inactive glyphs.
+		Add a user-defined function to the glyph window’s drawing operations, in the foreground and background for the active glyph as well as in the inactive glyphs.
 
 		The function names are used to add/remove the functions to the hooks, so make sure to use unique function names.
 
-		Your function needs to accept two values: `layer` which will contain the respective :class:`GSLayer` object of the layer we're dealing with and `info` which is a dictionary and contains the value `Scale` (for the moment).
+		Your function needs to accept two values: `layer` which will contain the respective :class:`GSLayer` object of the layer we’re dealing with and `info` which is a dictionary and contains the value `Scale` (for the moment).
 
 		For the hooks these constants are defined: `DRAWFOREGROUND`, `DRAWBACKGROUND`, `DRAWINACTIVE`, `DOCUMENTWASSAVED`, `DOCUMENTOPENED`, `TABDIDOPEN`, `TABWILLCLOSE`, `UPDATEINTERFACE`, `MOUSEMOVED`. For more information check the constants section.
 
@@ -1455,16 +1457,17 @@ GSApplication.removeCallback = python_method(__removeCallback__)
 '''
 	.. function:: removeCallback(function)
 
-		Remove the function you've previously added.
+		Remove the function you’ve previously added.
 
 		.. code-block:: python
 			# remove your function to the hook
 			Glyphs.removeCallback(drawGlyphIntoBackground)
 '''
 
+##########################################################################################################
 #
 #
-#      // end of Callback section
+#           // end of Callback section
 #
 #
 ##########################################################################################################
@@ -1487,12 +1490,12 @@ def Glyphs_showNotification(self, title, message):
 	notification.setInformativeText_(message)
 	NSUserNotificationCenter.defaultUserNotificationCenter().deliverNotification_(notification)
 
-GSApplication.showNotification = Glyphs_showNotification
+GSApplication.showNotification = python_method(Glyphs_showNotification)
 
 '''
 	.. function:: showNotification(title, message)
 
-		Shows the user a notification in Mac's Notification Center.
+		Shows the user a notification in Mac’s Notification Center.
 
 		.. code-block:: python
 			Glyphs.showNotification('Export fonts', 'The export of the fonts was successful.')
@@ -1516,7 +1519,7 @@ def Glyphs_localize(self, localization):
 		# None found, return first item in localization dict
 		return localization[localization.keys()[0]]
 
-GSApplication.localize = Glyphs_localize
+GSApplication.localize = python_method(Glyphs_localize)
 
 '''
 	.. function:: localize(localization)
@@ -1525,7 +1528,7 @@ GSApplication.localize = Glyphs_localize
 
 		The argument is a dictionary in the `languageCode: translatedString` format.
 
-		You don’t need to supply strings in all languages that the Glyphs.app UI supports. A subset will do. Just make sure that you add at least an English string to default to next to all your other translated strings. Also don’t forget to mark strings as unicode strings (:samp:`u'öäüß'`) when they contain non-ASCII content for proper encoding, and add a `# encoding: utf-8` to the top of all your .py files.
+		You don’t need to supply strings in all languages that the Glyphs.app UI supports. A subset will do. Just make sure that you add at least an English string to default to next to all your other translated strings. Also don’t forget to mark strings as unicode strings (:samp:`'öäüß'`) when they contain non-ASCII content for proper encoding, and add a `# encoding: utf-8` to the top of all your .py files.
 
 		Tip: You can find Glyphs’ localized languages here :samp:`Glyphs.defaults["AppleLanguages"]`.
 
@@ -1690,7 +1693,7 @@ class FontGlyphsProxy(Proxy):
 			# by glyph name
 			if self._owner.glyphForName_(key):
 				return self._owner.glyphForName_(key)
-			# by string representation as u'ä'
+			# by string representation as 'ä'
 			elif len(key) == 1 and self._owner.glyphForCharacter_(ord(key)):
 				return self._owner.glyphForCharacter_(ord(key))
 			# by unicode
@@ -2747,7 +2750,7 @@ class LayerAnchorsProxy(Proxy):
 	def setter(self, values):
 		newAnchors = NSMutableDictionary.dictionary()
 
-		if isinstance(values, (list, tuple)):
+		if isinstance(values, (list, tuple, NSArray)):
 			for anchor in values:
 				newAnchors[anchor.name] = anchor
 		elif isinstance(values, (NSDictionary, dict)):
@@ -3118,12 +3121,12 @@ def Font__copy__(self, memo=None):
 	return font
 
 GSFont.mutableCopyWithZone_ = Font__copy__
-GSFont.__copy__ = Font__copy__
-GSFont.__deepcopy__ = Font__copy__
+GSFont.__copy__ = python_method(Font__copy__)
+GSFont.__deepcopy__ = python_method(Font__copy__)
 
 def GSFont__contains__(self, key):
 	raise NotImplementedError("Font can't access values like this")
-GSFont.__contains__ = GSFont__contains__
+GSFont.__contains__ = python_method(GSFont__contains__)
 
 GSFont.parent = property(lambda self: self.pyobjc_instanceMethods.parent())
 '''
@@ -3234,7 +3237,7 @@ GSInterpolationFontProxy.glyphs = property(lambda self: FontGlyphsProxy(self),
 			<GSGlyph "A" with 4 layers>
 
 			# Access a glyph by character (new in v2.4.1)
-			print(font.glyphs[u'Ư'])
+			print(font.glyphs['Ư'])
 			<GSGlyph "Uhorn" with 4 layers>
 
 			# Access a glyph by unicode (new in v2.4.1)
@@ -3540,7 +3543,6 @@ GSFont.manufacturers = property(lambda self: FontInfoPropertiesProxy(self, "manu
 		.. code-block:: python
 			Font.manufacturers["ENG"] = "My English Corporation"
 
-		
 		.. versionadded:: 3.0.3
 '''
 
@@ -3644,7 +3646,7 @@ GSFont.kerning = property(lambda self: self.kerningLTR(),
 '''
 	.. attribute:: kerning
 		Kerning for LTR writing
-		A multi-level dictionary. The first level's key is the :attr:`GSFontMaster.id` (each master has its own kerning), the second level's key is the :attr:`GSGlyph.id` or class id (@MMK_L_XX) of the first glyph, the third level's key is a glyph id or class id (@MMK_R_XX) for the second glyph. The values are the actual kerning values.
+		A multi-level dictionary. The first level’s key is the :attr:`GSFontMaster.id` (each master has its own kerning), the second level’s key is the :attr:`GSGlyph.id` or class id (@MMK_L_XX) of the first glyph, the third level’s key is a glyph id or class id (@MMK_R_XX) for the second glyph. The values are the actual kerning values.
 
 		To set a value, it is better to use the method :meth:`GSFont.setKerningForPair()`. This ensures a better data integrity (and is faster).
 
@@ -3656,7 +3658,7 @@ GSFont.kerningRTL = property(lambda self: self.pyobjc_instanceMethods.kerningRTL
 '''
 	.. attribute:: kerningRTL
 		Kerning for RTL writing
-		A multi-level dictionary. The first level's key is the :attr:`GSFontMaster.id` (each master has its own kerning), the second level's key is the :attr:`GSGlyph.id` or class id (@MMK_L_XX) of the first glyph, the third level's key is a glyph id or class id (@MMK_R_XX) for the second glyph. The values are the actual kerning values.
+		A multi-level dictionary. The first level’s key is the :attr:`GSFontMaster.id` (each master has its own kerning), the second level’s key is the :attr:`GSGlyph.id` or class id (@MMK_L_XX) of the first glyph, the third level’s key is a glyph id or class id (@MMK_R_XX) for the second glyph. The values are the actual kerning values.
 
 		To set a value, it is better to use the method :meth:`GSFont.setKerningForPair()`. This ensures a better data integrity (and is faster).
 
@@ -3668,7 +3670,7 @@ GSFont.kerningVertical = property(lambda self: self.pyobjc_instanceMethods.kerni
 '''
 	.. attribute:: kerningVertical
 		Kerning for vertical writing
-		A multi-level dictionary. The first level's key is the :attr:`GSFontMaster.id` (each master has its own kerning), the second level's key is the :attr:`GSGlyph.id` or class id (@MMK_L_XX) of the first glyph, the third level's key is a glyph id or class id (@MMK_R_XX) for the second glyph. The values are the actual kerning values.
+		A multi-level dictionary. The first level’s key is the :attr:`GSFontMaster.id` (each master has its own kerning), the second level’s key is the :attr:`GSGlyph.id` or class id (@MMK_L_XX) of the first glyph, the third level’s key is a glyph id or class id (@MMK_R_XX) for the second glyph. The values are the actual kerning values.
 
 		To set a value, it is better to use the method :meth:`GSFont.setKerningForPair()`. This ensures a better data integrity (and is faster).
 
@@ -3711,7 +3713,7 @@ GSFont.disablesNiceNames = property(lambda self: bool(self.pyobjc_instanceMethod
 									lambda self, value: self.setDisablesNiceNames_(value))
 '''
 	.. attribute:: disablesNiceNames
-		Corresponds to the "Don't use nice names" setting from the Font Info dialog.
+		Corresponds to the “Don't use nice names” setting from the Font Info dialog.
 
 		:type: bool
 
@@ -3740,7 +3742,7 @@ GSFont.grid = property(lambda self: self.pyobjc_instanceMethods.gridMain(),
 					   lambda self, value: self.setGridMain_(value))
 '''
 	.. attribute:: grid
-		Corresponds to the "Grid spacing" setting from the Info dialog.
+		Corresponds to the “Grid spacing” setting from the Info dialog.
 
 		:type: int
 '''
@@ -3749,7 +3751,7 @@ GSFont.gridSubDivisions = property(lambda self: self.pyobjc_instanceMethods.grid
 								   lambda self, value: self.setGridSubDivision_(value))
 '''
 	.. attribute:: gridSubDivisions
-		Corresponds to the "Grid sub divisions" setting from the Info dialog.
+		Corresponds to the “Grid sub divisions” setting from the Info dialog.
 
 		:type: int
 '''
@@ -4080,7 +4082,7 @@ def Font__save__(self, path=None, formatVersion=3, makeCopy=False):
 	else:
 		raise ValueError("No path set")
 
-GSFont.save = Font__save__
+GSFont.save = python_method(Font__save__)
 '''
 	.. function:: save([path=None, formatVersion=3, makeCopy])
 		
@@ -4103,7 +4105,7 @@ def Font__close__(self, ignoreChanges=True):
 			self.parent.close()
 		else:
 			self.parent.canCloseDocumentWithDelegate_shouldCloseSelector_contextInfo_(None, None, None)
-GSFont.close = Font__close__
+GSFont.close = python_method(Font__close__)
 
 '''
 	.. function:: close([ignoreChanges=True])
@@ -4128,7 +4130,7 @@ def GSFont__show__(self):
 		Glyphs.fonts.append(self)
 	else:
 		self.parent.windowController().showWindow_(None)
-GSFont.show = GSFont__show__
+GSFont.show = python_method(GSFont__show__)
 
 '''
 	.. function:: show()
@@ -4156,7 +4158,7 @@ def kerningForPair(self, FontMasterID, LeftKeringId, RightKerningId, direction=L
 		return None
 	return value
 
-GSFont.kerningForPair = kerningForPair
+GSFont.kerningForPair = python_method(kerningForPair)
 '''
 	.. function:: kerningForPair(fontMasterId, leftKey, rightKey [, direction = LTR])
 
@@ -4202,7 +4204,7 @@ def setKerningForPair(self, FontMasterID, LeftKeringId, RightKerningId, Value, d
 		else:
 			raise KeyError("Glyphs with name: %s not found" % RightKerningId)
 	self.setKerningForFontMasterID_LeftKey_RightKey_Value_direction_(FontMasterID, LeftKeringId, RightKerningId, Value, direction)
-GSFont.setKerningForPair = setKerningForPair
+GSFont.setKerningForPair = python_method(setKerningForPair)
 '''
 	.. function:: setKerningForPair(fontMasterId, leftKey, rightKey, value [, direction = LTR])
 
@@ -4239,7 +4241,7 @@ def removeKerningForPair(self, FontMasterID, LeftKeringId, RightKerningId, direc
 		else:
 			raise KeyError("Glyphs with name: %s not found" % RightKerningId)
 	self.removeKerningForFontMasterID_LeftKey_RightKey_direction_(FontMasterID, LeftKeringId, RightKerningId, direction)
-GSFont.removeKerningForPair = removeKerningForPair
+GSFont.removeKerningForPair = python_method(removeKerningForPair)
 '''
 	.. function:: removeKerningForPair(FontMasterId, LeftKey, RightKey, direction=LTR)
 
@@ -4356,8 +4358,8 @@ GSAxis.__new__ = staticmethod(GSObject__new__)
 def Axis__init__(self):
 	pass
 GSAxis.__init__ = python_method(Axis__init__)
-GSAxis.__copy__ = GSObject__copy__
-GSAxis.__deepcopy__ = GSObject__copy__
+GSAxis.__copy__ = python_method(GSObject__copy__)
+GSAxis.__deepcopy__ = python_method(GSObject__copy__)
 
 GSAxis.font = property(lambda self: self.pyobjc_instanceMethods.font())
 '''
@@ -4440,8 +4442,8 @@ GSMetric.__new__ = staticmethod(GSObject__new__)
 def GSMetric__init__(self):
 	pass
 GSMetric.__init__ = python_method(Axis__init__)
-GSMetric.__copy__ = GSObject__copy__
-GSMetric.__deepcopy__ = GSObject__copy__
+GSMetric.__copy__ = python_method(GSObject__copy__)
+GSMetric.__deepcopy__ = python_method(GSObject__copy__)
 
 GSMetric.font = property(lambda self: self.pyobjc_instanceMethods.font())
 '''
@@ -4520,15 +4522,15 @@ GSFontMaster.__new__ = staticmethod(GSObject__new__)
 
 def FontMaster__init__(self):
 	pass
-GSFontMaster.__init__ = FontMaster__init__
+GSFontMaster.__init__ = python_method(FontMaster__init__)
 
 def FontMaster__repr__(self):
 	return "<GSFontMaster \"%s\" %s>" % (self.name, str(self.axes).replace("\n", "").replace("\t", ""))
 GSFontMaster.__repr__ = python_method(FontMaster__repr__)
 
 GSFontMaster.mutableCopyWithZone_ = GSObject__copy__
-GSFontMaster.__copy__ = GSObject__copy__
-GSFontMaster.__deepcopy__ = GSObject__copy__
+GSFontMaster.__copy__ = python_method(GSObject__copy__)
+GSFontMaster.__deepcopy__ = python_method(GSObject__copy__)
 
 '''
 
@@ -4536,14 +4538,8 @@ GSFontMaster.__deepcopy__ = GSObject__copy__
 
 		id
 		name
-		weight
-		width
 		axes
 		properties
-		weightValue
-		widthValue
-		customValue
-		customName
 		ascender
 		capHeight
 		xHeight
@@ -4577,7 +4573,7 @@ GSFontMaster.id = property(lambda self: self.pyobjc_instanceMethods.id(),
 			print(font.masters[0].id)
 			3B85FBE0-2D2B-4203-8F3D-7112D42D745E
 
-			# use this master to access the glyph's corresponding layer
+			# use this master to access the glyph’s corresponding layer
 			print(glyph.layers[font.masters[0].id])
 			<GSLayer "Light" (A)>
 
@@ -4715,7 +4711,7 @@ def FontMaster_blueValues(self):
 GSFontMaster.blueValues = property(lambda self: FontMaster_blueValues(self))
 '''
 	.. attribute:: blueValues
-		PS hinting Blue Values calculated from the master's alignment zones. Read-only.
+		PS hinting Blue Values calculated from the master’s alignment zones. Read-only.
 
 		:type: list
 '''
@@ -4726,7 +4722,7 @@ def FontMaster_otherBlues(self):
 GSFontMaster.otherBlues = property(lambda self: FontMaster_otherBlues(self))
 '''
 	.. attribute:: otherBlues
-		PS hinting Other Blues calculated from the master's alignment zones. Read-only.
+		PS hinting Other Blues calculated from the master’s alignment zones. Read-only.
 
 		:type: list
 '''
@@ -4905,7 +4901,7 @@ GSInstance.__new__ = staticmethod(GSInstance__new__)
 
 def Instance__init__(self):
 	pass
-GSInstance.__init__ = Instance__init__
+GSInstance.__init__ = python_method(Instance__init__)
 
 def Instance__repr__(self):
 	return "<GSInstance \"%s\" %s>" % (self.name, str(self.axes).replace("\n", "").replace("\t", ""))
@@ -5728,7 +5724,7 @@ GSInstance.interpolatedFont = property(lambda self: Instance_FontObject(self))
 		:rtype: bool/list
 
 		.. code-block:: python
-			# export all instances as OpenType (.otf) and WOFF2 to user's font folder
+			# export all instances as OpenType (.otf) and WOFF2 to user’s font folder
 
 			exportFolder = '/Users/myself/Library/Fonts'
 
@@ -5881,7 +5877,7 @@ GSInstance.lastExportedFilePath = property(lambda self: self.tempDataForKey_("la
 def AddInstanceAsMaster(self):
 	self.font.addFontAsNewMaster_(self.interpolatedFont.masters[0])
 
-GSInstance.addAsMaster = AddInstanceAsMaster
+GSInstance.addAsMaster = python_method(AddInstanceAsMaster)
 
 '''
 	.. function:: addAsMaster()
@@ -6403,6 +6399,8 @@ For details on how to access these glyphs, please see :class:`GSFont.glyphs`
 		storeCategory
 		subCategory
 		storeSubCategory
+		case
+		storeCase
 		script
 		storeScript
 		productionName
@@ -6462,8 +6460,8 @@ def Glyph__repr__(self):
 GSGlyph.__repr__ = python_method(Glyph__repr__)
 
 GSGlyph.mutableCopyWithZone_ = GSObject__copy__
-GSGlyph.__copy__ = GSObject__copy__
-GSGlyph.__deepcopy__ = GSObject__copy__
+GSGlyph.__copy__ = python_method(GSObject__copy__)
+GSGlyph.__deepcopy__ = python_method(GSObject__copy__)
 
 GSGlyph.__eq__ = python_method(lambda self, other: self.isEqualToGlyph_(other))
 
@@ -6613,8 +6611,8 @@ GSGlyph.category = property(lambda self: self.pyobjc_instanceMethods.category(),
 							lambda self, value: self.setCategory_(value))
 '''
 	.. attribute:: category
-		The category of the glyph. e.g. 'Letter', 'Symbol'
-		Setting only works if `storeCategory` is set (see below).
+		The category of the glyph. e.g. ‘Letter’, ‘Symbol’
+		Setting only works if :attr:`GSGlyph.storeCategory` is set (see below).
 
 		:type: str
 '''
@@ -6623,7 +6621,7 @@ GSGlyph.storeCategory = property(lambda self: bool(self.pyobjc_instanceMethods.s
 								 lambda self, value: self.setStoreCategory_(value))
 '''
 	.. attribute:: storeCategory
-		Set to True in order to manipulate the `category` of the glyph (see above).
+		Set to True in order to manipulate the :attr:`GSGlyph.category` of the glyph (see above).
 		Makes it possible to ship custom glyph data inside a .glyphs file without a separate GlyphData file. Same as Cmd-Alt-i dialog in UI.
 
 		:type: bool
@@ -6633,8 +6631,8 @@ GSGlyph.subCategory = property(lambda self: self.pyobjc_instanceMethods.subCateg
 							   lambda self, value: self.setSubCategory_(value))
 '''
 	.. attribute:: subCategory
-		The subCategory of the glyph. e.g. 'Uppercase', 'Math'
-		Setting only works if `storeSubCategory` is set (see below).
+		The subCategory of the glyph. e.g. ‘Currency’, ‘Math’
+		Setting it only works if :attr:`GSGlyph.storeSubCategory` is set (see below).
 
 		:type: str
 '''
@@ -6643,7 +6641,7 @@ GSGlyph.storeSubCategory = property(lambda self: bool(self.pyobjc_instanceMethod
 									lambda self, value: self.setStoreSubCategory_(value))
 '''
 	.. attribute:: storeSubCategory
-		Set to True in order to manipulate the `subCategory` of the glyph (see above).
+		Set to True in order to manipulate the :attr:`GSGlyph.subCategory` of the glyph (see above).
 		Makes it possible to ship custom glyph data inside a .glyphs file without a separate GlyphData file. Same as Cmd-Alt-i dialog in UI.
 
 		:type: bool
@@ -6665,7 +6663,7 @@ GSGlyph.storeCase = property(lambda self: bool(self.pyobjc_instanceMethods.store
 							 lambda self, value: self.setStoreCase_(value))
 '''
 	.. attribute:: storeCase
-		Set to True in order to manipulate the `case` of the glyph (see above).
+		Set to True in order to manipulate the :attr:`GSGlyph.case` of the glyph (see above).
 		Makes it possible to ship custom glyph data inside a .glyphs file without a separate GlyphData file. Same as Cmd-Alt-i dialog in UI.
 
 		:type: bool
@@ -6693,7 +6691,7 @@ GSGlyph.storeDirection = property(lambda self: bool(self.pyobjc_instanceMethods.
 								  lambda self, value: self.setStoreDirection_(value))
 '''
 	.. attribute:: storeDirection
-		Set to True in order to manipulate the `direction` of the glyph (see above).
+		Set to True in order to manipulate the :attr:`GSGlyph.direction` of the glyph (see above).
 		Makes it possible to ship custom glyph data inside a .glyphs file without a separate GlyphData file. Same as Cmd-Alt-i dialog in UI.
 
 		:type: bool
@@ -6706,7 +6704,7 @@ GSGlyph.script = property(lambda self: self.pyobjc_instanceMethods.script(),
 '''
 	.. attribute:: script
 		The script of the glyph, e.g., 'latin', 'arabic'.
-		Setting only works if `storeScript` is set (see below).
+		Setting only works if :attr:`GSGlyph.storeScript` is set (see below).
 
 		:type: str
 '''
@@ -6715,7 +6713,7 @@ GSGlyph.storeScript = property(lambda self: bool(self.pyobjc_instanceMethods.sto
 							   lambda self, value: self.setStoreScript_(value))
 '''
 	.. attribute:: storeScript
-		Set to True in order to manipulate the `script` of the glyph (see above).
+		Set to True in order to manipulate the :attr:`GSGlyph.script` of the glyph (see above).
 		Makes it possible to ship custom glyph data inside a .glyphs file without a separate GlyphData file. Same as Cmd-Alt-i dialog in UI.
 
 		:type: bool
@@ -6727,7 +6725,7 @@ GSGlyph.productionName = property(lambda self: self.pyobjc_instanceMethods.produ
 '''
 	.. attribute:: productionName
 		The productionName of the glyph.
-		Setting only works if `storeProductionName` is set (see below).
+		Setting only works if :attr:`GSGlyph.storeProductionName` is set (see below).
 
 		:type: str
 
@@ -6737,7 +6735,7 @@ GSGlyph.storeProductionName = property(lambda self: bool(self.storeProduction())
 									   lambda self, value: self.setStoreProduction_(value))
 '''
 	.. attribute:: storeProductionName
-		Set to True in order to manipulate the `productionName` of the glyph (see above).
+		Set to True in order to manipulate the :attr:`GSGlyph.productionName` of the glyph (see above).
 		Makes it possible to ship custom glyph data inside a .glyphs file without a separate GlyphData file. Same as Cmd-Alt-i dialog in UI.
 
 		:type: bool
@@ -6783,7 +6781,7 @@ GSGlyph.storeSortName = property(lambda self: bool(self.pyobjc_instanceMethods.s
 								 lambda self, value: self.setStoreSortName_(value))
 '''
 	.. attribute:: storeSortName
-		Set to True in order to manipulate the `sortName` and `sortNameKeep` of the glyph (see above).
+		Set to True in order to manipulate the :attr:`GSGlyph.sortName` and :attr:`GSGlyph.sortNameKeep` of the glyph (see above).
 		Makes it possible to ship custom glyph data inside a .glyphs file without a separate GlyphData file. Same as Cmd-Alt-i dialog in UI.
 
 		:type: bool
@@ -6871,7 +6869,7 @@ GSGlyph.leftKerningKey = property(lambda self: GSGlyph__leftKerningKey(self))
 
 '''
 	.. attribute:: leftKerningKey
-		The key to be used with the kerning functions (:meth:`GSFont.kerningForPair()`, :meth:`GSFont.setKerningForPair()`:meth:`GSFont.removeKerningForPair()`).
+		The key to be used with the kerning functions (:meth:`GSFont.kerningForPair()`, :meth:`GSFont.setKerningForPair()`, :meth:`GSFont.removeKerningForPair()`).
 
 		If the glyph has a :attr:`leftKerningGroup <GSGlyph.leftKerningGroup>` attribute, the internally used `@MMK_R_xx` notation will be returned (note that the R in there stands for the right side of the kerning pair for LTR fonts, which corresponds to the left kerning group of the glyph). If no group is given, the glyph’s name will be returned.
 
@@ -6918,7 +6916,7 @@ GSGlyph.topKerningKey = property(lambda self: GSGlyph__topKerningKey(self))
 
 '''
 	.. attribute:: topKerningKey
-		The key to be used with the kerning functions (:meth:`GSFont.kerningForPair()`, :meth:`GSFont.setKerningForPair()`:meth:`GSFont.removeKerningForPair()`).
+		The key to be used with the kerning functions (:meth:`GSFont.kerningForPair()`, :meth:`GSFont.setKerningForPair()`, :meth:`GSFont.removeKerningForPair()`).
 
 		.. versionadded:: 3
 '''
@@ -6933,7 +6931,7 @@ GSGlyph.bottomKerningKey = property(lambda self: GSGlyph__bottomKerningKey(self)
 
 '''
 	.. attribute:: bottomKerningKey
-		The key to be used with the kerning functions (:meth:`GSFont.kerningForPair()`, :meth:`GSFont.setKerningForPair()`:meth:`GSFont.removeKerningForPair()`).
+		The key to be used with the kerning functions (:meth:`GSFont.kerningForPair()`, :meth:`GSFont.setKerningForPair()`, :meth:`GSFont.removeKerningForPair()`).
 
 		.. versionadded:: 3
 '''
@@ -6946,6 +6944,7 @@ GSGlyph.leftMetricsKey = property(lambda self: self.pyobjc_instanceMethods.leftM
 
 		:type: str
 '''
+
 GSGlyph.rightMetricsKey = property(lambda self: self.pyobjc_instanceMethods.rightMetricsKey(),
 								   lambda self, value: self.setRightMetricsKey_(NSStr(value)))
 '''
@@ -6954,6 +6953,7 @@ GSGlyph.rightMetricsKey = property(lambda self: self.pyobjc_instanceMethods.righ
 
 		:type: str
 '''
+
 GSGlyph.widthMetricsKey = property(lambda self: self.pyobjc_instanceMethods.widthMetricsKey(),
 								   lambda self, value: self.setWidthMetricsKey_(NSStr(value)))
 '''
@@ -6962,9 +6962,9 @@ GSGlyph.widthMetricsKey = property(lambda self: self.pyobjc_instanceMethods.widt
 
 		:type: str
 '''
+
 GSGlyph.export = property(lambda self: bool(self.pyobjc_instanceMethods.export()),
 						  lambda self, value: self.setExport_(value))
-
 '''
 	.. attribute:: export
 		Defines whether glyph will export upon font generation
@@ -7119,7 +7119,7 @@ GSGlyph.smartComponentAxes = property(lambda self: GlyphSmartComponentAxesProxy(
 	.. attribute:: smartComponentAxes
 		A list of :class:`GSSmartComponentAxis` objects.
 
-		These are the axis definitions for the interpolations that take place within the Smart Components. Corresponds to the 'Properties' tab of the glyph's 'Show Smart Glyph Settings' dialog.
+		These are the axis definitions for the interpolations that take place within the Smart Components. Corresponds to the ‘Properties’ tab of the glyph’s ‘Show Smart Glyph Settings’ dialog.
 
 		Also see https://glyphsapp.com/tutorials/smart-components for reference.
 
@@ -7171,7 +7171,7 @@ GSGlyph.beginUndo = python_method(__BeginUndo__)
 '''
 	.. function:: beginUndo()
 
-		Call this before you do a longer running change to the glyph. Be extra careful to call Glyph.endUndo() when you are finished.
+		Call this before you do a longer running change to the glyph. Be extra careful to call :meth:`glyph.endUndo() <GSGlyph.endUndo()>` when you are finished.
 
 '''
 
@@ -7182,7 +7182,7 @@ GSGlyph.endUndo = python_method(__EndUndo__)
 '''
 	.. function:: endUndo()
 
-		This closes a undo group that was opened by a previous call of Glyph.beginUndo(). Make sure that you call this for each beginUndo() call.
+		This closes a undo group that was opened by a previous call of :meth:`glyph.beginUndo() <GSGlyph.beginUndo()>` Make sure that you call this for each `beginUndo()` call.
 
 '''
 
@@ -7212,7 +7212,7 @@ def Glyph_Duplicate(self, name=None):
 	self.parent.glyphs.append(newGlyph)
 	return newGlyph
 
-GSGlyph.duplicate = Glyph_Duplicate
+GSGlyph.duplicate = python_method(Glyph_Duplicate)
 
 '''
 	.. function:: duplicate([name])
@@ -7321,7 +7321,7 @@ GSLayer.__new__.__name__ = "__new__"
 
 def Layer__init__(self):
 	pass
-GSLayer.__init__ = Layer__init__
+GSLayer.__init__ = python_method(Layer__init__)
 
 def Layer__repr__(self):
 	try:
@@ -7491,7 +7491,7 @@ GSLayer.colorObject = property(lambda self: self.pyobjc_instanceMethods.color(),
 GSLayer.components = property(lambda self: self.pyobjc_instanceMethods.components())
 '''
 	.. attribute:: components
-		Collection of :class:`GSComponent` objects. This is only a helper proxy to iterate all components (without paths). To add/remove items, use `GSLayer.shapes`.
+		Collection of :class:`GSComponent` objects. This is only a helper proxy to iterate all components (without paths). To add/remove items, use :attr:`GSLayer.shapes`.
 
 		:type: list
 
@@ -7585,7 +7585,7 @@ GSLayer.hints = property(lambda self: LayerHintsProxy(self),
 			# copy hints from another layer
 			import copy
 			layer.hints = copy.copy(anotherlayer.hints)
-			# remember to reconnect the hints' nodes with the new layer's nodes
+			# remember to reconnect the hints' nodes with the new layer’s nodes
 
 '''
 
@@ -7638,7 +7638,7 @@ GSLayer.shapes = property(lambda self: LayerShapesProxy(self),
 GSLayer.paths = property(lambda self: self.pyobjc_instanceMethods.paths())
 '''
 	.. attribute:: paths
-		List of :class:`GSPath` objects. This is only a helper proxy to iterate all paths (without components). To add/remove items, use `GSLayer.shapes`.
+		List of :class:`GSPath` objects. This is only a helper proxy to iterate all paths (without components). To add/remove items, use :attr:`GSLayer.shapes`.
 
 		:type: list
 
@@ -7847,7 +7847,7 @@ GSLayer.bounds = property(lambda self: self.pyobjc_instanceMethods.bounds())
 GSLayer.selectionBounds = property(lambda self: self.boundsOfSelection())
 '''
 	.. attribute:: selectionBounds
-		Bounding box of the layer's selection (nodes, anchors, components etc). Read-only.
+		Bounding box of the layer’s selection (nodes, anchors, components etc). Read-only.
 
 		:type: NSRect
 '''
@@ -7856,7 +7856,7 @@ GSLayer.metrics =  property(lambda self: self.pyobjc_instanceMethods.metrics())
 
 '''
 	.. attribute:: metrics
-		The metrics layer are a list of horizontal metrics filtered specifically for this layer. Use this instead of master.alignmentZones.
+		The metrics layer are a list of horizontal metrics filtered specifically for this layer. Use this instead of :attr:`master.alignmentZones <GSFontMaster.alignmentZones>`.
 
 		:type: :class:`GSMetricValue`
 
@@ -7867,7 +7867,7 @@ GSLayer.background = property(lambda self: self.pyobjc_instanceMethods.backgroun
 							  lambda self, value: self.setBackground_(value))
 '''
 	.. attribute:: background
-		The background layer of GSLayer object.
+		The background layer
 
 		:type: :class:`GSLayer`
 
@@ -7883,7 +7883,7 @@ GSLayer.backgroundImage = property(lambda self: self.pyobjc_instanceMethods.back
 								   lambda self, value: self.setBackgroundImage_(value))
 '''
 	.. attribute:: backgroundImage
-		The background image. It will be scaled so that 1 em unit equals 1 of the image's pixels.
+		The background image. It will be scaled so that 1 em unit equals 1 of the image’s pixels.
 
 		:type: :class:`GSBackgroundImage`
 
@@ -8036,7 +8036,7 @@ GSLayer.smartComponentPoleMapping = property(lambda self: SmartComponentPoleMapp
 
 '''
 	.. attribute:: smartComponentPoleMapping
-		Maps this layer to the poles on the interpolation axes of the Smart Glyph. The dictionary keys are the names of the :class:`GSSmartComponentAxis` objects. The values are 1 for bottom pole and 2 for top pole. Corresponds to the 'Layers' tab of the glyph's 'Show Smart Glyph Settings' dialog.
+		Maps this layer to the poles on the interpolation axes of the Smart Glyph. The dictionary keys are the names of the :class:`GSSmartComponentAxis` objects. The values are 1 for bottom pole and 2 for top pole. Corresponds to the 'Layers' tab of the glyph’s ‘Show Smart Glyph Settings’ dialog.
 
 		Also see https://glyphsapp.com/tutorials/smart-components for reference.
 
@@ -8120,7 +8120,7 @@ GSLayer.smartComponentPoleMapping = property(lambda self: SmartComponentPoleMapp
 
 def RemoveOverlap(self, checkSelection=False):
 	self.removeOverlapCheckSelection_error_(checkSelection, None)
-GSLayer.removeOverlap = RemoveOverlap
+GSLayer.removeOverlap = python_method(RemoveOverlap)
 
 '''
 	.. function:: removeOverlap()
@@ -8138,7 +8138,7 @@ GSLayer.removeOverlap = RemoveOverlap
 def Layer_addNodesAtExtremes(self, force=False):
 	self.addExtremePoints()
 
-GSLayer.addNodesAtExtremes = Layer_addNodesAtExtremes
+GSLayer.addNodesAtExtremes = python_method(Layer_addNodesAtExtremes)
 
 '''
 	.. function:: addNodesAtExtremes()
@@ -8162,12 +8162,12 @@ GSLayer.applyTransform = python_method(__GSLayer_applyTransform__)
 
 		.. code-block:: python
 			layer.applyTransform([
-						0.5, # x scale factor
-						0.0, # x skew factor
-						0.0, # y skew factor
-						0.5, # y scale factor
-						0.0, # x position
-						0.0  # y position
+			    0.5, # x scale factor
+			    0.0, # x skew factor
+			    0.0, # y skew factor
+			    0.5, # y scale factor
+			    0.0, # x position
+			    0.0  # y position
 						])
 
 '''
@@ -8193,7 +8193,7 @@ GSLayer.transform = python_method(__GSLayer_transform__)
 def BeginChanges(self):
 	self.stopUpdates()
 	self.undoManager().beginUndoGrouping()
-GSLayer.beginChanges = BeginChanges
+GSLayer.beginChanges = python_method(BeginChanges)
 
 
 '''
@@ -8208,7 +8208,7 @@ GSLayer.beginChanges = BeginChanges
 def EndChanges(self):
 	self.startUpdates()
 	self.undoManager().endUndoGrouping()
-GSLayer.endChanges = EndChanges
+GSLayer.endChanges = python_method(EndChanges)
 
 
 '''
@@ -8221,7 +8221,7 @@ GSLayer.endChanges = EndChanges
 def CutBetweenPoints(self, Point1, Point2):
 	GlyphsToolOther = NSClassFromString("GlyphsToolOther")
 	GlyphsToolOther.cutPathsInLayer_forPoint_endPoint_(self, Point1, Point2)
-GSLayer.cutBetweenPoints = CutBetweenPoints
+GSLayer.cutBetweenPoints = python_method(CutBetweenPoints)
 
 
 '''
@@ -8240,7 +8240,7 @@ GSLayer.cutBetweenPoints = CutBetweenPoints
 
 def IntersectionsBetweenPoints(self, Point1, Point2, components=False, ignoreLocked=False):
 	return self.calculateIntersectionsStartPoint_endPoint_decompose_ignoreLocked_(Point1, Point2, components, ignoreLocked)
-GSLayer.intersectionsBetweenPoints = IntersectionsBetweenPoints
+GSLayer.intersectionsBetweenPoints = python_method(IntersectionsBetweenPoints)
 
 NSConcreteValue.x = property(lambda self: self.pointValue().x)
 NSConcreteValue.y = property(lambda self: self.pointValue().y)
@@ -8272,7 +8272,7 @@ NSConcreteValue.y = property(lambda self: self.pointValue().y)
 
 def Layer_addMissingAnchors(self):
 	GSGlyphsInfo.sharedManager().updateAnchor_(self)
-GSLayer.addMissingAnchors = Layer_addMissingAnchors
+GSLayer.addMissingAnchors = python_method(Layer_addMissingAnchors)
 
 
 '''
@@ -8303,12 +8303,10 @@ GSLayer.addMissingAnchors = Layer_addMissingAnchors
 '''
 
 def Layer_replaceLayerWithInterpolation(self):
-
 	if self.parent:
 		self.parent.replaceLayersWithInterpolation_([self])
 
-
-GSLayer.reinterpolate = Layer_replaceLayerWithInterpolation
+GSLayer.reinterpolate = python_method(Layer_replaceLayerWithInterpolation)
 
 '''
 	.. function:: reinterpolate()
@@ -8328,7 +8326,7 @@ GSControlLayer.__new__ = staticmethod(ControlLayer__new__)
 
 def ControlLayer__init__(self, args):
 	pass
-GSControlLayer.__init__ = ControlLayer__init__
+GSControlLayer.__init__ = python_method(ControlLayer__init__)
 
 def ControlLayer__repr__(self):
 	char = self.parent.unicodeChar()
@@ -8374,7 +8372,7 @@ def DrawLayerWithPen(self, pen, contours=True, components=True):
 		# FontTools pens don't have a doneDrawing() method
 		pass
 
-GSLayer.draw = DrawLayerWithPen
+GSLayer.draw = python_method(DrawLayerWithPen)
 
 def DrawPointsWithPen(self, pen, contours=True, components=True):
 	"""draw the object with a point pen"""
@@ -8391,13 +8389,13 @@ GSLayer.drawPoints = python_method(DrawPointsWithPen)
 def _getPen_(self):
 	return GSPathPen.alloc().initWithLayer_(self)
 
-GSLayer.getPen = _getPen_
-GSLayer.getPointPen = _getPen_
+GSLayer.getPen = python_method(_getPen_)
+GSLayer.getPointPen = python_method(_getPen_)
 
 def _invalidateContours_(self):
 	pass
 
-GSLayer._invalidateContours = _invalidateContours_
+GSLayer._invalidateContours = python_method(_invalidateContours_)
 
 def __GSLayer__add__(self, summand):
 	if isinstance(summand, NSPoint):
@@ -8640,7 +8638,7 @@ def DrawAnchorWithPen(self, pen):
 		pen.moveTo(self.position)
 		pen.endPath()
 
-GSAnchor.draw = DrawAnchorWithPen
+GSAnchor.draw = python_method(DrawAnchorWithPen)
 
 def __GSAnchor_drawPoints__(self, pen):
 	"""Draw the object with a point pen."""
@@ -8837,13 +8835,13 @@ GSComponent.transform = property(lambda self: self.transformStruct(),
 
 		.. code-block:: python
 			component.transform = ((
-						0.5, # x scale factor
-						0.0, # x skew factor
-						0.0, # y skew factor
-						0.5, # y scale factor
-						0.0, # x position
-						0.0  # y position
-						))
+			    0.5, # x scale factor
+			    0.0, # x skew factor
+			    0.0, # y skew factor
+			    0.5, # y scale factor
+			    0.0, # x position
+			    0.0  # y position
+			))
 
 '''
 
@@ -8951,7 +8949,7 @@ GSComponent.drawPoints = python_method(DrawComponentWithPen)
 GSComponent.smartComponentValues = property(lambda self: SmartComponentValuesProxy(self))
 '''
 	.. attribute:: smartComponentValues
-		Dictionary of interpolations values of the Smart Component. Key are the names, values are between the top and the bottom value of the corresponding :class:`GSSmartComponentAxis` objects. Corresponds to the values of the 'Smart Component Settings' dialog. Returns None if the component is not a Smart Component.
+		Dictionary of interpolations values of the Smart Component. Key are the names, values are between the top and the bottom value of the corresponding :class:`GSSmartComponentAxis` objects. Corresponds to the values of the ‘Smart Component Settings’ dialog. Returns None if the component is not a Smart Component.
 
 		Also see https://glyphsapp.com/tutorials/smart-components for reference.
 
@@ -9070,13 +9068,13 @@ GSComponent.applyTransform = python_method(__GSComponent_applyTransform__)
 			component = layer.components[0]
 
 			component.applyTransform((
-						0.5, # x scale factor
-						0.0, # x skew factor
-						0.0, # y skew factor
-						0.5, # y scale factor
-						0.0, # x position
-						0.0  # y position
-						))
+			    0.5, # x scale factor
+			    0.0, # x skew factor
+			    0.0, # y skew factor
+			    0.5, # y scale factor
+			    0.0, # x position
+			    0.0  # y position
+			))
 
 '''
 
@@ -9166,7 +9164,7 @@ GSSmartComponentAxis.__new__.__name__ = "__new__"
 
 def SmartComponentProperty__init__(self):
 	pass
-GSSmartComponentAxis.__init__ = SmartComponentProperty__init__
+GSSmartComponentAxis.__init__ = python_method(SmartComponentProperty__init__)
 def SmartComponentProperty__repr__(self):
 	return "<GSSmartComponentAxis \"%s\">" % (self.name)
 GSSmartComponentAxis.__repr__ = python_method(SmartComponentProperty__repr__)
@@ -9182,7 +9180,7 @@ GSSmartComponentAxis.name = property(lambda self: self.pyobjc_instanceMethods.na
 GSSmartComponentAxis.id = property(lambda self: self.axisId())
 '''
 	.. attribute:: id
-		Id of the axis. This Id will be used to map the Smart Glyph's layers to the poles of the interpolation. See :attr:`GSLayer.smartComponentPoleMapping`
+		Id of the axis. This Id will be used to map the Smart Glyph’s layers to the poles of the interpolation. See :attr:`GSLayer.smartComponentPoleMapping`
 
 		:type: str
 
@@ -9303,6 +9301,7 @@ If you build a path in code, make sure that the structure is valid. A curve node
 		selected
 		bezierPath
 		attributes
+		tempData
 
 	Functions
 
@@ -9320,7 +9319,7 @@ GSPath.__new__.__name__ = "__new__"
 
 def Path__init__(self):
 	pass
-GSPath.__init__ = Path__init__
+GSPath.__init__ = python_method(Path__init__)
 
 def Path__repr__(self):
 	return "<GSPath %s nodes>" % len(self.nodes)
@@ -9472,8 +9471,23 @@ GSPath.attributes = property(lambda self: AttributesProxy(self))
 			path.attributes['strokePos'] = 1 # or 0, -1
 
 		:type: dict
+'''
 
-	TODO Add doc and examples
+GSPath.tempData = property(lambda self: TempDataProxy(self))
+
+'''
+	.. attribute:: tempData
+		A dictionary to store data temporarily. Use a unique key. This will not be saved to file. If you need the data persistent, use path.userData
+
+		:type: dict
+
+		.. code-block:: python
+			# set value
+			path.tempData['rememberToMakeCoffee'] = True
+
+			# delete value
+			del path.tempData['rememberToMakeCoffee']
+
 '''
 
 def DrawPathWithPen(self, pen):
@@ -9508,7 +9522,7 @@ def DrawPathWithPen(self, pen):
 		pen.endPath()
 	return
 
-GSPath.draw = DrawPathWithPen
+GSPath.draw = python_method(DrawPathWithPen)
 
 def __GSPath__drawPoints__(self, pen):
 	'''draw the object with a fontTools pen'''
@@ -9526,11 +9540,11 @@ GSPath.drawPoints = python_method(__GSPath__drawPoints__)
 def Path_addNodesAtExtremes(self, force=False):
 	self.addExtremes_(force)
 
-GSPath.addNodesAtExtremes = Path_addNodesAtExtremes
+GSPath.addNodesAtExtremes = python_method(Path_addNodesAtExtremes)
 '''
 	.. function:: addNodesAtExtremes()
 
-		Add nodes at path's extrema, e.g., top, bottom etc.
+		Add nodes at path’s extrema, e.g., top, bottom etc.
 '''
 
 def __CGPath_applyTransform__(self, transformStruct):
@@ -9550,13 +9564,13 @@ GSPath.applyTransform = python_method(__CGPath_applyTransform__)
 			path = layer.paths[0]
 
 			path.applyTransform((
-						0.5, # x scale factor
-						0.0, # x skew factor
-						0.0, # y skew factor
-						0.5, # y scale factor
-						0.0, # x position
-						0.0  # y position
-						))
+			    0.5, # x scale factor
+			    0.0, # x skew factor
+			    0.0, # y skew factor
+			    0.5, # y scale factor
+			    0.0, # x position
+			    0.0  # y position
+			))
 '''
 
 ##################################################################################
@@ -9958,7 +9972,7 @@ For details on how to access them, please see :attr:`GSLayer.guides`
 
 def Guide__init__(self):
 	pass
-GSGuide.__init__ = Guide__init__
+GSGuide.__init__ = python_method(Guide__init__)
 
 def Guide__repr__(self):
 	return "<GSGuide x=%s y=%s angle=%s>" % (self.position.x, self.position.y, self.angle)
@@ -10087,7 +10101,7 @@ GSAnnotation.__new__.__name__ = "__new__"
 
 def Annotation__init__(self):
 	pass
-GSAnnotation.__init__ = Annotation__init__
+GSAnnotation.__init__ = python_method(Annotation__init__)
 
 def Annotation__repr__(self):
 	TypeName = "n/a"
@@ -10208,7 +10222,7 @@ GSHint.__new__.__name__ = "__new__"
 
 def Hint__init__(self):
 	pass
-GSHint.__init__ = Hint__init__
+GSHint.__init__ = python_method(Hint__init__)
 
 def Hint__origin__pos(self):
 	if (self.originNode):
@@ -10515,8 +10529,8 @@ def BackgroundImage__repr__(self):
 GSBackgroundImage.__repr__ = python_method(BackgroundImage__repr__)
 
 GSBackgroundImage.mutableCopyWithZone_ = GSObject__copy__
-GSBackgroundImage.__copy__ = GSObject__copy__
-GSBackgroundImage.__deepcopy__ = GSObject__copy__
+GSBackgroundImage.__copy__ = python_method(GSObject__copy__)
+GSBackgroundImage.__deepcopy__ = python_method(GSObject__copy__)
 
 def BackgroundImage_path(self):
 	url = self.imageURL()
@@ -10548,7 +10562,7 @@ GSBackgroundImage.crop = property(lambda self: self.pyobjc_instanceMethods.crop(
 								  lambda self, value: self.setCrop_(value))
 '''
 	.. attribute:: crop
-		Crop rectangle. This is relative to the image size in pixels, not the font's em units (just in case the image is scaled to something other than 100%).
+		Crop rectangle. This is relative to the image size in pixels, not the font’s em units (just in case the image is scaled to something other than 100%).
 
 		:type: :class:`NSRect`
 
@@ -10637,51 +10651,51 @@ GSBackgroundImage.transform = property(lambda self: self.transformStruct(),
 		.. code-block:: python
 			# change transformation
 			layer.backgroundImage.transform = ((
-				1.0, # x scale factor
-				0.0, # x skew factor
-				0.0, # y skew factor
-				1.0, # y scale factor
-				0.0, # x position
-				0.0  # y position
-				))
+			    1.0, # x scale factor
+			    0.0, # x skew factor
+			    0.0, # y skew factor
+			    1.0, # y scale factor
+			    0.0, # x position
+			    0.0  # y position
+			))
 
 	**Functions**
 '''
 
 def BackgroundImage_resetCrop(self):
 	self.crop = NSRect(NSPoint(0, 0), self.image.size())
-GSBackgroundImage.resetCrop = BackgroundImage_resetCrop
+GSBackgroundImage.resetCrop = python_method(BackgroundImage_resetCrop)
 '''
 	.. function:: resetCrop
 
-		Resets the cropping to the image's original dimensions.
+		Resets the cropping to the image’s original dimensions.
 '''
 
 def BackgroundImage_scaleWidthToEmUnits(self, value):
 	scale = float(value) / float(self.crop.size.width)
 	self.scale = NSPoint(scale, scale)
-GSBackgroundImage.scaleWidthToEmUnits = BackgroundImage_scaleWidthToEmUnits
+GSBackgroundImage.scaleWidthToEmUnits = python_method(BackgroundImage_scaleWidthToEmUnits)
 '''
 	.. function:: scaleWidthToEmUnits
 
-		Scale the image's cropped width to a certain em unit value, retaining its aspect ratio.
+		Scale the image’s cropped width to a certain em unit value, retaining its aspect ratio.
 
 		.. code-block:: python
-			# fit image in layer's width
+			# fit image in layer’s width
 			layer.backgroundImage.scaleWidthToEmUnits(layer.width)
 '''
 
 def BackgroundImage_scaleHeightToEmUnits(self, value):
 	self.scale = float(value) / float(self.crop.size.height)
-GSBackgroundImage.scaleHeightToEmUnits = BackgroundImage_scaleHeightToEmUnits
+GSBackgroundImage.scaleHeightToEmUnits = python_method(BackgroundImage_scaleHeightToEmUnits)
 
 '''
 	.. function:: scaleHeightToEmUnits
 
-		Scale the image's cropped height to a certain em unit value, retaining its aspect ratio.
+		Scale the image’s cropped height to a certain em unit value, retaining its aspect ratio.
 
 		.. code-block:: python
-			# position image's origin at descender line
+			# position image’s origin at descender line
 			layer.backgroundImage.position = NSPoint(0, font.masters[0].descender)
 
 			# scale image to UPM value
@@ -10885,7 +10899,7 @@ GSEditViewController.scale = property(lambda self: self.graphicView().scale(),
 	.. attribute:: scale
 		Scale (zoom factor) of the Edit view. Useful for drawing activity in plugins.
 
-		The scale changes with every zoom step of the Edit view. So if you want to draw objects (e.g. text, stroke thickness etc.) into the Edit view at a constant size relative to the UI (e.g. constant text size on screen), you need to calculate the object's size relative to the scale factor. See example below.
+		The scale changes with every zoom step of the Edit view. So if you want to draw objects (e.g. text, stroke thickness etc.) into the Edit view at a constant size relative to the UI (e.g. constant text size on screen), you need to calculate the object’s size relative to the scale factor. See example below.
 
 		:type: float
 
@@ -11165,7 +11179,7 @@ def GSEditViewController_saveToPDF(self, path, rect=None):
 	pdf.writeToFile_atomically_(path, True)
 
 
-GSEditViewController.saveToPDF = GSEditViewController_saveToPDF
+GSEditViewController.saveToPDF = python_method(GSEditViewController_saveToPDF)
 
 
 '''
@@ -11209,7 +11223,7 @@ GSGlyphInfo.__new__.__name__ = "__new__"
 
 def GSGlyphInfo__init__(self):
 	pass
-GSGlyphInfo.__init__ = GSGlyphInfo__init__
+GSGlyphInfo.__init__ = python_method(GSGlyphInfo__init__)
 
 def GSGlyphInfo__repr__(self):
 	return "<GSGlyphInfo '%s'>" % (self.name)
@@ -11279,7 +11293,7 @@ GSGlyphInfo.category = property(lambda self: self.pyobjc_instanceMethods.categor
 GSGlyphInfo.subCategory = property(lambda self: self.pyobjc_instanceMethods.subCategory())
 '''
 	.. attribute:: subCategory
-		This is mostly from the UnicodeData.txt file from unicode.org. Some corrections and additions have been made (Smallcaps, ...).
+		This is mostly from the UnicodeData.txt file from unicode.org. Some corrections and additions have been made.
 		e.g: "Nonspacing", "Ligature", "Decimal Digit", ...
 
 		:type: str
@@ -11629,7 +11643,7 @@ GSMetricValue.overshoot = property(lambda self: self.pyobjc_instanceMethods.over
 								   lambda self, value: self.setOvershoot_(value))
 '''
 	.. attribute:: overshoot
-		Value of overshoot's width.
+		Value of overshoot’s width.
 
 		:type: float
 '''
@@ -11690,14 +11704,14 @@ The Text Preview Window
 
 PreviewTextWindow.__class__.font = property(lambda self: self.defaultInstance().activeFont())
 '''
-	.. attribute:: text
+	.. attribute:: font
 		The font
 
 		:type: GSFont
 '''
 
 PreviewTextWindow.__class__.text = property(lambda self: self.defaultInstance().textView().string(),
-												lambda self, value: self.defaultInstance().textView().setString_(value))
+											lambda self, value: self.defaultInstance().textView().setString_(value))
 '''
 	.. attribute:: text
 		The text
@@ -11713,6 +11727,7 @@ PreviewTextWindow.__class__.instanceIndex = property(lambda self: Glyphs.intDefa
 
 		:type: int
 '''
+
 PreviewTextWindow.__class__.fontSize = property(lambda self: Glyphs.intDefaults["GSPreviewText_fontSize"],
 													lambda self, value: NSUserDefaults.standardUserDefaults().setObject_forKey_(value, objcObject("GSPreviewText_fontSize")))
 '''
@@ -11721,6 +11736,7 @@ PreviewTextWindow.__class__.fontSize = property(lambda self: Glyphs.intDefaults[
 
 		:type: int
 '''
+
 def PreviewTextWindow__open(self):
 	PreviewTextWindow.defaultInstance().openWindow()
 PreviewTextWindow.open = classmethod(PreviewTextWindow__open)
@@ -11750,11 +11766,6 @@ PreviewTextWindow.close = classmethod(PreviewTextWindow__close)
 	.. function:: close()
 		closes the Preview Text Window
 '''
-
-def _______________(): pass
-def ____METHODS____(): pass
-def _______________(): pass
-
 
 def __GSPathPen_beginPath__(self, identifier=None, **kwargs):
 	self.beginPath_(identifier)
@@ -11790,45 +11801,6 @@ def __GSPathPen_addPoint__(self, pt, segmentType=None, smooth=False, name=None, 
 		node.name = name
 	path.nodes.append(node)
 GSPathPen.addPoint = python_method(__GSPathPen_addPoint__)
-
-def removeOverlap(paths):
-	try:
-		Paths = NSMutableArray.arrayWithArray_(paths)
-	except:
-		Paths = NSMutableArray.arrayWithArray_(paths.values())
-
-	result = GSPathFinder.removeOverlapPaths_error_(Paths, None)
-	if result[0] != 1:
-		return None
-	return Paths
-
-def subtractPaths(paths, subtract):
-	try:
-		Paths = NSMutableArray.arrayWithArray_(paths)
-	except:
-		Paths = NSMutableArray.arrayWithArray_(paths.values())
-	try:
-		Subtract = NSMutableArray.arrayWithArray_(subtract)
-	except:
-		Subtract = NSMutableArray.arrayWithArray_(subtract.values())
-	result = GSPathFinder.subtractPaths_from_error_(Subtract, Paths, None)
-	if result[0] != 1:
-		return None
-	return Paths
-
-def intersectPaths(paths, otherPaths):
-	try:
-		Paths = NSMutableArray.arrayWithArray_(paths)
-	except:
-		Paths = NSMutableArray.arrayWithArray_(paths.values())
-	try:
-		OtherPaths = NSMutableArray.arrayWithArray_(otherPaths)
-	except:
-		OtherPaths = NSMutableArray.arrayWithArray_(otherPaths.values())
-	result = GSPathFinder.intersectPaths_from_error_(Paths, OtherPaths, None)
-	if result[0] != 1:
-		return None
-	return OtherPaths
 
 '''
 
@@ -11941,6 +11913,10 @@ Methods
 	distance()
 	addPoints()
 	subtractPoints()
+	scalePoint()
+	removeOverlap()
+	subtractPaths()
+	intersectPaths()
 	GetOpenFile()
 	GetSaveFile()
 	GetFolder()
@@ -11968,14 +11944,14 @@ def divideCurve(P0, P1, P2, P3, t):
 '''
 .. function:: divideCurve(P0, P1, P2, P3, t)
 
-	Divides the curve using the De Casteljau's algorithm.
+	Divides the curve using the De Casteljau’s algorithm.
 
 	:param P0: The Start point of the Curve (NSPoint)
 	:param P1: The first off curve point
 	:param P2: The second off curve point
 	:param P3: The End point of the Curve
 	:param t: The time parameter
-	:return: A list of points that represent two curves. (Q0, Q1, Q2, Q3, R1, R2, R3). Note that the "middle" point is only returned once.
+	:return: A list of points that represent two curves. (Q0, Q1, Q2, Q3, R1, R2, R3). Note that the ‘middle’ point is only returned once.
 	:rtype: list
 '''
 
@@ -12026,9 +12002,77 @@ def scalePoint(P, scalar):
 	Scaled a point.
 
 	:param P: a NSPoint
-	:param scalar: The Multiplier
+	:param scalar: The multiplier
 	:return: The multiplied point
 	:rtype: NSPoint
+'''
+
+def removeOverlap(paths):
+	try:
+		Paths = NSMutableArray.arrayWithArray_(paths)
+	except:
+		Paths = NSMutableArray.arrayWithArray_(paths.values())
+
+	result = GSPathFinder.removeOverlapPaths_error_(Paths, None)
+	if result[0] != 1:
+		return None
+	return Paths
+
+'''
+.. function:: removeOverlap(paths)
+
+	removes the overlaps from the list of paths
+
+	:param paths: A list of paths
+	:return: The resulting list of paths
+	:rtype: list
+'''
+
+def subtractPaths(paths, subtract):
+	try:
+		Paths = NSMutableArray.arrayWithArray_(paths)
+	except:
+		Paths = NSMutableArray.arrayWithArray_(paths.values())
+	try:
+		Subtract = NSMutableArray.arrayWithArray_(subtract)
+	except:
+		Subtract = NSMutableArray.arrayWithArray_(subtract.values())
+	result = GSPathFinder.subtractPaths_from_error_(Subtract, Paths, None)
+	if result[0] != 1:
+		return None
+	return Paths
+'''
+.. function:: subtractPaths(paths, subtract)
+
+	removes the overlaps from the list of paths
+
+	:param paths: a list of paths
+	:param subtract: the subtracting paths
+	:return: The resulting list of paths
+	:rtype: list
+'''
+def intersectPaths(paths, otherPaths):
+	try:
+		Paths = NSMutableArray.arrayWithArray_(paths)
+	except:
+		Paths = NSMutableArray.arrayWithArray_(paths.values())
+	try:
+		OtherPaths = NSMutableArray.arrayWithArray_(otherPaths)
+	except:
+		OtherPaths = NSMutableArray.arrayWithArray_(otherPaths.values())
+	result = GSPathFinder.intersectPaths_from_error_(Paths, OtherPaths, None)
+	if result[0] != 1:
+		return None
+	return OtherPaths
+'''
+.. function:: intersectPaths(paths, otherPaths)
+
+	removes the overlaps from the list of paths
+
+	:param paths: a list of paths
+	:param otherPaths: the other paths
+	:return: The resulting list of paths
+	:rtype: list
 '''
 
 def GetSaveFile(message=None, ProposedFileName=None, filetypes=None):
@@ -12194,9 +12238,25 @@ def Message(message, title="Alert", OKButton=None):
 
 	Shows an alert panel.
 
-	:param message:
-	:param title:
-	:param OKButton:
+	:param message: the string
+	:param title: a title of the dialog
+	:param OKButton: the lable of the confirmation button
+
+'''
+def AskString(message, value=None, title="Glyphs", OKButton=None, placeholder=None):
+	result = Glyphs.showAskString_message_defaultText_placeholder_OKButton_(title, message, value, placeholder, OKButton)
+	return result
+
+'''
+.. function:: AskString(message, value=None, title="Glyphs", OKButton=None, placeholder=None):
+
+	AskString Dialog
+
+	:param message: the string
+	:param value: a default value
+	:param title: a title of the dialog
+	:param OKButton: the lable of the confirmation button
+	:param placeholder: a placeholder value that is displayed in gray when the text field is emtpy
 
 '''
 
@@ -12216,7 +12276,7 @@ def LogToConsole(message, title=None):
 '''
 .. function:: LogToConsole(message)
 
-	Write a message to the Mac's Console.app for debugging.
+	Write a message to the Mac’s Console.app for debugging.
 
 	:param str message:
 '''
@@ -12333,6 +12393,23 @@ Path attributes
 .. data:: MASK
 
 	mask
+
+File Format Versions
+====================
+
+A constant that is used when saving are reading .glpyhs file but also for the clipboard.
+
+.. data:: GSFormatVersion1
+
+	The Format used by Glyhs 2
+
+.. data:: GSFormatVersion3
+
+	The Format used by Glyhs 3
+
+.. data:: GSFormatVersionCurrent
+
+	This will always return the format of the current app.
 
 
 Export formats
@@ -12600,7 +12677,7 @@ This are the available callbacks
 
 .. data:: MOUSEMOVED
 
-	is called if the mouse is moved. If you need to draw something, you need to call `Glyphs.redraw()` and also register to one of the drawing callbacks.
+	is called if the mouse is moved. If you need to draw something, you need to call :meth:`Glyphs.redraw() <GSApplication.redraw()>` and also register to one of the drawing callbacks.
 
 Writing Directions
 ==================
