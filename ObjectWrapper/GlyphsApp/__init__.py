@@ -5837,7 +5837,7 @@ def __Font_Export__(self, Format=OTF, Instances=None, FontPath=None, AutoHint=Tr
 		ufoWriter.setConvertNames_(UseProductionNames)
 		ufoWriter.setDecomposeSmartStuff_(DecomposeSmartStuff)
 		ufoWriter.setExportOptions_({"SeletedMasterIndexes": NSIndexSet.indexSetWithIndexesInRange_(NSRange(0, len(Font.masters)))})
-		result = ufoWriter.writeFont_toURL_error_(Font, NSURL.fileURLWithPath_(FontPath), None)
+		result = ufoWriter.exportFont_toDirectory_error_(Font, NSURL.fileURLWithPath_(FontPath), None)
 		return result
 	else:
 		if not Instances:
