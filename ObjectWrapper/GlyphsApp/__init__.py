@@ -2881,7 +2881,7 @@ class LayerShapesProxy(Proxy):
 		if isinstance(Shapes, type(self)):
 			for path in Shapes.values():
 				self._owner.addShape_(path)
-		elif isinstance(Shapes, (list, tuple)):
+		elif isinstance(Shapes, (list, tuple, NSArray)):
 			for Shape in Shapes:
 				self.append(Shape)
 		else:
