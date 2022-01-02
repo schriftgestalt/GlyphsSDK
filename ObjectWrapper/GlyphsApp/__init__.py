@@ -4824,6 +4824,8 @@ GSFontMaster.numbers = property(lambda self: MasterNumbersVauesProxy(self),
 			master.numbers[0] = 12
 
 			master.numbers["numberName"] = 12
+
+	.. versionadded:: 3.0.5
 '''
 
 GSFontMaster.alignmentZones = property(lambda self: tuple(self.defaultAlignmentZones()))
