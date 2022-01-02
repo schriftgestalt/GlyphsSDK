@@ -3267,7 +3267,7 @@ GSFont.properties = property(lambda self: self.mutableArrayValueForKey_("propert
 	.. attribute:: properties
 		Holds the fonts info properties. Can be instances of :class:`GSFontInfoValueSingle` and :class:`GSFontInfoValueLocalized`.
 		
-		The localised values use language tags defined in the middle column of `Language System Tags table`: <https://docs.microsoft.com/en-us/typography/opentype/spec/languagetags>.
+		The localized values use language tags defined in the middle column of `Language System Tags table`: <https://docs.microsoft.com/en-us/typography/opentype/spec/languagetags>.
 
 		To find specific values, use font.propertyForName_(name) or font.propertyForName_languageTag_(name, languageTag).
 
@@ -3446,7 +3446,7 @@ GSFont.copyright = property(lambda self: self.defaultPropertyForName_("copyright
 GSFont.copyrights = property(lambda self: FontInfoPropertiesProxy(self, "copyrights"))
 '''
 	.. attribute:: copyrights
-		This accesses all localised copyright values.
+		This accesses all localized copyright values.
 		For details :attr:`GSFont.properties`
 
 		:type: dict
@@ -3472,7 +3472,7 @@ GSFont.licenses = property(lambda self: FontInfoPropertiesProxy(self, "licenses"
 
 '''
 	.. attribute:: licenses
-		This accesses all localised license values.
+		This accesses all localized license values.
 		For details :attr:`GSFont.properties`
 
 		:type: dict
@@ -3500,7 +3500,7 @@ GSFont.compatibleFullNames = property(lambda self: FontInfoPropertiesProxy(self,
 
 '''
 	.. attribute:: compatibleFullNames
-		This accesses all localised designer values.
+		This accesses all localized designer values.
 		For details :attr:`GSFont.properties`
 
 		:type: dict
@@ -3528,7 +3528,7 @@ GSFont.sampleTexts = property(lambda self: FontInfoPropertiesProxy(self, "sample
 
 '''
 	.. attribute:: sampleTexts
-		This accesses all localised designer values.
+		This accesses all localized designer values.
 		For details :attr:`GSFont.properties`
 
 		:type: dict
@@ -3556,7 +3556,7 @@ GSFont.descriptions = property(lambda self: FontInfoPropertiesProxy(self, "descr
 
 '''
 	.. attribute:: descriptions
-		This accesses all localised designer values.
+		This accesses all localized designer values.
 		For details :attr:`GSFont.properties`
 
 		:type: dict
@@ -3581,7 +3581,7 @@ GSFont.designers = property(lambda self: FontInfoPropertiesProxy(self, "designer
 
 '''
 	.. attribute:: designers
-		This accesses all localised designer values.
+		This accesses all localized designer values.
 		For details :attr:`GSFont.properties`
 
 		:type: dict
@@ -3608,7 +3608,7 @@ GSFont.trademarks = property(lambda self: FontInfoPropertiesProxy(self, "tradema
 
 '''
 	.. attribute:: trademarks
-		This accesses all localised trademark values.
+		This accesses all localized trademark values.
 		For details :attr:`GSFont.properties`
 
 		:type: dict
@@ -3637,7 +3637,7 @@ GSFont.manufacturer = property(lambda self: self.defaultPropertyForName_("manufa
 GSFont.manufacturers = property(lambda self: FontInfoPropertiesProxy(self, "manufacturers"))
 '''
 	.. attribute:: manufacturers
-		This accesses all localised manufacturer values.
+		This accesses all localized manufacturer values.
 		For details :attr:`GSFont.properties`
 
 		:type: dict
@@ -3717,7 +3717,7 @@ GSFont.familyNames = property(lambda self: FontInfoPropertiesProxy(self, "family
 
 '''
 	.. attribute:: familyNames
-		This accesses all localised family name values.
+		This accesses all localized family name values.
 		For details :attr:`GSFont.properties`
 
 		:type: dict
@@ -3930,7 +3930,7 @@ def Font_GetSelectedGlyphs(self):
 	return self.parent.windowController().glyphsController().selectedObjects()
 
 def Font_SetSelectedGlyphs(self, value):
-	if not isinstance(value, (list, tuple)):
+	if not isinstance(value, (list, tuple, NSArray)):
 		raise TypeError('Argument needs to be a list, not %s' % type(value).__name__)
 	self.parent.windowController().glyphsController().setSelectedObjects_(value)
 
@@ -4724,7 +4724,7 @@ GSFontMaster.properties = property(lambda self: self.mutableArrayValueForKey_("p
 	.. attribute:: properties
 		Holds the fonts info properties. Can be instances of :class:`GSFontInfoValueSingle` and :class:`GSFontInfoValueLocalized`
 
-		The localised values use language tags defined in the middle column of `Language System Tags table`: <https://docs.microsoft.com/en-us/typography/opentype/spec/languagetags>.
+		The localized values use language tags defined in the middle column of `Language System Tags table`: <https://docs.microsoft.com/en-us/typography/opentype/spec/languagetags>.
 
 		To find specific values, use master.propertyForName_(name) or master.propertyForName_languageTag_(name, languageTag).
 
@@ -5212,7 +5212,7 @@ GSInstance.properties = property(lambda self: self.mutableArrayValueForKey_("pro
 	.. attribute:: properties
 		Holds the fonts info properties. Can be instances of :class:`GSFontInfoValueSingle` and :class:`GSFontInfoValueLocalized`
 
-		The localised values use language tags defined in the middle column of `Language System Tags table`: <https://docs.microsoft.com/en-us/typography/opentype/spec/languagetags>.
+		The localized values use language tags defined in the middle column of `Language System Tags table`: <https://docs.microsoft.com/en-us/typography/opentype/spec/languagetags>.
 		
 		To find specific values, use instance.propertyForName_(name) or instance.propertyForName_languageTag_(name, languageTag).
 
@@ -5319,7 +5319,7 @@ GSInstance.compatibleFullNames = property(lambda self: FontInfoPropertiesProxy(s
 
 '''
 	.. attribute:: compatibleFullNames
-		This accesses all localised compatibleFullNames values.
+		This accesses all localized compatibleFullNames values.
 		For details :attr:`GSInstance.properties`
 
 		:type: dict
@@ -5345,7 +5345,7 @@ GSInstance.copyrights = property(lambda self: FontInfoPropertiesProxy(self, "cop
 
 '''
 	.. attribute:: copyrights
-		This accesses all localised copyright values.
+		This accesses all localized copyright values.
 		For details :attr:`GSInstance.properties`
 
 		:type: dict
@@ -5372,7 +5372,7 @@ GSInstance.descriptions = property(lambda self: FontInfoPropertiesProxy(self, "d
 
 '''
 	.. attribute:: descriptions
-		This accesses all localised description values.
+		This accesses all localized description values.
 		For details :attr:`GSInstance.properties`
 
 		:type: dict
@@ -5406,7 +5406,7 @@ GSInstance.designers = property(lambda self: FontInfoPropertiesProxy(self, "desi
 
 '''
 	.. attribute:: designers
-		This accesses all localised designer values.
+		This accesses all localized designer values.
 		For details :attr:`GSInstance.properties`
 
 		:type: dict
@@ -5429,7 +5429,7 @@ GSInstance.familyName = property(lambda self: self.defaultPropertyForName_("fami
 GSInstance.familyNames = property(lambda self: FontInfoPropertiesProxy(self, "familyNames"))
 '''
 	.. attribute:: familyNames
-		This accesses all localised family name values.
+		This accesses all localized family name values.
 		For details :attr:`GSInstance.properties`
 
 		:type: dict
@@ -5454,7 +5454,7 @@ GSInstance.license = property(lambda self: self.defaultPropertyForName_("license
 GSInstance.licenses = property(lambda self: FontInfoPropertiesProxy(self, "licenses"))
 '''
 	.. attribute:: licenses
-		This accesses all localised family name values.
+		This accesses all localized family name values.
 		For details :attr:`GSInstance.properties`
 
 		:type: dict
@@ -5480,7 +5480,7 @@ GSInstance.manufacturers = property(lambda self: FontInfoPropertiesProxy(self, "
 
 '''
 	.. attribute:: manufacturers
-		This accesses all localised family name values.
+		This accesses all localized family name values.
 		For details :attr:`GSInstance.properties`
 
 		:type: dict
@@ -5507,7 +5507,7 @@ GSInstance.preferredFamilyNames = property(lambda self: FontInfoPropertiesProxy(
 
 '''
 	.. attribute:: preferredFamilyNames
-		This accesses all localised designer values.
+		This accesses all localized designer values.
 		For details :attr:`GSInstance.properties`
 
 		:type: dict
@@ -5531,7 +5531,7 @@ GSInstance.preferredSubfamilyNames = property(lambda self: FontInfoPropertiesPro
 
 '''
 	.. attribute:: preferredSubfamilyNames
-		This accesses all localised designer values.
+		This accesses all localized designer values.
 		For details :attr:`GSInstance.properties`
 
 		:type: dict
@@ -5558,7 +5558,7 @@ GSInstance.sampleTexts = property(lambda self: FontInfoPropertiesProxy(self, "sa
 
 '''
 	.. attribute:: sampleTexts
-		This accesses all localised designer values.
+		This accesses all localized designer values.
 		For details :attr:`GSInstance.properties`
 
 		:type: dict
@@ -5585,7 +5585,7 @@ GSInstance.styleMapFamilyNames = property(lambda self: FontInfoPropertiesProxy(s
 
 '''
 	.. attribute:: styleMapFamilyNames
-		This accesses all localised designer values.
+		This accesses all localized designer values.
 		For details :attr:`GSInstance.properties`
 
 		:type: dict
@@ -5613,7 +5613,7 @@ GSInstance.styleMapStyleNames = property(lambda self: FontInfoPropertiesProxy(se
 
 '''
 	.. attribute:: styleMapStyleNames
-		This accesses all localised designer values.
+		This accesses all localized designer values.
 		For details :attr:`GSInstance.properties`
 
 		:type: dict
@@ -5640,7 +5640,7 @@ GSInstance.styleNames = property(lambda self: FontInfoPropertiesProxy(self, "sty
 
 '''
 	.. attribute:: styleNames
-		This accesses all localised styleName values.
+		This accesses all localized styleName values.
 		For details :attr:`GSInstance.properties`
 
 		:type: dict
@@ -5666,7 +5666,7 @@ GSInstance.trademarks = property(lambda self: FontInfoPropertiesProxy(self, "tra
 
 '''
 	.. attribute:: trademarks
-		This accesses all localised trademark values.
+		This accesses all localized trademark values.
 		For details :attr:`GSInstance.properties`
 
 		:type: dict
@@ -5693,7 +5693,7 @@ GSInstance.variableStyleNames = property(lambda self: FontInfoPropertiesProxy(se
 
 '''
 	.. attribute:: variableStyleNames
-		This accesses all localised variableStyleName values.
+		This accesses all localized variableStyleName values.
 		For details :attr:`GSInstance.properties`
 
 		:type: dict
@@ -8272,7 +8272,7 @@ GSLayer.addNodesAtExtremes = python_method(Layer_addNodesAtExtremes)
 '''
 	.. function:: addNodesAtExtremes()
 
-		Add nodes at layer's extrema, e.g., top, bottom etc.
+		Add nodes at layer’s extrema, e.g., top, bottom etc.
 
 '''
 
