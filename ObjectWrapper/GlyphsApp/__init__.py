@@ -2033,6 +2033,95 @@ class MasterStemsProxy(Proxy):
 	def setterMethod(self):
 		return self._setterMethod
 
+class FontNumbersProxy(Proxy):
+	def _numberForKey(self, key):
+		number = None
+		if isinstance(key, int):
+			idx = self._validate_idx(key)
+			number = self._owner.objectInNumbersAtIndex_(key)
+		elif isString(key):
+			number = self._owner.numberForName_(key)
+		else:
+			raise TypeError("keys must be integers or strings, not %s" % type(key).__name__)
+		if number is None:
+			raise KeyError("No number for key %s" % key)
+		return number
+	def __getitem__(self, key):
+		if isinstance(key, slice):
+			return [self.__getitem__(i) for i in range(*key.indices(self.__len__()))]
+		return self._numberForKey(key)
+	def __setitem__(self, key, value):
+		if not isinstance(value, GSMetrics):
+			raise TypeError("only object of type GSMetrics allowed, got %s" % type(value).__name__)
+		if not isinstance(key, int):
+			raise TypeError("only accessible by integer index, got %s" % key)
+		idx = self._validate_idx(key)
+		self._owner.insertObject_inNumbersAtIndex_(value, idx)
+	def values(self):
+		return self._owner.pyobjc_instanceMethods.numbers()
+	def __len__(self):
+		return self._owner.countOfNumbers()
+	def append(self, value):
+		if not isinstance(value, GSMetrics):
+			raise TypeError("only object of type GSMetrics allowed, got %s" % type(value).__name__)
+		self._owner.addNumber_(value)
+	def __delitem__(self, key):
+		if isinstance(key, slice):
+			for i in sorted(range(*key.indices(self.__len__())), reverse=True):
+				self.__delitem__(i)
+		else:
+			number = self._numberForKey(key)
+			self._owner.removeObjectFromNumbers_(number)
+	def setterMethod(self):
+		return self.setNumbers_
+
+class MasterNumbersVauesProxy(Proxy):
+	def _numForKey(self, key):
+		if isinstance(key, int):
+			if key < 0:
+				key += self.__len__()
+			num = self._owner.font.objectInNumbersAtIndex_(key)
+		elif isString(key):
+			num = self._owner.font.numberForName_(key)
+		else:
+			raise TypeError("list indices must be integers or strings, not %s" % type(key).__name__)
+		return num
+	def __getitem__(self, key):
+		if isinstance(key, slice):
+			return [self.__getitem__(i) for i in range(*key.indices(self.__len__()))]
+		num = self._numForKey(key)
+		if num is None:
+			raise KeyError("No number for %s" % key)
+		return self._owner.numberValueValueForId_(num.id)
+	def __setitem__(self, key, value):
+		num = self._numForKey(key)
+		if num is None:
+			if isString(key):
+				name = key
+			else:
+				name = "num%s" % key
+			num = GSMetric.new()
+			num.setName_(name)
+			self._owner.font.addNumber_(num)
+		self._owner.setNumberValueValue_forId_(value, num.id)
+	def values(self):
+		return self._owner.numberValuesArray()
+	def __len__(self):
+		if self._owner.font is None:
+			return 0
+		return self._owner.font.countOfNumbers()
+	def _setterMethod(self, values):
+		idx = 0
+		if self._owner.font is None:
+			return
+		if self.__len__() != len(values):
+			raise ValueError("Count of values doesn’t match numbers")
+		for number in self._owner.font.numbers:
+			self._owner.setNumberValueValue_forId_(values[idx], number.id)
+			idx += 1
+	def setterMethod(self):
+		return self._setterMethod
+
 class CustomParametersProxy(Proxy):
 	def __getitem__(self, key):
 		if isinstance(key, slice):
@@ -3205,6 +3294,19 @@ GSFont.stems = property(lambda self: FontStemsProxy(self),
 		
 		.. code-block:: python
 			font.stems[0].horizontal = False
+
+'''
+
+GSFont.numbers = property(lambda self: FontNumbersProxy(self),
+						lambda self, value: FontNumbersProxy(self).setter(value))
+'''
+	.. attribute:: numbers
+		The numbers. A list of :class:`GSMetric` objects. For each number, there is a metricsValue in the masters, linked by the `id`.
+
+		:type: list, dict
+
+		.. code-block:: python
+			font.print(numbers[0].name)
 
 '''
 
@@ -4550,6 +4652,7 @@ GSFontMaster.__deepcopy__ = python_method(GSObject__copy__)
 		otherBlues
 		guides
 		stems
+		numbers
 		userData
 		customParameters
 		font
@@ -4687,14 +4790,40 @@ GSFontMaster.stems = property(lambda self: MasterStemsProxy(self),
 
 '''
 	.. attribute:: stems
-		The stems. This is a list of numbers. For the time being, this can be set only as an entire list at once.
+		The stems. This is a list of numbers.
 
 		:type: list
 
 		.. code-block:: python
-			# Set stems
-			TODO: Not updated yet
+
 			font.masters[0].stems = [10, 11, 20]
+
+			print(master.stems[0])
+
+			master.stems[0] = 12
+
+			master.stems["stemName"] = 12
+
+'''
+
+GSFontMaster.numbers = property(lambda self: MasterNumbersVauesProxy(self),
+							  lambda self, value: MasterNumbersVauesProxy(self).setter(value))
+
+'''
+	.. attribute:: numbers
+		The numbers. This is a list of numbers.
+
+		:type: list
+
+		.. code-block:: python
+
+			font.masters[0].numbers = [10, 11, 20]
+
+			print(master.numbers[0])
+
+			master.numbers[0] = 12
+
+			master.numbers["numberName"] = 12
 '''
 
 GSFontMaster.alignmentZones = property(lambda self: tuple(self.defaultAlignmentZones()))
