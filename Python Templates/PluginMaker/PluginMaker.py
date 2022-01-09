@@ -74,8 +74,8 @@ class PluginMaker(NSObject):
 			pluginFile.close()
 			for key, value in replaceDict.items():
 				plugin = plugin.replace(key, value)
-			pluginFile = open(filePath, "w")
-			pluginFile.write(plugin.encode("utf8"))
+			pluginFile = codecs.open(filePath, "w", encoding="utf-8")
+			pluginFile.write(plugin)
 			pluginFile.close()
 		except Exception as e:
 			description = "could not convert file: %s" % os.path.basename(filePath)
