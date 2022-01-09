@@ -17,7 +17,7 @@ from GlyphsApp import *
 from GlyphsApp.plugins import *
 
 class ____PluginClassName____ (PalettePlugin):
-	
+
 	dialog = objc.IBOutlet()
 	textField = objc.IBOutlet()
 
@@ -30,7 +30,7 @@ class ____PluginClassName____ (PalettePlugin):
 			'es': 'Mi panel',
 			'pt': 'Meu painel',
 			})
-		
+
 		# Load .nib dialog (without .extension)
 		self.loadNib('IBdialog', __file__)
 
@@ -39,24 +39,34 @@ class ____PluginClassName____ (PalettePlugin):
 		# Adding a callback for the 'GSUpdateInterface' event
 		Glyphs.addCallback(self.update, UPDATEINTERFACE)
 
-	@objc.python_method	
+	@objc.python_method
 	def __del__(self):
 		Glyphs.removeCallback(self.update)
 
 	@objc.python_method
 	def update(self, sender):
-		
+
 		text = []
 		# Extract font from sender
-		font = sender.object()
+		font = None
+		if sender:
+			font = sender.object()
+			if isinstance(font, GSEditViewController):
+				try:
+					font = font.representedObject()
+				except:
+					pass
+		if not font:
+			return
 		# We’re in the Edit View
-		if font.currentTab:
+		if hasattr(font, 'currentTab'):
 			# Check whether glyph is being edited
-			if len(font.selectedLayers) == 1:
+			if font.selectedLayers and len(font.selectedLayers) == 1:
 				layer = font.selectedLayers[0]
 				text.append('Selected nodes: %s' % len(layer.selection))
 				if layer.selection:
-					text.append('Selection bounds: %sx%s' % (int(layer.selectionBounds.size.width), int(layer.selectionBounds.size.height)))
+					text.append('Selection bounds: %sx%s' % (
+						int(layer.selectionBounds.size.width), int(layer.selectionBounds.size.height)))
 
 		# We’re in the Font view
 		else:
