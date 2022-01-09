@@ -48,12 +48,12 @@ class ____PluginClassName____ (PalettePlugin):
 		
 		text = []
 		# Extract font from sender
-		font = sender.object()
+		currentTab = sender.object()
 		# We’re in the Edit View
-		if font.currentTab:
+		if isinstance(currentTab, GSEditViewController):
 			# Check whether glyph is being edited
-			if len(font.selectedLayers) == 1:
-				layer = font.selectedLayers[0]
+			layer = currentTab.activeLayer()
+			if layer is not None:
 				text.append('Selected nodes: %s' % len(layer.selection))
 				if layer.selection:
 					text.append('Selection bounds: %sx%s' % (int(layer.selectionBounds.size.width), int(layer.selectionBounds.size.height)))
@@ -61,7 +61,7 @@ class ____PluginClassName____ (PalettePlugin):
 		# We’re in the Font view
 		else:
 			try:
-				text.append('Selected glyphs: %s' % len(font.selection))
+				text.append('Selected glyphs: %s' % len(currentTab.selectedLayers))
 			except:
 				pass
 
