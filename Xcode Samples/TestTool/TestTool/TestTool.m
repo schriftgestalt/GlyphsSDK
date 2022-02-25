@@ -11,6 +11,8 @@
 
 #import <GlyphsCore/GSLayer.h>
 
+static NSImage *_toolBarIcon = nil;
+
 @implementation TestTool
 
 - (id) init {
