@@ -90,9 +90,11 @@ static NSString * const showPluginWindowKey = @"XYShowMyPluginWindow"; /// Use y
 - (void)_updateDoc {
 	NSApplication<GSApplicationPluginProtocol> *app = NSApp;
 	GSDocument *Doc = [app currentFontDocument];
+	if (Doc.font == _currentFont) return;
 	[self setCurrentFont:Doc.font];
 	self.fontNameLabel.stringValue = _currentFont.fontName;
 	self.window.title = [NSString stringWithFormat:@"%@: %@", self.title, _currentFont.fontName];
+	/// Optionally call update methods of your plugin here.
 }
 
 
@@ -137,7 +139,6 @@ static NSString * const showPluginWindowKey = @"XYShowMyPluginWindow"; /// Use y
 - (void)setCurrentFont:(GSFont *)currentFont {
 	if (_currentFont != currentFont) {
 		_currentFont = currentFont;
-		/// Optionally call update methods of your plugin here.
 	}
 }
 
