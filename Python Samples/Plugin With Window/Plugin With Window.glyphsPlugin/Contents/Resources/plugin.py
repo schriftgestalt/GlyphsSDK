@@ -68,7 +68,7 @@ class PluginWithWindow(GeneralPlugin):
 
 	@objc.python_method	
 	def __del__(self):
-		Glyphs.removeCallback(self.update) # remove the callback
+		Glyphs.removeCallback(self.update) # Remove the callback
 
 	@objc.python_method
 	def __file__(self):
@@ -76,6 +76,6 @@ class PluginWithWindow(GeneralPlugin):
 		return __file__
 
 	def windowShouldClose_(self, window):
-		Glyphs.removeCallback(self.update) # Terminate the plugin when the window is closed
+		Glyphs.removeCallback(self.update) # Remove callbacks when the window is closed
 		return True
 		
