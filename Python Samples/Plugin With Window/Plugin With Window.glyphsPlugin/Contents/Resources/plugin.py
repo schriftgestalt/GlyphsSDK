@@ -20,14 +20,6 @@ import traceback
 
 class PluginWithWindow(GeneralPlugin):
 
-	"""
-	A GeneralPlugin has no windowcontroller.
-	The panel plugin does have it (as there is an instance of the
-	plugin per window).
-	The GeneralPlugin needs to get to the windows by
-	[NSApp mainWindow], [NSApp currentFontDocument] or [NSApp orderedDocuments].
-	"""
-
 	windowName = "com.Glyphs.PluginWithWindowWindow"
 	window = objc.IBOutlet()
 	fontNameLabel = objc.IBOutlet()
@@ -59,6 +51,15 @@ class PluginWithWindow(GeneralPlugin):
 
 	@objc.python_method
 	def update(self, sender):
+		"""
+		A GeneralPlugin has no windowcontroller. A panelPlugin does
+		have it (as there is an instance of the plugin per window).
+		So the GeneralPlugin needs to get to the fonts and windows by
+		Glyphs.currentDocument,
+		Glyphs.currentFontDocument(),
+		Glyphs.mainWindow(), or
+		Glyphs.orderedDocuments()
+		"""
 		try:
 			thisFont = Glyphs.currentDocument.font
 			if thisFont:

@@ -23,7 +23,7 @@
 	<key>productReleaseNotes</key>
 	<string>____LatestReleaseNotes____</string>
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright, Mark Frömberg, 2022</string>
+	<string>Copyright, Copyright, ____Developer____, ____YEAR____</string>
 	<key>NSPrincipalClass</key>
 	<string>PluginWithWindow</string>
 	<key>PyMainFileNames</key>
