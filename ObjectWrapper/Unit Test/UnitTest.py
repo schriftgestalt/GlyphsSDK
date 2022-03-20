@@ -67,7 +67,7 @@ class GlyphsAppTests(unittest.TestCase):
 			listObject.insert(0, testValues[-1])
 			self.assertEqual(listObject[0], testValues[-1])
 			self.assertEqual(listObject.index(testValues[-1]), 0)
-			self.assertEqual(listObject.pop(0), testValues[-1])
+			self.assertEqual(listObject.pop(), testValues[-1])
 			self.assertEqual(len(listObject), initial_len)
 		with self.assertRaises(IndexError):
 			listObject[len(listObject)]
@@ -261,7 +261,7 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertFloat(Glyphs.versionNumber, readOnly = True)
 		
 		# GSApplication.buildNumber
-		self.assertInteger(Glyphs.buildNumber, readOnly = True)
+		self.assertFloat(Glyphs.buildNumber, readOnly = True)
 
 		# GSApplication.menu
 		def a():
