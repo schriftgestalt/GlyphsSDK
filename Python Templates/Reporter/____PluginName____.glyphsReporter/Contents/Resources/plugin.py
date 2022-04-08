@@ -41,25 +41,27 @@ class ____PluginClassName____(ReporterPlugin):
 
 	@objc.python_method
 	def foreground(self, layer):
-		NSColor.blueColor().set()
+		NSColor.controlTextColor().set()
 		NSBezierPath.fillRect_(layer.bounds)
 		self.drawTextAtPoint(layer.parent.name, NSPoint(0, 0))
 
 	@objc.python_method
-	def inactiveLayer(self, layer):
-		NSColor.redColor().set()
+	def inactiveLayerForeground(self, layer):
+		NSColor.selectedTextColor().set()
 		if layer.paths:
 			layer.bezierPath.fill()
 		if layer.components:
+			NSColor.findHighlightColor().set()
 			for component in layer.components:
 				component.bezierPath.fill()
 
 	@objc.python_method
 	def preview(self, layer):
-		NSColor.blueColor().set()
+		NSColor.textColor().set()
 		if layer.paths:
 			layer.bezierPath.fill()
 		if layer.components:
+			NSColor.highlightColor().set()
 			for component in layer.components:
 				component.bezierPath.fill()
 	
