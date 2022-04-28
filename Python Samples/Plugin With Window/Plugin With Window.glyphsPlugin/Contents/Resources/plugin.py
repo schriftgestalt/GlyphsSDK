@@ -45,7 +45,7 @@ class PluginWithWindow(GeneralPlugin):
 	def showWindow_(self, sender):
 		self.window.makeKeyAndOrderFront_(self) # Show the window
 		
-		Glyphs.addCallback(self.update, DOCUMENTACTIVATED) # Add a callback for the 'GSUpdateInterface' event
+		Glyphs.addCallback(self.update, DOCUMENTACTIVATED) # Add a callback for the 'GSDocumentActivateNotification' event
 
 		self.update(None) # Update once when window is shown
 
