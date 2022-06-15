@@ -14,7 +14,21 @@ from GlyphsApp import *
 import os, time, sys, datetime
 import objc
 import copy
-from AppKit import *
+
+from AppKit import \
+NSAffineTransform, \
+NSArray, \
+NSBezierPath, \
+NSColor, \
+NSDate, \
+NSDictionary, \
+NSImage, \
+NSMenuItem, \
+NSMenuItem, \
+NSNull, \
+NSNumber, \
+NSPoint, \
+NSRect
 
 if sys.version_info[0] == 3:
 	unicode = str
