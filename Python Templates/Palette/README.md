@@ -127,6 +127,7 @@ if windowController:
 	if thisFont:
 		pass # your code goes here
 ```
+**Never** use `Glyphs.currentDocument` to access the font as that would only work with one open font.
 
 ## Resizing the palette
 
