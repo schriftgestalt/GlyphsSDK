@@ -95,9 +95,9 @@
 	}
 }
 
-- (void)setController:(NSViewController <GSGlyphEditViewControllerProtocol>*)Controller {
+- (void)setController:(NSViewController <GSGlyphEditViewControllerProtocol>*)controller {
 	// Use [self controller]; as object for the current view controller.
-	_editViewController = Controller;
+	_editViewController = controller;
 }
 
 @end

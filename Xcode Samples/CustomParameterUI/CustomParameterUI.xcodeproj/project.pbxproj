@@ -8,19 +8,18 @@
 
 /* Begin PBXBuildFile section */
 		561EC7BD24A3D515000F8246 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 561EC7BC24A3D515000F8246 /* Cocoa.framework */; };
-		561EC7C324A3D515000F8246 /* GlyphsCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 561EC7C224A3D515000F8246 /* GlyphsCore.framework */; };
 		561EC7C624A3D515000F8246 /* CustomParameterUI.m in Sources */ = {isa = PBXBuildFile; fileRef = 561EC7C524A3D515000F8246 /* CustomParameterUI.m */; };
 		561EC83424A3D55C000F8246 /* CustomParameterUISheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 561EC82E24A3D55B000F8246 /* CustomParameterUISheetController.m */; };
 		561EC83524A3D55C000F8246 /* CustomParameterUIValueViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 561EC83124A3D55B000F8246 /* CustomParameterUIValueViewController.m */; };
 		561EC83724A3D55C000F8246 /* CustomParameterUISheetController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 561EC83324A3D55C000F8246 /* CustomParameterUISheetController.xib */; };
 		561EC87D24A3DE21000F8246 /* CustomParameterUIValueViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 561EC87C24A3DE21000F8246 /* CustomParameterUIValueViewController.xib */; };
+		563566702874814D0023EA88 /* GlyphsCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5635666F2874811F0023EA88 /* GlyphsCore.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		561EC7B924A3D515000F8246 /* CustomParameterUI.glyphsPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CustomParameterUI.glyphsPlugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		561EC7BC24A3D515000F8246 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		561EC7BF24A3D515000F8246 /* CustomParameterUI-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CustomParameterUI-Prefix.pch"; sourceTree = "<group>"; };
-		561EC7C224A3D515000F8246 /* GlyphsCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GlyphsCore.framework; path = /Applications/Glyphs.app/Contents/Frameworks/GlyphsCore.framework; sourceTree = "<absolute>"; };
 		561EC7C424A3D515000F8246 /* CustomParameterUI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomParameterUI.h; sourceTree = "<group>"; };
 		561EC7C524A3D515000F8246 /* CustomParameterUI.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CustomParameterUI.m; sourceTree = "<group>"; };
 		561EC7C724A3D515000F8246 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -30,6 +29,7 @@
 		561EC83124A3D55B000F8246 /* CustomParameterUIValueViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomParameterUIValueViewController.m; sourceTree = "<group>"; };
 		561EC83324A3D55C000F8246 /* CustomParameterUISheetController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomParameterUISheetController.xib; sourceTree = "<group>"; };
 		561EC87C24A3DE21000F8246 /* CustomParameterUIValueViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomParameterUIValueViewController.xib; sourceTree = "<group>"; };
+		5635666F2874811F0023EA88 /* GlyphsCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GlyphsCore.framework; path = "/Applications/Glyphs 3.app/Contents/Frameworks/GlyphsCore.framework"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,8 +37,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				561EC7C324A3D515000F8246 /* GlyphsCore.framework in Frameworks */,
 				561EC7BD24A3D515000F8246 /* Cocoa.framework in Frameworks */,
+				563566702874814D0023EA88 /* GlyphsCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +65,7 @@
 		561EC7BB24A3D515000F8246 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				5635666F2874811F0023EA88 /* GlyphsCore.framework */,
 				561EC7BC24A3D515000F8246 /* Cocoa.framework */,
 			);
 			name = Frameworks;
@@ -83,17 +84,8 @@
 				561EC87C24A3DE21000F8246 /* CustomParameterUIValueViewController.xib */,
 				561EC7C724A3D515000F8246 /* Info.plist */,
 				561EC7BF24A3D515000F8246 /* CustomParameterUI-Prefix.pch */,
-				561EC7C124A3D515000F8246 /* Supporting Files */,
 			);
 			path = CustomParameterUI;
-			sourceTree = "<group>";
-		};
-		561EC7C124A3D515000F8246 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				561EC7C224A3D515000F8246 /* GlyphsCore.framework */,
-			);
-			path = "Supporting Files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -291,10 +283,11 @@
 				DEPLOYMENT_LOCATION = YES;
 				DEVELOPMENT_TEAM = X2L8375ZQ7;
 				DSTROOT = "$(USER_LIBRARY_DIR)/Application Support/Glyphs 3/Plugins";
-				FRAMEWORK_SEARCH_PATHS = "$(SYSTEM_APPS_DIR)/Glyphs.app/Contents/Frameworks";
+				FRAMEWORK_SEARCH_PATHS = "\"$(SYSTEM_APPS_DIR)/Glyphs 3.app/Contents/Frameworks\"";
 				GCC_PREFIX_HEADER = "CustomParameterUI/CustomParameterUI-Prefix.pch";
 				INFOPLIST_FILE = CustomParameterUI/Info.plist;
 				INSTALL_PATH = /;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Glyphs.CustomParameterUI;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = glyphsPlugin;
@@ -307,10 +300,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = X2L8375ZQ7;
-				FRAMEWORK_SEARCH_PATHS = "$(SYSTEM_APPS_DIR)/Glyphs.app/Contents/Frameworks";
+				FRAMEWORK_SEARCH_PATHS = "\"$(SYSTEM_APPS_DIR)/Glyphs 3.app/Contents/Frameworks\"";
 				GCC_PREFIX_HEADER = "CustomParameterUI/CustomParameterUI-Prefix.pch";
 				INFOPLIST_FILE = CustomParameterUI/Info.plist;
 				INSTALL_PATH = /;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Glyphs.CustomParameterUI;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = glyphsPlugin;

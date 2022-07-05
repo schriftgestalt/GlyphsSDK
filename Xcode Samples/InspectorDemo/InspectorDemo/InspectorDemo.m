@@ -15,39 +15,39 @@ static NSImage *_toolBarIcon = nil;
 
 @implementation InspectorDemo
 
-- (id) init {
+- (id)init {
 	self = [super init];
-	NSBundle * thisBundle = [NSBundle bundleForClass:[self class]];
+	NSBundle *thisBundle = [NSBundle bundleForClass:[self class]];
 	if (thisBundle) {
 		// The toolbar icon:
-		_toolBarIcon = [[NSImage alloc] initWithContentsOfFile:[thisBundle pathForImageResource: @"ToolbarIconTemplate"]];
+		_toolBarIcon = [[NSImage alloc] initWithContentsOfFile:[thisBundle pathForImageResource:@"ToolbarIconTemplate"]];
 		[_toolBarIcon setTemplate:YES];
 	}
 	return self;
 }
 
-- (NSUInteger) interfaceVersion {
+- (NSUInteger)interfaceVersion {
 	// Distinguishes the API verison the plugin was built for. Return 1.
 	return 1;
 }
 
-- (NSUInteger) groupID {
+- (NSUInteger)groupID {
 	// Return a number between 50 and 1000 to position the icon in the toolbar.
 	return 50;
 }
 
-- (NSString*) title {
+- (NSString*)title {
 	//return the name of the tool as it will appear in the tooltip of in the toolbar.
 	return @"InspectorDemo";
 }
 
-- (NSString*) trigger {
+- (NSString*)trigger {
 	// Return the key that the user can press to activate the tool.
 	// Please make sure to not conflict with other tools.
 	return @"h";
 }
 
-- (NSInteger) tempTrigger {
+- (NSEventModifierFlags)tempTrigger {
 	// Return a modifierMask (e.g NSAlternateKeyMask, NSCommandKeyMask ...)
 	return 0;
 }
@@ -154,4 +154,5 @@ static NSImage *_toolBarIcon = nil;
 	}
 	return inspectors;
 }
+
 @end

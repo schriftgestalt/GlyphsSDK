@@ -15,7 +15,7 @@
 #import <GlyphsCore/GSCallbackHandler.h>
 
 @implementation ___FILEBASENAMEASIDENTIFIER___ {
-    CGFloat _firstValue;
+	CGFloat _firstValue;
 }
 
 - (instancetype)init {
@@ -47,7 +47,7 @@
 
 - (NSView *)view {
 	if (!_view) {
-		[[NSBundle bundleForClass:[___FILEBASENAMEASIDENTIFIER___ class]] loadNibNamed:@"___PACKAGENAMEASIDENTIFIER___Dialog" owner:self topLevelObjects:nil];
+		[[NSBundle bundleForClass:[self class]] loadNibNamed:@"___PACKAGENAMEASIDENTIFIER___Dialog" owner:self topLevelObjects:nil];
 	}
 	return _view;
 }

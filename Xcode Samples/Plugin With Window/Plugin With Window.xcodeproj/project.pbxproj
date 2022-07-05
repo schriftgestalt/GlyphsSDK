@@ -8,22 +8,21 @@
 
 /* Begin PBXBuildFile section */
 		4DED2B0E27C802AE002BFFB7 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DED2B0D27C802AE002BFFB7 /* Cocoa.framework */; };
-		4DED2B1227C802AE002BFFB7 /* Plugin_With_Window.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DED2B1127C802AE002BFFB7 /* Plugin_With_Window.m */; };
-		4DED2B1427C802AE002BFFB7 /* GlyphsCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DED2B1327C802AE002BFFB7 /* GlyphsCore.framework */; };
+		4DED2B1227C802AE002BFFB7 /* PluginWithWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DED2B1127C802AE002BFFB7 /* PluginWithWindow.m */; };
 		4DED2B1627C802AE002BFFB7 /* Plugin With Window-Prefix.pch in Resources */ = {isa = PBXBuildFile; fileRef = 4DED2B1527C802AE002BFFB7 /* Plugin With Window-Prefix.pch */; };
 		4DED2B1E27C8038A002BFFB7 /* MyPluginWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4DED2B1D27C8038A002BFFB7 /* MyPluginWindow.xib */; };
+		5635666C28747F560023EA88 /* GlyphsCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DED2BA127C812FF002BFFB7 /* GlyphsCore.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		4DED2B0A27C802AE002BFFB7 /* Plugin With Window.glyphsPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Plugin With Window.glyphsPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4DED2B0D27C802AE002BFFB7 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
-		4DED2B1027C802AE002BFFB7 /* Plugin_With_Window.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Plugin_With_Window.h; sourceTree = "<group>"; };
-		4DED2B1127C802AE002BFFB7 /* Plugin_With_Window.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Plugin_With_Window.m; sourceTree = "<group>"; };
-		4DED2B1327C802AE002BFFB7 /* GlyphsCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GlyphsCore.framework; path = "/Applications/Glyphs 3.app/Contents/Frameworks/GlyphsCore.framework"; sourceTree = "<absolute>"; };
+		4DED2B1027C802AE002BFFB7 /* PluginWithWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PluginWithWindow.h; sourceTree = "<group>"; };
+		4DED2B1127C802AE002BFFB7 /* PluginWithWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PluginWithWindow.m; sourceTree = "<group>"; };
 		4DED2B1527C802AE002BFFB7 /* Plugin With Window-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Plugin With Window-Prefix.pch"; sourceTree = "<group>"; };
 		4DED2B1727C802AE002BFFB7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4DED2B1D27C8038A002BFFB7 /* MyPluginWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MyPluginWindow.xib; sourceTree = "<group>"; };
-		4DED2BA127C812FF002BFFB7 /* GlyphsCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GlyphsCore.framework; path = "../../../../../Applications/Glyphs 3.app/Contents/Frameworks/GlyphsCore.framework"; sourceTree = "<group>"; };
+		4DED2BA127C812FF002BFFB7 /* GlyphsCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GlyphsCore.framework; path = "/Applications/Glyphs 3.app/Contents/Frameworks/GlyphsCore.framework"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,7 +30,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4DED2B1427C802AE002BFFB7 /* GlyphsCore.framework in Frameworks */,
+				5635666C28747F560023EA88 /* GlyphsCore.framework in Frameworks */,
 				4DED2B0E27C802AE002BFFB7 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -68,10 +67,9 @@
 		4DED2B0F27C802AE002BFFB7 /* Plugin With Window */ = {
 			isa = PBXGroup;
 			children = (
-				4DED2B1027C802AE002BFFB7 /* Plugin_With_Window.h */,
-				4DED2B1127C802AE002BFFB7 /* Plugin_With_Window.m */,
+				4DED2B1027C802AE002BFFB7 /* PluginWithWindow.h */,
+				4DED2B1127C802AE002BFFB7 /* PluginWithWindow.m */,
 				4DED2B1D27C8038A002BFFB7 /* MyPluginWindow.xib */,
-				4DED2B1327C802AE002BFFB7 /* GlyphsCore.framework */,
 				4DED2B1527C802AE002BFFB7 /* Plugin With Window-Prefix.pch */,
 				4DED2B1727C802AE002BFFB7 /* Info.plist */,
 			);
@@ -147,7 +145,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4DED2B1227C802AE002BFFB7 /* Plugin_With_Window.m in Sources */,
+				4DED2B1227C802AE002BFFB7 /* PluginWithWindow.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -268,11 +266,9 @@
 		4DED2B1B27C802AE002BFFB7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEPLOYMENT_LOCATION = YES;
-				DEVELOPMENT_TEAM = 79B65AX6G6;
 				DSTROOT = "$(USER_LIBRARY_DIR)/Application Support/Glyphs 3/Plugins";
 				FRAMEWORK_SEARCH_PATHS = "\"$(SYSTEM_APPS_DIR)/Glyphs 3.app/Contents/Frameworks\"";
 				GCC_PREFIX_HEADER = "Plugin With Window/Plugin With Window-Prefix.pch";
@@ -281,7 +277,6 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Glyphs.Plugin-With-Window";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = YES;
 				WRAPPER_EXTENSION = glyphsPlugin;
 			};
 			name = Debug;
@@ -289,10 +284,8 @@
 		4DED2B1C27C802AE002BFFB7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 79B65AX6G6;
 				FRAMEWORK_SEARCH_PATHS = "\"$(SYSTEM_APPS_DIR)/Glyphs 3.app/Contents/Frameworks\"";
 				GCC_PREFIX_HEADER = "Plugin With Window/Plugin With Window-Prefix.pch";
 				GENERATE_INFOPLIST_FILE = YES;
@@ -300,7 +293,6 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Glyphs.Plugin-With-Window";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = YES;
 				WRAPPER_EXTENSION = glyphsPlugin;
 			};
 			name = Release;

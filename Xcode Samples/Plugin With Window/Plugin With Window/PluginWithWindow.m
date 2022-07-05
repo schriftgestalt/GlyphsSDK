@@ -8,10 +8,10 @@
 
 #import <GlyphsCore/GSFont.h>
 #import <GlyphsCore/GSWindowControllerProtocol.h>
-#import "Plugin_With_Window.h"
+#import "PluginWithWindow.h"
 
 static void *DocumentBindingContext = (void *)@"Document";
-static NSString * const showPluginWindowKey = @"XYShowMyPluginWindow"; /// Use your own prefix instead of `XY`
+static NSString *ShowPluginWindowKey = @"XYShowMyPluginWindow"; /// Use your own prefix instead of `XY`
 
 @protocol GSApplicationPluginProtocol <NSObject>
 
@@ -29,7 +29,7 @@ static NSString * const showPluginWindowKey = @"XYShowMyPluginWindow"; /// Use y
 
 @end
 
-@implementation Plugin_With_Window {
+@implementation PluginWithWindow {
 	BOOL _hasRegisteredObservers;
 	GSFont *__weak _currentFont;
 	NSViewController<GSGlyphEditViewControllerProtocol> *__weak _currentEditViewController;
@@ -55,24 +55,11 @@ static NSString * const showPluginWindowKey = @"XYShowMyPluginWindow"; /// Use y
 - (void)loadPlugin {
 	NSMenu *mainMenu = [[NSApplication sharedApplication] mainMenu];
 	NSMenuItem *newMenuItem = [[NSMenuItem alloc] initWithTitle:[self title] action:@selector(showMyPluginWindow:) keyEquivalent:@""];
-	[newMenuItem setTarget:self];
-	NSUInteger newItemIndex = 0;
+	newMenuItem.target = self;
 	NSMenu *submenu = [[mainMenu itemWithTag:17] submenu];
-	BOOL foundFirstSeparator = NO;
-	for (NSMenuItem *item in [submenu itemArray]) {
-		if ([item isSeparatorItem]) {
-			if (!foundFirstSeparator) {
-				foundFirstSeparator = YES;
-			} else {
-				break;
-			}
-		}
-		newItemIndex++;
-	}
+	[submenu addItem:newMenuItem];
 	
-	[submenu insertItem:newMenuItem atIndex:newItemIndex];
-	
-	if ([[NSUserDefaults standardUserDefaults] boolForKey:showPluginWindowKey]) {
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:ShowPluginWindowKey]) {
 		[self showMyPluginWindow:nil];
 	}
 }
@@ -124,12 +111,12 @@ static NSString * const showPluginWindowKey = @"XYShowMyPluginWindow"; /// Use y
 
 - (IBAction)showMyPluginWindow:(id)sender {
 	if ([[self window] isVisible]) {
-		[[NSUserDefaults standardUserDefaults] setBool:NO forKey:showPluginWindowKey];
+		[[NSUserDefaults standardUserDefaults] setBool:NO forKey:ShowPluginWindowKey];
 		[self.window orderOut:sender];
 		[self removeNotifications];
 	}
 	else {
-		[[NSUserDefaults standardUserDefaults] setBool:YES forKey:showPluginWindowKey];
+		[[NSUserDefaults standardUserDefaults] setBool:YES forKey:ShowPluginWindowKey];
 		[self.window makeKeyAndOrderFront:sender];
 		[self setUpNotifications];
 	}
@@ -146,7 +133,7 @@ static NSString * const showPluginWindowKey = @"XYShowMyPluginWindow"; /// Use y
 
 - (BOOL)windowShouldClose:(id)window {
 	if (self.window == window) {
-		[[NSUserDefaults standardUserDefaults] setBool:NO forKey:showPluginWindowKey];
+		[[NSUserDefaults standardUserDefaults] setBool:NO forKey:ShowPluginWindowKey];
 		[self removeNotifications];
 	}
 	return YES;

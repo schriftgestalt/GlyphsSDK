@@ -18,7 +18,7 @@ static NSImage *_toolBarIcon = nil;
 	if (bundle) {
 		// The toolbar icon:
 		_toolBarIcon = [[NSImage alloc] initWithContentsOfFile:[bundle pathForImageResource:@"ToolbarIconTemplate"]];
-		[_toolBarIcon setTemplate:YES];
+		_toolBarIcon.template = YES;
 	}
 	return self;
 }
@@ -86,8 +86,8 @@ static NSImage *_toolBarIcon = nil;
 
 - (void)mouseDragged:(NSEvent *)theEvent {
 	// Called when the mouse is moved with the primary button down.
-	NSPoint Loc = [theEvent locationInWindow];
-	NSLog(@"__mouse dragged to : %@", NSStringFromPoint(Loc));
+	NSPoint loc = [theEvent locationInWindow];
+	NSLog(@"__mouse dragged to : %@", NSStringFromPoint(loc));
 }
 
 - (void)mouseUp:(NSEvent *)theEvent {
@@ -103,9 +103,9 @@ static NSImage *_toolBarIcon = nil;
 	// Draw in the foreground, concerns the complete view.
 }
 
-- (void)drawLayer:(GSLayer *)Layer atPoint:(NSPoint)aPoint asActive:(BOOL)Active attributes:(NSDictionary *)Attributes {
+- (void)drawLayer:(GSLayer *)layer atPoint:(NSPoint)point asActive:(BOOL)active attributes:(NSDictionary *)attributes {
 	// Draw anythin for this particular layer.
-	[_editViewController.graphicView drawLayer:Layer atPoint:aPoint asActive:Active attributes:Attributes];
+	[_editViewController.graphicView drawLayer:Layer atPoint:point asActive:active attributes:attributes];
 }
 
 - (void)willActivate {

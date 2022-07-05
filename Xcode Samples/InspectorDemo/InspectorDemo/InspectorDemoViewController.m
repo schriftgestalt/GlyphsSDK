@@ -15,13 +15,13 @@
 @implementation InspectorDemoViewController
 
 - (instancetype)init {
-	self = [super initWithNibName:@"InspectorDemoView" bundle:[NSBundle bundleForClass:[InspectorDemoViewController class]]];
+	self = [super initWithNibName:@"InspectorDemoView" bundle:[NSBundle bundleForClass:[self class]]];
 	return self;
 }
 
 - (void)setRepresentedObject:(id)representedObject {
 	[super setRepresentedObject:representedObject];
-	[_titleButton setTitle:representedObject];
+	_titleButton.title = representedObject;
 }
 
 @end

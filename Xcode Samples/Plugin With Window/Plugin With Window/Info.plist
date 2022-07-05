@@ -3,6 +3,6 @@
 <plist version="1.0">
 <dict>
 	<key>NSPrincipalClass</key>
-	<string>Plugin_With_Window</string>
+	<string>PluginWithWindow</string>
 </dict>
 </plist>

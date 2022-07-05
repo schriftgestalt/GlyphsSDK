@@ -10,7 +10,7 @@
 
 #import <GlyphsCore/GlyphsPluginProtocol.h>
 
-@interface Plugin_With_Window : NSWindowController <GlyphsPlugin>
+@interface PluginWithWindow : NSWindowController <GlyphsPlugin>
 
 @property (strong) IBOutlet NSTextFieldCell *fontNameLabel;
 

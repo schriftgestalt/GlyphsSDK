@@ -36,12 +36,12 @@
 }
 
 - (NSUInteger)currentHeight {
-	return [[NSUserDefaults standardUserDefaults] integerForKey:@"___PACKAGENAMEASIDENTIFIER___CurrentHeight"];
+	return [NSUserDefaults.standardUserDefaults integerForKey:@"___PACKAGENAMEASIDENTIFIER___CurrentHeight"];
 }
 
 - (void)setCurrentHeight:(NSUInteger)newHeight {
 	if (newHeight >= [self minHeight] && newHeight <= [self maxHeight]) {
-		[[NSUserDefaults standardUserDefaults] setInteger:NewHeight forKey:@"___PACKAGENAMEASIDENTIFIER___CurrentHeight"];
+		[NSUserDefaults.standardUserDefaults setInteger:newHeight forKey:@"___PACKAGENAMEASIDENTIFIER___CurrentHeight"];
 	}
 }
 
