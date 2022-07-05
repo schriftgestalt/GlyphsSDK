@@ -3,13 +3,12 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		56D659B81E080F2200135582 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56D659B71E080F2200135582 /* Cocoa.framework */; };
 		56D659BB1E080F2200135582 /* TestTool-Prefix.pch in Resources */ = {isa = PBXBuildFile; fileRef = 56D659BA1E080F2200135582 /* TestTool-Prefix.pch */; };
-		56D659BD1E080F2200135582 /* TestTool-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 56D659BC1E080F2200135582 /* TestTool-Info.plist */; };
 		56D659C01E080F2200135582 /* TestTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 56D659BF1E080F2200135582 /* TestTool.m */; };
 		56D659C31E080F2200135582 /* ToolbarIconTemplate.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 56D659C21E080F2200135582 /* ToolbarIconTemplate.pdf */; };
 		56D659C51E080F2200135582 /* GlyphsCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56D659C41E080F2200135582 /* GlyphsCore.framework */; };
@@ -21,7 +20,6 @@
 		56D659B41E080F2200135582 /* TestTool.glyphsTool */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TestTool.glyphsTool; sourceTree = BUILT_PRODUCTS_DIR; };
 		56D659B71E080F2200135582 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		56D659BA1E080F2200135582 /* TestTool-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TestTool-Prefix.pch"; sourceTree = "<group>"; };
-		56D659BC1E080F2200135582 /* TestTool-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TestTool-Info.plist"; sourceTree = "<group>"; };
 		56D659BE1E080F2200135582 /* TestTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestTool.h; sourceTree = "<group>"; };
 		56D659BF1E080F2200135582 /* TestTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestTool.m; sourceTree = "<group>"; };
 		56D659C21E080F2200135582 /* ToolbarIconTemplate.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = ToolbarIconTemplate.pdf; sourceTree = "<group>"; };
@@ -74,7 +72,6 @@
 			isa = PBXGroup;
 			children = (
 				56D659BA1E080F2200135582 /* TestTool-Prefix.pch */,
-				56D659BC1E080F2200135582 /* TestTool-Info.plist */,
 				56D659BE1E080F2200135582 /* TestTool.h */,
 				56D659BF1E080F2200135582 /* TestTool.m */,
 				56D659C61E080F2200135582 /* Info.plist */,
@@ -130,8 +127,8 @@
 				};
 			};
 			buildConfigurationList = 56D659AF1E080F2200135582 /* Build configuration list for PBXProject "TestTool" */;
-			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			compatibilityVersion = "Xcode 10.0";
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
@@ -152,7 +149,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				56D659C31E080F2200135582 /* ToolbarIconTemplate.pdf in Resources */,
-				56D659BD1E080F2200135582 /* TestTool-Info.plist in Resources */,
 				56D659D61E080F4A00135582 /* TestToolView.xib in Resources */,
 				56D659BB1E080F2200135582 /* TestTool-Prefix.pch in Resources */,
 			);
@@ -190,6 +186,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -230,6 +227,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
@@ -249,9 +247,8 @@
 		56D659CA1E080F2200135582 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
 				DEPLOYMENT_LOCATION = YES;
-				DSTROOT = "~/Library/Application Support/Glyphs/Plugins";
+				DSTROOT = "$(USER_LIBRARY_DIR)/Application Support/Glyphs 3/Plugins";
 				FRAMEWORK_SEARCH_PATHS = "$(SYSTEM_APPS_DIR)/Glyphs.app/Contents/Frameworks";
 				INFOPLIST_FILE = TestTool/Info.plist;
 				INSTALL_PATH = /;
@@ -264,7 +261,6 @@
 		56D659CB1E080F2200135582 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(SYSTEM_APPS_DIR)/Glyphs.app/Contents/Frameworks";
 				INFOPLIST_FILE = TestTool/Info.plist;
 				INSTALL_PATH = /;
