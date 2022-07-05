@@ -44,7 +44,7 @@ static NSImage *_toolBarIcon = nil;
 	return @"h";
 }
 
-- (NSInteger)tempTrigger {
+- (NSEventModifierFlags)tempTrigger {
 	// Return a modifierMask (e.g NSAlternateKeyMask, NSCommandKeyMask ...)
 	return 0;
 }
