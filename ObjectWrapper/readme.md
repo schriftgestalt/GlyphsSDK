@@ -1,4 +1,4 @@
-This is a copy of the object wrapper that is shipped with Glyphs2. This is just for reference.
+This is a copy of the object wrapper that is shipped with Glyphs. This is just for reference.
 
 ### Debugging
 To debug the wrapper or play around with it, you can copy or symlink the GlyphsApp folder into `~/Library/Application Support/Glyphs 3/Scripts`
