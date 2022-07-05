@@ -1,19 +1,19 @@
 //
-//  TestTool.m
-//  TestTool
+//  InspectorDemo.m
+//  InspectorDemo
 //
 //  Created by Georg Seifert on 19.12.16.
 //  Copyright © 2016 Georg Seifert. All rights reserved.
 //
 
-#import "TestTool.h"
-#import "TestToolViewController.h"
+#import "InspectorDemo.h"
+#import "InspectorDemoViewController.h"
 
 #import <GlyphsCore/GSLayer.h>
 
 static NSImage *_toolBarIcon = nil;
 
-@implementation TestTool
+@implementation InspectorDemo
 
 - (id) init {
 	self = [super init];
@@ -38,7 +38,7 @@ static NSImage *_toolBarIcon = nil;
 
 - (NSString*) title {
 	//return the name of the tool as it will appear in the tooltip of in the toolbar.
-	return @"TestTool";
+	return @"InspectorDemo";
 }
 
 - (NSString*) trigger {
@@ -133,11 +133,11 @@ static NSImage *_toolBarIcon = nil;
 		}
 		//NSLog(@"one Glyph selected");
 
-		inspector = _inspectorViewControllers[@"TestToolViewController"];
+		inspector = _inspectorViewControllers[@"InspectorDemoViewController"];
 		if (!inspector) {
-			inspector = [[TestToolViewController alloc] init];
+			inspector = [[InspectorDemoViewController alloc] init];
 			[inspector view];
-			_inspectorViewControllers[@"TestToolViewController"] = inspector;
+			_inspectorViewControllers[@"InspectorDemoViewController"] = inspector;
 		}
 		if (inspector) {
 			[inspectors addObject:inspector];

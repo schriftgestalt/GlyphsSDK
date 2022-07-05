@@ -1,21 +1,21 @@
 //
-//  TestToolViewController.m
-//  TestTool
+//  InspectorDemoViewController.m
+//  InspectorDemo
 //
 //  Created by Georg Seifert on 19.12.16.
 //  Copyright © 2016 Georg Seifert. All rights reserved.
 //
 
-#import "TestToolViewController.h"
+#import "InspectorDemoViewController.h"
 
-@interface TestToolViewController ()
+@interface InspectorDemoViewController ()
 
 @end
 
-@implementation TestToolViewController
+@implementation InspectorDemoViewController
 
 - (instancetype)init {
-	self = [super initWithNibName:@"TestToolView" bundle:[NSBundle bundleForClass:[TestToolViewController class]]];
+	self = [super initWithNibName:@"InspectorDemoView" bundle:[NSBundle bundleForClass:[InspectorDemoViewController class]]];
 	return self;
 }
 

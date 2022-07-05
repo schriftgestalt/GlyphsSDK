@@ -19,6 +19,6 @@
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>NSPrincipalClass</key>
-	<string>TestTool</string>
+	<string>InspectorDemo</string>
 </dict>
 </plist>
