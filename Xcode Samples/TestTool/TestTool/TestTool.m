@@ -51,58 +51,59 @@ static NSImage *_toolBarIcon = nil;
 	// Return a modifierMask (e.g NSAlternateKeyMask, NSCommandKeyMask ...)
 	return 0;
 }
-/*
-- (BOOL) willSelectTempTool:(id) tempTool {
+
+#if 0
+- (BOOL)willSelectTempTool:(id)tempTool {
 	// This is called when the user presses a modifier key (e.g. the cmd key to swith to the Select Tool).
 	// Return NO to prevent the tool switching.
 	return YES;
 }
 
-- (void) keyDown:(NSEvent*)theEvent {
+- (void)keyDown:(NSEvent *)theEvent {
 	// Called when a key is pressed while the tool is active.
 	NSLog(@"keyDown: %@", theEvent);
 }
 
-- (void) doCommandBySelector:(SEL)aSelector {
+- (void)doCommandBySelector:(SEL)aSelector {
 	NSLog(@"aSelector: %s", sel_getName(aSelector));
 }
 
-- (NSMenu*) defaultContextMenu {
+- (NSMenu *)defaultContextMenu {
 	// Adds items to the context menu.
-	NSMenu * theMenu = [[ NSMenu alloc] initWithTitle:@"Contextual Menu" ];
+	NSMenu *theMenu = [[ NSMenu alloc] initWithTitle:@"Contextual Menu" ];
 	[ theMenu addItemWithTitle:@"Foo" action:@selector(foo:) keyEquivalent:@"" ];
 	[ theMenu addItemWithTitle:@"Bar" action:@selector(bar:) keyEquivalent:@"" ];
 	return theMenu;
 }
 
-- (void) addMenuItemsForEvent:(NSEvent*)theEvent toMenu:(NSMenu*)theMenu {
+- (void)addMenuItemsForEvent:(NSEvent *)theEvent toMenu:(NSMenu *)theMenu {
 	// Adds an item to theMenu for theEvent.
 	[ theMenu insertItemWithTitle:@"Wail" action:@selector(wail:) keyEquivalent:@"" atIndex:[theMenu numberOfItems]-1 ];
 }
 
-- (void) mouseDown:(NSEvent*)theEvent {
+- (void)mouseDown:(NSEvent *)theEvent {
 	// Called when the mouse button is clicked.
 	_editViewController = [_windowController activeEditViewController];
 	// editViewController.graphicView.cursor = [NSCursor closedHandCursor];
 	_draggStart = [theEvent locationInWindow];
 }
 
-- (void) mouseDragged:(NSEvent*)theEvent {
+- (void)mouseDragged:(NSEvent *)theEvent {
 	// Called when the mouse is moved with the primary button down.
-	NSPoint Loc = [theEvent locationInWindow];
-	NSLog(@"__mouse dragged to : %@", NSStringFromPoint(Loc));
+	NSPoint loc = [theEvent locationInWindow];
+	NSLog(@"__mouse dragged to : %@", NSStringFromPoint(loc));
 }
 
-- (void) mouseUp:(NSEvent*)theEvent {
+- (void)mouseUp:(NSEvent *)theEvent {
 	// Called when the primary mouse button is released.
 	// editViewController.graphicView.cursor = [NSCursor openHandCursor];
 }
 
-- (void) drawBackground {
+- (void)drawBackground {
 	// Draw in the background, concerns the complete view.
 }
 
-- (void) drawForeground {
+- (void)drawForeground {
 	// Draw in the foreground, concerns the complete view.
 }
 
@@ -117,40 +118,40 @@ static NSImage *_toolBarIcon = nil;
 }
 
 - (void) willDeactivate {}
-*/
+#endif
 
 - (NSArray *)inspectorViewControllers {
-	NSMutableArray *Inspectors = (NSMutableArray*)[super inspectorViewControllers];
-	if (!Inspectors) {
-		Inspectors = [NSMutableArray new];
+	NSMutableArray *inspectors = (NSMutableArray*)[super inspectorViewControllers];
+	if (!inspectors) {
+		inspectors = [NSMutableArray new];
 	}
-	GSInspectorViewController *Inspector = nil;
-	GSLayer* Layer = _editViewController.graphicView.activeLayer;
-	if (Layer) {
+	GSInspectorViewController *inspector = nil;
+	GSLayer* layer = _editViewController.graphicView.activeLayer;
+	if (layer) {
 		if (!_inspectorViewControllers) {
 			_inspectorViewControllers = [[NSMutableDictionary alloc] init];
 		}
-		//UKLog(@"one Glyph selected");
+		//NSLog(@"one Glyph selected");
 
-		Inspector = _inspectorViewControllers[@"TestToolViewController"];
-		if (!Inspector) {
-			Inspector = [[TestToolViewController alloc] init];
-			[Inspector view];
-			_inspectorViewControllers[@"TestToolViewController"] = Inspector;
+		inspector = _inspectorViewControllers[@"TestToolViewController"];
+		if (!inspector) {
+			inspector = [[TestToolViewController alloc] init];
+			[inspector view];
+			_inspectorViewControllers[@"TestToolViewController"] = inspector;
 		}
-		if (Inspector) {
-			[Inspectors addObject:Inspector];
+		if (inspector) {
+			[inspectors addObject:inspector];
 			NSString* title = nil;
-			if ([Layer.selection count] > 0) {
-				id firstObject = [Layer.selection firstObject];
+			if (layer.countOfSelection > 0) {
+				id firstObject = [layer.selection firstObject];
 				title = [firstObject className];
 			}
 			if (!title) {
 				title = @"nothing selected";
 			}
-			[Inspector setRepresentedObject:title];
+			inspector.representedObject = title;
 		}
 	}
-	return Inspectors;
+	return inspectors;
 }
 @end

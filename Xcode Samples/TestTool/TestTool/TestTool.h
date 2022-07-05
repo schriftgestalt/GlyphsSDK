@@ -7,12 +7,8 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import <GlyphsCore/GlyphsToolDrawProtocol.h>
-#import <GlyphsCore/GlyphsToolEventProtocol.h>
 #import <GlyphsCore/GSToolSelect.h>
 
-@interface TestTool : GSToolSelect {
-
-}
+@interface TestTool : GSToolSelect
 
 @end
