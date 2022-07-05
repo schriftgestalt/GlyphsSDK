@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9532" systemVersion="14F2109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="20037" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9532"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="20037"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="TestToolViewController">
@@ -13,26 +13,44 @@
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <customView id="H5M-D7-AeL">
-            <rect key="frame" x="0.0" y="0.0" width="196" height="57"/>
-            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+        <customView translatesAutoresizingMaskIntoConstraints="NO" id="H5M-D7-AeL">
+            <rect key="frame" x="0.0" y="0.0" width="196" height="63"/>
             <subviews>
-                <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2X4-AL-ua0" userLabel="HintView" customClass="GSInspectorView">
-                    <rect key="frame" x="0.0" y="39" width="196" height="18"/>
+                <customView translatesAutoresizingMaskIntoConstraints="NO" id="2X4-AL-ua0" userLabel="HintView" customClass="GSInspectorView">
+                    <rect key="frame" x="0.0" y="43" width="196" height="20"/>
                     <subviews>
-                        <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nWF-XY-v76">
-                            <rect key="frame" x="8" y="0.0" width="178" height="19"/>
+                        <button translatesAutoresizingMaskIntoConstraints="NO" id="nWF-XY-v76">
+                            <rect key="frame" x="20" y="3" width="156" height="14"/>
                             <buttonCell key="cell" type="roundTextured" title="Button" bezelStyle="texturedRounded" alignment="center" controlSize="small" imageScaling="proportionallyDown" inset="2" id="lgx-1f-toh">
                                 <behavior key="behavior" lightByContents="YES"/>
                                 <font key="font" metaFont="smallSystem"/>
                             </buttonCell>
                         </button>
                     </subviews>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="nWF-XY-v76" secondAttribute="trailing" constant="20" symbolic="YES" id="8Ys-bL-Lv8"/>
+                        <constraint firstItem="nWF-XY-v76" firstAttribute="centerY" secondItem="2X4-AL-ua0" secondAttribute="centerY" id="OIf-7h-vAj"/>
+                        <constraint firstItem="nWF-XY-v76" firstAttribute="leading" secondItem="2X4-AL-ua0" secondAttribute="leading" constant="20" symbolic="YES" id="Ovl-Mn-pvz"/>
+                        <constraint firstAttribute="height" constant="20" id="h3I-8a-HQE"/>
+                    </constraints>
                 </customView>
-                <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ss8-M6-d8v" userLabel="HintView" customClass="GSInspectorView">
-                    <rect key="frame" x="0.0" y="0.0" width="196" height="40"/>
+                <customView translatesAutoresizingMaskIntoConstraints="NO" id="Ss8-M6-d8v" userLabel="HintView" customClass="GSInspectorView">
+                    <rect key="frame" x="0.0" y="0.0" width="196" height="44"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="SGk-FB-WPB"/>
+                    </constraints>
                 </customView>
             </subviews>
+            <constraints>
+                <constraint firstItem="Ss8-M6-d8v" firstAttribute="leading" secondItem="H5M-D7-AeL" secondAttribute="leading" id="2Ha-IX-xJv"/>
+                <constraint firstAttribute="width" constant="196" id="2YZ-ta-i7v"/>
+                <constraint firstAttribute="trailing" secondItem="Ss8-M6-d8v" secondAttribute="trailing" id="4wE-bs-Qz4"/>
+                <constraint firstAttribute="bottom" secondItem="Ss8-M6-d8v" secondAttribute="bottom" id="Kdb-yw-Pro"/>
+                <constraint firstItem="2X4-AL-ua0" firstAttribute="top" secondItem="H5M-D7-AeL" secondAttribute="top" id="fyl-Q7-BvD"/>
+                <constraint firstItem="2X4-AL-ua0" firstAttribute="leading" secondItem="H5M-D7-AeL" secondAttribute="leading" id="gFb-YA-lkk"/>
+                <constraint firstAttribute="trailing" secondItem="2X4-AL-ua0" secondAttribute="trailing" id="had-mV-2sx"/>
+                <constraint firstItem="Ss8-M6-d8v" firstAttribute="top" secondItem="2X4-AL-ua0" secondAttribute="bottom" constant="-1" id="qQJ-SW-ab2"/>
+            </constraints>
             <point key="canvasLocation" x="550" y="392.5"/>
         </customView>
     </objects>
