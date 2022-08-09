@@ -9,10 +9,6 @@
  *
  */
 
-/*@import url("basic.css");
-@import url("app.css");*/
-
-
 /* -- page layout ----------------------------------------------------------- */
 
 body {
@@ -44,7 +40,6 @@ h2 a, h2 a:visited {
 /* -- body styles ----------------------------------------------------------- */
 div.body h1 {
 	font-weight: normal;
-/*	font-family: "Graublau Slab", serif;*/
 	font-style: italic;
 	font-weight: 500;
 	background-color: #f6dfe5;
@@ -54,7 +49,6 @@ div.body h1 {
 div.body h2 {
 	font-weight: normal;
 	color: #175447;
-/*	font-family: "Graublau Slab", serif;*/
 	font-style: italic;
 	background-color: #def7f2;
 	font-weight: 500;
