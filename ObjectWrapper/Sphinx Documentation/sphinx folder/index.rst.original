@@ -1,18 +1,18 @@
 .. Glyphs documentation master file, created by
-   sphinx-quickstart on Sat Apr 17 17:11:16 2010.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+	sphinx-quickstart on Sat Apr 17 17:11:16 2010.
+	You can adapt this file completely to your liking, but it should at least
+	contain the root `toctree` directive.
 
 .. highlight:: python
-    :linenothreshold: 500
+	 :linenothreshold: 500
 
 .. _module:: Glyphs
-   :synopsis: The Glyphs.app Python Scripting API Documentation.
+	:synopsis: The Glyphs.app Python Scripting API Documentation.
 
 .. moduleauthor:: Georg Seifert <info@schriftgestaltung.de>
 
 .. toctree::
-   :maxdepth: 2
+	:maxdepth: 2
 
 
 Glyphs.app Python Scripting API Documentation
@@ -21,7 +21,6 @@ Glyphs.app Python Scripting API Documentation
 This is the documentation for the Python Scripting API for Glyphs.app (`glyphsapp.com <http://glyphsapp.com/>`_)
 
 .. image:: _static/objectmodel.png
-
 
 About this Document
 ===================

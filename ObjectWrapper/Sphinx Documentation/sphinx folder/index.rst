@@ -1,18 +1,18 @@
 .. Glyphs documentation master file, created by
-   sphinx-quickstart on Sat Apr 17 17:11:16 2010.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+	sphinx-quickstart on Sat Apr 17 17:11:16 2010.
+	You can adapt this file completely to your liking, but it should at least
+	contain the root `toctree` directive.
 
 .. highlight:: python
-    :linenothreshold: 500
+	 :linenothreshold: 500
 
 .. _module:: Glyphs
-   :synopsis: The Glyphs.app Python Scripting API Documentation.
+	:synopsis: The Glyphs.app Python Scripting API Documentation.
 
 .. moduleauthor:: Georg Seifert <info@schriftgestaltung.de>
 
 .. toctree::
-   :maxdepth: 2
+	:maxdepth: 2
 
 
 Glyphs.app Python Scripting API Documentation
@@ -21,7 +21,6 @@ Glyphs.app Python Scripting API Documentation
 This is the documentation for the Python Scripting API for Glyphs.app (`glyphsapp.com <http://glyphsapp.com/>`_)
 
 .. image:: _static/objectmodel.png
-
 
 About this Document
 ===================
@@ -742,9 +741,20 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 
 		Holds the fonts info properties. Can be instances of :class:`GSFontInfoValueSingle` and :class:`GSFontInfoValueLocalized`.
 		
-		The localised values use language tags defined in the middle column of `Language System Tags table`: <https://docs.microsoft.com/en-us/typography/opentype/spec/languagetags>.
+		The localized values use language tags defined in the middle column of `Language System Tags table`: <https://docs.microsoft.com/en-us/typography/opentype/spec/languagetags>.
 
-		To find specific values, use font.propertyForName_(name) or font.propertyForName_languageTag_(name, languageTag).
+		The names are listed in the constants: `Info Property Keys`_
+
+
+		.. code-block:: python
+
+			# To find specific values:
+			font.propertyForName_(name)
+			# or
+			font.propertyForName_languageTag_(name, languageTag).
+
+			# To add an entry:
+			font.setProperty_value_languageTag_(GSPropertyNameFamilyNamesKey, "SomeName", None)
 
 		:type: list
 
@@ -818,6 +828,12 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 			# Delete a glyph
 			del(font.glyphs['A.alt'])
 
+
+
+	.. function:: characterForGlyph(glyph)
+		retuns the (internal) character that is used in the edit view. It the glpyh has a unicode, that is used, otherwiese a temporary code is assined. That can change over time, so don’t rely on it. This is mostly useful for constructing a string for see :attr:`tab.text <GSEditViewController.text>`
+
+		.. versionadded:: 3.1
 
 
 
@@ -905,7 +921,7 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 
 	.. attribute:: copyrights
 
-		This accesses all localised copyright values.
+		This accesses all localized copyright values.
 		For details :attr:`GSFont.properties`
 
 		:type: dict
@@ -930,7 +946,7 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 
 	.. attribute:: licenses
 
-		This accesses all localised license values.
+		This accesses all localized license values.
 		For details :attr:`GSFont.properties`
 
 		:type: dict
@@ -957,7 +973,7 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 
 	.. attribute:: compatibleFullNames
 
-		This accesses all localised designer values.
+		This accesses all localized designer values.
 		For details :attr:`GSFont.properties`
 
 		:type: dict
@@ -984,7 +1000,7 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 
 	.. attribute:: sampleTexts
 
-		This accesses all localised designer values.
+		This accesses all localized designer values.
 		For details :attr:`GSFont.properties`
 
 		:type: dict
@@ -1011,7 +1027,7 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 
 	.. attribute:: descriptions
 
-		This accesses all localised designer values.
+		This accesses all localized designer values.
 		For details :attr:`GSFont.properties`
 
 		:type: dict
@@ -1036,7 +1052,7 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 
 	.. attribute:: designers
 
-		This accesses all localised designer values.
+		This accesses all localized designer values.
 		For details :attr:`GSFont.properties`
 
 		:type: dict
@@ -1062,7 +1078,7 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 
 	.. attribute:: trademarks
 
-		This accesses all localised trademark values.
+		This accesses all localized trademark values.
 		For details :attr:`GSFont.properties`
 
 		:type: dict
@@ -1093,7 +1109,7 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 
 	.. attribute:: manufacturers
 
-		This accesses all localised manufacturer values.
+		This accesses all localized manufacturer values.
 		For details :attr:`GSFont.properties`
 
 		:type: dict
@@ -1158,7 +1174,7 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 
 	.. attribute:: familyNames
 
-		This accesses all localised family name values.
+		This accesses all localized family name values.
 		For details :attr:`GSFont.properties`
 
 		:type: dict
@@ -1572,7 +1588,7 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 			9.22337203685e+18 # (this is the maximum number for 64 bit. It is used as an empty value)
 
 
-	.. function:: setKerningForPair(fontMasterId, leftKey, rightKey, value [, direction = LTR])
+	.. function:: setKerningForPair(fontMasterId, leftKey, rightKey, value [, direction = GSLTR])
 
 		This sets the kerning for the two specified glyphs (leftKey or rightKey is the glyphname) or a kerning group key (@MMK_X_XX).
 	
@@ -1584,7 +1600,7 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 		:type rightKey: str
 		:param value: kerning value
 		:type value: float
-		:param direction: optional writing direction (see Constants). Default is LTR.
+		:param direction: optional writing direction (see Constants). Default is GSLTR.
 		:type direction: str
 
 
@@ -1595,7 +1611,7 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 			font.setKerningForPair(font.selectedFontMaster.id, '@MMK_L_T', '@MMK_R_A', -75)
 
 
-	.. function:: removeKerningForPair(FontMasterId, LeftKey, RightKey, direction=LTR)
+	.. function:: removeKerningForPair(FontMasterId, LeftKey, RightKey, direction=GSLTR)
 
 		Removes the kerning for the two specified glyphs (LeftKey or RightKey is the glyphname) or a kerning group key (@MMK_X_XX).
 
@@ -1605,7 +1621,7 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 		:type LeftKey: str
 		:param RightKey: either a glyph name or a class name
 		:type RightKey: str
-		:param direction: optional writing direction (see Constants; 'LTR' (0) or 'RTLTTB'). Default is LTR. (added in 2.6.6)
+		:param direction: optional writing direction (see Constants; 'GSLTR' (0) or 'GSVertical'). Default is GSLTR. (added in 2.6.6)
 		:type direction: int
 
 
@@ -1646,7 +1662,7 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 
 	.. function:: compileFeatures()
 
-		Compiles the features, thus making the new feature code functionally available in the editor. Equivalent to the "Test" button in the features panel.
+		Compiles the features, thus making the new feature code functionally available in the editor. Equivalent to the "Compile" button in the features panel.
 
 		.. versionadded:: 2.5
 
@@ -1879,7 +1895,7 @@ Implementation of the master object. This corresponds with the "Masters" pane in
 
 		Holds the fonts info properties. Can be instances of :class:`GSFontInfoValueSingle` and :class:`GSFontInfoValueLocalized`
 
-		The localised values use language tags defined in the middle column of `Language System Tags table`: <https://docs.microsoft.com/en-us/typography/opentype/spec/languagetags>.
+		The localized values use language tags defined in the middle column of `Language System Tags table`: <https://docs.microsoft.com/en-us/typography/opentype/spec/languagetags>.
 
 		To find specific values, use master.propertyForName_(name) or master.propertyForName_languageTag_(name, languageTag).
 
@@ -1938,16 +1954,22 @@ Implementation of the master object. This corresponds with the "Masters" pane in
 
 	.. attribute:: stems
 
-		The stems. This is a list of numbers. For the time being, this can be set only as an entire list at once.
+		The stems. This is a list of numbers.
 
 		:type: list
 
 
 		.. code-block:: python
 
-			# Set stems
-			TODO: Not updated yet
+
 			font.masters[0].stems = [10, 11, 20]
+
+			print(master.stems[0])
+
+			master.stems[0] = 12
+
+			master.stems["stemName"] = 12
+
 
 
 
@@ -2238,13 +2260,25 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 
 		Holds the fonts info properties. Can be instances of :class:`GSFontInfoValueSingle` and :class:`GSFontInfoValueLocalized`
 
-		The localised values use language tags defined in the middle column of `Language System Tags table`: <https://docs.microsoft.com/en-us/typography/opentype/spec/languagetags>.
-		
-		To find specific values, use instance.propertyForName_(name) or instance.propertyForName_languageTag_(name, languageTag).
+		The localized values use language tags defined in the middle column of `Language System Tags table`: <https://docs.microsoft.com/en-us/typography/opentype/spec/languagetags>.
+
+		The names are listed in the constants: `Info Property Keys`_
+
+
+		.. code-block:: python
+
+			# To find specific values:
+			instance.propertyForName_(name)
+			# or
+			instance.propertyForName_languageTag_(name, languageTag).
+
+			# To add an entry:
+			instance.setProperty_value_languageTag_(GSPropertyNameFamilyNamesKey, "SomeName", None)
 
 		:type: list
 
 		.. versionadded:: 3
+
 
 
 
@@ -2332,7 +2366,7 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 
 	.. attribute:: compatibleFullNames
 
-		This accesses all localised compatibleFullNames values.
+		This accesses all localized compatibleFullNames values.
 		For details :attr:`GSInstance.properties`
 
 		:type: dict
@@ -2358,7 +2392,7 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 
 	.. attribute:: copyrights
 
-		This accesses all localised copyright values.
+		This accesses all localized copyright values.
 		For details :attr:`GSInstance.properties`
 
 		:type: dict
@@ -2385,7 +2419,7 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 
 	.. attribute:: descriptions
 
-		This accesses all localised description values.
+		This accesses all localized description values.
 		For details :attr:`GSInstance.properties`
 
 		:type: dict
@@ -2420,7 +2454,7 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 
 	.. attribute:: designers
 
-		This accesses all localised designer values.
+		This accesses all localized designer values.
 		For details :attr:`GSInstance.properties`
 
 		:type: dict
@@ -2444,7 +2478,7 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 
 	.. attribute:: familyNames
 
-		This accesses all localised family name values.
+		This accesses all localized family name values.
 		For details :attr:`GSInstance.properties`
 
 		:type: dict
@@ -2470,7 +2504,7 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 
 	.. attribute:: licenses
 
-		This accesses all localised family name values.
+		This accesses all localized family name values.
 		For details :attr:`GSInstance.properties`
 
 		:type: dict
@@ -2495,7 +2529,7 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 
 	.. attribute:: manufacturers
 
-		This accesses all localised family name values.
+		This accesses all localized family name values.
 		For details :attr:`GSInstance.properties`
 
 		:type: dict
@@ -2521,7 +2555,7 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 
 	.. attribute:: preferredFamilyNames
 
-		This accesses all localised designer values.
+		This accesses all localized designer values.
 		For details :attr:`GSInstance.properties`
 
 		:type: dict
@@ -2545,7 +2579,7 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 
 	.. attribute:: preferredSubfamilyNames
 
-		This accesses all localised designer values.
+		This accesses all localized designer values.
 		For details :attr:`GSInstance.properties`
 
 		:type: dict
@@ -2571,7 +2605,7 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 
 	.. attribute:: sampleTexts
 
-		This accesses all localised designer values.
+		This accesses all localized designer values.
 		For details :attr:`GSInstance.properties`
 
 		:type: dict
@@ -2597,7 +2631,7 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 
 	.. attribute:: styleMapFamilyNames
 
-		This accesses all localised designer values.
+		This accesses all localized designer values.
 		For details :attr:`GSInstance.properties`
 
 		:type: dict
@@ -2624,7 +2658,7 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 
 	.. attribute:: styleMapStyleNames
 
-		This accesses all localised designer values.
+		This accesses all localized designer values.
 		For details :attr:`GSInstance.properties`
 
 		:type: dict
@@ -2650,7 +2684,7 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 
 	.. attribute:: styleNames
 
-		This accesses all localised styleName values.
+		This accesses all localized styleName values.
 		For details :attr:`GSInstance.properties`
 
 		:type: dict
@@ -2676,7 +2710,7 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 
 	.. attribute:: trademarks
 
-		This accesses all localised trademark values.
+		This accesses all localized trademark values.
 		For details :attr:`GSInstance.properties`
 
 		:type: dict
@@ -2702,7 +2736,7 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 
 	.. attribute:: variableStyleNames
 
-		This accesses all localised variableStyleName values.
+		This accesses all localized variableStyleName values.
 		For details :attr:`GSInstance.properties`
 
 		:type: dict
@@ -3460,14 +3494,14 @@ For details on how to access these glyphs, please see :class:`GSFont.glyphs`
 
 		Writing direction.
 
-		Defined constants are: LTR (left to right), RTL (right to left), LTRTTB (left to right, vertical, top to bottom e.g. Mongolian), and RTLTTB (right to left, vertical, top to bottom e.g. Chinese, Japanese, Korean)
+		Defined constants are: GSLTR (left to right), GSRTL (right to left), GSVertical (right to left, vertical, top to bottom e.g. Chinese, Japanese, Korean) and GSVerticalToRight (left to right, vertical, top to bottom e.g. Mongolian)
 
 		:type: integer
 
 
 		.. code-block:: python
 
-			glyph.direction = RTL
+			glyph.direction = GSRTL
 
 		.. versionadded:: 3
 
@@ -4263,7 +4297,7 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 
 	.. attribute:: selection
 
-		List of all selected objects in the glyph. Read-only.
+		List of all selected objects in the glyph.
 
 		This list contains **all selected items**, including **nodes**, **anchors**, **guides** etc.
 		If you want to work specifically with nodes, for instance, you may want to cycle through the nodes (or anchors etc.) and check whether they are selected. See example below.
@@ -4700,9 +4734,11 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 
 
 
-	.. function:: addNodesAtExtremes()
+	.. function:: addNodesAtExtremes([force=False])
 
 		Add nodes at layer's extrema, e.g., top, bottom etc.
+
+		:param force: if points are always added, even if that would distort the shape
 
 
 
@@ -4778,7 +4814,6 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 		:param Point1: one point
 		:param Point2: the other point
 		:param components: if components should be measured. Default: False
-		:param ignoreLocked: ignore locked or unfocused paths. Default: False
 
 
 		.. code-block:: python
@@ -6424,6 +6459,16 @@ For details on how to access them, please look at :class:`GSFont.tabs`
 		:type: str
 
 
+		.. code-block:: python
+
+			string = ""
+			for l in Font.selectedLayers:
+				char = Font.characterForGlyph_(l.parent)
+				string += chr(char)
+			tab = Font.tabs[0]
+			tab.text = string
+
+
 
 	.. attribute:: masterIndex
 
@@ -6444,14 +6489,16 @@ For details on how to access them, please look at :class:`GSFont.tabs`
 
 		.. code-block:: python
 
-			font.tabs[0].layers = []
+			layers = []
 
 			# display all layers of one glyph next to each other
 			for layer in font.glyphs['a'].layers:
-				font.tabs[0].layers.append(layer)
+				layers.append(layer)
 
 			# append line break
-			font.tabs[0].layers.append(GSControlLayer(10)) # 10 being the ASCII code of the new line character (\n)
+			layers.append(GSControlLayer(10)) # 10 being the ASCII code of the new line character (\n)
+
+			font.tabs[0].layers = layers
 
 
 
@@ -6689,6 +6736,7 @@ This contains valuable information from the glyph database. See :class:`GSGlyphs
 		sortNameKeep
 		desc
 		altNames
+		direction
 		desc
 
 	**Properties**
@@ -6823,6 +6871,23 @@ This contains valuable information from the glyph database. See :class:`GSGlyphs
 		Alternative names for glyphs that are not used, but should be recognized (e.g., for conversion to nice names).
 
 		:type: str
+
+
+
+	.. attribute:: direction
+
+		Writing direction.
+
+		Defined constants are: GSLTR (left to right), GSRTL (right to left), GSVertical (right to left, vertical, top to bottom e.g. Chinese, Japanese, Korean) and GSVerticalToRight (left to right, vertical, top to bottom e.g. Mongolian)
+
+		:type: integer
+
+
+		.. code-block:: python
+
+			glyph.direction = GSRTL
+
+		.. versionadded:: 3
 
 
 :mod:`GSFontInfoValueLocalized`
@@ -7606,6 +7671,112 @@ Export formats
 
 .. versionadded:: 2.5
 
+
+.. _`Info Property Keys`:
+=======================
+
+.. data:: GSPropertyNameFamilyNamesKey
+
+	Family Names
+
+.. data:: GSPropertyNameDesignersKey
+
+	Designers
+
+.. data:: GSPropertyNameDesignerURLKey
+
+	Designer URL
+
+.. data:: GSPropertyNameManufacturersKey
+
+	Manufacturers
+
+.. data:: GSPropertyNameManufacturerURLKey
+
+	Manufacturer URL
+
+.. data:: GSPropertyNameCopyrightsKey
+
+	Copyrights
+
+.. data:: GSPropertyNameVersionStringKey
+
+	Version String
+
+.. data:: GSPropertyNameVendorIDKey
+
+	VendorID
+
+.. data:: GSPropertyNameUniqueIDKey
+
+	UniqueID
+
+.. data:: GSPropertyNameLicensesKey
+
+	Licenses
+
+.. data:: GSPropertyNameLicenseURLKey
+
+	License URL
+
+.. data:: GSPropertyNameTrademarksKey
+
+	Trademarks
+
+.. data:: GSPropertyNameDescriptionsKey
+
+	Descriptions
+
+.. data:: GSPropertyNameSampleTextsKey
+
+	SampleTexts
+
+.. data:: GSPropertyNamePostscriptFontNameKey
+
+	PostscriptFontName
+
+.. data:: GSPropertyNameCompatibleFullNamesKey
+
+	CompatibleFullNames
+
+.. data:: GSPropertyNameStyleNamesKey
+
+	StyleNames
+
+.. data:: GSPropertyNameStyleMapFamilyNamesKey
+
+	StyleMapFamilyNames
+
+.. data:: GSPropertyNameStyleMapStyleNamesKey
+
+	StyleMapStyleNames
+
+.. data:: GSPropertyNamePreferredFamilyNamesKey
+
+	PreferredFamilyNames
+
+.. data:: GSPropertyNamePreferredSubfamilyNamesKey
+
+	PreferredSubfamilyNames
+
+.. data:: GSPropertyNameVariableStyleNamesKey
+
+	VariableStyleNames
+
+.. data:: GSPropertyNameWWSFamilyNameKey
+
+	WWSFamilyName
+
+.. data:: GSPropertyNameWWSSubfamilyNameKey
+
+	WWSSubfamilyName
+
+.. data:: GSPropertyNameVariationsPostScriptNamePrefixKey
+
+	VariationsPostScriptNamePrefix
+
+.. versionadded:: 3.1
+
 Instance Types
 ==============
 
@@ -7662,9 +7833,32 @@ Hint types
 
 	Corner Component
 
+
+	.. code-block:: python
+
+		path = Layer.shapes[0]
+		brush = GSHint()
+		brush.name = "_corner.test"
+		brush.type = CORNER
+		brush.originNode = path.nodes[1]
+		Layer.hints.append(brush)
+
 .. data:: CAP
 
 	Cap Component
+
+.. data:: BRUSH
+
+	Brush Component
+
+	.. versionadded:: 3.1
+
+.. data:: SEGMENT
+
+	Segment Component
+
+	.. versionadded:: 3.1
+
 
 Hint Option
 ===========

@@ -125,13 +125,18 @@ ul.list-inline {
 	}
 }
 
-.section h1 {
+section {
+	padding-top:1em;
+}
+
+section h1 {
 	font-variation-settings: "srff" 20, "wght" 120, "ital" 0;
 	font-size:51px;
 	display:auto;
+	padding-top:1em;
 }
 
-.section h1 .pre {
+section h1 .pre {
 	font-family: "ABCArizona";
 }
 
@@ -248,8 +253,8 @@ pre {
 	padding-top: 1em;
 	padding-right: 1em;
 	padding-bottom: 1em;
-	padding-left: 17px !important;
-	background-color: #e4e6e1;
+	padding-left: 12px !important;
+	background-color:rgb(235, 245, 245);
 	border-radius: 5px;
 	max-width: 100%;
 	overflow: auto;
@@ -279,4 +284,8 @@ table.docutils td {
 	border:none;
 	box-shadow:none;
 	padding:0;
+}
+
+table.align-default {
+	margin-left: 0 !important;
 }
