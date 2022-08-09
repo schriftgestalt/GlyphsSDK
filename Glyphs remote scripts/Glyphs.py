@@ -2,8 +2,9 @@
 # encoding: utf-8
 
 import time, objc
+from Foundation import NSObject
 
-__all__ = ["Glyphs", "currentDocument", "GSMOVE", "GSLINE", "GSCURVE", "GSOFFCURVE", "GSSHARP", "GSSMOOTH", "GSGlyph", "GSLayer", "GSApplication"]
+__all__ = ["Glyphs", "currentDocument", "GSMOVE", "GSLINE", "GSCURVE", "GSOFFCURVE", "GSSHARP", "GSSMOOTH", "GSGlyph", "GSLayer", "GSApplication", "RunScript"]
 
 NSConnection = objc.lookUpClass("NSConnection")
 
@@ -31,6 +32,15 @@ if Glyphs and Glyphs.orderedDocuments():
 	currentDocument = Glyphs.orderedDocuments()[0]
 else:
 	currentDocument = None
+
+class GSStdOut(NSObject):
+	def setWrite_(self, text):
+		print(text)
+
+def RunScript(code):
+	StdOut = GSStdOut.new()
+	scriptingHandler = Glyphs.scriptingHandler()
+	scriptingHandler.runMacroString_stdOut_(code, StdOut)
 
 GSMOVE = 17
 GSLINE = 1
