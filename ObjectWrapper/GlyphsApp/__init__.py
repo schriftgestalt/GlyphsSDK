@@ -77,19 +77,37 @@ __all__ = [
 	"Glyphs", "GetFile",
 	"wrapperVersion",
 	"GSAlignmentZone", "GSAnchor", "GSAnnotation", "GSApplication", "GSBackgroundImage", "GSBackgroundLayer", "GSClass", "GSComponent", "GSControlLayer", "GSGlyphReference",
-	"GSCustomParameter", "GSDocument", "GSProjectDocument", "GSEditViewController", "GSElement", "GSFeature", "GSFeaturePrefix", "GSFont", "GSFontMaster",
+	"GSCustomParameter", "GSDocument", "GSProjectDocument", "GSEditViewController", "GSFontViewController", "GSElement", "GSFeature", "GSFeaturePrefix", "GSFont", "GSFontMaster",
 	"GSGlyph", "GSGlyphInfo", "GSGlyphsInfo", "GSGuide", "GSGuideLine", "GSHint", "GSInstance", "GSLayer", "GSNode", "GSPath", "GSShape", "GSSubstitution", "GSPartProperty", "GSAxis", "GSMetric", "GSMetricValue", "GSFontInfoValue", "GSFontInfoValueLocalized", "GSFontInfoValueSingle", "GSInfoValue", "GSNotifyingDictionary",
 	"GSPathFinder", "GSPathPen", "GSCallbackHandler", "GSFeatureGenerator", "GSTTStem", "GSPathSegment",
 	# Constants
 	"MOVE", "LINE", "CURVE", "OFFCURVE", "QCURVE", "HOBBYCURVE", "GSMOVE", "GSLINE", "GSCURVE", "GSQCURVE", "GSOFFCURVE", "GSHOBBYCURVE", "GSSHARP", "GSSMOOTH",
 	"FILL", "FILLCOLOR", "FILLPATTERNANGLE", "FILLPATTERNBLENDMODE", "FILLPATTERNFILE", "FILLPATTERNOFFSET", "FILLPATTERNSCALE", "STROKECOLOR", "STROKELINECAPEND", "STROKELINECAPSTART", "STROKELINEJOIN", "STROKEPOSITION", "STROKEWIDTH", "STROKEHEIGHT", "GRADIENT", "SHADOW", "INNERSHADOW", "MASK", 
 	"INSTANCETYPESINGLE", "INSTANCETYPEVARIABLE",
-	"TAG", "TOPGHOST", "STEM", "BOTTOMGHOST", "FLEX", "TTSNAP", "TTSTEM", "TTSHIFT", "TTINTERPOLATE", "TTDIAGONAL", "TTDELTA", "CORNER", "CAP", "TTDONTROUND", "TTROUND", "TTROUNDUP", "TTROUNDDOWN", "TRIPLE",
-	"TTANCHOR", "TTALIGN", # backwards compatibilty 
+	"TAG", "TOPGHOST", "STEM", "BOTTOMGHOST", "FLEX", "TTSNAP", "TTSTEM", "TTSHIFT", "TTINTERPOLATE", "TTDIAGONAL", "TTDELTA", "TTDONTROUND", "TTROUND", "TTROUNDUP", "TTROUNDDOWN", "TRIPLE",
+	"TTANCHOR", "TTALIGN", # backwards compatibilty
+
+	"CORNER", "CAP", "BRUSH", "SEGMENT",
+
 	"TEXT", "ARROW", "CIRCLE", "PLUS", "MINUS",
-	"LTR", "RTL", "LTRTTB", "RTLTTB", "GSTopLeft", "GSTopCenter", "GSTopRight", "GSCenterLeft", "GSCenterCenter", "GSCenterRight", "GSBottomLeft", "GSBottomCenter", "GSBottomRight",
+	"GSBIDI", "GSLTR", "GSRTL", "GSVertical", "GSVerticalToRight",
+	# compatibilty
+	"BIDI", "LTR", "RTL", "LTRTTB", "RTLTTB",
+	"GSTopLeft", "GSTopCenter", "GSTopRight", "GSCenterLeft", "GSCenterCenter", "GSCenterRight", "GSBottomLeft", "GSBottomCenter", "GSBottomRight",
 
 	"OTF", "TTF", "VARIABLE", "UFO", "WOFF", "WOFF2", "PLAIN", "EOT",
+
+	"GSPropertyNameFamilyNamesKey", "GSPropertyNameDesignersKey", "GSPropertyNameDesignerURLKey",
+	"GSPropertyNameManufacturersKey", "GSPropertyNameManufacturerURLKey", "GSPropertyNameCopyrightsKey",
+	"GSPropertyNameVersionStringKey", "GSPropertyNameVendorIDKey", "GSPropertyNameUniqueIDKey",
+	"GSPropertyNameLicensesKey", "GSPropertyNameLicenseURLKey", "GSPropertyNameTrademarksKey",
+	"GSPropertyNameDescriptionsKey", "GSPropertyNameSampleTextsKey", "GSPropertyNamePostscriptFullNameKey",
+	"GSPropertyNamePostscriptFontNameKey", "GSPropertyNameCompatibleFullNamesKey",
+	"GSPropertyNameStyleNamesKey", "GSPropertyNameStyleMapFamilyNamesKey",
+	"GSPropertyNameStyleMapStyleNamesKey", "GSPropertyNamePreferredFamilyNamesKey",
+	"GSPropertyNamePreferredSubfamilyNamesKey", "GSPropertyNameVariableStyleNamesKey",
+	"GSPropertyNameWWSFamilyNameKey", "GSPropertyNameWWSSubfamilyNameKey",
+	"GSPropertyNameVariationsPostScriptNamePrefixKey",
 
 	# Methods
 	"divideCurve", "distance", "addPoints", "subtractPoints", "GetFolder", "GetSaveFile", "GetOpenFile", "Message", "AskString", "LogToConsole", "LogError", "removeOverlap", "subtractPaths", "intersectPaths", "scalePoint",
@@ -134,6 +152,36 @@ def _________________(): pass
 GSFormatVersion1 = 1
 GSFormatVersion3 = 3
 GSFormatVersionCurrent = 3
+
+GSPackageFlatFile = 1
+GSPackageBundle = 2
+
+GSPropertyNameFamilyNamesKey = "familyNames"
+GSPropertyNameDesignersKey = "designers"
+GSPropertyNameDesignerURLKey = "designerURL"
+GSPropertyNameManufacturersKey = "manufacturers"
+GSPropertyNameManufacturerURLKey = "manufacturerURL"
+GSPropertyNameCopyrightsKey = "copyrights"
+GSPropertyNameVersionStringKey = "versionString"
+GSPropertyNameVendorIDKey = "vendorID"
+GSPropertyNameUniqueIDKey = "uniqueID"
+GSPropertyNameLicensesKey = "licenses"
+GSPropertyNameLicenseURLKey = "licenseURL"
+GSPropertyNameTrademarksKey = "trademarks"
+GSPropertyNameDescriptionsKey = "descriptions"
+GSPropertyNameSampleTextsKey = "sampleTexts"
+GSPropertyNamePostscriptFullNameKey = "postscriptFullName"
+GSPropertyNamePostscriptFontNameKey = "postscriptFontName"
+GSPropertyNameCompatibleFullNamesKey = "compatibleFullNames"
+GSPropertyNameStyleNamesKey = "styleNames"
+GSPropertyNameStyleMapFamilyNamesKey = "styleMapFamilyNames"
+GSPropertyNameStyleMapStyleNamesKey = "styleMapStyleNames"
+GSPropertyNamePreferredFamilyNamesKey = "preferredFamilyNames"
+GSPropertyNamePreferredSubfamilyNamesKey = "preferredSubfamilyNames"
+GSPropertyNameVariableStyleNamesKey = "variableStyleNames"
+GSPropertyNameWWSFamilyNameKey = "WWSFamilyName"
+GSPropertyNameWWSSubfamilyNameKey = "WWSSubfamilyName"
+GSPropertyNameVariationsPostScriptNamePrefixKey = "variationsPostScriptNamePrefix"
 
 GSShapeTypePath = 1 << 1
 GSShapeTypeComponent = 1 << 2
@@ -203,6 +251,8 @@ TTDIAGONAL = 8
 TTDELTA = 9
 CORNER = 16
 CAP = 17
+BRUSH = 18
+SEGMENT = 19
 
 TTDONTROUND = 4
 TTROUND = 0
@@ -257,13 +307,18 @@ GSBottomLeft = 0
 GSBottomCenter = 1
 GSBottomRight = 2
 
-# TODO this is not up to date
 # Writing direction
-BIDI = -1
+GSBIDI = 1
+GSLTR = 0
+GSRTL = 2
+GSVertical = 4 # CJK
+GSVerticalToRight = 8 # Mongolian
+
+BIDI = 1
 LTR = 0
 RTL = 2
 LTRTTB = 4
-RTLTTB = 6
+RTLTTB = 8
 
 # Callbacks
 DRAWFOREGROUND = "DrawForeground"
@@ -273,8 +328,8 @@ DOCUMENTOPENED = "GSDocumentWasOpenedNotification"
 DOCUMENTACTIVATED = "GSDocumentActivateNotification"
 DOCUMENTWASSAVED = "GSDocumentWasSavedSuccessfully"
 DOCUMENTEXPORTED = "GSDocumentWasExportedNotification"
-DOCUMENTCLOSED = "GSDocumentCloseNotification" # deprecated use DOCUMENTWILLCLOSE
-DOCUMENTWILLCLOSE = "GSDocumentCloseNotification"
+DOCUMENTCLOSED = "GSDocumentWillCloseNotification" # deprecated use DOCUMENTWILLCLOSE
+DOCUMENTWILLCLOSE = "GSDocumentWillCloseNotification"
 DOCUMENTDIDCLOSE = "GSDocumentDidCloseNotification"
 TABDIDOPEN = "TabDidOpenNotification"
 TABWILLCLOSE = "TabWillCloseNotification"
@@ -333,6 +388,8 @@ class Proxy(object):
 		strings = []
 		for currItem in self:
 			strings.append(str(currItem))
+		if len(strings) == 0:
+			return "()"
 		return "(\n\t%s\n)" % (',\n\t'.join(strings))
 	def __len__(self):
 		Values = self.values()
@@ -358,6 +415,8 @@ class Proxy(object):
 			raise TypeError("list indices must be integers, not %s" % type(key).__name__)
 	def __iter__(self):
 		Values = self.values()
+		if Values is None:
+			return None
 		return iter(Values)
 	def values(self):
 		raise AttributeError("This collection does not support item iteration")
@@ -2033,95 +2092,6 @@ class MasterStemsProxy(Proxy):
 	def setterMethod(self):
 		return self._setterMethod
 
-class FontNumbersProxy(Proxy):
-	def _numberForKey(self, key):
-		number = None
-		if isinstance(key, int):
-			idx = self._validate_idx(key)
-			number = self._owner.objectInNumbersAtIndex_(key)
-		elif isString(key):
-			number = self._owner.numberForName_(key)
-		else:
-			raise TypeError("keys must be integers or strings, not %s" % type(key).__name__)
-		if number is None:
-			raise KeyError("No number for key %s" % key)
-		return number
-	def __getitem__(self, key):
-		if isinstance(key, slice):
-			return [self.__getitem__(i) for i in range(*key.indices(self.__len__()))]
-		return self._numberForKey(key)
-	def __setitem__(self, key, value):
-		if not isinstance(value, GSMetrics):
-			raise TypeError("only object of type GSMetrics allowed, got %s" % type(value).__name__)
-		if not isinstance(key, int):
-			raise TypeError("only accessible by integer index, got %s" % key)
-		idx = self._validate_idx(key)
-		self._owner.insertObject_inNumbersAtIndex_(value, idx)
-	def values(self):
-		return self._owner.pyobjc_instanceMethods.numbers()
-	def __len__(self):
-		return self._owner.countOfNumbers()
-	def append(self, value):
-		if not isinstance(value, GSMetrics):
-			raise TypeError("only object of type GSMetrics allowed, got %s" % type(value).__name__)
-		self._owner.addNumber_(value)
-	def __delitem__(self, key):
-		if isinstance(key, slice):
-			for i in sorted(range(*key.indices(self.__len__())), reverse=True):
-				self.__delitem__(i)
-		else:
-			number = self._numberForKey(key)
-			self._owner.removeObjectFromNumbers_(number)
-	def setterMethod(self):
-		return self.setNumbers_
-
-class MasterNumbersVauesProxy(Proxy):
-	def _numForKey(self, key):
-		if isinstance(key, int):
-			if key < 0:
-				key += self.__len__()
-			num = self._owner.font.objectInNumbersAtIndex_(key)
-		elif isString(key):
-			num = self._owner.font.numberForName_(key)
-		else:
-			raise TypeError("list indices must be integers or strings, not %s" % type(key).__name__)
-		return num
-	def __getitem__(self, key):
-		if isinstance(key, slice):
-			return [self.__getitem__(i) for i in range(*key.indices(self.__len__()))]
-		num = self._numForKey(key)
-		if num is None:
-			raise KeyError("No number for %s" % key)
-		return self._owner.numberValueValueForId_(num.id)
-	def __setitem__(self, key, value):
-		num = self._numForKey(key)
-		if num is None:
-			if isString(key):
-				name = key
-			else:
-				name = "num%s" % key
-			num = GSMetric.new()
-			num.setName_(name)
-			self._owner.font.addNumber_(num)
-		self._owner.setNumberValueValue_forId_(value, num.id)
-	def values(self):
-		return self._owner.numberValuesArray()
-	def __len__(self):
-		if self._owner.font is None:
-			return 0
-		return self._owner.font.countOfNumbers()
-	def _setterMethod(self, values):
-		idx = 0
-		if self._owner.font is None:
-			return
-		if self.__len__() != len(values):
-			raise ValueError("Count of values doesn’t match numbers")
-		for number in self._owner.font.numbers:
-			self._owner.setNumberValueValue_forId_(values[idx], number.id)
-			idx += 1
-	def setterMethod(self):
-		return self._setterMethod
-
 class CustomParametersProxy(Proxy):
 	def __getitem__(self, key):
 		if isinstance(key, slice):
@@ -2363,6 +2333,10 @@ class UserDataProxy(Proxy):
 		if value is None:
 			return default
 		return value
+	def __copy__(self):
+		return self._owner.pyobjc_instanceMethods.userData().copy()
+	def __deepcopy__(self, memo):
+		return self._owner.pyobjc_instanceMethods.userData().deepMutableCopy()
 
 
 class TempDataProxy(Proxy):
@@ -2391,6 +2365,10 @@ class TempDataProxy(Proxy):
 		if value is None:
 			return default
 		return value
+	def __copy__(self):
+		return self._owner.pyobjc_instanceMethods.tempData().copy()
+	def __deepcopy__(self, memo):
+		return self._owner.pyobjc_instanceMethods.tempData().deepMutableCopy()
 
 
 class AttributesProxy(Proxy):
@@ -2428,6 +2406,10 @@ class AttributesProxy(Proxy):
 		if value is None:
 			return default
 		return value
+	def __copy__(self):
+		return self._owner.pyobjc_instanceMethods.attributes().copy()
+	def __deepcopy__(self, memo):
+		return self._owner.pyobjc_instanceMethods.attributes().deepMutableCopy()
 
 
 class FontInfoPropertiesProxy(Proxy):
@@ -3269,7 +3251,16 @@ GSFont.properties = property(lambda self: self.mutableArrayValueForKey_("propert
 		
 		The localized values use language tags defined in the middle column of `Language System Tags table`: <https://docs.microsoft.com/en-us/typography/opentype/spec/languagetags>.
 
-		To find specific values, use font.propertyForName_(name) or font.propertyForName_languageTag_(name, languageTag).
+		The names are listed in the constants: `Info Property Keys`_
+
+		.. code-block:: python
+			# To find specific values:
+			font.propertyForName_(name)
+			# or
+			font.propertyForName_languageTag_(name, languageTag).
+
+			# To add an entry:
+			font.setProperty_value_languageTag_(GSPropertyNameFamilyNamesKey, "SomeName", None)
 
 		:type: list
 
@@ -3294,19 +3285,6 @@ GSFont.stems = property(lambda self: FontStemsProxy(self),
 		
 		.. code-block:: python
 			font.stems[0].horizontal = False
-
-'''
-
-GSFont.numbers = property(lambda self: FontNumbersProxy(self),
-						lambda self, value: FontNumbersProxy(self).setter(value))
-'''
-	.. attribute:: numbers
-		The numbers. A list of :class:`GSMetric` objects. For each number, there is a metricsValue in the masters, linked by the `id`.
-
-		:type: list, dict
-
-		.. code-block:: python
-			font.print(numbers[0].name)
 
 '''
 
@@ -3361,6 +3339,14 @@ GSInterpolationFontProxy.glyphs = property(lambda self: FontGlyphsProxy(self),
 			# Delete a glyph
 			del(font.glyphs['A.alt'])
 
+'''
+
+GSFont.characterForGlyph = python_method(GSFont.characterForGlyph_)
+'''
+	.. function:: characterForGlyph(glyph)
+		retuns the (internal) character that is used in the edit view. It the glpyh has a unicode, that is used, otherwiese a temporary code is assined. That can change over time, so don’t rely on it. This is mostly useful for constructing a string for see :attr:`tab.text <GSEditViewController.text>`
+
+		.. versionadded:: 3.1
 '''
 
 GSFont.classes = property(lambda self: FontClassesProxy(self),
@@ -3821,7 +3807,8 @@ GSFont.disablesNiceNames = property(lambda self: bool(self.pyobjc_instanceMethod
 
 '''
 
-GSFont.customParameters = property(lambda self: CustomParametersProxy(self))
+GSFont.customParameters = property(lambda self: CustomParametersProxy(self),
+								   lambda self, value: CustomParametersProxy(self).setter(value))
 '''
 	.. attribute:: customParameters
 		The custom parameters. List of :class:`GSCustomParameter` objects. You can access them by name or by index.
@@ -4155,32 +4142,34 @@ GSFont.formatVersion = property(lambda self: self.pyobjc_instanceMethods.formatV
 '''
 
 def Font__save__(self, path=None, formatVersion=3, makeCopy=False):
-	if self.parent is not None:
+	if self.parent is not None and not makeCopy:
 		if path is None:
 			self.parent.saveDocument_(None)
 		else:
-			URL = NSURL.fileURLWithPath_(path)
 			if path.endswith('.glyphs'):
 				typeName = "com.schriftgestaltung.glyphs"
+			elif path.endswith('.glyphspackage'):
+				typeName = "com.glyphsapp.glyphspackage"
 			elif path.endswith('.ufo'):
 				typeName = "org.unifiedfontobject.ufo"
 			else:
-				raise ValueError("Save file must have file extension .glyphs or .ufo")
-
-			if makeCopy:
-				self.saveToURL_error_(URL, None)
-			else:
-				self.parent.saveToURL_ofType_forSaveOperation_error_(URL, typeName, 1, objc.nil)
+				raise ValueError("Save file must have file extension .glyphs, .glyphspackage or .ufo")
+			URL = NSURL.fileURLWithPath_(path)
+			self.parent.saveToURL_ofType_forSaveOperation_error_(URL, typeName, 1, objc.nil)
 	elif path is not None:
 		URL = NSURL.fileURLWithPath_(path)
 		if path.endswith('.glyphs'):
-			self.saveToURL_error_(URL, None)
+			typeId = GSPackageFlatFile
+			self.saveToURL_type_error_(URL, typeId, None)
+		elif path.endswith('.glyphspackage'):
+			typeId = GSPackageBundle
+			self.saveToURL_type_error_(URL, typeId, None)
 		elif path.endswith('.ufo'):
 			GlyphsFileFormatUFO = objc.lookUpClass("GlyphsFileFormatUFO")
 			ufoWriter = GlyphsFileFormatUFO.new()
 			ufoWriter.writeFont_toURL_error_(self, URL, None)
 		else:
-			raise ValueError("Save file must have file extension .glyphs or .ufo")
+			raise ValueError("Save file must have file extension .glyphs, .glyphspackage or .ufo")
 	else:
 		raise ValueError("No path set")
 
@@ -4242,7 +4231,7 @@ GSFont.show = python_method(GSFont__show__)
 		.. versionadded:: 2.4.1
 '''
 
-def kerningForPair(self, FontMasterID, LeftKeringId, RightKerningId, direction=LTR):
+def kerningForPair(self, FontMasterID, LeftKeringId, RightKerningId, direction=GSLTR):
 	if not LeftKeringId[0] == '@':
 		glyph = self.glyphs[LeftKeringId]
 		if glyph is not None:
@@ -4292,7 +4281,7 @@ GSFont.kerningForPair = python_method(kerningForPair)
 			9.22337203685e+18 # (this is the maximum number for 64 bit. It is used as an empty value)
 '''
 
-def setKerningForPair(self, FontMasterID, LeftKeringId, RightKerningId, Value, direction=LTR):
+def setKerningForPair(self, FontMasterID, LeftKeringId, RightKerningId, Value, direction=GSLTR):
 	if not LeftKeringId[0] == '@':
 		glyph = self.glyphs[LeftKeringId]
 		if glyph is not None:
@@ -4308,7 +4297,7 @@ def setKerningForPair(self, FontMasterID, LeftKeringId, RightKerningId, Value, d
 	self.setKerningForFontMasterID_LeftKey_RightKey_Value_direction_(FontMasterID, LeftKeringId, RightKerningId, Value, direction)
 GSFont.setKerningForPair = python_method(setKerningForPair)
 '''
-	.. function:: setKerningForPair(fontMasterId, leftKey, rightKey, value [, direction = LTR])
+	.. function:: setKerningForPair(fontMasterId, leftKey, rightKey, value [, direction = GSLTR])
 
 		This sets the kerning for the two specified glyphs (leftKey or rightKey is the glyphname) or a kerning group key (@MMK_X_XX).
 	
@@ -4320,7 +4309,7 @@ GSFont.setKerningForPair = python_method(setKerningForPair)
 		:type rightKey: str
 		:param value: kerning value
 		:type value: float
-		:param direction: optional writing direction (see Constants). Default is LTR.
+		:param direction: optional writing direction (see Constants). Default is GSLTR.
 		:type direction: str
 
 		.. code-block:: python
@@ -4329,7 +4318,7 @@ GSFont.setKerningForPair = python_method(setKerningForPair)
 			font.setKerningForPair(font.selectedFontMaster.id, '@MMK_L_T', '@MMK_R_A', -75)
 '''
 
-def removeKerningForPair(self, FontMasterID, LeftKeringId, RightKerningId, direction=LTR):
+def removeKerningForPair(self, FontMasterID, LeftKeringId, RightKerningId, direction=GSLTR):
 	if not LeftKeringId[0] == '@':
 		glyph = self.glyphs[LeftKeringId]
 		if glyph is not None:
@@ -4345,7 +4334,7 @@ def removeKerningForPair(self, FontMasterID, LeftKeringId, RightKerningId, direc
 	self.removeKerningForFontMasterID_LeftKey_RightKey_direction_(FontMasterID, LeftKeringId, RightKerningId, direction)
 GSFont.removeKerningForPair = python_method(removeKerningForPair)
 '''
-	.. function:: removeKerningForPair(FontMasterId, LeftKey, RightKey, direction=LTR)
+	.. function:: removeKerningForPair(FontMasterId, LeftKey, RightKey, direction=GSLTR)
 
 		Removes the kerning for the two specified glyphs (LeftKey or RightKey is the glyphname) or a kerning group key (@MMK_X_XX).
 
@@ -4355,7 +4344,7 @@ GSFont.removeKerningForPair = python_method(removeKerningForPair)
 		:type LeftKey: str
 		:param RightKey: either a glyph name or a class name
 		:type RightKey: str
-		:param direction: optional writing direction (see Constants; 'LTR' (0) or 'RTLTTB'). Default is LTR. (added in 2.6.6)
+		:param direction: optional writing direction (see Constants; 'GSLTR' (0) or 'GSVertical'). Default is GSLTR. (added in 2.6.6)
 		:type direction: int
 
 		.. code-block:: python
@@ -4414,7 +4403,7 @@ GSFont.compileFeatures = python_method(__GSFont__compileFeatures__)
 '''
 	.. function:: compileFeatures()
 
-		Compiles the features, thus making the new feature code functionally available in the editor. Equivalent to the "Test" button in the features panel.
+		Compiles the features, thus making the new feature code functionally available in the editor. Equivalent to the "Compile" button in the features panel.
 
 		.. versionadded:: 2.5
 '''
@@ -4652,7 +4641,6 @@ GSFontMaster.__deepcopy__ = python_method(GSObject__copy__)
 		otherBlues
 		guides
 		stems
-		numbers
 		userData
 		customParameters
 		font
@@ -4806,28 +4794,6 @@ GSFontMaster.stems = property(lambda self: MasterStemsProxy(self),
 
 '''
 
-GSFontMaster.numbers = property(lambda self: MasterNumbersVauesProxy(self),
-							  lambda self, value: MasterNumbersVauesProxy(self).setter(value))
-
-'''
-	.. attribute:: numbers
-		The numbers. This is a list of numbers.
-
-		:type: list
-
-		.. code-block:: python
-
-			font.masters[0].numbers = [10, 11, 20]
-
-			print(master.numbers[0])
-
-			master.numbers[0] = 12
-
-			master.numbers["numberName"] = 12
-
-	.. versionadded:: 3.0.5
-'''
-
 GSFontMaster.alignmentZones = property(lambda self: tuple(self.defaultAlignmentZones()))
 '''
 	.. attribute:: alignmentZones
@@ -4884,7 +4850,8 @@ GSFontMaster.userData = property(lambda self: UserDataProxy(self))
 			del font.masters[0].userData['rememberToMakeTea']
 '''
 
-GSFontMaster.customParameters = property(lambda self: CustomParametersProxy(self))
+GSFontMaster.customParameters = property(lambda self: CustomParametersProxy(self),
+										 lambda self, value: CustomParametersProxy(self).setter(value))
 '''
 	.. attribute:: customParameters
 		The custom parameters. List of :class:`GSCustomParameter` objects. You can access them by name or by index.
@@ -5215,12 +5182,22 @@ GSInstance.properties = property(lambda self: self.mutableArrayValueForKey_("pro
 		Holds the fonts info properties. Can be instances of :class:`GSFontInfoValueSingle` and :class:`GSFontInfoValueLocalized`
 
 		The localized values use language tags defined in the middle column of `Language System Tags table`: <https://docs.microsoft.com/en-us/typography/opentype/spec/languagetags>.
-		
-		To find specific values, use instance.propertyForName_(name) or instance.propertyForName_languageTag_(name, languageTag).
+
+		The names are listed in the constants: `Info Property Keys`_
+
+		.. code-block:: python
+			# To find specific values:
+			instance.propertyForName_(name)
+			# or
+			instance.propertyForName_languageTag_(name, languageTag).
+
+			# To add an entry:
+			instance.setProperty_value_languageTag_(GSPropertyNameFamilyNamesKey, "SomeName", None)
 
 		:type: list
 
 		.. versionadded:: 3
+
 '''
 
 GSInstance.isItalic = property(lambda self: bool(self.pyobjc_instanceMethods.isItalic()),
@@ -5727,7 +5704,9 @@ GSInstance.font = property(lambda self: self.pyobjc_instanceMethods.font(),
 		.. versionadded:: 2.5.1
 '''
 
-GSInstance.customParameters = property(lambda self: CustomParametersProxy(self))
+GSInstance.customParameters = property(lambda self: CustomParametersProxy(self),
+									   lambda self, value: CustomParametersProxy(self).setter(value))
+
 '''
 	.. attribute:: customParameters
 		The custom parameters. List of :class:`GSCustomParameter` objects. You can access them by name or by index.
@@ -5881,7 +5860,7 @@ class _ExporterDelegate_(NSObject):
 
 def __Instance_Export__(self, Format=OTF, FontPath=None, AutoHint=True, RemoveOverlap=True, UseSubroutines=True, UseProductionNames=True, Containers=None, DecomposeSmartStuff=True):
 
-	if Format not in [OTF, WOFF, WOFF2, TTF, UFO]:
+	if Format not in [OTF, WOFF, WOFF2, TTF, UFO, VARIABLE]:
 		raise KeyError('The font format is not supported: %s (only \'OTF\' and \'TTF\')' % Format)
 	
 	if self.type == INSTANCETYPEVARIABLE and Format == UFO:
@@ -5898,22 +5877,19 @@ def __Instance_Export__(self, Format=OTF, FontPath=None, AutoHint=True, RemoveOv
 				ContainerList.append(Container.lower())
 			else:
 				raise KeyError('The container format is not supported: %s (only \'WOFF\' \'WOFF2\' \'plain\' and \'EOT\')' % Container)
-	
-	if self.type == INSTANCETYPEVARIABLE:
-		# TODO: Actually do stuff
-		pass
-	
+
 	if Format == UFO:
 		if not FontPath:
-			print("!", FontPath)
 			raise ValueError('Please provide a FontPath')
 		instanceFont = self.interpolatedFont
 		return instanceFont.export(Format=Format, FontPath=FontPath, UseProductionNames=UseProductionNames, DecomposeSmartStuff=DecomposeSmartStuff)
 	else:
 		Font = self.font
+		if self.type == INSTANCETYPEVARIABLE:
+			Format = VARIABLE
+			RemoveOverlap = False
 		if FontPath is None:
 			FontPath = NSUserDefaults.standardUserDefaults().objectForKey_("OTFExportPath")
-
 		if Format == OTF:
 			Format = GSOutlineFormatCFF
 		elif Format == TTF:
@@ -5938,7 +5914,7 @@ def __Instance_Export__(self, Format=OTF, FontPath=None, AutoHint=True, RemoveOv
 		Exporter.setDelegate_(Delegate)
 		Exporter.main()
 		if Delegate.result is True:
-			self.lastExportedFilePath = Exporter.finalFontPath()
+			self.lastExportedFilePath = Exporter.tempFontPath()
 		else:
 			self.lastExportedFilePath = None
 		return Delegate.result
@@ -5955,13 +5931,7 @@ def __Font_Export__(self, Format=OTF, Instances=None, FontPath=None, AutoHint=Tr
 	if FontPath and FontPath.startswith("~"):
 		FontPath = os.path.expanduser(FontPath)
 
-	if Format == VARIABLE:
-		Font = self.font()
-		Exporter = NSClassFromString("GlyphsFileFormatVariationFonts").alloc().init()
-		Exporter.setFont_(Font)
-		result = Exporter._exportToURL_error_(NSURL.fileURLWithPath_(FontPath), None)
-		return result
-	elif Format == UFO:
+	if Format == UFO:
 		Font = self.font()
 		GlyphsFileFormatUFO = objc.lookUpClass("GlyphsFileFormatUFO")
 		ufoWriter = GlyphsFileFormatUFO.new()
@@ -5972,7 +5942,18 @@ def __Font_Export__(self, Format=OTF, Instances=None, FontPath=None, AutoHint=Tr
 		return result
 	else:
 		if not Instances:
-			Instances = [i for i in self.instances if i.active]
+			Instances = []
+			for instance in self.instances:
+				if not instance.active:
+					continue
+				if (Format == VARIABLE) == (instance.type == INSTANCETYPESINGLE):
+					continue
+				Instances.append(instance)
+		if len(Instances) == 0:
+			instanceType = INSTANCETYPEVARIABLE if Format == VARIABLE else INSTANCETYPESINGLE
+			instance = GSInstance.alloc().initWithType_(instanceType)
+			instance.font = self
+			Instances.append(instance)
 		allResults = []
 		for i in Instances:
 			result = i.generate(Format=Format, FontPath=FontPath, AutoHint=AutoHint, RemoveOverlap=RemoveOverlap, UseSubroutines=UseSubroutines, UseProductionNames=UseSubroutines, Containers=Containers)
@@ -6005,10 +5986,10 @@ GSInstance.lastExportedFilePath = property(lambda self: self.tempDataForKey_("la
 
 	'''
 
-def AddInstanceAsMaster(self):
+def __GSInstance_AddInstanceAsMaster__(self):
 	self.font.addFontAsNewMaster_(self.interpolatedFont.masters[0])
 
-GSInstance.addAsMaster = python_method(AddInstanceAsMaster)
+GSInstance.addAsMaster = python_method(__GSInstance_AddInstanceAsMaster__)
 
 '''
 	.. function:: addAsMaster()
@@ -6808,12 +6789,12 @@ GSGlyph.direction = property(lambda self: self.pyobjc_instanceMethods.direction(
 	.. attribute:: direction
 		Writing direction.
 
-		Defined constants are: LTR (left to right), RTL (right to left), LTRTTB (left to right, vertical, top to bottom e.g. Mongolian), and RTLTTB (right to left, vertical, top to bottom e.g. Chinese, Japanese, Korean)
+		Defined constants are: GSLTR (left to right), GSRTL (right to left), GSVertical (right to left, vertical, top to bottom e.g. Chinese, Japanese, Korean) and GSVerticalToRight (left to right, vertical, top to bottom e.g. Mongolian)
 
 		:type: integer
 
 		.. code-block:: python
-			glyph.direction = RTL
+			glyph.direction = GSRTL
 
 		.. versionadded:: 3
 '''
@@ -7791,7 +7772,7 @@ GSLayer.selection = property(lambda self: LayerSelectionProxy(self),
 
 '''
 	.. attribute:: selection
-		List of all selected objects in the glyph. Read-only.
+		List of all selected objects in the glyph.
 
 		This list contains **all selected items**, including **nodes**, **anchors**, **guides** etc.
 		If you want to work specifically with nodes, for instance, you may want to cycle through the nodes (or anchors etc.) and check whether they are selected. See example below.
@@ -8267,14 +8248,16 @@ GSLayer.removeOverlap = python_method(RemoveOverlap)
 '''
 
 def Layer_addNodesAtExtremes(self, force=False):
-	self.addExtremePoints()
+	self.addExtremePointsForce_(force)
 
 GSLayer.addNodesAtExtremes = python_method(Layer_addNodesAtExtremes)
 
 '''
-	.. function:: addNodesAtExtremes()
+	.. function:: addNodesAtExtremes([force=False])
 
-		Add nodes at layer’s extrema, e.g., top, bottom etc.
+		Add nodes at layer's extrema, e.g., top, bottom etc.
+
+		:param force: if points are always added, even if that would distort the shape
 
 '''
 
@@ -8369,8 +8352,8 @@ GSLayer.cutBetweenPoints = python_method(CutBetweenPoints)
 
 '''
 
-def IntersectionsBetweenPoints(self, Point1, Point2, components=False, ignoreLocked=False):
-	return self.calculateIntersectionsStartPoint_endPoint_decompose_ignoreLocked_(Point1, Point2, components, ignoreLocked)
+def IntersectionsBetweenPoints(self, Point1, Point2, components=False):
+	return self.calculateIntersectionsStartPoint_endPoint_decompose_(Point1, Point2, components)
 GSLayer.intersectionsBetweenPoints = python_method(IntersectionsBetweenPoints)
 
 NSConcreteValue.x = property(lambda self: self.pointValue().x)
@@ -8386,7 +8369,6 @@ NSConcreteValue.y = property(lambda self: self.pointValue().y)
 		:param Point1: one point
 		:param Point2: the other point
 		:param components: if components should be measured. Default: False
-		:param ignoreLocked: ignore locked or unfocused paths. Default: False
 
 		.. code-block:: python
 			# show all intersections with glyph at y=100
@@ -9828,13 +9810,16 @@ GSNode.type = property(__GSNode_get_type__, __GSNode_set_type__, doc="")
 		:type: str
 '''
 
+def __GSNode__get_smooth(self):
+	return self.connection == GSSMOOTH
+
 def __GSNode__set_smooth(self, value):
 	if value is True:
 		self.setConnection_(GSSMOOTH)
 	else:
 		self.setConnection_(GSSHARP)
 
-GSNode.smooth = property(lambda self: bool(self.isSmooth()), __GSNode__set_smooth, doc="")
+GSNode.smooth = property(__GSNode__get_smooth, __GSNode__set_smooth, doc="")
 '''
 	.. attribute:: smooth
 		If it is a smooth connection or not
@@ -10907,6 +10892,14 @@ GSEditViewController.text = property(lambda self: self.graphicView().displayStri
 		The text of the tab, either as text, or slash-escaped glyph names, or mixed. OpenType features will be applied after the text has been changed.
 
 		:type: str
+
+		.. code-block:: python
+			string = ""
+			for l in Font.selectedLayers:
+				char = Font.characterForGlyph_(l.parent)
+				string += chr(char)
+			tab = Font.tabs[0]
+			tab.text = string
 '''
 
 def __GSEditViewController__repr__(self):
@@ -10966,6 +10959,9 @@ class TabLayersProxy(Proxy):
 			elif l.className() == "GSControlLayer":
 				char = l.parent.unicodeChar()
 				A = NSAttributedString.alloc().initWithString_(NSString.stringWithChar_(char))
+			elif l.className() == "GSGlyph":
+				char = Font.characterForGlyph_(l)
+				A = NSAttributedString.alloc().initWithString_(NSString.stringWithChar_(char))
 			else:
 				raise ValueError
 			string.appendAttributedString_(A)
@@ -11002,14 +10998,16 @@ GSEditViewController.layers = property(lambda self: TabLayersProxy(self),
 		:type: list
 
 		.. code-block:: python
-			font.tabs[0].layers = []
+			layers = []
 
 			# display all layers of one glyph next to each other
 			for layer in font.glyphs['a'].layers:
-				font.tabs[0].layers.append(layer)
+				layers.append(layer)
 
 			# append line break
-			font.tabs[0].layers.append(GSControlLayer(10)) # 10 being the ASCII code of the new line character (\n)
+			layers.append(GSControlLayer(10)) # 10 being the ASCII code of the new line character (\n)
+
+			font.tabs[0].layers = layers
 '''
 
 GSEditViewController.composedLayers = property(lambda self: TabLayersProxy(self).composedLayers())
@@ -11356,10 +11354,6 @@ def GSGlyphInfo__init__(self):
 	pass
 GSGlyphInfo.__init__ = python_method(GSGlyphInfo__init__)
 
-def GSGlyphInfo__repr__(self):
-	return "<GSGlyphInfo '%s'>" % (self.name)
-GSGlyphInfo.__repr__ = python_method(GSGlyphInfo__repr__)
-
 '''
 
 :mod:`GSGlyphInfo`
@@ -11390,6 +11384,7 @@ This contains valuable information from the glyph database. See :class:`GSGlyphs
 		sortNameKeep
 		desc
 		altNames
+		direction
 		desc
 
 	**Properties**
@@ -11524,6 +11519,21 @@ GSGlyphInfo.altNames = property(lambda self: self.pyobjc_instanceMethods.altName
 		Alternative names for glyphs that are not used, but should be recognized (e.g., for conversion to nice names).
 
 		:type: str
+'''
+
+GSGlyphInfo.direction = property(lambda self: self.pyobjc_instanceMethods.direction())
+'''
+	.. attribute:: direction
+		Writing direction.
+
+		Defined constants are: GSLTR (left to right), GSRTL (right to left), GSVertical (right to left, vertical, top to bottom e.g. Chinese, Japanese, Korean) and GSVerticalToRight (left to right, vertical, top to bottom e.g. Mongolian)
+
+		:type: integer
+
+		.. code-block:: python
+			glyph.direction = GSRTL
+
+		.. versionadded:: 3
 '''
 
 '''
@@ -12580,6 +12590,112 @@ Export formats
 
 .. versionadded:: 2.5
 
+
+.. _`Info Property Keys`:
+=======================
+
+.. data:: GSPropertyNameFamilyNamesKey
+
+	Family Names
+
+.. data:: GSPropertyNameDesignersKey
+
+	Designers
+
+.. data:: GSPropertyNameDesignerURLKey
+
+	Designer URL
+
+.. data:: GSPropertyNameManufacturersKey
+
+	Manufacturers
+
+.. data:: GSPropertyNameManufacturerURLKey
+
+	Manufacturer URL
+
+.. data:: GSPropertyNameCopyrightsKey
+
+	Copyrights
+
+.. data:: GSPropertyNameVersionStringKey
+
+	Version String
+
+.. data:: GSPropertyNameVendorIDKey
+
+	VendorID
+
+.. data:: GSPropertyNameUniqueIDKey
+
+	UniqueID
+
+.. data:: GSPropertyNameLicensesKey
+
+	Licenses
+
+.. data:: GSPropertyNameLicenseURLKey
+
+	License URL
+
+.. data:: GSPropertyNameTrademarksKey
+
+	Trademarks
+
+.. data:: GSPropertyNameDescriptionsKey
+
+	Descriptions
+
+.. data:: GSPropertyNameSampleTextsKey
+
+	SampleTexts
+
+.. data:: GSPropertyNamePostscriptFontNameKey
+
+	PostscriptFontName
+
+.. data:: GSPropertyNameCompatibleFullNamesKey
+
+	CompatibleFullNames
+
+.. data:: GSPropertyNameStyleNamesKey
+
+	StyleNames
+
+.. data:: GSPropertyNameStyleMapFamilyNamesKey
+
+	StyleMapFamilyNames
+
+.. data:: GSPropertyNameStyleMapStyleNamesKey
+
+	StyleMapStyleNames
+
+.. data:: GSPropertyNamePreferredFamilyNamesKey
+
+	PreferredFamilyNames
+
+.. data:: GSPropertyNamePreferredSubfamilyNamesKey
+
+	PreferredSubfamilyNames
+
+.. data:: GSPropertyNameVariableStyleNamesKey
+
+	VariableStyleNames
+
+.. data:: GSPropertyNameWWSFamilyNameKey
+
+	WWSFamilyName
+
+.. data:: GSPropertyNameWWSSubfamilyNameKey
+
+	WWSSubfamilyName
+
+.. data:: GSPropertyNameVariationsPostScriptNamePrefixKey
+
+	VariationsPostScriptNamePrefix
+
+.. versionadded:: 3.1
+
 Instance Types
 ==============
 
@@ -12636,9 +12752,30 @@ Hint types
 
 	Corner Component
 
+	.. code-block:: python
+		path = Layer.shapes[0]
+		brush = GSHint()
+		brush.name = "_corner.test"
+		brush.type = CORNER
+		brush.originNode = path.nodes[1]
+		Layer.hints.append(brush)
+
 .. data:: CAP
 
 	Cap Component
+
+.. data:: BRUSH
+
+	Brush Component
+
+	.. versionadded:: 3.1
+
+.. data:: SEGMENT
+
+	Segment Component
+
+	.. versionadded:: 3.1
+
 
 Hint Option
 ===========
