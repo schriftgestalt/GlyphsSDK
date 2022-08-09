@@ -16,7 +16,6 @@ body {
 	padding: 0;
 }
 
-
 /* -- hyperlink styles ------------------------------------------------------ */
 
 a {
@@ -46,6 +45,7 @@ div.body h1 {
 	padding: 10px;
 	padding-left: 15px
 }
+
 div.body h2 {
 	font-weight: normal;
 	color: #175447;
@@ -56,6 +56,7 @@ div.body h2 {
 	padding-left: 10px;
 	margin-top: 2em;
 }
+
 div.body h1 { font-size: 160%; }
 div.body h2 { font-size: 130%; }
 
@@ -71,12 +72,7 @@ a.headerlink:hover {
 	color: white;
 }
 
-
-
-
-
-div.sphinxsidebar {
-}
+div.sphinxsidebar {}
 
 div.sphinxsidebarwrapper {
 	position:fixed;
@@ -85,74 +81,71 @@ div.sphinxsidebarwrapper {
 	padding-top: 5px;
 	padding-left: 40px;
 	padding-right: 10px;
-    font-size: .8em;
+	font-size: .8em;
 }
 
 div.sphinxsidebar ul {
-    padding: 0;
-    color: #ffffff;
+	padding: 0;
+	color: #ffffff;
 }
 
 div.sphinxsidebar li code {
-    font-weight: bold;
+	font-weight: bold;
 }
 
 div.sphinxsidebar li li {
-    display: none;
+	display: none;
 }
-
 
 table.docutils + p {
 	margin-top: 10px;
-
 }
-
 
 /*
 div.sphinxsidebar h3 {
-    font-family: 'Trebuchet MS', sans-serif;
-    color: #ffffff;
-    font-size: 1.4em;
-    font-weight: normal;
-    margin: 0;
-    padding: 0;
+	font-family: 'Trebuchet MS', sans-serif;
+	color: #ffffff;
+	font-size: 1.4em;
+	font-weight: normal;
+	margin: 0;
+	padding: 0;
 }
 
 div.sphinxsidebar h3 a {
-    color: #ffffff;
+	color: #ffffff;
 }
 
 div.sphinxsidebar h4 {
-    font-family: 'Trebuchet MS', sans-serif;
-    color: #ffffff;
-    font-size: 1.3em;
-    font-weight: normal;
-    margin: 5px 0 0 0;
-    padding: 0;
+	font-family: 'Trebuchet MS', sans-serif;
+	color: #ffffff;
+	font-size: 1.3em;
+	font-weight: normal;
+	margin: 5px 0 0 0;
+	padding: 0;
 }
 
 div.sphinxsidebar p {
-    color: #ffffff;
+	color: #ffffff;
 }
 
 div.sphinxsidebar p.topless {
-    margin: 5px 10px 10px 10px;
+	margin: 5px 10px 10px 10px;
 }
 
 div.sphinxsidebar ul {
-    margin: 10px;
-    padding: 0;
-    color: #ffffff;
+	margin: 10px;
+	padding: 0;
+	color: #ffffff;
 }
 
 div.sphinxsidebar a {
-    color: #98dbcc;
+	color: #98dbcc;
 }
 
 div.sphinxsidebar input {
-    border: 1px solid #98dbcc;
-    font-family: sans-serif;
-    font-size: 1em;
+	border: 1px solid #98dbcc;
+	font-family: sans-serif;
+	font-size: 1em;
 }
 */
 
@@ -161,7 +154,6 @@ div.sphinxsidebar input {
 table.docutils td + td {
 	display: none;
 }
-
 
 div.body p, div.body dd, div.body li {
 	text-align: left;
@@ -184,16 +176,12 @@ code {
 
 /* Georg 10.4.13 */
 
-h1 .pre {
-/*	font-family: "Graublau Slab", sans-serif;*/
-}
 pre, .pre {
-/*	font-family: OliveGreen, monospace;*/
 	-moz-tab-size: 4;
 	tab-size: 4;
 }
+
 tt {
-/*	font-family: "Graublau Sans", sans-serif;*/
 	font-weight: normal !important;
 }
 
@@ -220,7 +208,6 @@ h4.method-subtitle {
 }
 
 /* ################ MOBILE ################  */
-
 
 @media screen and (max-width: 600px) {
 
@@ -273,5 +260,4 @@ a.reference.internal, div.section {
 }
 
 }
-
 
