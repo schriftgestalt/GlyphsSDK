@@ -1,0 +1,277 @@
+@charset "UTF-8";
+
+/*------------------------------------*\
+	#FONTS
+\*------------------------------------*/
+@font-face {
+	font-family: "ABCArizona";
+	src: url("https://glyphsapp.com/assets/fonts/ABCArizona-2101.woff2") format("woff");
+}
+
+body {
+	margin:0;
+}
+pre {
+	max-width :630px;
+	-moz-tab-size: 4;
+	tab-size: 4;
+}
+/*------------------------------------*\
+	#LIST-INLINE
+\*------------------------------------*/
+/**
+ * The list-inline object simply displays a list of items in one line.
+ */
+.list-inline {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.list-inline > li {
+	display: block;
+}
+
+/*------------------------------------*\
+	#WRAPPERS
+\*------------------------------------*/
+.wrapper {
+	width: 940px;
+	min-height:50px;
+	padding-top:15px;
+	margin: 0 auto;
+	border-bottom: 0.5px solid #999;
+}
+.page-head {
+	background-color: rgb(40, 52, 39);
+}
+@media screen and (max-width: 870px) {
+	div.document {
+		width: 100%;
+	}
+}
+
+.page-head a {
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	text-decoration: none;
+/*	color:rgba(8,74,21,0.99);*/
+	color:#80ee29;
+}
+
+.lightGreen {
+	color:#80ee29;
+}
+
+/* Head Navigation */
+ul.list-inline {
+	display:flex;
+}
+.page-head__nav a {
+	font-size: 20px;
+	font-style: normal;
+	color:#fff;
+	font-variation-settings: "wght" 20, "srff" 0, "ital" 0;
+	padding-left:1em;
+	align-items: center;
+	display: inline-flex;
+	flex-direction: column;
+	align-items: flex-start;
+	justify-content: space-between;
+	justify-content: center;
+	height: 30px;
+	padding-left: 12px;
+	padding-right: 12px;
+}
+
+.page-head__nav .is-active a,
+.page-head__nav a:hover {
+	font-variation-settings: "wght" 150, "srff" 0, "ital" 0;
+}
+
+.Header-logo {
+	float:left;
+}
+
+.Header-logo svg {
+	width:35px;
+	height:35px;
+}
+
+#contents,
+.document {
+	padding-top:20px;
+	font-variation-settings: "srff" 0, "wght" 70, "ital" 0;
+	font-style: normal;
+}
+
+@media screen and (max-width: 719px) {
+	.page-head__nav {
+		margin-top: -11px;
+		margin-right: -11px;
+		margin-bottom: 11px;
+		margin-left: -11px;
+	}
+}
+
+@media screen and (min-width: 720px) {
+	.page-head__nav {
+		float: right;
+	}
+}
+
+.section h1 {
+	font-variation-settings: "srff" 20, "wght" 120, "ital" 0;
+	font-size:51px;
+	display:auto;
+}
+
+.section h1 .pre {
+	font-family: "ABCArizona";
+}
+
+h1.stage__title {
+	position: relative;
+	display: inline-block;
+/*	color: rgba(8,74,21,0.99);*/
+	color:#fff;
+	font-variation-settings: "srff" 0, "wght" 120, "ital" 0;
+	font-size:23px;
+	padding:0px;
+	margin:0px;
+	margin-left:0.4em;
+	margin-top:5px;
+	vertical-align:text-center;
+}
+
+/*.nav-site {
+	text-transform: uppercase;
+}
+*/
+@media screen and (max-width: 719px) {
+	.nav-site {
+		position: relative;
+		margin-right: -11px;
+		margin-left: -11px;
+		font-size: 18px;
+		font-size: 2rem;
+		text-align: left;
+		background-color: #fff;
+	}
+
+	.nav-site > li {
+		display: block;
+		padding-right: 11px;
+		padding-left: 11px;
+	}
+
+	.nav-site a {
+		display: block;
+		color: #e53162;
+		padding: 0.5em 11px;
+		border-top: 1px solid rgba(23, 84, 71, 0.1);
+	}
+	
+	.nav-site a:hover {
+		color: #861131;
+	}
+	
+	.nav-site a:visited {
+		color: #fff;
+	}
+
+	.nav-site li:first-child a {
+		border-style: none;
+	}
+
+	.nav-site .is-active a {
+		color: #000;
+	}
+}
+
+@media screen and (min-width: 720px) {
+	.nav-site {
+		text-align: center;
+		text-align: right;
+	}
+
+	.nav-site a {
+		position: relative;
+	}
+
+	.nav-site .is-active a {
+		z-index: 1;
+	}
+}
+
+@media screen and (min-width: 720px) and (max-width: 1023px) {
+	.nav-site {
+		font-size: 14px;
+		font-size: 0.875rem;
+	}
+
+	.nav-site a {
+		margin-left: -4px;
+		padding: 3px 6px;
+	}
+}
+
+@media screen and (min-width: 1024px) {
+	.nav-site {
+		font-size: 1.5rem;
+	}
+}
+div.sphinxsidebarwrapper {
+	padding: 0px;
+}
+div.sphinxsidebar ul {
+	margin: 0;
+}
+.sphinxsidebar {
+	height:calc(100% - 100px);
+	overflow-y:scroll;
+}
+
+a.reference,
+div.sphinxsidebar a {
+	text-decoration:none;
+	border:0;
+}
+pre {
+	margin-top: 0;
+	margin-bottom: 1em;
+	padding-top: 1em;
+	padding-right: 1em;
+	padding-bottom: 1em;
+	padding-left: 17px !important;
+	background-color: #e4e6e1;
+	border-radius: 5px;
+	max-width: 100%;
+	overflow: auto;
+}
+.highlight {
+	margin-left:-15px;
+}
+dl.field-list > dt {
+	padding-left: 0;
+	padding-right: 2px;
+}
+dl.field-list, dd {
+	margin-bottom:0px;
+}
+dl.function {
+	margin-top:12px;
+}
+dd p {
+	margin-bottom:0px;
+}
+dl.attribute {
+	margin-top:1em;
+}
+
+table.docutils,
+table.docutils td {
+	border:none;
+	box-shadow:none;
+	padding:0;
+}
