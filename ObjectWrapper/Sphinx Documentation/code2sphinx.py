@@ -49,7 +49,7 @@ scriptPath = os.path.join(os.path.dirname(path), 'GlyphsApp', '__init__.py')
 # Read docu code from __init__.py
 print("__scriptPath", scriptPath)
 code = ReadFromFile(scriptPath)
-sphinxoriginal = ReadFromFile(os.path.join(path, 'sphinx folder', 'index.rst.original'))
+sphinxoriginal = ReadFromFile(os.path.join(path, 'sphinx folder', 'header.rst.txt'))
 
 # focus on triple comments
 r = re.compile(r"'''(.*?)'''", re.DOTALL)
