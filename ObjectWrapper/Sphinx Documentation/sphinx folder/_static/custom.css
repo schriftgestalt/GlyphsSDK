@@ -125,7 +125,7 @@ ul.list-inline {
 	}
 }
 
-section {
+section:not(:first-child) {
 	padding-top:1em;
 }
 
