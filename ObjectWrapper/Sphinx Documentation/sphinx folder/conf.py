@@ -101,7 +101,7 @@ html_theme = 'alabaster'
 # further.  For a list of options available for each theme, see the
 # documentation.
 html_theme_options = {
-	"nosidebar" : "false",
+	"nosidebar" : False,
 	"fixed_sidebar" : "true",
 	"code_font_family" : "Menlo, monospace",
 	"font_family" : "ABCArizona",
@@ -229,3 +229,9 @@ man_pages = [
     ('index', 'glyphsscriptingdoc', u'Glyphs.app Python Scripting API',
      [u'Georg Seifert'], 1)
 ]
+
+autodoc_mock_imports = ["GSFont", "GSFontMaster", "GSAxis", "GSMetric", "GSInfoValue", "GSGlyph", "GSGlyphInfo", "GSGlyphsInfo", "GSGuide", "GSGuideLine", "GSHint", "GSInstance", "GSLayer", "GSNode", "GSPath", "GSShape", "GSAlignmentZone", "GSAnchor", "GSAnnotation", "GSApplication", "GSBackgroundImage", "GSBackgroundLayer", "GSClass", "GSComponent", "GSControlLayer", "GSCustomParameter", "GSDocument", "GSProjectDocument", "GSEditViewController", "GSFontViewController", "GSElement", "GSFeature", "GSFeaturePrefix", "GSProxyShapes", "GSSubstitution", "GSPartProperty", "MGOrderedDictionary", "GSNotifyingDictionary", "GSPathFinder", "GSPathPen", "GSCallbackHandler", "GSInterpolationFontProxy", "GSFeatureGenerator", "GSTTStem", "GSMacroViewController", "GSPathSegment", "PreviewTextWindow", "GSFontInfoValueLocalized", "GSFontInfoValueSingle", "GSFontInfoValue", "GSMetricValue", "GSGlyphReference", "GSSmartComponentAxis", "NSAffineTransform"]
+# we need to add all single methods twice because sphinx 5 seems to need it. TODO: try to fix that properly. Is there a way to disable the importing altogether
+autodoc_mock_imports.extend(["divideCurve", "divideCurve()", "distance()", "distance", "addPoints()", "addPoints", "subtractPoints()", "subtractPoints", "scalePoint", "scalePoint()", "removeOverlap()", "removeOverlap", "subtractPaths()", "subtractPaths", "intersectPaths()", "intersectPaths", "GetOpenFile()", "GetOpenFile", "GetSaveFile()", "GetSaveFile", "GetFolder()", "GetFolder", "Message()", "Message", "LogToConsole()", "LogToConsole", "LogError()", "LogError"])
+
+autosummary_ignore_module_all = True

@@ -7672,8 +7672,8 @@ Export formats
 .. versionadded:: 2.5
 
 
-.. _`Info Property Keys`:
-=======================
+Info Property Keys
+==================
 
 .. data:: GSPropertyNameFamilyNamesKey
 
@@ -8011,9 +8011,9 @@ This are the available callbacks
 .. data:: DOCUMENTDIDCLOSE
 
 	is called after a document was closed
-	
+
 	the info object contains the NSDocument object
-	
+
 	.. versionadded:: 3.0.4
 
 .. data:: TABDIDOPEN

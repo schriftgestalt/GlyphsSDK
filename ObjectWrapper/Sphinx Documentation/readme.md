@@ -1,4 +1,4 @@
-# GlyphsApp.py Sphinx Documentation (http://docu.glyphsapp.com)
+# GlyphsApp Sphinx Documentation (http://docu.glyphsapp.com)
 
 Reads Sphinx-style docu code from `GlyphsApp/__init__.py` and combines it with a Sphinx header file, to bake html docu.
 Requires Sphinx (http://sphinx-doc.org) and ynlib (https://github.com/yanone/ynlib)

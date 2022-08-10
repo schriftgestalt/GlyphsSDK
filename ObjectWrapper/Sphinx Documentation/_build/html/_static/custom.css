@@ -125,7 +125,7 @@ ul.list-inline {
 	}
 }
 
-section {
+section:not(:first-child) {
 	padding-top:1em;
 }
 
@@ -247,6 +247,7 @@ div.sphinxsidebar a {
 	text-decoration:none;
 	border:0;
 }
+
 pre {
 	margin-top: 0.5em;
 	margin-bottom: 1em;
