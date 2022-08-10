@@ -24,3 +24,4 @@ Pods
 .eggs
 dist
 
+*.code-workspace
