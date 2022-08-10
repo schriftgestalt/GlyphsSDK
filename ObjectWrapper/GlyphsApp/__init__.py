@@ -9604,8 +9604,7 @@ GSPath.tempData = property(lambda self: TempDataProxy(self))
 '''
 
 def DrawPathWithPen(self, pen):
-	"""draw the object with a fontTools pen"""
-
+	# draw the object with a fontTools pen
 	Start = 0
 	if self.closed:
 		for i in range(len(self) - 1, -1, -1):
@@ -12591,8 +12590,8 @@ Export formats
 .. versionadded:: 2.5
 
 
-.. _`Info Property Keys`:
-=======================
+Info Property Keys
+==================
 
 .. data:: GSPropertyNameFamilyNamesKey
 
