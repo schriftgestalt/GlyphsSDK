@@ -242,7 +242,62 @@ class GlyphsAppUITests(unittest.TestCase):
 			Glyphs.addCallback(testCallbackMethod, callback)
 			Glyphs.removeCallback(testCallbackMethod)
 
+	def test_GSFont_parent():
+		# TODO: Implement <GS @MF>
+		pass
+		# GSFont.parent
+		# self.assertIn('GSDocument', str(font.parent))
 
+	def test_GSFont_selection(self):
+		# TODO: Implement <GS @MF>
+		pass
+		# for glyph in font.glyphs:
+		# 	glyph.selected = False
+		# font.glyphs['a'].selected = True
+		# self.assertEqual(len(list(font.selection)), 1)
+		# for glyph in font.glyphs:
+		# 	glyph.selected = True
+		# self.assertEqual(set(font.selection), set(font.glyphs))
+		# font.selection = [font.glyphs['a']]
+		# self.assertEqual(list(font.selection), [font.glyphs['a']])
+		# with self.assertRaises(TypeError):
+		# 	font.selection = 0
+		
+		# GSFont.selectedLayers
+		# GSFont.currentText
+		# GSFont.tabs
+		# GSFont.currentTab
+		# for tab in font.tabs:
+		# 	tab.close()
+		# tab = font.newTab('a')
+		# self.assertEqual(tab, font.tabs[-1])
+		# self.assertIsNotNone(font.currentTab.__repr__())
+		# self.assertEqual(len(list(font.selectedLayers)), 1)
+		# self.assertEqual(len(list(font.tabs)), 1)
+		# self.assertEqual(font.currentText, 'a')
+		# font.currentText = 'A'
+		# self.assertEqual(font.currentText, 'A')
+		# self.assertEqual(font.currentTab, font.tabs[-1])
+		# tab2 = font.newTab('n')
+		# self.assertEqual(font.currentTab, tab2)
+		# font.currentTab = tab
+		# self.assertEqual(font.currentTab, tab)
+		# font.tabs[0].close()
+		# self.assertEqual(font.currentTab, tab2)
+		# font.tabs[0].close()
+		# # values are None when no tabs are open
+		# self.assertIsNone(font.currentText)
+		# self.assertIsNone(font.currentTab)
+		# with self.assertRaises(TypeError):
+		# 	font.tabs['']
+		
+		# GSFont.selectedFontMaster
+		# GSFont.masterIndex
+		# oldMasterIndex = font.masterIndex
+		# for i in range(len(list(font.masters))):
+		# 	font.masterIndex = i
+		# 	self.assertEqual(font.selectedFontMaster, font.masters[i])
+		# font.masterIndex = oldMasterIndex
 
 
 '''
