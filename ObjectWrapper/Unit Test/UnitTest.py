@@ -115,8 +115,6 @@ class GlyphsAppTests(unittest.TestCase):
 			self.assertEqual(boolObject, (not oldValue))
 			boolObject = oldValue
 	
-	def setUp(self):
-		self.font = GSFont(PathToTestFile)
 
 	### MARK ### moved to UITests.py
 	def tearDown(self):
@@ -317,13 +315,22 @@ class GlyphsAppTests(unittest.TestCase):
 		# for callback in callbacks:
 		# 	Glyphs.addCallback(testCallbackMethod, callback)
 		# 	Glyphs.removeCallback(testCallbackMethod)
+	def assertIsFile(self, path):
+		# NOTE: can you confirm if this is proper? <MF @GS>
+		if not Pathlib.Path(path).resolve().is_file():
+			raise AssertionError("File does not exist: %s" % str(path))
 
+	def fontFromPath(self):
+		theFont = GSFont(PathToTestFile)
+		self.assertIsNotNone(theFont.__repr__())
+		self.assertIsNotNone(theFont)
+		return theFont
+
+	def setUp(self):
+		self.font = self.fontFromPath()
 
 	def test_GSFont(self):
-		# font = Glyphs.font
 		font = self.font
-		self.assertIsNotNone(font.__repr__())
-		# font.show()
 		
 		# GSFont.save()
 		# Test saving early to not save in a bad state.
@@ -607,7 +614,7 @@ class GlyphsAppTests(unittest.TestCase):
 		# TODO: ^ Move to UI Test <MF @MF>
 		
 		# GSFont.filepath
-		font = GSFont(PathToTestFile)
+		font = self.font
 		## self.assertIsNotNone(font.filepath)
 		## self.assertIsInstance(font.filepath, str)
 		# make sure this is a valid and existing path
@@ -746,8 +753,7 @@ class GlyphsAppTests(unittest.TestCase):
 
 	def test_GSAxis(self):
 		#font = Glyphs.font
-		font = GSFont(PathToTestFile)
-		self.assertIsNotNone(font.__repr__())
+		font = self.font
 
 		axis = font.axes[0]
 		
@@ -768,8 +774,7 @@ class GlyphsAppTests(unittest.TestCase):
 
 	def test_GSMetric(self):
 		#font = Glyphs.font
-		font = GSFont(PathToTestFile)
-		self.assertIsNotNone(font.__repr__())
+		font = self.font
 
 		metric = font.metrics[0]
 
@@ -788,8 +793,7 @@ class GlyphsAppTests(unittest.TestCase):
 	#::Rafal
 	def test_GSCustomParameter(self):
 		#font = Glyphs.font
-		font = GSFont(PathToTestFile)
-		self.assertIsNotNone(font.__repr__())
+		font = self.font
 
 		font.customParameters['trademark'] = 'ThisFont is a trademark by MyFoundry.com'
 		customParameter = font.customParameters[0]
@@ -808,8 +812,7 @@ class GlyphsAppTests(unittest.TestCase):
 	#::Rafal
 	def test_GSClass(self):
 		#font = Glyphs.font
-		font = GSFont(PathToTestFile)
-		self.assertIsNotNone(font.__repr__())
+		font = self.font
 		
 		feaClass = font.classes[0]
 		
@@ -835,8 +838,7 @@ class GlyphsAppTests(unittest.TestCase):
 	#::Rafal
 	def test_GSFeaturePrefix(self):
 		#font = Glyphs.font
-		font = GSFont(PathToTestFile)
-		self.assertIsNotNone(font.__repr__())
+		font = self.font
 		
 		featurePrefix = font.featurePrefixes[0]
 		
@@ -854,8 +856,7 @@ class GlyphsAppTests(unittest.TestCase):
 
 	def test_GSFeature(self):
 		#font = Glyphs.font
-		font = GSFont(PathToTestFile)
-		self.assertIsNotNone(font.__repr__())
+		font = self.font
 		
 		feature = font.features[0]
 
@@ -884,8 +885,7 @@ class GlyphsAppTests(unittest.TestCase):
 
 	def test_GSFontMaster(self):
 		#font = Glyphs.font
-		font = GSFont(PathToTestFile)
-		self.assertIsNotNone(font.__repr__())
+		font = self.font
 
 		self.assertEqual(len(font.axes), 1)
 		master = font.masters[0]
@@ -1011,8 +1011,7 @@ class GlyphsAppTests(unittest.TestCase):
 
 
 	def test_GSAlignmentZone(self):	
-		font = GSFont(PathToTestFile)
-		self.assertIsNotNone(font.__repr__())
+		font = self.font
 		
 		master = font.masters[0]
 		
@@ -1040,8 +1039,7 @@ class GlyphsAppTests(unittest.TestCase):
 
 
 	def test_GSInstance(self):
-		font = GSFont(PathToTestFile)
-		self.assertIsNotNone(font.__repr__())
+		font = self.font
 		
 		instance = font.instances[0]
 		copyInstance = copy.copy(instance)
@@ -1240,8 +1238,7 @@ class GlyphsAppTests(unittest.TestCase):
 
 	def test_GSGlyph(self):
 		# font = Glyphs.font
-		font = GSFont(PathToTestFile)
-		self.assertIsNotNone(font.__repr__())
+		font = self.font
 
 		glyph = font.glyphs['a'].duplicate('a.test')
 		glyph = copy.copy(glyph)
@@ -1439,8 +1436,7 @@ class GlyphsAppTests(unittest.TestCase):
 
 	def test_GSLayer(self):
 		# font = Glyphs.font
-		font = GSFont(PathToTestFile)
-		self.assertIsNotNone(font.__repr__())
+		font = self.font
 
 		glyph = font.glyphs['a']
 		layer = glyph.layers[0]
@@ -1741,8 +1737,7 @@ class GlyphsAppTests(unittest.TestCase):
 		
 		
 	def test_smartComponents(self):
-		font = GSFont(PathToTestFile)
-		self.assertIsNotNone(font.__repr__())
+		font = self.font
 		
 		glyph = font.glyphs['_part.shoulder']
 		
@@ -1793,8 +1788,7 @@ class GlyphsAppTests(unittest.TestCase):
 
 	def test_GSShapesComponents(self):
 		# font = Glyphs.font
-		font = GSFont(PathToTestFile)
-		self.assertIsNotNone(font.__repr__())
+		font = self.font
 
 		font.glyphs['adieresis'].duplicate('adieresis.test')
 		
@@ -1982,8 +1976,7 @@ class GlyphsAppTests(unittest.TestCase):
 		
 		
 	def test_GSPathShapes(self):
-		font = GSFont(PathToTestFile)
-		self.assertIsNotNone(font.__repr__())
+		font = self.font
 
 		layer = font.glyphs['a'].layers[0]
 		path = layer.shapes[0]
@@ -2128,8 +2121,7 @@ class GlyphsAppTests(unittest.TestCase):
 					])
 
 	def test_GSNode(self):
-		font = GSFont(PathToTestFile)
-		self.assertIsNotNone(font.__repr__())
+		font = self.font
 
 		layer = font.glyphs['a'].layers[0]
 		path = layer.shapes[0]
@@ -2181,8 +2173,7 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertEqual(node.index, 9223372036854775807) # theoretically, this value could be maxint in a node, but in our test font it should be 0, I guess (taken from actual glyph, not orphan path)
 
 	def test_GSAnchor(self):
-		font = GSFont(PathToTestFile)
-		self.assertIsNotNone(font.__repr__())
+		font = self.font
 
 		layer = font.glyphs['a'].layers[0]
 		anchor = layer.anchors["top"]
@@ -2208,8 +2199,7 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertIsNone(anchor.userData["TestData"])
 
 	def test_GSGuide(self):
-		font = GSFont(PathToTestFile)
-		self.assertIsNotNone(font.__repr__())
+		font = self.font
 
 		layer = font.glyphs['a'].layers[0]
 		guide = layer.guides[0]
@@ -2240,8 +2230,7 @@ class GlyphsAppTests(unittest.TestCase):
 		
 		
 	def test_GSBackgroundImage(self):
-		font = GSFont(PathToTestFile)
-		self.assertIsNotNone(font.__repr__())
+		font = self.font
 
 		glyph = font.glyphs['A']
 		layer = glyph.layers[0]
@@ -2289,8 +2278,7 @@ class GlyphsAppTests(unittest.TestCase):
 	def test_GSEditViewController(self):
 		return #TODO:  move to UI Test <MF>
 		#font = Glyphs.font
-		font = GSFont(PathToTestFile)
-		self.assertIsNotNone(font.__repr__())
+		font = self.font
 		# font.show()
 
 		tab = font.newTab('a')
@@ -2384,8 +2372,7 @@ class GlyphsAppTests(unittest.TestCase):
 
 
 	def test_GSGlyphInfo(self):
-		font = GSFont(PathToTestFile)
-		self.assertIsNotNone(font.__repr__())
+		font = self.font
 
 		info = font.glyphs['a'].glyphInfo
 		self.assertIsNotNone(info.__repr__())
