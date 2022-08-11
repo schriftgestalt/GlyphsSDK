@@ -243,14 +243,14 @@ class GlyphsAppUITests(unittest.TestCase):
 			Glyphs.removeCallback(testCallbackMethod)
 
 	def test_GSFont_parent():
+		return
 		# TODO: Implement <GS @MF>
-		pass
 		# GSFont.parent
 		# self.assertIn('GSDocument', str(font.parent))
 
 	def test_GSFont_selection(self):
 		# TODO: Implement <GS @MF>
-		pass
+		return
 		# for glyph in font.glyphs:
 		# 	glyph.selected = False
 		# font.glyphs['a'].selected = True
@@ -300,12 +300,106 @@ class GlyphsAppUITests(unittest.TestCase):
 		# font.masterIndex = oldMasterIndex
 	
 	def test_GSFont_close(self):
-		pass
+		return
 		# GSFont.close()
 		# font = self.font
 		# font.close()
 		# self.assertIsNone(font.__repr__())
 		# self.assertIsNone(font)
+
+
+	def test_GSEditViewController(self):
+		return
+		font = self.font
+		# font.show()
+
+		tab = font.newTab('a')
+		self.assertIsNotNone(tab.__repr__())
+		
+		# GSEditViewController.parent
+		self.assertEqual(tab.parent, font)
+
+		# GSEditViewController.text
+		self.assertEqual(tab.text, 'a')
+
+		# GSEditViewController.layers
+		self.assertEqual(list(tab.layers), [font.glyphs['a'].layers[0]])
+		tab.layers = [font.glyphs['a'].layers[0]]
+		tab.layers.append(font.glyphs['A'].layers[0])
+		tab.layers.remove(font.glyphs['A'].layers[0])
+		self.assertEqual(list(tab.layers), [font.glyphs['a'].layers[0]])
+
+		# GSEditViewController.composedLayers
+		font.updateFeatures()
+		self.assertEqual(list(tab.composedLayers), [font.glyphs['a'].layers[0]])
+		tab.features = ['smcp']
+		self.assertEqual(list(tab.composedLayers), [font.glyphs['a.sc'].layers[0]])
+		tab.features = []
+
+		# GSEditViewController.scale
+		self.assertFloat(tab.scale)
+
+		# GSEditViewController.viewPort
+		self.assertIsInstance(tab.viewPort, NSRect)
+
+		# GSEditViewController.bounds
+		self.assertIsInstance(tab.bounds, NSRect)
+
+		# GSEditViewController.selectedLayerOrigin
+		self.assertIsInstance(tab.selectedLayerOrigin, NSPoint)
+
+		# GSEditViewController.textCursor
+		self.assertInteger(tab.textCursor)
+
+		# GSEditViewController.textRange
+		self.assertInteger(tab.textRange)
+
+		# GSEditViewController.direction
+		self.assertTrue(tab.direction in [LTR, RTL, LTRTTB, RTLTTB])
+		tab.direction = RTL
+		self.assertTrue(tab.direction in [LTR, RTL, LTRTTB, RTLTTB])
+		tab.direction = LTR
+		self.assertTrue(tab.direction in [LTR, RTL, LTRTTB, RTLTTB])
+
+		# GSEditViewController.features
+		newFeature = GSFeature('liga', 'sub a by A;')
+		font.features.append(newFeature)
+		tab.features = ['liga']
+		self.assertEqual(list(tab.features), ['liga'])
+		tab.features = []
+		del(font.features['liga'])
+
+		# GSEditViewController.previewInstances
+		tab.previewInstances = 'all'
+		self.assertEqual(tab.previewInstances, 'all')
+		tab.previewInstances = 'live'
+		self.assertEqual(tab.previewInstances, 'live')
+		for instance in font.instances:
+			tab.previewInstances = instance
+			self.assertEqual(tab.previewInstances, instance)
+
+		# GSEditViewController.previewHeight
+		tab.previewHeight = 100
+		# self.assertEqual(tab.previewHeight, 100)
+		tab.previewHeight = 0
+		# self.assertEqual(tab.previewHeight, 0)
+
+		# GSEditViewController.bottomToolbarHeight
+		self.assertTrue(tab.bottomToolbarHeight > 0)
+
+		
+		# GSEditViewController.userData
+		tab.tempData['a'] = 'b'
+		self.assertTrue(tab.tempData['a'] == 'b')
+
+		## Methods
+		
+		# GSEditViewController.saveToPDF()
+		self.assertIsNotNone(font.filepath)
+		tab.saveToPDF(os.path.join(os.path.dirname(font.filepath), 'Unit Test.pdf'))
+
+		# GSEditViewController.close()
+		tab.close()
 
 '''
 Stuff from UnitTest.py which seems to not make sense

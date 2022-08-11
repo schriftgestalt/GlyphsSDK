@@ -550,7 +550,6 @@ class GlyphsAppTests(unittest.TestCase):
 	## GSAxis
 
 	def test_GSAxis(self):
-		#font = Glyphs.font
 		font = self.font
 
 		axis = font.axes[0]
@@ -571,7 +570,6 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertBool(axis.hidden)
 
 	def test_GSMetric(self):
-		#font = Glyphs.font
 		font = self.font
 
 		metric = font.metrics[0]
@@ -590,7 +588,6 @@ class GlyphsAppTests(unittest.TestCase):
 
 	#::Rafal
 	def test_GSCustomParameter(self):
-		#font = Glyphs.font
 		font = self.font
 
 		font.customParameters['trademark'] = 'ThisFont is a trademark by MyFoundry.com'
@@ -609,7 +606,6 @@ class GlyphsAppTests(unittest.TestCase):
 
 	#::Rafal
 	def test_GSClass(self):
-		#font = Glyphs.font
 		font = self.font
 		
 		feaClass = font.classes[0]
@@ -635,7 +631,6 @@ class GlyphsAppTests(unittest.TestCase):
 	
 	#::Rafal
 	def test_GSFeaturePrefix(self):
-		#font = Glyphs.font
 		font = self.font
 		
 		featurePrefix = font.featurePrefixes[0]
@@ -653,7 +648,6 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertBool(featurePrefix.active)
 
 	def test_GSFeature(self):
-		#font = Glyphs.font
 		font = self.font
 		
 		feature = font.features[0]
@@ -682,7 +676,6 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertEqual(len(feature.tempData), tempData_len)
 
 	def test_GSFontMaster(self):
-		#font = Glyphs.font
 		font = self.font
 
 		self.assertEqual(len(font.axes), 1)
@@ -1510,7 +1503,8 @@ class GlyphsAppTests(unittest.TestCase):
 		layer.applyTransform(transform.transformStruct())
 
 		# layer.beginChanges()
-		# !!!: `'NoneType' object has no attribute 'beginUndoGrouping'` even though layer exists until here. <MF @GS>
+		# TODO: `'NoneType' object has no attribute 'beginUndoGrouping'` even though layer exists until here. <MF>
+		# `beginUndoGrouping` is called on `layer.parent.undomanager`, it seems to be nil, here. <GS>
 
 		# layer.endChanges()
 		## TODO: ^ Re-enable once this is fixed <MF @MF @GS>
@@ -2075,7 +2069,6 @@ class GlyphsAppTests(unittest.TestCase):
 
 	def test_GSEditViewController(self):
 		return #TODO:  move to UI Test <MF>
-		#font = Glyphs.font
 		font = self.font
 		# font.show()
 
