@@ -3,6 +3,7 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import print_function
+from cgi import test
 
 #import GlyphsApp
 #reload(GlyphsApp)
@@ -217,22 +218,12 @@ class GlyphsAppTests(unittest.TestCase):
 		
 		# GSFontselfenableUpdateInterface()
 		font.enableUpdateInterface()
-		
-		# GSFont.setKerningForPair()
-		font.setKerningForPair(font.masters[0].id, 'a', 'a', -10)
-		
-		# GSFont.kerningForPair()
-		self.assertEqual(font.kerningForPair(font.masters[0].id, 'a', 'a'), -10)
-		
-		# GSFont.removeKerningForPair()
-		font.removeKerningForPair(font.masters[0].id, 'a', 'a')
 
 		# GSFont.updateFeatures()
 		font.updateFeatures()
 
 		# GSFont.updateFeatures()  #::Rafal
 		font.compileFeatures()
-
 
 
 		#::Rafal
@@ -332,8 +323,13 @@ class GlyphsAppTests(unittest.TestCase):
 		# ???: ^ What’s the intention here? `amountLayersPerGlyph` is the same as `len(font.glyphs['a'].layers)` -- Why the assertEqual of those? <MF @GS>
 		# GS: I seems that it was intended to add a master on some point. Or just to make sure that there are no side effects.
 		self.assertEqual(font.masters[0], font.masters[font.masters[0].id])
-		with self.assertRaises(TypeError):
-			font.masters[2.2]	
+		with self.assertRaises(TypeError) as ctx:
+			font.masters[2.2]
+		self.assertEqual("need int or str, got: float", str(ctx.exception))
+		
+		# Masters can’t be indexed by name.
+		firstMasterName = font.masters[0].name
+		self.assertIsNone(font.masters[firstMasterName])
 
 	def test_GSFont_intances(self):
 		font = self.font
@@ -342,24 +338,85 @@ class GlyphsAppTests(unittest.TestCase):
 		# self.assertList(font.instances, assertType=False, testValues=[
 		# 		GSInstance(), GSInstance(), copy.copy(GSInstance())])
 		# ???: ^ What’s the intention here? Fails with the test font. Shall it compare with another, empty font (because then it would pass) <MF @GS>
-		with self.assertRaises(TypeError):
+		with self.assertRaises(TypeError) as ctx:
 			font.instances['a']
+		self.assertEqual("list indices must be integers or slices, not str", str(ctx.exception))
 
 	def test_GSFont_axes(self):
+		"""
+		- [x] name
+		- [x] axisTag
+		- [ ] axisId
+		- [x] hidden
+		- [x] font
+		"""
 		font = self.font
 		# TODO: reactivate this again and make it work <MF @MF>
 		# self.assertList(font.axes, assertType=False, testValues=[
 		# 		GSAxis(), GSAxis(), copy.copy(GSAxis())])
 		# ???: ^ What’s the intention here? Fails with the test font. Shall it compare with another, empty font (because then it would pass) <MF @GS>
-		with self.assertRaises(TypeError):
+		with self.assertRaises(TypeError) as ctx:
 			font.axes['a']
+		self.assertEqual("list indices must be integers or slices, not str", str(ctx.exception))
+
+		# Properties
+
+		# .name
+		self.assertEqual(font.axes[0].name, 'Weight')
+		
+		old_axisName = font.axes[0].name
+		font.axes[0].name = "Test Axis Name"
+		self.assertEqual(font.axes[0].name, "Test Axis Name")
+		
+		# QUESTION: Should we raise when an axis name is not a string? <MF @GS>
+		# with self.assertRaises(TypeError) as ctx:
+		# 	font.axes[0].name = 3 # Expecting a string
+		# self.assertUnicode(font.axes[0].name)
+
+		font.axes[0].name = old_axisName
+		
+		# .axisTag
+		self.assertEqual(font.axes[0].axisTag, 'wght')
+
+		# QUESTION: Should we raise when an axis tag is not a four letter string? <MF @GS>
+		# # Add an axis
+		# old_axes = font.axes
+		# testAxis = GSAxis()
+		# testAxis.name = "Test Axis"
+		# with self.assertRaises(Exception) as ctx:
+		# 	testAxis.axisTag = "wdths"
+		# 	font.axes.append(testAxis)
+
+		# # Reset axes to former state
+		# font.axes = old_axes
+		# self.assertEqual(len(font.axes), 1)
+		
+		# .hidden
+		self.assertEqual(font.axes[0].hidden, False)
+		
+		# self.assertEqual(font.axes[0].axisId, '72A59FFB-3C17-45EE-9D3F-A5FD5045AA83') # not testable like this, as the id is different with each font opening
+
+		# .font
+		self.assertEqual(font.axes[0].font, font)
+		
+		# .font
+		self.assertEqual(len(font.axes[-1].axisTag), 4)
+
+		
 
 	def test_GSFont_stems(self):
 		font = self.font
 		#TODO get working testvalues
 		#self.assertList(font.stems, assertType=False, testValues=[...])
-		with self.assertRaises(TypeError):
+		with self.assertRaises(TypeError) as ctx:
 			font.stems[12.4]
+		self.assertEqual("keys must be integers or strings, not float", str(ctx.exception))
+
+		self.assertEqual(font.stems['hStem0'], font.stems[0])
+
+		with self.assertRaises(KeyError) as ctx:
+			font.stems['nonExistingName']
+		self.assertEqual("'No stem for key nonExistingName'", str(ctx.exception))
 
 	def test_GSFont_glyphs(self):
 		font = self.font
@@ -533,6 +590,18 @@ class GlyphsAppTests(unittest.TestCase):
 			font.save(path="wrong.extension")
 
 		self.assertIsFile(copypath_ufo) # TODO: UFO not created <MF @GS>
+
+	def test_GSFont_kerning(self):
+		font = self.font
+
+		# GSFont.setKerningForPair()
+		font.setKerningForPair(font.masters[0].id, 'a', 'a', -10)
+		
+		# GSFont.kerningForPair()
+		self.assertEqual(font.kerningForPair(font.masters[0].id, 'a', 'a'), -10)
+		
+		# GSFont.removeKerningForPair()
+		font.removeKerningForPair(font.masters[0].id, 'a', 'a')		
 
 	## GSAxis
 
