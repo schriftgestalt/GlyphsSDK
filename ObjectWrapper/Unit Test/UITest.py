@@ -298,7 +298,14 @@ class GlyphsAppUITests(unittest.TestCase):
 		# 	font.masterIndex = i
 		# 	self.assertEqual(font.selectedFontMaster, font.masters[i])
 		# font.masterIndex = oldMasterIndex
-
+	
+	def test_GSFont_close(self):
+		pass
+		# GSFont.close()
+		# font = self.font
+		# font.close()
+		# self.assertIsNone(font.__repr__())
+		# self.assertIsNone(font)
 
 '''
 Stuff from UnitTest.py which seems to not make sense
