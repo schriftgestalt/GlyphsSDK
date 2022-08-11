@@ -170,21 +170,7 @@ class GlyphsAppTests(unittest.TestCase):
 		
 		# GSFont.versionMinor
 		self.assertInteger(font.versionMinor)
-		
-		# GSFont.date
-		self.assertIsInstance(font.date, datetime.datetime)
-		old_date = font.date
-		dt = datetime.datetime.now()
-		font.date = dt
-		self.assertEqual(font.date, dt.replace(microsecond=0))
-		unixtime = time.time()
-		font.date = unixtime
-		self.assertEqual(font.date, datetime.datetime.fromtimestamp(unixtime))
-		nsdate = NSDate.alloc().init()
-		font.date = nsdate
-		self.assertEqual(font.date, datetime.datetime.fromtimestamp(nsdate.timeIntervalSince1970()))
-		font.date = old_date
-		
+				
 		# GSFont.familyName
 		self.assertUnicode(font.familyName)
 
@@ -199,49 +185,13 @@ class GlyphsAppTests(unittest.TestCase):
 				
 		# GSFont.disablesNiceNames
 		self.assertBool(font.disablesNiceNames)
-		
-		# GSFont.grid
-		self.assertInteger(font.grid)
-		old_grid = font.grid
-		font.grid = 9
-		self.assertEqual(font.grid, 9)
-		
-		# GSFont.gridSubDivisions
-		self.assertInteger(font.gridSubDivisions)
-		old_gridSubDivisions = font.gridSubDivisions
-		font.gridSubDivisions = 11
-		self.assertEqual(font.gridSubDivisions, 11)
-		
-		# GSFont.gridLength
-		self.assertFloat(font.gridLength, readOnly = True)
-		# assert that gridLength == grid / gridSubDivisions
-		self.assertAlmostEqual(font.gridLength, 9./11)
-		font.grid = old_grid
-		font.gridSubDivisions = old_gridSubDivisions
-		self.assertAlmostEqual(font.gridLength, float(font.grid)/font.gridSubDivisions)
-		
-		# GSFont.tool
-		# GSFont.tools
-		# GSFont.toolIndex
-		# oldTool = font.tool
-		# for toolName in font.tools:
-		# 	font.tool = toolName
-		# 	self.assertEqual(font.tool, toolName)
-		# 	self.assertInteger(font.toolIndex)
-		# 	self.assertEqual(font.tools[font.toolIndex], toolName)
-		# font.tool = oldTool
-		# TODO: ^ Move to UI Test <MF @MF>
 
 		# GSFont.appVersion #::Rafal
 		self.assertUnicode(font.appVersion, readOnly=True, allowNone=False)
 		
 		# GSFont.formatVersion #::Rafal
 		self.assertInteger(font.formatVersion)
-		
-		# GSFont.fontView #::Rafal
-		# self.assertIsInstance(font.fontView, GlyphsApp.GSFontViewController)
-		# TODO: ^ Move to UI Test <MF @MF>
-		
+				
 		# GSFont.keyboardIncrementHuge #::Rafal
 		self.assertFloat(font.keyboardIncrementHuge)
 
@@ -354,6 +304,21 @@ class GlyphsAppTests(unittest.TestCase):
 		# make sure this is a valid and existing path
 		self.assertTrue(os.path.exists(font.filepath))
 		## TODO: font.filepath seems to not work with `GSFont(PATH)` <MF @GS>
+
+	def test_GSFont_date(self):
+		font = self.font
+		self.assertIsInstance(font.date, datetime.datetime)
+		old_date = font.date
+		dt = datetime.datetime.now()
+		font.date = dt
+		self.assertEqual(font.date, dt.replace(microsecond=0))
+		unixtime = time.time()
+		font.date = unixtime
+		self.assertEqual(font.date, datetime.datetime.fromtimestamp(unixtime))
+		nsdate = NSDate.alloc().init()
+		font.date = nsdate
+		self.assertEqual(font.date, datetime.datetime.fromtimestamp(nsdate.timeIntervalSince1970()))
+		font.date = old_date		
 
 	def test_GSFont_masters(self):
 		font = self.font
@@ -517,6 +482,29 @@ class GlyphsAppTests(unittest.TestCase):
 		del(font.customParameters['trademark'])
 		with self.assertRaises(TypeError):
 			font.customParameters[12.3]
+
+	def test_GSFont_grid(self):
+		font = self.font
+		self.assertInteger(font.grid)
+		# TODO: test against float and throw if float.
+		old_grid = font.grid
+		font.grid = 9
+		self.assertEqual(font.grid, 9)
+		
+		# GSFont.gridSubDivisions
+		self.assertInteger(font.gridSubDivisions)
+		# TODO: test against float and throw if float.
+		old_gridSubDivisions = font.gridSubDivisions
+		font.gridSubDivisions = 11
+		self.assertEqual(font.gridSubDivisions, 11)
+		
+		# GSFont.gridLength
+		self.assertFloat(font.gridLength, readOnly = True)
+		# assert that gridLength == grid / gridSubDivisions
+		self.assertAlmostEqual(font.gridLength, 9./11)
+		font.grid = old_grid
+		font.gridSubDivisions = old_gridSubDivisions
+		self.assertAlmostEqual(font.gridLength, float(font.grid)/font.gridSubDivisions)		
 
 	## GSFont Methods
 
@@ -2064,101 +2052,6 @@ class GlyphsAppTests(unittest.TestCase):
 		image.scaleWidthToEmUnits(layer.width)
 		
 		layer.backgroundImage = None
-
-
-	def test_GSEditViewController(self):
-		return #TODO:  move to UI Test <MF>
-		font = self.font
-		# font.show()
-
-		tab = font.newTab('a')
-		self.assertIsNotNone(tab.__repr__())
-		
-		# GSEditViewController.parent
-		self.assertEqual(tab.parent, font)
-
-		# GSEditViewController.text
-		self.assertEqual(tab.text, 'a')
-
-		# GSEditViewController.layers
-		self.assertEqual(list(tab.layers), [font.glyphs['a'].layers[0]])
-		tab.layers = [font.glyphs['a'].layers[0]]
-		tab.layers.append(font.glyphs['A'].layers[0])
-		tab.layers.remove(font.glyphs['A'].layers[0])
-		self.assertEqual(list(tab.layers), [font.glyphs['a'].layers[0]])
-
-		# GSEditViewController.composedLayers
-		font.updateFeatures()
-		self.assertEqual(list(tab.composedLayers), [font.glyphs['a'].layers[0]])
-		tab.features = ['smcp']
-		self.assertEqual(list(tab.composedLayers), [font.glyphs['a.sc'].layers[0]])
-		tab.features = []
-
-		# GSEditViewController.scale
-		self.assertFloat(tab.scale)
-
-		# GSEditViewController.viewPort
-		self.assertIsInstance(tab.viewPort, NSRect)
-
-		# GSEditViewController.bounds
-		self.assertIsInstance(tab.bounds, NSRect)
-
-		# GSEditViewController.selectedLayerOrigin
-		self.assertIsInstance(tab.selectedLayerOrigin, NSPoint)
-
-		# GSEditViewController.textCursor
-		self.assertInteger(tab.textCursor)
-
-		# GSEditViewController.textRange
-		self.assertInteger(tab.textRange)
-
-		# GSEditViewController.direction
-		self.assertTrue(tab.direction in [LTR, RTL, LTRTTB, RTLTTB])
-		tab.direction = RTL
-		self.assertTrue(tab.direction in [LTR, RTL, LTRTTB, RTLTTB])
-		tab.direction = LTR
-		self.assertTrue(tab.direction in [LTR, RTL, LTRTTB, RTLTTB])
-
-		# GSEditViewController.features
-		newFeature = GSFeature('liga', 'sub a by A;')
-		font.features.append(newFeature)
-		tab.features = ['liga']
-		self.assertEqual(list(tab.features), ['liga'])
-		tab.features = []
-		del(font.features['liga'])
-
-		# GSEditViewController.previewInstances
-		tab.previewInstances = 'all'
-		self.assertEqual(tab.previewInstances, 'all')
-		tab.previewInstances = 'live'
-		self.assertEqual(tab.previewInstances, 'live')
-		for instance in font.instances:
-			tab.previewInstances = instance
-			self.assertEqual(tab.previewInstances, instance)
-
-		# GSEditViewController.previewHeight
-		tab.previewHeight = 100
-		# self.assertEqual(tab.previewHeight, 100)
-		tab.previewHeight = 0
-		# self.assertEqual(tab.previewHeight, 0)
-
-		# GSEditViewController.bottomToolbarHeight
-		self.assertTrue(tab.bottomToolbarHeight > 0)
-
-		
-		# GSEditViewController.userData
-		tab.tempData['a'] = 'b'
-		self.assertTrue(tab.tempData['a'] == 'b')
-
-		## Methods
-		
-		# GSEditViewController.saveToPDF()
-		self.assertIsNotNone(font.filepath)
-		tab.saveToPDF(os.path.join(os.path.dirname(font.filepath), 'Unit Test.pdf'))
-
-		# GSEditViewController.close()
-		tab.close()
-
 
 
 	def test_GSGlyphInfo(self):
