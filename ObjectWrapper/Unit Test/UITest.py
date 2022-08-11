@@ -401,6 +401,24 @@ class GlyphsAppUITests(unittest.TestCase):
 		# GSEditViewController.close()
 		tab.close()
 
+	def test_GSFont_tools(self):
+		return
+		# GSFont.tool
+		# GSFont.tools
+		# GSFont.toolIndex
+		# oldTool = font.tool
+		# for toolName in font.tools:
+		# 	font.tool = toolName
+		# 	self.assertEqual(font.tool, toolName)
+		# 	self.assertInteger(font.toolIndex)
+		# 	self.assertEqual(font.tools[font.toolIndex], toolName)
+		# font.tool = oldTool
+	
+	def test_GSFont_fontView(self):
+		return
+		# GSFont.fontView #::Rafal
+		# self.assertIsInstance(font.fontView, GlyphsApp.GSFontViewController)
+
 '''
 Stuff from UnitTest.py which seems to not make sense
 
