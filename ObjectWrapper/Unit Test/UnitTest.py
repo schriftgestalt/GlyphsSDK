@@ -15,7 +15,18 @@ import os, time, sys, datetime
 import objc
 import copy
 import pathlib as Pathlib
-from AppKit import *
+from AppKit import \
+NSAffineTransform, \
+NSArray, \
+NSBezierPath, \
+NSColor, \
+NSDate, \
+NSDictionary, \
+NSImage, \
+NSNull, \
+NSNumber, \
+NSPoint, \
+NSRect
 
 if sys.version_info[0] == 3:
 	unicode = str
