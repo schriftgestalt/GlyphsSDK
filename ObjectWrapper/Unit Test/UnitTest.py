@@ -148,21 +148,6 @@ class GlyphsAppTests(unittest.TestCase):
 
 	def test_GSFont(self):
 		font = self.font
-		
-		# GSFont.save()
-		# Test saving early to not save in a bad state.
-		# This still slightly mutates the test file.
-		# font.save()
-		# NOTE: ^ This does not work, as save() expects a file path (Docu says 'If no path is given, it saves to the existing location.') <MF @GS>
-		copypath = PathToTestFile[:-7] + "-copy.glyphs"
-		copypath_ufo = PathToTestFile[:-7] + "-copy.ufo"
-		font.save(path=copypath, makeCopy=True)
-		font.save(path=copypath_ufo, makeCopy=True)
-		with self.assertRaises(ValueError):
-			font.save(path="wrong.extension")
-		
-		self.assertIsFile(copypath)
-		self.assertIsFile(copypath_ufo) # TODO: UFO not created <MF @GS>
 
 		## Attributes
 
@@ -519,6 +504,29 @@ class GlyphsAppTests(unittest.TestCase):
 				del a['ENG']
 
 		font = copy.copy(font) # Testing this at the end because otherwise some UI-dependent tests fail (like selection of glyphs)
+
+	def test_GSFont_save_as_glyphsFile(self):
+		font = self.font
+		# GSFont.save()
+		# Test saving early to not save in a bad state.
+		# This still slightly mutates the test file.
+		# font.save()
+		# NOTE: ^ This does not work, as save() expects a file path (Docu says 'If no path is given, it saves to the existing location.') <MF @GS>
+		copypath = PathToTestFile[:-7] + "-copy.glyphs"
+		font.save(path=copypath, makeCopy=True)
+		with self.assertRaises(ValueError):
+			font.save(path="wrong.extension")
+		
+		self.assertIsFile(copypath)
+
+	def test_GSFont_save_as_ufoFile(self):
+		font = self.font
+		copypath_ufo = PathToTestFile[:-7] + "-copy.ufo"
+		font.save(path=copypath_ufo, makeCopy=True)
+		with self.assertRaises(ValueError):
+			font.save(path="wrong.extension")
+
+		self.assertIsFile(copypath_ufo) # TODO: UFO not created <MF @GS>
 
 
 	def test_GSAxis(self):
