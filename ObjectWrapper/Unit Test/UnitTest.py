@@ -14,6 +14,7 @@ from GlyphsApp import *
 import os, time, sys, datetime
 import objc
 import copy
+import pathlib as Pathlib
 from AppKit import *
 
 if sys.version_info[0] == 3:
@@ -44,8 +45,9 @@ class GlyphsAppTests(unittest.TestCase):
 		dictObject['uniTestValue'] = var2
 		self.assertEqual(dictObject['uniTestValue'], var2)
 		dictObject.pop('uniTestValue')
-	
+
 	def assertList(self, listObject, assertType = True, testValues = []):
+		# Also checks for mutability
 		if assertType:
 			self.assertIsInstance(listObject, list)
 		if testValues:
@@ -115,206 +117,6 @@ class GlyphsAppTests(unittest.TestCase):
 			self.assertEqual(boolObject, (not oldValue))
 			boolObject = oldValue
 	
-
-	### MARK ### moved to UITests.py
-	def tearDown(self):
-		pass
-		# if Glyphs.font is not None:
-		#	pass ### MARK ### Glyphs.font.close()
-
-	### MARK ### moved to UITests.py
-	def test_GSApplication(self):
-		pass
-		
-		# # Main object
-		# self.assertIsNotNone(Glyphs)
-		# self.assertIsNotNone(Glyphs.__repr__())
-		
-		# # close all fonts
-		# for font in Glyphs.fonts:
-		# 	pass ### MARK ### font.close()
-		# self.assertEqual(len(Glyphs.fonts), 0)
-		
-
-
-		# # AppFontProxy
-		# newFont = GSFont()
-		# Glyphs.fonts.append(newFont)
-		# self.assertIn(newFont, Glyphs.fonts)
-		# self.assertEqual(len(Glyphs.fonts), 1)
-		# self.assertEqual(newFont, Glyphs.font)
-		# copyfont = copy.copy(font)
-		# self.assertNotIn(copyfont, Glyphs.fonts)
-		# newFont.close()
-		# self.assertNotIn(newFont, Glyphs.fonts)
-		# self.assertEqual(len(Glyphs.fonts), 0)
-		# Glyphs.fonts.extend([copyfont])
-		# self.assertIn(copyfont, Glyphs.fonts)
-		# copyfont.close()
-		# with self.assertRaises(TypeError):
-		# 	Glyphs.fonts['a']
-
-		# # open font
-		# pass ### MARK ### Glyphs.open(PathToTestFile)
-		# # Macro window
-		# Glyphs.showMacroWindow()
-		
-		# # Assert font
-		# self.assertIsNotNone(Glyphs.font)
-		# self.assertEqual(len(Glyphs.fonts), 1)
-
-		# # GSApplication.documents
-		# self.assertEqual(len(Glyphs.documents), 1)
-		# self.assertIs(Glyphs.documents[0].font, Glyphs.fonts[0])
-		# with self.assertRaises(TypeError):
-		# 	Glyphs.documents['a']
-		# self.assertIsInstance(copy.copy(Glyphs.documents), list)
-		
-		# # current document #::Rafal
-		# self.assertIsInstance(Glyphs.currentDocument, GSDocument)
-
-		# ## Attributes
-		
-		# # GSApplication.reporters
-		# self.assertGreater(len(list(Glyphs.reporters)), 0)
-		# self.assertGreater(len(Glyphs.reporters), 0)
-		
-		# # activate all reporters
-		
-		# for reporter in Glyphs.reporters:
-		# 	Glyphs.activateReporter(reporter)
-		
-		# self.assertEqual(len(Glyphs.activeReporters), len(Glyphs.reporters))
-		# # deactivate all reporters
-		# for reporter in Glyphs.reporters:
-		# 	Glyphs.deactivateReporter(reporter)
-		# self.assertEqual(len(Glyphs.activeReporters), 0)
-		
-		# self.assertIsInstance(Glyphs.filters, list)
-		
-		# # GSApplication.defaults
-		# self.assertDict(Glyphs.defaults, assertType = False)
-		
-		# del(Glyphs.defaults["TestKey"])
-		# Glyphs.registerDefaults({"TestKey":12})
-		# self.assertEqual(Glyphs.defaults["TestKey"], 12)
-		# Glyphs.registerDefault("TestKey",36) #::Rafal
-		# self.assertEqual(Glyphs.defaults["TestKey"], 36)
-		# Glyphs.registerDefaults({"TestKey":12})
-		# Glyphs.defaults["TestKey"] = 24
-		# self.assertEqual(Glyphs.defaults["TestKey"], 24)
-		# del(Glyphs.defaults["TestKey"])
-		# self.assertEqual(Glyphs.defaults["TestKey"], 12)
-		
-		# # GSApplication.boolDefaults
-		# self.assertIsNone(Glyphs.defaults["BoolKey"])
-		# self.assertIs(Glyphs.boolDefaults["BoolKey"], False)
-		# Glyphs.boolDefaults["BoolKey"] = True
-		# self.assertEqual(Glyphs.boolDefaults["BoolKey"], True)
-		# del Glyphs.boolDefaults["BoolKey"]
-		# with self.assertRaises(TypeError):
-		# 	Glyphs.boolDefaults["BoolKey"] = 12
-
-		# # GSApplication.colorDefaults
-		# self.assertIsNone(Glyphs.colorDefaults["colorKey"])
-		# Glyphs.colorDefaults["colorKey"] = "#ff0000"
-		# self.assertIsNotNone(Glyphs.colorDefaults["colorKey"])
-		# del Glyphs.colorDefaults["colorKey"]
-		# self.assertIsNone(Glyphs.colorDefaults["colorKey"])
-		# with self.assertRaises(ValueError):
-		# 	Glyphs.colorDefaults["colorKey"] = "not a color"
-		# with self.assertRaises(TypeError):
-		# 	Glyphs.colorDefaults["colorKey"] = 12
-
-		# # GSApplication.intDefaults
-		# self.assertIsNone(Glyphs.defaults["IntKey"])
-		# self.assertIs(Glyphs.intDefaults["IntKey"], 0)
-		# Glyphs.intDefaults["IntKey"] = 14
-		# self.assertEqual(Glyphs.intDefaults["IntKey"], 14)
-		# del Glyphs.intDefaults["IntKey"]
-		# with self.assertRaises(TypeError):
-		# 	Glyphs.intDefaults["IntKey"] = 12.5
-
-		# # GSApplication.scriptAbbreviations
-		# self.assertIsNotNone(dict(Glyphs.scriptAbbreviations))
-		
-		# # GSApplication.scriptSuffixes
-		# self.assertIsNotNone(dict(Glyphs.scriptSuffixes))
-		
-		# # GSApplication.languageScripts
-		# self.assertIsNotNone(dict(Glyphs.languageScripts))
-		
-		# # GSApplication.languageData
-		# self.assertIsNotNone(list(map(dict, Glyphs.languageData)))
-		
-		# # GSApplication.unicodeRanges
-		# self.assertIsNotNone(list(Glyphs.unicodeRanges))
-		
-		# # GSApplication.editViewWidth
-		# self.assertInteger(Glyphs.editViewWidth)
-		
-		# # GSApplication.handleSize
-		# self.assertInteger(Glyphs.handleSize)
-		
-		# # GSApplication.versionString
-		# self.assertString(Glyphs.versionString, readOnly = True)
-		
-		# # GSApplication.versionNumber
-		# self.assertFloat(Glyphs.versionNumber, readOnly = True)
-		
-		# # GSApplication.buildNumber
-		# self.assertFloat(Glyphs.buildNumber, readOnly = True)
-
-		# # GSApplication.menu
-		# def a():
-		# 	print('hello')
-		# newMenuItem = NSMenuItem('B', a)
-		# Glyphs.menu[EDIT_MENU].append(newMenuItem)
-		# self.assertIsNotNone(Glyphs.menu[0])
-		# with self.assertRaises(TypeError):
-		# 	Glyphs.menu[1.5]
-		# self.assertList(copy.copy(Glyphs.menu))
-		
-		# ## Methods
-		
-		# # GSApplication.showGlyphInfoPanelWithSearchString()
-		# Glyphs.showGlyphInfoPanelWithSearchString('a')
-		
-		# # GSApplication.glyphInfoForName()
-		# self.assertEqual(str(Glyphs.glyphInfoForName('a')), "<GSGlyphInfo 'a'>")
-		
-		# # GSApplication.glyphInfoForUnicode()
-		# self.assertEqual(str(Glyphs.glyphInfoForUnicode('0061')), "<GSGlyphInfo 'a'>")
-		
-		# # GSApplication.niceGlyphName()
-		# self.assertEqual(Glyphs.niceGlyphName('a'), 'a')
-		
-		# # GSApplication.productionGlyphName()
-		# self.assertEqual(Glyphs.productionGlyphName('a'), 'a')
-		
-		# # GSApplication.ligatureComponents()
-		# self.assertEqual(len(list(Glyphs.ligatureComponents('allah-ar'))), 4)
-		
-		# # GSApplication.redraw()
-		# Glyphs.redraw()
-		
-		# # GSApplication.showNotification()
-		# Glyphs.showNotification('Glyphs Unit Test', 'Hello World')
-		
-		# self.assertIsNotNone(Glyphs.localize({
-		# 	'en':  'Hello World',
-		# 	'de': u'Hallöle Welt',
-		# 	'fr':  'Bonjour tout le monde',
-		# 	'es':  'Hola Mundo',
-		# 	}))
-		
-		# # callbacks #::Rafal # don't know if it makes sense at all
-		# def testCallbackMethod(**kwrgs):
-		# 	pass
-		# callbacks = ("DrawForeground", "DrawBackground", "DrawInactive", "GSDocumentWasOpenedNotification", "GSDocumentActivateNotification", "GSDocumentWasSavedSuccessfully", "GSDocumentWasExportedNotification", "GSDocumentCloseNotification", "TabDidOpenNotification", "TabWillCloseNotification", "GSUpdateInterface", "mouseMovedNotification", "mouseDraggedNotification", "mouseDownNotification", "mouseUpNotification", "GSContextMenuCallbackName")
-		# for callback in callbacks:
-		# 	Glyphs.addCallback(testCallbackMethod, callback)
-		# 	Glyphs.removeCallback(testCallbackMethod)
 	def assertIsFile(self, path):
 		# NOTE: can you confirm if this is proper? <MF @GS>
 		if not Pathlib.Path(path).resolve().is_file():
@@ -335,18 +137,19 @@ class GlyphsAppTests(unittest.TestCase):
 		# GSFont.save()
 		# Test saving early to not save in a bad state.
 		# This still slightly mutates the test file.
-		# font.save() # Mark: This does not work, as save() expects a file path.
+		# font.save()
+		# NOTE: ^ This does not work, as save() expects a file path (Docu says 'If no path is given, it saves to the existing location.') <MF @GS>
 		copypath = PathToTestFile[:-7] + "-copy.glyphs"
 		copypath_ufo = PathToTestFile[:-7] + "-copy.ufo"
 		font.save(path=copypath, makeCopy=True)
 		font.save(path=copypath_ufo, makeCopy=True)
 		with self.assertRaises(ValueError):
 			font.save(path="wrong.extension")
+		
+		self.assertIsFile(copypath)
+		self.assertIsFile(copypath_ufo) # TODO: UFO not created <MF @GS>
 
 		## Attributes
-		
-		# GSFont.parent
-		# self.assertIn('GSDocument', str(font.parent))
 
 		# GSFont.masters
 		amountLayersPerGlyph = len(font.glyphs['a'].layers)
@@ -354,8 +157,10 @@ class GlyphsAppTests(unittest.TestCase):
 		# EXPLAIN:
 		# self.assertList(font.masters, assertType=False, testValues=[
 		# 		GSFontMaster(), GSFontMaster(), copy.copy(GSFontMaster())])
+		# GS: I think the `assertList()` is meant to compare the list in the first argument to the `testValues`. And as the test font is quite empty, a new GSFontMaster (or a copy of it) should make it. We probably should check the `copy.copy()` somewhere else.
 		self.assertEqual(amountLayersPerGlyph, len(font.glyphs['a'].layers))
 		# ???: ^ What’s the intention here? `amountLayersPerGlyph` is the same as `len(font.glyphs['a'].layers)` -- Why the assertEqual of those? <MF @GS>
+		# GS: I seems that it was intended to add a master on some point. Or just to make sure that there are no side effects.
 		self.assertEqual(font.masters[0], font.masters[font.masters[0].id])
 		with self.assertRaises(TypeError):
 			font.masters[2.2]
@@ -416,10 +221,12 @@ class GlyphsAppTests(unittest.TestCase):
 		
 		# GSFont.features
 		font.features = []
+		testFeature = GSFeature('liga', 'sub f i by fi;')
 		self.assertList(font.features, assertType=False, testValues=[
-				GSFeature('liga', 'sub f i by fi;'),
+				testFeature,
 				copy.copy(GSFeature('liga', 'sub f l by fl;'))])
-		font.features.append(GSFeature('liga', 'sub f i by fi;'))
+		font.features.append(testFeature)
+		self.assertListEqual( list(font.features), [testFeature])
 		self.assertIsNotNone(font.features['liga'].__repr__())
 		self.assertEqual(len(font.features), 1)
 		self.assertIn('<GSFeature "liga">', str(font.features))
@@ -560,58 +367,6 @@ class GlyphsAppTests(unittest.TestCase):
 		font.grid = old_grid
 		font.gridSubDivisions = old_gridSubDivisions
 		self.assertAlmostEqual(font.gridLength, float(font.grid)/font.gridSubDivisions)
-		
-		# GSFont.selection
-		# for glyph in font.glyphs:
-		# 	glyph.selected = False
-		# font.glyphs['a'].selected = True
-		# self.assertEqual(len(list(font.selection)), 1)
-		# for glyph in font.glyphs:
-		# 	glyph.selected = True
-		# self.assertEqual(set(font.selection), set(font.glyphs))
-		# font.selection = [font.glyphs['a']]
-		# self.assertEqual(list(font.selection), [font.glyphs['a']])
-		# with self.assertRaises(TypeError):
-		# 	font.selection = 0
-		# TODO: ^ Move to UI Test <MF @MF>
-		
-		# GSFont.selectedLayers
-		# GSFont.currentText
-		# GSFont.tabs
-		# GSFont.currentTab
-		# for tab in font.tabs:
-		# 	tab.close()
-		# tab = font.newTab('a')
-		# self.assertEqual(tab, font.tabs[-1])
-		# self.assertIsNotNone(font.currentTab.__repr__())
-		# self.assertEqual(len(list(font.selectedLayers)), 1)
-		# self.assertEqual(len(list(font.tabs)), 1)
-		# self.assertEqual(font.currentText, 'a')
-		# font.currentText = 'A'
-		# self.assertEqual(font.currentText, 'A')
-		# self.assertEqual(font.currentTab, font.tabs[-1])
-		# tab2 = font.newTab('n')
-		# self.assertEqual(font.currentTab, tab2)
-		# font.currentTab = tab
-		# self.assertEqual(font.currentTab, tab)
-		# font.tabs[0].close()
-		# self.assertEqual(font.currentTab, tab2)
-		# font.tabs[0].close()
-		# # values are None when no tabs are open
-		# self.assertIsNone(font.currentText)
-		# self.assertIsNone(font.currentTab)
-		# with self.assertRaises(TypeError):
-		# 	font.tabs['']
-		# TODO: ^ Move to UI Test <MF @MF>
-		
-		# GSFont.selectedFontMaster
-		# GSFont.masterIndex
-		# oldMasterIndex = font.masterIndex
-		# for i in range(len(list(font.masters))):
-		# 	font.masterIndex = i
-		# 	self.assertEqual(font.selectedFontMaster, font.masters[i])
-		# font.masterIndex = oldMasterIndex
-		# TODO: ^ Move to UI Test <MF @MF>
 		
 		# GSFont.filepath
 		font = self.font
