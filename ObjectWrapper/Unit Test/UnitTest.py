@@ -24,7 +24,6 @@ NSDate, \
 NSDictionary, \
 NSImage, \
 NSMenuItem, \
-NSMenuItem, \
 NSNull, \
 NSNumber, \
 NSPoint, \
