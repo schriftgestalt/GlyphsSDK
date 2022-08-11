@@ -145,110 +145,11 @@ class GlyphsAppTests(unittest.TestCase):
 
 	def setUp(self):
 		self.font = self.fontFromPath()
-
+	
 	def test_GSFont(self):
 		font = self.font
 
 		## Attributes
-
-		# GSFont.masters
-		amountLayersPerGlyph = len(font.glyphs['a'].layers)
-		self.assertGreaterEqual(len(list(font.masters)), 1)
-		# EXPLAIN:
-		# self.assertList(font.masters, assertType=False, testValues=[
-		# 		GSFontMaster(), GSFontMaster(), copy.copy(GSFontMaster())])
-		# GS: I think the `assertList()` is meant to compare the list in the first argument to the `testValues`. And as the test font is quite empty, a new GSFontMaster (or a copy of it) should make it. We probably should check the `copy.copy()` somewhere else.
-		self.assertEqual(amountLayersPerGlyph, len(font.glyphs['a'].layers))
-		# ???: ^ What’s the intention here? `amountLayersPerGlyph` is the same as `len(font.glyphs['a'].layers)` -- Why the assertEqual of those? <MF @GS>
-		# GS: I seems that it was intended to add a master on some point. Or just to make sure that there are no side effects.
-		self.assertEqual(font.masters[0], font.masters[font.masters[0].id])
-		with self.assertRaises(TypeError):
-			font.masters[2.2]
-
-		# GSFont.instances
-		self.assertGreaterEqual(len(list(font.instances)), 1)
-		# self.assertList(font.instances, assertType=False, testValues=[
-		# 		GSInstance(), GSInstance(), copy.copy(GSInstance())])
-		# ???: ^ What’s the intention here? Fails with the test font. Shall it compare with another, empty font (because then it would pass) <MF @GS>
-		with self.assertRaises(TypeError):
-			font.instances['a']
-
-		# GSFont.axes
-		# self.assertList(font.axes, assertType=False, testValues=[
-		# 		GSAxis(), GSAxis(), copy.copy(GSAxis())])
-		# ???: ^ What’s the intention here? Fails with the test font. Shall it compare with another, empty font (because then it would pass) <MF @GS>
-		with self.assertRaises(TypeError):
-			font.axes['a']
-
-		# GSFont.stems
-		#TODO get working testvalues
-		#self.assertList(font.stems, assertType=False, testValues=[...])
-		with self.assertRaises(TypeError):
-			font.stems[12.4]
-
-		# GSFont.glyphs
-		self.assertGreaterEqual(len(list(font.glyphs)), 1)
-		self.assertIs(font['a'], font.glyphs['a'])  # direct access
-		self.assertEqual(font.glyphs[u'ä'], font.glyphs['adieresis'])
-		self.assertEqual(font.glyphs['00E4'], font.glyphs['adieresis'])
-		self.assertEqual(font.glyphs['00e4'], font.glyphs['adieresis'])
-		with self.assertRaises(TypeError):
-			font.glyphs[1.4]
-		with self.assertRaises(NameError):
-			font.glyphs.append(GSGlyph('adieresis'))
-
-		# GSFont.classes
-		font.classes = []
-		self.assertList(font.classes, assertType=False, testValues=[
-				GSClass('uppercaseLetters0', 'A'),
-				GSClass('uppercaseLetters1', 'A'),
-				copy.copy(GSClass('uppercaseLetters2', 'A'))])
-		amount = len(font.classes)
-		newClass = GSClass('uppercaseLetters', 'A')
-		font.classes.append(newClass)
-		self.assertIsNotNone(font.classes[-1].__repr__())
-		self.assertIn('<GSClass "uppercaseLetters">', str(font.classes))
-		self.assertEqual('A', font.classes['uppercaseLetters'].code)
-		copyClass = copy.copy(newClass)
-		self.assertIsNone(copyClass.parent())
-		self.assertIs(newClass.parent(), font)
-		font.classes.insert(0, copyClass)
-		self.assertEqual(copyClass.parent(), newClass.parent())
-		font.classes.remove(font.classes[0])
-		self.assertEqual(len(font.classes), amount)
-		with self.assertRaises(TypeError):
-			font.classes[1.23]
-		
-		# GSFont.features
-		font.features = []
-		testFeature = GSFeature('liga', 'sub f i by fi;')
-		self.assertList(font.features, assertType=False, testValues=[
-				testFeature,
-				copy.copy(GSFeature('liga', 'sub f l by fl;'))])
-		font.features.append(testFeature)
-		self.assertListEqual( list(font.features), [testFeature])
-		self.assertIsNotNone(font.features['liga'].__repr__())
-		self.assertEqual(len(font.features), 1)
-		self.assertIn('<GSFeature "liga">', str(font.features))
-		self.assertEqual('sub f i by fi;', font.features['liga'].code)
-		del(font.features['liga'])
-		with self.assertRaises(TypeError):
-			font.features[12.43]
-		
-		# GSFont.featurePrefixes
-		font.featurePrefixes = []
-		self.assertList(font.featurePrefixes, assertType=False, testValues=[
-				GSFeaturePrefix('LanguageSystems0', 'languagesystem DFLT dflt;'),
-				GSFeaturePrefix('LanguageSystems1', 'languagesystem DFLT dflt;'),
-				copy.copy(GSFeaturePrefix('LanguageSystems2', 'languagesystem DFLT dflt;'))])
-		font.featurePrefixes.append(GSFeaturePrefix('LanguageSystems', 'languagesystem DFLT dflt;'))
-		self.assertIsNotNone(font.featurePrefixes[-1].__repr__())
-		self.assertEqual(len(font.featurePrefixes), 1)
-		self.assertIn('<GSFeaturePrefix "LanguageSystems">', str(font.featurePrefixes))
-		self.assertEqual('languagesystem DFLT dflt;', font.featurePrefixes[-1].code)
-		del(font.featurePrefixes['LanguageSystems'])
-		with self.assertRaises(TypeError):
-			font.featurePrefixes[1.23]
 		
 		# GSFont.copyright
 		self.assertUnicode(font.copyright)
@@ -296,57 +197,9 @@ class GlyphsAppTests(unittest.TestCase):
 		
 		# GSFont.note
 		self.assertUnicode(font.note)
-		
-		test_kerning = {"C4872ECA-A3A9-40AB-960A-1DB2202F16DE": {"@MMK_L_A": {"@MMK_R_J": -22}}}
-		# GSFont.kerning
-		self.assertDict(font.kerning, assertType=False)
-		old_kerning = font.kerning
-		font.kerning = test_kerning
-		self.assertEqual(font.kerning, test_kerning)
-		font.kerning = old_kerning
-		
-		# GSFont.kerningVertical  #::Rafal
-		self.assertDict(font.kerningVertical, assertType=False)
-		old_kerning = font.kerningVertical
-		font.kerningVertical = test_kerning
-		self.assertEqual(font.kerningVertical, test_kerning)
-		font.kerningVertical = old_kerning
-
-		# GSFont.kerningRTL  #::Rafal
-		self.assertDict(font.kerningRTL, assertType=False)
-		old_kerning = font.kerningRTL
-		font.kerningRTL = test_kerning
-		self.assertEqual(font.kerningRTL, test_kerning)
-		font.kerningRTL = old_kerning
-
-		# GSFont.userData
-		self.assertIsNotNone(font.userData)
-		font.userData["TestData"] = 42
-		self.assertEqual(font.userData["TestData"], 42)
-		del(font.userData["TestData"])
-		self.assertIsNone(font.userData["TestData"])
-		
-		# GSFont.tempData
-		self.assertIsNotNone(font.tempData)
-		font.tempData["TestData"] = 42
-		self.assertEqual(font.tempData["TestData"], 42)
-		del(font.tempData["TestData"])
-		self.assertIsNone(font.tempData["TestData"])
-		
+				
 		# GSFont.disablesNiceNames
 		self.assertBool(font.disablesNiceNames)
-		
-		# GSFont.customParameters
-		font.customParameters['trademark'] = 'ThisFont is a trademark by MyFoundry.com'
-		self.assertEqual(font.customParameters['trademark'], 'ThisFont is a trademark by MyFoundry.com')
-		# self.assertList(font.customParameters, assertType=False, testValues=[
-		# 		GSCustomParameter('hello0', 'world0'),
-		# 		GSCustomParameter('hello1', 'world1'),
-		# 		copy.copy(GSCustomParameter('hello2', 'world2'))])
-		# ???: ^ What’s the intention here? Fails with the test font. Shall it compare with another, empty font (because then it would pass) <MF @GS>
-		del(font.customParameters['trademark'])
-		with self.assertRaises(TypeError):
-			font.customParameters[12.3]
 		
 		# GSFont.grid
 		self.assertInteger(font.grid)
@@ -367,14 +220,6 @@ class GlyphsAppTests(unittest.TestCase):
 		font.grid = old_grid
 		font.gridSubDivisions = old_gridSubDivisions
 		self.assertAlmostEqual(font.gridLength, float(font.grid)/font.gridSubDivisions)
-		
-		# GSFont.filepath
-		font = self.font
-		## self.assertIsNotNone(font.filepath)
-		## self.assertIsInstance(font.filepath, str)
-		# make sure this is a valid and existing path
-		## self.assertTrue(os.path.exists(font.filepath))
-		## TODO: ^ Re-enable once font.filepath is fixed to properly work with `GSFont(PATH)` <MF @MF @GS>
 		
 		# GSFont.tool
 		# GSFont.tools
@@ -417,10 +262,6 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertBool(font.previewRemoveOverlap)
 
 		## Methods
-		
-		# GSFont.close()
-		### MARK ### font.close()
-		pass ### MARK ### Glyphs.open(PathToTestFile)
 		
 		# GSFont.disableUpdateInterface()
 		font.disableUpdateInterface()
@@ -505,6 +346,181 @@ class GlyphsAppTests(unittest.TestCase):
 
 		font = copy.copy(font) # Testing this at the end because otherwise some UI-dependent tests fail (like selection of glyphs)
 
+	## GSFont Atributes
+
+	def test_GSFont_filepath(self):
+		font = self.font
+		self.assertIsNotNone(font.filepath)
+		self.assertIsInstance(font.filepath, str)
+		# make sure this is a valid and existing path
+		self.assertTrue(os.path.exists(font.filepath))
+		## TODO: font.filepath seems to not work with `GSFont(PATH)` <MF @GS>
+
+	def test_GSFont_masters(self):
+		font = self.font
+		amountLayersPerGlyph = len(font.glyphs['a'].layers)
+		self.assertGreaterEqual(len(list(font.masters)), 1)
+		# TODO: reactivate this again and make it work <MF @MF>
+		# self.assertList(font.masters, assertType=False, testValues=[
+		# 		GSFontMaster(), GSFontMaster(), copy.copy(GSFontMaster())])
+		# GS: I think the `assertList()` is meant to compare the list in the first argument to the `testValues`. And as the test font is quite empty, a new GSFontMaster (or a copy of it) should make it. We probably should check the `copy.copy()` somewhere else.
+		self.assertEqual(amountLayersPerGlyph, len(font.glyphs['a'].layers))
+		# ???: ^ What’s the intention here? `amountLayersPerGlyph` is the same as `len(font.glyphs['a'].layers)` -- Why the assertEqual of those? <MF @GS>
+		# GS: I seems that it was intended to add a master on some point. Or just to make sure that there are no side effects.
+		self.assertEqual(font.masters[0], font.masters[font.masters[0].id])
+		with self.assertRaises(TypeError):
+			font.masters[2.2]	
+
+	def test_GSFont_intances(self):
+		font = self.font
+		self.assertGreaterEqual(len(list(font.instances)), 1)
+		# TODO: reactivate this again and make it work <MF @MF>
+		# self.assertList(font.instances, assertType=False, testValues=[
+		# 		GSInstance(), GSInstance(), copy.copy(GSInstance())])
+		# ???: ^ What’s the intention here? Fails with the test font. Shall it compare with another, empty font (because then it would pass) <MF @GS>
+		with self.assertRaises(TypeError):
+			font.instances['a']
+
+	def test_GSFont_axes(self):
+		font = self.font
+		# TODO: reactivate this again and make it work <MF @MF>
+		# self.assertList(font.axes, assertType=False, testValues=[
+		# 		GSAxis(), GSAxis(), copy.copy(GSAxis())])
+		# ???: ^ What’s the intention here? Fails with the test font. Shall it compare with another, empty font (because then it would pass) <MF @GS>
+		with self.assertRaises(TypeError):
+			font.axes['a']
+
+	def test_GSFont_stems(self):
+		font = self.font
+		#TODO get working testvalues
+		#self.assertList(font.stems, assertType=False, testValues=[...])
+		with self.assertRaises(TypeError):
+			font.stems[12.4]
+
+	def test_GSFont_glyphs(self):
+		font = self.font
+		self.assertGreaterEqual(len(list(font.glyphs)), 1)
+		self.assertIs(font['a'], font.glyphs['a'])  # direct access
+		self.assertEqual(font.glyphs[u'ä'], font.glyphs['adieresis'])
+		self.assertEqual(font.glyphs['00E4'], font.glyphs['adieresis'])
+		self.assertEqual(font.glyphs['00e4'], font.glyphs['adieresis'])
+		with self.assertRaises(TypeError):
+			font.glyphs[1.4]
+		with self.assertRaises(NameError):
+			font.glyphs.append(GSGlyph('adieresis'))
+
+
+	def test_GSFont_classes(self):
+		font = self.font
+		font.classes = []
+		self.assertList(font.classes, assertType=False, testValues=[
+				GSClass('uppercaseLetters0', 'A'),
+				GSClass('uppercaseLetters1', 'A'),
+				copy.copy(GSClass('uppercaseLetters2', 'A'))])
+		amount = len(font.classes)
+		newClass = GSClass('uppercaseLetters', 'A')
+		font.classes.append(newClass)
+		self.assertIsNotNone(font.classes[-1].__repr__())
+		self.assertIn('<GSClass "uppercaseLetters">', str(font.classes))
+		self.assertEqual('A', font.classes['uppercaseLetters'].code)
+		copyClass = copy.copy(newClass)
+		self.assertIsNone(copyClass.parent())
+		self.assertIs(newClass.parent(), font)
+		font.classes.insert(0, copyClass)
+		self.assertEqual(copyClass.parent(), newClass.parent())
+		font.classes.remove(font.classes[0])
+		self.assertEqual(len(font.classes), amount)
+		with self.assertRaises(TypeError):
+			font.classes[1.23]
+
+	def test_GSFont_features(self):
+		font = self.font
+		font.features = []
+		testFeature = GSFeature('liga', 'sub f i by fi;')
+		self.assertList(font.features, assertType=False, testValues=[
+				testFeature,
+				copy.copy(GSFeature('liga', 'sub f l by fl;'))])
+		font.features.append(testFeature)
+		self.assertListEqual( list(font.features), [testFeature])
+		self.assertIsNotNone(font.features['liga'].__repr__())
+		self.assertEqual(len(font.features), 1)
+		self.assertIn('<GSFeature "liga">', str(font.features))
+		self.assertEqual('sub f i by fi;', font.features['liga'].code)
+		del(font.features['liga'])
+		with self.assertRaises(TypeError):
+			font.features[12.43]
+
+	def test_GSFont_featurePrefixes(self):
+		font = self.font
+		font.featurePrefixes = []
+		self.assertList(font.featurePrefixes, assertType=False, testValues=[
+				GSFeaturePrefix('LanguageSystems0', 'languagesystem DFLT dflt;'),
+				GSFeaturePrefix('LanguageSystems1', 'languagesystem DFLT dflt;'),
+				copy.copy(GSFeaturePrefix('LanguageSystems2', 'languagesystem DFLT dflt;'))])
+		font.featurePrefixes.append(GSFeaturePrefix('LanguageSystems', 'languagesystem DFLT dflt;'))
+		self.assertIsNotNone(font.featurePrefixes[-1].__repr__())
+		self.assertEqual(len(font.featurePrefixes), 1)
+		self.assertIn('<GSFeaturePrefix "LanguageSystems">', str(font.featurePrefixes))
+		self.assertEqual('languagesystem DFLT dflt;', font.featurePrefixes[-1].code)
+		del(font.featurePrefixes['LanguageSystems'])
+		with self.assertRaises(TypeError):
+			font.featurePrefixes[1.23]
+
+	def test_GSFont_kerning(self):
+		font = self.font
+		test_kerning = {"C4872ECA-A3A9-40AB-960A-1DB2202F16DE": {"@MMK_L_A": {"@MMK_R_J": -22}}}
+		# GSFont.kerning
+		self.assertDict(font.kerning, assertType=False)
+		old_kerning = font.kerning
+		font.kerning = test_kerning
+		self.assertEqual(font.kerning, test_kerning)
+		font.kerning = old_kerning
+		
+		# GSFont.kerningVertical  #::Rafal
+		self.assertDict(font.kerningVertical, assertType=False)
+		old_kerning = font.kerningVertical
+		font.kerningVertical = test_kerning
+		self.assertEqual(font.kerningVertical, test_kerning)
+		font.kerningVertical = old_kerning
+
+		# GSFont.kerningRTL  #::Rafal
+		self.assertDict(font.kerningRTL, assertType=False)
+		old_kerning = font.kerningRTL
+		font.kerningRTL = test_kerning
+		self.assertEqual(font.kerningRTL, test_kerning)
+		font.kerningRTL = old_kerning		
+
+	def test_GSFont_userData(self):
+		font = self.font
+		self.assertIsNotNone(font.userData)
+		font.userData["TestData"] = 42
+		self.assertEqual(font.userData["TestData"], 42)
+		del(font.userData["TestData"])
+		self.assertIsNone(font.userData["TestData"])
+
+	def test_GSFont_tempData(self):
+		font = self.font
+		self.assertIsNotNone(font.tempData)
+		font.tempData["TestData"] = 42
+		self.assertEqual(font.tempData["TestData"], 42)
+		del(font.tempData["TestData"])
+		self.assertIsNone(font.tempData["TestData"])		
+
+	def test_GSFont_customParameters(self):
+		font = self.font
+		font.customParameters['trademark'] = 'ThisFont is a trademark by MyFoundry.com'
+		self.assertEqual(font.customParameters['trademark'], 'ThisFont is a trademark by MyFoundry.com')
+		# self.assertList(font.customParameters, assertType=False, testValues=[
+		# 		GSCustomParameter('hello0', 'world0'),
+		# 		GSCustomParameter('hello1', 'world1'),
+		# 		copy.copy(GSCustomParameter('hello2', 'world2'))])
+		# ???: ^ What’s the intention here? Fails with the test font. Shall it compare with another, empty font (because then it would pass) <MF @GS>
+		del(font.customParameters['trademark'])
+		with self.assertRaises(TypeError):
+			font.customParameters[12.3]
+
+	## GSFont Methods
+
 	def test_GSFont_save_dotglyphs(self):
 		font = self.font
 		
@@ -531,6 +547,7 @@ class GlyphsAppTests(unittest.TestCase):
 
 		self.assertIsFile(copypath_ufo) # TODO: UFO not created <MF @GS>
 
+	## GSAxis
 
 	def test_GSAxis(self):
 		#font = Glyphs.font
