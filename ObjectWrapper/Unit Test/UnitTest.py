@@ -151,65 +151,65 @@ class GlyphsAppTests(unittest.TestCase):
 
 		## Attributes
 		
-		# GSFont.copyright
-		self.assertUnicode(font.copyright)
+		with self.subTest("copyright"):
+			self.assertUnicode(font.copyright)
 		
-		# GSFont.designer
-		self.assertUnicode(font.designer)
+		with self.subTest("designer"):
+			self.assertUnicode(font.designer)
 		
-		# GSFont.designerURL
-		self.assertUnicode(font.designerURL)
+		with self.subTest("designerURL"):	
+			self.assertUnicode(font.designerURL)
+
+		with self.subTest("manufacturer"):
+			self.assertUnicode(font.manufacturer)
 		
-		# GSFont.manufacturer
-		self.assertUnicode(font.manufacturer)
+		with self.subTest("manufacturerURL"):
+			self.assertUnicode(font.manufacturerURL)
 		
-		# GSFont.manufacturerURL
-		self.assertUnicode(font.manufacturerURL)
+		with self.subTest("versionMajor"):
+			self.assertInteger(font.versionMajor)
 		
-		# GSFont.versionMajor
-		self.assertInteger(font.versionMajor)
-		
-		# GSFont.versionMinor
-		self.assertInteger(font.versionMinor)
+		with self.subTest("versionMinor"):
+			self.assertInteger(font.versionMinor)
 				
-		# GSFont.familyName
-		self.assertUnicode(font.familyName)
+		with self.subTest("familyName"):
+			self.assertUnicode(font.familyName)
 
-		# GSFont.fontName
-		self.assertEqual(font.fontName, font.familyName)
+		with self.subTest("fontName"):
+			self.assertEqual(font.fontName, font.familyName)
 		
-		# GSFont.upm
-		self.assertInteger(font.upm)
+		with self.subTest("upm"):
+			self.assertInteger(font.upm)
 		
-		# GSFont.note
-		self.assertUnicode(font.note)
+		with self.subTest("note"):
+			self.assertUnicode(font.note)
 				
-		# GSFont.disablesNiceNames
-		self.assertBool(font.disablesNiceNames)
+		with self.subTest("disablesNiceNames"):
+			self.assertBool(font.disablesNiceNames)
 
-		# GSFont.appVersion #::Rafal
-		self.assertUnicode(font.appVersion, readOnly=True, allowNone=False)
+		with self.subTest("appVersion"): #::Rafal
+			self.assertUnicode(font.appVersion, readOnly=True, allowNone=False)
 		
-		# GSFont.formatVersion #::Rafal
-		self.assertInteger(font.formatVersion)
+		with self.subTest("formatVersion"): #::Rafal
+			self.assertInteger(font.formatVersion)
 				
-		# GSFont.keyboardIncrementHuge #::Rafal
-		self.assertFloat(font.keyboardIncrementHuge)
+		with self.subTest("keyboardIncrementHuge"): #::Rafal
+			self.assertFloat(font.keyboardIncrementHuge)
 
-		# GSFont.keyboardIncrementBig #::Rafal
-		self.assertFloat(font.keyboardIncrementBig)
+		with self.subTest("keyboardIncrementBig"): #::Rafal
+			self.assertFloat(font.keyboardIncrementBig)
 
-		# GSFont.keyboardIncrement #::Rafal
-		self.assertFloat(font.keyboardIncrement)
+		with self.subTest("keyboardIncrement"): #::Rafal
+			self.assertFloat(font.keyboardIncrement)
 
-		# GSFont.disablesAutomaticAlignment  #::Rafal
-		self.assertBool(font.disablesAutomaticAlignment)
+		with self.subTest("disablesAutomaticAlignment"): #::Rafal
+			self.assertBool(font.disablesAutomaticAlignment)
 
-		# GSFont.snapToObjects
-		self.assertBool(font.snapToObjects)
+		with self.subTest("snapToObjects"):
+			self.assertBool(font.snapToObjects)
 
-		# GSFont.previewRemoveOverlap
-		self.assertBool(font.previewRemoveOverlap)
+		with self.subTest("previewRemoveOverlap"):
+			self.assertBool(font.previewRemoveOverlap)
 
 		## Methods
 		
@@ -344,11 +344,11 @@ class GlyphsAppTests(unittest.TestCase):
 
 	def test_GSFont_axes(self):
 		"""
-		- [x] name
-		- [x] axisTag
-		- [ ] axisId
-		- [x] hidden
-		- [x] font
+		- (x) name
+		- (x) axisTag
+		- ( ) axisId
+		- (x) hidden
+		- (x) font
 		"""
 		font = self.font
 		# TODO: reactivate this again and make it work <MF @MF>
