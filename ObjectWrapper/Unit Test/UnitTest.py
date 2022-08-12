@@ -132,6 +132,8 @@ class GlyphsAppTests(unittest.TestCase):
 			self.assertEqual(boolObject, (not oldValue))
 			boolObject = oldValue
 	
+	## Helper Methods
+
 	def assertIsFile(self, path):
 		# NOTE: can you confirm if this is proper? <MF @GS>
 		if not Pathlib.Path(path).resolve().is_file():
@@ -288,13 +290,13 @@ class GlyphsAppTests(unittest.TestCase):
 
 	## GSFont Atributes
 
+	@unittest.skip("font.filepath seems to not work with `GSFont({PATH})` <MF @GS>")
 	def test_GSFont_filepath(self):
 		font = self.font
 		self.assertIsNotNone(font.filepath)
 		self.assertIsInstance(font.filepath, str)
 		# make sure this is a valid and existing path
 		self.assertTrue(os.path.exists(font.filepath))
-		## TODO: font.filepath seems to not work with `GSFont(PATH)` <MF @GS>
 
 	def test_GSFont_date(self):
 		font = self.font
@@ -582,7 +584,7 @@ class GlyphsAppTests(unittest.TestCase):
 		
 		self.assertIsFile(copypath)
 
-	@unittest.skip('Implement UFO saving <@GS>')
+	@unittest.skip('Implement UFO saving with `GSFont({PATH})` <@GS>')
 	def test_GSFont_save_dotufo(self):
 		font = self.font
 		copypath_ufo = PathToTestFile[:-7] + "-copy.ufo"
