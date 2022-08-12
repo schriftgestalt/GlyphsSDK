@@ -415,11 +415,11 @@ class GlyphsAppTests(unittest.TestCase):
 		- (x) name
 		- (x) id
 		- (x) filter
-		- ( ) type
+		- (x) type
 		- (x) horizontal
 		Not implemented in wrapper:
-		- ( ) title()
-		- ( ) titles()
+		- (x) title()
+		- (x) titles()
 		"""
 		font = self.font
 		metric = font.metrics[0]
@@ -427,20 +427,31 @@ class GlyphsAppTests(unittest.TestCase):
 		with self.subTest("font"):		
 			self.assertIs(metric.font, font)
 
+		with self.subTest("type"):		
+			self.assertInteger(metric.type)
+			self.assertIs(metric.type, 1)
+			# test mutability
+			metric.type = 2
+			self.assertIs(metric.type, 2)
+			metric.type = 1
+
 		with self.subTest("name"):		
 			self.assertUnicode(metric.name)
 			self.assertIsNone(metric.name)
+			# test mutability
 			metric.name = "Test Name"
 			self.assertIsNotNone(metric.name)
 			self.assertEqual(metric.name, "Test Name")
 			metric.name = None
 			self.assertIsNone(metric.name)
 		
-		with self.subTest("title()"):
-			self.assertEqual(metric.title(), "Ascender")
-
-		# GSMetric.id
-		self.assertUnicode(metric.id, readOnly=True)
+		with self.subTest("id"):
+			self.assertUnicode(metric.id, readOnly=True)
+			# NOTE: testing read only like so, as `assertUnicode => readOnly` seems not fully implemented <MF>
+			# QUESTION: We should implement a proper readOnly in all those custom assert... Methods, no? <MF @GS>
+			with self.assertRaises(AttributeError) as ctx:
+				metric.id = "testidthatmaynotbeapplied"
+			self.assertEqual("can't set attribute", str(ctx.exception))
 
 		with self.subTest("horizontal"):
 			self.assertBool(metric.horizontal)
@@ -448,6 +459,7 @@ class GlyphsAppTests(unittest.TestCase):
 
 		with self.subTest("filter"):
 			self.assertIsNone(metric.filter)
+			# test mutability
 			tetsFilter = NSPredicate.predicateWithFormat_('(category == "Letter")')
 			metric.filter = tetsFilter
 			self.assertEqual(metric.filter, tetsFilter)
@@ -455,8 +467,22 @@ class GlyphsAppTests(unittest.TestCase):
 			metric.filter = None
 			self.assertIsNone(metric.filter)
 
+		with self.subTest("title()"):
+			self.assertEqual(metric.title(), "Ascender")
+
+		with self.subTest("titles()"):
+			self.assertEqual(metric.titles(), ["Ascender"])
+
 	def test_GSFont_stems(self):
+		"""
+		- ( ) hoizontal 
+		"""
 		font = self.font
+
+		with self.subTest("horizontal"):
+			self.assertBool(font.stems[0].horizontal)
+			self.assertEqual(font.stems[0].horizontal, True)
+
 		#TODO get working testvalues
 		#self.assertList(font.stems, assertType=False, testValues=[...])
 		with self.assertRaises(TypeError) as ctx:
