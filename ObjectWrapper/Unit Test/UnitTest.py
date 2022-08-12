@@ -2287,6 +2287,9 @@ if __name__ == '__main__':
 	### MARK ### cov = coverage.Coverage(include=["*/GlyphsApp/__init__.py"])
 	### MARK ### cov.start()
 
+	# Hides Docstring from Verbosis mode (e.g.`verbosity=2`)
+	unittest.TestCase.shortDescription = lambda x: None
+
 	unittest.main(exit=False, failfast=False, verbosity=2)
 
 	### MARK ### cov.stop()
