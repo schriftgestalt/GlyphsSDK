@@ -32,6 +32,11 @@ NSRect
 
 import pathlib as Pathlib
 
+## Development Settings <MF>
+SKIP_FILE_SAVING = True # default: `False`
+PRINT_VERBOSE = 1 # `2` or default: `1`
+## ====================
+
 if sys.version_info[0] == 3:
 	unicode = str
 
@@ -567,6 +572,7 @@ class GlyphsAppTests(unittest.TestCase):
 
 	## GSFont Methods
 
+	@unittest.skipIf(SKIP_FILE_SAVING, "Don’t save when developping this file.")
 	def test_GSFont_save_dotglyphs(self):
 		font = self.font
 		
@@ -2293,7 +2299,7 @@ if __name__ == '__main__':
 	# Hides Docstring from Verbosis mode (e.g.`verbosity=2`)
 	unittest.TestCase.shortDescription = lambda x: None
 
-	unittest.main(exit=False, failfast=False, verbosity=2)
+	unittest.main(exit=False, failfast=False, verbosity=PRINT_VERBOSE)
 
 	### MARK ### cov.stop()
 	### MARK ### cov.save()
