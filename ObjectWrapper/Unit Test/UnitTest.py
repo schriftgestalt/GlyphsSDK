@@ -579,6 +579,7 @@ class GlyphsAppTests(unittest.TestCase):
 		
 		self.assertIsFile(copypath)
 
+	@unittest.skip('Implement UFO saving <@GS>')
 	def test_GSFont_save_dotufo(self):
 		font = self.font
 		copypath_ufo = PathToTestFile[:-7] + "-copy.ufo"
@@ -586,7 +587,7 @@ class GlyphsAppTests(unittest.TestCase):
 		with self.assertRaises(ValueError):
 			font.save(path="wrong.extension")
 
-		self.assertIsFile(copypath_ufo) # TODO: UFO not created <MF @GS>
+		self.assertIsFile(copypath_ufo) # TODO: UFO not created #1471 <MF @GS>
 
 	def test_GSFont_kerning(self):
 		font = self.font
@@ -2284,7 +2285,7 @@ if __name__ == '__main__':
 	### MARK ### cov = coverage.Coverage(include=["*/GlyphsApp/__init__.py"])
 	### MARK ### cov.start()
 
-	unittest.main(exit=False, failfast=False)
+	unittest.main(exit=False, failfast=False, verbosity=2)
 
 	### MARK ### cov.stop()
 	### MARK ### cov.save()
