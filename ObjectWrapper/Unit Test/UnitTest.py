@@ -28,6 +28,7 @@ NSMenuItem, \
 NSNull, \
 NSNumber, \
 NSPoint, \
+NSPredicate, \
 NSRect
 
 import pathlib as Pathlib
@@ -385,14 +386,14 @@ class GlyphsAppTests(unittest.TestCase):
 		# .axisTag
 		self.assertEqual(font.axes[0].axisTag, 'wght')
 
-		# QUESTION: Should we raise when an axis tag is not a four letter string? <MF @GS>
-		# # Add an axis
+		# Note:
+		# - axisTags will not be limited to four letter strings. <MF>
+		# - registed axisTags cannot be renamed in the UI, but programmatically. Probably OK. <MF>
+		
+		# Add an axis
 		# old_axes = font.axes
 		# testAxis = GSAxis()
 		# testAxis.name = "Test Axis"
-		# with self.assertRaises(Exception) as ctx:
-		# 	testAxis.axisTag = "wdths"
-		# 	font.axes.append(testAxis)
 
 		# # Reset axes to former state
 		# font.axes = old_axes
@@ -409,7 +410,50 @@ class GlyphsAppTests(unittest.TestCase):
 		# .font
 		self.assertEqual(len(font.axes[-1].axisTag), 4)
 
+	def test_GSMetric(self):
+		"""
+		- (x) name
+		- (x) id
+		- (x) filter
+		- ( ) type
+		- (x) horizontal
+		Not implemented in wrapper:
+		- ( ) title()
+		- ( ) titles()
+		"""
+		font = self.font
+		metric = font.metrics[0]
+
+		with self.subTest("font"):		
+			self.assertIs(metric.font, font)
+
+		with self.subTest("name"):		
+			self.assertUnicode(metric.name)
+			self.assertIsNone(metric.name)
+			metric.name = "Test Name"
+			self.assertIsNotNone(metric.name)
+			self.assertEqual(metric.name, "Test Name")
+			metric.name = None
+			self.assertIsNone(metric.name)
 		
+		with self.subTest("title()"):
+			self.assertEqual(metric.title(), "Ascender")
+
+		# GSMetric.id
+		self.assertUnicode(metric.id, readOnly=True)
+
+		with self.subTest("horizontal"):
+			self.assertBool(metric.horizontal)
+			self.assertEqual(metric.horizontal, False) # "This is used for stem metrics. so only use this for font.stems"
+
+		with self.subTest("filter"):
+			self.assertIsNone(metric.filter)
+			tetsFilter = NSPredicate.predicateWithFormat_('(category == "Letter")')
+			metric.filter = tetsFilter
+			self.assertEqual(metric.filter, tetsFilter)
+			self.assertIsInstance(metric.filter, NSPredicate)
+			metric.filter = None
+			self.assertIsNone(metric.filter)
 
 	def test_GSFont_stems(self):
 		font = self.font
@@ -633,23 +677,6 @@ class GlyphsAppTests(unittest.TestCase):
 
 		# GSAxis.hidden
 		self.assertBool(axis.hidden)
-
-	def test_GSMetric(self):
-		font = self.font
-
-		metric = font.metrics[0]
-
-		# GSMetric.font
-		self.assertIs(metric.font, font)
-
-		# GSMetric.name
-		self.assertUnicode(metric.name)
-
-		# GSMetric.id
-		self.assertUnicode(metric.id, readOnly=True)
-
-		# GSMetric.horizontal
-		self.assertBool(metric.horizontal)
 
 	#::Rafal
 	def test_GSCustomParameter(self):
