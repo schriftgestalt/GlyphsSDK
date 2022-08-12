@@ -581,7 +581,7 @@ class GlyphsAppTests(unittest.TestCase):
 		
 		self.assertIsFile(copypath)
 
-	@unittest.skip('Implement UFO saving with `GSFont({PATH})` <@GS>')
+	@unittest.skipIf(GSApplication.versionNumber < 3.2, 'UFO saving with `GSFont({PATH})` [should work with 3.2] <MF>')
 	def test_GSFont_save_dotufo(self):
 		font = self.font
 		copypath_ufo = PathToTestFile[:-7] + "-copy.ufo"
