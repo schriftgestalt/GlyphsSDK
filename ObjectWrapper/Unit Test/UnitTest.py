@@ -46,8 +46,25 @@ PathToTestFile = os.path.join(os.path.dirname(__file__), 'Glyphs Unit Test Sans.
 Glyphs.clearLog()
 
 class GlyphsAppTests(unittest.TestCase):
-	
-	def assertString(self, stringObject, assertType = True, readOnly = False, allowNone = True):
+
+	def isReadOnly(self, readOnlyObject, _instance, _property):
+		"""Needs the actual instance to test for readOnly-nes"""
+		self.assertIsNotNone(_instance) # if `readOnly=True` we need the instance object.
+		self.assertIsNotNone(_property) # if `readOnly=True` we need the property to be checked.
+		oldValue = readOnlyObject
+		self.assertHasAttr(_instance, _property)
+		with self.assertRaises(AttributeError) as ctx:
+			setattr(_instance, _property, "This should not happen")
+			setattr(_instance, _property, oldValue)
+		self.assertEqual("can't set attribute", str(ctx.exception))
+
+	def assertHasAttr(self, obj, intendedAttr):
+		testBool = hasattr(obj, intendedAttr)
+		self.assertTrue(testBool, msg="'%s' object has no attribute '%s'" % (obj.__class__.__name__, intendedAttr))
+
+	def assertString(self, stringObject, assertType=True, readOnly=False, _instance=None, _property=None, allowNone=True):
+		if not allowNone:
+			self.assertIsNotNone(stringObject)	
 		if assertType and not (stringObject is None and allowNone):
 			self.assertIsInstance(stringObject, str)
 		if readOnly == False:
@@ -55,6 +72,8 @@ class GlyphsAppTests(unittest.TestCase):
 			stringObject = 'a'
 			self.assertEqual(stringObject, 'a')
 			stringObject = oldValue
+		elif readOnly == True:
+			self.isReadOnly(stringObject, _instance, _property)
 	
 	def assertDict(self, dictObject, assertType = True):
 		if assertType:
@@ -67,7 +86,7 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertEqual(dictObject['uniTestValue'], var2)
 		dictObject.pop('uniTestValue')
 
-	def assertList(self, listObject, assertType = True, testValues = []):
+	def assertList(self, listObject, assertType=True, testValues = []):
 		# Also checks for mutability
 		if assertType:
 			self.assertIsInstance(listObject, list)
@@ -102,7 +121,7 @@ class GlyphsAppTests(unittest.TestCase):
 			self.assertIs(cp[i], element)
 		self.assertEqual(len(copy.deepcopy(listObject)), len(listObject))
 	
-	def assertInteger(self, intObject, assertType = True, readOnly = False):
+	def assertInteger(self, intObject, assertType=True, readOnly=False, _instance=None, _property=None):
 		if assertType:
 			self.assertIsInstance(intObject, int)
 		if readOnly == False:
@@ -110,8 +129,12 @@ class GlyphsAppTests(unittest.TestCase):
 			intObject = 1
 			self.assertEqual(intObject, 1)
 			intObject = oldValue
+		elif readOnly == True:
+			self.isReadOnly(intObject, _instance, _property)
 	
-	def assertFloat(self, floatObject, assertType = True, readOnly = False, allowNone = False):
+	def assertFloat(self, floatObject, assertType=True, readOnly=False, _instance=None, _property=None, allowNone = False):
+		if not allowNone:
+			self.assertIsNotNone(floatObject)
 		if assertType and not (floatObject is None and allowNone):
 			self.assertIsInstance(floatObject, float)
 		if readOnly == False:
@@ -119,8 +142,12 @@ class GlyphsAppTests(unittest.TestCase):
 			floatObject = .5
 			self.assertEqual(floatObject, .5)
 			floatObject = oldValue
+		elif readOnly == True:
+			self.isReadOnly(floatObject, _instance, _property)
 	
-	def assertUnicode(self, unicodeObject, assertType = True, readOnly = False, allowNone = True):
+	def assertUnicode(self, unicodeObject, assertType=True, readOnly=False, _instance=None, _property=None, allowNone = True):
+		if not allowNone:
+			self.assertIsNotNone(unicodeObject)
 		if assertType and not (unicodeObject is None and allowNone):
 			self.assertIsInstance(unicodeObject, unicode)
 		if readOnly == False:
@@ -128,8 +155,10 @@ class GlyphsAppTests(unittest.TestCase):
 			unicodeObject = u'Ə'
 			self.assertEqual(unicodeObject, u'Ə')
 			unicodeObject = oldValue
+		elif readOnly == True:
+			self.isReadOnly(unicodeObject, _instance, _property)
 	
-	def assertBool(self, boolObject, assertType = True, readOnly = False):
+	def assertBool(self, boolObject, assertType=True, readOnly=False, _instance=None, _property=None):
 		if assertType:
 			self.assertIsInstance(boolObject, bool)
 		if readOnly == False:
@@ -137,6 +166,8 @@ class GlyphsAppTests(unittest.TestCase):
 			boolObject = not boolObject
 			self.assertEqual(boolObject, (not oldValue))
 			boolObject = oldValue
+		elif readOnly == True:
+			self.isReadOnly(readOnly, _instance, _property)
 	
 	## Helper Methods
 
@@ -196,7 +227,7 @@ class GlyphsAppTests(unittest.TestCase):
 			self.assertBool(font.disablesNiceNames)
 
 		with self.subTest("appVersion"): #::Rafal
-			self.assertUnicode(font.appVersion, readOnly=True, allowNone=False)
+			self.assertUnicode(font.appVersion, readOnly=True, _instance=font, _property="appVersion", allowNone=False)
 		
 		with self.subTest("formatVersion"): #::Rafal
 			self.assertInteger(font.formatVersion)
@@ -446,7 +477,7 @@ class GlyphsAppTests(unittest.TestCase):
 			self.assertIsNone(metric.name)
 		
 		with self.subTest("id"):
-			self.assertUnicode(metric.id, readOnly=True)
+			self.assertUnicode(metric.id, readOnly=True, _instance=metric, _property="id")
 			# NOTE: testing read only like so, as `assertUnicode => readOnly` seems not fully implemented <MF>
 			# QUESTION: We should implement a proper readOnly in all those custom assert... Methods, no? <MF @GS>
 			with self.assertRaises(AttributeError) as ctx:
@@ -633,7 +664,7 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertEqual(font.gridSubDivisions, 11)
 		
 		# GSFont.gridLength
-		self.assertFloat(font.gridLength, readOnly = True)
+		self.assertFloat(font.gridLength, readOnly = True, _instance=font, _property='gridLength')
 		# assert that gridLength == grid / gridSubDivisions
 		self.assertAlmostEqual(font.gridLength, 9./11)
 		font.grid = old_grid
@@ -972,7 +1003,7 @@ class GlyphsAppTests(unittest.TestCase):
 			instance.weightClass = 'a'
 
 		# GSInstance.weightClassName
-		self.assertString(instance.weightClassName, readOnly = True)
+		self.assertString(instance.weightClassName, _instance=instance, _property='weightClassName', readOnly = True)
 		
 		# GSInstance.widthClass
 		self.assertInteger(instance.widthClass)
@@ -980,7 +1011,7 @@ class GlyphsAppTests(unittest.TestCase):
 			instance.widthClass = 'a'
 
 		# GSInstance.widthClassName
-		self.assertString(instance.widthClassName, readOnly = True)
+		self.assertString(instance.widthClassName, _instance=instance, _property='widthClassName', readOnly = True)
 
 		# GSInstance.axes
 		self.assertIsNotNone(instance.axes)
@@ -1568,16 +1599,16 @@ class GlyphsAppTests(unittest.TestCase):
 		# self.assertIsInstance(layer.completeOpenBezierPath, NSBezierPath) # TODO: is NULL if there are no open paths
 
 		# GSLayer.isAligned
-		self.assertBool(layer.isAligned, readOnly=True)
+		self.assertBool(layer.isAligned, readOnly=True, _instance=layer, _property="isAligned")
 
 		# GSLayer.isSpecialLayer
-		self.assertBool(layer.isSpecialLayer, readOnly=True)
+		self.assertBool(layer.isSpecialLayer, readOnly=True, _instance=layer, _property="isSpecialLayer")
 
 		# GSLayer.isMasterLayer
-		self.assertBool(layer.isMasterLayer, readOnly=True)
+		self.assertBool(layer.isMasterLayer, readOnly=True, _instance=layer, _property="isMasterLayer")
 
 		# GSLayer.italicAngle
-		self.assertFloat(layer.italicAngle, readOnly=True)
+		self.assertFloat(layer.italicAngle, readOnly=True, _instance=layer, _property='italicAngle')
 
 		# GSLayer.userData
 		self.assertIsNotNone(layer.userData)
@@ -1923,7 +1954,7 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertIsNotNone(list(path.segments))
 
 		# GSPath.closed
-		self.assertBool(path.closed, readOnly = True)
+		self.assertBool(path.closed, readOnly = True, _instance=path, _property="closed")
 
 		# GSPath.direction
 		self.assertTrue(path.direction == 1 or path.direction == -1)
@@ -2051,7 +2082,7 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertBool(node.selected)
 
 		# GSNode.index
-		self.assertInteger(node.index, readOnly = True)
+		self.assertInteger(node.index, readOnly = True, _instance=node, _property='index',)
 		self.assertNotEqual(node.index, 9223372036854775807) # theoretically, this value could be maxint in a node, but in our test font it should be 0, I guess (taken from actual glyph, not orphan path)
 
 		# GSNode.nextNode
