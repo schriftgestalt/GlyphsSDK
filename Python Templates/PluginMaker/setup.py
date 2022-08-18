@@ -11,10 +11,8 @@ plist = dict(
 )
 
 setup(
-    data_files=['MainMenu.nib'],
-    app=[
-        dict(script="PluginMaker.py", plist=plist),
-    ],
-    install_requires=["pyobjc-framework-Cocoa"],
-    setup_requires=["py2app"],
+	data_files=['MainMenu.nib'],
+	app=[dict(script="PluginMaker.py", plist=plist)],
+	install_requires=["pyobjc-framework-Cocoa"],
+	setup_requires=["py2app"],
 )

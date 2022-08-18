@@ -17,12 +17,12 @@ _pluginTypes = [
 		"path":"Reporter/____PluginName____.glyphsReporter",
 	},
 	{
-		"name":"Filter with Dialog",
-		"path":"Filter with Dialog/____PluginName____.glyphsFilter",
+		"name":"Filter, Dialog with xib",
+		"path":"Filter/dialog with xib/____PluginName____.glyphsFilter",
 	},
 	{
-		"name":"Filter without Dialog",
-		"path":"Filter without Dialog/____PluginName____.glyphsFilter",
+		"name":"Filter, without Dialog",
+		"path":"Filter/without dialog/____PluginName____.glyphsFilter",
 	},
 	{
 		"name":"Palette",
@@ -31,8 +31,17 @@ _pluginTypes = [
 	{
 		"name":"SelectTool",
 		"path":"SelectTool/____PluginName____.glyphsTool",
+	},
+	{
+		"name":"File Format, Dialog with vanilla",
+		"path":"File Format/dialog with vanilla/____PluginName____.glyphsFileFormat",
+	},
+	{
+		"name":"File Format, Dialog with xib",
+		"path":"File Format/dialog with xib/____PluginName____.glyphsFileFormat",
 	}
-	]
+]
+
 _pluginTypesNames = [x["name"] for x in _pluginTypes]
 
 def GetSaveFile(message=None, ProposedFileName=None, filetypes=None):

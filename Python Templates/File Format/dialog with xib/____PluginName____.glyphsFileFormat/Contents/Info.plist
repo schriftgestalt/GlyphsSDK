@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>ExportIcon</string>
+			</array>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+		</dict>
+	</array>
+	<key>CFBundleExecutable</key>
+	<string>plugin</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.____Developer____.____PluginClassName____</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>____PluginName____</string>
+	<key>CFBundleShortVersionString</key>
+	<string>____BundleVersionString____</string> <!-- 1.0 -->
+	<key>CFBundleVersion</key>
+	<string>____BundleVersion____</string> <!-- 123 -->
+	<key>UpdateFeedURL</key>
+	<string>____OnlineUrlToThisPlist____</string>
+	<key>productPageURL</key>
+	<string>____ProductPageURL____</string>
+	<key>productReleaseNotes</key>
+	<string>____LatestReleaseNotes____</string>
+	<key>NSHumanReadableCopyright</key>
+	<string>Copyright, ____Developer____, ____YEAR____</string>
+	<key>NSPrincipalClass</key>
+	<string>____PluginClassName____</string>
+	<key>PyMainFileNames</key>
+	<array>
+		<string>plugin.py</string>
+	</array>
+</dict>
+</plist>
