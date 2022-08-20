@@ -28,6 +28,8 @@ NSNull, \
 NSNumber, \
 NSPoint, \
 NSPredicate, \
+NSKeyValueFastMutableArray2, \
+NSClassFromString, \
 NSRect
 
 ## Development Settings <MF>
@@ -175,19 +177,86 @@ class GlyphsAppTests(unittest.TestCase):
 	def test_GSFont(self):
 		font = self.font
 
-		## Attributes
+		## Properties
+		## Mostly type checking.
+		
+		with self.subTest("masters"):
+			self.assertIsInstance(font.masters, GlyphsApp.FontFontMasterProxy)
+
+		with self.subTest("instances"):
+			self.assertIsInstance(font.instances, GlyphsApp.FontInstancesProxy)
+
+		with self.subTest("axes"):
+			self.assertIsInstance(font.axes, GlyphsApp.FontAxesProxy)
+
+		with self.subTest("stems"):
+			self.assertIsInstance(font.stems, GlyphsApp.FontStemsProxy)
+
+		with self.subTest("properties"):
+			self.assertIsInstance(font.properties, NSKeyValueFastMutableArray2)
+
+		with self.subTest("glyphs"):
+			self.assertIsInstance(font.glyphs, GlyphsApp.FontGlyphsProxy)
+
+		with self.subTest("classes"):
+			self.assertIsInstance(font.classes, GlyphsApp.FontClassesProxy)
+
+		with self.subTest("features"):
+			self.assertIsInstance(font.features, GlyphsApp.FontFeaturesProxy)
+
+		with self.subTest("featurePrefixes"):
+			self.assertIsInstance(font.featurePrefixes, GlyphsApp.FontFeaturePrefixesProxy)
 		
 		with self.subTest("copyright"):
 			self.assertUnicode(font.copyright)
+
+		with self.subTest("copyrights"):
+			self.assertIsInstance(font.copyrights, GlyphsApp.FontInfoPropertiesProxy)
+		
+		with self.subTest("license"):
+			self.assertUnicode(font.license)
+		
+		with self.subTest("licenses"):
+			self.assertIsInstance(font.licenses, GlyphsApp.FontInfoPropertiesProxy)
+		
+		with self.subTest("compatibleFullName"):
+			self.assertUnicode(font.compatibleFullName)
+		
+		with self.subTest("compatibleFullNames"):
+			self.assertIsInstance(font.compatibleFullNames, GlyphsApp.FontInfoPropertiesProxy)
+		
+		with self.subTest("sampleText"):
+			self.assertUnicode(font.sampleText)
+		
+		with self.subTest("sampleTexts"):
+			self.assertIsInstance(font.sampleTexts, GlyphsApp.FontInfoPropertiesProxy)
+		
+		with self.subTest("description"):
+			self.assertUnicode(font.description)
+		
+		with self.subTest("descriptions"):
+			self.assertIsInstance(font.descriptions, GlyphsApp.FontInfoPropertiesProxy)
+		
+		with self.subTest("trademark"):
+			self.assertUnicode(font.trademark)
+		
+		with self.subTest("trademarks"):
+			self.assertIsInstance(font.trademarks, GlyphsApp.FontInfoPropertiesProxy)
 		
 		with self.subTest("designer"):
 			self.assertUnicode(font.designer)
+		
+		with self.subTest("designers"):
+			self.assertIsInstance(font.designers, GlyphsApp.FontInfoPropertiesProxy)
 		
 		with self.subTest("designerURL"):	
 			self.assertUnicode(font.designerURL)
 
 		with self.subTest("manufacturer"):
 			self.assertUnicode(font.manufacturer)
+		
+		with self.subTest("manufacturers"):
+			self.assertIsInstance(font.manufacturers, GlyphsApp.FontInfoPropertiesProxy)
 		
 		with self.subTest("manufacturerURL"):
 			self.assertUnicode(font.manufacturerURL)
@@ -200,9 +269,48 @@ class GlyphsAppTests(unittest.TestCase):
 				
 		with self.subTest("familyName"):
 			self.assertUnicode(font.familyName)
+				
+		with self.subTest("familyNames"):
+			self.assertIsInstance(font.familyNames, GlyphsApp.FontInfoPropertiesProxy)
 
 		with self.subTest("fontName"):
 			self.assertEqual(font.fontName, font.familyName)
+
+		with self.subTest("date"):
+			self.assertIsInstance(font.date, datetime.datetime)
+
+		with self.subTest("kerning"):
+			self.assertIsInstance(font.kerning, NSClassFromString("MGOrderedDictionary"))
+
+		with self.subTest("userData"):
+			self.assertIsInstance(font.userData, GlyphsApp.UserDataProxy)
+
+		with self.subTest("grid"):
+			self.assertInteger(font.grid)
+
+		with self.subTest("gridSubDivisions"):
+			self.assertInteger(font.gridSubDivisions)
+
+		with self.subTest("disablesAutomaticAlignment"):
+			self.assertBool(font.disablesAutomaticAlignment)
+
+		with self.subTest("gridLength"):
+			self.assertFloat(font.gridLength)
+				
+		with self.subTest("keyboardIncrementHuge"):
+			self.assertFloat(font.keyboardIncrementHuge)
+
+		with self.subTest("keyboardIncrementBig"):
+			self.assertFloat(font.keyboardIncrementBig)
+
+		with self.subTest("keyboardIncrement"):
+			self.assertFloat(font.keyboardIncrement)
+
+		with self.subTest("snapToObjects"):
+			self.assertBool(font.snapToObjects)
+
+		with self.subTest("previewRemoveOverlap"):
+			self.assertBool(font.previewRemoveOverlap)
 		
 		with self.subTest("upm"):
 			self.assertInteger(font.upm)
@@ -219,24 +327,9 @@ class GlyphsAppTests(unittest.TestCase):
 		
 		with self.subTest("formatVersion"): #::Rafal
 			self.assertInteger(font.formatVersion)
-				
-		with self.subTest("keyboardIncrementHuge"): #::Rafal
-			self.assertFloat(font.keyboardIncrementHuge)
-
-		with self.subTest("keyboardIncrementBig"): #::Rafal
-			self.assertFloat(font.keyboardIncrementBig)
-
-		with self.subTest("keyboardIncrement"): #::Rafal
-			self.assertFloat(font.keyboardIncrement)
-
-		with self.subTest("disablesAutomaticAlignment"): #::Rafal
-			self.assertBool(font.disablesAutomaticAlignment)
-
-		with self.subTest("snapToObjects"):
-			self.assertBool(font.snapToObjects)
-
-		with self.subTest("previewRemoveOverlap"):
-			self.assertBool(font.previewRemoveOverlap)
+		
+		with self.subTest("filepath"):
+			pass # Has its dedicated test method now.
 
 		## Methods
 		
@@ -371,6 +464,7 @@ class GlyphsAppTests(unittest.TestCase):
 
 	def test_GSFont_axes(self):
 		"""
+		GSAxis:
 		- (x) name
 		- (x) axisTag
 		- ( ) axisId
@@ -493,6 +587,9 @@ class GlyphsAppTests(unittest.TestCase):
 		- ( ) hoizontal 
 		"""
 		font = self.font
+
+		# self.assertIsInstance(font.stems[0], GSFontInfoValueSingle)
+		self.assertIsInstance(font.stems[0], GSMetric)
 
 		with self.subTest("horizontal"):
 			self.assertBool(font.stems[0].horizontal)

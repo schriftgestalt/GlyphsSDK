@@ -29,6 +29,7 @@ NSMenuItem, \
 NSMenuItem, \
 NSNull, \
 NSNumber, \
+NSDocument, \
 NSPoint, \
 NSRect
 
@@ -44,6 +45,7 @@ class GlyphsAppUITests(unittest.TestCase):
 	def test_setUp(self):
 		if Glyphs.font is None:
 			Glyphs.open(PathToTestFile)
+			self.font = Glyphs.font
 			print(Glyphs.font)
 
 	def test_tearDown(self):
@@ -242,7 +244,15 @@ class GlyphsAppUITests(unittest.TestCase):
 			Glyphs.addCallback(testCallbackMethod, callback)
 			Glyphs.removeCallback(testCallbackMethod)
 
-	def test_GSFont_parent():
+	def test_GSFont(self):
+		font = self.font
+		with self.subTest("parent"):
+			self.assertIsInstance(font.parent, NSDocument)
+
+		# with self.subTest("currentText"):
+		# 	self.assertUnicode(font.currentText)
+
+	def test_GSFont_parent(self):
 		return
 		# TODO: Implement <GS @MF>
 		# GSFont.parent
