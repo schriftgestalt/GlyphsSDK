@@ -695,6 +695,7 @@ class GlyphsAppTests(unittest.TestCase):
 		font.kerning = old_kerning
 		
 		# GSFont.kerningVertical  #::Rafal
+		"""To set a value, it is better to use the method GSFont.setKerningForPair(). This ensures a better data integrity (and is faster)."""
 		self.assertDict(font.kerningVertical, assertType=False)
 		old_kerning = font.kerningVertical
 		font.kerningVertical = test_kerning
@@ -702,6 +703,7 @@ class GlyphsAppTests(unittest.TestCase):
 		font.kerningVertical = old_kerning
 
 		# GSFont.kerningRTL  #::Rafal
+		"""To set a value, it is better to use the method GSFont.setKerningForPair(). This ensures a better data integrity (and is faster)."""
 		self.assertDict(font.kerningRTL, assertType=False)
 		old_kerning = font.kerningRTL
 		font.kerningRTL = test_kerning
@@ -792,16 +794,29 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertIsFile(copypath_ufo) # TODO: UFO not created #1471 <MF @GS>
 
 	def test_GSFont_kerning(self):
+		"""To set a value, it is better to use the method GSFont.setKerningForPair(). This ensures a better data integrity (and is faster)."""
 		font = self.font
 
-		# GSFont.setKerningForPair()
-		font.setKerningForPair(font.masters[0].id, 'a', 'a', -10)
+		with self.subTest("GSFont.setKerningForPair()"):
+			font.setKerningForPair(font.masters[0].id, 'a', 'a', -10)
 		
-		# GSFont.kerningForPair()
-		self.assertEqual(font.kerningForPair(font.masters[0].id, 'a', 'a'), -10)
+		with self.subTest("GSFont.kerningForPair()"):
+			self.assertEqual(font.kerningForPair(font.masters[0].id, 'a', 'a'), -10)
 		
-		# GSFont.removeKerningForPair()
-		font.removeKerningForPair(font.masters[0].id, 'a', 'a')		
+		with self.subTest("GSFont.removeKerningForPair()"):
+			font.removeKerningForPair(font.masters[0].id, 'a', 'a')
+			self.assertIsNone(font.kerningForPair(font.masters[0].id, 'a', 'a'))
+
+
+	@unittest.skip("Test not implemented")
+	def test_GSFont_kerningRTL(self):
+		"""To set a value, it is better to use the method GSFont.setKerningForPair(). This ensures a better data integrity (and is faster)."""
+		pass	
+
+	@unittest.skip("Test not implemented")
+	def test_GSFont_kerningVertical(self):
+		"""To set a value, it is better to use the method GSFont.setKerningForPair(). This ensures a better data integrity (and is faster)."""
+		pass
 
 
 	#::Rafal
