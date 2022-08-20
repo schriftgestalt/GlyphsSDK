@@ -463,14 +463,6 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertEqual("list indices must be integers or slices, not str", str(ctx.exception))
 
 	def test_GSFont_axes(self):
-		"""
-		GSAxis:
-		- (x) name
-		- (x) axisTag
-		- ( ) axisId
-		- (x) hidden
-		- (x) font
-		"""
 		font = self.font
 		# TODO: reactivate this again and make it work <MF @MF>
 		# self.assertList(font.axes, assertType=False, testValues=[
@@ -479,29 +471,6 @@ class GlyphsAppTests(unittest.TestCase):
 		with self.assertRaises(TypeError) as ctx:
 			font.axes['a']
 		self.assertEqual("list indices must be integers or slices, not str", str(ctx.exception))
-
-		# Properties
-
-		# .name
-		self.assertEqual(font.axes[0].name, 'Weight')
-		
-		old_axisName = font.axes[0].name
-		font.axes[0].name = "Test Axis Name"
-		self.assertEqual(font.axes[0].name, "Test Axis Name")
-		
-		# QUESTION: Should we raise when an axis name is not a string? <MF @GS>
-		# with self.assertRaises(TypeError) as ctx:
-		# 	font.axes[0].name = 3 # Expecting a string
-		# self.assertUnicode(font.axes[0].name)
-
-		font.axes[0].name = old_axisName
-		
-		# .axisTag
-		self.assertEqual(font.axes[0].axisTag, 'wght')
-
-		# Note:
-		# - axisTags will not be limited to four letter strings. <MF>
-		# - registed axisTags cannot be renamed in the UI, but programmatically. Probably OK. <MF>
 		
 		# Add an axis
 		# old_axes = font.axes
@@ -512,16 +481,55 @@ class GlyphsAppTests(unittest.TestCase):
 		# font.axes = old_axes
 		# self.assertEqual(len(font.axes), 1)
 		
-		# .hidden
-		self.assertEqual(font.axes[0].hidden, False)
-		
 		# self.assertEqual(font.axes[0].axisId, '72A59FFB-3C17-45EE-9D3F-A5FD5045AA83') # not testable like this, as the id is different with each font opening
 
-		# .font
-		self.assertEqual(font.axes[0].font, font)
+	def test_GSAxis(self):
+		"""
+		- (x) name
+		- (x) axisTag
+		- ( ) axisId
+		- (x) hidden
+		- (x) font
+		"""
+		font = self.font
+		testAxis = font.axes[0]
+	
+		# Properties
+
+		with self.subTest("name"):
+			self.assertEqual(testAxis.name, 'Weight')
+			
+			old_axisName = testAxis.name
+			testAxis.name = "Test Axis Name"
+			self.assertEqual(testAxis.name, "Test Axis Name")
+			
+			# QUESTION: Should we raise when an axis name is not a string? <MF @GS>
+			# with self.assertRaises(TypeError) as ctx:
+			# 	font.axes[0].name = 3 # Expecting a string
+			# self.assertUnicode(font.axes[0].name)
+
+			font.axes[0].name = old_axisName
 		
-		# .font
-		self.assertEqual(len(font.axes[-1].axisTag), 4)
+		with self.subTest("font"):
+			self.assertIs(testAxis.font, font)
+			self.assertEqual(testAxis.font, font)
+		
+		with self.subTest("name"):
+			self.assertUnicode(testAxis.name)
+		
+		with self.subTest("axisTag"):
+			# - axisTags will not be limited to four letter strings. <MF>
+			# - registed axisTags cannot be renamed in the UI, but programmatically. "Probably OK". <MF>
+			self.assertUnicode(testAxis.axisTag)
+			self.assertEqual(testAxis.axisTag, 'wght')
+			self.assertEqual(len(font.axes[-1].axisTag), 4)
+		
+		with self.subTest("axisId"):
+			self.assertUnicode(testAxis.axisId)
+
+		with self.subTest("hidden"):
+			self.assertBool(testAxis.hidden)
+			self.assertEqual(testAxis.hidden, False)
 
 	def test_GSMetric(self):
 		"""
@@ -795,27 +803,6 @@ class GlyphsAppTests(unittest.TestCase):
 		# GSFont.removeKerningForPair()
 		font.removeKerningForPair(font.masters[0].id, 'a', 'a')		
 
-	## GSAxis
-
-	def test_GSAxis(self):
-		font = self.font
-
-		axis = font.axes[0]
-		
-		with self.subTest("font"):
-			self.assertIs(axis.font, font)
-		
-		with self.subTest("name"):
-			self.assertUnicode(axis.name)
-		
-		with self.subTest("axisTag"):
-			self.assertUnicode(axis.axisTag)
-		
-		with self.subTest("axisId"):
-			self.assertUnicode(axis.axisId)
-
-		with self.subTest("hidden"):
-			self.assertBool(axis.hidden)
 
 	#::Rafal
 	def test_GSCustomParameter(self):
