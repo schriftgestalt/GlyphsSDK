@@ -31,6 +31,7 @@ NSPoint, \
 NSPredicate, \
 NSKeyValueFastMutableArray2, \
 NSClassFromString, \
+NSDeviceRGBColorSpace, \
 NSRect
 
 import pathlib as Pathlib
@@ -1321,7 +1322,7 @@ class GlyphsAppTests(unittest.TestCase):
 		- (x) color
 		- (x) colorObject
 		- (x) note
-		- (x) selected --> UI
+		- (x) selected           --> UI
 		- (x) mastersCompatible
 		- (x) userData
 		- (x) smartComponentAxes --> own test
@@ -1520,8 +1521,10 @@ class GlyphsAppTests(unittest.TestCase):
 			glyph.name = "a.test1"
 		
 		## Methods
-		glyph.beginUndo()
-		glyph.endUndo()
+
+		with self.subTest("begin & end undo"):
+			glyph.beginUndo()
+			glyph.endUndo()
 
 		with self.subTest("updateGlyphInfo()"):
 			# some random samples:
@@ -1530,7 +1533,7 @@ class GlyphsAppTests(unittest.TestCase):
 			self.assertEqual(glyph.glyphInfo.script, "latin")
 			self.assertEqual(glyph.glyphInfo.case, GSLowercase)
 			self.assertIsNone(glyph.glyphInfo.unicode)
-			# self.assertIsNone(glyph.glyphInfo.unicode2)
+			# self.assertIsNone(glyph.glyphInfo.unicode2) # not implemented?
 			self.assertIsNone(glyph.glyphInfo.subCategory)
 			self.assertIsNone(glyph.glyphInfo.components)
 
@@ -1552,26 +1555,108 @@ class GlyphsAppTests(unittest.TestCase):
 			del font.glyphs["a.test"]
 
 	def test_GSLayer(self):
-		# font = Glyphs.font
+		"""	
+		- (x) parent
+		- (x) name
+		- (x) master
+		- (x) associatedMasterId
+		- (x) layerId
+		- (·) attributes
+		- (x) color
+		- (x) colorObject
+		- (x) guides
+		- (x) annotations
+		- (x) hints
+		- (x) anchors
+		- (x) shapes                       --> own test
+		- (x) components                   --> own test
+		- (x) paths                        --> own test
+		- (x) selection                    --> UI
+		- (x) LSB
+		- (x) RSB
+		- (x) TSB
+		- (x) BSB
+		- (x) width
+		- (x) vertWidth
+		- (x) leftMetricsKey
+		- (x) rightMetricsKey
+		- (x) widthMetricsKey
+		- (x) bounds
+		- (x) selectionBounds              --> UI
+		- (x) metrics
+		- (x) background
+		- (x) backgroundImage              --> own test
+		- (x) bezierPath
+		- (x) openBezierPath
+		- (x) completeOpenBezierPath
+		- ( ) smartComponentPoleMapping
+		- (x) isAligned
+		- (x) isSpecialLayer
+		- (x) isMasterLayer
+		- (x) italicAngle
+		- (x) userData
+		- (x) tempData
+
+		- ( ) decomposeComponents()
+		- ( ) decomposeCorners()
+		- ( ) compareString()
+		- ( ) connectAllOpenPaths()
+		- ( ) copyDecomposedLayer()
+		- ( ) syncMetrics()
+		- ( ) correctPathDirection()
+		- ( ) removeOverlap()
+		- ( ) roundCoordinates()
+		- ( ) addNodesAtExtremes()
+		- ( ) beginChanges()
+		- ( ) endChanges()
+		- ( ) cutBetweenPoints()
+		- ( ) intersectionsBetweenPoints()
+		- ( ) addMissingAnchors()
+		- ( ) clearSelection()              --> UI
+		- ( ) clear()
+		- ( ) swapForegroundWithBackground()
+		- ( ) reinterpolate()
+		- ( ) applyTransform()
+		"""
 		font = self.font
 
 		glyph = font.glyphs['a']
 		layer = glyph.layers[0]
-		layer = copy.copy(layer)
-		self.assertIsNotNone(layer.__repr__())
-		layer.parent = glyph
+		layerCopy = copy.copy(layer)
+		self.assertIsNotNone(layerCopy.__repr__())
+		
+		self.assertIsNone(layerCopy.parent)
+		layerCopy.parent = glyph
+		self.assertIsNotNone(layerCopy.parent)
 		
 		with self.subTest("parent"):
 			self.assertEqual(layer.parent, glyph)
+			self.assertEqual(layerCopy.parent, glyph)
 		
 		with self.subTest("name"):
 			self.assertUnicode(layer.name)
+
+		with self.subTest("master"):
+			self.assertIsInstance(layer.master, GSFontMaster)
+			self.assertIsNotNone(layer.master)
+			self.assertReadOnly(layer.master, _instance=layer, _property="master")
 
 		with self.subTest("associatedMasterID"):
 			self.assertEqual(layer.associatedMasterId, font.masters[0].id)
 
 		with self.subTest("layerId"):
 			self.assertEqual(layer.layerId, font.masters[0].id)
+			self.assertNotEqual(glyph.layers[1].layerId, font.masters[0].id)
+			self.assertEqual(glyph.layers[1].layerId, font.masters[1].id)
+		
+		with self.subTest("attributes"):
+			# self.assertIsNone(layer.attributes)
+			# NOTE: what is that returned `None` object from GlyphsApp.AttributesProxy?:
+			#     >>> `AssertionError: None is not None` <MF @GS>
+			layer.attributes["color"] = "#ff0000"
+			self.assertIsNotNone(layer.attributes)
+			del layer.attributes["color"] # QUESTION: How to properly delete all attributes <MF @GS>
+			self.assertEqual(layer.attributes, {}) # should be: `self.assertIsNone(layer.attributes)`
 		
 		with self.subTest("color"):
 			self.assertString(layer.color)
@@ -1579,9 +1664,11 @@ class GlyphsAppTests(unittest.TestCase):
 		with self.subTest("colorObject"):
 			layer.color = 1
 			self.assertIsInstance(layer.colorObject, NSColor)
-		
-		# GSLayer.components
-		# -> own test
+			# _nsColor = NSColor.colorWithCalibratedRed_green_blue_alpha_(0.99, 0.62, 0.11, 1).colorUsingColorSpaceName_(NSDeviceRGBColorSpace)
+			self.assertEqual(layer.colorObject.redComponent(), 0.99)
+			self.assertEqual(layer.colorObject.greenComponent(), 0.62)
+			self.assertEqual(layer.colorObject.blueComponent(), 0.11)
+			self.assertEqual(layer.colorObject.alphaComponent(), 1)
 
 		with self.subTest("guides"):
 			self.assertIsInstance(list(layer.guides), list)
@@ -1597,17 +1684,25 @@ class GlyphsAppTests(unittest.TestCase):
 			newGuide2 = GSGuide()
 			newGuide2.position = NSPoint(100, 100)
 			newGuide2.angle = -10.0
+
+			# add/remove a guide to/from the layer
+			layer.guides.append(newGuide1)
+			self.assertEqual(layer.guides[0].angle, -10.0)
+			self.assertEqual(layer.guides[0].position, NSPoint(100, 100))
+			del(layer.guides[0])
+
 			self.assertList(layer.guides, assertType=False, testValues=[
 					newGuide, newGuide1, newGuide2, GSGuide()])
 			with self.assertRaises(TypeError):
 				layer.guides['a']
+				layer.guides[1.2]
 
 		with self.subTest("annotations"):
 			layer.annotations = []
 			self.assertEqual(len(layer.annotations), 0)
 			newAnnotation = GSAnnotation()
 			newAnnotation.type = TEXT
-			newAnnotation.text = 'Fuck, this curve is ugly!'
+			newAnnotation.text = "Fuck, this curve is ugly!"
 			newAnnotation1 = GSAnnotation()
 			newAnnotation1.type = ARROW
 			newAnnotation2 = GSAnnotation()
@@ -1617,10 +1712,23 @@ class GlyphsAppTests(unittest.TestCase):
 			newAnnotation4 = GSAnnotation()
 			newAnnotation4 = copy.copy(newAnnotation)
 			newAnnotation4.type = MINUS
+
+			# add/remove an annotation to/from the layer
+			layer.annotations.append(newAnnotation)
+			self.assertEqual(layer.annotations[0].type, TEXT)
+			self.assertEqual(layer.annotations[0].text, "Fuck, this curve is ugly!")
+			del(layer.annotations[0])	
+
 			self.assertList(layer.annotations, assertType=False, testValues=[
-					newAnnotation, newAnnotation1, newAnnotation2, newAnnotation3, newAnnotation4])
+					newAnnotation,
+					newAnnotation1,
+					newAnnotation2,
+					newAnnotation3,
+					newAnnotation4
+					])
 			with self.assertRaises(TypeError):
 				layer.annotations['a']
+				layer.annotations[1.2]
 
 		with self.subTest("hints"):
 			layer = font.glyphs['a'].layers[0]
@@ -1642,10 +1750,19 @@ class GlyphsAppTests(unittest.TestCase):
 			newHint3 = GSHint()
 			newHint3.originNode = layer.shapes[0].nodes[0]
 			newHint3.targetNode = layer.shapes[0].nodes[1]
+
+			# add/remove an hints to/from the layer
+			layer.hints.append(newHint)
+			self.assertEqual(layer.hints[0].originNode, layer.shapes[0].nodes[0])
+			self.assertEqual(layer.hints[0].targetNode, layer.shapes[0].nodes[1])
+			self.assertEqual(layer.hints[0].type, STEM)
+			del(layer.hints[0])	
+
 			self.assertList(layer.hints, assertType=False, testValues=[
 					newHint, newHint1, newHint2, newHint3])
 			with self.assertRaises(TypeError):
 				layer.hints['a']
+				layer.hints[1.3]
 
 		with self.subTest("anchors"):
 			amount = len(layer.anchors)
@@ -1659,36 +1776,33 @@ class GlyphsAppTests(unittest.TestCase):
 			layer.anchors['top'].position = NSPoint(100, 100)
 			anchor = copy.copy(layer.anchors['top'])
 			del layer.anchors['top']
+			
 			layer.anchors['top'] = GSAnchor()
+			with self.assertRaises(TypeError):
+				layer.anchors['top'].position = None
 			layer.anchors['top'].position = oldPosition
 			self.assertString(layer.anchors['top'].name)
 			newAnchor1 = GSAnchor()
-			newAnchor1.name = 'testPosition1'
+			newAnchor1.name = 'testAnchor1'
 			newAnchor2 = GSAnchor()
-			newAnchor2.name = 'testPosition2'
-			layer.anchors.extend([newAnchor1, newAnchor2])
-			self.assertEqual(layer.anchors['testPosition1'], newAnchor1)
-			self.assertEqual(layer.anchors['testPosition2'], newAnchor2)
+			newAnchor2.name = 'testAnchor2'
 			newAnchor3 = GSAnchor()
-			newAnchor3.name = 'testPosition3'
+			newAnchor3.name = 'testAnchor3'
+			
+			layer.anchors.extend([newAnchor1, newAnchor2])
+			self.assertEqual(layer.anchors['testAnchor1'], newAnchor1)
+			self.assertEqual(layer.anchors['testAnchor2'], newAnchor2)
+			
 			layer.anchors.append(newAnchor3)
-			self.assertEqual(layer.anchors['testPosition3'], newAnchor3)
-			layer.anchors.remove(layer.anchors['testPosition3'])
-			layer.anchors.remove(layer.anchors['testPosition2'])
-			layer.anchors.remove(layer.anchors['testPosition1'])
+			self.assertEqual(layer.anchors['testAnchor3'], newAnchor3)
+			
+			layer.anchors.remove(layer.anchors['testAnchor3'])
+			layer.anchors.remove(layer.anchors['testAnchor2'])
+			layer.anchors.remove(layer.anchors['testAnchor1'])
+			
 			self.assertEqual(amount, len(layer.anchors))
 			with self.assertRaises(TypeError):
 				layer.anchors[12.3]
-
-		# GSLayer.paths
-		# has its own test
-
-		# GSLayer.shapes
-		# self.assertList(layer.shapes, assertType=False, testValues=[
-		# 		GSPath(), GSPath(), copy.copy(GSPath())])
-		# ???: ^ What’s the intention here? Fails with the test font. Shall it compare with another, empty font (because then it would pass) <MF @GS>
-		with self.assertRaises(TypeError):
-			layer.shapes['a']
 		
 		with self.subTest("selection"):
 			layer.selection.clear()
@@ -1750,31 +1864,51 @@ class GlyphsAppTests(unittest.TestCase):
 
 		with self.subTest("selectionBounds"):
 			self.assertIsInstance(layer.selectionBounds, NSRect)
+			self.assertEqual(layer.selectionBounds.origin.x, 9.223372036854776e+18)
 
 		with self.subTest("metrics"):
 			for m in layer.metrics:
 				if m.name == "Ascender":
+					self.assertIsInstance(m, GSMetricValue)
 					self.assertEqual(m.position, layer.ascender)
+					self.assertFloat(m.position)
 				elif m.name == "Descender":
+					self.assertIsInstance(m, GSMetricValue)
 					self.assertEqual(m.position, layer.descender)
+					self.assertFloat(m.position)
 
 		with self.subTest("background"):
 			self.assertIn('GSBackgroundLayer', layer.background.__repr__())
-		
-		# GSLayer.backgroundImage
-		# postponed to its own test
+			self.assertIsInstance(layer.background.shapes[0], GSPath)
+			self.assertEqual(len(layer.background.shapes[0].nodes), 44)
+			oldBackground = layer.background.copy()
+			self.assertNotEqual(layer.background.shapes[0], layer.shapes[0])
+			layer.background = layer.copy()
+			self.assertEqual(layer.background.shapes[0], layer.shapes[0])
+			layer.background = None
+			self.assertEqual(layer.background.shapes, ())
+			layer.background = oldBackground
+			self.assertNotEqual(layer.background.shapes[0], layer.shapes[0])
 
 		with self.subTest("bezierPath"):
 			self.assertIsInstance(layer.bezierPath, NSBezierPath)
+			self.assertEqual(layer.bezierPath.bounds(), NSRect((80, -10), (289, 490)))
 
-		# GSLayer.openBezierPath
-		# self.assertIsInstance(layer.openBezierPath, NSBezierPath) # TODO: is NULL if there are no open paths
+		with self.subTest("openBezierPath"):
+			self.assertIsNone(layer.openBezierPath)
+			oldLayer = layer.copy()
+			layer.paths[0].closed = False
+			self.assertIsNone(layer.openBezierPath)
+			layer.bezierPath # QUESTION: Shall this be necessary for `openBezierPath` to work? I’d assume `path.closed = False` should be enough <MF @GS>
+			self.assertIsInstance(layer.openBezierPath, NSBezierPath) 
+			layer = oldLayer
+			self.assertIsNone(layer.openBezierPath)
 
 		with self.subTest("completeBezierPath"):
 			self.assertIsInstance(layer.completeBezierPath, NSBezierPath)
 
-		# GSLayer.completeOpenBezierPath
-		# self.assertIsInstance(layer.completeOpenBezierPath, NSBezierPath) # TODO: is NULL if there are no open paths
+		with self.subTest("completeOpenBezierPath"):
+			self.assertIsInstance(layer.completeOpenBezierPath, NSBezierPath)
 
 		with self.subTest("isAligned"):
 			self.assertBool(layer.isAligned)
@@ -1807,6 +1941,7 @@ class GlyphsAppTests(unittest.TestCase):
 			self.assertIsNone(layer.tempData["TestData"])
 		
 		## Methods
+
 		decomposedLayer = layer.copyDecomposedLayer()
 		self.assertGreaterEqual(len(decomposedLayer.shapes), 1)
 		
@@ -1908,9 +2043,16 @@ class GlyphsAppTests(unittest.TestCase):
 		with self.assertRaises(TypeError):
 			glyph.smartComponentAxes[12.3]
 
-
-	def test_GSShapesComponents(self):
-		# font = Glyphs.font
+	@unittest.skip("Test not implemented")
+	def test_GSLayer_shapes(self):
+		pass
+		# self.assertList(layer.shapes, assertType=False, testValues=[
+		# 		GSPath(), GSPath(), copy.copy(GSPath())])
+		# ???: ^ What’s the intention here? Fails with the test font. Shall it compare with another, empty font (because then it would pass) <MF @GS>
+		with self.assertRaises(TypeError):
+			layer.shapes['a']
+	
+	def test_GSLayer_components(self): # former name: test_GSShapesComponents
 		font = self.font
 
 		font.glyphs['adieresis'].duplicate('adieresis.test')
@@ -2097,7 +2239,7 @@ class GlyphsAppTests(unittest.TestCase):
 		del Glyphs.font.glyphs['adieresis.test']
 		
 		
-	def test_GSPathShapes(self):
+	def test_GSLayer_paths(self): # former name: test_GSPathShapes
 		font = self.font
 
 		layer = font.glyphs['a'].layers[0]
@@ -2353,7 +2495,7 @@ class GlyphsAppTests(unittest.TestCase):
 			self.assertIsNone(guide.userData["TestData"])
 		
 		
-	def test_GSBackgroundImage(self):
+	def test_GSLayer_backgroundImage(self): # former name: test_GSBackgroundImage
 		font = self.font
 
 		glyph = font.glyphs['A']
