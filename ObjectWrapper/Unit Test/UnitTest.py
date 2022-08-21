@@ -159,6 +159,9 @@ class GlyphsAppTests(unittest.TestCase):
 			self.assertEqual(boolObject, (not oldValue))
 			boolObject = oldValue
 	
+	def assertIsRoundFloat(self, number):
+		self.assertEqual(number % 1, 0)
+
 	## Helper Methods
 
 	def assertIsFile(self, path):
@@ -297,6 +300,8 @@ class GlyphsAppTests(unittest.TestCase):
 
 		with self.subTest("gridLength"):
 			self.assertFloat(font.gridLength)
+			self.assertReadOnly(font.gridLength, _instance=font, _property="gridLength")
+			# QUESTION: add readonly-note to documentation. <MF @GS>
 				
 		with self.subTest("keyboardIncrementHuge"):
 			self.assertFloat(font.keyboardIncrementHuge)
@@ -755,7 +760,7 @@ class GlyphsAppTests(unittest.TestCase):
 		
 		# GSFont.gridLength
 		self.assertFloat(font.gridLength)
-		self.assertReadOnly(font.gridLength, _instance=font, _property='gridLength')
+		# self.assertReadOnly(font.gridLength, _instance=font, _property='gridLength') # TODO: can be removed here. Is tested already in GSFont properties. <MF>
 		# assert that gridLength == grid / gridSubDivisions
 		self.assertAlmostEqual(font.gridLength, 9./11)
 		font.grid = old_grid
@@ -1594,15 +1599,15 @@ class GlyphsAppTests(unittest.TestCase):
 		- (x) userData
 		- (x) tempData
 
-		- ( ) decomposeComponents()
+		- (x) decomposeComponents()
 		- ( ) decomposeCorners()
-		- ( ) compareString()
-		- ( ) connectAllOpenPaths()
-		- ( ) copyDecomposedLayer()
+		- (x) compareString()
+		- (·) connectAllOpenPaths()
+		- (x) copyDecomposedLayer()
 		- ( ) syncMetrics()
 		- ( ) correctPathDirection()
 		- ( ) removeOverlap()
-		- ( ) roundCoordinates()
+		- (x) roundCoordinates()
 		- ( ) addNodesAtExtremes()
 		- ( ) beginChanges()
 		- ( ) endChanges()
@@ -1939,17 +1944,37 @@ class GlyphsAppTests(unittest.TestCase):
 		
 		## Methods
 
-		decomposedLayer = layer.copyDecomposedLayer()
-		self.assertGreaterEqual(len(decomposedLayer.shapes), 1)
+		with self.subTest("copyDecomposedLayer()"):
+			decomposedLayer = layer.copyDecomposedLayer()
+			self.assertGreaterEqual(len(decomposedLayer.shapes), 1)
 		
-		layer = font.glyphs['adieresis'].layers[0]
-		self.assertIsNotNone(layer)
-		layer.decomposeComponents()
-		self.assertGreaterEqual(len(layer.paths), 1)
+		with self.subTest("decomposeComponents()"):
+			layer = font.glyphs['adieresis'].layers[0]
+			self.assertIsNotNone(layer)
+			self.assertEqual(len(layer.paths), 0)
+			layer.decomposeComponents()
+			self.assertGreaterEqual(len(layer.paths), 1)
+		
+		# with self.subTest("decomposeCorners()"):
+		# TODO: add corners to test font. <@MF>
 
-		self.assertString(layer.compareString())
+		with self.subTest("compareString()"):
+			self.assertString(layer.compareString())
+			self.assertEqual(layer.compareString(), "loocoocoocoocloocoocoocooclllloocoocloocoocl|_llll_llll_bottom**ogonek**top")
 		
-		layer.connectAllOpenPaths()
+		with self.subTest("connectAllOpenPaths()"):
+			# TODO: Check the impplementation of `connectAllOpenPaths()` <MF @GS>
+			oldShapes = layer.shapes
+			testPath = layer.paths[1]
+			self.assertTrue(testPath.closed)
+			testPath.closed = False
+			self.assertFalse(testPath.closed)
+			layer.connectAllOpenPaths()      # <== Seems to not work, also not in UI. Hence
+			self.assertTrue(testPath.closed) # <== fails here.
+			layer.shapes = copy.copy(oldShapes)
+			self.assertEqual(oldShapes, layer.shapes)
+			# testPath = layer.paths[1]
+			# self.assertTrue(testPath.closed)
 		
 		layer.syncMetrics()
 
@@ -1957,7 +1982,23 @@ class GlyphsAppTests(unittest.TestCase):
 
 		layer.removeOverlap()
 
-		layer.roundCoordinates()
+		with self.subTest("roundCoordinates()"):
+			# force decimal coordinates first
+			oldGridSubDivisions = font.gridSubDivisions
+			font.gridSubDivisions = 10
+			transformation = NSAffineTransform()
+			transformation.translateXBy_yBy_(0.4, 0.2)
+			layer.transform(transformation)
+			self.assertEqual(layer.paths[0].nodes[0].x, 155.4)
+
+			# now roundCoordinates and test for roundFloats
+			layer.roundCoordinates()
+			for path in layer.paths:
+				for node in path.nodes:
+					self.assertIsRoundFloat(node.x)
+					self.assertIsRoundFloat(node.y)
+
+			font.gridSubDivisions = oldGridSubDivisions # reset
 
 		layer.addNodesAtExtremes()
 		
