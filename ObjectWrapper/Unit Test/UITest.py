@@ -249,8 +249,23 @@ class GlyphsAppUITests(unittest.TestCase):
 		with self.subTest("parent"):
 			self.assertIsInstance(font.parent, NSDocument)
 
+	def test_GSGlyph(self):
+		return
+		# font = self.font
+		# with self.subTest("selected"):
+		# 	self.assertBool(glyph.selected)
+
 		# with self.subTest("currentText"):
 		# 	self.assertUnicode(font.currentText)
+
+	def test_GSLayer(self):
+		return
+		# with self.subTest("selection"):
+			# pass
+		# with self.subTest("selectionBounds"):
+		# 	self.assertIsInstance(layer.selectionBounds, NSRect)
+		# 	self.assertEqual(layer.selectionBounds.origin.x, 9.223372036854776e+18)
+		
 
 	def test_GSFont_parent(self):
 		return
