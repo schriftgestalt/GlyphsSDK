@@ -350,64 +350,62 @@ class GlyphsAppTests(unittest.TestCase):
 
 
 		#::Rafal
-		# GSFont properties tests
-		propertyKeys = [
-		"familyName",
-		"familyNames",
-		"designer",
-		"designers",
-		"manufacturer",
-		"manufacturers",
-		"copyright",
-		"copyrights",
-		"license",
-		"licenses",
-		"trademark",
-		"trademarks",
-		"description",
-		"descriptions",
-		"sampleText",
-		"sampleTexts",
-		"compatibleFullName",
-		"compatibleFullNames",
-		]
-		# testing ammount of properties
-		#TODO: font.properties has length 0
-		#self.assertEqual(len(font.properties), len(propertyKeys)/2)
+		with self.subTest("properties of GSFont"):
+			propertyKeys = [
+				"familyName",
+				"familyNames",
+				"designer",
+				"designers",
+				"manufacturer",
+				"manufacturers",
+				"copyright",
+				"copyrights",
+				"license",
+				"licenses",
+				"trademark",
+				"trademarks",
+				"description",
+				"descriptions",
+				"sampleText",
+				"sampleTexts",
+				"compatibleFullName",
+				"compatibleFullNames",
+			]
+			# testing ammount of properties
+			#TODO: font.properties has length 0
+			#self.assertEqual(len(font.properties), len(propertyKeys)/2)
 
-		# testing if empty properties return None
+			# testing if empty properties return None
 
-		for k in propertyKeys:
-			a = getattr(font, k)
-			#TODO: The "familyName" property is "Glyphs Unit Test Sans", not None
-			#self.assertEqual(a, None)
-
-		# testing assignment for properties
-
-		for k in propertyKeys:
-			if k[-1] != "s":
-				a = setattr(font, k, "test singlular")
-			else:
+			for k in propertyKeys:
 				a = getattr(font, k)
-				a["ENG"] = "test localised"
-		
-		# testing assignment for properties
-		for k in propertyKeys:
-			if k[-1] != "s":
-				a = setattr(font, k, "test singlular")
-				self.assertString(a)
-			else:
-				a = getattr(font, k)
-				self.assertIsInstance(a["ENG"], GSFontInfoValue)
-				self.assertEqual(a["ENG"].value, "test localised")
+				#TODO: The "familyName" property is "Glyphs Unit Test Sans", not None
+				#self.assertEqual(a, None)
 
-		# testing deletion of prular properties
-		for k in propertyKeys:
-			if k[-1] == "s":
-				a = getattr(font, k)
-				del a['ENG']
+			# testing assignment for properties
 
-		font = copy.copy(font) # Testing this at the end because otherwise some UI-dependent tests fail (like selection of glyphs)
+			for k in propertyKeys:
+				if k[-1] != "s":
+					a = setattr(font, k, "test singlular")
+				else:
+					a = getattr(font, k)
+					a["ENG"] = "test localised"
+			
+			# testing assignment for properties
+			for k in propertyKeys:
+				if k[-1] != "s":
+					a = setattr(font, k, "test singlular")
+					self.assertString(a)
+				else:
+					a = getattr(font, k)
+					self.assertIsInstance(a["ENG"], GSFontInfoValue)
+					self.assertEqual(a["ENG"].value, "test localised")
+
+			# testing deletion of plural properties
+			for k in propertyKeys:
+				if k[-1] == "s":
+					a = getattr(font, k)
+					del a['ENG']
 
 	## GSFont Atributes
 
@@ -785,6 +783,10 @@ class GlyphsAppTests(unittest.TestCase):
 			font.save(path="wrong.extension")
 		
 		self.assertIsFile(copypath)
+	
+	@unittest.skip("Test not implemented")
+	def test_GSFont_save_dotglyphspackage(self):
+		pass
 
 	@unittest.skipIf(GSApplication.versionNumber < 3.2, 'UFO saving with `GSFont({PATH})` [should work with 3.2] <MF>')
 	def test_GSFont_save_dotufo(self):
@@ -795,6 +797,14 @@ class GlyphsAppTests(unittest.TestCase):
 			font.save(path="wrong.extension")
 
 		self.assertIsFile(copypath_ufo) # TODO: UFO not created #1471 <MF @GS>
+
+	@unittest.skip("Test not implemented")
+	def test_instance_export(self):
+		pass # [OTF, WOFF, WOFF2, TTF, UFO, VARIABLE]
+
+	@unittest.skip("Test not implemented")
+	def test_addInstanceAsMaster(self):
+		pass # maybe inside GSFont test <@MF>
 
 	def test_GSFont_kerning(self):
 		"""To set a value, it is better to use the method GSFont.setKerningForPair(). This ensures a better data integrity (and is faster)."""
@@ -1196,80 +1206,133 @@ class GlyphsAppTests(unittest.TestCase):
 			self.assertEqual(len(instance.font.masters), oldNumbnerOfMasters + 1)
 
 		#::Rafal
-		# GSInstance properties tests
-		propertyKeys = ['compatibleFullName',
-		'compatibleFullNames',
-		'copyright',
-		'copyrights',
-		'description',
-		'descriptions',
-		'designer',
-		'designers',
-		'familyName',
-		'familyNames',
-		'license',
-		'licenses',
-		'manufacturer',
-		'manufacturers',
-		'preferredFamilyName',
-		'preferredFamilyNames',
-		'preferredSubfamilyName',
-		'preferredSubfamilyNames',
-		'sampleText',
-		'sampleTexts',
-		'styleMapFamilyName',
-		'styleMapFamilyNames',
-		'styleMapStyleName',
-		'styleMapStyleNames',
-		'styleName',
-		'styleNames',
-		'trademark',
-		'trademarks',
-		'variableStyleName',
-		'variableStyleNames']
+		with self.subTest("properties of GSInstance"):
+			propertyKeys = [
+				'compatibleFullName',
+				'compatibleFullNames',
+				'copyright',
+				'copyrights',
+				'description',
+				'descriptions',
+				'designer',
+				'designers',
+				'familyName',
+				'familyNames',
+				'license',
+				'licenses',
+				'manufacturer',
+				'manufacturers',
+				'preferredFamilyName',
+				'preferredFamilyNames',
+				'preferredSubfamilyName',
+				'preferredSubfamilyNames',
+				'sampleText',
+				'sampleTexts',
+				'styleMapFamilyName',
+				'styleMapFamilyNames',
+				'styleMapStyleName',
+				'styleMapStyleNames',
+				'styleName',
+				'styleNames',
+				'trademark',
+				'trademarks',
+				'variableStyleName',
+				'variableStyleNames'
+			]
 
-		# testing ammount of properties
-		#TODO: self.assertEqual(len(instance.properties), len(propertyKeys)/2)
+			# testing ammount of properties
+			#TODO: self.assertEqual(len(instance.properties), len(propertyKeys)/2)
 
-		# testing if empty properties return None
+			# testing if empty properties return None
 
-		for k in propertyKeys:
-			a = getattr(instance, k)
-			if isinstance(a, GlyphsApp.Proxy):
-				self.assertEqual(a.values(), None)
-			else:
-				self.assertEqual(a, None)
-
-		# testing assignment for properties
-
-		for k in propertyKeys:
-			if k[-1] != "s":
-				a = setattr(instance, k, "test singlular")
-			else:
+			for k in propertyKeys:
 				a = getattr(instance, k)
-				a["ENG"] = "test localised"
-		
-		# testing assignment for properties
+				if isinstance(a, GlyphsApp.Proxy):
+					self.assertEqual(a.values(), None)
+				else:
+					self.assertEqual(a, None)
 
-		for k in propertyKeys:
-			if k[-1] != "s":
-				a = setattr(instance, k, "test singlular")
-				self.assertString(a)
-			else:
-				a = getattr(instance, k)
-				self.assertIsInstance(a["ENG"], GSFontInfoValue)
-				self.assertEqual(a["ENG"].value, "test localised")
+			# testing assignment for properties
 
-		# testing deletion of prular properties
-		for k in propertyKeys:
-			if k[-1] == "s":
-				a = getattr(instance, k)
-				del a['ENG']
+			for k in propertyKeys:
+				if k[-1] != "s":
+					a = setattr(instance, k, "test singlular")
+				else:
+					a = getattr(instance, k)
+					a["ENG"] = "test localised"
+			
+			# testing assignment for properties
+
+			for k in propertyKeys:
+				if k[-1] != "s":
+					a = setattr(instance, k, "test singlular")
+					self.assertString(a)
+				else:
+					a = getattr(instance, k)
+					self.assertIsInstance(a["ENG"], GSFontInfoValue)
+					self.assertEqual(a["ENG"].value, "test localised")
+
+			# testing deletion of plural properties
+			for k in propertyKeys:
+				if k[-1] == "s":
+					a = getattr(instance, k)
+					del a['ENG']
 
 
 
 
 	def test_GSGlyph(self):
+		"""
+		- (x) parent
+		- (x) layers
+		- (x) font
+		- (x) name
+		- (x) unicode
+		- (x) string
+		- (x) id
+		- (x) locked
+		- (x) category
+		- (x) storeCategory
+		- (x) subCategory
+		- (x) storeSubCategory
+		- (x) case
+		- (x) storeCase
+		- (x) script
+		- (x) storeScript
+		- (x) direction
+		- (x) productionName
+		- (x) storeProductionName
+		- (x) sortName
+		- (x) sortNameKeep
+		- (x) storeSortName
+		- (x) glyphInfo
+		- (x) leftKerningGroup
+		- (x) leftKerningKey
+		- (x) rightKerningGroup
+		- (x) rightKerningKey
+		- (x) topKerningGroup
+		- (x) topKerningKey
+		- (x) bottomKerningKey
+		- (x) bottomKerningKey
+		- (x) leftMetricsKey
+		- (x) rightMetricsKey
+		- (x) widthMetricsKey
+		- (x) export
+		- (x) color
+		- (x) colorObject
+		- (x) note
+		- (x) selected --> UI
+		- (x) mastersCompatible
+		- (x) userData
+		- (x) smartComponentAxes --> own test
+		- (x) tags
+		- (x) lastChange
+
+		- (x) beginUndo()
+		- (x) endUndo()
+		- (x) updateGlyphInfo()
+		- (x) duplicate()
+		"""
 		# font = Glyphs.font
 		font = self.font
 
@@ -1438,9 +1501,6 @@ class GlyphsAppTests(unittest.TestCase):
 		with self.subTest("note"):
 			self.assertUnicode(glyph.note)
 		
-		# GSGlyph.selected
-		# self.assertBool(glyph.selected)
-		
 		with self.subTest("mastersCompatible"):
 			self.assertIsInstance(glyph.mastersCompatible, bool)
 		
@@ -1451,8 +1511,8 @@ class GlyphsAppTests(unittest.TestCase):
 			del(glyph.userData["TestData"])
 			self.assertIsNone(glyph.userData["TestData"])
 		
-		# GSGlyph.smartComponentAxes
-		# postponed to its own test
+		with self.subTest("smartComponentAxes"):
+			pass # postponed to its own test
 		
 		with self.subTest("lastChange"):
 			glyph.name = "a.test2"
@@ -1462,10 +1522,34 @@ class GlyphsAppTests(unittest.TestCase):
 		## Methods
 		glyph.beginUndo()
 		glyph.endUndo()
-		glyph.updateGlyphInfo()
+
+		with self.subTest("updateGlyphInfo()"):
+			# some random samples:
+			glyph.updateGlyphInfo()
+			self.assertEqual(glyph.glyphInfo.name, "a.test1")
+			self.assertEqual(glyph.glyphInfo.script, "latin")
+			self.assertEqual(glyph.glyphInfo.case, GSLowercase)
+			self.assertIsNone(glyph.glyphInfo.unicode)
+			# self.assertIsNone(glyph.glyphInfo.unicode2)
+			self.assertIsNone(glyph.glyphInfo.subCategory)
+			self.assertIsNone(glyph.glyphInfo.components)
+
+		with self.subTest("duplicate"):
+			# Duplicate default
+			duplicateName = "a.test1.001"
+			self.assertIsNone(font.glyphs[duplicateName])
+			glyph.duplicate()
+			self.assertIsNotNone(font.glyphs[duplicateName])
+			del font.glyphs[duplicateName]
+			# Duplicate with custom name
+			duplicateName = "a.dupe"
+			self.assertIsNone(font.glyphs[duplicateName])
+			glyph.duplicate(duplicateName)
+			self.assertIsNotNone(font.glyphs[duplicateName])
+			del font.glyphs[duplicateName]
 
 		with self.subTest("delete Glyph"):
-			del font.glyphs['a.test']
+			del font.glyphs["a.test"]
 
 	def test_GSLayer(self):
 		# font = Glyphs.font
@@ -2316,6 +2400,26 @@ class GlyphsAppTests(unittest.TestCase):
 
 
 	def test_GSGlyphInfo(self):
+		"""
+		- ( ) name
+		- ( ) productionName
+		- ( ) category
+		- ( ) subCategory
+		- ( ) components
+		- ( ) accents
+		- ( ) anchors
+		- ( ) unicode
+		- ( ) unicode2
+		- ( ) script
+		- ( ) index
+		- ( ) sortName
+		- ( ) sortNameKeep
+		- ( ) desc
+		- ( ) altNames
+		- ( ) direction
+		- ( ) desc
+		- ( ) case
+		"""
 		font = self.font
 
 		info = font.glyphs['a'].glyphInfo
