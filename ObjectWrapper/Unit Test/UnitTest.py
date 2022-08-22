@@ -1598,7 +1598,7 @@ class GlyphsAppTests(unittest.TestCase):
 		- (x) bezierPath
 		- (x) openBezierPath
 		- (x) completeOpenBezierPath
-		- ( ) smartComponentPoleMapping
+		- (x) smartComponentPoleMapping    --> tested in `test_smartComponents`
 		- (x) isAligned
 		- (x) isSpecialLayer
 		- (x) isMasterLayer
@@ -1620,13 +1620,13 @@ class GlyphsAppTests(unittest.TestCase):
 		- ( ) endChanges()
 		- (x) cutBetweenPoints()
 		- (x) intersectionsBetweenPoints()
-		- ( ) addMissingAnchors()
+		- (x) addMissingAnchors()
 		- ( ) clearSelection()              --> UI
-		- ( ) clear()
-		- ( ) swapForegroundWithBackground()
-		- ( ) reinterpolate()
+		- (x) swapForegroundWithBackground()
 		- (x) applyTransform()
 		- (x) transform()
+		- (·) reinterpolate()               --> UI ???
+		- (·) clear()
 		"""
 		font = self.font
 
@@ -2094,19 +2094,58 @@ class GlyphsAppTests(unittest.TestCase):
 			intersections = layer.intersectionsBetweenPoints((-1000, 100), (layer.width + 1000, 100))
 			self.assertEqual([i.pointValue() for i in intersections], [NSPoint(-1000, 100), NSPoint(1414, 100)])
 
-		layer.addMissingAnchors()
-		
-		#layer.clearSelection()
-		# already tested
-		
-		layer.swapForegroundWithBackground()
-		layer.swapForegroundWithBackground()
+		with self.subTest("addMissingAnchors()"):
+			anchorLayer = font.glyphs["o"].layers[0]
+			self.assertEqual(len(anchorLayer.anchors), 0)
+			anchorLayer.addMissingAnchors()
+			self.assertEqual(len(anchorLayer.anchors), 5)
+			self.assertEqual([a.name for a in anchorLayer.anchors], [
+				'top',
+				'bottom',
+				'center',
+				'topright',
+				'ogonek'
+				])
 
-		layer.reinterpolate()
+		with self.subTest("swapForegroundWithBackground()"):
+			testLayer = font.glyphs["a"].layers[0]
+			oldForeground = testLayer.copy()
+			oldBackground = testLayer.background.copy()
+			self.assertNotEqual(testLayer.compareString(), testLayer.background.compareString())
+			
+			testLayer.swapForegroundWithBackground()
+			self.assertNotEqual(testLayer.compareString(), testLayer.background.compareString())
+			self.assertEqual(testLayer.compareString(), oldBackground.compareString())
 
-		layer.clear()
-		
-		### MARK ### Glyphs.font.close()
+			testLayer.swapForegroundWithBackground()
+			self.assertNotEqual(testLayer.compareString(), testLayer.background.compareString())
+			self.assertEqual(testLayer.compareString(), oldForeground.compareString())
+
+
+		with self.subTest("reinterpolate()"):
+			reinterpolateLayer = font.glyphs["o"].layers[1]
+			oldBoundsWitdth = reinterpolateLayer.bounds.size.width
+			oldBoundsHeight = reinterpolateLayer.bounds.size.height
+			self.assertEqual(oldBoundsWitdth, 200.0)
+			self.assertEqual(oldBoundsHeight, 200.0)
+			reinterpolateLayer.reinterpolate()
+			newBoundsWitdth = reinterpolateLayer.bounds.size.width
+			newBoundsHeight = reinterpolateLayer.bounds.size.height
+			self.assertEqual(newBoundsWitdth, 272.0) # <== see #75
+			self.assertEqual(newBoundsHeight, 272.0)
+			# TODO: test for masster layer and brace layer
+
+		with self.subTest("clear()"):
+			reinterpolateLayer = font.glyphs["o"].layers[0]
+			oldLayer = reinterpolateLayer.copy()
+			reinterpolateLayer.shapes.append(GSComponent('a'))
+			self.assertEqual(len(reinterpolateLayer.anchors), 5)
+			self.assertEqual(len(reinterpolateLayer.paths), 2)
+			self.assertEqual(len(reinterpolateLayer.components), 1)
+			layer.clear()
+			self.assertEqual(len(reinterpolateLayer.anchors), 0) # <== see #75
+			self.assertEqual(len(reinterpolateLayer.paths), 0)
+			self.assertEqual(len(reinterpolateLayer.components), 0)
 		
 		
 	def test_smartComponents(self):
