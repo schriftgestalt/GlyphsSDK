@@ -2027,7 +2027,7 @@ class GlyphsAppTests(unittest.TestCase):
 			self.assertEqual(len(extremesLayer.paths[0].nodes), 24)
 		
 		with self.subTest("applyTransform("):
-			# translate
+			# test translate
 			oldLayerBoundsOriginX = layer.bounds.origin.x
 			oldLayerBoundsOriginY = layer.bounds.origin.y
 			transform = NSAffineTransform.new()
@@ -2037,7 +2037,7 @@ class GlyphsAppTests(unittest.TestCase):
 			newLayerBoundsOriginY = layer.bounds.origin.y
 			self.assertEqual(newLayerBoundsOriginX, oldLayerBoundsOriginX + 123)
 			self.assertEqual(newLayerBoundsOriginY, oldLayerBoundsOriginY + 321)
-			# scale
+			# test scale
 			oldLayerBoundsHeight = layer.bounds.size.height
 			oldLayerBoundsWidth = layer.bounds.size.width
 			transform = NSAffineTransform.new()
@@ -2049,7 +2049,7 @@ class GlyphsAppTests(unittest.TestCase):
 			self.assertEqual(newLayerBoundsWidth, oldLayerBoundsWidth * 2)
 
 		with self.subTest("transform()"):
-			# translate
+			# test translate
 			oldLayerBoundsOriginX = layer.bounds.origin.x
 			oldLayerBoundsOriginY = layer.bounds.origin.y
 			transform = NSAffineTransform.new()
@@ -2059,7 +2059,7 @@ class GlyphsAppTests(unittest.TestCase):
 			newLayerBoundsOriginY = layer.bounds.origin.y
 			self.assertEqual(newLayerBoundsOriginX, oldLayerBoundsOriginX + 123)
 			self.assertEqual(newLayerBoundsOriginY, oldLayerBoundsOriginY + 321)
-			# scale
+			# test scale
 			oldLayerBoundsHeight = layer.bounds.size.height
 			oldLayerBoundsWidth = layer.bounds.size.width
 			transform = NSAffineTransform.new()
@@ -2130,7 +2130,7 @@ class GlyphsAppTests(unittest.TestCase):
 			newBoundsHeight = reinterpolateLayer.bounds.size.height
 			self.assertEqual(newBoundsWitdth, 272.0) # <== see #75
 			self.assertEqual(newBoundsHeight, 272.0)
-			# TODO: test for masster layer and brace layer
+			# TODO: test for master layer and brace layer
 
 		with self.subTest("clear()"):
 			reinterpolateLayer = font.glyphs["o"].layers[0]
