@@ -15,6 +15,7 @@ from GlyphsApp import *
 import os, time, sys, datetime
 import objc
 import copy
+import itertools
 import pathlib as Pathlib
 from AppKit import \
 NSAffineTransform, \
@@ -26,6 +27,7 @@ NSDictionary, \
 NSImage, \
 NSNull, \
 NSNumber, \
+NSConcreteValue, \
 NSPoint, \
 NSPredicate, \
 NSKeyValueFastMutableArray2, \
@@ -46,6 +48,8 @@ PathToTestFile = os.path.join(os.path.dirname(__file__), 'Glyphs Unit Test Sans.
 Glyphs.clearLog()
 
 class GlyphsAppTests(unittest.TestCase):
+
+	maxDiff = None
 
 	def assertReadOnly(self, readOnlyObject, _instance, _property):
 		"""Needs the actual instance to test for readOnly-nes"""
@@ -1604,21 +1608,22 @@ class GlyphsAppTests(unittest.TestCase):
 		- (x) compareString()
 		- (·) connectAllOpenPaths()
 		- (x) copyDecomposedLayer()
-		- ( ) syncMetrics()
-		- ( ) correctPathDirection()
-		- ( ) removeOverlap()
+		- (x) syncMetrics()
+		- (x) correctPathDirection()
+		- (x) removeOverlap()
 		- (x) roundCoordinates()
-		- ( ) addNodesAtExtremes()
+		- (x) addNodesAtExtremes()
 		- ( ) beginChanges()
 		- ( ) endChanges()
-		- ( ) cutBetweenPoints()
-		- ( ) intersectionsBetweenPoints()
+		- (x) cutBetweenPoints()
+		- (x) intersectionsBetweenPoints()
 		- ( ) addMissingAnchors()
 		- ( ) clearSelection()              --> UI
 		- ( ) clear()
 		- ( ) swapForegroundWithBackground()
 		- ( ) reinterpolate()
-		- ( ) applyTransform()
+		- (x) applyTransform()
+		- (x) transform()
 		"""
 		font = self.font
 
@@ -1976,11 +1981,26 @@ class GlyphsAppTests(unittest.TestCase):
 			# testPath = layer.paths[1]
 			# self.assertTrue(testPath.closed)
 		
-		layer.syncMetrics()
+		with self.subTest("syncMetrics()"):
+			self.assertEqual(layer.RSB, 87.0)
+			layer.rightMetricsKey = "A"
+			self.assertEqual(layer.RSB, 87.0)
+			layer.syncMetrics()
+			self.assertEqual(layer.RSB, font.glyphs["A"].layers[0].RSB)
 
-		layer.correctPathDirection()
+		with self.subTest("correctPathDirection()"):
+			self.assertEqual(layer.paths[0].direction, -1)
+			layer.paths[0].reverse()
+			self.assertEqual(layer.paths[0].direction, 1)
+			layer.correctPathDirection()
+			self.assertEqual(layer.paths[0].direction, -1)
 
-		layer.removeOverlap()
+		with self.subTest("removeOverlap()"):
+			thisLayer = font.glyphs["a"].layers[1]
+			oldCompareString = thisLayer.compareString()			
+			thisLayer.removeOverlap()
+			newCompareString = thisLayer.compareString()
+			self.assertNotEqual(oldCompareString, newCompareString)
 
 		with self.subTest("roundCoordinates()"):
 			# force decimal coordinates first
@@ -2000,11 +2020,55 @@ class GlyphsAppTests(unittest.TestCase):
 
 			font.gridSubDivisions = oldGridSubDivisions # reset
 
-		layer.addNodesAtExtremes()
+		with self.subTest("addNodesAtExtremes()"):
+			extremesLayer = font.glyphs["test_addNodesAtExtremes"].layers[0]
+			self.assertEqual(len(extremesLayer.paths[0].nodes), 12)
+			extremesLayer.addNodesAtExtremes()
+			self.assertEqual(len(extremesLayer.paths[0].nodes), 24)
 		
-		transform = NSAffineTransform.new()
-		transform.scaleXBy_yBy_(0.5, 0.5)
-		layer.applyTransform(transform.transformStruct())
+		with self.subTest("applyTransform("):
+			# translate
+			oldLayerBoundsOriginX = layer.bounds.origin.x
+			oldLayerBoundsOriginY = layer.bounds.origin.y
+			transform = NSAffineTransform.new()
+			transform.translateXBy_yBy_(123, 321)
+			layer.applyTransform(transform.transformStruct())
+			newLayerBoundsOriginX = layer.bounds.origin.x
+			newLayerBoundsOriginY = layer.bounds.origin.y
+			self.assertEqual(newLayerBoundsOriginX, oldLayerBoundsOriginX + 123)
+			self.assertEqual(newLayerBoundsOriginY, oldLayerBoundsOriginY + 321)
+			# scale
+			oldLayerBoundsHeight = layer.bounds.size.height
+			oldLayerBoundsWidth = layer.bounds.size.width
+			transform = NSAffineTransform.new()
+			transform.scaleXBy_yBy_(2, 2)
+			layer.applyTransform(transform.transformStruct())
+			newLayerBoundsHeight = layer.bounds.size.height
+			newLayerBoundsWidth = layer.bounds.size.width
+			self.assertEqual(newLayerBoundsHeight, oldLayerBoundsHeight * 2)
+			self.assertEqual(newLayerBoundsWidth, oldLayerBoundsWidth * 2)
+
+		with self.subTest("transform()"):
+			# translate
+			oldLayerBoundsOriginX = layer.bounds.origin.x
+			oldLayerBoundsOriginY = layer.bounds.origin.y
+			transform = NSAffineTransform.new()
+			transform.translateXBy_yBy_(123, 321)
+			layer.transform(transform)
+			newLayerBoundsOriginX = layer.bounds.origin.x
+			newLayerBoundsOriginY = layer.bounds.origin.y
+			self.assertEqual(newLayerBoundsOriginX, oldLayerBoundsOriginX + 123)
+			self.assertEqual(newLayerBoundsOriginY, oldLayerBoundsOriginY + 321)
+			# scale
+			oldLayerBoundsHeight = layer.bounds.size.height
+			oldLayerBoundsWidth = layer.bounds.size.width
+			transform = NSAffineTransform.new()
+			transform.scaleXBy_yBy_(2, 2)
+			layer.transform(transform)
+			newLayerBoundsHeight = layer.bounds.size.height
+			newLayerBoundsWidth = layer.bounds.size.width
+			self.assertEqual(newLayerBoundsHeight, oldLayerBoundsHeight * 2)
+			self.assertEqual(newLayerBoundsWidth, oldLayerBoundsWidth * 2)
 
 		# layer.beginChanges()
 		# TODO: `'NoneType' object has no attribute 'beginUndoGrouping'` even though layer exists until here. <MF>
@@ -2013,9 +2077,19 @@ class GlyphsAppTests(unittest.TestCase):
 		# layer.endChanges()
 		## TODO: ^ Re-enable once this is fixed <MF @MF @GS>
 
-		layer.cutBetweenPoints(NSPoint(0, 100), NSPoint(layer.width, 100))
+		with self.subTest("cutBetweenPoints()"):
+			cutLayer = font.glyphs["test_cutBetweenPoints"].layers[0]
+			self.assertEqual(len(cutLayer.paths), 2)
+			self.assertEqual(cutLayer.paths[0].bounds.size.height, 600)
+			self.assertEqual(cutLayer.paths[1].bounds.size.height, 300)
+			cutLayer.cutBetweenPoints(NSPoint(0 - 1, 200), NSPoint(600 + 1, 400))
+			self.assertEqual(len(cutLayer.paths), 2)
+			self.assertEqual(cutLayer.paths[0].bounds.size.height, 400)
+			self.assertEqual(cutLayer.paths[1].bounds.size.height, 400)
 
-		intersections = layer.intersectionsBetweenPoints((-1000, 100), (layer.width+1000, 100))
+		with self.subTest("intersectionsBetweenPoints()"):
+			intersections = layer.intersectionsBetweenPoints((-1000, 100), (layer.width + 1000, 100))
+			self.assertEqual([i.pointValue() for i in intersections], [NSPoint(-1000, 100), NSPoint(1414, 100)])
 
 		layer.addMissingAnchors()
 		
