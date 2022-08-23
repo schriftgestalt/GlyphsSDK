@@ -1604,7 +1604,7 @@ class GlyphsAppTests(unittest.TestCase):
 		- (x) tempData
 
 		- (x) decomposeComponents()
-		- ( ) decomposeCorners()
+		- (x) decomposeCorners()
 		- (x) compareString()
 		- (·) connectAllOpenPaths()
 		- (x) copyDecomposedLayer()
@@ -1859,6 +1859,7 @@ class GlyphsAppTests(unittest.TestCase):
 
 		with self.subTest("leftMetricsKey"):
 			self.assertUnicode(layer.leftMetricsKey)
+			# TODO: test for valid operators? Also: rightMetricsKey, widthMetricsKey
 
 		with self.subTest("rightMetricsKey"):
 			self.assertUnicode(layer.rightMetricsKey)
@@ -1960,8 +1961,12 @@ class GlyphsAppTests(unittest.TestCase):
 			layer.decomposeComponents()
 			self.assertGreaterEqual(len(layer.paths), 1)
 		
-		# with self.subTest("decomposeCorners()"):
-		# TODO: add corners to test font. <@MF>
+		with self.subTest("decomposeCorners()"):
+			cornersLayer = font.glyphs['c'].layers[0]
+			self.assertEqual(cornersLayer.compareString(), "llllllll_&&_cap.test@0,0&&_corner.test@0,2&&_corner.test@0,3&&_cap.test@0,4&&_corner.test@0,6&&_corner.test@0,7")
+			cornersLayer.decomposeCorners()
+			self.assertEqual(cornersLayer.compareString(), "lloocoocloocloocloocooclooclooc_")
+			
 
 		with self.subTest("compareString()"):
 			self.assertString(layer.compareString())
