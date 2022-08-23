@@ -2142,7 +2142,7 @@ class GlyphsAppTests(unittest.TestCase):
 			self.assertEqual(len(clearLayer.paths), 2)
 			self.assertEqual(len(clearLayer.components), 1)
 			clearLayer.clear()
-			self.assertEqual(len(clearLayer.anchors), 0) # <== see #75
+			self.assertEqual(len(clearLayer.anchors), 0)
 			self.assertEqual(len(clearLayer.paths), 0)
 			self.assertEqual(len(clearLayer.components), 0)
 		
