@@ -1,8 +1,7 @@
 {
 .appVersion = "3134";
 DisplayStrings = (
-aA,
-o
+aA
 );
 classes = (
 {
@@ -1044,6 +1043,181 @@ width = 518;
 unicode = 00E4;
 },
 {
+glyphname = c;
+lastChange = "2022-08-23 12:25:09 +0000";
+layers = (
+{
+hints = (
+{
+origin = "{0, 6}";
+type = Corner;
+name = _corner.test;
+},
+{
+origin = "{0, 3}";
+scale = "{0.9, 0.9}";
+type = Corner;
+name = _corner.test;
+},
+{
+origin = "{0, 7}";
+type = Corner;
+name = _corner.test;
+},
+{
+origin = "{0, 2}";
+scale = "{0.9, 0.9}";
+type = Corner;
+name = _corner.test;
+},
+{
+origin = "{0, 4}";
+type = Cap;
+name = _cap.test;
+},
+{
+origin = "{0, 0}";
+target = "{0, 1}";
+type = Cap;
+name = _cap.test;
+}
+);
+layerId = "C4872ECA-A3A9-40AB-960A-1DB2202F16DE";
+paths = (
+{
+closed = 1;
+nodes = (
+"440 0 LINE",
+"440 14 LINE",
+"166 14 LINE",
+"166 456 LINE",
+"440 456 LINE",
+"440 470 LINE",
+"152 470 LINE",
+"152 0 LINE"
+);
+}
+);
+width = 600;
+},
+{
+color = 0;
+hints = (
+{
+origin = "{0, 6}";
+scale = "{0.85616, 0.85616}";
+type = Corner;
+name = _corner.test;
+},
+{
+origin = "{0, 3}";
+scale = "{1.22365, 1.22365}";
+type = Corner;
+name = _corner.test;
+},
+{
+origin = "{0, 7}";
+scale = "{1.28768, 1.28768}";
+type = Corner;
+name = _corner.test;
+},
+{
+origin = "{0, 2}";
+scale = "{0.79212, 0.79212}";
+type = Corner;
+name = _corner.test;
+},
+{
+origin = "{0, 4}";
+type = Cap;
+name = _cap.test;
+},
+{
+origin = "{0, 0}";
+target = "{0, 1}";
+type = Cap;
+name = _cap.test;
+}
+);
+layerId = "3E7589AA-8194-470F-8E2F-13C1C581BE24";
+paths = (
+{
+closed = 1;
+nodes = (
+"469 0 LINE",
+"469 64 LINE",
+"215 64 LINE",
+"215 413 LINE",
+"469 413 LINE",
+"469 477 LINE",
+"127 477 LINE",
+"127 0 LINE"
+);
+}
+);
+width = 600;
+},
+{
+hints = (
+{
+origin = "{0, 2}";
+scale = "{0.6, 0.6}";
+type = Corner;
+name = _corner.test;
+},
+{
+origin = "{0, 3}";
+scale = "{0.6, 0.6}";
+type = Corner;
+name = _corner.test;
+},
+{
+origin = "{0, 7}";
+scale = "{1.8, 1.8}";
+type = Corner;
+name = _corner.test;
+},
+{
+origin = "{0, 6}";
+scale = "{1.8, 1.8}";
+type = Corner;
+name = _corner.test;
+},
+{
+origin = "{0, 4}";
+target = "{0, 5}";
+type = Cap;
+name = _cap.test;
+},
+{
+origin = "{0, 0}";
+target = "{0, 1}";
+type = Cap;
+name = _cap.test;
+}
+);
+layerId = "BFFFD157-90D3-4B85-B99D-9A2F366F03CA";
+paths = (
+{
+closed = 1;
+nodes = (
+"520 0 LINE",
+"520 154 LINE",
+"302 154 LINE",
+"302 336 LINE",
+"520 336 LINE",
+"520 490 LINE",
+"82 490 LINE",
+"82 0 LINE"
+);
+}
+);
+width = 600;
+}
+);
+unicode = 0063;
+},
+{
 glyphname = n;
 lastChange = "2016-03-23 16:55:38 +0000";
 layers = (
@@ -1619,6 +1793,119 @@ width = 600;
 }
 );
 unicode = 00A8;
+},
+{
+export = 0;
+glyphname = _cap.test;
+lastChange = "2022-08-23 12:25:05 +0000";
+layers = (
+{
+layerId = "C4872ECA-A3A9-40AB-960A-1DB2202F16DE";
+paths = (
+{
+closed = 0;
+nodes = (
+"7 0 LINE",
+"3 0 OFFCURVE",
+"0 -3 OFFCURVE",
+"0 -7 CURVE SMOOTH",
+"0 -11 OFFCURVE",
+"3 -14 OFFCURVE",
+"7 -14 CURVE SMOOTH"
+);
+}
+);
+width = 200;
+},
+{
+layerId = "3E7589AA-8194-470F-8E2F-13C1C581BE24";
+paths = (
+{
+closed = 0;
+nodes = (
+"33 0 LINE",
+"14 0 OFFCURVE",
+"0 -14 OFFCURVE",
+"0 -31 CURVE SMOOTH",
+"0 -50 OFFCURVE",
+"14 -64 OFFCURVE",
+"33 -64 CURVE SMOOTH"
+);
+}
+);
+width = 200;
+},
+{
+layerId = "BFFFD157-90D3-4B85-B99D-9A2F366F03CA";
+paths = (
+{
+closed = 0;
+nodes = (
+"79 0 LINE",
+"33 0 OFFCURVE",
+"0 -33 OFFCURVE",
+"0 -75 CURVE SMOOTH",
+"0 -121 OFFCURVE",
+"33 -154 OFFCURVE",
+"79 -154 CURVE SMOOTH"
+);
+}
+);
+width = 200;
+}
+);
+},
+{
+export = 0;
+glyphname = _corner.test;
+lastChange = "2022-08-23 12:10:25 +0000";
+layers = (
+{
+layerId = "C4872ECA-A3A9-40AB-960A-1DB2202F16DE";
+paths = (
+{
+closed = 0;
+nodes = (
+"0 130 LINE",
+"0 43 OFFCURVE",
+"43 0 OFFCURVE",
+"130 0 CURVE"
+);
+}
+);
+width = 200;
+},
+{
+layerId = "3E7589AA-8194-470F-8E2F-13C1C581BE24";
+paths = (
+{
+closed = 0;
+nodes = (
+"0 130 LINE",
+"0 43 OFFCURVE",
+"43 0 OFFCURVE",
+"130 0 CURVE"
+);
+}
+);
+width = 200;
+},
+{
+layerId = "BFFFD157-90D3-4B85-B99D-9A2F366F03CA";
+paths = (
+{
+closed = 0;
+nodes = (
+"0 130 LINE",
+"0 43 OFFCURVE",
+"43 0 OFFCURVE",
+"130 0 CURVE"
+);
+}
+);
+width = 200;
+}
+);
 },
 {
 glyphname = test_addNodesAtExtremes;
