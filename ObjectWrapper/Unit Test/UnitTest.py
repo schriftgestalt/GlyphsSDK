@@ -2098,7 +2098,6 @@ class GlyphsAppTests(unittest.TestCase):
 			anchorLayer = font.glyphs["o"].layers[0]
 			self.assertEqual(len(anchorLayer.anchors), 0)
 			anchorLayer.addMissingAnchors()
-			self.assertEqual(len(anchorLayer.anchors), 5)
 			self.assertEqual([a.name for a in anchorLayer.anchors], [
 				'top',
 				'bottom',
