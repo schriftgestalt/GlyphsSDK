@@ -2136,16 +2136,16 @@ class GlyphsAppTests(unittest.TestCase):
 			# TODO: test for master layer and brace layer
 
 		with self.subTest("clear()"):
-			reinterpolateLayer = font.glyphs["o"].layers[0]
-			oldLayer = reinterpolateLayer.copy()
-			reinterpolateLayer.shapes.append(GSComponent('a'))
-			self.assertEqual(len(reinterpolateLayer.anchors), 5)
-			self.assertEqual(len(reinterpolateLayer.paths), 2)
-			self.assertEqual(len(reinterpolateLayer.components), 1)
-			reinterpolateLayer.clear()
-			self.assertEqual(len(reinterpolateLayer.anchors), 0) # <== see #75
-			self.assertEqual(len(reinterpolateLayer.paths), 0)
-			self.assertEqual(len(reinterpolateLayer.components), 0)
+			clearLayer = font.glyphs["o"].layers[0]
+			oldLayer = clearLayer.copy()
+			clearLayer.shapes.append(GSComponent('a'))
+			self.assertEqual(len(clearLayer.anchors), 5)
+			self.assertEqual(len(clearLayer.paths), 2)
+			self.assertEqual(len(clearLayer.components), 1)
+			clearLayer.clear()
+			self.assertEqual(len(clearLayer.anchors), 0) # <== see #75
+			self.assertEqual(len(clearLayer.paths), 0)
+			self.assertEqual(len(clearLayer.components), 0)
 		
 		
 	def test_smartComponents(self):
