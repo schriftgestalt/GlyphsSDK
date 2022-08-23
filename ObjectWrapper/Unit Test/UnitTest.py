@@ -172,7 +172,6 @@ class GlyphsAppTests(unittest.TestCase):
 	## Helper Methods
 
 	def assertIsFile(self, path):
-		# NOTE: can you confirm if this is proper? <MF @GS>
 		if not Pathlib.Path(path).resolve().is_file():
 			raise AssertionError("File does not exist: %s" % str(path))
 
@@ -308,7 +307,7 @@ class GlyphsAppTests(unittest.TestCase):
 		with self.subTest("gridLength"):
 			self.assertFloat(font.gridLength)
 			self.assertReadOnly(font.gridLength, _instance=font, _property="gridLength")
-			# QUESTION: add readonly-note to documentation. <MF @GS>
+			# QUESTION: Add readonly-note to documentation? <MF @GS>
 				
 		with self.subTest("keyboardIncrementHuge"):
 			self.assertFloat(font.keyboardIncrementHuge)
@@ -776,16 +775,30 @@ class GlyphsAppTests(unittest.TestCase):
 
 	## GSFont Methods
 
+	@unittest.skip("Implementation not according to documentation.")
+	def test_GSFont_save(self):
+		font = self.font
+		# NOTE: This does not work, as save() still expects a file path
+		# See #77
+		# WIP <MF>
+		with self.subTest("default"):
+			font.save()
+		with self.subTest("make copy"):
+			font.save(makeCopy=True)
+		# with self.subTest("path provided"):
+		# 	font.save(path=f"{PathToTestFile}-copy")
+		with self.subTest("format versions"):
+			# font.save(formatVersion=1)
+			font.save(formatVersion=2)
+			font.save(formatVersion=3)
+			with self.assertRaises(TypeError):
+				font.save(formatVersion=3.2)
+			with self.assertRaises(TypeError):
+				font.save(formatVersion="3.2")
+
 	@unittest.skipIf(SKIP_FILE_SAVING, "Don’t save when developping this file.")
 	def test_GSFont_save_dotglyphs(self):
 		font = self.font
-		
-		# GSFont.save()
-		# Test saving early to not save in a bad state.
-		# This still slightly mutates the test file.
-		# font.save()
-		# NOTE: ^ This does not work, as save() expects a file path (Docu says 'If no path is given, it saves to the existing location.')
-		# Also, needs to be implemented again somewhere. <MF @GS>
 
 		copypath = PathToTestFile[:-7] + "-copy.glyphs"
 		font.save(path=copypath, makeCopy=True)
