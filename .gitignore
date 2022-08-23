@@ -24,3 +24,4 @@ Pods
 dist
 
 *.code-workspace
+*pyrightconfig.json
