@@ -423,6 +423,7 @@ class GlyphsAppTests(unittest.TestCase):
 	@unittest.skip("font.filepath seems to not work with `GSFont({PATH})` <MF @GS>")
 	def test_GSFont_filepath(self):
 		font = self.font
+
 		self.assertIsNotNone(font.filepath)
 		self.assertIsInstance(font.filepath, str)
 		# make sure this is a valid and existing path
@@ -430,6 +431,7 @@ class GlyphsAppTests(unittest.TestCase):
 
 	def test_GSFont_date(self):
 		font = self.font
+
 		self.assertIsInstance(font.date, datetime.datetime)
 		old_date = font.date
 		dt = datetime.datetime.now()
@@ -446,6 +448,7 @@ class GlyphsAppTests(unittest.TestCase):
 	@unittest.skip("Confusing implementation of the test. Needs fixing.")
 	def test_GSFont_masters(self):
 		font = self.font
+
 		amountLayersPerGlyph = len(font.glyphs['a'].layers)
 		self.assertGreaterEqual(len(list(font.masters)), 1)
 		# TODO: reactivate this again and make it work <MF @MF>
@@ -468,6 +471,7 @@ class GlyphsAppTests(unittest.TestCase):
 
 	def test_GSFont_intances(self):
 		font = self.font
+
 		self.assertGreaterEqual(len(list(font.instances)), 1)
 		self.assertList(font.instances, assertType=False, testValues=[
 				GSInstance(),
@@ -480,6 +484,7 @@ class GlyphsAppTests(unittest.TestCase):
 
 	def test_GSFont_axes(self):
 		font = self.font
+
 		self.assertList(font.axes, assertType=False, testValues=[
 				GSAxis(),
 				GSAxis(),
@@ -568,8 +573,8 @@ class GlyphsAppTests(unittest.TestCase):
 		- (x) filter
 		- (x) type
 		- (x) horizontal
+		- (x) title() / title (soon implemented in wrapper)
 		Not implemented in wrapper:
-		- (x) title()
 		- (x) titles()
 		"""
 		font = self.font
@@ -616,6 +621,7 @@ class GlyphsAppTests(unittest.TestCase):
 
 		with self.subTest("title()"):
 			self.assertEqual(metric.title(), "Ascender")
+			# self.assertEqual(metric.title, "Ascender")
 
 		with self.subTest("titles()"):
 			self.assertEqual(metric.titles(), ["Ascender"])
@@ -647,6 +653,7 @@ class GlyphsAppTests(unittest.TestCase):
 
 	def test_GSFont_glyphs(self):
 		font = self.font
+
 		self.assertGreaterEqual(len(list(font.glyphs)), 1)
 		self.assertIs(font['a'], font.glyphs['a'])  # direct access
 		self.assertEqual(font.glyphs[u'ä'], font.glyphs['adieresis'])
@@ -660,11 +667,13 @@ class GlyphsAppTests(unittest.TestCase):
 
 	def test_GSFont_classes(self):
 		font = self.font
+
 		font.classes = []
 		self.assertList(font.classes, assertType=False, testValues=[
 				GSClass('uppercaseLetters0', 'A'),
 				GSClass('uppercaseLetters1', 'A'),
-				copy.copy(GSClass('uppercaseLetters2', 'A'))])
+				copy.copy(GSClass('uppercaseLetters2', 'A'))
+				])
 		amount = len(font.classes)
 		newClass = GSClass('uppercaseLetters', 'A')
 		font.classes.append(newClass)
@@ -683,11 +692,13 @@ class GlyphsAppTests(unittest.TestCase):
 
 	def test_GSFont_features(self):
 		font = self.font
+
 		font.features = []
 		testFeature = GSFeature('liga', 'sub f i by fi;')
 		self.assertList(font.features, assertType=False, testValues=[
 				testFeature,
-				copy.copy(GSFeature('liga', 'sub f l by fl;'))])
+				copy.copy(GSFeature('liga', 'sub f l by fl;'))
+				])
 		font.features.append(testFeature)
 		self.assertListEqual( list(font.features), [testFeature])
 		self.assertIsNotNone(font.features['liga'].__repr__())
@@ -700,11 +711,13 @@ class GlyphsAppTests(unittest.TestCase):
 
 	def test_GSFont_featurePrefixes(self):
 		font = self.font
+
 		font.featurePrefixes = []
 		self.assertList(font.featurePrefixes, assertType=False, testValues=[
 				GSFeaturePrefix('LanguageSystems0', 'languagesystem DFLT dflt;'),
 				GSFeaturePrefix('LanguageSystems1', 'languagesystem DFLT dflt;'),
-				copy.copy(GSFeaturePrefix('LanguageSystems2', 'languagesystem DFLT dflt;'))])
+				copy.copy(GSFeaturePrefix('LanguageSystems2', 'languagesystem DFLT dflt;'))
+				])
 		font.featurePrefixes.append(GSFeaturePrefix('LanguageSystems', 'languagesystem DFLT dflt;'))
 		self.assertIsNotNone(font.featurePrefixes[-1].__repr__())
 		self.assertEqual(len(font.featurePrefixes), 1)
@@ -716,6 +729,7 @@ class GlyphsAppTests(unittest.TestCase):
 
 	def test_GSFont_kerning(self):
 		font = self.font
+
 		test_kerning = {"C4872ECA-A3A9-40AB-960A-1DB2202F16DE": {"@MMK_L_A": {"@MMK_R_J": -22}}}
 		# GSFont.kerning
 		self.assertDict(font.kerning, assertType=False)
@@ -742,6 +756,7 @@ class GlyphsAppTests(unittest.TestCase):
 
 	def test_GSFont_userData(self):
 		font = self.font
+
 		self.assertIsNotNone(font.userData)
 		font.userData["TestData"] = 42
 		self.assertEqual(font.userData["TestData"], 42)
@@ -750,6 +765,7 @@ class GlyphsAppTests(unittest.TestCase):
 
 	def test_GSFont_tempData(self):
 		font = self.font
+
 		self.assertIsNotNone(font.tempData)
 		font.tempData["TestData"] = 42
 		self.assertEqual(font.tempData["TestData"], 42)
@@ -758,6 +774,7 @@ class GlyphsAppTests(unittest.TestCase):
 
 	def test_GSFont_customParameters(self):
 		font = self.font
+
 		font.customParameters['trademark'] = 'ThisFont is a trademark by MyFoundry.com'
 		self.assertEqual(font.customParameters['trademark'], 'ThisFont is a trademark by MyFoundry.com')
 		# self.assertList(font.customParameters, assertType=False, testValues=[
@@ -771,6 +788,7 @@ class GlyphsAppTests(unittest.TestCase):
 
 	def test_GSFont_grid(self):
 		font = self.font
+
 		self.assertInteger(font.grid)
 		# TODO: test against float and throw if float.
 		old_grid = font.grid
@@ -798,6 +816,7 @@ class GlyphsAppTests(unittest.TestCase):
 	@unittest.skip("Implementation not according to documentation.")
 	def test_GSFont_save(self):
 		font = self.font
+
 		# NOTE: This does not work, as save() still expects a file path
 		# See #77
 		# WIP <MF>
@@ -834,6 +853,7 @@ class GlyphsAppTests(unittest.TestCase):
 	@unittest.skipIf(GSApplication.versionNumber < 3.2, 'UFO saving with `GSFont({PATH})` [should work with 3.2] <MF>')
 	def test_GSFont_save_dotufo(self):
 		font = self.font
+
 		copypath_ufo = PathToTestFile[:-7] + "-copy.ufo"
 		font.save(path=copypath_ufo, makeCopy=True)
 		with self.assertRaises(ValueError):
@@ -977,7 +997,6 @@ class GlyphsAppTests(unittest.TestCase):
 		with self.subTest("id"):
 			self.assertString(master.id, allowNone=False)
 
-		# GSFontMaster.font
 		with self.subTest("font"):
 			self.assertIs(master.font, font)
 		
@@ -1089,11 +1108,8 @@ class GlyphsAppTests(unittest.TestCase):
 			self.assertGreaterEqual(len(list(master.customParameters)), 1)
 			del(master.customParameters['trademark'])
 
-
-
 	def test_GSAlignmentZone(self):	
 		font = self.font
-		
 		master = font.masters[0]
 		
 		'''
@@ -1111,7 +1127,6 @@ class GlyphsAppTests(unittest.TestCase):
 		zone = master.alignmentZones[0]
 		copyZone = copy.copy(zone)
 
-
 		self.assertIsInstance(copyZone, GSAlignmentZone)
 
 		with self.subTest("position"):
@@ -1123,7 +1138,6 @@ class GlyphsAppTests(unittest.TestCase):
 
 	def test_GSInstance(self):
 		font = self.font
-		
 		instance = font.instances[0]
 		copyInstance = copy.copy(instance)
 
@@ -1848,23 +1862,25 @@ class GlyphsAppTests(unittest.TestCase):
 				layer.anchors[12.3]
 		
 		with self.subTest("selection"):
-			layer.selection.clear()
-			self.assertEqual(len(layer.selection), 0)
-			selection = 0
-			for path in layer.paths:
-				path.selected = True
-				selection += len(path.nodes)
-			for anchor in layer.anchors:
-				anchor.selected = True
-				selection += 1
-			self.assertEqual(len(layer.selection), selection)
-			layer.clearSelection()
-			self.assertEqual(len(layer.selection), 0)
-			layer.selection.append(layer.shapes[0])
-			layer.selection.extend(layer.anchors)
-			layer.selection.remove(layer.shapes[0])
-			layer.selection.insert(0, layer.shapes[0])
-			self.assertEqual(len(layer.selection), 1 + len(layer.anchors)) # 1 for the single path
+			pass
+			# TODO: move to UI tests
+			# layer.selection.clear()
+			# self.assertEqual(len(layer.selection), 0)
+			# selection = 0
+			# for path in layer.paths:
+			# 	path.selected = True
+			# 	selection += len(path.nodes)
+			# for anchor in layer.anchors:
+			# 	anchor.selected = True
+			# 	selection += 1
+			# self.assertEqual(len(layer.selection), selection)
+			# layer.clearSelection()
+			# self.assertEqual(len(layer.selection), 0)
+			# layer.selection.append(layer.shapes[0])
+			# layer.selection.extend(layer.anchors)
+			# layer.selection.remove(layer.shapes[0])
+			# layer.selection.insert(0, layer.shapes[0])
+			# self.assertEqual(len(layer.selection), 1 + len(layer.anchors)) # 1 for the single path
 
 		with self.subTest("LSB"):
 			self.assertFloat(layer.LSB)
@@ -2009,7 +2025,7 @@ class GlyphsAppTests(unittest.TestCase):
 			self.assertEqual(layer.compareString(), "loocoocoocoocloocoocoocooclllloocoocloocoocl|_llll_llll_bottom**ogonek**top")
 		
 		with self.subTest("connectAllOpenPaths()"):
-			# TODO: Check the impplementation of `connectAllOpenPaths()` <MF @GS>
+			# TODO: Check the implementation of `connectAllOpenPaths()` <MF @GS>
 			oldShapes = layer.shapes
 			testPath = layer.paths[1]
 			self.assertTrue(testPath.closed)
@@ -2244,6 +2260,13 @@ class GlyphsAppTests(unittest.TestCase):
 			layer.shapes['a']
 	
 	def test_GSLayer_components(self): # former name: test_GSShapesComponents
+		"""
+		Should these be in a own test method for test_GSComponent?
+		- ( ) ...
+		- (x) applyTransform()
+		- (x) decompose()
+		- ( ) ...
+		"""
 		font = self.font
 
 		font.glyphs['adieresis'].duplicate('adieresis.test')
@@ -2251,28 +2274,29 @@ class GlyphsAppTests(unittest.TestCase):
 		glyph = font.glyphs['adieresis.test']
 		layer = glyph.layers[0]
 		component = layer.shapes[0]
-		component = copy.copy(component)
+		component = copy.copy(component) # ???
 		self.assertIsNotNone(component.__repr__())
 		component.parent = layer
-		# Delete and add
-		self.assertEqual(len(layer.shapes), 2)
-		layer.shapes = []
-		self.assertEqual(len(layer.shapes), 0)
-		layer.shapes.append(GSComponent('a'))
-		self.assertIsNotNone(layer.shapes[0].__repr__())
-		self.assertEqual(len(layer.shapes), 1)
-		layer.shapes.append(GSComponent('dieresis'))
-		self.assertEqual(len(layer.shapes), 2)
-		layer.shapes = [GSComponent('a'), GSComponent('dieresis')]
-		self.assertEqual(len(layer.shapes), 2)
-		layer.shapes = []
-		layer.shapes.extend([GSComponent('a'), GSComponent('dieresis')])
-		self.assertEqual(len(layer.shapes), 2)
-		newComponent = GSComponent('dieresis')
-		layer.shapes.insert(0, newComponent)
-		self.assertEqual(newComponent, layer.shapes[0])
-		layer.shapes.remove(layer.shapes[0])
-		self.assertEqual(len(layer.shapes), 2)
+		
+		with self.subTest("Delete and add"):
+			self.assertEqual(len(layer.shapes), 2)
+			layer.shapes = []
+			self.assertEqual(len(layer.shapes), 0)
+			layer.shapes.append(GSComponent('a'))
+			self.assertIsNotNone(layer.shapes[0].__repr__())
+			self.assertEqual(len(layer.shapes), 1)
+			layer.shapes.append(GSComponent('dieresis'))
+			self.assertEqual(len(layer.shapes), 2)
+			layer.shapes = [GSComponent('a'), GSComponent('dieresis')]
+			self.assertEqual(len(layer.shapes), 2)
+			layer.shapes = []
+			layer.shapes.extend([GSComponent('a'), GSComponent('dieresis')])
+			self.assertEqual(len(layer.shapes), 2)
+			newComponent = GSComponent('dieresis')
+			layer.shapes.insert(0, newComponent)
+			self.assertEqual(newComponent, layer.shapes[0])
+			layer.shapes.remove(layer.shapes[0])
+			self.assertEqual(len(layer.shapes), 2)
 
 		with self.subTest("position"):
 			self.assertIsInstance(component.position, NSPoint)
@@ -2321,7 +2345,7 @@ class GlyphsAppTests(unittest.TestCase):
 			self.assertBool(component.automaticAlignment)
 
 		with self.subTest("alignment"):
-			#TODO
+			#TODO: needs more tests here.
 			self.assertIsNotNone(component.alignment)
 
 		with self.subTest("locked"):
@@ -2345,9 +2369,19 @@ class GlyphsAppTests(unittest.TestCase):
 			del component.tempData['testKey']
 
 		## Methods
-		component.applyTransform((.5, 0, 0, .5, 0, 0))
-		component.decompose()
 		
+		with self.subTest("applyTransform()"):
+			component.applyTransform((.5, 0, 0, .5, 0, 0))
+			self.assertEqual(component.transform, (0.5, 0.0, 0.0, 0.5, 0.0, 0.0))
+
+		with self.subTest("decompose()"):
+			self.assertEqual(len(layer.paths), 0)
+			self.assertEqual(len(layer.components), 2)
+			component.decompose()
+			self.assertEqual(len(layer.paths), 1)
+			self.assertEqual(len(layer.components), 1)
+		
+		# clean up
 		del font.glyphs['adieresis.test']
 		self.assertIsNone(font.glyphs['adieresis.test'])
 
