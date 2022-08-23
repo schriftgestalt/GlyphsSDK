@@ -2142,7 +2142,7 @@ class GlyphsAppTests(unittest.TestCase):
 			self.assertEqual(len(reinterpolateLayer.anchors), 5)
 			self.assertEqual(len(reinterpolateLayer.paths), 2)
 			self.assertEqual(len(reinterpolateLayer.components), 1)
-			layer.clear()
+			reinterpolateLayer.clear()
 			self.assertEqual(len(reinterpolateLayer.anchors), 0) # <== see #75
 			self.assertEqual(len(reinterpolateLayer.paths), 0)
 			self.assertEqual(len(reinterpolateLayer.components), 0)
