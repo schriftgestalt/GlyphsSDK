@@ -146,12 +146,21 @@ The property list file contains a dictionary with the following structure.
             * horizontal `int`: If set, the hint is horizontal and vertical otherwise
             * type `string`: The type of the hint. Possible value are: Tag, TopGhost, Stem, BottomGhost, Flex, TTAnchor, TTStem, TTAlign, TTInterpolate, TTDiagonal, TTDelta, Corner, Cap, Brush, Line, Auto
                 If there is no type, it defaults to Stem, or Ghost if `target` is not set
-            * origin `string`: '(pathIndex,nodeIndex)'
-               
-                TODO: Explain node indexes
-            * target `tuple`: `(pathIndex,nodeIndex)`, `up` or `down`
-            * other1 `tuple`: `(pathIndex,nodeIndex)` for TT Institutions that need more than two nodes (Interpolation, Diagonal)
-            * other2 `tuple`: `(pathIndex,nodeIndex)` for TT Institutions that need more than three nodes (Diagonal)
+            * origin `tuple`: 
+                - (pathIndex,nodeIndex) Most likely case, points to a real node
+                - (pathIndex,nodeIndex,inflectionIndex) Points to an inflection. The first two numbers point to the on-curve node that finishes the curve segment. The third item indicates the index of the inflection. Most likely `0`. 
+                - (pathIndex1,nodeIndex1,pathIndex2,nodeIndex2) Points to a intersection of two segments. The nodes are the ones that finish the segment. 
+                - (sideBearingFlag) `lsb|rsb` To attache a hint to the side-bearings
+            * target `tuple`: 
+                For details see `origin` above. 
+                additional:
+                - (ghostDirection) `up|down`
+            * other1 `tuple`: 
+                For TT Institutions that need more than two nodes (Interpolation, Diagonal)
+                For details see `origin` above. 
+            * other2 `tuple`: 
+                For TT Institutions that need more than three nodes (Diagonal)
+                For details see `origin` above. 
             * scale `tuple`: `(scaleX,scaleY)` Only used for caps and corners
             * stem `int`: if a stem is manually set
             * options `int`: a bitfield for options
