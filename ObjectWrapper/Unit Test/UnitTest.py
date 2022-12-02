@@ -12,6 +12,7 @@ import unittest
 
 import GlyphsApp
 from GlyphsApp import *
+from GlyphsApp import Proxy
 import os, time, sys, datetime
 import objc
 import copy
@@ -38,7 +39,6 @@ NSNumber, \
 NSPoint, \
 NSPredicate, \
 NSRect
-
 
 ## Development Settings <MF>
 SKIP_FILE_SAVING = True # default: `False`
@@ -96,7 +96,7 @@ class GlyphsAppTests(unittest.TestCase):
 	def assertList(self, listObject, assertType=True, testValues=[], assertSorting=True):
 		# Also checks for mutability
 		if assertType:
-			self.assertIsInstance(listObject, list)
+			self.assertIsInstance(listObject, (list, Proxy))
 		if testValues:
 			initial_len = len(listObject)
 			listObject.append(testValues[0])
@@ -162,8 +162,8 @@ class GlyphsAppTests(unittest.TestCase):
 			self.assertIsInstance(unicodeObject, unicode)
 		# if readOnly == False:
 			oldValue = unicodeObject
-			unicodeObject = u'Ə'
-			self.assertEqual(unicodeObject, u'Ə')
+			unicodeObject = 'Ə'
+			self.assertEqual(unicodeObject, 'Ə')
 			unicodeObject = oldValue
 
 	def assertBool(self, boolObject, assertType=True):
@@ -234,43 +234,43 @@ class GlyphsAppTests(unittest.TestCase):
 			self.assertUnicode(font.copyright)
 
 		with self.subTest("copyrights"):
-			self.assertIsInstance(font.copyrights, GlyphsApp.FontInfoPropertiesProxy)
+			self.assertIsInstance(font.copyrights, GlyphsApp.FontInfoPropertyProxy)
 
 		with self.subTest("license"):
 			self.assertUnicode(font.license)
 
 		with self.subTest("licenses"):
-			self.assertIsInstance(font.licenses, GlyphsApp.FontInfoPropertiesProxy)
+			self.assertIsInstance(font.licenses, GlyphsApp.FontInfoPropertyProxy)
 
 		with self.subTest("compatibleFullName"):
 			self.assertUnicode(font.compatibleFullName)
 
 		with self.subTest("compatibleFullNames"):
-			self.assertIsInstance(font.compatibleFullNames, GlyphsApp.FontInfoPropertiesProxy)
+			self.assertIsInstance(font.compatibleFullNames, GlyphsApp.FontInfoPropertyProxy)
 
 		with self.subTest("sampleText"):
 			self.assertUnicode(font.sampleText)
 
 		with self.subTest("sampleTexts"):
-			self.assertIsInstance(font.sampleTexts, GlyphsApp.FontInfoPropertiesProxy)
+			self.assertIsInstance(font.sampleTexts, GlyphsApp.FontInfoPropertyProxy)
 
 		with self.subTest("description"):
 			self.assertUnicode(font.description)
 
 		with self.subTest("descriptions"):
-			self.assertIsInstance(font.descriptions, GlyphsApp.FontInfoPropertiesProxy)
+			self.assertIsInstance(font.descriptions, GlyphsApp.FontInfoPropertyProxy)
 
 		with self.subTest("trademark"):
 			self.assertUnicode(font.trademark)
 
 		with self.subTest("trademarks"):
-			self.assertIsInstance(font.trademarks, GlyphsApp.FontInfoPropertiesProxy)
+			self.assertIsInstance(font.trademarks, GlyphsApp.FontInfoPropertyProxy)
 
 		with self.subTest("designer"):
 			self.assertUnicode(font.designer)
 
 		with self.subTest("designers"):
-			self.assertIsInstance(font.designers, GlyphsApp.FontInfoPropertiesProxy)
+			self.assertIsInstance(font.designers, GlyphsApp.FontInfoPropertyProxy)
 
 		with self.subTest("designerURL"):
 			self.assertUnicode(font.designerURL)
@@ -279,7 +279,7 @@ class GlyphsAppTests(unittest.TestCase):
 			self.assertUnicode(font.manufacturer)
 
 		with self.subTest("manufacturers"):
-			self.assertIsInstance(font.manufacturers, GlyphsApp.FontInfoPropertiesProxy)
+			self.assertIsInstance(font.manufacturers, GlyphsApp.FontInfoPropertyProxy)
 
 		with self.subTest("manufacturerURL"):
 			self.assertUnicode(font.manufacturerURL)
@@ -294,7 +294,7 @@ class GlyphsAppTests(unittest.TestCase):
 			self.assertUnicode(font.familyName)
 
 		with self.subTest("familyNames"):
-			self.assertIsInstance(font.familyNames, GlyphsApp.FontInfoPropertiesProxy)
+			self.assertIsInstance(font.familyNames, GlyphsApp.FontInfoPropertyProxy)
 
 		with self.subTest("fontName"):
 			self.assertEqual(font.fontName, font.familyName)
@@ -455,21 +455,13 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertEqual(font.date, datetime.datetime.fromtimestamp(nsdate.timeIntervalSince1970()))
 		font.date = old_date
 
-	@unittest.skip("Confusing implementation of the test. Needs fixing.")
 	def test_GSFont_masters(self):
 		font = self.font
 
 		amountLayersPerGlyph = len(font.glyphs['a'].layers)
 		self.assertGreaterEqual(len(list(font.masters)), 1)
 		# TODO: reactivate this again and make it work <MF @MF>
-		self.assertList(font.masters, assertType=False, testValues=[
-			GSFontMaster(),
-			GSFontMaster(),
-			copy.copy(GSFontMaster()),
-			])
-		# GS: I think the `assertList()` is meant to compare the list in the first argument to the `testValues`. And as the test font is quite empty, a new GSFontMaster (or a copy of it) should make it. We probably should check the `copy.copy()` somewhere else.
-		self.assertEqual(amountLayersPerGlyph, len(font.glyphs['a'].layers))
-		# GS: I seems that it was intended to add a master on some point. Or just to make sure that there are no side effects.
+		self.assertList(font.masters)
 		self.assertEqual(font.masters[0], font.masters[font.masters[0].id])
 		with self.assertRaises(TypeError) as ctx:
 			font.masters[2.2]
@@ -660,7 +652,7 @@ class GlyphsAppTests(unittest.TestCase):
 
 		self.assertGreaterEqual(len(list(font.glyphs)), 1)
 		self.assertIs(font['a'], font.glyphs['a']) # direct access
-		self.assertEqual(font.glyphs[u'ä'], font.glyphs['adieresis'])
+		self.assertEqual(font.glyphs['ä'], font.glyphs['adieresis'])
 		self.assertEqual(font.glyphs['00E4'], font.glyphs['adieresis'])
 		self.assertEqual(font.glyphs['00e4'], font.glyphs['adieresis'])
 		with self.assertRaises(TypeError):
@@ -673,10 +665,12 @@ class GlyphsAppTests(unittest.TestCase):
 
 		font.classes = []
 		self.assertList(
-			font.classes, assertType=False, testValues=[GSClass('uppercaseLetters0', 'A'),
-														GSClass('uppercaseLetters1', 'A'),
-														copy.copy(GSClass('uppercaseLetters2', 'A'))]
-			)
+			font.classes, assertType=False, testValues=[
+				GSClass('uppercaseLetters0', 'A'),
+				GSClass('uppercaseLetters1', 'A'),
+				GSClass('uppercaseLetters2', 'A')
+			]
+		)
 		amount = len(font.classes)
 		newClass = GSClass('uppercaseLetters', 'A')
 		font.classes.append(newClass)
@@ -827,7 +821,7 @@ class GlyphsAppTests(unittest.TestCase):
 	def test_GSFont_save(self):
 		font = self.font
 
-		# NOTE: This does not work, as save() still expects a file path
+		# NOTE: The font doens't have a document and thous can’t store a file path. So save always needs a `path` argument
 		# See #77
 		# WIP <MF>
 		with self.subTest("default"):
@@ -873,11 +867,23 @@ class GlyphsAppTests(unittest.TestCase):
 		while (len(singleMasterFont.masters) > 1):
 			del (singleMasterFont.masters[1])
 		singleMasterFont.save(path=copypath_ufo, makeCopy=True)
-		self.assertIsFolder(copypath_ufo) # TODO: UFO not created #1471 <MF @GS>
+		self.assertIsFolder(copypath_ufo)
 
-	@unittest.skip("Test not implemented")
-	def test_instance_export(self):
-		pass # [OTF, WOFF, WOFF2, TTF, UFO, VARIABLE]
+	def test_GSInstance_export(self):
+		instance = self.font.instances[0]
+		FontPath = os.path.split(PathToTestFile)[0]
+		for Format in [OTF, TTF]:
+			instance.generate(Format, FontPath)
+			FileName = instance.fileName_error_(Format.lower(), None)
+			self.assertIsFile(os.path.join(FontPath, FileName))
+
+			instance.generate(Format, FontPath, Containers=[WOFF])
+			FileName = instance.fileName_error_(WOFF.lower(), None)
+			self.assertIsFile(os.path.join(FontPath, FileName))
+
+		instance.generate(UFO, FontPath)
+		FileName = instance.fileName_error_(UFO.lower(), None)
+		self.assertIsFolder(os.path.join(FontPath, FileName))
 
 	@unittest.skip("Test not implemented")
 	def test_addInstanceAsMaster(self):
