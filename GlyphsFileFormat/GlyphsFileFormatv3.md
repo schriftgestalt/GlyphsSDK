@@ -235,7 +235,7 @@ The property list file contains a dictionary with the following structure.
     * first level key is the master ID.
     * second level is either the left kerning group name or glyph name.
     * third level is either the right kerning group name or glyph name.
-* kerningRLT `dict`: see `kerningLTR`
+* kerningRTL `dict`: see `kerningLTR`
 * kerningVertical `dict`: see `kerningLTR`
 * metrics `list>dict`: definition of the (vertical) metrics
     * filter `string`: A predicate format string [(Apple Predicate Programming Guide)](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/Predicates/AdditionalChapters/Introduction.html#//apple_ref/doc/uid/TP40001789) (e.g. `"case == 3"` (No Case = 0, Uppercase = 1, Lowercase = 2, Smallcaps = 3, Other = 4))
@@ -342,7 +342,7 @@ Then the *structural* changes:
 
 * There is a new `numbers` entry at top-level, which contains a list of dictionaries representing named interpolation numbers.
 
-* `kerning` and `vertKerning` have been renamed to `kerningLTR` and `kerningVertical`, and there is a new top-level `kerningRLT` (sic.) dictionary.
+* `kerning` and `vertKerning` have been renamed to `kerningLTR` and `kerningVertical`, and there is a new top-level `kerningRTL` dictionary.
 
 * There is a new `stems` entry at top-level, which contain a list of named stem definitions.
 
