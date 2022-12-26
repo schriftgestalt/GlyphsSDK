@@ -53,6 +53,7 @@
 }
 
 - (NSError *)setup {
+	[super setup];
 	NSNumber *firstValueNumber = (NSNumber *)[_fontMaster userDataForKey:@"theFirstValue"];
 	if (firstValueNumber) {
 		_firstValue = [firstValueNumber floatValue];
