@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="15705" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="21225" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment version="101500" identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="15705"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="21225"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -374,13 +374,13 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="163" y="199" width="480" height="180"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
-            <view key="contentView" misplaced="YES" id="dr5-pE-BqS">
-                <rect key="frame" x="0.0" y="0.0" width="480" height="179"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1415"/>
+            <view key="contentView" id="dr5-pE-BqS">
+                <rect key="frame" x="0.0" y="0.0" width="480" height="178"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="VSB-JL-aBt">
-                        <rect key="frame" x="133" y="137" width="77" height="25"/>
+                        <rect key="frame" x="132" y="135" width="78" height="25"/>
                         <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="kcH-VI-2A5" id="XDI-4i-zoo">
                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="menu"/>
@@ -398,7 +398,7 @@
                         </connections>
                     </popUpButton>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="9eB-XR-9P8">
-                        <rect key="frame" x="18" y="143" width="111" height="16"/>
+                        <rect key="frame" x="18" y="142" width="111" height="16"/>
                         <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="Plugin Type" id="5i6-QF-J2Z">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -406,7 +406,7 @@
                         </textFieldCell>
                     </textField>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="FzO-2c-NeD">
-                        <rect key="frame" x="18" y="114" width="111" height="16"/>
+                        <rect key="frame" x="18" y="113" width="111" height="16"/>
                         <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="Plugin Name" id="CdX-m9-upp">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -414,7 +414,7 @@
                         </textFieldCell>
                     </textField>
                     <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="NCU-u2-vO2">
-                        <rect key="frame" x="135" y="111" width="325" height="21"/>
+                        <rect key="frame" x="135" y="110" width="325" height="21"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="CWy-A8-Xly">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -425,7 +425,7 @@
                         </connections>
                     </textField>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="oT9-gs-e4J">
-                        <rect key="frame" x="18" y="83" width="111" height="16"/>
+                        <rect key="frame" x="18" y="82" width="111" height="16"/>
                         <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="Plugin Main Class" id="xcy-xU-W9x">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -433,7 +433,7 @@
                         </textFieldCell>
                     </textField>
                     <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="5aS-D9-lU5">
-                        <rect key="frame" x="135" y="80" width="325" height="21"/>
+                        <rect key="frame" x="135" y="79" width="325" height="21"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="Ioh-v8-1g3">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -444,7 +444,7 @@
                         </connections>
                     </textField>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Fe8-Ht-URi">
-                        <rect key="frame" x="352" y="13" width="114" height="32"/>
+                        <rect key="frame" x="359" y="13" width="108" height="32"/>
                         <buttonCell key="cell" type="push" title="Make Plugin" bezelStyle="rounded" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Yc8-1F-dAh">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -454,7 +454,7 @@
                         </connections>
                     </button>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="sHe-6l-6Qg">
-                        <rect key="frame" x="18" y="52" width="111" height="16"/>
+                        <rect key="frame" x="18" y="51" width="111" height="16"/>
                         <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="Developer Name" id="x2b-AU-OBb">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -462,7 +462,7 @@
                         </textFieldCell>
                     </textField>
                     <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="PAw-JR-Mc7">
-                        <rect key="frame" x="135" y="49" width="325" height="21"/>
+                        <rect key="frame" x="135" y="48" width="325" height="21"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="Hpi-El-Kjg">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -506,7 +506,7 @@
         </window>
         <customObject id="Ahg-Uv-0gO" customClass="PluginMaker">
             <connections>
-                <outlet property="window" destination="dr5-pE-BqS" id="2Ye-fX-VjL"/>
+                <outlet property="window" destination="hqB-2a-8Rt" id="dQx-5m-sCY"/>
             </connections>
         </customObject>
         <userDefaultsController representsSharedInstance="YES" id="u4l-Vj-bPc"/>

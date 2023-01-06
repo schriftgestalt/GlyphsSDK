@@ -96,6 +96,7 @@ class PluginMaker(NSObject):
 	
 	@objc.IBAction
 	def makePlugin_(self, sender):
+		self.window.endEditingFor_(None)
 		defaults = NSUserDefaults.standardUserDefaults()
 		pluginTypeIndex = defaults.integerForKey_("SelectedPluginType")
 		pluginType = _pluginTypes[pluginTypeIndex]
