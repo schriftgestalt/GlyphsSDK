@@ -69,8 +69,17 @@ def runScriptInsideGlyphs():
 		macroViewController.runMacroString_(code)
 	else:
 		RunScript(code)
+		
+def accessGlyphsInfo():
+	font = currentDocument.font()
+	print(font.glyphsInfo())
+	glyphsInfo = Glyphs.objectWithClassName_("GSGlyphsInfo")
+	print(glyphsInfo)
+	print(glyphsInfo.glyphInfoForName_("A"))
+	
 
 if __name__ == '__main__':
 	#exportAllInstances()
 	#writeInstanceAsUFO()
-	runScriptInsideGlyphs()
+	#runScriptInsideGlyphs()
+	accessGlyphsInfo()
