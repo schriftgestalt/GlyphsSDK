@@ -201,6 +201,12 @@
 			"title": "The .formatVersion schema",
 			"type": "integer"
 		},
+		".storedFormatVersion": {
+			"$id": "#/properties/.storedFormatVersion",
+			"description": "This is only present in autosave files",
+			"title": "The .storedFormatVersion schema",
+			"type": "integer"
+		},
 		"axes": {
 			"$id": "#/properties/axes",
 			"additionalItems": true,
@@ -501,13 +507,13 @@
 									"$id": "#/properties/fontMaster/items/properties/metricValues/items/properties/over",
 									"description": "the overshot",
 									"title": "The over schema",
-									"type": "integer"
+									"type": "number"
 								},
 								"pos": {
 									"$id": "#/properties/fontMaster/items/properties/metricValues/items/properties/pos",
 									"description": "the position",
 									"title": "The pos schema",
-									"type": "integer"
+									"type": "number"
 								}
 							},
 							"type": "object"
@@ -674,8 +680,7 @@
 											}
 										},
 										"required": [
-											"name",
-											"pos"
+											"name"
 										],
 										"title": "The items schema",
 										"type": "object"
@@ -707,7 +712,7 @@
 											}
 										},
 										"required": [
-											"name",
+											"type",
 											"pos"
 										],
 										"title": "The items schema",
@@ -727,11 +732,35 @@
 									"additionalProperties": false,
 									"description": "Layer attributes (color, alternate, coordinate)",
 									"properties": {
+										"axisRules": {
+											"$id": "#/properties/glyphs/items/properties/layers/items/properties/attr/properties/axisRules",
+											"description": "Bracket layer settings",
+											"items": {
+												"$id": "#/properties/glyphs/items/properties/layers/items/properties/attr/properties/axisRules/items",
+												"additionalProperties": false,
+												"description": "An explanation about the purpose of this instance.",
+												"properties": {
+													"min": {
+														"type": "number"
+													},
+													"max": {
+														"type": "number"
+													}
+												}
+											}
+										},
 										"color": {
+											"$id": "#/properties/glyphs/items/properties/layers/items/properties/attr/properties/color",
 											"description": "if set, this is a color layer",
 											"type": ["integer", "boolean"]
 										},
+										"colorPalette": {
+											"$id": "#/properties/glyphs/items/properties/layers/items/properties/attr/properties/colorPalette",
+											"description": "a index into the palette or '*' for default color",
+											"type": ["integer", "string"]
+										}, 
 										"coordinates": {
+											"$id": "#/properties/glyphs/items/properties/layers/items/properties/attr/properties/coordinates",
 											"description": "A list of numbers to specify a position in the axes space",
 											"type": "array"
 										}
@@ -749,6 +778,9 @@
 										},
 										"backgroundImage": {
 											"$ref": "#/properties/glyphs/items/properties/layers/items/properties/backgroundImage"
+										},
+										"hints": {
+											"$ref": "#/properties/glyphs/items/properties/layers/items/properties/hints"
 										},
 										"shapes": {
 											"$ref": "#/properties/glyphs/items/properties/layers/items/properties/shapes"
@@ -804,7 +836,7 @@
 								"hints": {
 									"$id": "#/properties/glyphs/items/properties/layers/items/properties/hints",
 									"additionalItems": true,
-									"description": "An explanation about the purpose of this instance.",
+									"description": "a list of hints",
 									"items": {
 										"$id": "#/properties/glyphs/items/properties/layers/items/properties/hints/items",
 										"additionalProperties": false,
@@ -817,13 +849,13 @@
 											},
 											"name": {
 												"$id": "#/properties/glyphs/items/properties/layers/items/properties/hints/items/properties/name",
-												"description": "An explanation about the purpose of this instance.",
+												"description": "The name of the hint. Can be used a glyph reference in corner components",
 												"title": "The name schema",
 												"type": "string"
 											},
 											"options": {
 												"$id": "#/properties/glyphs/items/properties/layers/items/properties/hints/items/properties/options",
-												"description": "An explanation about the purpose of this instance.",
+												"description": "a bitfield for options",
 												"title": "The options schema",
 												"type": "integer"
 											},
@@ -833,7 +865,7 @@
 												"description": "'(pathIndex, nodeIndex)' TODO: Explain node indexes",
 												"items": {
 													"$id": "#/properties/glyphs/items/properties/layers/items/properties/hints/items/properties/origin/items",
-													"description": "An explanation about the purpose of this instance.",
+													"description": "an index",
 													"title": "The items schema",
 													"type": "integer"
 												},
@@ -846,7 +878,7 @@
 												"description": "`(pathIndex,nodeIndex)` for TT Institutions that need more than two nodes (Interpolation, Diagonal)",
 												"items": {
 													"$id": "#/properties/glyphs/items/properties/layers/items/properties/hints/items/properties/origin/items",
-													"description": "An explanation about the purpose of this instance.",
+													"description": "and index",
 													"title": "The items schema",
 													"type": "integer"
 												},
@@ -862,6 +894,19 @@
 												},
 												"title": "The other2 schema",
 												"type": "array"
+											},
+											"place": {
+												"$ref": "#/definitions/scale",
+												"description": "`(position,width)` for hints that are not attached to a node."
+											},
+											"settings": {
+												"$id": "#/properties/glyphs/items/properties/layers/items/properties/hints/items/properties/settings",
+												"description": "hint settings",
+												"properties": {
+													"deltaV": {
+														"description": "delta settings"
+													}
+												}
 											},
 											"scale": {
 												"$ref": "#/definitions/scale",
@@ -879,23 +924,22 @@
 												"description": "`(pathIndex,nodeIndex)`, `up` or `down`",
 												"items": {
 													"$id": "#/properties/glyphs/items/properties/layers/items/properties/hints/items/properties/target/items",
-													"description": "An explanation about the purpose of this instance.",
+													"description": "an index",
 													"title": "The items schema",
 													"type": "integer"
 												},
 												"title": "The target schema",
-												"type": "array"
+												"type": ["array", "string"]
 											},
 											"type": {
 												"$id": "#/properties/glyphs/items/properties/layers/items/properties/hints/items/properties/type",
 												"description": "The type of the hint. Possible value are: Tag, TopGhost, Stem, BottomGhost, Flex, TTAnchor, TTStem, TTAlign, TTInterpolate, TTDiagonal, TTDelta, Corner, Cap, Brush, Line, Auto\nIf there is no type, it defaults to Stem, or Ghost if `target` is not set",
-												"enum": ["Tag", "TopGhost", "Stem", "BottomGhost", "Flex", "TTAnchor", "TTStem", "TTAlign", "TTInterpolate", "TTDiagonal", "TTDelta", "Corner", "Cap", "Brush", "Line", "Auto"],
+												"enum": ["Auto", "BottomGhost", "Brush", "Cap", "Corner", "Flex", "Segment", "Stem", "Tag", "TopGhost", "TTDelta", "TTDiagonal", "TTInterpolate", "TTShift", "TTSnap", "TTStem"],
 												"title": "The type schema",
 												"type": "string"
 											}
 										},
 										"required": [
-											"origin",
 											"type"
 										],
 										"title": "The items schema",
@@ -971,7 +1015,7 @@
 											{
 												"$id": "#/properties/glyphs/items/properties/layers/items/properties/shapes/items/component",
 												"additionalProperties": false,
-												"description": "An explanation about the purpose of this instance.",
+												"description": "a component",
 												"properties": {
 													"alignment": {
 														"description": "controls the automatic alignment of this component. (-1 disables alignment, 1 forces it for glyph that are usually not aligned)",
@@ -1042,45 +1086,57 @@
 											{
 												"$id": "#/properties/glyphs/items/properties/layers/items/properties/shapes/items/path",
 												"additionalProperties": false,
-												"description": "An explanation about the purpose of this instance.",
+												"description": "a path object",
 												"properties": {
 													"attr": {
+														"$id": "#/properties/glyphs/items/properties/layers/items/properties/shapes/items/path/properties/attr",
 														"description": "Color and stroke settings. See [Attributes](*attributes)",
 														"properties": {
 															"fill": {
+																"$id": "#/properties/glyphs/items/properties/layers/items/properties/shapes/items/path/properties/attr/properties/fill",
 																"type": ["integer", "string"]
 															},
 															"fillColor": {
+																"$id": "#/properties/glyphs/items/properties/layers/items/properties/shapes/items/path/properties/attr/properties/fillColor",
 																"type": "array"
 															},
 															"mask": {
+																"$id": "#/properties/glyphs/items/properties/layers/items/properties/shapes/items/path/properties/attr/properties/mask",
 																"type": ["integer", "string"]
 															},
 															"shadow": {
+																"$id": "#/properties/glyphs/items/properties/layers/items/properties/shapes/items/path/properties/attr/properties/shadow",
 																"properties": {
 																	"blur": {
+																		"$id": "#/properties/glyphs/items/properties/layers/items/properties/shapes/items/path/properties/attr/properties/shadow/properties/blue",
 																		"type": "string"
 																	},
 																	"color": {
+																		"$id": "#/properties/glyphs/items/properties/layers/items/properties/shapes/items/path/properties/attr/properties/shadow/properties/color",
 																		"type": "array"
 																	},
 																	"offsetX": {
+																		"$id": "#/properties/glyphs/items/properties/layers/items/properties/shapes/items/path/properties/attr/properties/shadow/properties/offsetX",
 																		"type": "string"
 																	},
 																	"offsetY": {
+																		"$id": "#/properties/glyphs/items/properties/layers/items/properties/shapes/items/path/properties/attr/properties/shadow/properties/offsetY",
 																		"type": "string"
 																	}
 																},
 																"type": "object"
 															},
 															"strokeColor": {
+																"$id": "#/properties/glyphs/items/properties/layers/items/properties/shapes/items/path/properties/attr/properties/strokeColor",
 																"type": "array"
 															},
 															"strokePos": {
+																"$id": "#/properties/glyphs/items/properties/layers/items/properties/shapes/items/path/properties/attr/properties/strokePos",
 																"description": "TODO: should be integer",
 																"type": ["integer", "string"]
 															},
 															"strokeWidth": {
+																"$id": "#/properties/glyphs/items/properties/layers/items/properties/shapes/items/path/properties/attr/properties/strokeWidth",
 																"type": ["number", "string"]
 															}
 														},
@@ -1097,11 +1153,11 @@
 														"$id": "#/properties/glyphs/items/properties/layers/items/properties/shapes/items/properties/nodes",
 														"additionalItems": true,
 														"default": [],
-														"description": "An explanation about the purpose of this instance.",
+														"description": "a list of nodes",
 														"items": {
 															"$id": "#/properties/glyphs/items/properties/layers/items/properties/shapes/items/properties/nodes/items",
 															"additionalItems": true,
-															"description": "An explanation about the purpose of this instance.",
+															"description": "a node",
 															"items": [
 																{
 																	"title": "X",
@@ -1284,6 +1340,12 @@
 					},
 					"userData": {
 						"$id": "#/definitions/userData"
+					},
+					"changeCount": {
+						"$id": "#/properties/glyphs/items/properties/changeCount",
+						"description": "only present in autosave files",
+						"title": "changeCount",
+						"type": "integer"
 					}
 				},
 				"required": [
@@ -1319,6 +1381,7 @@
 						"$ref": "#/definitions/customParameters"
 					},
 					"exports": {
+						"$id": "#/properties/instances/items/properties/exports",
 						"default": 1,
 						"description": "Always set to `0`, otherwise omit the key.",
 						"type": ["integer", "boolean"]
@@ -1328,7 +1391,7 @@
 						"description": "keys are master IDs, values are the factors for that master.",
 						"patternProperties": {
 							"^.*$": {
-								"type": "number"
+								"type": ["number", "string"]
 							}
 						},
 						"title": "The instanceInterpolations schema",
@@ -1370,26 +1433,31 @@
 					"properties": {
 						"$id": "#/definitions/properties"
 					},
+					"type": {
+						"$id": "#/properties/instances/items/properties/type",
+						"description": "The instance type.",
+						"enum": ["variable"],
+						"type": "string"
+					},
 					"userData": {
 						"$id": "#/definitions/userData"
 					},
 					"weightClass": {
 						"$id": "#/properties/instances/items/properties/weightClass",
 						"default": 5,
-						"description": "An explanation about the purpose of this instance.",
+						"description": "the weight class setting",
 						"title": "The weightClass schema",
 						"type": "integer"
 					},
 					"widthClass": {
 						"$id": "#/properties/instances/items/properties/widthClass",
 						"default": 400,
-						"description": "An explanation about the purpose of this instance.",
+						"description": "the width class setting",
 						"title": "The widthClass schema",
 						"type": "integer"
 					}
 				},
 				"required": [
-					"instanceInterpolations",
 					"name"
 				],
 				"title": "The items schema",
@@ -1411,11 +1479,11 @@
 			"$id": "#/properties/metrics",
 			"additionalItems": true,
 			"default": [],
-			"description": "An explanation about the purpose of this instance.",
+			"description": "the font wide list of metrics. The actual values are in the masters",
 			"items": {
 				"$id": "#/properties/metrics/items",
 				"additionalProperties": false,
-				"description": "An explanation about the purpose of this instance.",
+				"description": "the metric object",
 				"properties": {
 					"filter": {
 						"$id": "#/properties/metrics/items/properties/filter",
@@ -1431,15 +1499,13 @@
 					},
 					"type": {
 						"$id": "#/properties/metrics/items/properties/type",
+						"default": 0,
 						"description": "special meaning. allowed keys: \"ascender\", \"cap height\", \"slant height\", \"x-height\", \"midHeight\", \"topHeight\", \"bodyHeight\", \"descender\", \"baseline\", \"italic angle\"",
 						"enum": ["ascender", "cap height", "slant height", "x-height", "midHeight", "topHeight", "bodyHeight", "descender", "baseline", "italic angle"],
 						"title": "The type schema",
 						"type": "string"
 					}
 				},
-				"required": [
-					"type"
-				],
 				"title": "The items schema",
 				"type": "object"
 			},
@@ -1448,7 +1514,7 @@
 		},
 		"note": {
 			"$id": "#/properties/note",
-			"description": "An explanation about the purpose of this instance.",
+			"description": "a note",
 			"title": "The note schema",
 			"type": "string"
 		},
@@ -1459,7 +1525,7 @@
 			"items": {
 				"$id": "#/properties/numbers/items",
 				"additionalProperties": false,
-				"description": "An explanation about the purpose of this instance.",
+				"description": "the font wide list of general purpose numbers. The actual values are in the masters",
 				"properties": {
 					"name": {
 						"description": "name of the number",
@@ -1614,6 +1680,12 @@
 				"additionalProperties": false,
 				"description": "An explanation about the purpose of this instance.",
 				"properties": {
+					"filter": {
+						"$id": "#/properties/stems/items/properties/hfilter",
+						"description": "A predicate format string [(Apple Predicate Programming Guide)](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/Predicates/AdditionalChapters/Introduction.html#//apple_ref/doc/uid/TP40001789) (e.g. `\"case == 3\"` (No Case = 0, Uppercase = 1, Lowercase = 2, Smallcaps = 3, Other = 4))",
+						"title": "The filter schema",
+						"type": "string"
+					},
 					"horizontal": {
 						"$id": "#/properties/stems/items/properties/horizontal",
 						"description": "An explanation about the purpose of this instance.",
@@ -1668,7 +1740,6 @@
 		"familyName",
 		"fontMaster",
 		"glyphs",
-		"instances",
 		"metrics",
 		"unitsPerEm",
 		"versionMajor",
