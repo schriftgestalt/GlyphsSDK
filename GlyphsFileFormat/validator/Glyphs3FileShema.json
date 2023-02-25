@@ -48,6 +48,7 @@
 			"additionalItems": true,
 			"description": "An explanation about the purpose of this instance.",
 			"items": {
+				"$id": "#guides/items",
 				"additionalProperties": false,
 				"properties": {
 					"angle": {
@@ -57,12 +58,17 @@
 						"title": "The angle schema",
 						"type": "number"
 					},
+					"filter": {
+						"$ref": "#filter"
+					},
 					"lockAngle": {
+						"$id": "#/guides/items/properties/lockAngle",
 						"default": 0,
 						"description": "Always set to `1`, otherwise omit the key",
 						"type": ["integer", "boolean"]
 					},
 					"locked": {
+						"$id": "#/guides/items/properties/locked",
 						"default": 0,
 						"description": "Always set to `1`, otherwise omit the key",
 						"type": ["integer", "boolean"]
@@ -71,6 +77,13 @@
 						"$id": "#/guides/items/properties/name",
 						"description": "An explanation about the purpose of this instance.",
 						"title": "The name schema",
+						"type": "string"
+					},
+					"orientation": {
+						"$id": "#/guides/items/properties/orientation",
+						"description": "Orientation means that the item can be attached to the Right or the Center of the layer. So if you change the RSB, it moves along",
+						"enum": ["center", "right"],
+						"title": "The orientation schema",
 						"type": "string"
 					},
 					"pos": {
@@ -87,6 +100,12 @@
 			"title": "The guides schema",
 			"type": "array"
 		},
+		"filter": {
+			"$id": "#filter",
+			"description": "A predicate format string [(Apple Predicate Programming Guide)](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/Predicates/AdditionalChapters/Introduction.html#//apple_ref/doc/uid/TP40001789) (e.g. `\"case == 3\"` (No Case = 0, Uppercase = 1, Lowercase = 2, Smallcaps = 3, Other = 4))",
+			"title": "The filter schema",
+			"type": "string"
+		},
 		"kerning": {
 			"$id": "#kerning",
 			"description": "An explanation about the purpose of this instance.",
@@ -98,6 +117,7 @@
 			"additionalItems": false,
 			"description": "store a position with a X and Y coordinate",
 			"items": {
+				"$id": "#pos/items",
 				"type": "number"
 			},
 			"maxItems": 2,
@@ -171,6 +191,7 @@
 			"additionalItems": false,
 			"description": "store a horizontal and vertical scale",
 			"items": {
+				"$id": "#scale/items",
 				"type": "number"
 			},
 			"maxItems": 2,
@@ -548,6 +569,7 @@
 						"additionalItems": true,
 						"description": "A list of floats, stem settings are stored in the font object.",
 						"items": {
+							"$id": "#/properties/fontMaster/items/properties/stemValues/items",
 							"type": "number"
 						},
 						"title": "The stemValues schema",
@@ -696,18 +718,22 @@
 										"$id": "#/properties/glyphs/items/properties/layers/items/properties/annotations/items",
 										"properties": {
 											"angle": {
+												"$id": "#/properties/glyphs/items/properties/layers/items/properties/annotations/items/properties/angle",
 												"type": "number"
 											},
 											"pos": {
 												"$ref": "#/definitions/pos"
 											},
 											"text": {
+												"$id": "#/properties/glyphs/items/properties/layers/items/properties/annotations/items/properties/text",
 												"type": "string"
 											},
 											"type": {
+												"$id": "#/properties/glyphs/items/properties/layers/items/properties/annotations/items/type",
 												"type": "string"
 											},
 											"width": {
+												"$id": "#/properties/glyphs/items/properties/layers/items/properties/annotations/items/width",
 												"type": "number"
 											}
 										},
@@ -741,9 +767,11 @@
 												"description": "An explanation about the purpose of this instance.",
 												"properties": {
 													"min": {
+														"$id": "#/properties/glyphs/items/properties/layers/items/properties/attr/properties/axisRules/items/properties/min",
 														"type": "number"
 													},
 													"max": {
+														"$id": "#/properties/glyphs/items/properties/layers/items/properties/attr/properties/axisRules/items/properties/max",
 														"type": "number"
 													}
 												}
@@ -763,6 +791,16 @@
 											"$id": "#/properties/glyphs/items/properties/layers/items/properties/attr/properties/coordinates",
 											"description": "A list of numbers to specify a position in the axes space",
 											"type": "array"
+										},
+										"freeMaster": {
+											"$id": "#/properties/glyphs/items/properties/layers/items/properties/attr/properties/freeMaster",
+											"description": "If that master is a 'freeMaster'",
+											"type": "integer"
+										},
+										"svg": {
+											"$id": "#/properties/glyphs/items/properties/layers/items/properties/attr/properties/svg",
+											"description": "If the layer contains svg",
+											"type": "integer"
 										}
 									},
 									"title": "The layer attributes schema",
@@ -776,8 +814,14 @@
 										"anchors": {
 											"$ref": "#/properties/glyphs/items/properties/layers/items/properties/anchors"
 										},
+										"annotations": {
+											"$ref": "#/properties/glyphs/items/properties/layers/items/properties/annotations"
+										},
 										"backgroundImage": {
 											"$ref": "#/properties/glyphs/items/properties/layers/items/properties/backgroundImage"
+										},
+										"guides": {
+											"$ref": "#/properties/glyphs/items/properties/layers/items/properties/guides"
 										},
 										"hints": {
 											"$ref": "#/properties/glyphs/items/properties/layers/items/properties/hints"
@@ -1073,6 +1117,9 @@
 													"scale": {
 														"$ref": "#/definitions/scale"
 													},
+													"slant": {
+														"$ref": "#/definitions/scale"
+													},
 													"userData": {
 														"$ref": "#/definitions/userData"
 													}
@@ -1160,14 +1207,17 @@
 															"description": "a node",
 															"items": [
 																{
+																	"$id": "#/properties/glyphs/items/properties/layers/items/properties/shapes/items/properties/nodes/items/X",
 																	"title": "X",
 																	"type": "number"
 																},
 																{
+																	"$id": "#/properties/glyphs/items/properties/layers/items/properties/shapes/items/properties/nodes/items/Y",
 																	"title": "Y",
 																	"type": "number"
 																},
 																{
+																	"$id": "#/properties/glyphs/items/properties/layers/items/properties/shapes/items/properties/nodes/items/nodetype",
 																	"title": "node type",
 																	"type": "string",
 																	"enum": ["l", "ls", "c", "cs", "q", "qs", "o"]
@@ -1274,24 +1324,30 @@
 						"type": "string"
 					},
 					"partsSettings": {
+						"$id": "#/properties/glyphs/items/properties/partsSettings",
 						"items": {
 							"$id": "#/properties/glyphs/items/properties/partsSettings",
 							"additionalProperties": false,
 							"description": "axes of a smart component",
 							"properties": {
 								"bottomName": {
+									"$id": "#/properties/glyphs/items/properties/partsSettings/properties/bottomName",
 									"type": "string"
 								},
 								"bottomValue": {
+									"$id": "#/properties/glyphs/items/properties/partsSettings/properties/bottomValue",
 									"type": "number"
 								},
 								"name": {
+									"$id": "#/properties/glyphs/items/properties/partsSettings/properties/name",
 									"type": "string"
 								},
 								"topName": {
+									"$id": "#/properties/glyphs/items/properties/partsSettings/properties/topName",
 									"type": "string"
 								},
 								"topValue": {
+									"$id": "#/properties/glyphs/items/properties/partsSettings/properties/topValue",
 									"type": "number"
 								}
 							},
@@ -1314,6 +1370,18 @@
 					"script": {
 						"$id": "#/properties/glyphs/items/properties/script",
 						"description": "manually set script",
+						"title": "The script schema",
+						"type": "string"
+					},
+					"sortName": {
+						"$id": "#/properties/glyphs/items/properties/sortName",
+						"description": "manually set sort name",
+						"title": "The script schema",
+						"type": "string"
+					},
+					"sortNameKeep": {
+						"$id": "#/properties/glyphs/items/properties/sortNameKeep",
+						"description": "manually set sort name keep",
 						"title": "The script schema",
 						"type": "string"
 					},
@@ -1372,6 +1440,7 @@
 						"additionalItems": true,
 						"description": "A list of float values storing the axis coordinate for each axis, Axis settings are stored in the font object.",
 						"items": {
+							"$id": "#/properties/instances/items/properties/axesValues/items",
 							"type": "number"
 						},
 						"title": "The axesValues schema",
@@ -1442,6 +1511,12 @@
 					"userData": {
 						"$id": "#/definitions/userData"
 					},
+					"visible": {
+						"$id": "#/properties/instances/items/properties/visible",
+						"default": 1,
+						"description": "Always set to `0`, otherwise omit the key.",
+						"type": ["integer", "boolean"]
+					},
 					"weightClass": {
 						"$id": "#/properties/instances/items/properties/weightClass",
 						"default": 5,
@@ -1486,10 +1561,7 @@
 				"description": "the metric object",
 				"properties": {
 					"filter": {
-						"$id": "#/properties/metrics/items/properties/filter",
-						"description": "A predicate format string [(Apple Predicate Programming Guide)](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/Predicates/AdditionalChapters/Introduction.html#//apple_ref/doc/uid/TP40001789) (e.g. `\"case == 3\"` (No Case = 0, Uppercase = 1, Lowercase = 2, Smallcaps = 3, Other = 4))",
-						"title": "The filter schema",
-						"type": "string"
+						"$ref": "#filter"
 					},
 					"name": {
 						"$id": "#/properties/metrics/items/properties/name",
@@ -1681,10 +1753,7 @@
 				"description": "An explanation about the purpose of this instance.",
 				"properties": {
 					"filter": {
-						"$id": "#/properties/stems/items/properties/hfilter",
-						"description": "A predicate format string [(Apple Predicate Programming Guide)](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/Predicates/AdditionalChapters/Introduction.html#//apple_ref/doc/uid/TP40001789) (e.g. `\"case == 3\"` (No Case = 0, Uppercase = 1, Lowercase = 2, Smallcaps = 3, Other = 4))",
-						"title": "The filter schema",
-						"type": "string"
+						"$ref": "#filter"
 					},
 					"horizontal": {
 						"$id": "#/properties/stems/items/properties/horizontal",

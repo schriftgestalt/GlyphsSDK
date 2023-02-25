@@ -1,0 +1,242 @@
+{
+.appVersion = "3179";
+.formatVersion = 3;
+axes = (
+{
+hidden = 1;
+name = Weight;
+tag = wght;
+}
+);
+date = "2020-01-03 19:42:13 +0000";
+familyName = "New Font";
+fontMaster = (
+{
+axesValues = (
+100
+);
+guides = (
+{
+orientation = right;
+angle = 24.582;
+lockAngle = 1;
+locked = 1;
+name = "guide name";
+pos = (-25,193);
+showMeasurement = 1;
+},
+{
+orientation = right;
+angle = 90;
+filter = "category == \"Letter\"";
+pos = (-34,271);
+}
+);
+id = m01;
+metricValues = (
+{
+over = 15;
+pos = 800;
+},
+{
+over = 15;
+pos = 700;
+},
+{
+over = 15;
+pos = 500;
+},
+{
+over = -15;
+},
+{
+over = -15;
+pos = -200;
+},
+{
+over = 15;
+pos = 550;
+},
+{
+over = 12;
+pos = 123;
+}
+);
+name = Regular;
+stemValues = (
+123,
+321,
+234
+);
+userData = {
+"Some Key" = "Some Value";
+};
+visible = 1;
+},
+{
+axesValues = (
+900
+);
+guides = (
+{
+angle = 24.582;
+lockAngle = 1;
+pos = (192,216);
+showMeasurement = 1;
+}
+);
+iconName = Bold;
+id = "C2ECF50A-02EF-4989-A14C-AF8E838D1105";
+metricValues = (
+{
+over = 15;
+pos = 800;
+},
+{
+over = 15;
+pos = 700;
+},
+{
+over = 15;
+pos = 500;
+},
+{
+over = -15;
+},
+{
+over = -15;
+pos = -200;
+},
+{
+over = 15;
+pos = 550;
+},
+{
+over = 12;
+pos = 123;
+}
+);
+name = Black;
+stemValues = (
+123,
+321,
+234
+);
+}
+);
+glyphs = (
+{
+glyphname = Z;
+lastChange = "2023-02-25 15:23:51 +0000";
+layers = (
+{
+layerId = m01;
+shapes = (
+{
+closed = 1;
+nodes = (
+(415,669,l),
+(22,122,l),
+(501,126,l),
+(105,155,l),
+(504,714,l),
+(19,704,l)
+);
+}
+);
+width = 560;
+},
+{
+layerId = "C2ECF50A-02EF-4989-A14C-AF8E838D1105";
+shapes = (
+{
+closed = 1;
+nodes = (
+(255,575,l),
+(22,122,l),
+(501,126,l),
+(285,335,l),
+(504,714,l),
+(19,704,l)
+);
+}
+);
+width = 530;
+}
+);
+unicode = 90;
+}
+);
+kerningLTR = {
+m01 = {
+};
+"C2ECF50A-02EF-4989-A14C-AF8E838D1105" = {
+};
+};
+kerningRTL = {
+m01 = {
+};
+"C2ECF50A-02EF-4989-A14C-AF8E838D1105" = {
+};
+};
+kerningVertical = {
+m01 = {
+};
+"C2ECF50A-02EF-4989-A14C-AF8E838D1105" = {
+};
+};
+metrics = (
+{
+type = ascender;
+},
+{
+type = "cap height";
+},
+{
+type = "x-height";
+},
+{
+type = baseline;
+},
+{
+type = descender;
+},
+{
+filter = "case == 3";
+type = "x-height";
+},
+{
+name = "A custom metric";
+}
+);
+settings = {
+disablesNiceNames = 1;
+fontType = variable;
+gridLength = 10;
+gridSubDivision = 10;
+keepAlternatesTogether = 1;
+keyboardIncrement = 2;
+keyboardIncrementBig = 20;
+keyboardIncrementHuge = 200;
+previewRemoveOverlap = 0;
+};
+stems = (
+{
+name = "New Stem h";
+},
+{
+horizontal = 1;
+name = "New Stem v";
+},
+{
+filter = "category == \"Number\"";
+name = "Stem numbers";
+}
+);
+unitsPerEm = 1000;
+userData = {
+"Some Key" = "Some Value";
+};
+versionMajor = 1;
+versionMinor = 0;
+}
