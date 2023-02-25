@@ -2,7 +2,6 @@ import json
 from jsonschema import validate, Draft7Validator
 from glyphsLib.parser import Parser
 
-print("----- validate 3")
 f = open("Glyphs3FileShema.json",)
 schema = json.load(f)
 
