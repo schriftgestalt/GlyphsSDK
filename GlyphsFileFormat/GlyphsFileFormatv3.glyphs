@@ -1,5 +1,5 @@
 {
-.appVersion = "3179";
+.appVersion = "3180";
 .formatVersion = 3;
 DisplayStrings = (
 "/Smily",
@@ -373,11 +373,11 @@ type = Stem;
 },
 {
 horizontal = 1;
-place = (-46, 58);
+place = (-46,58);
 type = Stem;
 },
 {
-place = (165, 101);
+place = (165,101);
 type = Stem;
 }
 );
