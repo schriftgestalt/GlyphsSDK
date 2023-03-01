@@ -3,6 +3,14 @@ export = 0;
 glyphname = _part.test;
 layers = (
 {
+hints = (
+{
+horizontal = 1;
+origin = (0,3);
+target = down;
+type = TopGhost;
+}
+);
 layerId = m01;
 partSelection = {
 Width = 1;
