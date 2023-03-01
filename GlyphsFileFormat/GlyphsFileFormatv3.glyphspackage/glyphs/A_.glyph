@@ -1,7 +1,34 @@
 {
+color = 7;
 glyphname = A;
+kernBottom = A;
+kernLeft = A;
+kernRight = A;
+kernTop = A;
 layers = (
 {
+anchors = (
+{
+name = bottom;
+pos = (230,0);
+},
+{
+name = ogonek;
+pos = (413,10);
+},
+{
+name = top;
+pos = (230,700);
+userData = {
+"Some Key" = "Some Value";
+};
+},
+{
+name = top.alt;
+pos = (10,635);
+}
+);
+color = 0;
 guides = (
 {
 angle = 8.1446;
@@ -9,6 +36,15 @@ lockAngle = 1;
 locked = 1;
 pos = (151,402);
 showMeasurement = 1;
+},
+{
+name = "guide name";
+pos = (186,310);
+},
+{
+orientation = right;
+angle = 90;
+pos = (-74,271);
 }
 );
 hints = (
@@ -17,6 +53,13 @@ horizontal = 1;
 origin = (0,0);
 target = (0,7);
 type = Stem;
+},
+{
+name = _corner.cut;
+options = 1;
+origin = (0,7);
+scale = (1.1,0.9);
+type = Corner;
 }
 );
 layerId = m01;
@@ -40,6 +83,9 @@ Welt";
 );
 }
 );
+userData = {
+"Some Key" = "Some Value";
+};
 width = 459;
 },
 {
@@ -67,12 +113,106 @@ nodes = (
 }
 );
 width = 459;
+},
+{
+anchors = (
+{
+name = bottom;
+pos = (230,0);
+},
+{
+name = ogonek;
+pos = (413,10);
+},
+{
+name = top;
+pos = (230,700);
+}
+);
+guides = (
+{
+angle = 8.1446;
+lockAngle = 1;
+locked = 1;
+pos = (151,402);
+showMeasurement = 1;
+}
+);
+hints = (
+{
+horizontal = 1;
+origin = (0,0);
+target = (0,7);
+type = Stem;
+},
+{
+horizontal = 1;
+place = (-46,58);
+type = Stem;
+},
+{
+place = (165,101);
+type = Stem;
+}
+);
+layerId = "C2ECF50A-02EF-4989-A14C-AF8E838D1105";
+metricRight = "=20";
+shapes = (
+{
+closed = 1;
+nodes = (
+(10,66,l),
+(92,-21,o),
+(338,-35,o),
+(439,66,cs),
+(578,205,o),
+(522,462,o),
+(439,608,c),
+(10,608,l,{
+name = "Hallo	Welt";
+test = "Hallo
+Welt";
+})
+);
+}
+);
+width = 459;
+},
+{
+associatedMasterId = "C2ECF50A-02EF-4989-A14C-AF8E838D1105";
+attr = {
+color = 1;
+};
+layerId = "D2308E80-25B0-4FAB-BEE2-D01D0D71AFD0";
+shapes = (
+{
+attr = {
+strokeColor = (0,84);
+strokeWidth = 21;
+};
+closed = 0;
+nodes = (
+(20,35,l),
+(91,35,o),
+(97,35,o),
+(100,5,c),
+(103,35,o),
+(109,35,o),
+(180,35,c)
+);
+}
+);
+width = 459;
 }
 );
 metricLeft = "=10";
+note = "a note";
 tags = (
 tag1,
 tag2
 );
 unicode = (65,97);
+userData = {
+"Some Key" = "Some Value";
+};
 }

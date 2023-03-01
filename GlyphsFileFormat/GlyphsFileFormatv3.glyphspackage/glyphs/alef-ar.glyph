@@ -1,0 +1,110 @@
+{
+glyphname = "alef-ar";
+layers = (
+{
+annotations = (
+{
+pos = (250.521,646.968);
+text = "a annotiation";
+type = Text;
+},
+{
+angle = 45.51233;
+pos = (248,407);
+type = Arrow;
+},
+{
+pos = (261.78,311.9);
+type = Circle;
+width = 54.32292;
+},
+{
+pos = (264,176);
+type = Plus;
+},
+{
+pos = (264.981,54.875);
+type = Minus;
+}
+);
+hints = (
+{
+horizontal = 1;
+origin = (0,3);
+target = down;
+type = TopGhost;
+},
+{
+horizontal = 1;
+origin = (0,0);
+target = up;
+type = BottomGhost;
+},
+{
+options = 4;
+origin = lsb;
+target = (0,0);
+type = TTStem;
+},
+{
+options = 4;
+origin = rsb;
+target = (0,1);
+type = TTStem;
+},
+{
+options = 4;
+origin = (0,0);
+other1 = (0,2);
+target = (0,1);
+type = TTInterpolate;
+}
+);
+layerId = m01;
+shapes = (
+{
+closed = 1;
+nodes = (
+(10,35,l),
+(200,35,l),
+(200,763,l),
+(10,763,l)
+);
+}
+);
+width = 135;
+},
+{
+hints = (
+{
+horizontal = 1;
+place = (778,-20);
+target = down;
+type = TopGhost;
+},
+{
+horizontal = 1;
+place = (19,21);
+target = up;
+type = BottomGhost;
+}
+);
+layerId = "C2ECF50A-02EF-4989-A14C-AF8E838D1105";
+shapes = (
+{
+closed = 1;
+nodes = (
+(10,35,l),
+(200,35,l),
+(200,763,l),
+(10,763,l)
+);
+}
+);
+width = 135;
+}
+);
+metricLeft = A;
+metricRight = A;
+unicode = 1575;
+}

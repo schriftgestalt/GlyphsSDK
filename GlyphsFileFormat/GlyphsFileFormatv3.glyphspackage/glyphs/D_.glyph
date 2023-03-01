@@ -12,6 +12,30 @@ ref = _part.test;
 }
 );
 width = 368;
+},
+{
+layerId = "C2ECF50A-02EF-4989-A14C-AF8E838D1105";
+shapes = (
+{
+piece = {
+Width = 29.74825;
+};
+ref = _part.test;
+}
+);
+width = 368;
+},
+{
+associatedMasterId = m01;
+attr = {
+svg = 1;
+};
+backgroundImage = {
+imagePath = files/Smily.svg;
+};
+layerId = "3FEDB0F1-E3ED-423F-8080-03A25A363A56";
+name = "25. Feb. 23, 15:53";
+width = 368;
 }
 );
 unicode = 68;

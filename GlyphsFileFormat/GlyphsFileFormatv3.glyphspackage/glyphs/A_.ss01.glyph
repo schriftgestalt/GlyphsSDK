@@ -1,0 +1,143 @@
+{
+glyphname = A.ss01;
+layers = (
+{
+hints = (
+{
+horizontal = 1;
+options = 4;
+origin = (0,1,1,1);
+stem = 1;
+target = (0,1,1,3);
+type = TTStem;
+},
+{
+horizontal = 1;
+origin = (0,1);
+type = TTSnap;
+},
+{
+horizontal = 1;
+origin = (0,1);
+settings = {
+deltaV = {
+"{0, 0, 0, 0, 0, 0}" = {
+"100" = 8;
+};
+};
+};
+type = TTDelta;
+}
+);
+layerId = m01;
+shapes = (
+{
+attr = {
+lineCapEnd = 3;
+lineCapStart = 1;
+strokeHeight = 80;
+strokePos = 1;
+strokeWidth = 100;
+};
+closed = 0;
+nodes = (
+(35,5,l),
+(278,673,l),
+(568,10,l)
+);
+},
+{
+attr = {
+mask = 1;
+};
+closed = 1;
+nodes = (
+(-70,330,l),
+(680,330,l),
+(680,435,l),
+(-70,435,l)
+);
+},
+{
+attr = {
+fill = 1;
+strokeHeight = 100;
+strokeWidth = 100;
+};
+closed = 1;
+nodes = (
+(748,500,o),
+(830,577,o),
+(830,673,cs),
+(830,768,o),
+(748,845,o),
+(648,845,cs),
+(547,845,o),
+(465,768,o),
+(465,673,cs),
+(465,577,o),
+(547,500,o),
+(648,500,cs)
+);
+}
+);
+width = 600;
+},
+{
+attr = {
+color = 1;
+};
+hints = (
+{
+options = 4;
+origin = (0,0);
+other1 = (0,2);
+target = (0,1);
+type = TTInterpolate;
+}
+);
+layerId = "C2ECF50A-02EF-4989-A14C-AF8E838D1105";
+shapes = (
+{
+attr = {
+gradient = {
+colors = (
+(
+(179,22,37,255),
+0
+),
+(
+(63,56,203,255),
+1
+)
+);
+end = (0,0);
+start = (0.2939,-0.0168);
+type = circle;
+};
+};
+closed = 1;
+nodes = (
+(3,-10,l),
+(638,-10,l),
+(283,795,l)
+);
+}
+);
+userData = {
+com.GeorgSeifert.ImageExportSettings = {
+path = "..";
+presets = (
+{
+filename = "{{{glyph.name}}}";
+format = SVG;
+name = default;
+size = 1000;
+}
+);
+};
+};
+width = 600;
+}
+);
+}

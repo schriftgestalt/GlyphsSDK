@@ -1,6 +1,10 @@
 {
 displayStrings = (
+"/Smily",
+"اا",
+"/_part.test",
 A,
-AB
+B,
+"国"
 );
 }

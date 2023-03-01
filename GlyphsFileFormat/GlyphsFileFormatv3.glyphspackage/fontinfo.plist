@@ -1,5 +1,5 @@
 {
-.appVersion = "3066";
+.appVersion = "3180";
 .formatVersion = 3;
 axes = (
 {
@@ -13,13 +13,30 @@ classes = (
 code = "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
 ";
 name = Uppercase;
+notes = "a class note.";
+},
+{
+automatic = 1;
+code = "A B C D";
+disabled = 1;
+name = AllLetters;
 }
 );
 customParameters = (
 {
 name = "Import Font";
 value = {
+Path = "files/LinkedFontv3.glyphs";
 };
+},
+{
+name = "Color Palettes";
+value = (
+(
+(255,0,0,255),
+(255,128,0,255)
+)
+);
 }
 );
 date = "2020-01-03 19:42:13 +0000";
@@ -30,17 +47,26 @@ automatic = 1;
 code = "languagesystem DFLT dflt;
 ";
 name = Languagesystems;
+notes = "a prefix note";
+},
+{
+code = "";
+disabled = 1;
+name = somePrefix;
 }
 );
 features = (
 {
 code = "sub C by D;
 ";
+notes = "a feature note.";
 tag = test;
 },
 {
-code = "sub A by B;
+automatic = 1;
+code = "sub A by A.ss01;
 ";
+disabled = 1;
 labels = (
 {
 language = dflt;
@@ -57,7 +83,7 @@ tag = ss01;
 fontMaster = (
 {
 axesValues = (
-0
+100
 );
 customParameters = (
 {
@@ -67,10 +93,19 @@ value = "600";
 );
 guides = (
 {
+orientation = right;
 angle = 24.582;
 lockAngle = 1;
-pos = (192,216);
+locked = 1;
+name = "guide name";
+pos = (-25,193);
 showMeasurement = 1;
+},
+{
+orientation = right;
+angle = 90;
+filter = "category == \"Letter\"";
+pos = (-34,271);
 }
 );
 id = m01;
@@ -97,6 +132,10 @@ pos = -200;
 {
 over = 15;
 pos = 550;
+},
+{
+over = 12;
+pos = 123;
 }
 );
 name = Regular;
@@ -105,12 +144,79 @@ numberValues = (
 );
 stemValues = (
 123,
-321
+321,
+234
 );
+userData = {
+"Some Key" = "Some Value";
+};
 visible = 1;
+},
+{
+axesValues = (
+900
+);
+customParameters = (
+{
+name = "Default Layer Width";
+value = "600";
+}
+);
+guides = (
+{
+angle = 24.582;
+lockAngle = 1;
+pos = (192,216);
+showMeasurement = 1;
+}
+);
+iconName = Bold;
+id = "C2ECF50A-02EF-4989-A14C-AF8E838D1105";
+metricValues = (
+{
+over = 15;
+pos = 800;
+},
+{
+over = 15;
+pos = 700;
+},
+{
+over = 15;
+pos = 500;
+},
+{
+over = -15;
+},
+{
+over = -15;
+pos = -200;
+},
+{
+over = 15;
+pos = 550;
+},
+{
+over = 12;
+pos = 123;
+}
+);
+name = Black;
+numberValues = (
+123
+);
+stemValues = (
+123,
+321,
+234
+);
 }
 );
 instances = (
+{
+name = Regular;
+type = variable;
+},
 {
 axesValues = (
 123
@@ -126,14 +232,61 @@ name = "Remove Glyphs";
 value = (
 B
 );
+},
+{
+name = Filter;
+value = "HatchOutlineFilter;OriginX:-238;StepWidth:43;Angle:12;Offset:7";
 }
 );
-instanceInterpolations = {
-m01 = 1;
-};
-isBold = 1;
 isItalic = 1;
 name = Regular;
+properties = (
+{
+key = familyNames;
+values = (
+{
+language = dflt;
+value = "Instance Family Name";
+},
+{
+language = DEU;
+value = "Instance Familienname";
+}
+);
+},
+{
+key = designerURL;
+value = www.designer.com;
+}
+);
+userData = {
+"Some Key" = "Some Value";
+};
+},
+{
+axesValues = (
+723
+);
+customParameters = (
+{
+name = familyName;
+value = "Instance Family Name";
+},
+{
+disabled = 1;
+name = "Remove Glyphs";
+value = (
+B
+);
+}
+);
+exports = 0;
+isBold = 1;
+linkStyle = Light;
+name = Bold;
+visible = 0;
+weightClass = 700;
+widthClass = 6;
 }
 );
 kerningLTR = {
@@ -142,11 +295,36 @@ A = {
 B = 30;
 };
 };
+"C2ECF50A-02EF-4989-A14C-AF8E838D1105" = {
+A = {
+B = 30;
+};
+};
+};
+kerningRTL = {
+m01 = {
+"alef-ar" = {
+"alef-ar" = -125;
+};
+};
+"C2ECF50A-02EF-4989-A14C-AF8E838D1105" = {
+"alef-ar" = {
+"alef-ar" = -125;
+};
+};
 };
 kerningVertical = {
 m01 = {
 A = {
 B = 30;
+};
+};
+"C2ECF50A-02EF-4989-A14C-AF8E838D1105" = {
+A = {
+B = 30;
+};
+uni56FD = {
+uni56FD = -100;
 };
 };
 };
@@ -169,8 +347,12 @@ type = descender;
 {
 filter = "case == 3";
 type = "x-height";
+},
+{
+name = "A custom metric";
 }
 );
+note = "a font note";
 numbers = (
 {
 name = "Some Number";
@@ -205,14 +387,15 @@ value = "New Value";
 }
 );
 settings = {
-disablesAutomaticAlignment = 1;
 disablesNiceNames = 1;
-gridLength = 5;
-gridSubDivision = 2;
+fontType = variable;
+gridLength = 10;
+gridSubDivision = 10;
 keepAlternatesTogether = 1;
 keyboardIncrement = 2;
 keyboardIncrementBig = 20;
 keyboardIncrementHuge = 200;
+previewRemoveOverlap = 0;
 };
 stems = (
 {
@@ -221,9 +404,16 @@ name = "New Stem h";
 {
 horizontal = 1;
 name = "New Stem v";
+},
+{
+filter = "category == \"Number\"";
+name = "Stem numbers";
 }
 );
 unitsPerEm = 1000;
+userData = {
+"Some Key" = "Some Value";
+};
 versionMajor = 1;
 versionMinor = 0;
 }

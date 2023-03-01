@@ -3,13 +3,106 @@ category = Icon;
 glyphname = Smily;
 layers = (
 {
+attr = {
+color = 1;
+};
 layerId = m01;
+shapes = (
+{
+attr = {
+fillColor = (255,211,55,255);
+shadow = {
+blur = "10";
+color = (255,0,0,255);
+offsetX = "4";
+offsetY = "8";
+};
+strokeColor = (64,255);
+strokeWidth = 20;
+};
+closed = 1;
+nodes = (
+(424,63,o),
+(530,168,o),
+(530,299,cs),
+(530,429,o),
+(424,535,o),
+(294,535,cs),
+(163,535,o),
+(58,429,o),
+(58,299,cs),
+(58,168,o),
+(163,63,o),
+(294,63,cs)
+);
+}
+);
 vertWidth = 600;
+width = 600;
+},
+{
+attr = {
+color = 1;
+};
+layerId = "C2ECF50A-02EF-4989-A14C-AF8E838D1105";
+shapes = (
+{
+attr = {
+fillColor = (255,211,55,255);
+strokeColor = (64,255);
+strokeWidth = 20;
+};
+closed = 1;
+nodes = (
+(424,63,o),
+(530,168,o),
+(530,299,cs),
+(530,429,o),
+(424,535,o),
+(294,535,cs),
+(163,535,o),
+(58,429,o),
+(58,299,cs),
+(58,168,o),
+(163,63,o),
+(294,63,cs)
+);
+}
+);
+userData = {
+com.GeorgSeifert.ImageExportSettings = {
+path = "..";
+presets = (
+{
+filename = "{{{glyph.name}}}";
+format = SVG;
+name = default;
+size = 600;
+}
+);
+};
+};
+vertWidth = 600;
+width = 600;
+},
+{
+associatedMasterId = m01;
+attr = {
+coordinates = (
+450
+);
+};
+layerId = "403102FA-569E-44B5-9F7D-836F0E7D2DAD";
+name = "25. Feb. 23, 15:21";
+vertWidth = 600;
+visible = 1;
 width = 600;
 }
 );
 production = someSmily;
 script = "Black Letter";
+sortName = XSmily;
+sortNameKeep = YSmily;
 subCategory = Emoji;
 tags = (
 new,
