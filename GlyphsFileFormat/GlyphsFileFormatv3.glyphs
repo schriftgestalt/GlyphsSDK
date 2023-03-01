@@ -933,6 +933,20 @@ pos = (264.981,54.875);
 type = Minus;
 }
 );
+hints = (
+{
+horizontal = 1;
+origin = (0,3);
+target = down;
+type = TopGhost;
+},
+{
+horizontal = 1;
+origin = (0,0);
+target = up;
+type = BottomGhost;
+}
+);
 layerId = m01;
 shapes = (
 {
@@ -948,6 +962,20 @@ nodes = (
 width = 135;
 },
 {
+hints = (
+{
+horizontal = 1;
+place = (778,-20);
+target = down;
+type = TopGhost;
+},
+{
+horizontal = 1;
+place = (19,21);
+target = up;
+type = BottomGhost;
+}
+);
 layerId = "C2ECF50A-02EF-4989-A14C-AF8E838D1105";
 shapes = (
 {
