@@ -34,10 +34,10 @@ __all__ = ["Glyphs", "FileFormatPlugin", "FilterWithDialog", "FilterWithoutDialo
 #  Helper methods
 
 def LogToConsole_AsClassExtension(self, message):
-	LogToConsole(message, self.title())  # from GlyhsApp.py
+	LogToConsole(message, self.title())  # from GlyphsApp.py
 
 def LogError_AsClassExtension(self, message):
-	LogError(message)  # from GlyhsApp.py
+	LogError(message)  # from GlyphsApp.py
 
 def LoadNib(self, nibname, path=None):
 	if path and len(path) > 10:
@@ -96,7 +96,7 @@ def setUpMenuHelper(Menu, Items, defaultTarget):
 						if isinstance(view, NSView):
 							newMenuItem.setView_(view)
 					except:
-						LogToConsole(traceback.format_exc(), "setUpMenuHelper")  # from GlyhsApp.py
+						LogToConsole(traceback.format_exc(), "setUpMenuHelper")  # from GlyphsApp.py
 				if "state" in entry:
 					state = entry["state"]
 					if state == ONSTATE or state == OFFSTATE or state == MIXEDSTATE:

@@ -12988,7 +12988,7 @@ Node Types
 
 .. data:: OFFCURVE
 
-	Off-cuve node
+	Off-curve node
 
 Path attributes
 ==============
@@ -13068,15 +13068,15 @@ Path attributes
 File Format Versions
 ====================
 
-A constant that is used when saving are reading .glpyhs file but also for the clipboard.
+A constant that is used when saving are reading .glyphs file but also for the clipboard.
 
 .. data:: GSFormatVersion1
 
-	The Format used by Glyhs 2
+	The Format used by Glyphs 2
 
 .. data:: GSFormatVersion3
 
-	The Format used by Glyhs 3
+	The Format used by Glyphs 3
 
 .. data:: GSFormatVersionCurrent
 
