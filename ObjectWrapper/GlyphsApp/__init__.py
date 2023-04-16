@@ -12915,7 +12915,7 @@ def Message(message, title="Alert", OKButton=None):
 
 	:param message: the string
 	:param title: a title of the dialog
-	:param OKButton: the lable of the confirmation button
+	:param OKButton: the label of the confirmation button
 '''
 
 def AskString(message, value=None, title="Glyphs", OKButton=None, placeholder=None):
@@ -12929,7 +12929,7 @@ def AskString(message, value=None, title="Glyphs", OKButton=None, placeholder=No
 	:param message: the string
 	:param value: a default value
 	:param title: a title of the dialog
-	:param OKButton: the lable of the confirmation button
+	:param OKButton: the label of the confirmation button
 	:param placeholder: a placeholder value that is displayed in gray when the text field is emtpy
 '''
 
