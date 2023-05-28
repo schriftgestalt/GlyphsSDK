@@ -8,7 +8,8 @@ You can add context menus (that appear on the user’s mouse right-click), both 
 
 In its naked version, the plug-in behaves exactly like the built-in select tool.
 
-![](../_Readme_Images/selecttool.png)
+<img src="../_Readme_Images/selecttool.png" alt="Selection Tool Screenshot" width="50%" height="50%" />
+
 
 ## User code
 
