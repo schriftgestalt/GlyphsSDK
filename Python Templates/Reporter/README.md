@@ -361,11 +361,11 @@ In fact, we highly encourage you to do so, because we want to keep Glyphs’ use
 
 When creating the menu items in the code, instead of handing over *name* and *action* attributes, you hand over just a *view* that contains a reference to the `NSView` object.
 
-As with other dialogs, we have two choices to create them: Use Xcode’s Interface Builder or Tal Leming’s [Vanilla](https://github.com/typesupply/vanilla) library.
+As with other dialogs, we have two choices to create them: Use Xcode’s Xcode or Tal Leming’s [Vanilla](https://vanilla.robotools.dev/en/) library.
 
-### Interface Builder
+### Xcode
 
-Create a dialog with interface elements in Interface Builder like you’ve read about [here](https://github.com/schriftgestalt/GlyphsSDK/tree/master/Python%20Templates). In short: add the plugin.py with *File > Add Files...* (Cmd-Opt-A), set the *Custom Class* in the *Identity Inspector* of *File’s Owner* to the name of your plug-in class, ctrl-drag from and to *File’s Owner* to connect outlets and actions. Save your .xib and compile it to a .nib.
+Create a dialog with interface elements in Xcode like you’ve read about [here](https://github.com/schriftgestalt/GlyphsSDK/tree/master/Python%20Templates). In short: add the plugin.py with *File > Add Files...* (Cmd-Opt-A), set the *Custom Class* in the *Identity Inspector* of *File’s Owner* to the name of your plug-in class, ctrl-drag from and to *File’s Owner* to connect outlets and actions. Save your .xib and compile it to a .nib.
 
 In `plugin.py`, an *IBOutlet* needs to be created at the root of the plug-in class for the dialog (and more for more controls that you want to access from Python), and our class needs an *IBAction* method to receive input from interface elements.
 
@@ -411,9 +411,9 @@ class ____PluginClassName____(SelectTool):
 
 ### Vanilla
 
-As opposed to Interface Builder, dialogs get created entirely in code only using Vanilla, which might be advantageous for you if Xcode looks too daunting.
+As opposed to Xcode, dialogs get created entirely in code only using Vanilla, which might be advantageous for you if Xcode looks too daunting.
 
-We need to create a so called [Group](http://ts-vanilla.readthedocs.org/en/latest/objects/Group.html) that contains a set of objects. Of this group, we can get hold of the wrapped `NSView` object to display in Glyphs. Note that due to Vanilla internals, we have to create a window first, although that window isn’t getting any attention anymore later on, and it must contain a `Group()` of the same size. Note that stretching the `Group` to the far corners of the windows using `(0, 0, -0, -0)` may not work, so explicitly define its size identical to the containing window.
+We need to create a so called [Group](https://vanilla.robotools.dev/en/latest/objects/Group.html) that contains a set of objects. Of this group, we can get hold of the wrapped `NSView` object to display in Glyphs. Note that due to Vanilla internals, we have to create a window first, although that window isn’t getting any attention anymore later on, and it must contain a `Group()` of the same size. Note that stretching the `Group` to the far corners of the windows using `(0, 0, -0, -0)` may not work, so explicitly define its size identical to the containing window.
 
 ```python
 # encoding: utf-8

@@ -8,7 +8,7 @@
 #	Read the docs:
 #	https://github.com/schriftgestalt/GlyphsSDK/tree/master/Python%20Templates/Filter%20with%20Dialog
 #
-#	For help on the use of Interface Builder:
+#	For help on the use of Xcode:
 #	https://github.com/schriftgestalt/GlyphsSDK/tree/master/Python%20Templates
 #
 #

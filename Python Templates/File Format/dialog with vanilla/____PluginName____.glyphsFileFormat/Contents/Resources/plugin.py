@@ -9,7 +9,7 @@
 #	Read the docs:
 #	https://github.com/schriftgestalt/GlyphsSDK/tree/master/Python%20Templates/File%20Format
 #
-#	For help on the use of Interface Builder:
+#	For help on the use of Xcode:
 #	https://github.com/schriftgestalt/GlyphsSDK/tree/master/Python%20Templates
 #
 #

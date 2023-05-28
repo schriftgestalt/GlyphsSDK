@@ -12,7 +12,7 @@ Replace all placeholders that have quadruple underscores (like `____placeholder_
 
 * `Contents/Info.plist`
 * `Contents/Resources/plugin.py`
-* `Contents/Resources/IBdialog.xib` (Only in case that plug-in actually uses a dialog. Don’t forget to re-compile. See the *Interface Builder* section below.)
+* `Contents/Resources/IBdialog.xib` (Only in case that plug-in actually uses a dialog. Don’t forget to re-compile. See the *Xcode* section below.)
 
 ### Edit `Contents/Info.plist`:
 
@@ -64,14 +64,14 @@ This is where your own code goes. You need to rename the main class `class ____P
 
 ### Edit `Contents/Resources/IBdialog.xib`:
 
-Should your plug-in contain a dialog, you need to likewise rename the pointer `____PluginClassName____` to the principal class. This is quickest done in text editor, but you can (and must) also read through the Interface Builder instructions below and change the value in Xcode/Interface Builder.
+Should your plug-in contain a dialog, you need to likewise rename the pointer `____PluginClassName____` to the principal class. This is quickest done in text editor, but you can (and must) also read through the Xcode instructions below and change the value in Xcode/Xcode.
 
-Don’t forget to re-compile. See the *Interface Builder* section below.
+Don’t forget to re-compile. See the *Xcode* section below.
 
 
-## Interface Builder: Adding GUI elements
+## Xcode: Adding GUI elements
 
-The interaction between your Python script and a graphical user interface (GUI) requires the use of Interface Builder, which is part of Apple’s Xcode software development environment. The work with Interface Builder can be a bit daunting, but we’ve written a step-by-step walkthrough here for you that will get you going quickly. After your first completed GUI interaction, using it will become as natural as all the rest.
+The interaction between your Python script and a graphical user interface (GUI) requires the use of Xcode, which is part of Apple’s Xcode software development environment. The work with Xcode can be a bit daunting, but we’ve written a step-by-step walkthrough here for you that will get you going quickly. After your first completed GUI interaction, using it will become as natural as all the rest.
 
 Your Python code communicates with the UI through:
 
@@ -129,7 +129,7 @@ The function names need to end with an underscore, e.g. `setValue_()`.
 		self.updateFeedBackTextField()
 ```
 
-#### 3. Interface Builder
+#### 3. Xcode
 
 ![](_Readme_Images/IB_Overview.png)
 

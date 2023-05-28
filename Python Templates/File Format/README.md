@@ -6,7 +6,7 @@ At the moment, this plug-in provides font export functionality through the Expor
 Planned for the future are Save and Open functionalities.
 
 This sample plug-in is functional and exports glyph names, unicodes and glyph width into a simple CSV file.
-It makes use of a GUI through Interface Builder. See the description one level up (https://github.com/schriftgestalt/GlyphsSDK/tree/master/Python%20Templates) on how to use it.
+It makes use of a GUI through Xcode. See the description one level up (https://github.com/schriftgestalt/GlyphsSDK/tree/master/Python%20Templates) on how to use it.
 
 ![](../_Readme_Images/exportdialog.png)
 
