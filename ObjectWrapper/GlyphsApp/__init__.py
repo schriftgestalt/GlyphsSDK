@@ -842,7 +842,7 @@ def validateTuple(expectedLenth, value=None):
 	if value is None:
 		return (0, 0)
 	if expectedLenth == 1 and isinstance(value, (float, int)):
-		value = (value, )
+		value = (value,)
 	if not isinstance(value, (tuple, NSPoint)):
 		raise TypeError
 	if len(value) < expectedLenth:

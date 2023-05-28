@@ -40,12 +40,12 @@ class ____PluginClassName____ (PalettePlugin):
 		Glyphs.addCallback(self.update, UPDATEINTERFACE)
 
 	@objc.python_method
-	def update( self, sender ):
+	def update(self, sender):
 		# Your code goes here...
 	
 	@objc.python_method
 	def __del__(self):
-		# Delete callbacks when Glyphs quits, otherwise it'll crash :( 
+		# Delete callbacks when Glyphs quits, otherwise it'll crash :(
 		Glyphs.removeCallback(self.update)
 ```
 

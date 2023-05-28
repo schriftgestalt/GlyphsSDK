@@ -230,7 +230,7 @@ Here are a few examples:
 
 		# Setting colors:
 		# sets RGBA values between 0.0 and 1.0:
-		NSColor.colorWithCalibratedRed_green_blue_alpha_( 1.0, 0.2, 1.0, 0.4 ).set()
+		NSColor.colorWithCalibratedRed_green_blue_alpha_(1.0, 0.2, 1.0, 0.4).set()
 		
 		# predefined colors: blackColor, blueColor, brownColor, clearColor, cyanColor,
 		# darkGrayColor, grayColor, greenColor, lightGrayColor, magentaColor, orangeColor,
@@ -240,7 +240,7 @@ Here are a few examples:
 
 		# Drawing paths:
 		myPath = NSBezierPath.alloc().init()  # initialize a path object
-		myPath.appendBezierPath_( subpath )   # add subpath
+		myPath.appendBezierPath_(subpath)   # add subpath
 		myPath.fill()   # fill with the current NSColor (see above)
 		myPath.stroke() # stroke with the current NSColor (see above)
 		
@@ -271,8 +271,8 @@ Useful method that returns `True` or `False` depending on the state the your edi
 		currentController = self.controller.view().window().windowController()
 		if currentController:
 			tool = currentController.toolDrawDelegate()
-			textToolIsActive = tool.isKindOfClass_( NSClassFromString("GlyphsToolText") )
-			handToolIsActive = tool.isKindOfClass_( NSClassFromString("GlyphsToolHand") )
+			textToolIsActive = tool.isKindOfClass_(NSClassFromString("GlyphsToolText"))
+			handToolIsActive = tool.isKindOfClass_(NSClassFromString("GlyphsToolHand"))
 			if not textToolIsActive and not handToolIsActive: 
 				return True
 		return False
@@ -318,7 +318,7 @@ Glyphs scales its drawings a little differently at small and large zoom stages. 
 	
 	NSColor.orangeColor().set()
 	openPaths = layer.openBezierPath
-	openPaths.setLineWidth_( 5.0 * self.getScale() ** -0.9 )
+	openPaths.setLineWidth_(5.0 * self.getScale() ** -0.9)
 	openPaths.stroke()
 ```
 

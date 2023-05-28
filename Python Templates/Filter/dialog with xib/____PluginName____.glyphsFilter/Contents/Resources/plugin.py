@@ -72,7 +72,7 @@ class ____PluginClassName____(FilterWithDialog):
 
 	# Action triggered by UI
 	@objc.IBAction
-	def setValue_( self, sender ):
+	def setValue_(self, sender):
 		
 		# Store value coming in from dialog
 		Glyphs.defaults['com.myname.myfilter.shift'] = sender.floatValue()
@@ -98,8 +98,8 @@ class ____PluginClassName____(FilterWithDialog):
 				node.position = NSPoint(node.position.x + value, node.position.y + value)
 
 	@objc.python_method
-	def generateCustomParameter( self ):
-		return "%s; shift:%s;" % (self.__class__.__name__, Glyphs.defaults['com.myname.myfilter.shift'] )
+	def generateCustomParameter(self):
+		return "%s; shift:%s;" % (self.__class__.__name__, Glyphs.defaults['com.myname.myfilter.shift'])
 
 	@objc.python_method
 	def __file__(self):
