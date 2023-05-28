@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="21225" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="21225"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="MySelectTool">
+            <connections>
+                <outlet property="button" destination="eYt-Ye-vf7" id="k7g-lq-pZU"/>
+                <outlet property="inspectorDialogView" destination="c22-O7-iKe" id="XSj-l1-NFk"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView translatesAutoresizingMaskIntoConstraints="NO" id="c22-O7-iKe" customClass="GSInspectorView">
+            <rect key="frame" x="0.0" y="0.0" width="227" height="40"/>
+            <subviews>
+                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="eYt-Ye-vf7">
+                    <rect key="frame" x="1" y="3" width="225" height="32"/>
+                    <buttonCell key="cell" type="push" title="Button" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="qqy-xe-Qzb">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="buttonCallback:" target="-2" id="E3g-PG-TSc"/>
+                    </connections>
+                </button>
+            </subviews>
+            <constraints>
+                <constraint firstItem="eYt-Ye-vf7" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" constant="8" id="DK6-cY-kAN"/>
+                <constraint firstItem="eYt-Ye-vf7" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" constant="10" id="FL4-BJ-4e3"/>
+                <constraint firstAttribute="bottom" secondItem="eYt-Ye-vf7" secondAttribute="bottom" constant="10" id="KFu-px-MaC"/>
+                <constraint firstAttribute="trailing" secondItem="eYt-Ye-vf7" secondAttribute="trailing" constant="8" id="nHc-iT-fjG"/>
+            </constraints>
+            <point key="canvasLocation" x="-316.5" y="140"/>
+        </customView>
+    </objects>
+</document>
