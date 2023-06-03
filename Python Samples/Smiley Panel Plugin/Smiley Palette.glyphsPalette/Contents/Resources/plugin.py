@@ -47,12 +47,15 @@ class SmileyPalette (PalettePlugin):
 		This can be called quite a lot, so keep this method fast.
 		"""
 		try:
-			Layer = self.windowController().activeLayer()
-			if Layer:
-				self._theImageView.setHidden_(False)
-			else:
-				self._theImageView.setHidden_(True)
+			windowController = self.windowController()
+			if windowController is not None:
+				Layer = windowController.activeLayer()
+				if Layer:
+					self._theImageView.setHidden_(False)
+					return
+			self._theImageView.setHidden_(True)
 		except Exception as e:
+			import traceback
 			self.logError(traceback.format_exc())
 
 	@objc.python_method
