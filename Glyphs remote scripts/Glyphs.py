@@ -2,11 +2,9 @@
 # encoding: utf-8
 
 import time, objc
-from Foundation import NSObject
+from Foundation import NSObject, NSConnection
 
 __all__ = ["Glyphs", "currentDocument", "GSMOVE", "GSLINE", "GSCURVE", "GSOFFCURVE", "GSSHARP", "GSSMOOTH", "GSGlyph", "GSLayer", "GSApplication", "RunScript"]
-
-NSConnection = objc.lookUpClass("NSConnection")
 
 def application(appName):
 	port = "com.GeorgSeifert.Glyphs3"
