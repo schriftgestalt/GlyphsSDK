@@ -951,7 +951,7 @@ GSApplication.registerDefaults = python_method(__GSApp_registerDefaults__)
 
 			# Remove value
 			# This will restore the default value
-			del(Glyphs.defaults["com.MyName.foo.bar"])
+			del Glyphs.defaults["com.MyName.foo.bar"]
 '''
 
 class BoolDefaultsProxy(DefaultsProxy):
@@ -2073,7 +2073,7 @@ class FontAxesProxy(Proxy):
 		return self._owner.setAxes_
 
 
-class MasterAxesProxy(Proxy):
+class InternalAxesProxy(Proxy):
 
 	def __getitem__(self, idx):
 		if isinstance(idx, slice):
@@ -2084,15 +2084,20 @@ class MasterAxesProxy(Proxy):
 			if axis is None:
 				return None
 			return self._owner.axisValueValueForId_(axis.axisId)
-		raise TypeError("list indices must be integers or slices, not %s" % type(idx).__name__)
+		elif isString(idx):
+			return self._owner.axisValueValueForId_(idx)
+		raise TypeError("list indices must be integers, strings or slices, not %s" % type(idx).__name__)
 
 	def __setitem__(self, idx, value):
 		if isinstance(idx, int):
 			idx = self._validate_idx(idx)
 			count = self.__len__()
 			axis = self._owner.font.axes[idx]
-			return self._owner.setAxisValueValue_forId_(value, axis.axisId)
-		raise TypeError("list indices must be integers or slices, not %s" % type(idx).__name__)
+			self._owner.setAxisValueValue_forId_(value, axis.axisId)
+		elif isString(idx):
+			self._owner.setAxisValueValue_forId_(value, idx)
+		else:
+			raise TypeError("list indices must be integers, strings or slices, not %s" % type(idx).__name__)
 
 	def values(self):
 		if self._owner.font is None:
@@ -2119,6 +2124,58 @@ class MasterAxesProxy(Proxy):
 	def setterMethod(self):
 		return self._setterMethod
 
+class ExternalAxesProxy(Proxy):
+
+	def __getitem__(self, idx):
+		if isinstance(idx, slice):
+			return self.values().__getitem__(idx)
+		elif isinstance(idx, int):
+			idx = self._validate_idx(idx)
+			axis = self._owner.font.axes[idx]
+			if axis is None:
+				return None
+			return self._owner.externAxisValueValueForId_(axis.axisId)
+		elif isString(idx):
+			return self._owner.externAxisValueValueForId_(idx)
+		raise TypeError("list indices must be integers, strings or slices, not %s" % type(idx).__name__)
+
+	def __setitem__(self, idx, value):
+		axis = None
+		if isinstance(idx, int):
+			idx = self._validate_idx(idx)
+			axis = self._owner.font.axes[idx]
+			self._owner.setExternAxisValueValue_forId_(value, axis.axisId)
+		elif isString(idx):
+			axis = self._owner.font.axes[idx]
+			self._owner.setExternAxisValueValue_forId_(value, axis.axisId)
+		else:
+			raise TypeError("list indices must be integers, strings or slices, not %s" % type(idx).__name__)
+
+	def values(self):
+		if self._owner.font is None:
+			return []
+		values = []
+		for axis in self._owner.font.axes:
+			value = self._owner.externAxisValueValueForId_(axis.axisId)
+			values.append(value)
+		return values
+
+	def __len__(self):
+		if self._owner.font is None:
+			return 0
+		return self._owner.font.countOfAxes()
+
+	def _setterMethod(self, values):
+		idx = 0
+		if self._owner.font is None:
+			return
+		for axis in self._owner.font.axes:
+			self._owner.setExternAxisValueValue_forId_(values[idx], axis.axisId)
+			idx += 1
+
+	def setterMethod(self):
+		return self._setterMethod
+
 
 class FontStemsProxy(Proxy):
 
@@ -2129,6 +2186,8 @@ class FontStemsProxy(Proxy):
 			stem = self._owner.objectInStemsAtIndex_(key)
 		elif isString(key):
 			stem = self._owner.stemForName_(key)
+			if stem is None:
+				stem = self._owner.stemForId_(key)
 		else:
 			raise TypeError("keys must be integers or strings, not %s" % type(key).__name__)
 		if stem is None:
@@ -2141,8 +2200,8 @@ class FontStemsProxy(Proxy):
 		return self._stemForKey(key)
 
 	def __setitem__(self, key, value):
-		if not isinstance(value, GSMetrics):
-			raise TypeError("only object of type GSMetrics allowed, got %s" % type(value).__name__)
+		if not isinstance(value, GSMetric):
+			raise TypeError("only object of type GSMetric allowed, got %s" % type(value).__name__)
 		if not isinstance(key, int):
 			raise TypeError("only accessible by integer index, got %s" % key)
 		idx = self._validate_idx(key)
@@ -2155,8 +2214,8 @@ class FontStemsProxy(Proxy):
 		return self._owner.countOfStems()
 
 	def append(self, value):
-		if not isinstance(value, GSMetrics):
-			raise TypeError("only object of type GSMetrics allowed, got %s" % type(value).__name__)
+		if not isinstance(value, GSMetric):
+			raise TypeError("only object of type GSMetric allowed, got %s" % type(value).__name__)
 		self._owner.addStem_(value)
 
 	def __delitem__(self, key):
@@ -2180,6 +2239,8 @@ class MasterStemsProxy(Proxy):
 			stem = self._owner.font.objectInStemsAtIndex_(key)
 		elif isString(key):
 			stem = self._owner.font.stemForName_(key)
+			if stem is None:
+				stem = self._owner.font.stemForId_(key)
 		else:
 			raise TypeError("list indices must be integers or strings, not %s" % type(key).__name__)
 		return stem
@@ -2236,6 +2297,8 @@ class FontNumbersProxy(Proxy):
 			number = self._owner.objectInNumbersAtIndex_(key)
 		elif isString(key):
 			number = self._owner.numberForName_(key)
+			if number is None:
+				number = self._owner.numberForId_(key)
 		else:
 			raise TypeError("keys must be integers or strings, not %s" % type(key).__name__)
 		if number is None:
@@ -2248,8 +2311,8 @@ class FontNumbersProxy(Proxy):
 		return self._numberForKey(key)
 
 	def __setitem__(self, key, value):
-		if not isinstance(value, GSMetrics):
-			raise TypeError("only object of type GSMetrics allowed, got %s" % type(value).__name__)
+		if not isinstance(value, GSMetric):
+			raise TypeError("only object of type GSMetric allowed, got %s" % type(value).__name__)
 		if not isinstance(key, int):
 			raise TypeError("only accessible by integer index, got %s" % key)
 		idx = self._validate_idx(key)
@@ -2262,8 +2325,8 @@ class FontNumbersProxy(Proxy):
 		return self._owner.countOfNumbers()
 
 	def append(self, value):
-		if not isinstance(value, GSMetrics):
-			raise TypeError("only object of type GSMetrics allowed, got %s" % type(value).__name__)
+		if not isinstance(value, GSMetric):
+			raise TypeError("only object of type GSMetric allowed, got %s" % type(value).__name__)
 		self._owner.addNumber_(value)
 
 	def __delitem__(self, key):
@@ -2287,6 +2350,8 @@ class MasterNumbersVauesProxy(Proxy):
 			num = self._owner.font.objectInNumbersAtIndex_(key)
 		elif isString(key):
 			num = self._owner.font.numberForName_(key)
+			if num is None:
+				num = self._owner.font.numberForId_(key)
 		else:
 			raise TypeError("list indices must be integers or strings, not %s" % type(key).__name__)
 		return num
@@ -3699,7 +3764,7 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 		kerning
 		userData
 		grid
-		gridSubDivisions
+		gridSubDivision
 		gridLength
 		keyboardIncrement
 		keyboardIncrementBig
@@ -3815,8 +3880,8 @@ GSFont.instances = property(lambda self: FontInstancesProxy(self),
 			instance.name = "Some Instance"
 			font.instances.append(instance)
 
-			# to delete an axis
-			del(font.instances[0])
+			# to delete an instances
+			del font.instances[0]
 
 			font.instances.remove(someInstance)
 
@@ -3845,7 +3910,7 @@ GSFont.axes = property(lambda self: FontAxesProxy(self),
 			font.axes.append(axis)
 
 			# to delete an axis
-			del(font.axes[0])
+			del font.axes[0]
 
 			font.axes.remove(someAxis)
 
@@ -3897,6 +3962,13 @@ GSFont.stems = property(lambda self: FontStemsProxy(self),
 
 		.. code-block:: python
 			font.stems[0].horizontal = False
+
+			# add a stem
+			stem = GSMetric()
+			stem.horizontal = False # or True
+			stem.name = "Some Name"
+			font.stems.append(stem)
+			master.stems[stem.name] = 123
 '''
 
 GSFont.numbers = property(lambda self: FontNumbersProxy(self),
@@ -3908,7 +3980,15 @@ GSFont.numbers = property(lambda self: FontNumbersProxy(self),
 		:type: list, dict
 
 		.. code-block:: python
-			font.print(numbers[0].name)
+			print(font.numbers[0].name)
+
+			# add a number
+			number = GSMetric()
+			number.horizontal = False # or True
+			number.name = "Some Name"
+			font.numbers.append(number)
+			master.numbers[number.name] = 123
+
 '''
 
 def __GSFont_getitem__(self, value):
@@ -3961,7 +4041,7 @@ GSInterpolationFontProxy.glyphs = property(lambda self: FontGlyphsProxy(self),
 			font.glyphs.append(newGlyph)
 
 			# Delete a glyph
-			del(font.glyphs['A.alt'])
+			del font.glyphs['A.alt']
 '''
 
 GSFont.characterForGlyph = python_method(GSFont.characterForGlyph_)
@@ -3993,7 +4073,7 @@ GSFont.classes = property(lambda self: FontClassesProxy(self),
 			print(font.classes['uppercaseLetters'].code)
 
 			# delete a class
-			del(font.classes['uppercaseLetters'])
+			del font.classes['uppercaseLetters']
 '''
 
 GSFont.features = property(lambda self: FontFeaturesProxy(self),
@@ -4016,7 +4096,7 @@ GSFont.features = property(lambda self: FontFeaturesProxy(self),
 			print(font.features['liga'].code)
 
 			# delete a feature
-			del(font.features['liga'])
+			del font.features['liga']
 '''
 
 GSFont.featurePrefixes = property(lambda self: FontFeaturePrefixesProxy(self),
@@ -4039,7 +4119,7 @@ GSFont.featurePrefixes = property(lambda self: FontFeaturePrefixesProxy(self),
 			print(font.featurePrefixes['LanguageSystems'].code)
 
 			# delete
-			del(font.featurePrefixes['LanguageSystems'])
+			del font.featurePrefixes['LanguageSystems']
 '''
 
 GSFont.copyright = property(lambda self: self.defaultPropertyForName_("copyrights"),
@@ -4439,7 +4519,7 @@ GSFont.customParameters = property(lambda self: CustomParametersProxy(self),
 			font.customParameters.append(parameter)
 
 			# delete a parameter
-			del(font.customParameters['glyphOrder'])
+			del font.customParameters['glyphOrder']
 
 '''
 GSFont.grid = property(lambda self: self.pyobjc_instanceMethods.gridMain(),
@@ -4453,8 +4533,11 @@ GSFont.grid = property(lambda self: self.pyobjc_instanceMethods.gridMain(),
 
 GSFont.gridSubDivisions = property(lambda self: self.pyobjc_instanceMethods.gridSubDivision(),
 								   lambda self, value: self.setGridSubDivision_(value))
+
+GSFont.gridSubDivision = property(lambda self: self.pyobjc_instanceMethods.gridSubDivision(),
+								   lambda self, value: self.setGridSubDivision_(value))
 '''
-	.. attribute:: gridSubDivisions
+	.. attribute:: gridSubDivision
 		Corresponds to the “Grid sub divisions” setting from the Info dialog.
 
 		:type: int
@@ -4530,12 +4613,18 @@ GSFont.previewRemoveOverlap = property(lambda self: bool(self.pyobjc_instanceMet
 '''
 
 def __GSFont_getSelectedGlyphs__(self):
+	try:
 	return self.parent.windowController().glyphsController().selectedObjects()
+	except:
+		return None
 
 def __GSFont_setSelectedGlyphs__(self, value):
 	if not isinstance(value, (list, tuple, NSArray)):
 		raise TypeError('Argument needs to be a list, not %s' % type(value).__name__)
+	try:
 	self.parent.windowController().glyphsController().setSelectedObjects_(value)
+	except:
+		pass
 
 GSFont.selection = property(lambda self: __GSFont_getSelectedGlyphs__(self),
 							lambda self, value: __GSFont_setSelectedGlyphs__(self, value))
@@ -5261,7 +5350,8 @@ GSFontMaster.__deepcopy__ = python_method(__GSObject__copy__)
 
 		id
 		name
-		axes
+		internalAxesValues
+		externalAxesValues
 		properties
 		metrics
 		ascender
@@ -5332,8 +5422,8 @@ GSFontMaster.iconName = property(lambda self: self.pyobjc_instanceMethods.iconNa
 		:type: string
 '''
 
-GSFontMaster.axes = property(lambda self: MasterAxesProxy(self),
-							 lambda self, value: MasterAxesProxy(self).setter(value))
+GSFontMaster.axes = property(lambda self: InternalAxesProxy(self),
+							 lambda self, value: InternalAxesProxy(self).setter(value))
 '''
 	.. attribute:: axes
 		List of floats specifying the positions for each axis
@@ -5347,6 +5437,45 @@ GSFontMaster.axes = property(lambda self: MasterAxesProxy(self),
 			master.axes = [100, 12, 3.5]
 
 		.. versionadded:: 2.5.2
+		.. deprecated:: 3.2
+'''
+
+GSFontMaster.internalAxesValues = property(lambda self: InternalAxesProxy(self),
+										   lambda self, value: InternalAxesProxy(self).setter(value))
+'''
+	.. attribute:: internalAxesValues
+		List of floats specifying the positions for each axis
+
+		:type: list
+
+		.. code-block:: python
+			# setting a value for a specific axis
+			master.internalAxesValues[2] = 12
+			# or more precisely
+			master.internalAxesValues[axis.axisId] = 12
+			# setting all values at once
+			master.internalAxesValues = [100, 12, 3.5]
+
+		.. versionadded:: 3.2
+'''
+
+GSFontMaster.externalAxesValues = property(lambda self: ExternalAxesProxy(self),
+										  lambda self, value: ExternalAxesProxy(self).setter(value))
+'''
+	.. attribute:: externalAxesValues
+		List of floats specifying the positions for each axis for the user facing values
+
+		:type: list
+
+		.. code-block:: python
+			# setting a value for a specific axis
+			master.externalAxesValues[2] = 12
+			# or more precisely
+			master.externalAxesValues[axis.axisId] = 12
+			# setting all values at once
+			master.externalAxesValues = [100, 12, 3.5]
+
+		.. versionadded:: 3.2
 '''
 
 GSFontMaster.properties = property(lambda self: self.mutableArrayValueForKey_("properties"),
@@ -5542,7 +5671,7 @@ GSFontMaster.customParameters = property(lambda self: CustomParametersProxy(self
 			font.customParameters.append(parameter)
 
 			# delete a parameter
-			del(font.masters[0].customParameters['underlinePosition'])
+			del font.masters[0].customParameters['underlinePosition']
 '''
 
 ##################################################################################
@@ -5750,10 +5879,13 @@ GSInstance.mutableCopyWithZone_ = __GSObject__copy__
 	**Properties**
 '''
 
-GSInstance.active = property(lambda self: bool(self.exports()),
+GSInstance.active = property(lambda self: bool(self.pyobjc_instanceMethods.exports()),
+							 lambda self, value: self.setExports_(value))
+
+GSInstance.exports = property(lambda self: bool(self.pyobjc_instanceMethods.exports()),
 							 lambda self, value: self.setExports_(value))
 '''
-	.. attribute:: active
+	.. attribute:: exports
 
 		:type: bool
 '''
@@ -5828,8 +5960,8 @@ GSInstance.widthClassName = property(lambda self: self.widthClassUI())
 		:type: string
 '''
 
-GSInstance.axes = property(lambda self: MasterAxesProxy(self),
-						   lambda self, value: MasterAxesProxy(self).setter(value))
+GSInstance.axes = property(lambda self: InternalAxesProxy(self),
+						   lambda self, value: InternalAxesProxy(self).setter(value))
 '''
 	.. attribute:: axes
 		List of floats specifying the positions for each axis
@@ -5843,6 +5975,45 @@ GSInstance.axes = property(lambda self: MasterAxesProxy(self),
 			instance.axes = [100, 12, 3.5] # make sure that the count of numbers matches the count of axes
 
 		.. versionadded:: 2.5.2
+		.. deprecated:: 3.2
+'''
+
+GSInstance.internalAxesValues = property(lambda self: InternalAxesProxy(self),
+										 lambda self, value: InternalAxesProxy(self).setter(value))
+'''
+	.. attribute:: internalAxesValues
+		List of floats specifying the positions for each axis
+
+		:type: list
+
+		.. code-block:: python
+			# setting a value for a specific axis
+			instance.internalAxesValues[2] = 12
+			# or more precisely
+			instance.internalAxesValues[axis.axisId] = 12
+			# setting all values at once
+			instance.internalAxesValues = [100, 12, 3.5]
+
+		.. versionadded:: 3.2
+'''
+
+GSInstance.externalAxesValues = property(lambda self: ExternalAxesProxy(self),
+										lambda self, value: ExternalAxesProxy(self).setter(value))
+'''
+	.. attribute:: externalAxesValues
+		List of floats specifying the positions for each axis for the user facing values
+
+		:type: list
+
+		.. code-block:: python
+			# setting a value for a specific axis
+			instance.externalAxesValues[2] = 12
+			# or more precisely
+			instance.externalAxesValues[axis.axisId] = 12
+			# setting all values at once
+			instance.externalAxesValues = [100, 12, 3.5]
+
+		.. versionadded:: 3.2
 '''
 
 GSInstance.properties = property(lambda self: self.mutableArrayValueForKey_("properties"),
@@ -6374,7 +6545,7 @@ GSInstance.customParameters = property(lambda self: CustomParametersProxy(self),
 			font.customParameters.append(parameter)
 
 			# delete a parameter
-			del(font.instances[0].customParameters['hheaLineGap'])
+			del font.instances[0].customParameters['hheaLineGap']
 '''
 
 GSInstance.userData = property(lambda self: UserDataProxy(self))
@@ -6691,7 +6862,7 @@ It is best to access the custom parameters through its dictionary interface like
 	font.customParameters.append(parameter)
 
 	# delete a parameter
-	del(font.customParameters['trademark'])
+	del font.customParameters['trademark']
 
 .. class:: GSCustomParameter([name, value])
 
@@ -7317,10 +7488,10 @@ GSGlyph.layers = property(lambda self: GlyphLayerProxy(self),
 
 			# delete last layer of glyph
 			# (Also works for master layers. They will be emptied)
-			del(font.glyphs['a'].layers[-1])
+			del font.glyphs['a'].layers[-1]
 
 			# delete currently active layer
-			del(font.glyphs['a'].layers[font.selectedLayers[0].layerId])
+			del font.glyphs['a'].layers[font.selectedLayers[0].layerId]
 '''
 
 def GSGlyph_setName(self, name):
@@ -8186,11 +8357,11 @@ GSLayer.layerId = property(lambda self: self.pyobjc_instanceMethods.layerId(),
 			FBCA074D-FCF3-427E-A700-7E318A949AE5
 
 			# access a layer by this ID
-			layer = font.glyphs['a'].layers[id]
-			layer = font.glyphs['a'].layers['FBCA074D-FCF3-427E-A700-7E318A949AE5']
+			layer = font.glyphs["a"].layers[id]
+			layer = font.glyphs["a"].layers['FBCA074D-FCF3-427E-A700-7E318A949AE5']
 
 			# for master layers, use ID of masters
-			layer = font.glyphs['a'].layers[font.masters[0].id]
+			layer = font.glyphs["a"].layers[font.masters[0].id]
 '''
 
 GSLayer.attributes = property(lambda self: AttributesProxy(self))
@@ -8201,8 +8372,9 @@ GSLayer.attributes = property(lambda self: AttributesProxy(self))
 		.. code-block:: python
 
 			axis = font.axes[0]
-			layer.attributes['axisRules'] = {axis.axisId: {'min': 100}}
-			layer.attributes['coordinates'] = {axis.axisId: 99}
+			layer.attributes["axisRules"] = {axis.axisId: {'min': 100}}
+			layer.attributes["coordinates"] = {axis.axisId: 99}
+			layer.attributes["colorPalette"] = 2  # This makes the layer a CPAL layer for color index 2
 
 		:type: dict
 '''
@@ -8216,19 +8388,19 @@ GSLayer.color = property(lambda self: __GSGlyph_getColorIndex__(self),
 		:type: int
 
 		.. code-block:: python
-			glyph.color = 0		# red
-			glyph.color = 1		# orange
-			glyph.color = 2		# brown
-			glyph.color = 3		# yellow
-			glyph.color = 4		# light green
-			glyph.color = 5		# dark green
-			glyph.color = 6		# light blue
-			glyph.color = 7		# dark blue
-			glyph.color = 8		# purple
-			glyph.color = 9		# magenta
-			glyph.color = 10	# light gray
-			glyph.color = 11	# charcoal
-			glyph.color = None	# not colored, white (before version 1235, use -1)
+			glyph.color = 0     # red
+			glyph.color = 1     # orange
+			glyph.color = 2     # brown
+			glyph.color = 3     # yellow
+			glyph.color = 4     # light green
+			glyph.color = 5     # dark green
+			glyph.color = 6     # light blue
+			glyph.color = 7     # dark blue
+			glyph.color = 8     # purple
+			glyph.color = 9     # magenta
+			glyph.color = 10    # light gray
+			glyph.color = 11    # charcoal
+			glyph.color = None  # not colored, white (before version 1235, use -1)
 '''
 
 GSLayer.colorObject = property(lambda self: self.pyobjc_instanceMethods.color(),
@@ -8293,7 +8465,7 @@ GSLayer.guideLines = GSLayer.guides
 			layer.guides.append(newGuide)
 
 			# delete guide
-			del(layer.guides[0])
+			del layer.guides[0]
 
 			# copy guides from another layer
 			import copy
@@ -8320,7 +8492,7 @@ GSLayer.annotations = property(lambda self: LayerAnnotationProxy(self),
 			layer.annotations.append(newAnnotation)
 
 			# delete annotation
-			del(layer.annotations[0])
+			del layer.annotations[0]
 
 			# copy annotations from another layer
 			import copy
@@ -8346,7 +8518,7 @@ GSLayer.hints = property(lambda self: LayerHintsProxy(self),
 			layer.hints.append(newHint)
 
 			# delete hint
-			del(layer.hints[0])
+			del layer.hints[0]
 
 			# copy hints from another layer
 			import copy
@@ -8371,7 +8543,7 @@ GSLayer.anchors = property(lambda self: LayerAnchorsProxy(self),
 			layer.anchors['top'] = GSAnchor()
 
 			# delete anchor
-			del(layer.anchors['top'])
+			del layer.anchors['top']
 
 			# copy anchors from another layer
 			import copy
@@ -8392,7 +8564,7 @@ GSLayer.shapes = property(lambda self: LayerShapesProxy(self),
 			    print(shape)
 
 			# delete shape
-			del(layer.shapes[0])
+			del layer.shapes[0]
 
 			# copy shapes from another layer
 			import copy
@@ -10643,15 +10815,29 @@ For details on how to access them, please see :attr:`GSPath.segments`
 
 .. class:: GSPathSegment()
 
-	**Properties**
+	Properties
 
 	.. autosummary::
 
 		type
 		bounds
-		count
-		points
 		length
+
+	Functions
+
+	.. autosummary::
+
+		reverse()
+		middlePoint()
+		lastPoint()
+		inflectionPoints()
+		curvatureAtTime_()
+		pointAtTime_()
+		normalAtTime_()
+		tangentAtTime_()
+		extremePoints()
+		extremeTimes()
+		normalizeHandles()
 '''
 
 def __GSPathSegment__getitem__(self, idx):
@@ -10669,6 +10855,22 @@ def __GSPathSegment__new__(typ, p1=NSPoint(0, 0), p2=NSPoint(0, 0), p3=None, p4=
 
 GSPathSegment.__new__ = staticmethod(__GSPathSegment__new__)
 
+GSPathSegment.bounds = property(lambda self: self.pyobjc_instanceMethods.bounds())
+'''
+	.. attribute:: bounds
+		Bounding box of the segment as NSRect. Read-only.
+
+		:type: NSRect
+
+		.. code-block:: python
+			bounds = segment.bounds
+			# origin
+			print(bounds.origin.x, bounds.origin.y)
+
+			# size
+			print(bounds.size.width, bounds.size.height)
+'''
+
 GSPathSegment.type = property(__GSNode_get_type__)
 '''
 	.. attribute:: type
@@ -10678,6 +10880,56 @@ GSPathSegment.type = property(__GSNode_get_type__)
 
 		:type: str
 '''
+
+'''
+	.. function:: reverse()
+
+		reverses the segments
+
+	.. function:: middlePoint()
+
+		the point at t=0.5
+
+	.. function:: lastPoint()
+
+		the ending point of the segment
+
+	.. function:: inflectionPoints()
+
+		a list of "t" values of inflection points on the segment
+
+	.. function:: curvatureAtTime_(t)
+
+		the curvature at "t"
+
+	.. function:: pointAtTime_(t)
+
+		the point a "t"
+
+	.. function:: normalAtTime_(t)
+
+		the normal vector at "t"
+
+	.. function:: tangentAtTime_(t)
+
+		the tanget at "t"
+
+	.. function:: extremePoints()
+
+		a list of extreme points
+
+	.. function:: extremeTimes()
+
+		a list of "t" value for the extreme points
+
+	.. function:: normalizeHandles()
+
+		balances the length of the handle while trying to keep the shape as good as possible
+
+'''
+
+
+
 
 ##################################################################################
 #
@@ -12987,6 +13239,10 @@ def removeOverlap(paths):
 .. function:: removeOverlap(paths)
 
 	removes the overlaps from the list of paths
+
+	.. code-block:: python
+		paths = [path1, path2, path3]
+		mergePaths = removeOverlap(paths)
 
 	:param paths: A list of paths
 	:return: The resulting list of paths
