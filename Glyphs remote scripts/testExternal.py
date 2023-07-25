@@ -76,10 +76,21 @@ def accessGlyphsInfo():
 	glyphsInfo = Glyphs.objectWithClassName_("GSGlyphsInfo")
 	print(glyphsInfo)
 	print(glyphsInfo.glyphInfoForName_("A"))
+
+def accessLayers():
+	font = currentDocument.font()
+	glyph = font.glyphForName_("A")
+	master = font.fontMasterAtIndex_(0)
+	print(master.id())
+	layer = glyph.layerForId_(master.id())
+	print(layer)
+	path = layer.objectInShapesAtIndex_(0)
+	print(path)
 	
 
 if __name__ == '__main__':
 	#exportAllInstances()
 	#writeInstanceAsUFO()
 	#runScriptInsideGlyphs()
-	accessGlyphsInfo()
+	#accessGlyphsInfo()
+	accessLayers()
