@@ -34,6 +34,7 @@ class PluginWithWindow(GeneralPlugin):
 			})
 		self.loadNib("MyPluginWindow", __file__) # Load .nib file next to plugin.py
 		self.window.setTitle_(self.name)
+		# self.window._window.setDelegate_(self) # If using a vanilla window, set delegate here.
 		self.window.setFrameAutosaveName_(self.windowName)
 		self.fontNameLabel.setStringValue_("No Font Open")
 
@@ -76,6 +77,7 @@ class PluginWithWindow(GeneralPlugin):
 		"""Please leave this method unchanged"""
 		return __file__
 
+	# Window Delegate Method
 	def windowShouldClose_(self, window):
 		Glyphs.removeCallback(self.update) # Remove callbacks when the window is closed
 		return True
