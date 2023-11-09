@@ -64,7 +64,7 @@ doc = re.sub('((.*?)code-block(.*))', '\n\g<0>\n', doc)
 WriteToFile(os.path.join(path, 'sphinx folder', 'index.rst'), sphinxoriginal + doc)
 
 # bake HTML
-Execute('/Library/Frameworks/Python.framework/Versions/3.10/bin/sphinx-build -b html "%s" "%s"' % (os.path.join(path, 'sphinx folder'), os.path.join(path, '_build', 'html')))
+Execute('/Library/Frameworks/Python.framework/Versions/3.11/bin/sphinx-build -b html "%s" "%s"' % (os.path.join(path, 'sphinx folder'), os.path.join(path, '_build', 'html')))
 
 html = ReadFromFile(os.path.join(path, '_build', 'html', 'index.html'))
 
@@ -99,6 +99,6 @@ html = html.replace("\n\n", "\n")
 html = html.replace("\n\n", "\n")
 html = html.replace("\n|\n", " | ")
 html = html.replace("<div class=\"toctree-wrapper compound\">\n</div>\n", "")
-html = html.replace("()</span></code></a>()</p>", "</span></code></a>()</p>")
+html = html.replace("()</span></code></a>()</p>", "()</span></code></a></p>")
 
 WriteToFile(os.path.join(path, '_build', 'html', 'index.html'), html)
