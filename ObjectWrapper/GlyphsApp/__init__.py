@@ -9,7 +9,7 @@ from Foundation import NSObject, NSString, NSArray, NSMutableArray, NSMutableDic
 	NSMutableAttributedString, NSLog, NSBundle, NSAffineTransform, NSAffineTransformStruct, NSPoint, NSRect, NSRange, NSUserNotification, \
 	NSUserNotificationCenter, NSDate, NSIndexSet, NSNull, NSAffineTransform
 from AppKit import NSApp, NSDocumentController, NSOpenPanel, NSSavePanel, NSOKButton, NSWorkspace, \
-	NSMenu, NSMenuItem, NSOnState, NSOffState, NSMixedState, NSColor, NSError
+	NSMenu, NSMenuItem, NSOnState, NSOffState, NSMixedState, NSColor, NSError, NSPredicate
 
 GSFont = objc.lookUpClass("GSFont")
 
@@ -128,6 +128,7 @@ __all__ = [
 	"MOUSEMOVED", "MOUSEDRAGGED", "MOUSEDOWN", "MOUSEUP", "CONTEXTMENUCALLBACK", "FILTER_FLAT_KERNING",
 
 	"GSMetricsKeyAscender", "GSMetricsKeyCapHeight", "GSMetricsKeySlantHeight", "GSMetricsKeyxHeight", "GSMetricsKeyTopHeight", "GSMetricsKeyDescender", "GSMetricsKeyBaseline",
+	"GSMetricsTypeUndefined", "GSMetricsTypeAscender", "GSMetricsTypeCapHeight", "GSMetricsTypeSlantHeight", "GSMetricsTypexHeight", "GSMetricsTypeMidHeight", "GSMetricsTypeBodyHeight", "GSMetricsTypeDescender", "GSMetricsTypeBaseline", "GSMetricsTypeItalicAngle",
 	"GSNoCase", "GSUppercase", "GSLowercase", "GSSmallcaps", "GSMinor", "GSOtherCase",
 
 	"GSFormatVersion1", "GSFormatVersion3", "GSFormatVersionCurrent",
@@ -1299,20 +1300,20 @@ GSApplication.showGlyphInfoPanelWithSearchString = python_method(__showGlyphInfo
 		:param String: The search term
 '''
 
-def _glyphInfoForName(self, String, font=None):
-	if isinstance(String, int):
-		return self.glyphInfoForUnicode(String)
+def _glyphInfoForName(self, name, font=None):
+	if isinstance(name, int):
+		return self.glyphInfoForUnicode(name)
 	if font is not None:
-		return font.glyphsInfo().glyphInfoForName_(String)
-	return GSGlyphsInfo.sharedManager().glyphInfoForName_(String)
+		return font.glyphsInfo().glyphInfoForName_(name)
+	return GSGlyphsInfo.sharedManager().glyphInfoForName_(name)
 
 GSApplication.glyphInfoForName = python_method(_glyphInfoForName)
 '''
-	.. function:: glyphInfoForName(String)
+	.. function:: glyphInfoForName(name, [font=None])
 
 		Generates :class:`GSGlyphInfo` object for a given glyph name.
 
-		:param String: Glyph name
+		:param name: Glyph name
 		:param font: if you add a font, and the font has a local glyph info, it will be used instead of the global info data.
 		:return: :class:`GSGlyphInfo`
 '''
@@ -1326,11 +1327,11 @@ def _glyphInfoForUnicode(self, String, font=None):
 
 GSApplication.glyphInfoForUnicode = python_method(_glyphInfoForUnicode)
 '''
-	.. function:: glyphInfoForUnicode(Unicode)
+	.. function:: glyphInfoForUnicode(Unicode, [font=None])
 
 		Generates :class:`GSGlyphInfo` object for a given hex unicode.
 
-		:param String: Hex unicode
+		:param Unicode: Hex unicode
 		:param font: if you add a font, and the font has a local glyph info, it will be used instead of the global info data.
 		:return: :class:`GSGlyphInfo`
 '''
@@ -1342,11 +1343,11 @@ def __GSApp_niceGlyphName__(self, String, font=None):
 
 GSApplication.niceGlyphName = python_method(__GSApp_niceGlyphName__)
 '''
-	.. function:: niceGlyphName(Name)
+	.. function:: niceGlyphName(name, [font=None])
 
 		Converts glyph name to nice, human-readable glyph name (e.g. afii10017 or uni0410 to A-cy)
 
-		:param string: glyph name
+		:param name: glyph name
 		:param font: if you add a font, and the font has a local glyph info, it will be used instead of the global info data.
 		:return: string
 '''
@@ -1380,7 +1381,7 @@ def __GSApp_ligatureComponents__(self, name, font=None):
 
 GSApplication.ligatureComponents = python_method(__GSApp_ligatureComponents__)
 '''
-	.. function:: ligatureComponents(String)
+	.. function:: ligatureComponents(String, [font=None])
 
 		If defined as a ligature in the glyph database, this function returns a list of glyph names that this ligature could be composed of.
 
@@ -3515,6 +3516,8 @@ class PathNodesProxy(Proxy):
 		if isinstance(idx, slice):
 			return self.values().__getitem__(idx)
 		elif isinstance(idx, int):
+			if self._owner.closed:
+				idx %= self.__len__()
 			idx = self._validate_idx(idx)
 			return self._owner.nodeAtIndex_(idx)
 		else:
@@ -4967,7 +4970,7 @@ def __GSFont_kerningForPair__(self, FontMasterID, LeftKerningId, RightKerningId,
 
 GSFont.kerningForPair = python_method(__GSFont_kerningForPair__)
 '''
-	.. function:: kerningForPair(fontMasterId, leftKey, rightKey [, direction = LTR])
+	.. function:: kerningForPair(fontMasterId, leftKey, rightKey [, direction=LTR])
 
 		This returns the kerning value for the two specified glyphs (leftKey or rightKey is the glyph name) or a kerning group key (@MMK_X_XX).
 
@@ -5014,7 +5017,7 @@ def __GSFont_setKerningForPair__(self, FontMasterID, LeftKerningId, RightKerning
 
 GSFont.setKerningForPair = python_method(__GSFont_setKerningForPair__)
 '''
-	.. function:: setKerningForPair(fontMasterId, leftKey, rightKey, value [, direction = GSLTR])
+	.. function:: setKerningForPair(fontMasterId, leftKey, rightKey, value [, direction=GSLTR])
 
 		This sets the kerning for the two specified glyphs (leftKey or rightKey is the glyphname) or a kerning group key (@MMK_X_XX).
 
@@ -5294,8 +5297,16 @@ GSMetric.type = property(lambda self: self.pyobjc_instanceMethods.type(),
 		:type: int
 '''
 
+def __GSMetric__setFilter__(self, filter):
+	if isString(filter):
+		self.setFilterString_(filter)
+	elif isinstance(filterm, NSPredicate):
+		self.setFilter_(filter)
+	else:
+		raise ValueError('filter needs to be a string (in NSPreficate filter syntax) or a NSPredicate')
+
 GSMetric.filter = property(lambda self: self.pyobjc_instanceMethods.filter(),
-						   lambda self, value: self.setFilter_(value))
+						   lambda self, value: __GSMetric__setFilter__(self, value))
 '''
 	.. attribute:: filter
 		A filter to limit the scope of the metric.
@@ -5501,8 +5512,15 @@ GSFontMaster.metrics = property(lambda self: self.pyobjc_instanceMethods.metrics
 		:type: list
 
 		.. code-block:: python
-			for metric in master.metrics:
-			    if metric.type == xH
+			for metric in Font.masters[0].metrics:
+			    if metric.metric.type == GSMetricsTypexHeight and metric.metric.filter is None:
+			        metric.position = 543
+			        metric.overshoot = 17
+
+			# to add a new metric
+
+			metric = GSMetric(GSMetricsTypexHeight, )
+
 
 		.. versionadded:: 3
 '''
@@ -5687,6 +5705,9 @@ GSFontMaster.customParameters = property(lambda self: CustomParametersProxy(self
 GSElement.selected = property(lambda self: __ObjectInLayer_selected__(self),
 							  lambda self, value: __SetObjectInLayer_selected__(self, value))
 
+GSElement.orientation = property(lambda self: self.pyobjc_instanceMethods.orientation(),
+								 lambda self, value: self.setOrientation_(validateNumber(value)))
+
 
 ##################################################################################
 #
@@ -5794,12 +5815,16 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 
 def GSInstance__new__(typ, *args, **kwargs):
 	instanceType = 0
-	if kwargs is not None:
+	if args:
+		instanceType = args[0]
+	elif kwargs:
 		instanceType = kwargs.get("type", 0)
 	return typ.alloc().initWithType_(instanceType)
 
 GSInstance.__new__ = staticmethod(GSInstance__new__)
-GSInstance.__init__ = python_method(__empty__init__)
+def __GSInstance__init__(self, type=None):
+	pass
+GSInstance.__init__ = python_method(__GSInstance__init__)
 
 def __GSInstance__str__(self):
 	return "<GSInstance \"%s\" %s>" % (self.name, str(self.axes).replace("\n", "").replace("\t", ""))
@@ -5814,6 +5839,7 @@ GSInstance.mutableCopyWithZone_ = __GSObject__copy__
 
 		active
 		name
+		type
 		visible
 		weightClass
 		widthClass
@@ -6655,7 +6681,7 @@ GSInstance.interpolatedFont = property(lambda self: __GSInstance_FontObject__(se
 			exportFolder = '/Users/myself/Library/Fonts'
 
 			for instance in Glyphs.font.instances:
-			    instance.generate(FontPath = exportFolder, Containers = [PLAIN, WOFF2])
+			    instance.generate(FontPath=exportFolder, Containers=[PLAIN, WOFF2])
 
 			Glyphs.showNotification('Export fonts', 'The export of %s was successful.' % (Glyphs.font.familyName))
 '''
@@ -6776,6 +6802,7 @@ def __GSFont_Export__(self, Format=OTF, Instances=None, FontPath=None, AutoHint=
 			instance = GSInstance.alloc().initWithType_(instanceType)
 			instance.font = self
 			Instances.append(instance)
+		allResults = []
 		for i in Instances:
 			result = i.generate(Format=Format,
 								FontPath=FontPath,
@@ -6784,6 +6811,8 @@ def __GSFont_Export__(self, Format=OTF, Instances=None, FontPath=None, AutoHint=
 								UseSubroutines=UseSubroutines,
 								UseProductionNames=UseSubroutines,
 								Containers=Containers)
+			allResults.append(result)
+		return allResults
 
 GSFont.export = python_method(__GSFont_Export__)
 
@@ -8853,11 +8882,11 @@ GSLayer.openBezierPath = property(lambda self: self.pyobjc_instanceMethods.openB
 # keep for compatibility:
 def __GSLayer__drawBezierPath(self):
 	print("layer.drawBezierPath is deprecated. Please use layer.completeBezierPath")
-	return self.pyobjc_instanceMethods.drawBezierPath()
+	return self.pyobjc_instanceMethods.drawBezierPath().autorelease()
 
 GSLayer.drawBezierPath = property(lambda self: __GSLayer__drawBezierPath(self))
 
-GSLayer.completeBezierPath = property(lambda self: self.pyobjc_instanceMethods.drawBezierPath())
+GSLayer.completeBezierPath = property(lambda self: self.pyobjc_instanceMethods.drawBezierPath().autorelease())
 '''
 	.. attribute:: completeBezierPath
 		The layer as an NSBezierPath object including paths from components. Useful for drawing glyphs in plug-ins.
@@ -9490,6 +9519,7 @@ For details on how to access them, please see :attr:`GSLayer.anchors`
 		position
 		name
 		selected
+		orientation
 
 	**Properties**
 '''
@@ -9551,6 +9581,11 @@ GSAnchor.name = property(lambda self: self.pyobjc_instanceMethods.name(),
 			print(layer.anchors[0].selected)
 
 		:type: bool
+
+	.. attribute:: orientation
+		If the position of the anchor is relaive to the LSB (0), center (2) or RSB (1).
+
+		:type: int
 '''
 
 GSAnchor.userData = property(lambda self: UserDataProxy(self))
@@ -9810,7 +9845,7 @@ GSComponent.bounds = property(lambda self: self.pyobjc_instanceMethods.bounds(),
 GSComponent.disableAlignment = property(lambda self: bool(self.pyobjc_instanceMethods.disableAlignment()),
 										lambda self, value: self.setDisableAlignment_(value))
 # new:
-GSComponent.automaticAlignment = property(lambda self: bool(self.doesAlign() or self.doesAttach()),
+GSComponent.automaticAlignment = property(lambda self: bool(self.isAligned() >= 0),
 										  lambda self, value: self.setDisableAlignment_(not bool(value)),
 										  doc="Defines whether the component is automatically aligned.")
 '''
@@ -10537,6 +10572,7 @@ For details on how to access them, please see :attr:`GSPath.nodes`
 		nextNode
 		prevNode
 		name
+		orientation
 
 	Functions
 
@@ -10761,6 +10797,15 @@ GSNode.name = property(__GSNode__get_name, __GSNode__set_name, doc="")
 
 		:type: str
 '''
+
+'''
+	.. attribute:: orientation
+		If the position of the node is relaive to the LSB (0), center (2) or RSB (1).
+
+		:type: int
+'''
+
+
 
 GSNode.userData = property(lambda self: UserDataProxy(self))
 '''
@@ -11108,7 +11153,20 @@ For details on how to access them, please see :class:`GSLayer.annotations`
 
 GSAnnotation.__new__ = staticmethod(__GSObject__new__)
 GSAnnotation.__new__.__name__ = "__new__"
-GSAnnotation.__init__ = python_method(__empty__init__)
+
+def __GSAnnotation__init__(self, pt=None, type=None, text=None, angle=None, width=None):
+	if pt:
+		self.setPosition_(pt)
+	if type:
+		self.type = type
+	if text:
+		self.setType_(text)
+	if angle:
+		self.setAngle_(angle)
+	if width:
+		self.setWidth_(width)
+
+GSAnnotation.__init__ = python_method(__GSAnnotation__init__)
 
 def __GSAnnotation__str__(self):
 	TypeName = "n/a"
@@ -11503,7 +11561,7 @@ GSHint.isCorner = property(lambda self: self.pyobjc_instanceMethods.isCorner())
 GSHint.tempData = property(lambda self: TempDataProxy(self))
 '''
 	.. attribute:: tempData
-		A dictionary to store data temporarily. Use a unique key. This will not be saved to file. If you need the data persistent, use hint.userData
+		A dictionary to store data temporarily. Use a unique key. This will not be saved to file. (If you need the data persistent, use hint.settings() (not documented, yet))
 
 		:type: dict
 
