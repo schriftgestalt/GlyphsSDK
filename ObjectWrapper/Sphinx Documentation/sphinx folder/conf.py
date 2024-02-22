@@ -45,7 +45,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Glyphs.app Python Scripting API'
-copyright = u'2023, Georg Seifert'
+copyright = u'2024, Georg Seifert'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

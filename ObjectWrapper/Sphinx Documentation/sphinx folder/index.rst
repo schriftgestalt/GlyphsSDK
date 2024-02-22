@@ -12,8 +12,8 @@
 .. moduleauthor:: Georg Seifert <info@schriftgestaltung.de>
 
 .. toctree::
-	:maxdepth: 2
-
+	:maxdepth: 0
+	:hidden:
 
 Glyphs.app Python Scripting API Documentation
 =============================================
@@ -148,7 +148,7 @@ The mothership. Everything starts here.
 
 			# add a font
 			font = GSFont()
-			font.familyName = "My New Fonts"
+			font.familyName = "My New Font"
 			Glyphs.fonts.append(font)
 
 
@@ -166,11 +166,11 @@ The mothership. Everything starts here.
 
 			# List of all reporter plug-ins
 			print(Glyphs.reporters)
-
+			
 			# Individual plug-in class names
 			for reporter in Glyphs.reporters:
 			    print(reporter.__class__.__name__)
-
+			
 			# Activate a plugin
 			Glyphs.activateReporter(Glyphs.reporters[0]) # by object
 			Glyphs.activateReporter('GlyphsMasterCompatibility') # by class name
@@ -487,18 +487,16 @@ The mothership. Everything starts here.
 
 			def drawGlyphIntoBackground(layer, info):
 
-				# Due to internal Glyphs.app structure, we need to catch and print exceptions
-				# of these callback functions with try/except like so:
-				try:
-
-				    # Your drawing code here
-				    NSColor.redColor().set()
-				    layer.bezierPath.fill()
-
-				# Error. Print exception.
-				except:
-				    import traceback
-				    print(traceback.format_exc())
+			    # Due to internal Glyphs.app structure, we need to catch and print exceptions
+			    # of these callback functions with try/except like so:
+			    try:
+			        # Your drawing code here
+			        NSColor.redColor().set()
+			        layer.bezierPath.fill()
+			    # Error. Print exception.
+			    except:
+			        import traceback
+			        print(traceback.format_exc())
 
 			# add your function to the hook
 			Glyphs.addCallback(drawGlyphIntoBackground, DRAWBACKGROUND)
@@ -511,7 +509,7 @@ The mothership. Everything starts here.
 
 		.. code-block:: python
 
-			# remove your function to the hook
+			# remove your function from the hook
 			Glyphs.removeCallback(drawGlyphIntoBackground)
 
 
@@ -551,9 +549,9 @@ The mothership. Everything starts here.
 			}))
 
 			# Given that your Mac’s system language is set to German
-			# and Glyphs.app UI is set to use localization (change in preferences),
+			# and Glyphs.app UI is set to use localization (change in app settings),
 			# it will print:
-			> Hallöle Welt
+			>> Hallöle Welt
 
 
 	.. function:: activateReporter(reporter)
@@ -726,7 +724,7 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 		.. code-block:: python
 
 			for instance in font.instances:
-				print(instance)
+			    print(instance)
 
 			# to add a new instance
 			instance = GSInstance()
@@ -750,7 +748,7 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 		.. code-block:: python
 
 			for axis in font.axes:
-				print(axis)
+			    print(axis)
 
 			# to add a new axis
 			axis = GSAxis()
@@ -800,6 +798,16 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 		a list of all :class:`GSMetric` objects.
 
 		:type: list
+
+
+		.. code-block:: python
+
+			# to add a new metric
+			metric = GSMetric(GSMetricsTypexHeight)
+			font.metrics.append(metric)
+			metricValue = master.metricValues[metric.id]
+			metricValue.position = 543
+			metricValue.overshoot = 17
 
 
 
@@ -856,26 +864,26 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 			# Access all glyphs
 			for glyph in font.glyphs:
 			    print(glyph)
-			<GSGlyph "A" with 4 layers>
-			<GSGlyph "B" with 4 layers>
-			<GSGlyph "C" with 4 layers>
+			>> <GSGlyph "A" with 4 layers>
+			>> <GSGlyph "B" with 4 layers>
+			>> <GSGlyph "C" with 4 layers>
 			...
 
 			# Access one glyph
 			print(font.glyphs['A'])
-			<GSGlyph "A" with 4 layers>
+			>> <GSGlyph "A" with 4 layers>
 
 			# Access a glyph by character (new in v2.4.1)
 			print(font.glyphs['Ư'])
-			<GSGlyph "Uhorn" with 4 layers>
+			>> <GSGlyph "Uhorn" with 4 layers>
 
 			# Access a glyph by unicode (new in v2.4.1)
 			print(font.glyphs['01AF'])
-			<GSGlyph "Uhorn" with 4 layers>
+			>> <GSGlyph "Uhorn" with 4 layers>
 
 			# Access a glyph by index
 			print(font.glyphs[145])
-			<GSGlyph "Uhorn" with 4 layers>
+			>> <GSGlyph "Uhorn" with 4 layers>
 
 			# Add a glyph
 			font.glyphs.append(GSGlyph('adieresis'))
@@ -986,7 +994,7 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 
 		.. code-block:: python
 
-			Font.copyrights["ENG"] = "All rights reserved"
+			font.copyrights["ENG"] = "All rights reserved"
 
 		.. versionadded:: 3.0.3
 
@@ -1012,7 +1020,7 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 
 		.. code-block:: python
 
-			Font.licenses["ENG"] = "This font may be installed on all of your machines and printers, but you may not sell or give these fonts to anyone else."
+			font.licenses["ENG"] = "This font may be installed on all of your machines and printers, but you may not sell or give these fonts to anyone else."
 
 		.. versionadded:: 3.0.3
 
@@ -1038,7 +1046,7 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 
 		.. code-block:: python
 
-			Font.compatibleFullNames["ENG"] = "MyFont Condensed Bold"
+			font.compatibleFullNames["ENG"] = "MyFont Condensed Bold"
 
 		.. versionadded:: 3.0.3
 
@@ -1064,7 +1072,7 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 
 		.. code-block:: python
 
-			Font.sampleTexts["ENG"] = "This is my sample text"
+			font.sampleTexts["ENG"] = "This is my sample text"
 
 		.. versionadded:: 3.0.3
 
@@ -1090,7 +1098,7 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 
 		.. code-block:: python
 
-			Font.descriptions["ENG"] = "This is my description"
+			font.descriptions["ENG"] = "This is my description"
 
 		.. versionadded:: 3.0.3
 
@@ -1114,7 +1122,7 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 
 		.. code-block:: python
 
-			Font.designers["ENG"] = "John Smith"
+			font.designers["ENG"] = "John Smith"
 
 		.. versionadded:: 3.0.3
 
@@ -1140,7 +1148,7 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 
 		.. code-block:: python
 
-			Font.trademarks["ENG"] = "ThisFont is a trademark by MyFoundry.com"
+			font.trademarks["ENG"] = "ThisFont is a trademark by MyFoundry.com"
 
 		.. versionadded:: 3.0.3
 
@@ -1171,7 +1179,7 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 
 		.. code-block:: python
 
-			Font.manufacturers["ENG"] = "My English Corporation"
+			font.manufacturers["ENG"] = "My English Corporation"
 
 		.. versionadded:: 3.0.3
 
@@ -1207,7 +1215,7 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 		.. code-block:: python
 
 			print(font.date)
-			2015-06-08 09:39:05
+			>> 2015-06-08 09:39:05
 
 			# set date to now
 			font.date = datetime.datetime.now()
@@ -1235,7 +1243,7 @@ Also, the :class:`glyphs <GSGlyph>` are attached to the Font object right here, 
 
 		.. code-block:: python
 
-			Font.familyNames["ENG"] = "MyFamilyName"
+			font.familyNames["ENG"] = "MyFamilyName"
 
 		.. versionadded:: 3.0.3
 
@@ -1904,11 +1912,11 @@ Implementation of the master object. This corresponds with the "Masters" pane in
 
 			# ID of first master
 			print(font.masters[0].id)
-			3B85FBE0-2D2B-4203-8F3D-7112D42D745E
+			>> 3B85FBE0-2D2B-4203-8F3D-7112D42D745E
 
 			# use this master to access the glyph’s corresponding layer
 			print(glyph.layers[font.masters[0].id])
-			<GSLayer "Light" (A)>
+			>> <GSLayer "Light" (A)>
 
 
 
@@ -2013,22 +2021,18 @@ Implementation of the master object. This corresponds with the "Masters" pane in
 
 	.. attribute:: metrics
 
-		a list of all :class:`GSMetricValue` objects.
+		a dict of all :class:`GSMetricValue` objects. Keys are font.metrics[].id
 
-		:type: list
+		:type: dict
 
 
 		.. code-block:: python
 
-			for metric in Font.masters[0].metrics:
-			    if metric.metric.type == GSMetricsTypexHeight and metric.metric.filter is None:
-			        metric.position = 543
-			        metric.overshoot = 17
-
-			# to add a new metric
-
-			metric = GSMetric(GSMetricsTypexHeight, )
-
+			for metric in Font.metrics:
+			    if metric.type == GSMetricsTypexHeight and metric.filter is None:
+			        metricValue = master.metricValues[metric.id]
+			        metricValue.position = 543
+			        metricValue.overshoot = 17
 
 		.. versionadded:: 3
 
@@ -2560,7 +2564,7 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 
 		.. code-block:: python
 
-			Instance.compatibleFullNames["ENG"] = "MyFont Condensed Bold"
+			instance.compatibleFullNames["ENG"] = "MyFont Condensed Bold"
 
 		.. versionadded:: 3.0.3
 
@@ -2586,7 +2590,7 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 
 		.. code-block:: python
 
-			Instance.copyrights["ENG"] = "All rights reserved"
+			instance.copyrights["ENG"] = "All rights reserved"
 
 		.. versionadded:: 3.0.3
 
@@ -2612,7 +2616,7 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 
 		.. code-block:: python
 
-			Instance.descriptions["ENG"] = "This is my description"
+			instance.descriptions["ENG"] = "This is my description"
 
 		.. versionadded:: 3.0.3
 
@@ -2647,7 +2651,7 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 
 		.. code-block:: python
 
-			Instance.designers["ENG"] = "John Smith"
+			instance.designers["ENG"] = "John Smith"
 
 		.. versionadded:: 3.0.3
 
@@ -2671,7 +2675,7 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 
 		.. code-block:: python
 
-			Instance.familyNames["ENG"] = "MyFamilyName"
+			instance.familyNames["ENG"] = "MyFamilyName"
 
 		.. versionadded:: 3.0.3
 
@@ -2696,7 +2700,7 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 
 		.. code-block:: python
 
-			Instance.licenses["ENG"] = "This font may be installed on all of your machines and printers, but you may not sell or give these fonts to anyone else."
+			instance.licenses["ENG"] = "This font may be installed on all of your machines and printers, but you may not sell or give these fonts to anyone else."
 
 		.. versionadded:: 3.0.3
 
@@ -2722,7 +2726,7 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 
 		.. code-block:: python
 
-			Instance.manufacturers["ENG"] = "My English Corporation"
+			instance.manufacturers["ENG"] = "My English Corporation"
 
 		.. versionadded:: 3.0.3
 
@@ -2748,7 +2752,7 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 
 		.. code-block:: python
 
-			Instance.preferredFamilyNames["ENG"] = "MyFamilyName"
+			instance.preferredFamilyNames["ENG"] = "MyFamilyName"
 
 		.. versionadded:: 3.0.3
 
@@ -2772,7 +2776,7 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 
 		.. code-block:: python
 
-			Instance.preferredSubfamilyNames["ENG"] = "Regular"
+			instance.preferredSubfamilyNames["ENG"] = "Regular"
 
 		.. versionadded:: 3.0.3
 
@@ -2798,7 +2802,7 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 
 		.. code-block:: python
 
-			Instance.sampleTexts["ENG"] = "This is my sample text"
+			instance.sampleTexts["ENG"] = "This is my sample text"
 
 		.. versionadded:: 3.0.3
 
@@ -2825,7 +2829,7 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 
 		.. code-block:: python
 
-			Instance.styleMapFamilyNames["ENG"] = "MyFamily Bold"
+			instance.styleMapFamilyNames["ENG"] = "MyFamily Bold"
 
 		.. versionadded:: 3.0.3
 
@@ -2851,7 +2855,7 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 
 		.. code-block:: python
 
-			Instance.styleMapStyleNames["ENG"] = "Bold"
+			instance.styleMapStyleNames["ENG"] = "Bold"
 
 		.. versionadded:: 3.0.3
 
@@ -2877,7 +2881,7 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 
 		.. code-block:: python
 
-			Instance.styleNames["ENG"] = "Regular"
+			instance.styleNames["ENG"] = "Regular"
 
 		.. versionadded:: 3.0.3
 
@@ -2903,7 +2907,7 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 
 		.. code-block:: python
 
-			Instance.trademarks["ENG"] = "ThisFont is a trademark by MyFoundry.com"
+			instance.trademarks["ENG"] = "ThisFont is a trademark by MyFoundry.com"
 
 		.. versionadded:: 3.0.3
 
@@ -2929,7 +2933,7 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 
 		.. code-block:: python
 
-			Instance.variableStyleNames["ENG"] = "Roman"
+			instance.variableStyleNames["ENG"] = "Roman"
 
 		.. versionadded:: 3.0.3
 
@@ -3058,10 +3062,9 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 
 			# then access it several times
 			print(interpolated.masters)
+			>> (<GSFontMaster "Light" width 100.0 weight 75.0>)
 			print(interpolated.instances)
-
-			(<GSFontMaster "Light" width 100.0 weight 75.0>)
-			(<GSInstance "Web" width 100.0 weight 75.0>)
+			>> (<GSInstance "Web" width 100.0 weight 75.0>)
 
 
 
@@ -3112,10 +3115,9 @@ Implementation of the instance object. This corresponds with the "Instances" pan
 
 			# then access it several times
 			print(interpolated.masters)
+			>> (<GSFontMaster "Light" width 100.0 weight 75.0>)
 			print(interpolated.instances)
-
-			(<GSFontMaster "Light" width 100.0 weight 75.0>)
-			(<GSInstance "Web" width 100.0 weight 75.0>)
+			>> (<GSInstance "Web" width 100.0 weight 75.0>)
 
 	
 
@@ -3956,10 +3958,10 @@ For details on how to access these glyphs, please see :class:`GSFont.glyphs`
 			R, G, B, A = glyph.colorObject.colorUsingColorSpace_(NSColorSpace.genericRGBColorSpace()).getRed_green_blue_alpha_(None, None, None, None)
 
 			print(R, G, B)
-			0.617805719376 0.958198726177 0.309286683798
+			>> 0.617805719376 0.958198726177 0.309286683798
 
 			print(round(R * 256), int(G * 256), int(B * 256))
-			158 245 245
+			>> 158 245 245
 
 			# Draw layer
 			glyph.layers[0].bezierPath.fill()
@@ -3967,13 +3969,12 @@ For details on how to access these glyphs, please see :class:`GSFont.glyphs`
 			# set the glyph color.
 
 			glyph.colorObject = NSColor.colorWithDeviceRed_green_blue_alpha_(247.0 / 255.0, 74.0 / 255.0, 62.9 / 255.0, 1)
-
-			new in 2.4.2:
-			glyph.colorObject = (247.0, 74.0, 62.9) #
-			or
-			glyph.colorObject = (247.0, 74.0, 62.9, 1) #
-			or
-			glyph.colorObject = (0.968, 0.29, 0.247, 1) #
+			# or:
+			glyph.colorObject = (247.0, 74.0, 62.9) # max 255.0
+			# or:
+			glyph.colorObject = (247.0, 74.0, 62.9, 1) # with alpha
+			# or:
+			glyph.colorObject = (0.968, 0.29, 0.247, 1) # max 1.0
 
 
 
@@ -4233,7 +4234,7 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 			# see ID of active layer
 			id = font.selectedLayers[0].layerId
 			print(id)
-			FBCA074D-FCF3-427E-A700-7E318A949AE5
+			>> FBCA074D-FCF3-427E-A700-7E318A949AE5
 
 			# access a layer by this ID
 			layer = font.glyphs["a"].layers[id]
@@ -4310,10 +4311,10 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 			R, G, B, A = layer.colorObject.colorUsingColorSpace_(NSColorSpace.genericRGBColorSpace()).getRed_green_blue_alpha_(None, None, None, None)
 
 			print(R, G, B)
-			0.617805719376 0.958198726177 0.309286683798
+			>> 0.617805719376 0.958198726177 0.309286683798
 
 			print(round(R * 256), int(G * 256), int(B * 256))
-			158 245 245
+			>> 158 245 245
 
 			# Draw layer
 			layer.bezierPath.fill()
@@ -4417,7 +4418,7 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 			# copy hints from another layer
 			import copy
 			layer.hints = copy.copy(anotherlayer.hints)
-			# remember to reconnect the hints' nodes with the new layer’s nodes
+			# remember to reconnect the hints’ nodes with the new layer’s nodes
 
 
 
@@ -4875,7 +4876,6 @@ For details on how to access these layers, please see :attr:`GSGlyph.layers`
 
 
 			print(layer.compareString())
-
 			>> oocoocoocoocooc_oocoocoocloocoocoocoocoocoocoocoocooc_
 
 	.. function:: connectAllOpenPaths()
@@ -5385,7 +5385,9 @@ For details on how to access them, please see :attr:`GSLayer.components`
 
 	.. attribute:: smartComponentValues
 
-		Dictionary of interpolations values of the Smart Component. Key are the names, values are between the top and the bottom value of the corresponding :class:`GSSmartComponentAxis` objects. Corresponds to the values of the ‘Smart Component Settings’ dialog. Returns None if the component is not a Smart Component.
+		Dictionary of interpolations values of the Smart Component. Key are the axis.id, values are between the top and the bottom value of the corresponding :class:`GSSmartComponentAxis` objects. Corresponds to the values of the ‘Smart Component Settings’ dialog. Returns None if the component is not a Smart Component.
+
+		For newly setup smart glyhs, the axis.id is a random string. After saving and re-opening the file, the name and id is the same. As long as you don't change the name. So it is saver to always go through the smart glyphs > axis > id (as explained in the code sample below.
 
 		Also see https://glyphsapp.com/tutorials/smart-components for reference.
 
@@ -5394,15 +5396,10 @@ For details on how to access them, please see :attr:`GSLayer.components`
 
 		.. code-block:: python
 
-			# Narrow shoulders of m
-			glyph = font.glyphs['m']
-			glyph.layers[0].components[1].smartComponentValues['shoulderWidth'] = 30 # First shoulder. Index is 1, given that the stem is also a component with index 0
-			glyph.layers[0].components[2].smartComponentValues['shoulderWidth'] = 30 # Second shoulder. Index is 2, given that the stem is also a component with index 0
 
-			# Low crotch of h
-			glyph = font.glyphs['h']
-			crotchDepthAxis = glyph.smartComponentAxes['crotchDepth']
-			glyph.layers[0].components[1].smartComponentValues[crotchDepthAxis.id] = -77  # Shoulder. Index is 1, given that the stem is also a component with index 0
+			component = glyph.layers[0].shapes[1]
+			widthAxis = component.component.smartComponentAxes['Width']  # get the width axis from the smart glyph
+			components.smartComponentValues[widthAxis.id] = 45
 
 			# Check whether a component is a smart component
 			for component in layer.components:
@@ -5522,7 +5519,7 @@ a small helper class to store a reference to a glyph in userData that will keep 
 	.. code-block:: python
 
 
-		glyphReference = GSGlyphReference(Font.glyphs["A"])
+		glyphReference = GSGlyphReference(font.glyphs["A"])
 
 
 
@@ -6860,9 +6857,9 @@ For details on how to access them, please look at :class:`GSFont.tabs`
 		.. code-block:: python
 
 			string = ""
-			for l in Font.selectedLayers:
+			for l in font.selectedLayers:
 			    string += "/"+l.parent.name
-			tab = Font.tabs[-1]
+			tab = font.tabs[-1]
 			tab.text = string
 
 
@@ -6877,10 +6874,10 @@ For details on how to access them, please look at :class:`GSFont.tabs`
 		.. code-block:: python
 
 			string = ""
-			for l in Font.selectedLayers:
-			    char = Font.characterForGlyph(l.parent)
+			for l in font.selectedLayers:
+			    char = font.characterForGlyph(l.parent)
 			    string += chr(char)
-			tab = Font.tabs[-1]
+			tab = font.tabs[-1]
 			tab.text = string
 
 		.. versionadded:: 3.2
@@ -6899,7 +6896,7 @@ For details on how to access them, please look at :class:`GSFont.tabs`
 
 	.. attribute:: layers
 
-		Alternatively, you can set (and read) a list of :class:`GSLayer` objects. These can be any of the layers of a glyph. OpenType features will be applied after the layers have been changed.
+		Alternatively, you can set (and read) a list of :class:`GSLayer` objects. These can be any of the layers of a glyph.
 
 		:type: list
 
@@ -6923,6 +6920,8 @@ For details on how to access them, please look at :class:`GSFont.tabs`
 
 		Similar to the above, but this list contains the :class:`GSLayer` objects after the OpenType features have been applied (see :class:`GSEditViewController.features`). Read-only.
 
+		Deprecated. .layers behave like this now.
+
 		:type: list
 
 		.. versionadded:: 2.4
@@ -6941,14 +6940,14 @@ For details on how to access them, please look at :class:`GSFont.tabs`
 		.. code-block:: python
 
 			print(font.currentTab.scale)
-			0.414628537193
+			>> 0.414628537193
 
 			# Calculate text size
 			desiredTextSizeOnScreen = 10 #pt
 			scaleCorrectedTextSize = desiredTextSizeOnScreen / font.currentTab.scale
 
 			print(scaleCorrectedTextSize)
-			24.1179733255
+			>> 24.1179733255
 
 
 
