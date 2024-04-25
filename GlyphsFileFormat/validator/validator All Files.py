@@ -1,5 +1,6 @@
 import json
 import os
+import threading
 from jsonschema import validate
 from glyphsLib.parser import Parser
 from pathlib import Path
@@ -21,23 +22,43 @@ pathlist = Path(PathToGlyphsFiles).glob('**/*.glyphs')
 skipFiles = [
 ]
 
+
+def validate_file(path_in_str):
+	p = Parser()
+	fp = open(path_in_str, "r", encoding="utf-8")
+	fileContent = fp.read()
+	fp.close()
+	if ".formatVersion = 3;" not in fileContent[:50]:
+		# print("skip v2:", path_in_str)
+		return
+	print("\"%s\"," % path_in_str)
+	data = p.parse(fileContent)
+	# print("<<")
+	try:
+		validate(instance=data, schema=schema)
+		result = "OK"
+	except:
+		import traceback
+		result = traceback.format_exc()
+	resultFile = open(path_in_str + ".txt", "w")
+	resultFile.write(result)
+	resultFile.close()
+
+
 for path in pathlist:
 	# because path is object not string
 	path_in_str = str(path)
 	if path_in_str in skipFiles:
 		# print("skip done:", path_in_str)
 		continue
-	p = Parser()
-	fp = open(path_in_str, "r", encoding="utf-8")
-	fileContent = fp.read()
-	if ".formatVersion = 3;" not in fileContent[:50]:
-		# print("skip v2:", path_in_str)
+	if os.path.isfile(path_in_str + ".txt"):
 		continue
-	print("\"%s\"," % path_in_str)
-	data = p.parse(fileContent)
-	#print("<<")
-	validate(instance=data, schema=schema)
-	#print(">>")
+	
+	x = threading.Thread(target=validate_file, args=(path_in_str,))
+	x.start()
+	# print(">>")
+
+
 # print("----- validate 2")
 # f = open("Glyphs2FileSchema.json",)
 # schema = json.load(f)
