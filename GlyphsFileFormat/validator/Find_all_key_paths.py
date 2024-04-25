@@ -1,20 +1,15 @@
 import json
-from jsonschema import validate, Draft7Validator
-from glyphsLib.parser import Parser
+import os
 import collections
-
-f = open("Glyphs3FileShema.json",)
-schema = json.load(f)
-
-p = Parser()
-fp = open("../GlyphsFileFormatv3.glyphs", "r", encoding="utf-8")
-data = p.parse(fp.read())
-
+from glyphsLib.parser import Parser
 from pathlib import Path
 
-PathToGlyphsFiles = "/" # add path to a folder that contains .glyphs test files
+f = open(os.path.join(os.path.dirname(__file__), "Glyphs3FileSchema.json"),)
+schema = json.load(f)
 
-assert(len(PathToGlyphsFiles) > 10)
+
+PathToGlyphsFiles = ""  # add path to a folder that contains .glyphs test files
+assert (len(PathToGlyphsFiles) > 10)
 
 # add full file paths of files that you like to exclude
 skipFiles = [
@@ -24,6 +19,7 @@ skipChildren = [
 	"kerningLTR",
 	"kerningRTL",
 	"kerningVertical",
+	"kerningContext",
 	"userData",
 	"instanceInterpolations",
 	"customParameters",
@@ -32,7 +28,7 @@ skipChildren = [
 	"piece",
 ]
 
-ignoreKeys  = [
+ignoreKeys = [
 	".storedFormatVersion",
 	"changeCount",
 	"bottomName",
@@ -60,6 +56,7 @@ def keysFromObject(obj, parentKey, keyset):
 				continue
 		keyset.add(itemKey)
 
+
 def keysFromFile(path, keyset):
 	p = Parser()
 	fp = open(path, "r", encoding="utf-8")
@@ -69,8 +66,8 @@ def keysFromFile(path, keyset):
 	data = p.parse(fileContent)
 	keysFromObject(data, "", keyset)
 
-def keysFromAllFiles(folder_path):
 
+def keysFromAllFiles(folder_path):
 	keyset = set()
 	pathlist = Path(folder_path).glob('**/*.glyphs')
 	for path in pathlist:
@@ -80,12 +77,13 @@ def keysFromAllFiles(folder_path):
 			continue
 		keysFromFile(path_in_str, keyset)
 
-	keysFromFile("../GlyphsFileFormatv3.glyphs", keyset)
+	keysFromFile(os.path.join(os.path.dirname(os.path.dirname(__file__)), "GlyphsFileFormatv3.glyphs"), keyset)
 	result = list(keyset)
 	result.sort()
 	for key in result:
 		print("\"%s\"," % key)
-	print("#found: %s keypaths" % len(result))
+	print("#found: %s key paths" % len(result))
+
 
 if __name__ == '__main__':
 	keysFromAllFiles(PathToGlyphsFiles)

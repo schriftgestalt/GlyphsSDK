@@ -2,7 +2,7 @@ import json
 from jsonschema import validate, Draft7Validator
 from glyphsLib.parser import Parser
 
-f = open("Glyphs3FileShema.json",)
+f = open("Glyphs3FileSchema.json",)
 schema = json.load(f)
 
 p = Parser()
@@ -12,7 +12,7 @@ data = p.parse(fp.read())
 validate(instance=data, schema=schema)
 
 print("----- validate 2")
-f = open("Glyphs2FileShema.json",) 
+f = open("Glyphs2FileSchema.json",) 
 schema = json.load(f) 
 
 p = Parser()

@@ -1,19 +1,19 @@
 import json
-from jsonschema import validate, Draft7Validator
+import os
+from jsonschema import validate
 from glyphsLib.parser import Parser
+from pathlib import Path
 
-f = open("Glyphs3FileShema.json",)
+f = open("Glyphs3FileSchema.json",)
 schema = json.load(f)
 
 p = Parser()
 fp = open("../GlyphsFileFormatv3.glyphs", "r", encoding="utf-8")
 data = p.parse(fp.read())
 
-from pathlib import Path
+PathToGlyphsFiles = ""  # add path to a folder that contains .glyphs test files
 
-PathToGlyphsFiles = "/" # add path to a folder that contains .glyphs test files
-
-assert(len(PathToGlyphsFiles) > 10)
+assert (len(PathToGlyphsFiles) > 10)
 
 pathlist = Path(PathToGlyphsFiles).glob('**/*.glyphs')
 
@@ -39,7 +39,7 @@ for path in pathlist:
 	validate(instance=data, schema=schema)
 	#print(">>")
 # print("----- validate 2")
-# f = open("Glyphs2FileShema.json",)
+# f = open("Glyphs2FileSchema.json",)
 # schema = json.load(f)
 #
 # p = Parser()
