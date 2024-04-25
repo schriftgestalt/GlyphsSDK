@@ -93,6 +93,9 @@
 						"$id": "#/guides/items/properties/showMeasurement",
 						"default": 0,
 						"type": ["boolean", "integer"]
+					},
+					"userData": {
+						"$ref": "#/definitions/userData"
 					}
 				},
 				"type": "object"
@@ -914,16 +917,13 @@
 													"type": "integer"
 												},
 												"title": "The origin schema",
-												"type": "array"
+												"type": ["array", "string"]
 											},
 											"other1": {
 												"$id": "#/properties/glyphs/items/properties/layers/items/properties/hints/items/properties/other1",
 												"additionalItems": true,
 												"description": "`(pathIndex,nodeIndex)` for TT Institutions that need more than two nodes (Interpolation, Diagonal)",
 												"items": {
-													"$id": "#/properties/glyphs/items/properties/layers/items/properties/hints/items/properties/origin/items",
-													"description": "and index",
-													"title": "The items schema",
 													"type": "integer"
 												},
 												"title": "The other1 schema",
@@ -1151,6 +1151,23 @@
 																"$id": "#/properties/glyphs/items/properties/layers/items/properties/shapes/items/path/properties/attr/properties/mask",
 																"type": ["integer", "string"]
 															},
+															"gradient": {
+																"$id": "#/properties/glyphs/items/properties/layers/items/properties/shapes/items/path/properties/attr/properties/gradient",
+																"properties": {
+																	"colors": {
+																		"$id": "#/properties/glyphs/items/properties/layers/items/properties/shapes/items/path/properties/attr/properties/gradient/properties/colors",
+																		"type": "array"
+																	},
+																	"start": {
+																		"$id": "#/properties/glyphs/items/properties/layers/items/properties/shapes/items/path/properties/attr/properties/gradient/properties/start",
+																		"type": "array"
+																	},
+																	"end": {
+																		"$id": "#/properties/glyphs/items/properties/layers/items/properties/shapes/items/path/properties/attr/properties/gradient/properties/end",
+																		"type": "array"
+																	}
+																}
+															},
 															"shadow": {
 																"$id": "#/properties/glyphs/items/properties/layers/items/properties/shapes/items/path/properties/attr/properties/shadow",
 																"properties": {
@@ -1168,6 +1185,28 @@
 																	},
 																	"offsetY": {
 																		"$id": "#/properties/glyphs/items/properties/layers/items/properties/shapes/items/path/properties/attr/properties/shadow/properties/offsetY",
+																		"type": "string"
+																	}
+																},
+																"type": "object"
+															},
+															"shadowIn": {
+																"$id": "#/properties/glyphs/items/properties/layers/items/properties/shapes/items/path/properties/attr/properties/shadowIn",
+																"properties": {
+																	"blur": {
+																		"$id": "#/properties/glyphs/items/properties/layers/items/properties/shapes/items/path/properties/attr/properties/shadowIn/properties/blue",
+																		"type": "string"
+																	},
+																	"color": {
+																		"$id": "#/properties/glyphs/items/properties/layers/items/properties/shapes/items/path/properties/attr/properties/shadowIn/properties/color",
+																		"type": "array"
+																	},
+																	"offsetX": {
+																		"$id": "#/properties/glyphs/items/properties/layers/items/properties/shapes/items/path/properties/attr/properties/shadowIn/properties/offsetX",
+																		"type": "string"
+																	},
+																	"offsetY": {
+																		"$id": "#/properties/glyphs/items/properties/layers/items/properties/shapes/items/path/properties/attr/properties/shadowIn/properties/offsetY",
 																		"type": "string"
 																	}
 																},
@@ -1220,7 +1259,7 @@
 																	"$id": "#/properties/glyphs/items/properties/layers/items/properties/shapes/items/properties/nodes/items/nodetype",
 																	"title": "node type",
 																	"type": "string",
-																	"enum": ["l", "ls", "c", "cs", "q", "qs", "o"]
+																	"enum": ["l", "ls", "c", "cs", "q", "qs", "o", "ct", "lt"]
 																},
 																{
 																	"title": "userData",
@@ -1460,7 +1499,7 @@
 						"description": "keys are master IDs, values are the factors for that master.",
 						"patternProperties": {
 							"^.*$": {
-								"type": ["number", "string"]
+								"type": ["number", "string", "array"]
 							}
 						},
 						"title": "The instanceInterpolations schema",
@@ -1723,21 +1762,21 @@
 					"default": 1,
 					"description": "Only written if not `1`",
 					"title": "The keyboardIncrement schema",
-					"type": "integer"
+					"type": "number"
 				},
 				"keyboardIncrementBig": {
 					"$id": "#/properties/keyboardIncrementBig",
 					"default": 10,
 					"description": "Only written if not `10`",
 					"title": "The keyboardIncrementBig schema",
-					"type": "integer"
+					"type": "number"
 				},
 				"keyboardIncrementHuge": {
 					"$id": "#/properties/keyboardIncrementHuge",
 					"default": 100,
 					"description": "Only written if not `100`",
 					"title": "The keyboardIncrementHuge schema",
-					"type": "integer"
+					"type": "number"
 				}
 			},
 			"title": "The properties schema",
@@ -1805,7 +1844,6 @@
 	"required": [
 		".appVersion",
 		".formatVersion",
-		"date",
 		"familyName",
 		"fontMaster",
 		"glyphs",

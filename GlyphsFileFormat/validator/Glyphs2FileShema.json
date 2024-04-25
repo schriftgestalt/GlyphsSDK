@@ -1178,8 +1178,8 @@
 			"title": "The keyboardIncrementHuge schema",
 			"type": "integer"
 		},
-		"manufacturerURL": {
-			"$id": "#/properties/manufacturerURL",
+		"designer": {
+			"$id": "#/properties/designer",
 			"description": "An explanation about the purpose of this instance.",
 			"title": "The schema",
 			"type": "string"
@@ -1190,14 +1190,20 @@
 			"title": "The schema",
 			"type": "string"
 		},
-		"copyright": {
-			"$id": "#/properties/copyright",
+		"manufacturer": {
+			"$id": "#/properties/manufacturer",
 			"description": "An explanation about the purpose of this instance.",
 			"title": "The schema",
 			"type": "string"
 		},
-		"manufacturer": {
-			"$id": "#/properties/manufacturer",
+		"manufacturerURL": {
+			"$id": "#/properties/manufacturerURL",
+			"description": "An explanation about the purpose of this instance.",
+			"title": "The schema",
+			"type": "string"
+		},
+		"copyright": {
+			"$id": "#/properties/copyright",
 			"description": "An explanation about the purpose of this instance.",
 			"title": "The schema",
 			"type": "string"
