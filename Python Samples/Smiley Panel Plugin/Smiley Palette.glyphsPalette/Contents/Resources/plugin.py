@@ -3,17 +3,19 @@
 ###########################################################################################################
 #
 #
-#	Smiley Palette Plugin
+# Smiley Palette Plugin
 #
-#	Read the docs:
-#	https://github.com/schriftgestalt/GlyphsSDK/tree/master/Python%20Samples/Smiley%20Panel%20Plugin
+# Read the docs:
+# https://github.com/schriftgestalt/GlyphsSDK/tree/master/Python%20Samples/Smiley%20Panel%20Plugin
 #
 #
 ###########################################################################################################
 
 from __future__ import division, print_function, unicode_literals
-from GlyphsApp import *
-from GlyphsApp.plugins import *
+import objc
+from GlyphsApp import Glyphs, UPDATEINTERFACE
+from GlyphsApp.plugins import PalettePlugin
+
 
 class SmileyPalette (PalettePlugin):
 	_theView = objc.IBOutlet()
@@ -35,7 +37,7 @@ class SmileyPalette (PalettePlugin):
 		# Adding a callback for the 'GSUpdateInterface' event
 		Glyphs.addCallback(self.update, UPDATEINTERFACE)
 
-	@objc.python_method	
+	@objc.python_method
 	def __del__(self):
 		# remove the callback
 		Glyphs.removeCallback(self.update)

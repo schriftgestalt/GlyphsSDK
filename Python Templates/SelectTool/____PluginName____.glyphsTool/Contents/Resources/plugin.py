@@ -3,37 +3,48 @@
 ###########################################################################################################
 #
 #
-#	Select Tool Plugin
+# Select Tool Plugin
 #
-#	Read the docs:
-#	https://github.com/schriftgestalt/GlyphsSDK/tree/master/Python%20Templates/SelectTool
+# Read the docs:
+# https://github.com/schriftgestalt/GlyphsSDK/tree/master/Python%20Templates/SelectTool
 #
 #
 ###########################################################################################################
 
 from __future__ import division, print_function, unicode_literals
 import objc
-from GlyphsApp import *
-from GlyphsApp.plugins import *
+from GlyphsApp import Glyphs, GSAnchor, subtractPoints
+from GlyphsApp.plugins import SelectTool
+from AppKit import NSColor, NSBezierPath, NSPoint
+
 
 class ____PluginClassName____(SelectTool):
 
 	@objc.python_method
 	def settings(self):
-		self.name = Glyphs.localize({'en': u'My Select Tool', 'de': u'Mein Auswahlwerkzeug'})
+		self.name = Glyphs.localize({
+			'en': 'My Select Tool',
+			'de': 'Mein Auswahlwerkzeug'
+		})
 		self.generalContextMenus = [
-			{'name': Glyphs.localize({'en': u'Layer info in Macro window', 'de': u'Ebenen-Infos in Makro-Fenster'}), 'action': self.printInfo_},
+			{
+				'name': Glyphs.localize({
+					'en': 'Layer info in Macro window',
+					'de': 'Ebenen-Infos in Makro-Fenster'
+				}),
+				'action': self.printInfo_
+			},
 		]
 		self.keyboardShortcut = 'c'
 
 	@objc.python_method
 	def start(self):
 		pass
-	
+
 	@objc.python_method
 	def activate(self):
 		pass
-	
+
 	@objc.python_method
 	def background(self, layer):
 
@@ -44,11 +55,11 @@ class ____PluginClassName____(SelectTool):
 	@objc.python_method
 	def deactivate(self):
 		pass
-	
+
 	def mouseDown_(self, theEvent):
 		objc.super(____PluginClassName____, self).mouseDown_(theEvent)
 		"""
-		Do more stuff that you need on mouseDown_(). Like custom selection 
+		Do more stuff that you need on mouseDown_(). Like custom selection
 		"""
 		loc = self.editViewController().graphicView().getActiveLocation_(theEvent)
 		layer = self.editViewController().graphicView().activeLayer()
@@ -63,11 +74,11 @@ class ____PluginClassName____(SelectTool):
 		layer = self.editViewController().graphicView().activeLayer()
 		offset = subtractPoints(loc, self.draggStart())
 		# now you can move stuff with that offset.
-		
+
 	def mouseUp_(self, theEvent):
 		objc.super(____PluginClassName____, self).mouseUp_(theEvent)
 		"""
-		Do more stuff that you need on mouseUp_(). Like custom selection 
+		Do more stuff that you need on mouseUp_(). Like custom selection
 		"""
 		# some selection is only done on mouseUp_
 		loc = self.editViewController().graphicView().getActiveLocation_(theEvent)
@@ -75,7 +86,7 @@ class ____PluginClassName____(SelectTool):
 		clickedElement = self.elementAtPoint_atLayer_(loc, layer)
 		if clickedElement is not None:
 			layer.selection.append(clickedElement)
-	
+
 	@objc.python_method
 	def conditionalContextMenus(self):
 
@@ -85,10 +96,9 @@ class ____PluginClassName____(SelectTool):
 		# Execute only if layers are actually selected
 		if Glyphs.font.selectedLayers:
 			layer = Glyphs.font.selectedLayers[0]
-			
+
 			# Exactly one object is selected and it’s an anchor
-			if len(layer.selection) == 1 and type(layer.selection[0]) == GSAnchor:
-					
+			if len(layer.selection) == 1 and isinstance(layer.selection[0], GSAnchor):
 				# Add context menu item
 				contextMenus.append({'name': Glyphs.localize({'en': u'Randomly move anchor', 'de': u'Anker zufällig verschieben'}), 'action': self.randomlyMoveAnchor_})
 
@@ -105,7 +115,7 @@ class ____PluginClassName____(SelectTool):
 		# Execute only if layers are actually selected
 		if Glyphs.font.selectedLayers:
 			layer = Glyphs.font.selectedLayers[0]
-		
+
 			# Do stuff:
 			print("Current layer:", layer.parent.name, layer.name)
 			print("  Number of paths:", len(layer.paths))
@@ -120,7 +130,7 @@ class ____PluginClassName____(SelectTool):
 		Remove this method if you do not want any extra context menu items.
 		"""
 		import random
-		
+
 		# Just for your understanding:
 		# Here we don’t need to check how many objects are selected and what types they are.
 		# Because this has already been done in conditionalContextMenus() and didn’t change since.

@@ -3,18 +3,20 @@
 ###########################################################################################################
 #
 #
-#	General Plugin
+# General Plugin
 #
-#	Read the docs:
-#	https://github.com/schriftgestalt/GlyphsSDK/tree/master/Python%20Templates/General%20Plugin
+# Read the docs:
+# https://github.com/schriftgestalt/GlyphsSDK/tree/master/Python%20Templates/General%20Plugin
 #
 #
 ###########################################################################################################
 
 from __future__ import division, print_function, unicode_literals
 import objc
-from GlyphsApp import *
-from GlyphsApp.plugins import *
+from GlyphsApp import Glyphs, EDIT_MENU
+from GlyphsApp.plugins import GeneralPlugin
+from AppKit import NSMenuItem
+
 
 class ____PluginClassName____(GeneralPlugin):
 
@@ -26,7 +28,7 @@ class ____PluginClassName____(GeneralPlugin):
 			'fr': 'Ma extension générale',
 			'es': 'Mi plugin general',
 			'pt': 'Meu plug-in geral',
-			})
+		})
 
 	@objc.python_method
 	def start(self):

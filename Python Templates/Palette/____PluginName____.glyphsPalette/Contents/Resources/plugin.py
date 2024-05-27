@@ -3,21 +3,22 @@
 ###########################################################################################################
 #
 #
-#	Palette Plugin
+# Palette Plugin
 #
-#	Read the docs:
-#	https://github.com/schriftgestalt/GlyphsSDK/tree/master/Python%20Templates/Palette
+# Read the docs:
+# https://github.com/schriftgestalt/GlyphsSDK/tree/master/Python%20Templates/Palette
 #
 #
 ###########################################################################################################
 
 from __future__ import division, print_function, unicode_literals
 import objc
-from GlyphsApp import *
-from GlyphsApp.plugins import *
+from GlyphsApp import Glyphs, GSEditViewController, UPDATEINTERFACE
+from GlyphsApp.plugins import PalettePlugin
+
 
 class ____PluginClassName____ (PalettePlugin):
-	
+
 	dialog = objc.IBOutlet()
 	textField = objc.IBOutlet()
 
@@ -29,8 +30,8 @@ class ____PluginClassName____ (PalettePlugin):
 			'fr': 'Ma palette',
 			'es': 'Mi panel',
 			'pt': 'Meu painel',
-			})
-		
+		})
+
 		# Load .nib dialog (without .extension)
 		self.loadNib('IBdialog', __file__)
 
@@ -39,13 +40,13 @@ class ____PluginClassName____ (PalettePlugin):
 		# Adding a callback for the 'GSUpdateInterface' event
 		Glyphs.addCallback(self.update, UPDATEINTERFACE)
 
-	@objc.python_method	
+	@objc.python_method
 	def __del__(self):
 		Glyphs.removeCallback(self.update)
 
 	@objc.python_method
 	def update(self, sender):
-		
+
 		text = []
 		# Extract font from sender
 		currentTab = sender.object()

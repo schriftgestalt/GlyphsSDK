@@ -3,18 +3,19 @@
 ###########################################################################################################
 #
 #
-#	General Plugin
+# General Plugin
 #
-#	Read the docs:
-#	https://github.com/schriftgestalt/GlyphsSDK/tree/master/Python%20Templates/General%20Plugin
+# Read the docs:
+# https://github.com/schriftgestalt/GlyphsSDK/tree/master/Python%20Templates/General%20Plugin
 #
 #
 ###########################################################################################################
 
 from __future__ import division, print_function, unicode_literals
 import objc
-from GlyphsApp import *
-from GlyphsApp.plugins import *
+from GlyphsApp import Glyphs, WINDOW_MENU, DOCUMENTACTIVATED
+from GlyphsApp.plugins import GeneralPlugin
+from AppKit import NSMenuItem
 import traceback
 
 
@@ -31,8 +32,8 @@ class PluginWithWindow(GeneralPlugin):
 			'de': 'Plug-in mit Fenster',
 			'fr': 'Extension avec fenêtre',
 			'es': 'Plugin con ventana',
-			})
-		self.loadNib("MyPluginWindow", __file__) # Load .nib file next to plugin.py
+		})
+		self.loadNib("MyPluginWindow", __file__)  # Load .nib file next to plugin.py
 		self.window.setTitle_(self.name)
 		self.window.setFrameAutosaveName_(self.windowName)
 		self.fontNameLabel.setStringValue_("No Font Open")
@@ -43,11 +44,11 @@ class PluginWithWindow(GeneralPlugin):
 		Glyphs.menu[WINDOW_MENU].append(newMenuItem)
 
 	def showWindow_(self, sender):
-		self.window.makeKeyAndOrderFront_(self) # Show the window
-		
-		Glyphs.addCallback(self.update, DOCUMENTACTIVATED) # Add a callback for the 'GSDocumentActivateNotification' event
+		self.window.makeKeyAndOrderFront_(self)  # Show the window
 
-		self.update(None) # Update once when window is shown
+		Glyphs.addCallback(self.update, DOCUMENTACTIVATED)  # Add a callback for the 'GSDocumentActivateNotification' event
+
+		self.update(None)  # Update once when window is shown
 
 	@objc.python_method
 	def update(self, sender):
@@ -63,13 +64,13 @@ class PluginWithWindow(GeneralPlugin):
 		try:
 			thisFont = Glyphs.currentDocument.font
 			if thisFont:
-				self.fontNameLabel.setStringValue_(thisFont.familyName) # Update the font name label
+				self.fontNameLabel.setStringValue_(thisFont.familyName)  # Update the font name label
 		except:
 			print(traceback.format_exc())
 
-	@objc.python_method	
+	@objc.python_method
 	def __del__(self):
-		Glyphs.removeCallback(self.update) # Remove the callback
+		Glyphs.removeCallback(self.update)  # Remove the callback
 
 	@objc.python_method
 	def __file__(self):
@@ -77,6 +78,5 @@ class PluginWithWindow(GeneralPlugin):
 		return __file__
 
 	def windowShouldClose_(self, window):
-		Glyphs.removeCallback(self.update) # Remove callbacks when the window is closed
+		Glyphs.removeCallback(self.update)  # Remove callbacks when the window is closed
 		return True
-		

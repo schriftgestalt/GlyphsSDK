@@ -1,48 +1,49 @@
 """PluginMaker -- A tool to quickly instantiate a plugin"""
 from __future__ import print_function, unicode_literals
 
-from Cocoa import NSObject, NSLog, NSUserDefaults, NSBundle, NSError, NSLocalizedDescriptionKey,NSLocalizedRecoverySuggestionErrorKey, NSApp, NSSavePanel, NSOKButton
+from Cocoa import NSObject, NSUserDefaults, NSBundle, NSError, NSLocalizedDescriptionKey, NSLocalizedRecoverySuggestionErrorKey, NSApp, NSSavePanel, NSOKButton, NSURL
 from PyObjCTools import AppHelper
 import objc
-import sys, os
+import os
 import shutil
 
 _pluginTypes = [
 	{
-		"name":"General",
-		"path":"General Plugin/____PluginName____.glyphsPlugin",
+		"name": "General",
+		"path": "General Plugin/____PluginName____.glyphsPlugin",
 	},
 	{
-		"name":"Reporter",
-		"path":"Reporter/____PluginName____.glyphsReporter",
+		"name": "Reporter",
+		"path": "Reporter/____PluginName____.glyphsReporter",
 	},
 	{
-		"name":"Filter, Dialog with xib",
-		"path":"Filter/dialog with xib/____PluginName____.glyphsFilter",
+		"name": "Filter, Dialog with xib",
+		"path": "Filter/dialog with xib/____PluginName____.glyphsFilter",
 	},
 	{
-		"name":"Filter, without Dialog",
-		"path":"Filter/without dialog/____PluginName____.glyphsFilter",
+		"name": "Filter, without Dialog",
+		"path": "Filter/without dialog/____PluginName____.glyphsFilter",
 	},
 	{
-		"name":"Palette",
-		"path":"Palette/____PluginName____.glyphsPalette"
+		"name": "Palette",
+		"path": "Palette/____PluginName____.glyphsPalette"
 	},
 	{
-		"name":"SelectTool",
-		"path":"SelectTool/____PluginName____.glyphsTool",
+		"name": "SelectTool",
+		"path": "SelectTool/____PluginName____.glyphsTool",
 	},
 	{
-		"name":"File Format, Dialog with vanilla",
-		"path":"File Format/dialog with vanilla/____PluginName____.glyphsFileFormat",
+		"name": "File Format, Dialog with vanilla",
+		"path": "File Format/dialog with vanilla/____PluginName____.glyphsFileFormat",
 	},
 	{
-		"name":"File Format, Dialog with xib",
-		"path":"File Format/dialog with xib/____PluginName____.glyphsFileFormat",
+		"name": "File Format, Dialog with xib",
+		"path": "File Format/dialog with xib/____PluginName____.glyphsFileFormat",
 	}
 ]
 
 _pluginTypesNames = [x["name"] for x in _pluginTypes]
+
 
 def GetSaveFile(message=None, ProposedFileName=None, filetypes=None):
 	Panel = NSSavePanel.savePanel().retain()
@@ -60,13 +61,15 @@ def GetSaveFile(message=None, ProposedFileName=None, filetypes=None):
 		return Panel.filename()
 	return None
 
+
 try:
 	from objc import python_method
 except ImportError:
 	def python_method(arg):
 		return arg
 	objc.python_method = python_method
-	
+
+
 class PluginMaker(NSObject):
 	window = objc.IBOutlet()
 
@@ -79,7 +82,7 @@ class PluginMaker(NSObject):
 			import codecs
 			pluginFile = codecs.open(filePath, mode="r", encoding="utf-8")
 			plugin = pluginFile.read()
-			assert(len(plugin) > 1)
+			assert len(plugin) > 1
 			pluginFile.close()
 			for key, value in replaceDict.items():
 				plugin = plugin.replace(key, value)
@@ -89,11 +92,13 @@ class PluginMaker(NSObject):
 		except Exception as e:
 			description = "could not convert file: %s" % os.path.basename(filePath)
 			recovery = str(e)
-			errorDetail = {NSLocalizedDescriptionKey: description,
-						   NSLocalizedRecoverySuggestionErrorKey: recovery};
+			errorDetail = {
+				NSLocalizedDescriptionKey: description,
+				NSLocalizedRecoverySuggestionErrorKey: recovery
+			}
 			error = NSError.errorWithDomain_code_userInfo_("error", 1, errorDetail)
 			NSApp.presentError_(error)
-	
+
 	@objc.IBAction
 	def makePlugin_(self, sender):
 		self.window.endEditingFor_(None)
@@ -123,7 +128,7 @@ class PluginMaker(NSObject):
 			NSApp.presentError_(error)
 			return
 		appPath = NSBundle.mainBundle().bundlePath()
-		
+
 		appIsInTemplateFolder = appPath.find("/Python Templates/")
 		if appIsInTemplateFolder < 0:
 			description = "The app must be inside the /Python Templates/ folder"
@@ -131,8 +136,8 @@ class PluginMaker(NSObject):
 			error = NSError.errorWithDomain_code_userInfo_("error", 4, errorDetail)
 			NSApp.presentError_(error)
 			return
-		templateFolder = appPath[:appIsInTemplateFolder+18]
-		
+		templateFolder = appPath[:appIsInTemplateFolder + 18]
+
 		fileName = os.path.basename(pluginType["path"])
 		fileName = fileName.replace("____PluginName____", pluginName)
 		exportFilePath = GetSaveFile("Where to put the plugin", fileName)
@@ -154,10 +159,10 @@ class PluginMaker(NSObject):
 			}
 			infoPlistFile = os.path.join(exportFilePath, "Contents/Info.plist")
 			self.replacePlaceholders(infoPlistFile, replaceDict)
-			
+
 			pluginFile = os.path.join(exportFilePath, "Contents/Resources/plugin.py")
 			self.replacePlaceholders(pluginFile, replaceDict)
-			
+
 			xibFile = os.path.join(exportFilePath, "Contents/Resources/IBdialog.xib")
 			if os.path.exists(xibFile):
 				self.replacePlaceholders(pluginFile, replaceDict)
@@ -165,6 +170,7 @@ class PluginMaker(NSObject):
 	@objc.IBAction
 	def showWindow_(self, sender):
 		self.window.makeKeyAndOrderFront_(objc.nil)
+
 
 if __name__ == "__main__":
 	AppHelper.runEventLoop()

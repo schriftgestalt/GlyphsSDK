@@ -7,9 +7,10 @@ Created by Georg Seifert on 2016-10-13.
 Copyright (c) 2016 schriftgestaltung.de. All rights reserved.
 """
 
-import sys, os
-from Glyphs import *
-from Foundation import NSURL, NSString
+import os
+from Glyphs import Glyphs, currentDocument, RunScript
+from Foundation import NSURL
+
 
 def writeInstanceAsUFO():
 	'''
@@ -17,16 +18,17 @@ def writeInstanceAsUFO():
 	'''
 	font = currentDocument.font()
 	intance = font.instances()[2]
-	
+
 	InterpolatedFont = font.generateInstance_error_(intance, None)
 	print(InterpolatedFont)
 	doc = Glyphs.objectWithClassName_("GSDocument")
 	doc.setFont_(InterpolatedFont)
-	
+
 	url = NSURL.fileURLWithPath_(os.path.expanduser("~/Desktop/%s-%s.ufo" % (font.familyName(), intance.name())))
 	typeName = "org.unifiedfontobject.ufo"
 	doc.writeToURL_ofType_forSaveOperation_originalContentsURL_error_(url, typeName, 0, url, None)
-	
+
+
 def exportAllInstances():
 	'''
 	This will export all instances of the font at 'path' as TrueType fonts.
@@ -42,7 +44,7 @@ def exportAllInstances():
 			'ExportContainer': "woff",
 			'Destination': NSURL.fileURLWithPath_(os.path.expanduser("~/Desktop/test/"))
 		})
-		
+
 	'''
 	possible keys:
 		ExportContainer: "woff", "woff2", "eot"
@@ -52,14 +54,16 @@ def exportAllInstances():
 		useSubroutines: bool (default = true)
 		useProductionNames: bool (default = true)
 	'''
-	
+
 	doc.close()
 	print("Ready!")
+
 
 def classTeste():
 	pen = Glyphs.objectWithClassName_("GSSVGPen")
 	print(pen)
 	print(Glyphs.mainBundle())
+
 
 def runScriptInsideGlyphs():
 	code = "print(Layer)"
@@ -69,13 +73,15 @@ def runScriptInsideGlyphs():
 		macroViewController.runMacroString_(code)
 	else:
 		RunScript(code)
-		
+
+
 def accessGlyphsInfo():
 	font = currentDocument.font()
 	print(font.glyphsInfo())
 	glyphsInfo = Glyphs.objectWithClassName_("GSGlyphsInfo")
 	print(glyphsInfo)
 	print(glyphsInfo.glyphInfoForName_("A"))
+
 
 def accessLayers():
 	font = currentDocument.font()
@@ -86,11 +92,11 @@ def accessLayers():
 	print(layer)
 	path = layer.objectInShapesAtIndex_(0)
 	print(path)
-	
+
 
 if __name__ == '__main__':
-	#exportAllInstances()
-	#writeInstanceAsUFO()
-	#runScriptInsideGlyphs()
-	#accessGlyphsInfo()
+	# exportAllInstances()
+	# writeInstanceAsUFO()
+	# runScriptInsideGlyphs()
+	# accessGlyphsInfo()
 	accessLayers()
