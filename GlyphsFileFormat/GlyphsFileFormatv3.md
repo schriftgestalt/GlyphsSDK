@@ -176,7 +176,7 @@ The property list file contains a dictionary with the following structure.
         * shapes `list>dict`: Can be paths or components
             * path:
                 * attr: `dict`: see [Attributes](*attributes)
-                * closed `bool`: Always set to `1`, otherwise omit the key
+                * closed `bool`: Always set to `0`, otherwise omit the key
                 * nodes `tuple`: `(X,Y,TYPE[SMOOTH],{user:data})`, where X and Y are the coordinates as float, and TYPE is either `l`, `c`, `o`, `q`. when the on-curve node is smooth, add an `s`.
                 when the node has usedData store it as fourth element. Remove all newlines and extra spaces.
             * component:
