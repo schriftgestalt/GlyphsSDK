@@ -138,7 +138,7 @@ The XML file contains a dictionary with the following structure. The elements wi
         * widthMetricsKey `string`
         * name `string`: The name of the layer. Only stored for none master layers (this is changed in 2.3, before the master names where stored)
         * paths `list`
-            * closed `bool`: Always set to `1`. If not set, the key is not present at all.
+            * closed `bool`: Always set to `0`, otherwise omit the key.
             * nodes `list`: One entry per node. Format: `X Y TYPE [SMOOTH]`, where X and Y are the coordinates as float, and TYPE is either `LINE`, `CURVE` or `OFFCURVE`. After `LINE` and `CURVE`, you can additionally add a `SMOOTH`.
         * userDate `dict`: A dict with user defined structure
         * vertWidth `float`: Only stored if other than the default (ascender+descender)
