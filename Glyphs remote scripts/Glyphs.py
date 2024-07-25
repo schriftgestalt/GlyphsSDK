@@ -7,8 +7,9 @@ from Foundation import NSObject, NSString, NSConnection
 __all__ = ["Glyphs", "currentDocument", "GSMOVE", "GSLINE", "GSCURVE", "GSOFFCURVE", "GSSHARP", "GSSMOOTH", "GSGlyph", "GSLayer", "GSApplication", "RunScript"]
 
 
-def application(appName):
-	port = "com.GeorgSeifert.Glyphs3"
+def application(appName, port=None):
+	if port is None:
+		port = "com.GeorgSeifert.Glyphs3"
 	conn = None
 	tries = 0
 
