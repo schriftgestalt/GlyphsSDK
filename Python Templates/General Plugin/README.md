@@ -61,7 +61,7 @@ Something you will probably want to do here is add an entry to one of the menus:
 	def start(self):
 	
 		# create a menu item with its name, and a reference to the method it shoud invoke:
-		newMenuItem = NSMenuItem(self.name, self.doSomething)
+		newMenuItem = NSMenuItem(self.name, callback=self.doSomething, target=self)
 		
 		# append the menu item to one of the menus:
 		Glyphs.menu[FILE_MENU].append(newMenuItem)
