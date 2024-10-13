@@ -37,7 +37,10 @@ else:
 
 class GSStdOut(NSObject):
 	def setWrite_(self, text):
-		print(text)
+		print(text, end="")
+
+	def setWriteError_(self, text):
+		print(text, end="")
 
 
 def RunScript(code):
