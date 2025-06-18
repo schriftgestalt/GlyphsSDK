@@ -52,14 +52,15 @@ PathToTestFile = os.path.join(os.path.dirname(__file__), 'Glyphs Unit Test Sans.
 
 Glyphs.clearLog()
 
+
 class GlyphsAppTests(unittest.TestCase):
 
 	maxDiff = None
 
 	def assertReadOnly(self, readOnlyObject, _instance, _property):
 		"""Needs the actual instance to test for readOnly-nes"""
-		self.assertIsNotNone(_instance) # if `readOnly=True` we need the instance object.
-		self.assertIsNotNone(_property) # if `readOnly=True` we need the property to be checked.
+		self.assertIsNotNone(_instance)  # if `readOnly=True` we need the instance object.
+		self.assertIsNotNone(_property)  # if `readOnly=True` we need the property to be checked.
 		oldValue = readOnlyObject
 		self.assertHasAttr(_instance, _property)
 		with self.assertRaises(AttributeError) as ctx:
@@ -178,7 +179,7 @@ class GlyphsAppTests(unittest.TestCase):
 	def assertIsRoundFloat(self, number):
 		self.assertEqual(number % 1, 0)
 
-	## Helper Methods
+	# Helper Methods
 
 	def assertIsFile(self, path):
 		if not Pathlib.Path(path).resolve().is_file():
@@ -200,8 +201,8 @@ class GlyphsAppTests(unittest.TestCase):
 	def test_GSFont(self):
 		font = self.font
 
-		## Properties
-		## Mostly type checking.
+		# Properties
+		# Mostly type checking.
 
 		with self.subTest("masters"):
 			self.assertIsInstance(font.masters, GlyphsApp.FontFontMasterProxy)
@@ -346,11 +347,11 @@ class GlyphsAppTests(unittest.TestCase):
 		with self.subTest("disablesNiceNames"):
 			self.assertBool(font.disablesNiceNames)
 
-		with self.subTest("appVersion"): #::Rafal
+		with self.subTest("appVersion"): # ::Rafal
 			self.assertUnicode(font.appVersion, allowNone=False)
 			self.assertReadOnly(font.appVersion, _instance=font, _property="appVersion")
 
-		with self.subTest("formatVersion"): #::Rafal
+		with self.subTest("formatVersion"): # ::Rafal
 			self.assertInteger(font.formatVersion)
 
 		with self.subTest("filepath"):
@@ -370,7 +371,7 @@ class GlyphsAppTests(unittest.TestCase):
 		# GSFont.updateFeatures()  #::Rafal
 		font.compileFeatures()
 
-		#::Rafal
+		# ::Rafal
 		with self.subTest("properties of GSFont"):
 			propertyKeys = [
 				"familyName",
@@ -391,17 +392,17 @@ class GlyphsAppTests(unittest.TestCase):
 				"sampleTexts",
 				"compatibleFullName",
 				"compatibleFullNames",
-				]
+			]
 			# testing ammount of properties
-			#TODO: font.properties has length 0
-			#self.assertEqual(len(font.properties), len(propertyKeys)/2)
+			# TODO: font.properties has length 0
+			# self.assertEqual(len(font.properties), len(propertyKeys)/2)
 
 			# testing if empty properties return None
 
 			for k in propertyKeys:
 				a = getattr(font, k)
-				#TODO: The "familyName" property is "Glyphs Unit Test Sans", not None
-				#self.assertEqual(a, None)
+				# TODO: The "familyName" property is "Glyphs Unit Test Sans", not None
+				# self.assertEqual(a, None)
 
 			# testing assignment for properties
 
@@ -464,7 +465,7 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertList(font.masters)
 		self.assertEqual(font.masters[0], font.masters[font.masters[0].id])
 		with self.assertRaises(TypeError) as ctx:
-			font.masters[2.2]
+			font.masters[2.2]  # type: ignore
 		self.assertEqual("need int or str, got: float", str(ctx.exception))
 
 		# Masters can’t be indexed by name.
@@ -477,7 +478,7 @@ class GlyphsAppTests(unittest.TestCase):
 		self.assertGreaterEqual(len(list(font.instances)), 1)
 		self.assertList(font.instances, assertType=False, testValues=[GSInstance(), GSInstance(), copy.copy(GSInstance())])
 		with self.assertRaises(TypeError) as ctx:
-			font.instances['a']
+			font.instances['a']  # type: ignore
 		self.assertEqual("list indices must be integers or slices, not str", str(ctx.exception))
 
 	def test_GSFont_axes(self):
@@ -485,7 +486,7 @@ class GlyphsAppTests(unittest.TestCase):
 
 		self.assertList(font.axes, assertType=False, testValues=[GSAxis(), GSAxis(), copy.copy(GSAxis())])
 		with self.assertRaises(TypeError) as ctx:
-			font.axes['a']
+			font.axes['a']  # type: ignore
 		self.assertEqual("list indices must be integers or slices, not str", str(ctx.exception))
 
 		with self.subTest("add and remove an axis"):
@@ -871,11 +872,11 @@ class GlyphsAppTests(unittest.TestCase):
 
 	def test_GSInstance_export(self):
 		instance = self.font.instances[0]
-		FontPath = os.path.split(PathToTestFile)[0]
+		fontPath = os.path.split(PathToTestFile)[0]
 		for Format in [OTF, TTF]:
 			instance.generate(Format, FontPath)
-			FileName = instance.fileName_error_(Format.lower(), None)
-			self.assertIsFile(os.path.join(FontPath, FileName))
+			fileName, _ = instance.fileName_error_(Format.lower(), None)
+			self.assertIsFile(os.path.join(FontPath, fileName))
 
 			instance.generate(Format, FontPath, Containers=[WOFF])
 			FileName = instance.fileName_error_(WOFF.lower(), None)
@@ -1267,7 +1268,7 @@ class GlyphsAppTests(unittest.TestCase):
 
 		with self.subTest("generate()"):
 			path = os.path.join(os.path.dirname(__file__), 'GlyphsUnitTestSans-Thin.otf')
-			result = instance.generate(FontPath=path)
+			result = instance.generate(fontPath=path)
 			self.assertEqual(result, True)
 			self.assertTrue(os.path.exists(path))
 			if os.path.exists(path):
