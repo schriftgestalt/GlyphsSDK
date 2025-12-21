@@ -2,7 +2,7 @@ Welcome to Glyphs.app’s plug-in documentation! This document covers only some 
 
 ## Reporter Plug-in
 
-A reporter plug-in gets activated in the View menu of Glyphs.app and is designed to draw on top and behind the glyphs in the Edit View, as well as change the drawing behaviour of inactive glyphs and the preview panel.
+A reporter plug-in gets activated in the View menu of Glyphs.app and is designed to draw on top and behind the glyphs in the Edit View, as well as change the drawing behavior of inactive glyphs and the preview panel.
 
 ![](../_Readme_Images/showplugin.png)
 
