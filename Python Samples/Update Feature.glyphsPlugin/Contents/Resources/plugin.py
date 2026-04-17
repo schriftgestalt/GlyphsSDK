@@ -12,7 +12,7 @@
 ###########################################################################################################
 
 import objc
-from GlyphsApp import GSCallbackHandler, GSFeature, GSFont
+from GlyphsApp import GSCallbackHandler, GSFeaturePrefix, GSClass, GSFeature, GSFont
 from GlyphsApp.plugins import GeneralPlugin
 
 GSFeatureCodeGeneratorProtocol = objc.protocolNamed("GSFeatureCodeGeneratorProtocol")
@@ -41,14 +41,14 @@ class MyUpdateFeature(GeneralPlugin):
 		return (True, None)
 
 	@classmethod
-	def featureCodeForClass_font_error_(cls, feature: GSFeature, font: GSFont, error):
-		if feature.name == "Uppercase":
-			feature.code += "\n# Hallo"
+	def featureCodeForClass_font_error_(cls, aClass: GSClass, font: GSFont, error):
+		if aClass.name == "Uppercase":
+			aClass.code += "\n# Hallo"
 
 		return (True, None)
 
 	@classmethod
-	def featureCodeForPrefix_font_error_(cls, feature: GSFeature, font: GSFont, error):
+	def featureCodeForPrefix_font_error_(cls, prefix: GSFeaturePrefix, font: GSFont, error):
 		return (True, None)
 
 	@objc.python_method
