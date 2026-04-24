@@ -81,7 +81,7 @@ static NSImage *_toolBarIcon = nil;
 	// Called when the mouse button is clicked.
 	_editViewController = [_windowController activeEditViewController];
 	// editViewController.graphicView.cursor = [NSCursor closedHandCursor];
-	_draggStart = [theEvent locationInWindow];
+	self.dragStart = [theEvent locationInWindow];
 }
 
 - (void)mouseDragged:(NSEvent *)theEvent {
@@ -104,8 +104,8 @@ static NSImage *_toolBarIcon = nil;
 }
 
 - (void)drawLayer:(GSLayer *)layer atPoint:(NSPoint)point asActive:(BOOL)active attributes:(NSDictionary *)attributes {
-	// Draw anythin for this particular layer.
-	[_editViewController.graphicView drawLayer:Layer atPoint:point asActive:active attributes:attributes];
+	// Draw anything for this particular layer.
+	[_editViewController.graphicView drawLayer:layer atPoint:point asActive:active attributes:attributes];
 }
 
 - (void)willActivate {
