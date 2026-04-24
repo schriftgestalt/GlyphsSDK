@@ -24,24 +24,58 @@
 			</dict>
 		</dict>
 	</array>
+	<key>Options</key>
+	<array>
+		<dict>
+			<key>Identifier</key>
+			<string>languageChoice</string>
+			<key>Units</key>
+			<dict>
+				<key>Objective-C</key>
+				<dict>
+					<key>Nodes</key>
+					<array>
+						<string>___PACKAGENAMEASIDENTIFIER___.h</string>
+						<string>___PACKAGENAMEASIDENTIFIER___.m</string>
+					</array>
+					<key>Definitions</key>
+					<dict>
+						<key>___PACKAGENAMEASIDENTIFIER___.h</key>
+						<dict>
+							<key>Path</key>
+							<string>___PACKAGENAMEASIDENTIFIER___.h</string>
+						</dict>
+						<key>___PACKAGENAMEASIDENTIFIER___.m</key>
+						<dict>
+							<key>Path</key>
+							<string>___PACKAGENAMEASIDENTIFIER___.m</string>
+						</dict>
+					</dict>
+				</dict>
+				<key>Swift</key>
+				<dict>
+					<key>Nodes</key>
+					<array>
+						<string>___PACKAGENAMEASIDENTIFIER___.swift</string>
+					</array>
+					<key>Definitions</key>
+					<dict>
+						<key>___PACKAGENAMEASIDENTIFIER___.swift</key>
+						<dict>
+							<key>Path</key>
+							<string>___PACKAGENAMEASIDENTIFIER___.swift</string>
+						</dict>
+					</dict>
+				</dict>
+			</dict>
+		</dict>
+	</array>
 	<key>Nodes</key>
 	<array>
-		<string>___PACKAGENAMEASIDENTIFIER___.h</string>
-		<string>___PACKAGENAMEASIDENTIFIER___.m</string>
 		<string>Base.lproj/___PACKAGENAMEASIDENTIFIER___Dialog.xib</string>
 	</array>
 	<key>Definitions</key>
 	<dict>
-		<key>___PACKAGENAMEASIDENTIFIER___.h</key>
-		<dict>
-			<key>Path</key>
-			<string>___PACKAGENAMEASIDENTIFIER___.h</string>
-		</dict>
-		<key>___PACKAGENAMEASIDENTIFIER___.m</key>
-		<dict>
-			<key>Path</key>
-			<string>___PACKAGENAMEASIDENTIFIER___.m</string>
-		</dict>
 		<key>Base.lproj/___PACKAGENAMEASIDENTIFIER___Dialog.xib</key>
 		<dict>
 			<key>Path</key>

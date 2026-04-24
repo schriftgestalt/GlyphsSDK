@@ -16,6 +16,7 @@
 	<array>
 		<string>com.apple.dt.unit.bundleBase</string>
 		<string>com.apple.dt.unit.osxBase</string>
+		<string>com.apple.dt.unit.languageChoice</string>
 	</array>
 	<key>Targets</key>
 	<array>
@@ -30,6 +31,8 @@
 				<string>glyphsPlugin</string>
 				<key>FRAMEWORK_SEARCH_PATHS</key>
 				<string>"$(SYSTEM_APPS_DIR)/Glyphs 3.app/Contents/Frameworks"</string>
+				<key>OTHER_LDFLAGS</key>
+				<string>-framework GlyphsCore</string>
 				<key>GCC_PREFIX_HEADER</key>
 				<string>___PACKAGENAME___/___PACKAGENAME___-Prefix.pch</string>
 			</dict>
@@ -67,12 +70,46 @@
 		</dict>
 	</array>
 	<key>Options</key>
-	<array/>
+	<array>
+		<dict>
+			<key>Identifier</key>
+			<string>languageChoice</string>
+			<key>Units</key>
+			<dict>
+				<key>Swift</key>
+				<dict>
+					<key>Nodes</key>
+					<array>
+						<string>___PACKAGENAME___-Bridging-Header.h</string>
+					</array>
+					<key>Definitions</key>
+					<dict>
+						<key>___PACKAGENAME___-Bridging-Header.h</key>
+						<dict>
+							<key>Path</key>
+							<string>___PACKAGENAME___-Bridging-Header.h</string>
+						</dict>
+					</dict>
+					<key>Targets</key>
+					<array>
+						<dict>
+							<key>SharedSettings</key>
+							<dict>
+								<key>SWIFT_VERSION</key>
+								<string>5.0</string>
+								<key>SWIFT_OBJC_BRIDGING_HEADER</key>
+								<string>___PACKAGENAME___/___PACKAGENAME___-Bridging-Header.h</string>
+							</dict>
+						</dict>
+					</array>
+				</dict>
+			</dict>
+		</dict>
+	</array>
 	<key>Nodes</key>
 	<array>
 		<string>___PACKAGENAME___-Prefix.pch</string>
 		<string>Info.plist:PrincipalClass</string>
-		<string>GlyphsCore</string>
 	</array>
 	<key>Definitions</key>
 	<dict>
@@ -87,15 +124,6 @@
 		<string><![CDATA[<key>NSPrincipalClass</key>
 <string>___PACKAGENAMEASIDENTIFIER___</string>
 ]]></string>
-		<key>GlyphsCore</key>
-		<dict>
-			<key>Path</key>
-			<string>/Applications/Glyphs 3.app/Contents/Frameworks/GlyphsCore.framework</string>
-			<key>PathType</key>
-			<string>Absolute</string>
-			<key>SortOrder</key>
-			<integer>99</integer>
-		</dict>
 	</dict>
 </dict>
 </plist>

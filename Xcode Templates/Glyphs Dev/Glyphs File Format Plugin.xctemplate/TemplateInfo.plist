@@ -13,6 +13,7 @@
 	<key>Ancestors</key>
 	<array>
 		<string>com.schriftgestaltung.glyphsPluginBase</string>
+		<string>com.apple.dt.unit.languageChoice</string>
 	</array>
 	<key>Options</key>
 	<array>
@@ -58,6 +59,49 @@
 			<key>Default</key>
 			<string>Exporter</string>
 		</dict>
+		<dict>
+			<key>Identifier</key>
+			<string>languageChoice</string>
+			<key>Units</key>
+			<dict>
+				<key>Objective-C</key>
+				<dict>
+					<key>Nodes</key>
+					<array>
+						<string>___PACKAGENAMEASIDENTIFIER___.h</string>
+						<string>___PACKAGENAMEASIDENTIFIER___.m</string>
+					</array>
+					<key>Definitions</key>
+					<dict>
+						<key>___PACKAGENAMEASIDENTIFIER___.h</key>
+						<dict>
+							<key>Path</key>
+							<string>___PACKAGENAMEASIDENTIFIER___.h</string>
+						</dict>
+						<key>___PACKAGENAMEASIDENTIFIER___.m</key>
+						<dict>
+							<key>Path</key>
+							<string>___PACKAGENAMEASIDENTIFIER___.m</string>
+						</dict>
+					</dict>
+				</dict>
+				<key>Swift</key>
+				<dict>
+					<key>Nodes</key>
+					<array>
+						<string>___PACKAGENAMEASIDENTIFIER___.swift</string>
+					</array>
+					<key>Definitions</key>
+					<dict>
+						<key>___PACKAGENAMEASIDENTIFIER___.swift</key>
+						<dict>
+							<key>Path</key>
+							<string>___PACKAGENAMEASIDENTIFIER___.swift</string>
+						</dict>
+					</dict>
+				</dict>
+			</dict>
+		</dict>
 	</array>
 	<key>Targets</key>
 	<array>
@@ -71,8 +115,6 @@
 	</array>
 	<key>Nodes</key>
 	<array>
-		<string>___PACKAGENAMEASIDENTIFIER___.h</string>
-		<string>___PACKAGENAMEASIDENTIFIER___.m</string>
 		<string>Base.lproj/___PACKAGENAMEASIDENTIFIER___Dialog.xib</string>
 		<string>GenericExportTemplate.pdf</string>
 		<string>Info.plist:CFBundleDocumentTypes</string>
@@ -81,16 +123,6 @@
 	</array>
 	<key>Definitions</key>
 	<dict>
-		<key>___PACKAGENAMEASIDENTIFIER___.h</key>
-		<dict>
-			<key>Path</key>
-			<string>___PACKAGENAMEASIDENTIFIER___.h</string>
-		</dict>
-		<key>___PACKAGENAMEASIDENTIFIER___.m</key>
-		<dict>
-			<key>Path</key>
-			<string>___PACKAGENAMEASIDENTIFIER___.m</string>
-		</dict>
 		<key>Base.lproj/___PACKAGENAMEASIDENTIFIER___Dialog.xib</key>
 		<dict>
 			<key>Path</key>
@@ -113,7 +145,7 @@
 				<string>___VARIABLE_documentExtension:XML___</string>
 			</array>
 		]]></string>
-<key>Info.plist:CFBundleTypeRole</key>
+		<key>Info.plist:CFBundleTypeRole</key>
 		<string><![CDATA[<key>CFBundleTypeRole</key>
 			<string>___VARIABLE_role:XML___</string>
 		]]></string>
