@@ -33,8 +33,6 @@
 				<string>"$(SYSTEM_APPS_DIR)/Glyphs 3.app/Contents/Frameworks"</string>
 				<key>OTHER_LDFLAGS</key>
 				<string>-framework GlyphsCore</string>
-				<key>GCC_PREFIX_HEADER</key>
-				<string>___PACKAGENAME___/___PACKAGENAME___-Prefix.pch</string>
 			</dict>
 			<key>Configurations</key>
 			<dict>
@@ -76,6 +74,33 @@
 			<string>languageChoice</string>
 			<key>Units</key>
 			<dict>
+				<key>Objective-C</key>
+				<dict>
+					<key>Nodes</key>
+					<array>
+						<string>___PACKAGENAME___-Prefix.pch</string>
+					</array>
+					<key>Definitions</key>
+					<dict>
+						<key>___PACKAGENAME___-Prefix.pch</key>
+						<dict>
+							<key>Path</key>
+							<string>___PACKAGENAME___-Prefix.pch</string>
+							<key>SortOrder</key>
+							<integer>100</integer>
+						</dict>
+					</dict>
+					<key>Targets</key>
+					<array>
+						<dict>
+							<key>SharedSettings</key>
+							<dict>
+								<key>GCC_PREFIX_HEADER</key>
+								<string>___PACKAGENAME___/___PACKAGENAME___-Prefix.pch</string>
+							</dict>
+						</dict>
+					</array>
+				</dict>
 				<key>Swift</key>
 				<dict>
 					<key>Nodes</key>
@@ -108,18 +133,10 @@
 	</array>
 	<key>Nodes</key>
 	<array>
-		<string>___PACKAGENAME___-Prefix.pch</string>
 		<string>Info.plist:PrincipalClass</string>
 	</array>
 	<key>Definitions</key>
 	<dict>
-		<key>___PACKAGENAME___-Prefix.pch</key>
-		<dict>
-			<key>Path</key>
-			<string>___PACKAGENAME___-Prefix.pch</string>
-			<key>SortOrder</key>
-			<integer>100</integer>
-		</dict>
 		<key>Info.plist:PrincipalClass</key>
 		<string><![CDATA[<key>NSPrincipalClass</key>
 <string>___PACKAGENAMEASIDENTIFIER___</string>
