@@ -27,7 +27,7 @@ class DemoFeatureCodeGenerator(NSObject):
 		return "Demo Feature Code Generation"
 
 	@classmethod
-	def canGenerateFeatureCodeForPrefixWithName_(cld, prefixName: str):
+	def canGenerateFeatureCodeForPrefixWithName_(cls, prefixName: str):
 		return prefixName in ["Header"]
 
 	@classmethod
