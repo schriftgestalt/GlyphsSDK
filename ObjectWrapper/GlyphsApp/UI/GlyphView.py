@@ -7,9 +7,12 @@ __all__ = ["GlyphView"]
 import traceback
 from vanilla import Group
 from AppKit import NSView, NSColor, NSRectFill
-
+from GlyphsApp import GSLayer
 
 class GlyphView_view(NSView):
+	_layer: GSLayer | None
+	_backgroundColor: NSColor | None
+	_foregroundColor: NSColor | None
 
 	def drawRect_(self, rect):
 		try:
@@ -18,7 +21,7 @@ class GlyphView_view(NSView):
 				self._backgroundColor.set()
 				NSRectFill(bounds)
 			if self._layer is not None:
-				self._layer.drawInFrame_color_(bounds, self._foregroundColor)
+				self._layer.drawInFrame_metrics_color_dark_(bounds, self._layer.glyphMetrics(), self._foregroundColor or NSColor.blackColor(), False)
 		except:
 			print(traceback.format_exc())
 
@@ -42,6 +45,7 @@ class GlyphView(Group):
 
 	version = "1.0"
 	nsViewClass = GlyphView_view
+	_nsObject: GlyphView_view
 
 	def __init__(self, posSize, layer=None, backgroundColor=None, foregroundColor=NSColor.textColor()):
 		self._setupView(self.nsViewClass, posSize)
@@ -50,7 +54,7 @@ class GlyphView(Group):
 		self.foregroundColor = foregroundColor if foregroundColor is not None else NSColor.textColor()
 
 	def _get_layer(self):
-		return self.view._layer
+		return self._nsObject._layer
 
 	def _set_layer(self, layer):
 		self._nsObject._layer = layer
@@ -59,7 +63,7 @@ class GlyphView(Group):
 	layer = property(_get_layer, _set_layer)
 
 	def _get_backgroundColor(self):
-		return self.view._backgroundColor
+		return self._nsObject._backgroundColor
 
 	def _set_backgroundColor(self, backgroundColor):
 		self._nsObject._backgroundColor = backgroundColor
@@ -68,7 +72,7 @@ class GlyphView(Group):
 	backgroundColor = property(_get_backgroundColor, _set_backgroundColor)
 
 	def _get_foregroundColor(self):
-		return self.view._foregroundColor
+		return self._nsObject._foregroundColor
 
 	def _set_foregroundColor(self, foregroundColor):
 		self._nsObject._foregroundColor = foregroundColor

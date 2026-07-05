@@ -2,55 +2,49 @@
 # encoding: utf-8
 
 from __future__ import print_function
-
-from AppKit import NSBezierPath, NSColor, NSFont, NSImage, NSGradient, NSColorSpace, NSMiterLineJoinStyle, NSRoundLineJoinStyle, NSBevelLineJoinStyle, NSButtLineCapStyle, NSRoundLineCapStyle, NSSquareLineCapStyle, NSFontAttributeName, NSForegroundColorAttributeName, NSGraphicsContext, NSCompositeSourceOver, NSGradientDrawsBeforeStartingLocation, NSGradientDrawsAfterEndingLocation
-from Foundation import NSMakeRect, NSAffineTransform, NSMakePoint, NSZeroRect, NSString
-
-
-def drawGlyph(glyph):
-	if isinstance(glyph, RGlyph):
-		path = glyph._layer.bezierPath
-		drawPath(path)
-	else:
-		raise ValueError('Please provide an RGlyph object. For GSGlyph, use the native API')
+# from typing import Any, List, Dict, Optional
+from AppKit import NSBezierPath, NSColor, NSFont, NSImage, NSGradient, NSColorSpace, NSLineJoinStyleMiter, NSLineJoinStyleRound, NSLineCapStyleButt, NSLineCapStyleRound, NSLineCapStyleSquare, NSFontAttributeName, NSForegroundColorAttributeName, NSGraphicsContext, NSCompositingOperationSourceOver, NSGradientDrawsBeforeStartingLocation, NSGradientDrawsAfterEndingLocation  # type: ignore
+from Foundation import NSMakeRect, NSAffineTransform, NSMakePoint, NSZeroRect, NSString, NSPoint, NSPointLike
+from typing import Optional, Tuple, List
 
 
 def save():
 	# save the current graphic state
-	NSGraphicsContext.currentContext().saveGraphicsState()
+	NSGraphicsContext.saveGraphicsState()
 
 
 def restore():
 	# restore the current graphic state
-	NSGraphicsContext.currentContext().restoreGraphicsState()
+	NSGraphicsContext.restoreGraphicsState()
 
 
-currentPath = None
-currentFillColor = NSColor.blackColor()
-currentStrokeColor = None
-currentGradient = None
-currentStrokeWidth = None
-currentFont = NSFont.systemFontOfSize_(NSFont.systemFontSize())
+currentPath: NSBezierPath | None = None
+currentFillColor: NSColor | None = NSColor.blackColor()
+currentStrokeColor: NSColor | None = None
+currentGradient: Tuple[str, NSPoint, NSPoint, List[Tuple], list] | None = None
+currentStrokeWidth: float | None = None
+currentFont: NSFont = NSFont.systemFontOfSize_(NSFont.systemFontSize())
 
 
-def rect(x, y, width, height):
+def rect(x: float, y: float, width: float, height: float):
 	# draws a rectangle
 	drawPath(NSBezierPath.bezierPathWithRect_(NSMakeRect(x, y, width, height)))
 
 
-def oval(x, y, width, height):
+def oval(x: float, y: float, width: float, height: float):
 	# draws an oval
 	drawPath(NSBezierPath.bezierPathWithOvalInRect_(NSMakeRect(x, y, width, height)))
 
 
-def line(x1, y1, x2=None, y2=None):
+def line(x1: float, y1: float, x2: float | None = None, y2: float | None = None):
 	# draws a line
 	if x2 is None and y2 is None and isinstance(x1, tuple) and isinstance(y1, tuple):
 		(x1, y1), (x2, y2) = x1, y1
-	p = NSBezierPath.bezierPath()
-	p.moveToPoint_(NSMakePoint(x1, y1))
-	p.lineToPoint_(NSMakePoint(x2, y2))
-	drawPath(p)
+	if x2 and y2:
+		p = NSBezierPath.bezierPath()
+		p.moveToPoint_(NSMakePoint(x1, y1))
+		p.lineToPoint_(NSMakePoint(x2, y2))
+		drawPath(p)
 
 
 def newPath():
@@ -59,19 +53,19 @@ def newPath():
 	currentPath = NSBezierPath.bezierPath()
 
 
-def moveTo(pt):
+def moveTo(pt: NSPointLike):
 	# move to point
 	if currentPath is not None:
 		currentPath.moveToPoint_(NSMakePoint(pt[0], pt[1]))
 
 
-def lineTo(pt):
+def lineTo(pt: NSPointLike):
 	# line to point
 	if currentPath is not None:
 		currentPath.lineToPoint_(NSMakePoint(pt[0], pt[1]))
 
 
-def curveTo(h1, h2, pt):
+def curveTo(h1: NSPointLike, h2: NSPointLike, pt: NSPointLike):
 	# curve to point with bcps
 	if currentPath is not None:
 		currentPath.curveToPoint_controlPoint1_controlPoint2_(NSMakePoint(pt[0], pt[1]), NSMakePoint(h1[0], h1[1]), NSMakePoint(h2[0], h2[1]))
@@ -83,10 +77,12 @@ def closePath():
 		currentPath.closePath()
 
 
-def drawPath(path=None):
+def drawPath(path: Optional[NSBezierPath] = None):
 	# draws the path
 	if path is None:
 		path = currentPath
+	if path is None:
+		return
 	if currentFillColor is not None:
 		currentFillColor.set()
 		path.fill()
@@ -107,13 +103,13 @@ def drawPath(path=None):
 			elif len(color) == 4:
 				r, g, b, a = color
 			if g is not None:
-				NSColors.append(NSColor.colorWithCalibratedRed_green_blue_alpha_(r, g, b, a))
+				NSColors.append(NSColor.colorWithSRGBRed_green_blue_alpha_(r, g, b, a))
 			else:
-				NSColors.append(NSColor.colorWithCalibratedWhite_alpha_(r, a))
+				NSColors.append(NSColor.colorWithGenericGamma22White_alpha_(r, a))
 		gradient = NSGradient.alloc().initWithColors_atLocations_colorSpace_(NSColors, locations, NSColorSpace.deviceRGBColorSpace())
 		if gradientType == "linear":
 			gradient.drawFromPoint_toPoint_options_(startPoint, endPoint, NSGradientDrawsBeforeStartingLocation | NSGradientDrawsAfterEndingLocation)
-		elif gradient.gradientType == "radial":
+		elif gradientType == "radial":
 			pass
 		restore()
 	if currentStrokeWidth is not None:
@@ -123,7 +119,7 @@ def drawPath(path=None):
 		path.stroke()
 
 
-def fill(r=None, g=None, b=None, a=1):
+def fill(r: float | None = None, g: float | None = None, b: float | None = None, a=1):
 	# Set the fill color as RGB value.
 	global currentFillColor
 	global currentGradient
@@ -134,55 +130,55 @@ def fill(r=None, g=None, b=None, a=1):
 	elif g is None:
 		currentFillColor = NSColor.colorWithDeviceWhite_alpha_(r, a)
 		currentGradient = None
-	else:
+	elif b is not None:
 		currentFillColor = NSColor.colorWithDeviceRed_green_blue_alpha_(r, g, b, a)
 		currentGradient = None
 
 
-def stroke(r=None, g=None, b=None, a=1):
+def stroke(r: float | None = None, g: float | None = None, b: float | None = None, a: float = 1):
 	# Set the stroke color as RGB value.
 	global currentStrokeColor
 	if r is None:
 		currentStrokeColor = None
 	elif g is None:
 		currentStrokeColor = NSColor.colorWithDeviceWhite_alpha_(r, a)
-	else:
+	elif b is not None:
 		currentStrokeColor = NSColor.colorWithDeviceRed_green_blue_alpha_(r, g, b, a)
 
 
-def strokeWidth(value):
+def strokeWidth(value: float):
 	# Set the stroke width for a path.
 	global currentStrokeWidth
 	currentStrokeWidth = value
 	if currentPath is not None:
-		currentPath.lineWidth = value
+		currentPath.setLineWidth_(value)
 
 
-def miterLimit(value):
+def miterLimit(value: int):
 	# Set the miter limit for a path.
 	if currentPath is not None:
-		currentPath.miterLimit = value
+		currentPath.setMiterLimit_(value)
 
 
-def lineJoin(join):
+def lineJoin(join: int):
 	# Set the line join for a path, possible join arguments are: "bevel", "miter" or "round"
 	if currentPath is not None:
-		style = NSMiterLineJoinStyle
+		style = NSLineJoinStyleMiter
 		if join == "bevel":
-			style = NSBevelLineJoinStyle
+			style = NSLineJoinStyleMiter
 		elif join == "round":
-			style = NSRoundLineJoinStyle
-		currentPath.lineJoinStyle = style
+			style = NSLineJoinStyleRound
+		currentPath.setLineJoinStyle_(style)
 
 
-def lineCap(cap):
+def lineCap(cap: int):
 	if currentPath is not None:
-		style = NSButtLineCapStyle
+		style = NSLineCapStyleButt
 		if cap == "square":
-			style = NSSquareLineCapStyle
+			style = NSLineCapStyleSquare
 		elif cap == "round":
-			style = NSRoundLineCapStyle
-		currentPath.lineCapStyle = style
+			style = NSLineCapStyleRound
+		currentPath.setLineCapStyle_(style)
 
 
 def dashLine(dash):
@@ -190,21 +186,21 @@ def dashLine(dash):
 	pass
 
 
-def translate(x, y):
+def translate(x: float, y: float):
 	# Translate the art board pane to "x", "y"
 	Transform = NSAffineTransform.alloc().init()
 	Transform.translateXBy_yBy_(x, y)
 	Transform.concat()
 
 
-def rotate(angle):
+def rotate(angle: float):
 	# Rotate the art board by an angle.
 	Transform = NSAffineTransform.alloc().init()
 	Transform.rotateByDegrees_(angle)
 	Transform.concat()
 
 
-def scale(x, y=None):
+def scale(x: float, y: float | None = None):
 	# Scale the art board by "x", "y", if "y" is not set the art board will be scaled proportionally.
 	Transform = NSAffineTransform.alloc().init()
 	if y is None:
@@ -213,7 +209,7 @@ def scale(x, y=None):
 	Transform.concat()
 
 
-def skew(a, b=None):
+def skew(a: float, b: float | None = None):
 	# Skew the art board by "a", "b", if "b" is not set the art board will be skew with "a" = "b"
 	Transform = NSAffineTransform.alloc().init()
 	if b is None:
@@ -222,7 +218,7 @@ def skew(a, b=None):
 	Transform.concat()
 
 
-def font(fontName, fontSize=None):
+def font(fontName: str, fontSize: float | None = None):
 	# Set the font by PostScript name.
 	# Optionally set the font size.
 	if fontSize is None:
@@ -230,13 +226,13 @@ def font(fontName, fontSize=None):
 	NSFont.fontWithName_size_(fontName, fontSize)
 
 
-def fontSize(fontSize):
+def fontSize(fontSize: float):
 	# Set the font size.
 	global currentFont
 	currentFont = NSFont.fontWithName_size_(currentFont.fontName(), fontSize)
 
 
-def text(textString, pt):
+def text(textString: str, pt: NSPointLike):
 	# Draw a text on position "x", "y".
 	NSString.stringWithString_(textString).drawAtPoint_withAttributes_(NSMakePoint(pt[0], pt[1]), {
 		NSFontAttributeName: currentFont,
@@ -244,17 +240,17 @@ def text(textString, pt):
 	})
 
 
-def image(image, pt, alpha=1):
+def image(image: NSImage, pt: NSPointLike, alpha: float = 1):
 	if isinstance(image, NSImage):
-		image.drawAtPoint_fromRect_operation_fraction_(NSMakePoint(pt[0], pt[1]), NSZeroRect, NSCompositeSourceOver, 1)
+		image.drawAtPoint_fromRect_operation_fraction_(NSMakePoint(pt[0], pt[1]), NSZeroRect, NSCompositingOperationSourceOver, alpha)
 
 
-def linearGradient(startPoint=None, endPoint=None, colors=None, locations=None):
+def linearGradient(startPoint: NSPointLike, endPoint: NSPointLike, colors: list[NSColor] | None = None, locations: list | None = None):
 	global currentGradient
 	global currentFillColor
 	if colors is None:
 		colors = [NSColor.greenColor(), NSColor.redColor()]
 	if locations is None:
 		locations = [i / float(len(colors) - 1) for i in range(len(colors))]
-	currentGradient = ("linear", startPoint, endPoint, colors, locations)
+	currentGradient = ("linear", startPoint, endPoint, colors, locations)  # type: ignore XXX
 	currentFillColor = None

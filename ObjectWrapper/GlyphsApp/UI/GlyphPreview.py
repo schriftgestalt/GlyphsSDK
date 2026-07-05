@@ -1,20 +1,29 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function
-
 __all__ = ["GlyphPreview"]
 
 import traceback
-
-from AppKit import NSView, NSColor, NSRectFill
-from vanilla.vanillaBase import VanillaBaseObject
 from GlyphsApp import GSLayer
+from Foundation import NSAffineTransform
+from AppKit import NSView, NSColor, NSGraphicsContext, NSRectFill
+
+from vanilla.vanillaBase import VanillaBaseObject
+from typing import Tuple, cast
 
 
 class GSGlyphPreviewView(NSView):
 
-	def setGlyph_(self, glyph):
-		self._glyph = glyph
+	_transformation: NSAffineTransform | None = None
+	_layer: GSLayer
+
+	@property
+	def layer(self):
+		return self._layer
+
+	@layer.setter
+	def layer(self, layer):
+		assert isinstance(layer, GSLayer)
+		self._layer = layer
 
 	def setDelegate_(self, delegate):
 		self._delegate = delegate
@@ -24,13 +33,16 @@ class GSGlyphPreviewView(NSView):
 		NSColor.whiteColor().set()
 		NSRectFill(frame)
 		try:
-			if self._glyph is not None:
-				if isinstance(self._glyph, GSLayer):
-					layer = self._glyph
-				if layer:
-					layer.drawInFrame_(frame)
+			if self._transformation:
+				NSGraphicsContext.saveGraphicsState()
+				self._transformation.concat()
+			if self._layer is not None:
+				self._layer.drawInFrame_(frame)
 		except:
 			print(traceback.format_exc())
+		finally:
+			if self._transformation:
+				NSGraphicsContext.restoreGraphicsState()
 
 	def mouseDown_(self, event):
 		try:
@@ -79,19 +91,34 @@ class GlyphPreview(VanillaBaseObject):
 
 	nsGlyphPreviewClass = GSGlyphPreviewView
 
-	def __init__(self, posSize, layer=None):
+	def __init__(self, posSize: Tuple, layer: GSLayer | None = None) -> None:
 		self.mouseDownCallBack = None
 		self.mouseDoubleDownCallBack = None
 		self.mouseUpCallBack = None
 		self._setupView(self.nsGlyphPreviewClass, posSize)
-		self._nsObject.setDelegate_(self)
-		self._nsObject.setGlyph_(layer)
+		view: GSGlyphPreviewView = cast(GSGlyphPreviewView, self._nsObject)
+		view.setDelegate_(self)
+		view.layer = layer
 
 	@property
-	def layer(self):
-		return self._nsObject._layer
+	def layer(self) -> GSLayer:
+		view: GSGlyphPreviewView = cast(GSGlyphPreviewView, self._nsObject)
+		return view.layer
 
 	@layer.setter
-	def layer(self, value):
-		self._nsObject._layer = value
+	def layer(self, value: GSLayer) -> None:
+		view: GSGlyphPreviewView = cast(GSGlyphPreviewView, self._nsObject)
+		view.layer = value
+		self._nsObject.setNeedsDisplay_(True)
+
+	@property
+	def transformation(self) -> NSAffineTransform | None:
+		view: GSGlyphPreviewView = cast(GSGlyphPreviewView, self._nsObject)
+		return view._transformation
+
+	@transformation.setter
+	def transformation(self, value: NSAffineTransform) -> None:
+		assert isinstance(value, NSAffineTransform)
+		view: GSGlyphPreviewView = cast(GSGlyphPreviewView, self._nsObject)
+		view._transformation = value
 		self._nsObject.setNeedsDisplay_(True)

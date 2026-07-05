@@ -6,10 +6,13 @@ __all__ = ["CanvasView"]
 
 import traceback
 from vanilla import Group
-from AppKit import NSView, NSRectFill
-
+from AppKit import NSView, NSColor, NSRectFill
+from typing import Any, Tuple, Type, cast
 
 class CanvasView_view(NSView):
+
+	_backgroundColor: NSColor | None
+	_delegate: Any | None
 
 	def drawRect_(self, rect):
 		try:
@@ -66,19 +69,22 @@ class CanvasView(Group):
 	'''
 
 	version = "1.0"
-	nsViewClass = CanvasView_view
+	nsViewClass: Type[NSView] = CanvasView_view
 
-	def __init__(self, posSize, delegate, backgroundColor=None):
+	def __init__(self, posSize: Tuple, delegate: Any, backgroundColor: NSColor | None = None):
 		self._setupView(self.nsViewClass, posSize)
 		self.delegate = delegate
-		self._nsObject._backgroundColor = backgroundColor
+		view: CanvasView_view = cast(CanvasView_view, self._nsObject)
+		view._backgroundColor = backgroundColor
 
-	def _get_delegate(self):
-		return self.view._delegate
+	def _get_delegate(self) -> Any | None:
+		view: CanvasView_view = cast(CanvasView_view, self._nsObject)
+		return view._delegate
 
-	def _set_delegate(self, delegate):
-		self._nsObject._delegate = delegate
-		self._nsObject.setNeedsDisplay_(True)
+	def _set_delegate(self, delegate: Any) -> None:
+		view: CanvasView_view = cast(CanvasView_view, self._nsObject)
+		view._delegate = delegate
+		view.setNeedsDisplay_(True)
 
 	delegate = property(_get_delegate, _set_delegate)
 
