@@ -18,7 +18,7 @@ from __future__ import division, print_function, unicode_literals
 import objc
 from GlyphsApp import Glyphs
 from GlyphsApp.plugins import FilterWithDialog
-from AppKit import NSPoint
+from Cocoa import NSPoint
 
 
 class ____PluginClassName____(FilterWithDialog):

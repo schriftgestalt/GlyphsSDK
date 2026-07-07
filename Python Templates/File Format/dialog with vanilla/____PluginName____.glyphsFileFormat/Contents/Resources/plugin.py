@@ -18,7 +18,7 @@
 from __future__ import division, print_function, unicode_literals
 import objc
 import os
-from GlyphsApp import Glyphs, GetSaveFile
+from GlyphsApp import Glyphs, GetSaveFile, GSFont
 from GlyphsApp.plugins import FileFormatPlugin
 from vanilla import Window, TextBox, CheckBox, Group
 
@@ -93,7 +93,7 @@ class ____PluginClassName____(FileFormatPlugin):
 	# read the file/data at path and return a GSFont object.
 	# filetype is a UIT like `org.unifiedfontobject.ufo`
 	@objc.python_method
-	self.read(self, path, filetype):
+	def read(self, path, filetype) -> GSFont | None:
 		return None
 
 	@objc.python_method

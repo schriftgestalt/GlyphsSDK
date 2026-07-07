@@ -38,8 +38,6 @@ But even if you don’t want to participate in the automatic update notification
 
 > Pro tip: Think ahead and specify at least a URL for automatic update notifications even if it’s way too early for you to implement the update procedure. Glyphs can handle an error response for that URL until the time has come. Consider that once your plug-in has shipped to users, it’s too late to remedy.
 
-> Simply take this `Info.plist` file, upload it on some server, and place a http link to that file into the `UpdateFeedURL` field of the shipped plug-in’s `Info.plist`. For the time being, leave the version number in `CFBundleVersion` in the online file the same as the shipped file. When the time has come, you’ll fill in the new version number and the `productPageURL` field, and voilà: we have established ourselves an automatic update notification process.
-
 The variables in detail:
 
 * `____BundleVersion____` is a machine-readable version identifier for the plug-in. It must contain either an integer (`15`) or a float (`1.6`) version number. Glyphs will also use this version number to compare the currently installed plug-in to the version number made available online.
@@ -54,9 +52,7 @@ If you operate your own software distribution system, like an online shop, you c
 
 Glyphs will add the URL parameters `glyphsUniqueID` (an anonymous ID identifying unique Glyphs installations on people's computer's) and `glyphsVersion` (the Build number of that Glyphs installation) to the update check call (planned but not yet implemented: `pluginVersion` describing the version of your plug-in installed within the user's Glyphs installation). You can use this information to keep anonymous track of the number of plugin installations out there and their version information and level of adoption.
 
-The interface language of Glyphs makes its way into the update check call via the HTTP headers. Therefore, you may choose to provide the `productReleaseNotes` dynamically in various languages.
-
-A live example of all of this can be found for Yanone’s Speed Punk, with `productReleaseNotes` provided in English and German (if you click the following link here in your browser, your browser will send the preferred languages via the HTTP headers identical to how Glyphs would do it): https://yanone.de/buy/?page=versionInformation&product=speedpunkglyphs&format=GlyphsInfoPlist
+The interface language of Glyphs makes its way into the update check call via the HTTP headers.
 
 ### Edit `Contents/Resources/plugin.py`:
 
