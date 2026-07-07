@@ -4,8 +4,14 @@
 	"editor.formatOnSave": false,
 	"editor.formatOnType": false,
 	"flake8.args": [
-		"--ignore=W191,E501,E722,W503",
+		"--ignore=W191,E266,E501,E265,E722,W503,E302,E222,E262,E704,E305",
 		"--verbose"
 	],
-	"python.analysis.extraPaths": [".."]
+	"python.analysis.extraPaths": [
+		"/Applications/Glyphs 4.app/Contents/Scripts/typing/",
+		"/Applications/Glyphs 4.app/Contents/Scripts/GlyphsApp/",
+		"/Applications/Glyphs 4.app/Contents/Scripts/",
+		"/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages",
+		"~/Library/Application Support/Glyphs 4/Scripts/"
+	]
 }
