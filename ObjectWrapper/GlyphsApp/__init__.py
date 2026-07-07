@@ -56,7 +56,7 @@ objc.addConvenienceForClass(
 
 
 if TYPE_CHECKING:
-	from .classes import GSFont, GSFontMaster, GSAxis, GSMetric, GSValueStore, GSGlyph, GSGlyphInfo, GSGlyphsInfo, GSGuide, GSHint, GSInstance, GSLayer, GSNode, GSPath, GSShapeClass, GSShape, GSAlignmentZone, GSAnchor, GSAnnotation, GSApplication, GSImage, GSBackgroundImage, GSBackgroundLayer, GSClass, GSComponent, GSControlLayer, GSCustomParameter, GSDocument, GSProjectDocument, GSEditViewController, GSGlyphEditView, GSFontViewController, GSElement, GSGradient, GSColorStop, GSFeature, GSFeaturePrefix, GSProxyShapes, GSSubstitution, GSPartProperty, MGOrderedDictionary, GSNotifyingDictionary, GSPathFinder, GSPathPen, GSCallbackHandler, GSInterpolationFontProxy, GSFeatureGenerator, GSTTStem, GSMacroViewController, GSPathSegment, PreviewTextWindow, GSInfoValueLocalized, GSInfoValueSingle, GSInfoValue, GSMetricStore, GSGlyphReference, FTPointArray, GSSelectGlyphsDialogController, GSTransformableElement, GSHandle, GSUserNotification, GSFilterHandler, GSInfoProperty, GlyphsToolOther, GSToolGroup, GSExportInstanceOperation, GSCustomParameterValueViewController, GSPropertyDialogController, GSParameterValueViewController  # type: ignore
+	from .classes import GSFont, GSFontMaster, GSAxis, GSMetric, GSValueStore, GSGlyph, GSGlyphInfo, GSGlyphsInfo, GSGuide, GSHint, GSInstance, GSLayer, GSNode, GSPath, GSShapeClass, GSShape, GSAlignmentZone, GSAnchor, GSAnnotation, GSApplication, GSImage, GSBackgroundImage, GSBackgroundLayer, GSClass, GSComponent, GSControlLayer, GSCustomParameter, GSDocument, GSProjectDocument, GSEditViewController, GSGlyphEditView, GSFontViewController, GSElement, GSGradient, GSColorStop, GSFeature, GSFeaturePrefix, GSProxyShapes, GSSubstitution, GSPartProperty, MGOrderedDictionary, GSNotifyingDictionary, GSPathFinder, GSPathPen, GSCallbackHandler, GSInterpolationFontProxy, GSFeatureGenerator, GSTTStem, GSMacroViewController, GSPathSegment, PreviewTextWindow, GSInfoValueLocalized, GSInfoValueSingle, GSInfoValue, GSMetricStore, GSGlyphReference, FTPointArray, GSSelectGlyphsDialogController, GSTransformableElement, GSHandle, GSUserNotification, GSFilterHandler, GSInfoProperty, GlyphsToolKnife, GSToolGroup, GSExportInstanceOperation, GSCustomParameterValueViewController, GSPropertyDialogController, GSParameterValueViewController  # type: ignore
 else:
 	GSFont: Type = objc.lookUpClass("GSFont")
 	GSFontMaster = objc.lookUpClass("GSFontMaster")
@@ -167,9 +167,6 @@ __all__ = [
 
 	# Methods
 	"divideCurve", "pointOnLine", "pointOnQuadratic", "distance", "addPoints", "subtractPoints", "GetFolder", "GetSaveFile", "GetOpenFile", "Message", "AskString", "PickGlyphs", "LogToConsole", "LogError", "removeOverlap", "subtractPaths", "intersectPaths", "scalePoint",
-
-	# Classes
-	"GSSmartComponentAxis",
 
 	# Menus
 	"APP_MENU", "FILE_MENU", "EDIT_MENU", "GLYPH_MENU", "PATH_MENU", "FILTER_MENU", "VIEW_MENU", "SCRIPT_MENU", "WINDOW_MENU", "HELP_MENU",
@@ -520,8 +517,8 @@ class OrderedDictProxy(Generic[T], ABC):  # T is the type of items in the sequen
 			start, stop, step = key.indices(length)
 			# Collect items at the specified indices
 			result = []
-			for i in range(start, stop, step):
-				result.append(self.getByIndex(i))
+			for idx in range(start, stop, step):
+				result.append(self.getByIndex(idx))
 			return result
 		elif not self.KEY_TYPE or isinstance(key, self.KEY_TYPE):
 			return self.getByKey(key)
@@ -734,8 +731,8 @@ class ListProxy(Generic[T], ABC):  # T is the type of items in the sequence
 			start, stop, step = key.indices(length)
 			# Collect items at the specified indices
 			result = []
-			for i in range(start, stop, step):
-				result.append(self.getByIndex(i))
+			for idx in range(start, stop, step):
+				result.append(self.getByIndex(idx))
 			return result
 		else:
 			raise TypeError(f"list indices must be integers or slices, not {type(key).__name__}")
@@ -2314,6 +2311,21 @@ add_type(GSUserNotification, "title", str)
 		:type: str
 '''
 
+
+GSUserNotification.subtitle = property(
+	lambda self: self.pyobjc_instanceMethods.subtitle(),
+	lambda self, value: self.setSubtitle_(value)
+)
+add_type(GSUserNotification, "subtitle", str)
+'''
+	.. attribute:: subtitle
+
+		the subtitle of the notification
+
+		:type: str
+'''
+
+
 GSUserNotification.message = property(
 	lambda self: self.informativeText(),
 	lambda self, value: self.setInformativeText_(value)
@@ -3646,7 +3658,7 @@ class UserDataProxy(DictProxy):
 		return self._owner.pyobjc_instanceMethods.userData().deepMutableCopy()
 
 	def setter(self, values: dict):
-		if values is not None and not isinstance(values, (dict, NSDictionary, self)):
+		if values is not None and not isinstance(values, (dict, NSDictionary, self.__class__)):
 			ValueError("%s is not a dict" % values)
 		self._owner.setUserData_(values)
 
@@ -3699,7 +3711,7 @@ class TempDataProxy(DictProxy):
 		return self._owner.pyobjc_instanceMethods.tempData().deepMutableCopy()
 
 	def setter(self, values: dict):
-		if values is not None and not isinstance(values, (dict, NSDictionary, self)):
+		if values is not None and not isinstance(values, (dict, NSDictionary, self.__class__)):
 			ValueError("%s is not a dict" % values)
 		self._owner.setTempData_(values)
 
@@ -3805,47 +3817,6 @@ class FontInfoPropertyProxy(DictProxy[GSInfoValue]):
 		if value is None:
 			return default
 		return value
-
-
-class SmartComponentPoleMappingProxy(DictProxy):
-
-	def getKeyOf(self, value: Any) -> str:
-		poleMapping = self._owner.partSelection()
-		keys = poleMapping.allKeysForObject_(value)
-		if keys:
-			return keys[0]
-		return ""
-
-	def getByKey(self, key: str) -> Any:
-		poleMapping = self._owner.partSelection()
-		if poleMapping is not None:
-			return poleMapping[key]
-		return None
-
-	def setByKey(self, key: str, value: Any):
-		poleMapping = self._owner.partSelection()
-		if poleMapping is None:
-			self._owner.setPartSelection_(NSMutableDictionary.dictionaryWithObject_forKey_(objcObject(value), objcObject(key)))
-		else:
-			poleMapping[key] = objcObject(value)
-
-	def removeByKey(self, key: str):
-		poleMapping = self._owner.partSelection()
-		if poleMapping is not None:
-			del (poleMapping[key])
-
-	def values(self):
-		poleMapping = self._owner.partSelection()
-		if poleMapping is not None:
-			return poleMapping.allValues()
-		return None
-
-	def __str__(self):
-		poleMapping = self._owner.partSelection()
-		return str(poleMapping)
-
-	def items(self):
-		return self._owner.partSelection().items()
 
 
 class SmartComponentValuesProxy(DictProxy[float]):
@@ -5792,7 +5763,7 @@ GSFont.toolIndex = property(
 toolClassAbbreviations = {  # abbreviation : className
 	"SelectTool": "GlyphsToolSelect",
 	"DrawTool": "GlyphsToolDraw",
-	"OtherTool": "GlyphsToolOther",
+	"KnifeTool": "GlyphsToolKnife",
 	"PenTool": "PenTool",
 	"PrimitivesTool": "GlyphsToolPrimitives",
 	"RotateTool": "GlyphsToolRotate",
@@ -8304,8 +8275,8 @@ def __GSFont_Export__(
 			instance.font = self
 			instances.append(instance)
 		allResults = []
-		for i in instances:
-			result = i.generate(
+		for instance in instances:
+			result = instance.generate(
 				format=format,
 				fontPath=fontPath,
 				autoHint=autoHint,
@@ -10046,7 +10017,7 @@ GSGlyph.updateGlyphInfo = python_method(__GSGlyph_updateGlyphInfo__)
 
 def __GSGlyph_Duplicate__(self, name: Optional[str] = None) -> GSGlyph:
 
-	newGlyph = self.copyThin_options_(False, 4)  # option: 4 copy all layers
+	newGlyph = self.copyWithOptions_(3)  # option: 1 (masters) + 2 (special) layers
 	if newGlyph.unicode:
 		newGlyph.unicode = None
 	if name:
@@ -10196,7 +10167,7 @@ GSControlLayer.bezierPath = property(lambda self: self.pyobjc_instanceMethods.be
 '''
 
 GSLayer.name = property(
-	lambda self: self.pyobjc_instanceMethods.name(),
+	lambda self: self.nameUI(),
 	lambda self, value: self.setName_(value),
 	doc="Name of layer."
 )
@@ -11013,38 +10984,12 @@ GSLayer.tempData = property(
 			del layer.tempData['rememberToMakeCoffee']
 '''
 
-GSLayer.smartComponentPoleMapping = property(lambda self: SmartComponentPoleMappingProxy(self))
+def __GSLayer_smartComponentPoleMapping__(self):
+	raise NotImplementedError('smartComponentPoleMapping has been removed. Position smart layers in the design space with layer.attributes["coordinates"], a dict keyed by axis.axisId (see glyph.axes).')
+
+
+GSLayer.smartComponentPoleMapping = property(__GSLayer_smartComponentPoleMapping__)
 '''
-	.. attribute:: smartComponentPoleMapping
-		Maps this layer to the poles on the interpolation axes of the Smart Glyph. The dictionary keys are the names of the :class:`GSSmartComponentAxis` objects. The values are 1 for bottom pole and 2 for top pole. Corresponds to the 'Layers' tab of the glyph’s ‘Show Smart Glyph Settings’ dialog.
-
-		Also see https://glyphsapp.com/learn/smart-components for reference.
-
-		:type: dict, int
-
-		.. code-block:: python
-			# Map layers to top and bottom poles:
-			crotchDepthAxis = glyph.smartComponentAxes['crotchDepth']
-			shoulderWidthAxis = glyph.smartComponentAxes['shoulderWidth']
-
-			for layer in glyph.layers:
-
-			    # Regular layer
-			    if layer.name == 'Regular':
-			        layer.smartComponentPoleMapping[crotchDepthAxis.id] = 2
-			        layer.smartComponentPoleMapping[shoulderWidthAxis.id] = 2
-
-			    # NarrowShoulder layer
-			    elif layer.name == 'NarrowShoulder':
-			        layer.smartComponentPoleMapping[crotchDepthAxis.id] = 2
-			        layer.smartComponentPoleMapping[shoulderWidthAxis.id] = 1
-
-			    # LowCrotch layer
-			    elif layer.name == 'LowCrotch':
-			        layer.smartComponentPoleMapping[crotchDepthAxis.id] = 1
-			        layer.smartComponentPoleMapping[shoulderWidthAxis.id] = 2
-
-
 	**Functions**
 
 	.. function:: copy()
@@ -11226,8 +11171,8 @@ GSLayer.endChanges = python_method(__GSLayer_EndChanges__)
 
 
 def __GSLayer_CutBetweenPoints__(self, point1: NSPoint, point2: NSPoint):
-	GlyphsToolOtherCls: Type[GlyphsToolOther] = NSClassFromString("GlyphsToolOther")
-	GlyphsToolOtherCls.cutPathsInLayer_forPoint_endPoint_(self, point1, point2)
+	GlyphsToolKnifeCls: Type[GlyphsToolKnife] = NSClassFromString("GlyphsToolKnife")
+	GlyphsToolKnifeCls.cutPathsInLayer_forPoint_endPoint_(self, point1, point2)
 
 
 GSLayer.cutBetweenPoints = python_method(__GSLayer_CutBetweenPoints__)
@@ -11436,9 +11381,9 @@ def __GSLayer__add__(self, summand: NSPoint | tuple | GSLayer):
 			raise ValueError("Layers are not compatible: %s, %s" % (self.compareString(), otherLayer.compareString()))
 		newLayer = self.copy()
 		newShapes = NSMutableArray.new()
-		for i in range(len(otherLayer.shapes)):
-			shape1 = newLayer.shapes[i]
-			shape2 = otherLayer.shapes[i]
+		for idx in range(len(otherLayer.shapes)):
+			shape1 = newLayer.shapes[idx]
+			shape2 = otherLayer.shapes[idx]
 			newShape = shape1 + shape2
 			newShapes.addObject_(newShape)
 		newLayer.shapes = newShapes
@@ -11470,9 +11415,9 @@ def __GSLayer__i_add__(self, summand: NSPoint | tuple | GSLayer):
 		otherLayer: GSLayer = cast(GSLayer, summand)
 		if self.compareString() != otherLayer.compareString():
 			raise ValueError("Layers are not compatible: %s, %s" % (self.compareString(), otherLayer.compareString()))
-		for i in range(len(otherLayer.shapes)):
-			shape1 = self.shapes[i]
-			shape2 = otherLayer.shapes[i]
+		for idx in range(len(otherLayer.shapes)):
+			shape1 = self.shapes[idx]
+			shape2 = otherLayer.shapes[idx]
 			shape1 += shape2
 
 		if len(self.anchors):
@@ -11502,9 +11447,9 @@ def __GSLayer__sub__(self, summand: NSPoint | tuple | GSLayer):
 			raise ValueError("Layers are not compatible: %s, %s" % (self.compareString(), otherLayer.compareString()))
 		newLayer = self.copy()
 		newShapes = NSMutableArray.new()
-		for i in range(len(otherLayer.shapes)):
-			shape1 = newLayer.shapes[i]
-			shape2 = otherLayer.shapes[i]
+		for idx in range(len(otherLayer.shapes)):
+			shape1 = newLayer.shapes[idx]
+			shape2 = otherLayer.shapes[idx]
 			newShape = shape1 - shape2
 			newShapes.addObject_(newShape)
 		newLayer.shapes = newShapes
@@ -11536,9 +11481,9 @@ def __GSLayer__iadd__(self, summand: NSPoint | tuple | GSLayer):
 		otherLayer: GSLayer = cast(GSLayer, summand)
 		if self.compareString() != otherLayer.compareString():
 			raise ValueError("Layers are not compatible: %s, %s" % (self.compareString(), otherLayer.compareString()))
-		for i in range(len(otherLayer.shapes)):
-			shape1 = self.shapes[i]
-			shape2 = otherLayer.shapes[i]
+		for idx in range(len(otherLayer.shapes)):
+			shape1 = self.shapes[idx]
+			shape2 = otherLayer.shapes[idx]
 			shape1 += shape2
 
 		if len(self.anchors):
@@ -11603,9 +11548,9 @@ def __GSPath__add__(self, summand: NSPoint | tuple | GSLayer):
 			raise ValueError("Paths are not compatible: %s, %s" % (len(self.nodes), len(otherPath.nodes)))
 		newPath = self.copy()
 		newNodes = NSMutableArray.new()
-		for i in range(len(otherPath.nodes)):
-			node1 = newPath.nodes[i]
-			node2 = otherPath.nodes[i]
+		for idx in range(len(otherPath.nodes)):
+			node1 = newPath.nodes[idx]
+			node2 = otherPath.nodes[idx]
 			newNode = node1 + node2
 			newNodes.addObject_(newNode)
 		newPath.nodes = newNodes
@@ -11629,9 +11574,9 @@ def __GSPath__i_add__(self, summand: NSPoint | tuple | GSLayer):
 	elif isinstance(summand, GSPath):
 		if len(self.nodes) != len(summand.nodes) or self.closed != summand.closed:
 			raise ValueError("Paths are not compatible: %s, %s" % (len(self.nodes), len(summand.nodes)))
-		for i in range(len(summand.nodes)):
-			node1 = self.nodes[i]
-			node2 = summand.nodes[i]
+		for idx in range(len(summand.nodes)):
+			node1 = self.nodes[idx]
+			node2 = summand.nodes[idx]
 			node1 += node2
 	else:
 		raise TypeError("unsupported operand type(s) for +: '%s' and '%s'" % (type(self).__name__, type(summand).__name__))
@@ -12243,7 +12188,7 @@ GSComponent.alignment = property(
 '''
 	.. attribute:: alignment
 
-	
+
 		See :ref:`component-alignment` for available constants.
 
 		.. versionadded:: 2.5
@@ -12332,9 +12277,9 @@ GSComponent.drawPoints = python_method(DrawComponentWithPen)
 GSComponent.smartComponentValues = property(lambda self: SmartComponentValuesProxy(self))
 '''
 	.. attribute:: smartComponentValues
-		Dictionary of interpolations values of the Smart Component. Key are the axis.id, values are between the top and the bottom value of the corresponding :class:`GSSmartComponentAxis` objects. Corresponds to the values of the ‘Smart Component Settings’ dialog. Returns None if the component is not a Smart Component.
+		Dictionary of interpolation values of the Smart Component. Keys are the ``axisId`` of the :class:`GSAxis` objects in the smart glyph’s :attr:`GSGlyph.axes` (or the font’s :attr:`GSFont.axes`). Corresponds to the values of the ‘Smart Component Settings’ dialog. Returns None if the component is not a Smart Component.
 
-		For newly setup smart glyphs, the axis.id is a random string. After saving and re-opening the file, the name and id is the same. As long as you don't change the name. So it is saver to always go through the smart glyphs > axis > id (as explained in the code sample below.
+		For newly setup smart glyphs, the axis.axisId is a random string. After saving and re-opening the file, the name and axisId stay the same, as long as you don't change the name. So it is safer to always go through the smart glyph > axis > axisId (as explained in the code sample below).
 
 		Also see https://glyphsapp.com/learn/smart-components for reference.
 
@@ -12343,8 +12288,8 @@ GSComponent.smartComponentValues = property(lambda self: SmartComponentValuesPro
 		.. code-block:: python
 
 			component = glyph.layers[0].shapes[1]
-			widthAxis = component.component.smartComponentAxes['Width']  # get the width axis from the smart glyph
-			components.smartComponentValues[widthAxis.id] = 45
+			widthAxis = component.component.axes[0]  # get the width axis from the smart glyph
+			component.smartComponentValues[widthAxis.axisId] = 45
 
 			# Check whether a component is a smart component
 			for component in layer.components:
@@ -12543,6 +12488,9 @@ Implementation of the Smart Component interpolation axis object.
 For details on how to access them, please see :attr:`GSGlyph.smartComponentAxes`
 
 .. versionadded:: 2.3
+
+.. deprecated:: 4
+	Smart glyphs now use regular :class:`GSAxis` objects in :attr:`GSGlyph.axes` (exactly like :attr:`GSFont.axes`). Smart layers are positioned with :attr:`GSLayer.attributes` ["coordinates"], keyed by ``axis.axisId``.
 
 .. class:: GSSmartComponentAxis()
 
@@ -12946,29 +12894,29 @@ def DrawPathWithPen(self, pen):
 
 	Start = 0
 	if self.closed:
-		for i in range(len(self) - 1, -1, -1):
-			StartNode = self.nodeAtIndex_(i)
+		for idx in range(len(self) - 1, -1, -1):
+			StartNode = self.nodeAtIndex_(idx)
 			GS_Type = StartNode.pyobjc_instanceMethods.type()
 			if GS_Type is not GSOFFCURVE_:
 				pen.moveTo(StartNode.pyobjc_instanceMethods.position())
 				break
 	else:
-		for i in range(len(self)):
-			StartNode = self.nodeAtIndex_(i)
+		for idx in range(len(self)):
+			StartNode = self.nodeAtIndex_(idx)
 			GS_Type = StartNode.pyobjc_instanceMethods.type()
 			if GS_Type is not GSOFFCURVE_:
 				pen.moveTo(StartNode.pyobjc_instanceMethods.position())
-				Start = i + 1
+				Start = idx + 1
 				break
-	for i in range(Start, len(self), 1):
-		node = self.nodeAtIndex_(i)
+	for idx in range(Start, len(self), 1):
+		node = self.nodeAtIndex_(idx)
 		GS_Type = node.pyobjc_instanceMethods.type()
 		if GS_Type == GSLINE_:
 			pen.lineTo(node.pyobjc_instanceMethods.position())
 		elif GS_Type == GSCURVE_:
 			pen.curveTo(
-				self.nodeAtIndex_(i - 2).pyobjc_instanceMethods.position(),
-				self.nodeAtIndex_(i - 1).pyobjc_instanceMethods.position(), node.pyobjc_instanceMethods.position())
+				self.nodeAtIndex_(idx - 2).pyobjc_instanceMethods.position(),
+				self.nodeAtIndex_(idx - 1).pyobjc_instanceMethods.position(), node.pyobjc_instanceMethods.position())
 	if self.closed:
 		pen.closePath()
 	else:
@@ -15970,7 +15918,7 @@ The NSAffineTransform object.
 .. class:: NSAffineTransform()
 
 	Properties
-	
+
 		* :attr:`matrix`
 
 	Functions
@@ -16215,9 +16163,19 @@ NSMenuItem.insert = python_method(__NSMenuItem__insert__)  # type: ignore
 FTPointArray.__len__ = python_method(lambda self: self.count())
 
 
-def __FTPointArray__getitem__(self, idx):
-	if idx < self.count():
+def __FTPointArray__getitem__(self, key):
+	if isinstance(key, int):
+		idx = _validate_idx(cast(Sequence, self), key)
 		return self.pointAtIndex_(idx)
+	elif isinstance(key, slice):
+		# Handle slice access
+		length = len(self)
+		start, stop, step = key.indices(length)
+		# Collect items at the specified indices
+		result = []
+		for idx in range(start, stop, step):
+			result.append(self.pointAtIndex_(idx))
+		return result
 	raise IndexError("list index out of range")
 
 
