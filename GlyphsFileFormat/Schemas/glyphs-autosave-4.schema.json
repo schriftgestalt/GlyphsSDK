@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "https://info.glyphsapp.com/schema/glyphs-autosave-3.schema.json",
+	"$id": "https://info.glyphsapp.com/schema/glyphs-autosave-4.schema.json",
 	"title": "Glyphs Document",
 	"description": "A native Glyphs source file.",
 	"type": "object",
@@ -8,6 +8,14 @@
 		"anchor": {
 			"type": "object",
 			"properties": {
+				"attr": {
+					"$ref": "#/$defs/attr",
+					"default": {},
+					"description": "The attributes of the anchor.",
+					"glyphsCondition": {
+						"minVersion": 4
+					}
+				},
 				"locked": {
 					"type": "integer",
 					"glyphsNumber": "bool",
@@ -42,15 +50,6 @@
 					"description": "The position of the anchor.",
 					"glyphsCondition": {
 						"minVersion": 3
-					}
-				},
-				"userData": {
-					"$ref": "#/$defs/userData",
-					"default": {},
-					"description": "Custom data associated with the anchor.",
-					"glyphsCondition": {
-						"minVersion": 3,
-						"maxVersion": 3
 					}
 				}
 			},
@@ -137,10 +136,29 @@
 					"default": "",
 					"description": "The user-facing name of the axis."
 				},
+				"names": {
+					"type": "array",
+					"items": {
+						"$ref": "#/$defs/infoValue"
+					},
+					"default": [],
+					"description": "The user-facing, localized name of the axis.",
+					"glyphsCondition": {
+						"minVersion": 4
+					}
+				},
 				"tag": {
 					"type": "string",
 					"default": "",
 					"description": "The OpenType tag of the axis. Must be unique within the font. The tag may be longer than four characters in which case only the first four characters are considered to be the canonical tag of the axis and the rest is used as a differentiating identifier. On export, the canonical tag is used. Multiple axes with the same canonical tag are useful for higher-order interpolation."
+				},
+				"userData": {
+					"$ref": "#/$defs/userData",
+					"default": {},
+					"description": "Custom data associated with the axis.",
+					"glyphsCondition": {
+						"minVersion": 4
+					}
 				}
 			},
 			"additionalProperties": false,
@@ -209,6 +227,122 @@
 					"type": "array",
 					"prefixItems": [
 						{
+							"type": "number",
+							"glyphsNumber": "f64",
+							"description": "The red color component.",
+							"minimum": 0,
+							"maximum": 1
+						},
+						{
+							"type": "number",
+							"glyphsNumber": "f64",
+							"description": "The green color component.",
+							"minimum": 0,
+							"maximum": 1
+						},
+						{
+							"type": "number",
+							"glyphsNumber": "f64",
+							"description": "The blue color component.",
+							"minimum": 0,
+							"maximum": 1
+						},
+						{
+							"type": "number",
+							"glyphsNumber": "f64",
+							"description": "The alpha color component.",
+							"minimum": 0,
+							"maximum": 1
+						}
+					],
+					"items": false,
+					"minItems": 4,
+					"maxItems": 4,
+					"glyphsCompact": true,
+					"description": "An RGB color with an alpha channel in the font color space. In version 4, color components are normalized to the range 0\u20261.",
+					"glyphsCondition": {
+						"minVersion": 4
+					}
+				},
+				{
+					"type": "array",
+					"prefixItems": [
+						{
+							"type": "number",
+							"glyphsNumber": "f64",
+							"description": "The gray value from `0` (black) to `1` (white).",
+							"minimum": 0,
+							"maximum": 1
+						},
+						{
+							"type": "number",
+							"glyphsNumber": "f64",
+							"description": "The alpha color component.",
+							"minimum": 0,
+							"maximum": 1
+						}
+					],
+					"items": false,
+					"minItems": 2,
+					"maxItems": 2,
+					"glyphsCompact": true,
+					"description": "A gray color with an alpha channel. In version 4, color components are normalized to the range 0\u20261.",
+					"glyphsCondition": {
+						"minVersion": 4
+					}
+				},
+				{
+					"type": "array",
+					"prefixItems": [
+						{
+							"type": "number",
+							"glyphsNumber": "f64",
+							"description": "The cyan color component.",
+							"minimum": 0,
+							"maximum": 1
+						},
+						{
+							"type": "number",
+							"glyphsNumber": "f64",
+							"description": "The magenta color component.",
+							"minimum": 0,
+							"maximum": 1
+						},
+						{
+							"type": "number",
+							"glyphsNumber": "f64",
+							"description": "The yellow color component.",
+							"minimum": 0,
+							"maximum": 1
+						},
+						{
+							"type": "number",
+							"glyphsNumber": "f64",
+							"description": "The black color component.",
+							"minimum": 0,
+							"maximum": 1
+						},
+						{
+							"type": "number",
+							"glyphsNumber": "f64",
+							"description": "The alpha color component.",
+							"minimum": 0,
+							"maximum": 1
+						}
+					],
+					"items": false,
+					"minItems": 5,
+					"maxItems": 5,
+					"glyphsCompact": true,
+					"description": "A CMYK color with an alpha channel. In version 4, color components are normalized to the range 0\u20261.",
+					"glyphsCondition": {
+						"minVersion": 4
+					}
+				},
+				{
+					"type": "array",
+					"prefixItems": [
+						{
 							"type": "string",
 							"const": "p",
 							"description": "Indicates a palette color reference."
@@ -218,14 +352,14 @@
 							"glyphsNumber": "u16",
 							"minimum": 0,
 							"maximum": 65535,
-							"description": "The color palette entry index."
+							"description": "The color palette entry index. `65535` indicates the current text color."
 						},
 						{
-							"type": "integer",
-							"glyphsNumber": "u8",
+							"type": "number",
+							"glyphsNumber": "f64",
 							"minimum": 0,
-							"maximum": 255,
-							"default": 255,
+							"maximum": 1,
+							"default": 1,
 							"description": "The alpha factor applied to the referenced palette color."
 						}
 					],
@@ -233,128 +367,9 @@
 					"minItems": 3,
 					"maxItems": 3,
 					"glyphsCompact": true,
-					"description": "A legacy color reference into the version 3 `Color Palettes` custom parameter, written with an 8-bit alpha factor.",
+					"description": "A color reference into the `Color Palettes` custom parameter.",
 					"glyphsCondition": {
-						"minVersion": 3,
-						"maxVersion": 3
-					}
-				},
-				{
-					"type": "array",
-					"prefixItems": [
-						{
-							"type": "integer",
-							"glyphsNumber": "u8",
-							"description": "The red color component.",
-							"minimum": 0,
-							"maximum": 255
-						},
-						{
-							"type": "integer",
-							"glyphsNumber": "u8",
-							"description": "The green color component.",
-							"minimum": 0,
-							"maximum": 255
-						},
-						{
-							"type": "integer",
-							"glyphsNumber": "u8",
-							"description": "The blue color component.",
-							"minimum": 0,
-							"maximum": 255
-						},
-						{
-							"type": "integer",
-							"glyphsNumber": "u8",
-							"description": "The alpha color component.",
-							"minimum": 0,
-							"maximum": 255
-						}
-					],
-					"items": false,
-					"minItems": 4,
-					"maxItems": 4,
-					"glyphsCompact": true,
-					"description": "An RGB color with an alpha channel in the sRGB IEC61966-2.1 color space.",
-					"glyphsCondition": {
-						"maxVersion": 3
-					}
-				},
-				{
-					"type": "array",
-					"prefixItems": [
-						{
-							"type": "integer",
-							"glyphsNumber": "u8",
-							"description": "The gray value from `0` (black) to `255` (white).",
-							"minimum": 0,
-							"maximum": 255
-						},
-						{
-							"type": "integer",
-							"glyphsNumber": "u8",
-							"description": "The alpha color component.",
-							"minimum": 0,
-							"maximum": 255
-						}
-					],
-					"items": false,
-					"minItems": 2,
-					"maxItems": 2,
-					"glyphsCompact": true,
-					"description": "A gray color with an alpha channel in a perceptual generic gray color space with \u03b3 = 2.2.",
-					"glyphsCondition": {
-						"minVersion": 3,
-						"maxVersion": 3
-					}
-				},
-				{
-					"type": "array",
-					"prefixItems": [
-						{
-							"type": "integer",
-							"glyphsNumber": "u8",
-							"description": "The cyan color component.",
-							"minimum": 0,
-							"maximum": 255
-						},
-						{
-							"type": "integer",
-							"glyphsNumber": "u8",
-							"description": "The magenta color component.",
-							"minimum": 0,
-							"maximum": 255
-						},
-						{
-							"type": "integer",
-							"glyphsNumber": "u8",
-							"description": "The yellow color component.",
-							"minimum": 0,
-							"maximum": 255
-						},
-						{
-							"type": "integer",
-							"glyphsNumber": "u8",
-							"description": "The black color component.",
-							"minimum": 0,
-							"maximum": 255
-						},
-						{
-							"type": "integer",
-							"glyphsNumber": "u8",
-							"description": "The alpha color component.",
-							"minimum": 0,
-							"maximum": 255
-						}
-					],
-					"items": false,
-					"minItems": 5,
-					"maxItems": 5,
-					"glyphsCompact": true,
-					"description": "A CMYK color with an alpha channel. The color space is device-dependent.",
-					"glyphsCondition": {
-						"minVersion": 3,
-						"maxVersion": 3
+						"minVersion": 4
 					}
 				}
 			]
@@ -537,12 +552,17 @@
 						"minVersion": 3
 					}
 				},
-				"userData": {
-					"$ref": "#/$defs/userData",
-					"default": {},
-					"description": "Custom data associated with the component. See `attr` for current format versions.",
+				"traverseAnchors": {
+					"type": "integer",
+					"glyphsNumber": "bool",
+					"enum": [
+						0,
+						1
+					],
+					"default": true,
+					"description": "Whether the component should traverse anchors.",
 					"glyphsCondition": {
-						"maxVersion": 3
+						"minVersion": 4
 					}
 				}
 			},
@@ -719,6 +739,19 @@
 		"fontMaster": {
 			"type": "object",
 			"properties": {
+				"active": {
+					"type": "integer",
+					"glyphsNumber": "bool",
+					"enum": [
+						0,
+						1
+					],
+					"default": true,
+					"description": "Whether the master is active.",
+					"glyphsCondition": {
+						"minVersion": 4
+					}
+				},
 				"axesValues": {
 					"type": "array",
 					"items": {
@@ -842,6 +875,17 @@
 		"glyph": {
 			"type": "object",
 			"properties": {
+				"axes": {
+					"type": "array",
+					"items": {
+						"$ref": "#/$defs/axis"
+					},
+					"default": [],
+					"description": "The Smart Glyph variation axes of the glyph.",
+					"glyphsCondition": {
+						"minVersion": 4
+					}
+				},
 				"case": {
 					"enum": [
 						"noCase",
@@ -900,6 +944,22 @@
 				"glyphname": {
 					"type": "string",
 					"description": "The name of the glyph."
+				},
+				"group": {
+					"type": "string",
+					"description": "The glyph group name.",
+					"glyphsCondition": {
+						"minVersion": 4
+					}
+				},
+				"groupIdx": {
+					"type": "integer",
+					"glyphsNumber": "i32",
+					"default": 0,
+					"description": "The index of the glyph within its group.",
+					"glyphsCondition": {
+						"minVersion": 4
+					}
 				},
 				"kernBottom": {
 					"type": "string",
@@ -1109,6 +1169,14 @@
 					"default": 0,
 					"description": "The angle at which the guide is drawn in degrees clockwise."
 				},
+				"attr": {
+					"$ref": "#/$defs/attr",
+					"default": {},
+					"description": "The attributes of the guide.",
+					"glyphsCondition": {
+						"minVersion": 4
+					}
+				},
 				"filter": {
 					"type": "string",
 					"description": "The filter of the guide. The syntax is the description of [NSPredicate](https://developer.apple.com/documentation/foundation/nspredicate). Omitted when no filter is defined."
@@ -1190,6 +1258,19 @@
 						"minVersion": 3
 					}
 				},
+				"slope": {
+					"type": "integer",
+					"glyphsNumber": "bool",
+					"enum": [
+						0,
+						1
+					],
+					"default": false,
+					"description": "Whether the guide has a slope.",
+					"glyphsCondition": {
+						"minVersion": 4
+					}
+				},
 				"type": {
 					"enum": [
 						"Line",
@@ -1201,15 +1282,6 @@
 					"description": "The type of the guide.",
 					"glyphsCondition": {
 						"minVersion": 3
-					}
-				},
-				"userData": {
-					"$ref": "#/$defs/userData",
-					"default": {},
-					"description": "Custom data associated with the guide.",
-					"glyphsCondition": {
-						"minVersion": 3,
-						"maxVersion": 3
 					}
 				}
 			},
@@ -1230,6 +1302,10 @@
 							"$ref": "#/$defs/pos",
 							"description": "The end point of the linear gradient relative to the shape bounds."
 						},
+						"extend": {
+							"$ref": "#/$defs/gradientExtend",
+							"description": "How the gradient behaves outside the start/end range. Omitted for pad mode."
+						},
 						"start": {
 							"$ref": "#/$defs/pos",
 							"description": "The start point of the linear gradient relative to the shape bounds."
@@ -1245,19 +1321,56 @@
 				{
 					"type": "object",
 					"properties": {
+						"angle": {
+							"type": "number",
+							"glyphsNumber": "f64",
+							"default": 0,
+							"description": "The radial gradient angle.",
+							"glyphsCondition": {
+								"minVersion": 4
+							}
+						},
 						"colors": {
 							"$ref": "#/$defs/gradientColors",
 							"description": "The color stops of the gradient."
+						},
+						"end": {
+							"$ref": "#/$defs/pos",
+							"description": "The end center of the radial gradient relative to the shape bounds.",
+							"glyphsCondition": {
+								"minVersion": 4
+							}
+						},
+						"endRadius": {
+							"type": "number",
+							"glyphsNumber": "f64",
+							"description": "The end radius of the radial gradient relative to the shape bounds.",
+							"glyphsCondition": {
+								"minVersion": 4
+							}
+						},
+						"extend": {
+							"$ref": "#/$defs/gradientExtend",
+							"description": "How the gradient behaves outside the start/end range. Omitted for pad mode."
 						},
 						"start": {
 							"$ref": "#/$defs/pos",
 							"description": "The start center of the radial gradient relative to the shape bounds."
 						},
+						"startRadius": {
+							"type": "number",
+							"glyphsNumber": "f64",
+							"default": 0,
+							"description": "The start radius of the radial gradient relative to the shape bounds.",
+							"glyphsCondition": {
+								"minVersion": 4
+							}
+						},
 						"type": {
 							"type": "string",
-							"const": "circle",
+							"const": "radial",
 							"glyphsCondition": {
-								"maxVersion": 3
+								"minVersion": 4
 							},
 							"description": "The radial gradient type marker."
 						}
@@ -1269,6 +1382,56 @@
 					],
 					"description": "A radial gradient.",
 					"glyphsType": "GSRadialGradient"
+				},
+				{
+					"type": "object",
+					"properties": {
+						"angle": {
+							"type": "number",
+							"glyphsNumber": "f64",
+							"default": 360,
+							"description": "The angular extent of the conic gradient."
+						},
+						"center": {
+							"$ref": "#/$defs/pos",
+							"description": "The center of the conic gradient relative to the shape bounds."
+						},
+						"colors": {
+							"$ref": "#/$defs/gradientColors",
+							"description": "The color stops of the gradient."
+						},
+						"controlRadius": {
+							"type": "number",
+							"glyphsNumber": "f64",
+							"default": 0,
+							"description": "The radius used to control the conic gradient."
+						},
+						"extend": {
+							"$ref": "#/$defs/gradientExtend",
+							"description": "How the gradient behaves outside the start/end range. Omitted for pad mode."
+						},
+						"startAngle": {
+							"type": "number",
+							"glyphsNumber": "f64",
+							"default": 0,
+							"description": "The start angle of the conic gradient."
+						},
+						"type": {
+							"type": "string",
+							"const": "conic",
+							"description": "The conic gradient type marker."
+						}
+					},
+					"additionalProperties": false,
+					"required": [
+						"colors",
+						"type"
+					],
+					"description": "A conic gradient.",
+					"glyphsCondition": {
+						"minVersion": 4
+					},
+					"glyphsType": "GSConicGradient"
 				}
 			],
 			"glyphsType": "GSGradient",
@@ -1283,6 +1446,17 @@
 			},
 			"glyphsCondition": {
 				"minVersion": 3
+			}
+		},
+		"gradientExtend": {
+			"enum": [
+				"repeat",
+				"reflect"
+			],
+			"type": "string",
+			"default": "pad",
+			"glyphsCondition": {
+				"minVersion": 4
 			}
 		},
 		"gradientColorStop": {
@@ -1384,23 +1558,7 @@
 					"description": "The stem of the hint."
 				},
 				"target": {
-					"oneOf": [
-						{
-							"$ref": "#/$defs/indexPath"
-						},
-						{
-							"enum": [
-								"up",
-								"down"
-							],
-							"type": "string",
-							"description": "The target of a ghost hint.",
-							"glyphsCondition": {
-								"minVersion": 3,
-								"maxVersion": 3
-							}
-						}
-					]
+					"$ref": "#/$defs/indexPath"
 				},
 				"type": {
 					"enum": [
@@ -1419,13 +1577,13 @@
 						"Cap",
 						"Brush",
 						"Segment",
+						"Head",
 						"Auto",
 						"Unknown"
 					],
 					"type": "string",
 					"glyphsCondition": {
-						"minVersion": 3,
-						"maxVersion": 3
+						"minVersion": 4
 					},
 					"description": "The type of the hint."
 				}
@@ -1454,6 +1612,14 @@
 					"description": "The rotation angle of the image in degrees clockwise.",
 					"glyphsCondition": {
 						"minVersion": 3
+					}
+				},
+				"attr": {
+					"$ref": "#/$defs/attr",
+					"default": {},
+					"description": "The attributes of the image.",
+					"glyphsCondition": {
+						"minVersion": 4
 					}
 				},
 				"crop": {
@@ -1597,6 +1763,13 @@
 					"default": true,
 					"description": "Whether the instance is exported."
 				},
+				"id": {
+					"type": "string",
+					"description": "The unique ID of the instance.",
+					"glyphsCondition": {
+						"minVersion": 4
+					}
+				},
 				"instanceInterpolations": {
 					"type": "object",
 					"additionalProperties": {
@@ -1666,19 +1839,6 @@
 					],
 					"default": false,
 					"description": "Whether the `instanceInterpolations` values are used. Otherwise, the values are calculated from the axis values."
-				},
-				"name": {
-					"type": "string",
-					"examples": [
-						"Regular",
-						"Bold",
-						"Italic",
-						"Bold Italic"
-					],
-					"description": "The style name of the instance.",
-					"glyphsCondition": {
-						"maxVersion": 3
-					}
 				},
 				"properties": {
 					"type": "array",
@@ -1862,6 +2022,22 @@
 			"default": {},
 			"description": "Maps master IDs to kerning definitions."
 		},
+		"kerningContext": {
+			"type": "object",
+			"additionalProperties": {
+				"type": "object",
+				"additionalProperties": {
+					"type": "number",
+					"glyphsNumber": "f64"
+				},
+				"description": "Maps master IDs to kerning values."
+			},
+			"default": {},
+			"description": "Maps kerning contexts to kerning definitions.",
+			"glyphsCondition": {
+				"minVersion": 4
+			}
+		},
 		"layer": {
 			"type": "object",
 			"properties": {
@@ -1871,6 +2047,19 @@
 					"description": "The time interval of the last update of the layer in seconds since 2001-01-01 00:00:00 GMT.",
 					"glyphsCondition": {
 						"autosave": true
+					}
+				},
+				"active": {
+					"type": "integer",
+					"glyphsNumber": "bool",
+					"enum": [
+						0,
+						1
+					],
+					"default": true,
+					"description": "Whether the layer is active.",
+					"glyphsCondition": {
+						"minVersion": 4
 					}
 				},
 				"anchors": {
@@ -2183,9 +2372,21 @@
 				"coordinates": {
 					"type": "array",
 					"items": {
-						"type": "number",
-						"glyphsNumber": "f64",
-						"description": "The explicit coordinate value."
+						"oneOf": [
+							{
+								"type": "number",
+								"glyphsNumber": "f64",
+								"description": "The explicit coordinate value."
+							},
+							{
+								"type": "string",
+								"const": "-",
+								"description": "Use the default value for this axis.",
+								"glyphsCondition": {
+									"minVersion": 4
+								}
+							}
+						]
 					},
 					"default": [],
 					"description": "Intermediate-layer coordinates, ordered like the relevant axes. Starting in version 4, also contains the glyph-local axis coordinates for layers of Smart Glyphs.",
@@ -2219,6 +2420,59 @@
 			"additionalProperties": {},
 			"glyphsCondition": {
 				"minVersion": 3
+			}
+		},
+		"lineCap": {
+			"oneOf": [
+				{
+					"type": "integer",
+					"const": 0,
+					"description": "Butt: ends the stroke at the path endpoint."
+				},
+				{
+					"type": "integer",
+					"const": 1,
+					"description": "Round: extends the stroke with a semicircular cap."
+				},
+				{
+					"type": "integer",
+					"const": 2,
+					"description": "Square: extends the stroke with a square cap."
+				},
+				{
+					"type": "integer",
+					"const": 3,
+					"description": "Round inset: ends the stroke with an inset semicircular cap."
+				},
+				{
+					"type": "integer",
+					"const": 4,
+					"description": "Align to axis: aligns the cap to the nearest coordinate axis.",
+					"glyphsCondition": {
+						"minVersion": 4
+					}
+				},
+				{
+					"type": "integer",
+					"const": 5,
+					"description": "Align to x-axis: aligns the cap to the x-axis.",
+					"glyphsCondition": {
+						"minVersion": 4
+					}
+				},
+				{
+					"type": "integer",
+					"const": 6,
+					"description": "Align to y-axis: aligns the cap to the y-axis.",
+					"glyphsCondition": {
+						"minVersion": 4
+					}
+				}
+			],
+			"type": "integer",
+			"glyphsNumber": "u8",
+			"glyphsCondition": {
+				"minVersion": 4
 			}
 		},
 		"metric": {
@@ -2297,16 +2551,16 @@
 				{
 					"type": "string",
 					"minLength": 1,
-					"description": "The configuration of the node expressed as a sequence of characters. Types: `m`: move, `l`: line, `c`: cubic curve, `q`: quadratic curve, `o`: off-curve. Connection (may follow `l`, `c`, `q`): `s`: smooth. Orientation (left is the default): `R`: right, `C`: center. Locking (not locked is the default): `X`: locked.",
+					"description": "The configuration of the node expressed as a sequence of characters. Types: `m`: move, `l`: line, `c`: cubic curve, `q`: quadratic curve, `u`: quartic curve, `h`: Hobby curve, `r`: Raph New Spiral, `o`: off-curve. Connections (may follow on-curve types): `s`: smooth, `t`: tangent. Orientation (left is the default): `R`: right, `C`: center. Locking (not locked is the default): `X`: locked.",
 					"glyphsCondition": {
-						"maxVersion": 3
+						"minVersion": 4
 					}
 				},
 				{
-					"$ref": "#/$defs/attr",
+					"$ref": "#/$defs/nodeAttr",
 					"default": {},
 					"glyphsCondition": {
-						"maxVersion": 3
+						"minVersion": 4
 					},
 					"description": "The attributes of the node."
 				}
@@ -2318,6 +2572,134 @@
 				"minVersion": 3
 			},
 			"glyphsType": "GSNode"
+		},
+		"nodeAttr": {
+			"type": "object",
+			"properties": {
+				"hoi": {
+					"type": "object",
+					"additionalProperties": {
+						"oneOf": [
+							{
+								"type": "object",
+								"properties": {
+									"ip": {
+										"type": "array",
+										"prefixItems": [
+											{
+												"type": "number",
+												"glyphsNumber": "f64",
+												"description": "The x-coordinate of the intermediate point."
+											},
+											{
+												"type": "number",
+												"glyphsNumber": "f64",
+												"description": "The y-coordinate of the intermediate point."
+											}
+										],
+										"items": false,
+										"minItems": 2,
+										"maxItems": 2,
+										"glyphsCompact": true
+									}
+								},
+								"additionalProperties": false,
+								"description": "HOI intermediate point."
+							},
+							{
+								"type": "object",
+								"properties": {
+									"rc": {
+										"oneOf": [
+											{
+												"type": "array",
+												"prefixItems": [
+													{
+														"type": "number",
+														"glyphsNumber": "f64",
+														"description": "The x-coordinate of the rotation center."
+													},
+													{
+														"type": "number",
+														"glyphsNumber": "f64",
+														"description": "The y-coordinate of the rotation center."
+													}
+												],
+												"items": false,
+												"minItems": 2,
+												"maxItems": 2,
+												"glyphsCompact": true
+											},
+											{
+												"const": "auto",
+												"type": "string",
+												"description": "The rotation center is automatically determined based on the shared center of the lower HOI shape and upper HOI shape."
+											}
+										],
+										"description": "HOI rotation center."
+									},
+									"rd": {
+										"type": "string",
+										"enum": [
+											"cw",
+											"ccw"
+										],
+										"default": null,
+										"description": "The rotation direction: clockwise or counter-clockwise. When not set, the direction with the smallest angle is used."
+									}
+								},
+								"additionalProperties": false,
+								"description": "HOI rotation."
+							},
+							{
+								"type": "object",
+								"properties": {
+									"tl": {
+										"type": "number",
+										"glyphsNumber": "f64",
+										"default": 0.3333333333333333,
+										"description": "Lower time."
+									},
+									"tu": {
+										"type": "number",
+										"glyphsNumber": "f64",
+										"default": 0.3333333333333333,
+										"description": "Upper time."
+									},
+									"al": {
+										"type": "number",
+										"glyphsNumber": "f64",
+										"default": 0,
+										"description": "Lower amplitude."
+									},
+									"au": {
+										"type": "number",
+										"glyphsNumber": "f64",
+										"default": 0,
+										"description": "Upper amplitude."
+									}
+								},
+								"additionalProperties": false,
+								"default": {},
+								"description": "HOI B\u00e9zier interpolation. The time is the linear interpolation from the associated node to the other node. The amplitude is the offset orthogonal to the line connecting the associated node and the other node as a percentage of the length of that line."
+							}
+						]
+					},
+					"default": {},
+					"description": "Maps axis tags to higher-order interpolation descriptions. The info is stored in the lower node for the HOI span of that axis.",
+					"glyphsCondition": {
+						"minVersion": 4
+					}
+				},
+				"userData": {
+					"$ref": "#/$defs/userData",
+					"default": {},
+					"description": "Custom data associated with the node."
+				}
+			},
+			"glyphsCondition": {
+				"minVersion": 4
+			}
 		},
 		"infoProperty": {
 			"oneOf": [
@@ -2397,13 +2779,6 @@
 		"partProperty": {
 			"type": "object",
 			"properties": {
-				"bottomName": {
-					"type": "string",
-					"description": "The name of the bottom value of the property. (Unused)",
-					"glyphsCondition": {
-						"maxVersion": 3
-					}
-				},
 				"bottomValue": {
 					"type": "integer",
 					"glyphsNumber": "i32",
@@ -2412,13 +2787,6 @@
 				"name": {
 					"type": "string",
 					"description": "The name of the property."
-				},
-				"topName": {
-					"type": "string",
-					"description": "The name of the top value of the property. (Unused)",
-					"glyphsCondition": {
-						"maxVersion": 3
-					}
 				},
 				"topValue": {
 					"type": "integer",
@@ -2430,17 +2798,60 @@
 			"glyphsType": "GSPartProperty"
 		},
 		"palettes": {
-			"type": "array",
-			"items": {
-				"type": "array",
-				"items": {
-					"$ref": "#/$defs/color"
+			"type": "object",
+			"properties": {
+				"names": {
+					"type": "object",
+					"additionalProperties": {
+						"type": "string"
+					},
+					"default": {},
+					"description": "Maps color indices to color names."
+				},
+				"palettes": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"backgroundStyle": {
+								"type": "array",
+								"items": {
+									"enum": [
+										"dark",
+										"light"
+									],
+									"type": "string"
+								},
+								"default": [],
+								"description": "Which UI background styles the palette is intended for."
+							},
+							"colors": {
+								"type": "array",
+								"items": {
+									"$ref": "#/$defs/color"
+								},
+								"description": "The colors of the palette."
+							},
+							"name": {
+								"type": "string",
+								"description": "The palette name."
+							}
+						},
+						"additionalProperties": false,
+						"required": [
+							"colors"
+						]
+					},
+					"description": "The color palettes."
 				}
 			},
-			"description": "The version 3 structure of the `Color Palettes` custom parameter.",
+			"additionalProperties": false,
+			"required": [
+				"palettes"
+			],
+			"description": "The version 4 structure of the `Color Palettes` custom parameter.",
 			"glyphsCondition": {
-				"minVersion": 3,
-				"maxVersion": 3
+				"minVersion": 4
 			},
 			"glyphsType": "GSPalettes"
 		},
@@ -2537,6 +2948,18 @@
 				},
 				{
 					"$ref": "#/$defs/component"
+				},
+				{
+					"$ref": "#/$defs/image",
+					"glyphsCondition": {
+						"minVersion": 4
+					}
+				},
+				{
+					"$ref": "#/$defs/shapeGroup",
+					"glyphsCondition": {
+						"minVersion": 4
+					}
 				}
 			],
 			"glyphsType": "GSShape"
@@ -2547,6 +2970,13 @@
 				"color": {
 					"$ref": "#/$defs/colorLabel",
 					"description": "The color label of the shape."
+				},
+				"compositing": {
+					"type": "string",
+					"description": "The compositing operation used to draw the shape. Omitted for the default source-over operation.",
+					"glyphsCondition": {
+						"minVersion": 4
+					}
 				},
 				"fill": {
 					"type": "integer",
@@ -2566,6 +2996,36 @@
 					"$ref": "#/$defs/gradient",
 					"description": "The fill gradient of the shape."
 				},
+				"group": {
+					"type": "string",
+					"description": "The ID of the parent shape group. Omitted for shapes in the root group.",
+					"glyphsCondition": {
+						"minVersion": 4
+					}
+				},
+				"hidden": {
+					"type": "integer",
+					"glyphsNumber": "bool",
+					"enum": [
+						0,
+						1
+					],
+					"default": false,
+					"description": "Whether the shape is hidden.",
+					"glyphsCondition": {
+						"minVersion": 4
+					}
+				},
+				"lineCapEnd": {
+					"$ref": "#/$defs/lineCap",
+					"default": 0,
+					"description": "The line cap style at the end of the stroke."
+				},
+				"lineCapStart": {
+					"$ref": "#/$defs/lineCap",
+					"default": 0,
+					"description": "The line cap style at the start of the stroke."
+				},
 				"lineJoin": {
 					"oneOf": [
 						{
@@ -2582,29 +3042,57 @@
 							"type": "integer",
 							"const": 2,
 							"description": "Bevel: connects the segment edges with a straight edge."
+						},
+						{
+							"type": "integer",
+							"const": 3,
+							"description": "Round full: connects the complete segment ends with a circular arc."
 						}
 					],
 					"type": "integer",
 					"glyphsNumber": "u8",
 					"glyphsCondition": {
-						"maxVersion": 3
+						"minVersion": 4
 					},
 					"default": 0,
 					"description": "The line join style of the stroke."
 				},
 				"mask": {
-					"type": "integer",
-					"glyphsNumber": "bool",
-					"enum": [
-						0,
-						1
+					"oneOf": [
+						{
+							"type": "integer",
+							"const": 0,
+							"description": "None: does not use the shape as a mask."
+						},
+						{
+							"type": "integer",
+							"const": 1,
+							"description": "Subtract: removes the area covered by the shape."
+						},
+						{
+							"type": "integer",
+							"const": 2,
+							"description": "Intersect: retains only the area covered by the shape."
+						}
 					],
+					"type": "integer",
+					"glyphsNumber": "u8",
 					"glyphsCondition": {
-						"minVersion": 3,
-						"maxVersion": 3
+						"minVersion": 4
 					},
 					"default": 0,
 					"description": "How the shape masks preceding shapes in the same composition unit."
+				},
+				"opacity": {
+					"type": "number",
+					"glyphsNumber": "f64",
+					"minimum": 0,
+					"maximum": 1,
+					"default": 1,
+					"description": "The opacity of the shape.",
+					"glyphsCondition": {
+						"minVersion": 4
+					}
 				},
 				"reversePaths": {
 					"type": "integer",
@@ -2628,25 +3116,62 @@
 					"$ref": "#/$defs/color",
 					"description": "The stroke color of the shape."
 				},
+				"strokeGradient": {
+					"$ref": "#/$defs/gradient",
+					"description": "The stroke gradient of the shape.",
+					"glyphsCondition": {
+						"minVersion": 4
+					}
+				},
 				"strokeHeight": {
-					"type": "number",
-					"glyphsNumber": "f64",
+					"oneOf": [
+						{
+							"type": "number",
+							"glyphsNumber": "f64"
+						},
+						{
+							"type": "string",
+							"glyphsCondition": {
+								"minVersion": 4
+							}
+						}
+					],
 					"description": "The vertical stroke size, or an expression resolving to one. Falls back to the value of `strokeWidth` when unset."
 				},
 				"strokePos": {
-					"type": "number",
-					"glyphsNumber": "f64",
-					"minimum": 0,
-					"maximum": 1,
-					"default": 0.5,
-					"glyphsCondition": {
-						"maxVersion": 3
-					},
+					"oneOf": [
+						{
+							"type": "number",
+							"glyphsNumber": "f64",
+							"minimum": -1,
+							"maximum": 1,
+							"default": 0,
+							"glyphsCondition": {
+								"minVersion": 4
+							}
+						},
+						{
+							"type": "string",
+							"glyphsCondition": {
+								"minVersion": 4
+							}
+						}
+					],
 					"description": "The stroke position. In version 4, values range from inside (-1) through centered (0) to outside (1). In version 3, values range from outside (0) through centered (0.5) to inside (1)."
 				},
 				"strokeWidth": {
-					"type": "number",
-					"glyphsNumber": "f64",
+					"oneOf": [
+						{
+							"type": "number",
+							"glyphsNumber": "f64"
+						},
+						{
+							"type": "string",
+							"glyphsCondition": {
+								"minVersion": 4
+							}
+						}
+					],
 					"description": "The horizontal stroke size, or an expression resolving to one."
 				}
 			},
@@ -2654,6 +3179,28 @@
 			"glyphsCondition": {
 				"minVersion": 3
 			}
+		},
+		"shapeGroup": {
+			"type": "object",
+			"properties": {
+				"attr": {
+					"$ref": "#/$defs/shapeAttr",
+					"default": {},
+					"description": "The attributes of the shape group."
+				},
+				"groupId": {
+					"type": "string",
+					"description": "The unique ID of the shape group. The empty string is reserved for the layer\u2019s root group and is not written as a shape group."
+				}
+			},
+			"additionalProperties": false,
+			"required": [
+				"groupId"
+			],
+			"glyphsCondition": {
+				"minVersion": 4
+			},
+			"glyphsType": "GSShapeGroup"
 		},
 		"shadow": {
 			"type": "object",
@@ -2735,12 +3282,23 @@
 			"description": "The build number of Glyphs used to save the file."
 		},
 		".formatVersion": {
-			"type": "integer",
-			"const": 3,
-			"description": "The version of the file format. If unset, the file is considered to be version 1 as used by Glyphs 1 and Glyphs 2.",
+			"oneOf": [
+				{
+					"type": "integer",
+					"const": 4,
+					"description": "Glyphs file format version 4."
+				},
+				{
+					"type": "integer",
+					"const": 3,
+					"description": "Glyphs file format version 3."
+				}
+			],
 			"glyphsCondition": {
 				"minVersion": 3
-			}
+			},
+			"type": "integer",
+			"description": "The version of the file format. If unset, the file is considered to be version 1 as used by Glyphs 1 and Glyphs 2."
 		},
 		".storedFileType": {
 			"type": "string",
@@ -2819,13 +3377,6 @@
 			],
 			"description": "The moment in time that is used as the creation date of exported font files including date, time, and timezone."
 		},
-		"familyName": {
-			"type": "string",
-			"description": "The font family name. Corresponds to the default value of the `familyNames` property.",
-			"glyphsCondition": {
-				"maxVersion": 3
-			}
-		},
 		"featurePrefixes": {
 			"type": "array",
 			"items": {
@@ -2867,6 +3418,16 @@
 			},
 			"default": [],
 			"description": "The instances of the font."
+		},
+		"kerningContext": {
+			"$ref": "#/$defs/kerningContext",
+			"description": "The context kerning of the font.",
+			"glyphsCondition": {
+				"regular": {
+					"minVersion": 4
+				},
+				"package": false
+			}
 		},
 		"kerningLTR": {
 			"$ref": "#/$defs/kerning",
@@ -2950,6 +3511,17 @@
 		"settings": {
 			"type": "object",
 			"properties": {
+				"dependencies": {
+					"type": "object",
+					"additionalProperties": {
+						"type": "string"
+					},
+					"default": {},
+					"description": "Maps dependency class names to dependency display names.",
+					"glyphsCondition": {
+						"minVersion": 4
+					}
+				},
 				"disablesAutomaticAlignment": {
 					"type": "integer",
 					"glyphsNumber": "bool",
