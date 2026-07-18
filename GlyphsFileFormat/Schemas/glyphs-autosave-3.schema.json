@@ -2922,7 +2922,13 @@
 			"type": "string",
 			"description": "The note about the font.",
 			"glyphsCondition": {
-				"minVersion": 3
+				"regular": {
+					"minVersion": 3
+				},
+				"package": {
+					"minVersion": 3,
+					"maxVersion": 3
+				}
 			}
 		},
 		"numbers": {

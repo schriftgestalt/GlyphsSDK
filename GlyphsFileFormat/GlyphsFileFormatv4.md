@@ -20,6 +20,7 @@ Inside this directory, there are the following files:
 - `UIState.plist` – A file containing the display strings. A dictionary with a `displayStrings` key following the [`displayStrings` schema](#spec-glyphs-4-displayStrings).
 - `glyphs/*.glyph` – Individual files for each glyph. The files follow the [`glyph` schema](#spec-glyphs-4-glyph).
 - `kerning.plist` – A file containing the `kerningLTR`/`kerningRTL`/`kerningVertical` (following the [`kerning` schema](#spec-glyphs-4-kerning)) and [`kerningContext`](#spec-glyphs-4-kerningContext) dictionaries. Omitted when the font contains no kerning.
+- `note.md` – A UTF-8 Markdown text file containing the font note. Omitted when the font note is empty.
 - `features/*.fea` – Individual UTF-8 files for feature classes, feature prefixes, and features. Each file contains the layout feature code of the matching object.
 
 Feature file names are derived from the object name:

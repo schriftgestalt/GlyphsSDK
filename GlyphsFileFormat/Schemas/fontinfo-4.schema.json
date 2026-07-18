@@ -3337,13 +3337,6 @@
 				"minVersion": 3
 			}
 		},
-		"note": {
-			"type": "string",
-			"description": "The note about the font.",
-			"glyphsCondition": {
-				"minVersion": 3
-			}
-		},
 		"numbers": {
 			"type": "array",
 			"items": {
