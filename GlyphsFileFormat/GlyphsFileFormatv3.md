@@ -150,10 +150,10 @@ Use the following JSON schemas to validate files.
 - <code><strong>annotation</strong>: object</code><a name="spec-glyphs-3-annotation"></a> – (`GSAnnotation`)
     - <code><strong>angle</strong>: number = 0</code> (`f64`) – The angle of the annotation in degrees clockwise.
     - <code><strong>pos</strong>: array = [0, 0]</code> <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – The position of the annotation. See [`pos`](#spec-glyphs-3-pos).
-    - <code><strong>text</strong>: string = ""</code> – The text of an text-type annotation.
+    - <code><strong>text</strong>: string = ""</code> – The text of a text-type annotation.
     - <code><strong>type</strong>: string</code> <img alt="required" src="https://img.shields.io/badge/required-204d7e" align="center"> – The type of the annotation.
         - Possible values: `"Text"`, `"Arrow"`, `"Circle"`, `"Plus"`, `"Minus"`.
-    - <code><strong>width</strong>: number = 0</code> (`f64`) – The width of an text- or circle-type annotation.
+    - <code><strong>width</strong>: number = 0</code> (`f64`) – The width of a text- or circle-type annotation.
 - <code><strong>attr</strong>: object</code><a name="spec-glyphs-3-attr"></a>
 - <code><strong>axis</strong>: object</code><a name="spec-glyphs-3-axis"></a> – (`GSAxis`)
     - <code><strong>default</strong>: number = 0</code> (`f64`) – The default location on the axis.
@@ -417,7 +417,7 @@ Use the following JSON schemas to validate files.
  See [`anchor`](#spec-glyphs-3-anchor) for items.
     - <code><strong>annotations</strong>: array = []</code> – The annotations of the layer.
  See [`annotation`](#spec-glyphs-3-annotation) for items.
-    - <code><strong>associatedMasterId</strong>: string</code> – The unique identifier of the associated master. Omitted when equalt to the layer ID.
+    - <code><strong>associatedMasterId</strong>: string</code> – The unique identifier of the associated master. Omitted when equal to the layer ID.
     - <code><strong>attr</strong>: object = {}</code> <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – The attributes of the layer. See [`layerAttr`](#spec-glyphs-3-layerAttr).
     - <code><strong>background</strong>: object</code>
         - <code><strong>anchors</strong>: array = []</code> – The anchors of the background layer.
@@ -445,7 +445,7 @@ Use the following JSON schemas to validate files.
     - <code><strong>metricVertOrigin</strong>: string</code> <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – The vertical origin metrics key of the layer.
     - <code><strong>metricVertWidth</strong>: string</code> <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – The vertical width metrics key of the layer.
     - <code><strong>metricWidth</strong>: string</code> <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – The width metrics key of the layer.
-    - <code><strong>name</strong>: string = ""</code> – The name of the layer. Master layers and other special layers display a name in the Glyphs UI that is derived from the layers role (for example, the name of the master that the layer belongs to). These derived names are not written to the file. Instead, this name is only displayed in the UI for non-special layers (like backup layers).
+    - <code><strong>name</strong>: string = ""</code> – The name of the layer. Master layers and other special layers display a name in the Glyphs UI that is derived from the layer’s role (for example, the name of the master that the layer belongs to). These derived names are not written to the file. Instead, this name is only displayed in the UI for non-special layers (like backup layers).
     - <code><strong>partSelection</strong>: object</code> <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – The Smart Glyph setting of the layer. The keys are the property names. The values are either `1` if the layer corresponds to the bottom value of the property or `2` if the layer corresponds to the top value of the property. If a layer is neither the top nor the bottom value, the property is omitted.
         - <code>string: integer</code> One of 2 options.
             - Option. `1` – Bottom: the layer corresponds to the bottom value of the property.
@@ -470,6 +470,11 @@ Use the following JSON schemas to validate files.
         - <code><strong>#</strong>: number</code> (`f64`) – The explicit coordinate value.
     - <code><strong>sbixSize</strong>: integer</code> (`u16`) <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – The Apple sbix image size.
     - <code><strong>svg</strong>: boolean = false</code> <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – Whether the layer is an SVG color layer.
+- <code><strong>lineCap</strong>: integer</code><a name="spec-glyphs-3-lineCap"></a> (`u8`) One of 4 options.
+    - Option. `0` – Butt: ends the stroke at the path endpoint.
+    - Option. `1` – Round: extends the stroke with a semicircular cap.
+    - Option. `2` – Square: extends the stroke with a square cap.
+    - Option. `3` – Round inset: ends the stroke with an inset semicircular cap.
 - <code><strong>metric</strong>: object</code><a name="spec-glyphs-3-metric"></a> – (`GSMetric`)
     - <code><strong>filter</strong>: string</code> – The filter of the metric limiting the scope of the metric to a subset of glyphs.
     - <code><strong>horizontal</strong>: boolean = false</code> – Whether the metric is a horizontal metric.
@@ -494,7 +499,7 @@ Use the following JSON schemas to validate files.
         - <code><strong>values</strong>: array</code> <img alt="required" src="https://img.shields.io/badge/required-204d7e" align="center"> – The values of the property.
  See [`infoValue`](#spec-glyphs-3-infoValue) for items.
 - <code><strong>infoValue</strong>: object</code><a name="spec-glyphs-3-infoValue"></a> – (`GSInfoValue`)
-    - <code><strong>language</strong>: string</code> <img alt="required" src="https://img.shields.io/badge/required-204d7e" align="center"> – The language tag of the string value. The tag is based on the [OpenType Language System Tags](https://learn.microsoft.com/en-us/typography/opentype/spec/languagetags) but omitts trailing whitespace. Examples: `"dflt"`, `"DEU"`.
+    - <code><strong>language</strong>: string</code> <img alt="required" src="https://img.shields.io/badge/required-204d7e" align="center"> – The language tag of the string value. The tag is based on the [OpenType Language System Tags](https://learn.microsoft.com/en-us/typography/opentype/spec/languagetags) but omits trailing whitespace. Examples: `"dflt"`, `"DEU"`.
     - <code><strong>value</strong>: string</code> <img alt="required" src="https://img.shields.io/badge/required-204d7e" align="center"> – The localized string value.
 - <code><strong>orientation</strong>: string</code><a name="spec-glyphs-3-orientation"></a> – (`GSElementOrientation`)
     - Possible values: `"left"`, `"center"`, `"right"`.
@@ -529,6 +534,8 @@ Use the following JSON schemas to validate files.
     - <code><strong>fill</strong>: boolean = false</code> – Whether a stroked path is also filled.
     - <code><strong>fillColor</strong></code> – The fill color of the shape. See [`color`](#spec-glyphs-3-color).
     - <code><strong>gradient</strong></code> <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – The fill gradient of the shape. See [`gradient`](#spec-glyphs-3-gradient).
+    - <code><strong>lineCapEnd</strong>: integer = 0</code> (`u8`) <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – The line cap style at the end of the stroke. See [`lineCap`](#spec-glyphs-3-lineCap).
+    - <code><strong>lineCapStart</strong>: integer = 0</code> (`u8`) <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – The line cap style at the start of the stroke. See [`lineCap`](#spec-glyphs-3-lineCap).
     - <code><strong>lineJoin</strong>: integer = 0</code> (`u8`) – The line join style of the stroke. One of 3 options.
         - Option. `0` – Miter: extends the segment edges until they intersect.
         - Option. `1` – Round: connects the segment edges with a circular arc.

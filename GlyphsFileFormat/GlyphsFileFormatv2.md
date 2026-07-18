@@ -113,10 +113,10 @@ Use the following JSON schemas to validate files.
 - <code><strong>annotation</strong>: object</code><a name="spec-glyphs-1-annotation"></a> – (`GSAnnotation`)
     - <code><strong>angle</strong>: number = 0</code> (`f64`) – The angle of the annotation in degrees clockwise.
     - <code><strong>position</strong>: string</code> <img alt="required" src="https://img.shields.io/badge/required-204d7e" align="center"> – The position of the annotation. See [`legacyPosition`](#spec-glyphs-1-legacyPosition). Examples: `"{0, 50}"`, `"{-30.5, 600}"`.
-    - <code><strong>text</strong>: string = ""</code> – The text of an text-type annotation.
+    - <code><strong>text</strong>: string = ""</code> – The text of a text-type annotation.
     - <code><strong>type</strong>: string</code> <img alt="required" src="https://img.shields.io/badge/required-204d7e" align="center"> – The type of the annotation.
         - Possible values: `"Text"`, `"Arrow"`, `"Circle"`, `"Plus"`, `"Minus"`.
-    - <code><strong>width</strong>: number = 0</code> (`f64`) – The width of an text- or circle-type annotation.
+    - <code><strong>width</strong>: number = 0</code> (`f64`) – The width of a text- or circle-type annotation.
 - <code><strong>attr</strong>: object</code><a name="spec-glyphs-1-attr"></a>
 - <code><strong>axis</strong>: object</code><a name="spec-glyphs-1-axis"></a> – (`GSAxis`)
     - <code><strong>default</strong>: number = 0</code> (`f64`) – The default location on the axis.
@@ -322,7 +322,7 @@ Use the following JSON schemas to validate files.
  See [`anchor`](#spec-glyphs-1-anchor) for items.
     - <code><strong>annotations</strong>: array = []</code> – The annotations of the layer.
  See [`annotation`](#spec-glyphs-1-annotation) for items.
-    - <code><strong>associatedMasterId</strong>: string</code> – The unique identifier of the associated master. Omitted when equalt to the layer ID.
+    - <code><strong>associatedMasterId</strong>: string</code> – The unique identifier of the associated master. Omitted when equal to the layer ID.
     - <code><strong>background</strong>: object</code>
         - <code><strong>anchors</strong>: array = []</code> – The anchors of the background layer.
  See [`anchor`](#spec-glyphs-1-anchor) for items.
@@ -349,7 +349,7 @@ Use the following JSON schemas to validate files.
     - <code><strong>leftMetricsKey</strong>: string</code> – The left metrics key of the layer.
     - <code><strong>rightMetricsKey</strong>: string</code> – The right metrics key of the layer.
     - <code><strong>widthMetricsKey</strong>: string</code> – The width metrics key of the layer.
-    - <code><strong>name</strong>: string = ""</code> – The name of the layer. Master layers and other special layers display a name in the Glyphs UI that is derived from the layers role (for example, the name of the master that the layer belongs to). These derived names are not written to the file. Instead, this name is only displayed in the UI for non-special layers (like backup layers).
+    - <code><strong>name</strong>: string = ""</code> – The name of the layer. Master layers and other special layers display a name in the Glyphs UI that is derived from the layer’s role (for example, the name of the master that the layer belongs to). These derived names are not written to the file. Instead, this name is only displayed in the UI for non-special layers (like backup layers).
     - <code><strong>paths</strong>: array = []</code> – The paths of the layer.
  See [`path`](#spec-glyphs-1-path) for items.
     - <code><strong>userData</strong>: object = {}</code> – Custom data associated with the layer. See [`userData`](#spec-glyphs-1-userData).
@@ -377,7 +377,7 @@ Use the following JSON schemas to validate files.
         - <code><strong>values</strong>: array</code> <img alt="required" src="https://img.shields.io/badge/required-204d7e" align="center"> – The values of the property.
  See [`infoValue`](#spec-glyphs-1-infoValue) for items.
 - <code><strong>infoValue</strong>: object</code><a name="spec-glyphs-1-infoValue"></a> – (`GSInfoValue`)
-    - <code><strong>language</strong>: string</code> <img alt="required" src="https://img.shields.io/badge/required-204d7e" align="center"> – The language tag of the string value. The tag is based on the [OpenType Language System Tags](https://learn.microsoft.com/en-us/typography/opentype/spec/languagetags) but omitts trailing whitespace. Examples: `"dflt"`, `"DEU"`.
+    - <code><strong>language</strong>: string</code> <img alt="required" src="https://img.shields.io/badge/required-204d7e" align="center"> – The language tag of the string value. The tag is based on the [OpenType Language System Tags](https://learn.microsoft.com/en-us/typography/opentype/spec/languagetags) but omits trailing whitespace. Examples: `"dflt"`, `"DEU"`.
     - <code><strong>value</strong>: string</code> <img alt="required" src="https://img.shields.io/badge/required-204d7e" align="center"> – The localized string value.
 - <code><strong>orientation</strong>: string</code><a name="spec-glyphs-1-orientation"></a> – (`GSElementOrientation`)
     - Possible values: `"left"`, `"center"`, `"right"`.
