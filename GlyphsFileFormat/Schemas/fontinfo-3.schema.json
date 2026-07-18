@@ -9,38 +9,26 @@
 			"type": "object",
 			"properties": {
 				"locked": {
+					"type": "integer",
+					"glyphsNumber": "bool",
 					"enum": [
 						0,
 						1
 					],
-					"type": "integer",
-					"glyphsNumber": "bool",
 					"default": false,
 					"description": "Whether the anchor is locked.",
-					"glyphsLabel": {
-						"key": "any.locked",
-						"default": "Locked"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
 				},
 				"name": {
 					"type": "string",
-					"description": "The name of the anchor.",
-					"glyphsLabel": {
-						"key": "any.name",
-						"default": "Name"
-					}
+					"description": "The name of the anchor."
 				},
 				"orientation": {
 					"$ref": "#/$defs/orientation",
 					"default": "left",
 					"description": "The orientation of the anchor.",
-					"glyphsLabel": {
-						"key": "any.orientation",
-						"default": "Orientation"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -52,10 +40,6 @@
 						0
 					],
 					"description": "The position of the anchor.",
-					"glyphsLabel": {
-						"key": "any.position",
-						"default": "Position"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -64,12 +48,9 @@
 					"$ref": "#/$defs/userData",
 					"default": {},
 					"description": "Custom data associated with the anchor.",
-					"glyphsLabel": {
-						"key": "any.user-data",
-						"default": "User Data"
-					},
 					"glyphsCondition": {
-						"minVersion": 3
+						"minVersion": 3,
+						"maxVersion": 3
 					}
 				}
 			},
@@ -86,11 +67,7 @@
 					"type": "number",
 					"glyphsNumber": "f64",
 					"default": 0,
-					"description": "The angle of the annotation in degrees clockwise.",
-					"glyphsLabel": {
-						"key": "any.angle",
-						"default": "Angle"
-					}
+					"description": "The angle of the annotation in degrees clockwise."
 				},
 				"pos": {
 					"$ref": "#/$defs/pos",
@@ -99,10 +76,6 @@
 						0
 					],
 					"description": "The position of the annotation.",
-					"glyphsLabel": {
-						"key": "any.position",
-						"default": "Position"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -110,11 +83,7 @@
 				"text": {
 					"type": "string",
 					"default": "",
-					"description": "The text of an text-type annotation.",
-					"glyphsLabel": {
-						"key": "any.text",
-						"default": "Text"
-					}
+					"description": "The text of a text-type annotation."
 				},
 				"type": {
 					"enum": [
@@ -125,21 +94,13 @@
 						"Minus"
 					],
 					"type": "string",
-					"description": "The type of the annotation.",
-					"glyphsLabel": {
-						"key": "any.type",
-						"default": "Type"
-					}
+					"description": "The type of the annotation."
 				},
 				"width": {
 					"type": "number",
 					"glyphsNumber": "f64",
 					"default": 0,
-					"description": "The width of an text- or circle-type annotation.",
-					"glyphsLabel": {
-						"key": "any.width",
-						"default": "Width"
-					}
+					"description": "The width of a text- or circle-type annotation."
 				}
 			},
 			"additionalProperties": false,
@@ -149,10 +110,8 @@
 			"glyphsType": "GSAnnotation"
 		},
 		"attr": {
-			"type": "object"
-		},
-		"attrShape": {
-			"type": "object"
+			"type": "object",
+			"additionalProperties": {}
 		},
 		"axis": {
 			"type": "object",
@@ -161,44 +120,27 @@
 					"type": "number",
 					"glyphsNumber": "f64",
 					"default": 0,
-					"description": "The default location on the axis.",
-					"glyphsLabel": {
-						"key": "axis.location.default",
-						"default": "Default Location"
-					}
+					"description": "The default location on the axis."
 				},
 				"hidden": {
+					"type": "integer",
+					"glyphsNumber": "bool",
 					"enum": [
 						0,
 						1
 					],
-					"type": "integer",
-					"glyphsNumber": "bool",
 					"default": false,
-					"description": "Whether the axis is considered to be hidden from the font user.",
-					"glyphsLabel": {
-						"key": "axis.hidden",
-						"default": "Hidden"
-					}
+					"description": "Whether the axis is considered to be hidden from the font user."
 				},
 				"name": {
 					"type": "string",
 					"default": "",
-					"description": "The user-facing name of the axis.",
-					"glyphsLabel": {
-						"key": "any.name",
-						"default": "Name"
-					},
-					"glyphsCondition": {}
+					"description": "The user-facing name of the axis."
 				},
 				"tag": {
 					"type": "string",
 					"default": "",
-					"description": "The OpenType tag of the axis. Must be unique within the font. The tag may be longer than four characters in which case only the first four characters are considered to be the canonical tag of the axis and the rest is used as a differentiating identifier. On export, the canonical tag is used. Multiple axes with the same canonical tag are useful for higher-order interpolation.",
-					"glyphsLabel": {
-						"key": "opentype.tag",
-						"default": "Tag"
-					}
+					"description": "The OpenType tag of the axis. Must be unique within the font. The tag may be longer than four characters in which case only the first four characters are considered to be the canonical tag of the axis and the rest is used as a differentiating identifier. On export, the canonical tag is used. Multiple axes with the same canonical tag are useful for higher-order interpolation."
 				}
 			},
 			"additionalProperties": false,
@@ -208,18 +150,14 @@
 			"type": "object",
 			"properties": {
 				"automatic": {
+					"type": "integer",
+					"glyphsNumber": "bool",
 					"enum": [
 						0,
 						1
 					],
-					"type": "integer",
-					"glyphsNumber": "bool",
 					"default": false,
-					"description": "Whether the code of the class is generated automatically.",
-					"glyphsLabel": {
-						"key": "layout.automatic",
-						"default": "Automatic"
-					}
+					"description": "Whether the code of the class is generated automatically."
 				},
 				"code": {
 					"type": "string",
@@ -229,25 +167,21 @@
 						"noon-ar noon-ar.fina noon-ar.medi noon-ar.init # noon-ar glyphs"
 					],
 					"description": "The code of the class. Note that this code may not just be a whitespace-separated list of glyph names but may also contain comments and other feature code constructs.",
-					"glyphsLabel": {
-						"key": "layout.code",
-						"default": "Code"
-					},
-					"glyphsCondition": {}
+					"glyphsCondition": {
+						"package": {
+							"maxVersion": 3
+						}
+					}
 				},
 				"disabled": {
+					"type": "integer",
+					"glyphsNumber": "bool",
 					"enum": [
 						0,
 						1
 					],
-					"type": "integer",
-					"glyphsNumber": "bool",
 					"default": false,
-					"description": "Whether the class is disabled.",
-					"glyphsLabel": {
-						"key": "layout.disabled",
-						"default": "Disabled"
-					}
+					"description": "Whether the class is disabled."
 				},
 				"name": {
 					"type": "string",
@@ -255,20 +189,12 @@
 						"Uppercase",
 						"CombiningTopAccents"
 					],
-					"description": "The name of the class. The leading at sign (`@`) is not included.",
-					"glyphsLabel": {
-						"key": "any.name",
-						"default": "Name"
-					}
+					"description": "The name of the class. The leading at sign (`@`) is not included."
 				},
 				"notes": {
 					"type": "string",
 					"default": "",
-					"description": "A string serving as a description or comment about the class.",
-					"glyphsLabel": {
-						"key": "layout.notes",
-						"default": "Notes"
-					}
+					"description": "A string serving as a description or comment about the class."
 				}
 			},
 			"additionalProperties": false,
@@ -279,6 +205,40 @@
 		},
 		"color": {
 			"oneOf": [
+				{
+					"type": "array",
+					"prefixItems": [
+						{
+							"type": "string",
+							"const": "p",
+							"description": "Indicates a palette color reference."
+						},
+						{
+							"type": "integer",
+							"glyphsNumber": "u16",
+							"minimum": 0,
+							"maximum": 65535,
+							"description": "The color palette entry index."
+						},
+						{
+							"type": "integer",
+							"glyphsNumber": "u8",
+							"minimum": 0,
+							"maximum": 255,
+							"default": 255,
+							"description": "The alpha factor applied to the referenced palette color."
+						}
+					],
+					"items": false,
+					"minItems": 3,
+					"maxItems": 3,
+					"glyphsCompact": true,
+					"description": "A legacy color reference into the version 3 `Color Palettes` custom parameter, written with an 8-bit alpha factor.",
+					"glyphsCondition": {
+						"minVersion": 3,
+						"maxVersion": 3
+					}
+				},
 				{
 					"type": "array",
 					"prefixItems": [
@@ -315,7 +275,10 @@
 					"minItems": 4,
 					"maxItems": 4,
 					"glyphsCompact": true,
-					"description": "An RGB color with an alpha channel in the sRGB IEC61966-2.1 color space."
+					"description": "An RGB color with an alpha channel in the sRGB IEC61966-2.1 color space.",
+					"glyphsCondition": {
+						"maxVersion": 3
+					}
 				},
 				{
 					"type": "array",
@@ -341,7 +304,8 @@
 					"glyphsCompact": true,
 					"description": "A gray color with an alpha channel in a perceptual generic gray color space with \u03b3 = 2.2.",
 					"glyphsCondition": {
-						"minVersion": 3
+						"minVersion": 3,
+						"maxVersion": 3
 					}
 				},
 				{
@@ -389,7 +353,8 @@
 					"glyphsCompact": true,
 					"description": "A CMYK color with an alpha channel. The color space is device-dependent.",
 					"glyphsCondition": {
-						"minVersion": 3
+						"minVersion": 3,
+						"maxVersion": 3
 					}
 				}
 			]
@@ -412,51 +377,51 @@
 			"type": "object",
 			"properties": {
 				"alignment": {
-					"enum": [
-						-1,
-						0,
-						1,
-						3
+					"oneOf": [
+						{
+							"type": "integer",
+							"const": -1,
+							"description": "Disabled: automatic positioning is disabled."
+						},
+						{
+							"type": "integer",
+							"const": 0,
+							"description": "Default: automatic positioning follows the normal eligibility rules."
+						},
+						{
+							"type": "integer",
+							"const": 1,
+							"description": "Forced: automatic positioning is enabled regardless of normal eligibility."
+						},
+						{
+							"type": "integer",
+							"const": 3,
+							"description": "Horizontal: only the horizontal coordinate is positioned automatically."
+						}
 					],
 					"type": "integer",
 					"glyphsNumber": "i8",
 					"default": 0,
 					"description": "Controls the automatic alignment of the component. `-1`: disabled (no alignment), `0`: default (alignment is based on context), `1`: force alignment (align regardless of context), `3`: horizontal alignment (align horizontally, but allow for manual vertical placement).",
-					"glyphsLabel": {
-						"key": "component.alignment",
-						"default": "Alignment"
-					},
 					"glyphsType": "GSComponentAlignment"
 				},
 				"anchor": {
 					"type": "string",
-					"description": "The name of the attachment anchor. Set to specify a specific anchor when there are multiple candidates.",
-					"glyphsLabel": {
-						"key": "component.anchor",
-						"default": "Anchor"
-					}
+					"description": "The name of the attachment anchor. Set to specify a specific anchor when there are multiple candidates."
 				},
 				"angle": {
 					"type": "number",
 					"glyphsNumber": "f64",
 					"default": 0,
 					"description": "The rotation angle of the component in degrees clockwise.",
-					"glyphsLabel": {
-						"key": "any.angle",
-						"default": "Angle"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
 				},
 				"attr": {
-					"$ref": "#/$defs/attrShape",
+					"$ref": "#/$defs/shapeAttr",
 					"default": {},
 					"description": "The attributes of the component.",
-					"glyphsLabel": {
-						"key": "any.attributes",
-						"default": "Attributes"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -465,51 +430,47 @@
 					"type": "number",
 					"glyphsNumber": "f64",
 					"default": 0,
-					"description": "Unused.",
-					"glyphsLabel": {
-						"key": "component.keep-weight",
-						"default": "Keep Weight"
-					}
+					"description": "Unused."
 				},
 				"locked": {
+					"type": "integer",
+					"glyphsNumber": "bool",
 					"enum": [
 						0,
 						1
 					],
-					"type": "integer",
-					"glyphsNumber": "bool",
 					"default": false,
-					"description": "Whether the component is locked.",
-					"glyphsLabel": {
-						"key": "any.locked",
-						"default": "Locked"
-					}
+					"description": "Whether the component is locked."
 				},
 				"masterId": {
 					"type": "string",
 					"description": "The ID of the master from which the component is derived.",
-					"glyphsLabel": {
-						"key": "master.id",
-						"default": "Master ID"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
 				},
 				"orientation": {
-					"enum": [
-						0,
-						1,
-						2
+					"oneOf": [
+						{
+							"type": "integer",
+							"const": 0,
+							"description": "Left: x values are relative to the left edge of the layer box."
+						},
+						{
+							"type": "integer",
+							"const": 1,
+							"description": "Right: x values are relative to the right edge of the layer box."
+						},
+						{
+							"type": "integer",
+							"const": 2,
+							"description": "Center: x values are relative to the center of the layer box."
+						}
 					],
 					"type": "integer",
 					"default": 0,
 					"glyphsNumber": "i8",
 					"description": "The orientation of the component.",
-					"glyphsLabel": {
-						"key": "orientation",
-						"default": "Orientation"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					},
@@ -518,15 +479,23 @@
 				"piece": {
 					"type": "object",
 					"additionalProperties": {
-						"type": "number",
-						"glyphsNumber": "f64"
+						"oneOf": [
+							{
+								"type": "number",
+								"glyphsNumber": "f64"
+							},
+							{
+								"type": "integer",
+								"glyphsNumber": "bool",
+								"enum": [
+									0,
+									1
+								]
+							}
+						]
 					},
 					"default": {},
-					"description": "The Smart Component settings of the component, mapping property names to values.",
-					"glyphsLabel": {
-						"key": "component.piece",
-						"default": "Smart Settings"
-					}
+					"description": "The Smart Component settings of the component, mapping property names to values."
 				},
 				"pos": {
 					"$ref": "#/$defs/pos",
@@ -535,10 +504,6 @@
 						0
 					],
 					"description": "The position (translation transform) of the component.",
-					"glyphsLabel": {
-						"key": "any.position",
-						"default": "Position"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -546,10 +511,6 @@
 				"ref": {
 					"type": "string",
 					"description": "The name of the referenced glyph.",
-					"glyphsLabel": {
-						"key": "component.ref",
-						"default": "Reference"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -561,10 +522,6 @@
 						1
 					],
 					"description": "The scale transform of the component.",
-					"glyphsLabel": {
-						"key": "any.scale",
-						"default": "Scale"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -576,10 +533,6 @@
 						0
 					],
 					"description": "The slant transform of the component.",
-					"glyphsLabel": {
-						"key": "any.slant",
-						"default": "Slant"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -588,11 +541,9 @@
 					"$ref": "#/$defs/userData",
 					"default": {},
 					"description": "Custom data associated with the component. See `attr` for current format versions.",
-					"glyphsLabel": {
-						"key": "any.user-data",
-						"default": "User Data"
-					},
-					"glyphsCondition": {}
+					"glyphsCondition": {
+						"maxVersion": 3
+					}
 				}
 			},
 			"additionalProperties": false,
@@ -605,33 +556,21 @@
 			"type": "object",
 			"properties": {
 				"disabled": {
+					"type": "integer",
+					"glyphsNumber": "bool",
 					"enum": [
 						0,
 						1
 					],
-					"type": "integer",
-					"glyphsNumber": "bool",
 					"default": false,
-					"description": "Whether the custom parameter is disabled.",
-					"glyphsLabel": {
-						"key": "any.disabled",
-						"default": "Disabled"
-					}
+					"description": "Whether the custom parameter is disabled."
 				},
 				"name": {
 					"type": "string",
-					"description": "The name of the custom parameter.",
-					"glyphsLabel": {
-						"key": "any.name",
-						"default": "Name"
-					}
+					"description": "The name of the custom parameter."
 				},
 				"value": {
-					"description": "The value of the custom parameter.",
-					"glyphsLabel": {
-						"key": "any.value",
-						"default": "Value"
-					}
+					"description": "The value of the custom parameter."
 				}
 			},
 			"additionalProperties": false,
@@ -654,18 +593,14 @@
 			"type": "object",
 			"properties": {
 				"automatic": {
+					"type": "integer",
+					"glyphsNumber": "bool",
 					"enum": [
 						0,
 						1
 					],
-					"type": "integer",
-					"glyphsNumber": "bool",
 					"default": false,
-					"description": "Whether the code of the feature prefix is generated automatically.",
-					"glyphsLabel": {
-						"key": "layout.automatic",
-						"default": "Automatic"
-					}
+					"description": "Whether the code of the feature prefix is generated automatically."
 				},
 				"code": {
 					"type": "string",
@@ -674,45 +609,33 @@
 						"languagesystem DFLT dflt;"
 					],
 					"description": "The code of the feature prefix.",
-					"glyphsLabel": {
-						"key": "layout.code",
-						"default": "Code"
-					},
-					"glyphsCondition": {}
+					"glyphsCondition": {
+						"package": {
+							"maxVersion": 3
+						}
+					}
 				},
 				"disabled": {
+					"type": "integer",
+					"glyphsNumber": "bool",
 					"enum": [
 						0,
 						1
 					],
-					"type": "integer",
-					"glyphsNumber": "bool",
 					"default": false,
-					"description": "Whether the feature prefix is disabled.",
-					"glyphsLabel": {
-						"key": "layout.disabled",
-						"default": "Disabled"
-					}
+					"description": "Whether the feature prefix is disabled."
 				},
 				"name": {
 					"type": "string",
 					"examples": [
 						"Languagesystems"
 					],
-					"description": "The name of the feature prefix.",
-					"glyphsLabel": {
-						"key": "any.name",
-						"default": "Name"
-					}
+					"description": "The name of the feature prefix."
 				},
 				"notes": {
 					"type": "string",
 					"default": "",
-					"description": "A string serving as a description or comment about the feature prefix.",
-					"glyphsLabel": {
-						"key": "layout.notes",
-						"default": "Notes"
-					}
+					"description": "A string serving as a description or comment about the feature prefix."
 				}
 			},
 			"additionalProperties": false,
@@ -725,18 +648,14 @@
 			"type": "object",
 			"properties": {
 				"automatic": {
+					"type": "integer",
+					"glyphsNumber": "bool",
 					"enum": [
 						0,
 						1
 					],
-					"type": "integer",
-					"glyphsNumber": "bool",
 					"default": false,
-					"description": "Whether the code of the feature is generated automatically.",
-					"glyphsLabel": {
-						"key": "layout.automatic",
-						"default": "Automatic"
-					}
+					"description": "Whether the code of the feature is generated automatically."
 				},
 				"code": {
 					"type": "string",
@@ -745,25 +664,21 @@
 						"sub a by a.alt;"
 					],
 					"description": "The code of the feature.",
-					"glyphsLabel": {
-						"key": "layout.code",
-						"default": "Code"
-					},
-					"glyphsCondition": {}
+					"glyphsCondition": {
+						"package": {
+							"maxVersion": 3
+						}
+					}
 				},
 				"disabled": {
+					"type": "integer",
+					"glyphsNumber": "bool",
 					"enum": [
 						0,
 						1
 					],
-					"type": "integer",
-					"glyphsNumber": "bool",
 					"default": false,
-					"description": "Whether the feature is disabled.",
-					"glyphsLabel": {
-						"key": "layout.disabled",
-						"default": "Disabled"
-					}
+					"description": "Whether the feature is disabled."
 				},
 				"labels": {
 					"type": "array",
@@ -772,10 +687,6 @@
 					},
 					"default": [],
 					"description": "The labels of the feature.",
-					"glyphsLabel": {
-						"key": "layout.feature.labels",
-						"default": "Labels"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -783,11 +694,7 @@
 				"notes": {
 					"type": "string",
 					"default": "",
-					"description": "A string serving as a description or comment about the feature.",
-					"glyphsLabel": {
-						"key": "layout.notes",
-						"default": "Notes"
-					}
+					"description": "A string serving as a description or comment about the feature."
 				},
 				"tag": {
 					"type": "string",
@@ -797,10 +704,6 @@
 						"calt"
 					],
 					"description": "The four-letter tag of the feature.",
-					"glyphsLabel": {
-						"key": "opentype.tag",
-						"default": "Tag"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -816,20 +719,6 @@
 		"fontMaster": {
 			"type": "object",
 			"properties": {
-				"active": {
-					"enum": [
-						0,
-						1
-					],
-					"type": "integer",
-					"glyphsNumber": "bool",
-					"default": true,
-					"description": "Unused.",
-					"glyphsLabel": {
-						"key": "any.active",
-						"default": "Active"
-					}
-				},
 				"axesValues": {
 					"type": "array",
 					"items": {
@@ -838,10 +727,6 @@
 					},
 					"default": [],
 					"description": "The designspace location of the master.",
-					"glyphsLabel": {
-						"key": "any.axes-values",
-						"default": "Axes Values"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -852,11 +737,7 @@
 						"$ref": "#/$defs/customParameter"
 					},
 					"default": [],
-					"description": "The custom parameters of the master.",
-					"glyphsLabel": {
-						"key": "any.custom-parameters",
-						"default": "Custom Parameters"
-					}
+					"description": "The custom parameters of the master."
 				},
 				"guides": {
 					"type": "array",
@@ -865,10 +746,6 @@
 					},
 					"default": [],
 					"description": "The global guides of the master.",
-					"glyphsLabel": {
-						"key": "any.guides",
-						"default": "Guides"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -876,19 +753,11 @@
 				"iconName": {
 					"type": "string",
 					"default": "Regular",
-					"description": "The name of the icon that represents the master. Generally omitted when equal to `Regular`, or equal to the default icon name of the master (`GSFontMaster.defaultIconName`). For a list of available names, consult `GSFontMaster.iconNames()`.",
-					"glyphsLabel": {
-						"key": "master.icon-name",
-						"default": "Icon Name"
-					}
+					"description": "The name of the icon that represents the master. Generally omitted when equal to `Regular`, or equal to the default icon name of the master (`GSFontMaster.defaultIconName`). For a list of available names, consult `GSFontMaster.iconNames()`."
 				},
 				"id": {
 					"type": "string",
-					"description": "The unique identifier of the master.",
-					"glyphsLabel": {
-						"key": "master.id",
-						"default": "Master ID"
-					}
+					"description": "The unique identifier of the master."
 				},
 				"metricValues": {
 					"type": "array",
@@ -897,21 +766,13 @@
 					},
 					"default": [],
 					"description": "The metric values of the master.",
-					"glyphsLabel": {
-						"key": "master.metrics",
-						"default": "Metrics"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
 				},
 				"name": {
 					"type": "string",
-					"description": "The name of the master. May be omitted in file format version 1 when equal to `Regular` or the default master name.",
-					"glyphsLabel": {
-						"key": "any.name",
-						"default": "Name"
-					}
+					"description": "The name of the master. May be omitted in file format version 1 when equal to `Regular` or the default master name."
 				},
 				"numberValues": {
 					"type": "array",
@@ -921,10 +782,6 @@
 					},
 					"default": [],
 					"description": "The number values of the master.",
-					"glyphsLabel": {
-						"key": "any.number-values",
-						"default": "Number Values"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -936,10 +793,6 @@
 					},
 					"default": [],
 					"description": "The properties of the master.",
-					"glyphsLabel": {
-						"key": "any.properties",
-						"default": "Properties"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -952,10 +805,6 @@
 					},
 					"default": [],
 					"description": "The stem values of the master.",
-					"glyphsLabel": {
-						"key": "master.stem-values",
-						"default": "Stem Values"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -964,10 +813,6 @@
 					"$ref": "#/$defs/userData",
 					"default": {},
 					"description": "Auto-save files only: Temporary data associated with the master.",
-					"glyphsLabel": {
-						"key": "any.temp-data",
-						"default": "Temporary Data"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -975,25 +820,17 @@
 				"userData": {
 					"$ref": "#/$defs/userData",
 					"default": {},
-					"description": "Custom data associated with the master.",
-					"glyphsLabel": {
-						"key": "any.user-data",
-						"default": "User Data"
-					}
+					"description": "Custom data associated with the master."
 				},
 				"visible": {
+					"type": "integer",
+					"glyphsNumber": "bool",
 					"enum": [
 						0,
 						1
 					],
-					"type": "integer",
-					"glyphsNumber": "bool",
 					"default": true,
-					"description": "Whether the master is visible in the preview.",
-					"glyphsLabel": {
-						"key": "master.visible",
-						"default": "Visible in Preview"
-					}
+					"description": "Whether the master is visible in the preview."
 				}
 			},
 			"additionalProperties": false,
@@ -1016,29 +853,17 @@
 					],
 					"type": "string",
 					"description": "The case of the glyph. If unset, then the case is based on a glyph data lookup based on the glyph name.",
-					"glyphsLabel": {
-						"key": "glyph.case",
-						"default": "Case"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
 				},
 				"category": {
 					"type": "string",
-					"description": "The category of the glyph. If unset, then the category is based on a glyph data lookup based on the glyph name.",
-					"glyphsLabel": {
-						"key": "glyph.category",
-						"default": "Category"
-					}
+					"description": "The category of the glyph. If unset, then the category is based on a glyph data lookup based on the glyph name."
 				},
 				"color": {
 					"$ref": "#/$defs/colorLabel",
-					"description": "The color label of the glyph.",
-					"glyphsLabel": {
-						"key": "any.color-label",
-						"default": "Color Label"
-					}
+					"description": "The color label of the glyph."
 				},
 				"direction": {
 					"enum": [
@@ -1050,43 +875,27 @@
 					],
 					"type": "string",
 					"description": "The writing direction of the glyph. If unset, then the writing direction is based on a glyph data lookup based on the glyph name.",
-					"glyphsLabel": {
-						"key": "glyph.writing-direction",
-						"default": "Direction"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
 				},
 				"export": {
+					"type": "integer",
+					"glyphsNumber": "bool",
 					"enum": [
 						0,
 						1
 					],
-					"type": "integer",
-					"glyphsNumber": "bool",
 					"default": true,
-					"description": "Whether the glyph is exported.",
-					"glyphsLabel": {
-						"key": "glyph.export",
-						"default": "Export"
-					}
+					"description": "Whether the glyph is exported."
 				},
 				"glyphname": {
 					"type": "string",
-					"description": "The name of the glyph.",
-					"glyphsLabel": {
-						"key": "glyph.name",
-						"default": "Glyphname"
-					}
+					"description": "The name of the glyph."
 				},
 				"kernBottom": {
 					"type": "string",
 					"description": "The kerning group of the bottom side of the glyph.",
-					"glyphsLabel": {
-						"key": "kerning-group.bottom",
-						"default": "Bottom Kerning Group"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -1094,10 +903,6 @@
 				"kernLeft": {
 					"type": "string",
 					"description": "The kerning group of the left side of the glyph.",
-					"glyphsLabel": {
-						"key": "kerning-group.left",
-						"default": "Left Kerning Group"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -1105,10 +910,6 @@
 				"kernRight": {
 					"type": "string",
 					"description": "The kerning group of the right side of the glyph.",
-					"glyphsLabel": {
-						"key": "kerning-group.right",
-						"default": "Right Kerning Group"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -1116,10 +917,6 @@
 				"kernTop": {
 					"type": "string",
 					"description": "The kerning group of the top side of the glyph.",
-					"glyphsLabel": {
-						"key": "kerning-group.top",
-						"default": "Top Kerning Group"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -1129,44 +926,28 @@
 					"examples": [
 						"2023-02-25 14:46:49 +0000"
 					],
-					"description": "The date and time of the last change of the glyph.",
-					"glyphsLabel": {
-						"key": "glyph.last-change",
-						"default": "Last Change"
-					}
+					"description": "The date and time of the last change of the glyph."
 				},
 				"layers": {
 					"type": "array",
 					"items": {
 						"$ref": "#/$defs/layer"
 					},
-					"description": "The layers of the glyph.",
-					"glyphsLabel": {
-						"key": "glyph.layers",
-						"default": "Layers"
-					}
+					"description": "The layers of the glyph."
 				},
 				"locked": {
+					"type": "integer",
+					"glyphsNumber": "bool",
 					"enum": [
 						0,
 						1
 					],
-					"type": "integer",
-					"glyphsNumber": "bool",
 					"default": false,
-					"description": "Whether the glyph is locked.",
-					"glyphsLabel": {
-						"key": "any.locked",
-						"default": "Locked"
-					}
+					"description": "Whether the glyph is locked."
 				},
 				"metricBottom": {
 					"type": "string",
 					"description": "The bottom metrics key of the glyph.",
-					"glyphsLabel": {
-						"key": "metrics-key.bottom",
-						"default": "Bottom Metrics Key"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -1174,10 +955,6 @@
 				"metricLeft": {
 					"type": "string",
 					"description": "The left metrics key of the glyph.",
-					"glyphsLabel": {
-						"key": "metrics-key.left",
-						"default": "Left Metrics Key"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -1185,10 +962,6 @@
 				"metricRight": {
 					"type": "string",
 					"description": "The right metrics key of the glyph.",
-					"glyphsLabel": {
-						"key": "metrics-key.right",
-						"default": "Right Metrics Key"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -1196,10 +969,6 @@
 				"metricTop": {
 					"type": "string",
 					"description": "The top metrics key of the glyph.",
-					"glyphsLabel": {
-						"key": "metrics-key.top",
-						"default": "Top Metrics Key"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -1207,10 +976,6 @@
 				"metricVertOrigin": {
 					"type": "string",
 					"description": "The vertical origin metrics key of the glyph.",
-					"glyphsLabel": {
-						"key": "metrics-key.vertical-origin",
-						"default": "Vertical Origin Metrics Key"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -1218,10 +983,6 @@
 				"metricVertWidth": {
 					"type": "string",
 					"description": "The vertical width metrics key of the glyph.",
-					"glyphsLabel": {
-						"key": "metrics-key.vertical-width",
-						"default": "Vertical Width Metrics Key"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -1229,10 +990,6 @@
 				"metricWidth": {
 					"type": "string",
 					"description": "The width metrics key of the glyph.",
-					"glyphsLabel": {
-						"key": "metrics-key.width",
-						"default": "Width Metrics Key"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -1240,11 +997,7 @@
 				"note": {
 					"type": "string",
 					"default": "",
-					"description": "A string serving as a description or comment about the glyph.",
-					"glyphsLabel": {
-						"key": "any.note",
-						"default": "Note"
-					}
+					"description": "A string serving as a description or comment about the glyph."
 				},
 				"partsSettings": {
 					"type": "array",
@@ -1252,35 +1005,19 @@
 						"$ref": "#/$defs/partProperty"
 					},
 					"default": [],
-					"description": "A list of the Smart Glyph properties and their top/bottom values.",
-					"glyphsLabel": {
-						"key": "glyph.parts-settings",
-						"default": "Parts Settings"
-					}
+					"description": "A list of the Smart Glyph properties and their top/bottom values."
 				},
 				"production": {
 					"type": "string",
-					"description": "The production name of the glyph. If unset, then the production name is based on a glyph data lookup based on the glyph name or the Unicode code point.",
-					"glyphsLabel": {
-						"key": "glyph.production-name",
-						"default": "Production Name"
-					}
+					"description": "The production name of the glyph. If unset, then the production name is based on a glyph data lookup based on the glyph name or the Unicode code point."
 				},
 				"script": {
 					"type": "string",
-					"description": "The script of the glyph. If unset, then the script is based on a glyph data lookup based on the glyph name.",
-					"glyphsLabel": {
-						"key": "glyph.script",
-						"default": "Script"
-					}
+					"description": "The script of the glyph. If unset, then the script is based on a glyph data lookup based on the glyph name."
 				},
 				"sortName": {
 					"type": "string",
 					"description": "The sort name of the glyph. If unset, then the sort name is based on a glyph data lookup based on the glyph name.",
-					"glyphsLabel": {
-						"key": "glyph.sort-name",
-						"default": "Sort Name"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -1288,21 +1025,13 @@
 				"sortNameKeep": {
 					"type": "string",
 					"description": "The sort name of the glyph used in the *Keep Alternates Next to Base Glyph* display mode. If unset, then the sort name is based on a glyph data lookup based on the glyph name.",
-					"glyphsLabel": {
-						"key": "glyph.sort-name-keep",
-						"default": "Sort Name (Keep)"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
 				},
 				"subCategory": {
 					"type": "string",
-					"description": "The subcategory of the glyph. If unset, then the subcategory is based on a glyph data lookup based on the glyph name.",
-					"glyphsLabel": {
-						"key": "glyph.subcategory",
-						"default": "Subcategory"
-					}
+					"description": "The subcategory of the glyph. If unset, then the subcategory is based on a glyph data lookup based on the glyph name."
 				},
 				"tags": {
 					"type": "array",
@@ -1312,10 +1041,6 @@
 					},
 					"default": [],
 					"description": "The tags of the glyph, sorted lexicographically.",
-					"glyphsLabel": {
-						"key": "any.tags",
-						"default": "Tags"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -1353,20 +1078,12 @@
 							}
 						}
 					],
-					"description": "The Unicode code points of the glyph.",
-					"glyphsLabel": {
-						"key": "glyph.unicode",
-						"default": "Unicode"
-					}
+					"description": "The Unicode code points of the glyph."
 				},
 				"userData": {
 					"$ref": "#/$defs/userData",
 					"default": {},
-					"description": "Custom data associated with the glyph.",
-					"glyphsLabel": {
-						"key": "any.user-data",
-						"default": "User Data"
-					}
+					"description": "Custom data associated with the glyph."
 				}
 			},
 			"additionalProperties": false,
@@ -1382,85 +1099,53 @@
 					"type": "number",
 					"glyphsNumber": "f64",
 					"default": 0,
-					"description": "The angle at which the guide is drawn in degrees clockwise.",
-					"glyphsLabel": {
-						"key": "any.angle",
-						"default": "Angle"
-					}
+					"description": "The angle at which the guide is drawn in degrees clockwise."
 				},
 				"filter": {
 					"type": "string",
-					"description": "The filter of the guide. The syntax is the description of [NSPredicate](https://developer.apple.com/documentation/foundation/nspredicate). Omitted when no filter is defined.",
-					"glyphsLabel": {
-						"key": "any.predicate.filter",
-						"default": "Filter"
-					}
+					"description": "The filter of the guide. The syntax is the description of [NSPredicate](https://developer.apple.com/documentation/foundation/nspredicate). Omitted when no filter is defined."
 				},
 				"grid": {
 					"type": "number",
 					"glyphsNumber": "f64",
 					"default": 0,
-					"description": "The grid of the guide.",
-					"glyphsLabel": {
-						"key": "guide.grid",
-						"default": "Grid"
-					}
+					"description": "The grid of the guide."
 				},
 				"length": {
 					"type": "number",
 					"glyphsNumber": "f64",
 					"default": 0,
-					"description": "The length of a line-type guide.",
-					"glyphsLabel": {
-						"key": "guide.length",
-						"default": "Length"
-					}
+					"description": "The length of a line-type guide."
 				},
 				"lockAngle": {
+					"type": "integer",
+					"glyphsNumber": "bool",
 					"enum": [
 						0,
 						1
 					],
-					"type": "integer",
-					"glyphsNumber": "bool",
 					"default": false,
-					"description": "Whether the angle of the guide is locked.",
-					"glyphsLabel": {
-						"key": "guide.locked-angle",
-						"default": "Locked Angle"
-					}
+					"description": "Whether the angle of the guide is locked."
 				},
 				"locked": {
+					"type": "integer",
+					"glyphsNumber": "bool",
 					"enum": [
 						0,
 						1
 					],
-					"type": "integer",
-					"glyphsNumber": "bool",
 					"default": false,
-					"description": "Whether the guide is locked.",
-					"glyphsLabel": {
-						"key": "any.locked",
-						"default": "Locked"
-					}
+					"description": "Whether the guide is locked."
 				},
 				"name": {
 					"type": "string",
 					"default": "",
-					"description": "The name of the guide.",
-					"glyphsLabel": {
-						"key": "any.name",
-						"default": "Name"
-					}
+					"description": "The name of the guide."
 				},
 				"orientation": {
 					"$ref": "#/$defs/orientation",
 					"default": "left",
 					"description": "The orientation of the guide.",
-					"glyphsLabel": {
-						"key": "any.orientation",
-						"default": "Orientation"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -1472,27 +1157,19 @@
 						0
 					],
 					"description": "The position of the guide.",
-					"glyphsLabel": {
-						"key": "any.position",
-						"default": "Position"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
 				},
 				"showMeasurement": {
+					"type": "integer",
+					"glyphsNumber": "bool",
 					"enum": [
 						0,
 						1
 					],
-					"type": "integer",
-					"glyphsNumber": "bool",
 					"default": false,
-					"description": "Whether the measurement of the guide is shown.",
-					"glyphsLabel": {
-						"key": "guide.show-measurement",
-						"default": "Show Measurement"
-					}
+					"description": "Whether the measurement of the guide is shown."
 				},
 				"size": {
 					"$ref": "#/$defs/size",
@@ -1501,10 +1178,6 @@
 						0
 					],
 					"description": "The size of the guide.",
-					"glyphsLabel": {
-						"key": "any.size",
-						"default": "Size"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -1518,10 +1191,6 @@
 					"default": "Line",
 					"type": "string",
 					"description": "The type of the guide.",
-					"glyphsLabel": {
-						"key": "any.type",
-						"default": "Type"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -1530,75 +1199,140 @@
 					"$ref": "#/$defs/userData",
 					"default": {},
 					"description": "Custom data associated with the guide.",
-					"glyphsLabel": {
-						"key": "any.user-data",
-						"default": "User Data"
-					},
-					"glyphsCondition": {}
+					"glyphsCondition": {
+						"minVersion": 3,
+						"maxVersion": 3
+					}
 				}
 			},
 			"additionalProperties": false,
 			"required": [],
 			"glyphsType": "GSGuide"
 		},
+		"gradient": {
+			"oneOf": [
+				{
+					"type": "object",
+					"properties": {
+						"colors": {
+							"$ref": "#/$defs/gradientColors",
+							"description": "The color stops of the gradient."
+						},
+						"end": {
+							"$ref": "#/$defs/pos",
+							"description": "The end point of the linear gradient relative to the shape bounds."
+						},
+						"start": {
+							"$ref": "#/$defs/pos",
+							"description": "The start point of the linear gradient relative to the shape bounds."
+						}
+					},
+					"additionalProperties": false,
+					"required": [
+						"colors"
+					],
+					"description": "A linear gradient.",
+					"glyphsType": "GSLinearGradient"
+				},
+				{
+					"type": "object",
+					"properties": {
+						"colors": {
+							"$ref": "#/$defs/gradientColors",
+							"description": "The color stops of the gradient."
+						},
+						"start": {
+							"$ref": "#/$defs/pos",
+							"description": "The start center of the radial gradient relative to the shape bounds."
+						},
+						"type": {
+							"type": "string",
+							"const": "circle",
+							"glyphsCondition": {
+								"maxVersion": 3
+							},
+							"description": "The radial gradient type marker."
+						}
+					},
+					"additionalProperties": false,
+					"required": [
+						"colors",
+						"type"
+					],
+					"description": "A radial gradient.",
+					"glyphsType": "GSRadialGradient"
+				}
+			],
+			"glyphsType": "GSGradient",
+			"glyphsCondition": {
+				"minVersion": 3
+			}
+		},
+		"gradientColors": {
+			"type": "array",
+			"items": {
+				"$ref": "#/$defs/gradientColorStop"
+			},
+			"glyphsCondition": {
+				"minVersion": 3
+			}
+		},
+		"gradientColorStop": {
+			"type": "array",
+			"prefixItems": [
+				{
+					"$ref": "#/$defs/color",
+					"description": "The color of the stop."
+				},
+				{
+					"type": "number",
+					"glyphsNumber": "f64",
+					"description": "The offset of the stop."
+				}
+			],
+			"items": false,
+			"minItems": 2,
+			"maxItems": 2,
+			"glyphsCompact": true,
+			"glyphsType": "GSColorStop",
+			"glyphsCondition": {
+				"minVersion": 3
+			}
+		},
 		"hint": {
 			"type": "object",
 			"properties": {
 				"horizontal": {
+					"type": "integer",
+					"glyphsNumber": "bool",
 					"enum": [
 						0,
 						1
 					],
-					"type": "integer",
-					"glyphsNumber": "bool",
 					"default": false,
-					"description": "Whether the hint is horizontal. Not written for path components.",
-					"glyphsLabel": {
-						"key": "hint.horizontal",
-						"default": "Horizontal"
-					}
+					"description": "Whether the hint is horizontal. Not written for path components."
 				},
 				"name": {
 					"type": "string",
-					"description": "The name of the hint.",
-					"glyphsLabel": {
-						"key": "any.name",
-						"default": "Name"
-					}
+					"description": "The name of the hint."
 				},
 				"options": {
 					"type": "number",
 					"glyphsNumber": "u32",
 					"default": 0,
-					"description": "The options of the hint.",
-					"glyphsLabel": {
-						"key": "hint.options",
-						"default": "Options"
-					}
+					"description": "The options of the hint."
 				},
 				"origin": {
 					"$ref": "#/$defs/indexPath",
-					"description": "The origin of the hint.",
-					"glyphsLabel": {
-						"key": "hint.origin",
-						"default": "Origin"
-					}
+					"description": "The origin of the hint."
 				},
 				"other1": {
 					"$ref": "#/$defs/indexPath",
-					"description": "The first other point of the hint, used by TrueType instructions that need more than two nodes.",
-					"glyphsLabel": {
-						"key": "hint.other1",
-						"default": "Other 1"
-					}
+					"description": "The first other point of the hint, used by TrueType instructions that need more than two nodes."
 				},
 				"other2": {
 					"$ref": "#/$defs/indexPath",
-					"description": "The second other point of the hint, used by TrueType instructions that need more than three nodes.",
-					"glyphsLabel": {
-						"key": "hint.other2",
-						"default": "Other 2"
-					}
+					"description": "The second other point of the hint, used by TrueType instructions that need more than three nodes."
 				},
 				"place": {
 					"type": "array",
@@ -1619,10 +1353,6 @@
 					"maxItems": 2,
 					"glyphsCondition": {
 						"minVersion": 3
-					},
-					"glyphsLabel": {
-						"key": "hint.place",
-						"default": "Placement"
 					}
 				},
 				"scale": {
@@ -1634,28 +1364,16 @@
 					"glyphsCondition": {
 						"minVersion": 3
 					},
-					"description": "The scale of the hint.",
-					"glyphsLabel": {
-						"key": "any.scale",
-						"default": "Scale"
-					}
+					"description": "The scale of the hint."
 				},
 				"settings": {
 					"type": "object",
-					"description": "The settings of the hint.",
-					"glyphsLabel": {
-						"key": "hint.settings",
-						"default": "Settings"
-					}
+					"description": "The settings of the hint."
 				},
 				"stem": {
 					"type": "number",
 					"glyphsNumber": "i32",
-					"description": "The stem of the hint.",
-					"glyphsLabel": {
-						"key": "hint.stem",
-						"default": "Stem"
-					}
+					"description": "The stem of the hint."
 				},
 				"target": {
 					"oneOf": [
@@ -1670,14 +1388,11 @@
 							"type": "string",
 							"description": "The target of a ghost hint.",
 							"glyphsCondition": {
-								"minVersion": 3
+								"minVersion": 3,
+								"maxVersion": 3
 							}
 						}
-					],
-					"glyphsLabel": {
-						"key": "hint.target",
-						"default": "Target"
-					}
+					]
 				},
 				"type": {
 					"enum": [
@@ -1701,13 +1416,10 @@
 					],
 					"type": "string",
 					"glyphsCondition": {
-						"minVersion": 3
+						"minVersion": 3,
+						"maxVersion": 3
 					},
-					"description": "The type of the hint.",
-					"glyphsLabel": {
-						"key": "any.type",
-						"default": "Type"
-					}
+					"description": "The type of the hint."
 				}
 			},
 			"additionalProperties": false,
@@ -1725,21 +1437,13 @@
 					"minimum": 0,
 					"maximum": 100,
 					"default": 50,
-					"description": "The alpha value of the image.",
-					"glyphsLabel": {
-						"key": "image.alpha",
-						"default": "Alpha"
-					}
+					"description": "The alpha value of the image."
 				},
 				"angle": {
 					"type": "number",
 					"glyphsNumber": "f64",
 					"default": 0,
 					"description": "The rotation angle of the image in degrees clockwise.",
-					"glyphsLabel": {
-						"key": "any.angle",
-						"default": "Angle"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -1774,44 +1478,28 @@
 					"glyphsCondition": {
 						"minVersion": 3
 					},
-					"description": "The cropped frame of the image, specified as the crop origin X/Y and size width/height.",
-					"glyphsLabel": {
-						"key": "image.crop",
-						"default": "Crop"
-					}
+					"description": "The cropped frame of the image, specified as the crop origin X/Y and size width/height."
 				},
 				"imagePath": {
 					"type": "string",
-					"description": "The file path of the image file relative to the document file.",
-					"glyphsLabel": {
-						"key": "image.filepath",
-						"default": "File Path"
-					}
+					"description": "The file path of the image file relative to the document file."
 				},
 				"imageURL": {
 					"type": "string",
 					"description": "The URL bookmark data of the image file path.",
-					"glyphsLabel": {
-						"key": "image.url-bookmark",
-						"default": "URL Bookmark"
-					},
 					"glyphsCondition": {
 						"appStore": true
 					}
 				},
 				"locked": {
+					"type": "integer",
+					"glyphsNumber": "bool",
 					"enum": [
 						0,
 						1
 					],
-					"type": "integer",
-					"glyphsNumber": "bool",
 					"default": false,
-					"description": "Whether the image is locked.",
-					"glyphsLabel": {
-						"key": "any.locked",
-						"default": "Locked"
-					}
+					"description": "Whether the image is locked."
 				},
 				"pos": {
 					"$ref": "#/$defs/pos",
@@ -1820,10 +1508,6 @@
 						0
 					],
 					"description": "The position of the image.",
-					"glyphsLabel": {
-						"key": "any.position",
-						"default": "Position"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -1835,10 +1519,6 @@
 						1
 					],
 					"description": "The scale factor of the image.",
-					"glyphsLabel": {
-						"key": "any.scale",
-						"default": "Scale"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -1850,10 +1530,6 @@
 						0
 					],
 					"description": "The slant factor of the image.",
-					"glyphsLabel": {
-						"key": "any.slant",
-						"default": "Slant"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -1871,11 +1547,7 @@
 						"type": "number",
 						"glyphsNumber": "f64"
 					},
-					"description": "The internal axis locations of the instance. These values are also used for the external axis locations, if no external axis locations are specified separately.",
-					"glyphsLabel": {
-						"key": "instance.axis-values",
-						"default": "Axis Values"
-					}
+					"description": "The internal axis locations of the instance. These values are also used for the external axis locations, if no external axis locations are specified separately."
 				},
 				"customParameters": {
 					"type": "array",
@@ -1883,25 +1555,17 @@
 						"$ref": "#/$defs/customParameter"
 					},
 					"default": [],
-					"description": "The custom parameters of the instance.",
-					"glyphsLabel": {
-						"key": "any.custom-parameters",
-						"default": "Custom Parameters"
-					}
+					"description": "The custom parameters of the instance."
 				},
 				"exports": {
+					"type": "integer",
+					"glyphsNumber": "bool",
 					"enum": [
 						0,
 						1
 					],
-					"type": "integer",
-					"glyphsNumber": "bool",
 					"default": true,
-					"description": "Whether the instance is exported.",
-					"glyphsLabel": {
-						"key": "instance.exports",
-						"default": "Export"
-					}
+					"description": "Whether the instance is exported."
 				},
 				"instanceInterpolations": {
 					"type": "object",
@@ -1940,54 +1604,38 @@
 					"description": "The interpolation factors where the keys are the master IDs."
 				},
 				"isBold": {
+					"type": "integer",
+					"glyphsNumber": "bool",
 					"enum": [
 						0,
 						1
 					],
-					"type": "integer",
-					"glyphsNumber": "bool",
 					"default": false,
-					"description": "Whether the instance is bold.",
-					"glyphsLabel": {
-						"key": "instance.style.is-bold",
-						"default": "Bold"
-					}
+					"description": "Whether the instance is bold."
 				},
 				"isItalic": {
+					"type": "integer",
+					"glyphsNumber": "bool",
 					"enum": [
 						0,
 						1
 					],
-					"type": "integer",
-					"glyphsNumber": "bool",
 					"default": false,
-					"description": "Whether the instance is italic.",
-					"glyphsLabel": {
-						"key": "instance.style.is-italic",
-						"default": "Italic"
-					}
+					"description": "Whether the instance is italic."
 				},
 				"linkStyle": {
 					"type": "string",
-					"description": "The name of the style-linked instance.",
-					"glyphsLabel": {
-						"key": "instance.style.link",
-						"default": "Link Style"
-					}
+					"description": "The name of the style-linked instance."
 				},
 				"manualInterpolation": {
+					"type": "integer",
+					"glyphsNumber": "bool",
 					"enum": [
 						0,
 						1
 					],
-					"type": "integer",
-					"glyphsNumber": "bool",
 					"default": false,
-					"description": "Whether the `instanceInterpolations` values are used. Otherwise, the values are calculated from the axis values.",
-					"glyphsLabel": {
-						"key": "instance.manual-interpolation",
-						"default": "Manual Interpolation"
-					}
+					"description": "Whether the `instanceInterpolations` values are used. Otherwise, the values are calculated from the axis values."
 				},
 				"name": {
 					"type": "string",
@@ -1998,11 +1646,9 @@
 						"Bold Italic"
 					],
 					"description": "The style name of the instance.",
-					"glyphsLabel": {
-						"key": "any.name",
-						"default": "Name"
-					},
-					"glyphsCondition": {}
+					"glyphsCondition": {
+						"maxVersion": 3
+					}
 				},
 				"properties": {
 					"type": "array",
@@ -2010,10 +1656,6 @@
 						"$ref": "#/$defs/infoProperty"
 					},
 					"default": [],
-					"glyphsLabel": {
-						"key": "instance.properties",
-						"default": "Properties"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -2022,41 +1664,31 @@
 					"enum": [
 						"single",
 						"variable",
-						"icon"
+						"static",
+						"icon",
+						"particles"
 					],
 					"type": "string",
 					"default": "single",
 					"glyphsCondition": {
 						"minVersion": 3
 					},
-					"description": "The type of the instance.",
-					"glyphsLabel": {
-						"key": "any.type",
-						"default": "Type"
-					}
+					"description": "The type of the instance."
 				},
 				"userData": {
 					"$ref": "#/$defs/userData",
 					"default": {},
-					"description": "Custom data associated with the instance.",
-					"glyphsLabel": {
-						"key": "any.user-data",
-						"default": "User Data"
-					}
+					"description": "Custom data associated with the instance."
 				},
 				"visible": {
+					"type": "integer",
+					"glyphsNumber": "bool",
 					"enum": [
 						0,
 						1
 					],
-					"type": "integer",
-					"glyphsNumber": "bool",
 					"default": true,
 					"description": "Whether the instance is visible when previewing all instances.",
-					"glyphsLabel": {
-						"key": "any.visible",
-						"default": "Visible"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -2070,11 +1702,7 @@
 					"glyphsCondition": {
 						"minVersion": 3
 					},
-					"description": "The weight class of the instance.",
-					"glyphsLabel": {
-						"key": "instance.weight-class",
-						"default": "Weight Class"
-					}
+					"description": "The weight class of the instance."
 				},
 				"widthClass": {
 					"type": "integer",
@@ -2085,11 +1713,7 @@
 					"glyphsCondition": {
 						"minVersion": 3
 					},
-					"description": "The width class of the instance.",
-					"glyphsLabel": {
-						"key": "instance.width-class",
-						"default": "Width Class"
-					}
+					"description": "The width class of the instance."
 				}
 			},
 			"additionalProperties": false,
@@ -2217,11 +1841,7 @@
 						"$ref": "#/$defs/anchor"
 					},
 					"default": [],
-					"description": "The anchors of the layer.",
-					"glyphsLabel": {
-						"key": "layer.anchors",
-						"default": "Anchors"
-					}
+					"description": "The anchors of the layer."
 				},
 				"annotations": {
 					"type": "array",
@@ -2229,28 +1849,16 @@
 						"$ref": "#/$defs/annotation"
 					},
 					"default": [],
-					"description": "The annotations of the layer.",
-					"glyphsLabel": {
-						"key": "layer.annotations",
-						"default": "Annotations"
-					}
+					"description": "The annotations of the layer."
 				},
 				"associatedMasterId": {
 					"type": "string",
-					"description": "The unique identifier of the associated master. Omitted when equalt to the layer ID.",
-					"glyphsLabel": {
-						"key": "layer.associated-master-id",
-						"default": "Associated Master ID"
-					}
+					"description": "The unique identifier of the associated master. Omitted when equal to the layer ID."
 				},
 				"attr": {
-					"$ref": "#/$defs/attr",
+					"$ref": "#/$defs/layerAttr",
 					"default": {},
 					"description": "The attributes of the layer.",
-					"glyphsLabel": {
-						"key": "any.attributes",
-						"default": "Attributes"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -2264,11 +1872,7 @@
 								"$ref": "#/$defs/anchor"
 							},
 							"default": [],
-							"description": "The anchors of the background layer.",
-							"glyphsLabel": {
-								"key": "layer.anchors",
-								"default": "Anchors"
-							}
+							"description": "The anchors of the background layer."
 						},
 						"annotations": {
 							"type": "array",
@@ -2276,19 +1880,11 @@
 								"$ref": "#/$defs/annotation"
 							},
 							"default": [],
-							"description": "The annotations of the background layer.",
-							"glyphsLabel": {
-								"key": "layer.annotations",
-								"default": "Annotations"
-							}
+							"description": "The annotations of the background layer."
 						},
 						"backgroundImage": {
 							"$ref": "#/$defs/image",
-							"description": "The background image of the layer.",
-							"glyphsLabel": {
-								"key": "layer.background-image",
-								"default": "Background Image"
-							}
+							"description": "The background image of the layer."
 						},
 						"guides": {
 							"type": "array",
@@ -2297,10 +1893,6 @@
 							},
 							"default": [],
 							"description": "The guides of the background layer.",
-							"glyphsLabel": {
-								"key": "layer.guides",
-								"default": "Guides"
-							},
 							"glyphsCondition": {
 								"minVersion": 3
 							}
@@ -2311,11 +1903,7 @@
 								"$ref": "#/$defs/hint"
 							},
 							"default": [],
-							"description": "The hints of the background layer.",
-							"glyphsLabel": {
-								"key": "layer.hints",
-								"default": "Hints"
-							}
+							"description": "The hints of the background layer."
 						},
 						"shapes": {
 							"type": "array",
@@ -2324,10 +1912,6 @@
 							},
 							"default": [],
 							"description": "The shapes of the background layer.",
-							"glyphsLabel": {
-								"key": "layer.shapes",
-								"default": "Shapes"
-							},
 							"glyphsCondition": {
 								"minVersion": 3
 							}
@@ -2336,19 +1920,11 @@
 				},
 				"backgroundImage": {
 					"$ref": "#/$defs/image",
-					"description": "The background image of the layer.",
-					"glyphsLabel": {
-						"key": "layer.background-image",
-						"default": "Background Image"
-					}
+					"description": "The background image of the layer."
 				},
 				"color": {
 					"$ref": "#/$defs/colorLabel",
-					"description": "The color label of the layer.",
-					"glyphsLabel": {
-						"key": "any.color-label",
-						"default": "Color Label"
-					}
+					"description": "The color label of the layer."
 				},
 				"guides": {
 					"type": "array",
@@ -2357,10 +1933,6 @@
 					},
 					"default": [],
 					"description": "The guides of the layer.",
-					"glyphsLabel": {
-						"key": "layer.guides",
-						"default": "Guides"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -2371,27 +1943,15 @@
 						"$ref": "#/$defs/hint"
 					},
 					"default": [],
-					"description": "The hints of the layer.",
-					"glyphsLabel": {
-						"key": "layer.hints",
-						"default": "Hints"
-					}
+					"description": "The hints of the layer."
 				},
 				"layerId": {
 					"type": "string",
-					"description": "The unique ID of the layer. Matches the master ID when the layer is a master layer.",
-					"glyphsLabel": {
-						"key": "layer.id",
-						"default": "Layer ID"
-					}
+					"description": "The unique ID of the layer. Matches the master ID when the layer is a master layer."
 				},
 				"metricBottom": {
 					"type": "string",
 					"description": "The bottom metrics key of the layer.",
-					"glyphsLabel": {
-						"key": "metrics-key.bottom",
-						"default": "Bottom Metrics Key"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -2399,10 +1959,6 @@
 				"metricLeft": {
 					"type": "string",
 					"description": "The left metrics key of the layer.",
-					"glyphsLabel": {
-						"key": "metrics-key.left",
-						"default": "Left Metrics Key"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -2410,10 +1966,6 @@
 				"metricRight": {
 					"type": "string",
 					"description": "The right metrics key of the layer.",
-					"glyphsLabel": {
-						"key": "metrics-key.right",
-						"default": "Right Metrics Key"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -2421,10 +1973,6 @@
 				"metricTop": {
 					"type": "string",
 					"description": "The top metrics key of the layer.",
-					"glyphsLabel": {
-						"key": "metrics-key.top",
-						"default": "Top Metrics Key"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -2432,10 +1980,6 @@
 				"metricVertOrigin": {
 					"type": "string",
 					"description": "The vertical origin metrics key of the layer.",
-					"glyphsLabel": {
-						"key": "metrics-key.vertical-origin",
-						"default": "Vertical Origin Metrics Key"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -2443,10 +1987,6 @@
 				"metricVertWidth": {
 					"type": "string",
 					"description": "The vertical width metrics key of the layer.",
-					"glyphsLabel": {
-						"key": "metrics-key.vertical-width",
-						"default": "Vertical Width Metrics Key"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -2454,10 +1994,6 @@
 				"metricWidth": {
 					"type": "string",
 					"description": "The width metrics key of the layer.",
-					"glyphsLabel": {
-						"key": "metrics-key.width",
-						"default": "Width Metrics Key"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -2465,26 +2001,26 @@
 				"name": {
 					"type": "string",
 					"default": "",
-					"description": "The name of the layer. Master layers and other special layers display a name in the Glyphs UI that is derived from the layers role (for example, the name of the master that the layer belongs to). These derived names are not written to the file. Instead, this name is only displayed in the UI for non-special layers (like backup layers).",
-					"glyphsLabel": {
-						"key": "any.name",
-						"default": "Name"
-					}
+					"description": "The name of the layer. Master layers and other special layers display a name in the Glyphs UI that is derived from the layer\u2019s role (for example, the name of the master that the layer belongs to). These derived names are not written to the file. Instead, this name is only displayed in the UI for non-special layers (like backup layers)."
 				},
 				"partSelection": {
 					"type": "object",
 					"additionalProperties": {
-						"enum": [
-							1,
-							2
+						"oneOf": [
+							{
+								"type": "integer",
+								"const": 1,
+								"description": "Bottom: the layer corresponds to the bottom value of the property."
+							},
+							{
+								"type": "integer",
+								"const": 2,
+								"description": "Top: the layer corresponds to the top value of the property."
+							}
 						],
 						"type": "integer"
 					},
 					"description": "The Smart Glyph setting of the layer. The keys are the property names. The values are either `1` if the layer corresponds to the bottom value of the property or `2` if the layer corresponds to the top value of the property. If a layer is neither the top nor the bottom value, the property is omitted.",
-					"glyphsLabel": {
-						"key": "layer.part-selection",
-						"default": "Part Selection"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -2496,10 +2032,6 @@
 					},
 					"default": [],
 					"description": "The shapes of the layer.",
-					"glyphsLabel": {
-						"key": "layer.shapes",
-						"default": "Shapes"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -2507,21 +2039,13 @@
 				"userData": {
 					"$ref": "#/$defs/userData",
 					"default": {},
-					"description": "Custom data associated with the layer.",
-					"glyphsLabel": {
-						"key": "any.user-data",
-						"default": "User Data"
-					}
+					"description": "Custom data associated with the layer."
 				},
 				"vertOrigin": {
 					"type": "number",
 					"glyphsNumber": "f64",
 					"default": 0,
 					"description": "The vertical origin of the layer.",
-					"glyphsLabel": {
-						"key": "layer.vertical-origin",
-						"default": "Vertical Origin"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -2531,36 +2055,24 @@
 					"glyphsNumber": "f64",
 					"default": 0,
 					"description": "The vertical width of the layer.",
-					"glyphsLabel": {
-						"key": "layer.vertical-width",
-						"default": "Vertical Width"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
 				},
 				"visible": {
+					"type": "integer",
+					"glyphsNumber": "bool",
 					"enum": [
 						0,
 						1
 					],
-					"type": "integer",
-					"glyphsNumber": "bool",
 					"default": false,
-					"description": "Whether the layer is visible.",
-					"glyphsLabel": {
-						"key": "any.visible",
-						"default": "Visible"
-					}
+					"description": "Whether the layer is visible."
 				},
 				"width": {
 					"type": "number",
 					"glyphsNumber": "f64",
-					"description": "The width of the layer.",
-					"glyphsLabel": {
-						"key": "any.width",
-						"default": "Width"
-					}
+					"description": "The width of the layer."
 				}
 			},
 			"additionalProperties": false,
@@ -2570,38 +2082,156 @@
 			],
 			"glyphsType": "GSLayer"
 		},
+		"layerAttr": {
+			"type": "object",
+			"properties": {
+				"axisRules": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"min": {
+								"type": "number",
+								"glyphsNumber": "f64",
+								"description": "The minimum matching axis value."
+							},
+							"max": {
+								"type": "number",
+								"glyphsNumber": "f64",
+								"description": "The maximum matching axis value."
+							}
+						},
+						"additionalProperties": false
+					},
+					"default": [],
+					"description": "Alternative-layer rules, ordered like the font axes.",
+					"glyphsCondition": {
+						"minVersion": 3
+					}
+				},
+				"color": {
+					"type": "integer",
+					"glyphsNumber": "bool",
+					"enum": [
+						0,
+						1
+					],
+					"default": false,
+					"description": "Whether the layer is an Apple color layer.",
+					"glyphsCondition": {
+						"minVersion": 3
+					}
+				},
+				"colorPalette": {
+					"oneOf": [
+						{
+							"type": "integer",
+							"glyphsNumber": "u16",
+							"minimum": 0,
+							"maximum": 65534,
+							"description": "The color palette index of a color palette layer."
+						},
+						{
+							"type": "string",
+							"const": "*",
+							"description": "The foreground text color (color index 65535)."
+						}
+					],
+					"description": "The color palette index of a color palette layer.",
+					"glyphsCondition": {
+						"minVersion": 3
+					}
+				},
+				"coordinates": {
+					"type": "array",
+					"items": {
+						"type": "number",
+						"glyphsNumber": "f64",
+						"description": "The explicit coordinate value."
+					},
+					"default": [],
+					"description": "Intermediate-layer coordinates, ordered like the relevant axes. Starting in version 4, also contains the glyph-local axis coordinates for layers of Smart Glyphs.",
+					"glyphsCondition": {
+						"minVersion": 3
+					}
+				},
+				"sbixSize": {
+					"type": "integer",
+					"glyphsNumber": "u16",
+					"minimum": 0,
+					"description": "The Apple sbix image size.",
+					"glyphsCondition": {
+						"minVersion": 3
+					}
+				},
+				"svg": {
+					"type": "integer",
+					"glyphsNumber": "bool",
+					"enum": [
+						0,
+						1
+					],
+					"default": false,
+					"description": "Whether the layer is an SVG color layer.",
+					"glyphsCondition": {
+						"minVersion": 3
+					}
+				}
+			},
+			"additionalProperties": {},
+			"glyphsCondition": {
+				"minVersion": 3
+			}
+		},
+		"lineCap": {
+			"oneOf": [
+				{
+					"type": "integer",
+					"const": 0,
+					"description": "Butt: ends the stroke at the path endpoint."
+				},
+				{
+					"type": "integer",
+					"const": 1,
+					"description": "Round: extends the stroke with a semicircular cap."
+				},
+				{
+					"type": "integer",
+					"const": 2,
+					"description": "Square: extends the stroke with a square cap."
+				},
+				{
+					"type": "integer",
+					"const": 3,
+					"description": "Round inset: ends the stroke with an inset semicircular cap."
+				}
+			],
+			"type": "integer",
+			"glyphsNumber": "u8",
+			"glyphsCondition": {
+				"minVersion": 3
+			}
+		},
 		"metric": {
 			"type": "object",
 			"properties": {
 				"filter": {
 					"type": "string",
-					"description": "The filter of the metric limiting the scope of the metric to a subset of glyphs.",
-					"glyphsLabel": {
-						"key": "any.predicate.filter",
-						"default": "Filter"
-					}
+					"description": "The filter of the metric limiting the scope of the metric to a subset of glyphs."
 				},
 				"horizontal": {
+					"type": "integer",
+					"glyphsNumber": "bool",
 					"enum": [
 						0,
 						1
 					],
-					"type": "integer",
-					"glyphsNumber": "bool",
 					"default": false,
-					"description": "Whether the metric is a horizontal metric.",
-					"glyphsLabel": {
-						"key": "metric.horizontal",
-						"default": "Horizontal"
-					}
+					"description": "Whether the metric is a horizontal metric."
 				},
 				"name": {
 					"type": "string",
-					"description": "The name of the metric.",
-					"glyphsLabel": {
-						"key": "any.name",
-						"default": "Name"
-					}
+					"description": "The name of the metric."
 				},
 				"type": {
 					"enum": [
@@ -2610,7 +2240,6 @@
 						"slant height",
 						"x-height",
 						"midHeight",
-						"topHeight",
 						"bodyHeight",
 						"descender",
 						"baseline",
@@ -2618,11 +2247,7 @@
 						"italic slope"
 					],
 					"type": "string",
-					"description": "The type of the metric.",
-					"glyphsLabel": {
-						"key": "metric.type",
-						"default": "Type"
-					}
+					"description": "The type of the metric."
 				}
 			},
 			"additionalProperties": false,
@@ -2635,21 +2260,13 @@
 					"type": "number",
 					"glyphsNumber": "f64",
 					"default": 0,
-					"description": "The overshoot of the metric value.",
-					"glyphsLabel": {
-						"key": "metric-store.overshoot",
-						"default": "Overshoot"
-					}
+					"description": "The overshoot of the metric value."
 				},
 				"pos": {
 					"type": "number",
 					"glyphsNumber": "f64",
 					"default": 0,
-					"description": "The offset from the baseline of the metric value.",
-					"glyphsLabel": {
-						"key": "metric-store.offset",
-						"default": "Offset"
-					}
+					"description": "The offset from the baseline of the metric value."
 				}
 			},
 			"additionalProperties": false,
@@ -2672,11 +2289,16 @@
 					"type": "string",
 					"minLength": 1,
 					"description": "The configuration of the node expressed as a sequence of characters. Types: `m`: move, `l`: line, `c`: cubic curve, `q`: quadratic curve, `o`: off-curve. Connection (may follow `l`, `c`, `q`): `s`: smooth. Orientation (left is the default): `R`: right, `C`: center. Locking (not locked is the default): `X`: locked.",
-					"glyphsCondition": {}
+					"glyphsCondition": {
+						"maxVersion": 3
+					}
 				},
 				{
-					"$ref": "#/$defs/attrShape",
+					"$ref": "#/$defs/attr",
 					"default": {},
+					"glyphsCondition": {
+						"maxVersion": 3
+					},
 					"description": "The attributes of the node."
 				}
 			],
@@ -2695,18 +2317,10 @@
 					"properties": {
 						"key": {
 							"type": "string",
-							"description": "The key of the property.",
-							"glyphsLabel": {
-								"key": "any.key",
-								"default": "Key"
-							}
+							"description": "The key of the property."
 						},
 						"value": {
-							"description": "The value of the property.",
-							"glyphsLabel": {
-								"key": "any.value",
-								"default": "Value"
-							}
+							"description": "The value of the property."
 						}
 					},
 					"additionalProperties": false,
@@ -2720,22 +2334,14 @@
 					"properties": {
 						"key": {
 							"type": "string",
-							"description": "The key of the property.",
-							"glyphsLabel": {
-								"key": "any.key",
-								"default": "Key"
-							}
+							"description": "The key of the property."
 						},
 						"values": {
 							"type": "array",
 							"items": {
 								"$ref": "#/$defs/infoValue"
 							},
-							"description": "The values of the property.",
-							"glyphsLabel": {
-								"key": "any.values",
-								"default": "Values"
-							}
+							"description": "The values of the property."
 						}
 					},
 					"additionalProperties": false,
@@ -2756,19 +2362,11 @@
 						"dflt",
 						"DEU"
 					],
-					"description": "The language tag of the string value. The tag is based on the [OpenType Language System Tags](https://learn.microsoft.com/en-us/typography/opentype/spec/languagetags) but omitts trailing whitespace.",
-					"glyphsLabel": {
-						"key": "localized-string.language",
-						"default": "Language"
-					}
+					"description": "The language tag of the string value. The tag is based on the [OpenType Language System Tags](https://learn.microsoft.com/en-us/typography/opentype/spec/languagetags) but omits trailing whitespace."
 				},
 				"value": {
 					"type": "string",
-					"description": "The localized string value.",
-					"glyphsLabel": {
-						"key": "any.value",
-						"default": "Value"
-					}
+					"description": "The localized string value."
 				}
 			},
 			"additionalProperties": false,
@@ -2793,92 +2391,79 @@
 				"bottomName": {
 					"type": "string",
 					"description": "The name of the bottom value of the property. (Unused)",
-					"glyphsLabel": {
-						"key": "part-property.bottom-name",
-						"default": "Bottom Name"
-					},
-					"glyphsCondition": {}
+					"glyphsCondition": {
+						"maxVersion": 3
+					}
 				},
 				"bottomValue": {
 					"type": "integer",
 					"glyphsNumber": "i32",
-					"description": "The lower end of the value range of the property.",
-					"glyphsLabel": {
-						"key": "part-property.bottom-value",
-						"default": "Bottom"
-					}
+					"description": "The lower end of the value range of the property."
 				},
 				"name": {
 					"type": "string",
-					"description": "The name of the property.",
-					"glyphsLabel": {
-						"key": "any.name",
-						"default": "Name"
-					}
+					"description": "The name of the property."
 				},
 				"topName": {
 					"type": "string",
 					"description": "The name of the top value of the property. (Unused)",
-					"glyphsLabel": {
-						"key": "part-property.top-name",
-						"default": "Top Name"
-					},
-					"glyphsCondition": {}
+					"glyphsCondition": {
+						"maxVersion": 3
+					}
 				},
 				"topValue": {
 					"type": "integer",
 					"glyphsNumber": "i32",
-					"description": "The upper end of the value range of the property.",
-					"glyphsLabel": {
-						"key": "part-property.top-value",
-						"default": "Top"
-					}
+					"description": "The upper end of the value range of the property."
 				}
 			},
 			"additionalProperties": false,
 			"glyphsType": "GSPartProperty"
 		},
+		"palettes": {
+			"type": "array",
+			"items": {
+				"type": "array",
+				"items": {
+					"$ref": "#/$defs/color"
+				}
+			},
+			"description": "The version 3 structure of the `Color Palettes` custom parameter.",
+			"glyphsCondition": {
+				"minVersion": 3,
+				"maxVersion": 3
+			},
+			"glyphsType": "GSPalettes"
+		},
 		"path": {
 			"type": "object",
 			"properties": {
 				"attr": {
-					"$ref": "#/$defs/attrShape",
+					"$ref": "#/$defs/shapeAttr",
 					"default": {},
 					"description": "The attributes of the path.",
-					"glyphsLabel": {
-						"key": "attributes",
-						"default": "Attributes"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
 				},
 				"closed": {
+					"type": "integer",
+					"glyphsNumber": "bool",
 					"enum": [
 						0,
 						1
 					],
-					"type": "integer",
-					"glyphsNumber": "bool",
-					"description": "Whether the path is closed.",
-					"glyphsLabel": {
-						"key": "path.closed",
-						"default": "Closed"
-					}
+					"description": "Whether the path is closed."
 				},
 				"locked": {
+					"type": "integer",
+					"glyphsNumber": "bool",
 					"enum": [
 						0,
 						1
 					],
-					"type": "integer",
-					"glyphsNumber": "bool",
 					"default": false,
 					"description": "Whether the path is locked.",
-					"glyphsLabel": {
-						"key": "any.locked",
-						"default": "Locked"
-					},
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -2888,11 +2473,7 @@
 					"items": {
 						"$ref": "#/$defs/node"
 					},
-					"description": "The on- and off-curve nodes of the path.",
-					"glyphsLabel": {
-						"key": "path.nodes",
-						"default": "Nodes"
-					}
+					"description": "The on- and off-curve nodes of the path."
 				}
 			},
 			"additionalProperties": false,
@@ -2951,6 +2532,159 @@
 			],
 			"glyphsType": "GSShape"
 		},
+		"shapeAttr": {
+			"type": "object",
+			"properties": {
+				"color": {
+					"$ref": "#/$defs/colorLabel",
+					"description": "The color label of the shape."
+				},
+				"fill": {
+					"type": "integer",
+					"glyphsNumber": "bool",
+					"enum": [
+						0,
+						1
+					],
+					"default": false,
+					"description": "Whether a stroked path is also filled."
+				},
+				"fillColor": {
+					"$ref": "#/$defs/color",
+					"description": "The fill color of the shape."
+				},
+				"gradient": {
+					"$ref": "#/$defs/gradient",
+					"description": "The fill gradient of the shape."
+				},
+				"lineCapEnd": {
+					"$ref": "#/$defs/lineCap",
+					"default": 0,
+					"description": "The line cap style at the end of the stroke."
+				},
+				"lineCapStart": {
+					"$ref": "#/$defs/lineCap",
+					"default": 0,
+					"description": "The line cap style at the start of the stroke."
+				},
+				"lineJoin": {
+					"oneOf": [
+						{
+							"type": "integer",
+							"const": 0,
+							"description": "Miter: extends the segment edges until they intersect."
+						},
+						{
+							"type": "integer",
+							"const": 1,
+							"description": "Round: connects the segment edges with a circular arc."
+						},
+						{
+							"type": "integer",
+							"const": 2,
+							"description": "Bevel: connects the segment edges with a straight edge."
+						}
+					],
+					"type": "integer",
+					"glyphsNumber": "u8",
+					"glyphsCondition": {
+						"maxVersion": 3
+					},
+					"default": 0,
+					"description": "The line join style of the stroke."
+				},
+				"mask": {
+					"type": "integer",
+					"glyphsNumber": "bool",
+					"enum": [
+						0,
+						1
+					],
+					"glyphsCondition": {
+						"minVersion": 3,
+						"maxVersion": 3
+					},
+					"default": 0,
+					"description": "How the shape masks preceding shapes in the same composition unit."
+				},
+				"reversePaths": {
+					"type": "integer",
+					"glyphsNumber": "bool",
+					"enum": [
+						0,
+						1
+					],
+					"default": false,
+					"description": "Whether paths from the shape are reversed for drawing/export."
+				},
+				"shadow": {
+					"$ref": "#/$defs/shadow",
+					"description": "The outer shadow of the shape."
+				},
+				"shadowIn": {
+					"$ref": "#/$defs/shadow",
+					"description": "The inner shadow of the shape."
+				},
+				"strokeColor": {
+					"$ref": "#/$defs/color",
+					"description": "The stroke color of the shape."
+				},
+				"strokeHeight": {
+					"type": "number",
+					"glyphsNumber": "f64",
+					"description": "The vertical stroke size, or an expression resolving to one. Falls back to the value of `strokeWidth` when unset."
+				},
+				"strokePos": {
+					"type": "number",
+					"glyphsNumber": "f64",
+					"minimum": 0,
+					"maximum": 1,
+					"default": 0.5,
+					"glyphsCondition": {
+						"maxVersion": 3
+					},
+					"description": "The stroke position. In version 4, values range from inside (-1) through centered (0) to outside (1). In version 3, values range from outside (0) through centered (0.5) to inside (1)."
+				},
+				"strokeWidth": {
+					"type": "number",
+					"glyphsNumber": "f64",
+					"description": "The horizontal stroke size, or an expression resolving to one."
+				}
+			},
+			"additionalProperties": {},
+			"glyphsCondition": {
+				"minVersion": 3
+			}
+		},
+		"shadow": {
+			"type": "object",
+			"properties": {
+				"blur": {
+					"type": "string",
+					"default": "4",
+					"description": "The shadow blur radius, stored as an expression string."
+				},
+				"color": {
+					"$ref": "#/$defs/color",
+					"description": "The shadow color."
+				},
+				"offsetX": {
+					"type": "string",
+					"default": "4",
+					"description": "The horizontal shadow offset, stored as an expression string."
+				},
+				"offsetY": {
+					"type": "string",
+					"default": "4",
+					"description": "The vertical shadow offset, stored as an expression string."
+				}
+			},
+			"additionalProperties": false,
+			"glyphsType": "GSShadow",
+			"glyphsCondition": {
+				"minVersion": 3
+			}
+		},
 		"size": {
 			"type": "array",
 			"prefixItems": [
@@ -2997,36 +2731,22 @@
 		".appVersion": {
 			"type": "string",
 			"examples": [
-				"3210"
+				"4012"
 			],
-			"description": "The build number of Glyphs used to save the file.",
-			"glyphsLabel": {
-				"key": "document.app-version",
-				"default": "App Version"
-			}
+			"description": "The build number of Glyphs used to save the file."
 		},
 		".formatVersion": {
-			"enum": [
-				3
-			],
+			"type": "integer",
+			"const": 3,
 			"description": "The version of the file format. If unset, the file is considered to be version 1 as used by Glyphs 1 and Glyphs 2.",
 			"glyphsCondition": {
 				"minVersion": 3
-			},
-			"type": "integer",
-			"glyphsLabel": {
-				"key": "document.format-version",
-				"default": "Format Version"
 			}
 		},
 		"DisplayStrings": {
 			"$ref": "#/$defs/displayStrings",
 			"default": [],
 			"description": "The strings of the Edit View tabs. Omitted when the `Write DisplayStrings` custom parameter is set to false. Omitted and written as `displayStrings` to `UIState.plist` in case of a package file.",
-			"glyphsLabel": {
-				"key": "document.display-strings",
-				"default": "Display Strings"
-			},
 			"glyphsCondition": {
 				"packages": false
 			}
@@ -3038,10 +2758,6 @@
 			},
 			"default": [],
 			"description": "The designspace variation axes of the font.",
-			"glyphsLabel": {
-				"key": "font.axes",
-				"default": "Axes"
-			},
 			"glyphsCondition": {
 				"minVersion": 3
 			}
@@ -3052,11 +2768,7 @@
 				"$ref": "#/$defs/class"
 			},
 			"default": [],
-			"description": "The OpenType layout classes of the font.",
-			"glyphsLabel": {
-				"key": "font.classes",
-				"default": "Classes"
-			}
+			"description": "The OpenType layout classes of the font."
 		},
 		"customParameters": {
 			"type": "array",
@@ -3064,31 +2776,21 @@
 				"$ref": "#/$defs/customParameter"
 			},
 			"default": [],
-			"description": "The custom parameters of the font.",
-			"glyphsLabel": {
-				"key": "any.custom-parameters",
-				"default": "Custom Parameters"
-			}
+			"description": "The custom parameters of the font."
 		},
 		"date": {
 			"type": "string",
 			"examples": [
-				"2024-07-17 03:14:15 +0000"
+				"2026-07-17 03:14:15 +0000"
 			],
-			"description": "The moment in time that is used as the creation date of exported font files including date, time, and timezone.",
-			"glyphsLabel": {
-				"key": "font.creation-date",
-				"default": "Date"
-			}
+			"description": "The moment in time that is used as the creation date of exported font files including date, time, and timezone."
 		},
 		"familyName": {
 			"type": "string",
 			"description": "The font family name. Corresponds to the default value of the `familyNames` property.",
-			"glyphsLabel": {
-				"key": "font.family-name",
-				"default": "Family Name"
-			},
-			"glyphsCondition": {}
+			"glyphsCondition": {
+				"maxVersion": 3
+			}
 		},
 		"featurePrefixes": {
 			"type": "array",
@@ -3096,11 +2798,7 @@
 				"$ref": "#/$defs/featurePrefix"
 			},
 			"default": [],
-			"description": "The OpenType layout feature prefixes of the font.",
-			"glyphsLabel": {
-				"key": "font.feature-prefixes",
-				"default": "Feature Prefixes"
-			}
+			"description": "The OpenType layout feature prefixes of the font."
 		},
 		"features": {
 			"type": "array",
@@ -3108,11 +2806,7 @@
 				"$ref": "#/$defs/feature"
 			},
 			"default": [],
-			"description": "The OpenType layout features of the font.",
-			"glyphsLabel": {
-				"key": "font.features",
-				"default": "Features"
-			}
+			"description": "The OpenType layout features of the font."
 		},
 		"fontMaster": {
 			"type": "array",
@@ -3120,11 +2814,7 @@
 				"$ref": "#/$defs/fontMaster"
 			},
 			"minItems": 1,
-			"description": "The masters of the font.",
-			"glyphsLabel": {
-				"key": "font.masters",
-				"default": "Masters"
-			}
+			"description": "The masters of the font."
 		},
 		"instances": {
 			"type": "array",
@@ -3132,57 +2822,44 @@
 				"$ref": "#/$defs/instance"
 			},
 			"default": [],
-			"description": "The instances of the font.",
-			"glyphsLabel": {
-				"key": "instances",
-				"default": "Instances"
-			}
+			"description": "The instances of the font."
 		},
 		"kerningLTR": {
 			"$ref": "#/$defs/kerning",
 			"description": "The left-to-right kerning of the font.",
-			"glyphsLabel": {
-				"key": "font.kerning.ltr",
-				"default": "Kerning (LTR)"
-			},
 			"glyphsCondition": {
 				"regular": {
 					"minVersion": 3
 				},
 				"package": {
-					"minVersion": 3
+					"minVersion": 3,
+					"maxVersion": 3
 				}
 			}
 		},
 		"kerningRTL": {
 			"$ref": "#/$defs/kerning",
 			"description": "The right-to-left kerning of the font.",
-			"glyphsLabel": {
-				"key": "font.kerning.rtl",
-				"default": "Kerning (RTL)"
-			},
 			"glyphsCondition": {
 				"regular": {
 					"minVersion": 3
 				},
 				"package": {
-					"minVersion": 3
+					"minVersion": 3,
+					"maxVersion": 3
 				}
 			}
 		},
 		"kerningVertical": {
 			"$ref": "#/$defs/kerning",
 			"description": "The vertical kerning of the font.",
-			"glyphsLabel": {
-				"key": "font.kerning.vertical",
-				"default": "Kerning (Vertical)"
-			},
 			"glyphsCondition": {
 				"regular": {
 					"minVersion": 3
 				},
 				"package": {
-					"minVersion": 3
+					"minVersion": 3,
+					"maxVersion": 3
 				}
 			}
 		},
@@ -3193,10 +2870,6 @@
 			},
 			"default": [],
 			"description": "The metrics of the font.",
-			"glyphsLabel": {
-				"key": "font.metrics",
-				"default": "Metrics"
-			},
 			"glyphsCondition": {
 				"minVersion": 3
 			}
@@ -3204,12 +2877,14 @@
 		"note": {
 			"type": "string",
 			"description": "The note about the font.",
-			"glyphsLabel": {
-				"key": "any.note",
-				"default": "Note"
-			},
 			"glyphsCondition": {
-				"minVersion": 3
+				"regular": {
+					"minVersion": 3
+				},
+				"package": {
+					"minVersion": 3,
+					"maxVersion": 3
+				}
 			}
 		},
 		"numbers": {
@@ -3219,10 +2894,6 @@
 			},
 			"default": [],
 			"description": "The numbers of the font.",
-			"glyphsLabel": {
-				"key": "font.numbers",
-				"default": "Numbers"
-			},
 			"glyphsCondition": {
 				"minVersion": 3
 			}
@@ -3234,10 +2905,6 @@
 			},
 			"default": [],
 			"description": "The properties of the font.",
-			"glyphsLabel": {
-				"key": "any.properties",
-				"default": "Properties"
-			},
 			"glyphsCondition": {
 				"minVersion": 3
 			}
@@ -3246,124 +2913,84 @@
 			"type": "object",
 			"properties": {
 				"disablesAutomaticAlignment": {
+					"type": "integer",
+					"glyphsNumber": "bool",
 					"enum": [
 						0,
 						1
 					],
-					"type": "integer",
-					"glyphsNumber": "bool",
 					"default": false,
-					"description": "Whether automatic alignment of components is disabled.",
-					"glyphsLabel": {
-						"key": "font.setting.disables-automatic-alignment",
-						"default": "Disables Automatic Alignment"
-					}
+					"description": "Whether automatic alignment of components is disabled."
 				},
 				"disablesNiceNames": {
+					"type": "integer",
+					"glyphsNumber": "bool",
 					"enum": [
 						0,
 						1
 					],
-					"type": "integer",
-					"glyphsNumber": "bool",
 					"default": false,
-					"description": "Whether to use production names instead of nice names.",
-					"glyphsLabel": {
-						"key": "font.setting.disables-nice-names",
-						"default": "Disables Nice Names"
-					}
+					"description": "Whether to use production names instead of nice names."
 				},
 				"gridLength": {
 					"type": "integer",
 					"glyphsNumber": "u32",
 					"default": 1,
-					"description": "The main grid length.",
-					"glyphsLabel": {
-						"key": "font.setting.grid.length",
-						"default": "Grid Length"
-					}
+					"description": "The main grid length."
 				},
 				"gridSubDivision": {
 					"type": "integer",
 					"glyphsNumber": "u32",
 					"default": 1,
-					"description": "The grid sub-division size.",
-					"glyphsLabel": {
-						"key": "font.setting.grid.subdivision",
-						"default": "Grid Subdivision"
-					}
+					"description": "The grid sub-division size."
 				},
 				"keepAlternatesTogether": {
+					"type": "integer",
+					"glyphsNumber": "bool",
 					"enum": [
 						0,
 						1
 					],
-					"type": "integer",
-					"glyphsNumber": "bool",
 					"default": false,
-					"description": "Whether to keep alternates glyphs together in Font View.",
-					"glyphsLabel": {
-						"key": "font.setting.keep-alternates-together",
-						"default": "Keep Alternates Together"
-					}
+					"description": "Whether to keep alternates glyphs together in Font View."
 				},
 				"keyboardIncrement": {
 					"type": "number",
 					"glyphsNumber": "f32",
 					"default": 1,
-					"description": "The standard keyboard increment.",
-					"glyphsLabel": {
-						"key": "font.setting.keyboard-increment",
-						"default": "Keyboard Increment"
-					}
+					"description": "The standard keyboard increment."
 				},
 				"keyboardIncrementBig": {
 					"type": "number",
 					"glyphsNumber": "f32",
 					"default": 10,
-					"description": "The keyboard increment when holding the Shift key.",
-					"glyphsLabel": {
-						"key": "font.setting.keyboard-increment-big",
-						"default": "Keyboard Increment (\u21e7)"
-					}
+					"description": "The keyboard increment when holding the Shift key."
 				},
 				"keyboardIncrementHuge": {
 					"type": "number",
 					"glyphsNumber": "f32",
 					"default": 100,
-					"description": "The keyboard increment when holding both the Shift and Command key.",
-					"glyphsLabel": {
-						"key": "font.setting.keyboard-increment-huge",
-						"default": "Keyboard Increment (\u21e7\u2318)"
-					}
+					"description": "The keyboard increment when holding both the Shift and Command key."
 				},
 				"previewRemoveOverlap": {
+					"type": "integer",
+					"glyphsNumber": "bool",
 					"enum": [
 						0,
 						1
 					],
-					"type": "integer",
-					"glyphsNumber": "bool",
 					"default": false,
-					"description": "Whether to preview the effect of the Remove Overlaps filter in Edit View.",
-					"glyphsLabel": {
-						"key": "font.setting.preview-remove-overlap",
-						"default": "Preview Remove Overlap"
-					}
+					"description": "Whether to preview the effect of the Remove Overlaps filter in Edit View."
 				},
 				"snapToObjects": {
+					"type": "integer",
+					"glyphsNumber": "bool",
 					"enum": [
 						0,
 						1
 					],
-					"type": "integer",
-					"glyphsNumber": "bool",
 					"default": false,
-					"description": "Whether snapping is enabled in Edit View.",
-					"glyphsLabel": {
-						"key": "font.setting.snap-to-objects",
-						"default": "Snap to Objects"
-					}
+					"description": "Whether snapping is enabled in Edit View."
 				},
 				"fontType": {
 					"enum": [
@@ -3374,11 +3001,7 @@
 					],
 					"type": "string",
 					"default": "default",
-					"description": "The type of the font.",
-					"glyphsLabel": {
-						"key": "font.setting.type",
-						"default": "Font Type"
-					}
+					"description": "The type of the font."
 				}
 			},
 			"additionalProperties": false,
@@ -3394,10 +3017,6 @@
 			},
 			"default": [],
 			"description": "The stems of the font.",
-			"glyphsLabel": {
-				"key": "font.stems",
-				"default": "Stems"
-			},
 			"glyphsCondition": {
 				"minVersion": 3
 			}
@@ -3405,38 +3024,22 @@
 		"unitsPerEm": {
 			"type": "integer",
 			"glyphsNumber": "u32",
-			"description": "The number of coordinate units on the em square.",
-			"glyphsLabel": {
-				"key": "font.units-per-em",
-				"default": "UPM"
-			}
+			"description": "The number of coordinate units on the em square."
 		},
 		"userData": {
 			"$ref": "#/$defs/userData",
 			"default": {},
-			"description": "Custom data associated with the font.",
-			"glyphsLabel": {
-				"key": "any.user-data",
-				"default": "User Data"
-			}
+			"description": "Custom data associated with the font."
 		},
 		"versionMajor": {
 			"type": "integer",
 			"glyphsNumber": "u32",
-			"description": "The major version number of the font.",
-			"glyphsLabel": {
-				"key": "font.version.major",
-				"default": "Major Version"
-			}
+			"description": "The major version number of the font."
 		},
 		"versionMinor": {
 			"type": "integer",
 			"glyphsNumber": "u32",
-			"description": "The minor version number of the font.",
-			"glyphsLabel": {
-				"key": "font.version.minor",
-				"default": "Minor Version"
-			}
+			"description": "The minor version number of the font."
 		}
 	},
 	"additionalProperties": false,
