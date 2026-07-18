@@ -1241,6 +1241,10 @@
 							"$ref": "#/$defs/gradientColors",
 							"description": "The color stops of the gradient."
 						},
+						"end": {
+							"$ref": "#/$defs/pos",
+							"description": "The end center of the radial gradient relative to the shape bounds."
+						},
 						"start": {
 							"$ref": "#/$defs/pos",
 							"description": "The start center of the radial gradient relative to the shape bounds."
