@@ -321,6 +321,7 @@ Use the following JSON schemas to validate files.
         - <code><strong>start</strong>: array</code> – The start point of the linear gradient relative to the shape bounds. See [`pos`](#spec-glyphs-3-pos).
     - Option. `object` – (`GSRadialGradient`) – A radial gradient.
         - <code><strong>colors</strong>: array</code> <img alt="required" src="https://img.shields.io/badge/required-204d7e" align="center"> <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – The color stops of the gradient. See [`gradientColors`](#spec-glyphs-3-gradientColors).
+        - <code><strong>end</strong>: array</code> – The end center of the radial gradient relative to the shape bounds. See [`pos`](#spec-glyphs-3-pos).
         - <code><strong>start</strong>: array</code> – The start center of the radial gradient relative to the shape bounds. See [`pos`](#spec-glyphs-3-pos).
         - <code><strong>type</strong>: string = "circle"</code> <img alt="required" src="https://img.shields.io/badge/required-204d7e" align="center"> – The radial gradient type marker.
 - <code><strong>gradientColors</strong>: array</code><a name="spec-glyphs-3-gradientColors"></a>

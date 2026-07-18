@@ -31,8 +31,7 @@ These plugins add a new tool in the toolbar. You can place a small PDF as toolba
 ## Glyphs File Format
 
 The Glyphs File Format is described in the `GlyphsFileFormat` folder including validation tools, example files, and specifications.
-There are seperate specifications for the format used by [Glyphs 3](https://github.com/schriftgestalt/GlyphsSDK/blob/Glyphs3/GlyphsFileFormat/GlyphsFileFormatv3.md) and [Glyphs 1 and Glyphs 2](https://github.com/schriftgestalt/GlyphsSDK/blob/Glyphs3/GlyphsFileFormat/GlyphsFileFormatv2.md).
-
+There are separate specifications for the format used by [Glyphs 4](https://github.com/schriftgestalt/GlyphsSDK/blob/Glyphs4/GlyphsFileFormat/GlyphsFileFormatv4.md), [Glyphs 3](https://github.com/schriftgestalt/GlyphsSDK/blob/Glyphs4/GlyphsFileFormat/GlyphsFileFormatv3.md), and [Glyphs 1 and Glyphs 2](https://github.com/schriftgestalt/GlyphsSDK/blob/Glyphs4/GlyphsFileFormat/GlyphsFileFormatv2.md).
 ### License
 
 Copyright 2013-2016 Georg Seifert (@schriftgestalt), Jan Gerner (@yanone) and Rainer Erich Scheichelbauer (@mekkablue).

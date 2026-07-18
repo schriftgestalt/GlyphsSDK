@@ -1318,10 +1318,7 @@
 						},
 						"end": {
 							"$ref": "#/$defs/pos",
-							"description": "The end center of the radial gradient relative to the shape bounds.",
-							"glyphsCondition": {
-								"minVersion": 4
-							}
+							"description": "The end center of the radial gradient relative to the shape bounds."
 						},
 						"endRadius": {
 							"type": "number",

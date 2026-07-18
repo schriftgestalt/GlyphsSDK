@@ -348,7 +348,7 @@ Use the following JSON schemas to validate files.
     - Option. `object` – (`GSRadialGradient`) – A radial gradient.
         - <code><strong>angle</strong>: number = 0</code> (`f64`) <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – The radial gradient angle.
         - <code><strong>colors</strong>: array</code> <img alt="required" src="https://img.shields.io/badge/required-204d7e" align="center"> – The color stops of the gradient. See [`gradientColors`](#spec-glyphs-4-gradientColors).
-        - <code><strong>end</strong>: array</code> <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – The end center of the radial gradient relative to the shape bounds. See [`pos`](#spec-glyphs-4-pos).
+        - <code><strong>end</strong>: array</code> – The end center of the radial gradient relative to the shape bounds. See [`pos`](#spec-glyphs-4-pos).
         - <code><strong>endRadius</strong>: number</code> (`f64`) <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – The end radius of the radial gradient relative to the shape bounds.
         - <code><strong>extend</strong>: string = "pad"</code> <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – How the gradient behaves outside the start/end range. Omitted for pad mode. See [`gradientExtend`](#spec-glyphs-4-gradientExtend).
             - Possible values: `"repeat"`, `"reflect"`.
