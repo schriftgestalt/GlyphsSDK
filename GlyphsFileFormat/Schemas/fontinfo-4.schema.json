@@ -11,9 +11,9 @@
 				"attr": {
 					"$ref": "#/$defs/attr",
 					"default": {},
-					"description": "The attributes of the anchor.",
+					"description": "The attributes of the anchor. Starting in version 4, this also holds the user data; before that, `userData` is a key of its own.",
 					"glyphsCondition": {
-						"minVersion": 4
+						"minVersion": 3
 					}
 				},
 				"locked": {

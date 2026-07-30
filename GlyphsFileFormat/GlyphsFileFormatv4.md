@@ -156,7 +156,7 @@ Use the following JSON schemas to validate files.
 ## Definitions
 
 - <code><strong>anchor</strong>: object</code><a name="spec-glyphs-4-anchor"></a> – (`GSAnchor`)
-    - <code><strong>attr</strong>: object = {}</code> <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – The attributes of the anchor. See [`attr`](#spec-glyphs-4-attr).
+    - <code><strong>attr</strong>: object = {}</code> – The attributes of the anchor. Starting in version 4, this also holds the user data; before that, `userData` is a key of its own. See [`attr`](#spec-glyphs-4-attr).
     - <code><strong>locked</strong>: boolean = false</code> – Whether the anchor is locked.
     - <code><strong>name</strong>: string</code> <img alt="required" src="https://img.shields.io/badge/required-204d7e" align="center"> – The name of the anchor.
     - <code><strong>orientation</strong>: string = "left"</code> – The orientation of the anchor. See [`orientation`](#spec-glyphs-4-orientation).
