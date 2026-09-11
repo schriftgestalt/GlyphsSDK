@@ -27,24 +27,24 @@ private var _toolBarIcon: NSImage?
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	func groupID() -> UInt {
-		// Return a number between 50 and 1000 to position the icon in the toolbar.
+	// Return a number between 50 and 1000 to position the icon in the toolbar.
+	override var groupID: UInt {
 		return 50
 	}
 
-	func title() -> String! {
-		// Return the name of the tool as it will appear in the tooltip of in the toolbar.
-		return "___PACKAGENAME___"
+	// Return the name of the tool as it will appear in the tooltip of in the toolbar.
+	override var title: String {
+		return "rgwegweqrgqrg"
 	}
 
-	func trigger() -> String! {
-		// Return the key that the user can press to activate the tool.
-		// Please make sure to not conflict with other tools.
+	// Return the key that the user can press to activate the tool.
+	// Please make sure to not conflict with other tools.
+	override var trigger: String! {
 		return "h"
 	}
 
-	func tempTrigger() -> NSEvent.ModifierFlags {
-		// Return a modifierMask (e.g. .option, .command ...)
+	// Return a modifierMask (e.g. .option, .command ...)
+	override var tempTrigger: NSEvent.ModifierFlags {
 		return []
 	}
 
