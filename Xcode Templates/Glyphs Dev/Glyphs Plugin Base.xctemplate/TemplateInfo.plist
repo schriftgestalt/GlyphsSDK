@@ -30,16 +30,18 @@
 				<key>WRAPPER_EXTENSION</key>
 				<string>glyphsPlugin</string>
 				<key>FRAMEWORK_SEARCH_PATHS</key>
-				<string>"$(SYSTEM_APPS_DIR)/Glyphs 3.app/Contents/Frameworks"</string>
+				<string>"$(SYSTEM_APPS_DIR)/Glyphs 4.app/Contents/Frameworks"</string>
 				<key>OTHER_LDFLAGS</key>
 				<string>-framework GlyphsCore</string>
+				<key>MACOSX_DEPLOYMENT_TARGET</key>
+				<string>12.0</string>
 			</dict>
 			<key>Configurations</key>
 			<dict>
 				<key>Debug</key>
 				<dict>
 					<key>DSTROOT</key>
-					<string>$(USER_LIBRARY_DIR)/Application Support/Glyphs 3/Plugins</string>
+					<string>$(USER_LIBRARY_DIR)/Application Support/Glyphs 4/Plugins</string>
 					<key>SKIP_INSTALL</key>
 					<string>NO</string>
 					<key>DEPLOYMENT_LOCATION</key>

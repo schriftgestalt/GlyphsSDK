@@ -8,3 +8,4 @@
 
 #import <Cocoa/Cocoa.h>
 #import <GlyphsCore/GlyphsCore.h>
+#import <GlyphsApp/GlyphsApp.h>

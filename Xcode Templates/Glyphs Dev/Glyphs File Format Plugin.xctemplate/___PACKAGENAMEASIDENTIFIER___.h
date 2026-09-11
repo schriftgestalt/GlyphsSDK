@@ -7,7 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import <GlyphsCore/GlyphsFileFormatProtocol.h>
+#import <GlyphsApp/GlyphsFileFormatProtocol.h>
 
 @class GSFont;
 

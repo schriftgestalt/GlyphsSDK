@@ -11,7 +11,9 @@ import Cocoa
 @objc class ___FILEBASENAMEASIDENTIFIER___: NSObject, GlyphsPlugin {
 
 	// Distinguishes the API version the plugin was built for. Return 1.
-	let interfaceVersion: UInt = 1
+	var interfaceVersion: UInt {
+		return 1
+	}
 
 	override init() {
 		super.init()

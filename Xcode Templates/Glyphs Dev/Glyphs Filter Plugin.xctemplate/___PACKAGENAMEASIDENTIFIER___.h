@@ -7,7 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import <GlyphsCore/GSFilterPlugin.h>
+#import <GlyphsApp/GSFilterPlugin.h>
 
 @interface ___FILEBASENAMEASIDENTIFIER___ : GSFilterPlugin
 

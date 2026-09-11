@@ -7,15 +7,12 @@
 //
 
 #import "___PACKAGENAMEASIDENTIFIER___.h"
-#import <GlyphsCore/GSFont.h>
-#import <GlyphsCore/GSFontMaster.h>
-#import <GlyphsCore/GSGlyph.h>
-#import <GlyphsCore/GSLayer.h>
-#import <GlyphsCore/GSPath.h>
-#import <GlyphsCore/GSCallbackHandler.h>
+#import <GlyphsCore/GlyphsCore.h>
+#import <GlyphsApp/GSCallbackHandler.h>
 
 @implementation ___FILEBASENAMEASIDENTIFIER___ {
 	CGFloat _firstValue;
+	NSView *_view;
 }
 
 - (instancetype)init {
@@ -74,7 +71,7 @@
 
 - (void)processFont:(GSFont *)font withArguments:(NSArray *)arguments {
 	// Invoked when called as Custom Parameter in an instance at export.
-	// The Arguments come from the custom parameter in the instance settings. 
+	// The Arguments come from the custom parameter in the instance settings.
 	// The first item in Arguments is the class-name. After that, it depends on the filter.
 	CGFloat firstValue = 15;
 	if (arguments.count > 1) {

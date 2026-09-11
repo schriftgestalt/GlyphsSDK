@@ -7,7 +7,7 @@
 //
 
 #import "___PACKAGENAMEASIDENTIFIER___.h"
-#import <GlyphsCore/GSPaletteView.h>
+#import <GlyphsApp/GSPaletteView.h>
 
 @implementation ___FILEBASENAMEASIDENTIFIER___
 

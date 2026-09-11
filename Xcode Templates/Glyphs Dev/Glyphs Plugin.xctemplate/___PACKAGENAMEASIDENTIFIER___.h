@@ -8,7 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-#import <GlyphsCore/GlyphsPluginProtocol.h>
+#import <GlyphsApp/GlyphsPluginProtocol.h>
 
 @interface ___FILEBASENAMEASIDENTIFIER___ : NSObject <GlyphsPlugin>
 

@@ -10,11 +10,10 @@ import Cocoa
 
 @objc class ___FILEBASENAMEASIDENTIFIER___: NSObject, GlyphsReporter {
 
-	var controller: (any NSViewController & GSGlyphEditViewControllerProtocol)!
-	private var _editViewController: (NSViewController & GSGlyphEditViewControllerProtocol)?
+	var controller: (GSEditViewController)!
 
 	// Distinguishes the API version the plugin was built for. Return 1.
-	func interfaceVersion() -> UInt {
+	var interfaceVersion: UInt {
 		return 1
 	}
 
@@ -23,7 +22,7 @@ import Cocoa
 		// do stuff
 	}
 
-	func title() -> String! {
+	var title: String! {
 		// This is the name as it appears in the menu in combination with 'Show'.
 		// E.g. `return "Nodes"` will make the menu item read "Show Nodes".
 		return NSLocalizedString("___PACKAGENAME___", tableName: nil, bundle: Bundle(for: Self.self), value: "", comment: "DESCRIPTION")
@@ -74,14 +73,9 @@ import Cocoa
 	func getScale() -> Float {
 		// getScale() returns the current scale factor of the Edit View UI.
 		// Divide any scalable size by this value in order to keep the same apparent pixel size.
-		if let editViewController = _editViewController {
-			return Float(editViewController.graphicView.scale)
+		if let controller = self.controller {
+			return Float(controller.graphicView.scale)
 		}
 		return 1.0
-	}
-
-	func setController(_ controller: (NSViewController & GSGlyphEditViewControllerProtocol)?) {
-		// Use self.controller as object for the current view controller.
-		_editViewController = controller
 	}
 }

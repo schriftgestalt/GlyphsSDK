@@ -7,17 +7,12 @@
 //
 
 #import "___FILEBASENAME___.h"
-#import <GlyphsCore/GlyphsFilterProtocol.h>
-#import <GlyphsCore/GSFilterPlugin.h>
-#import <GlyphsCore/GSGlyph.h>
-#import <GlyphsCore/GSLayer.h>
-#import <GlyphsCore/GSFont.h>
-#import <GlyphsCore/GSFontMaster.h>
-#import <GlyphsCore/GSComponent.h>
+#import <GlyphsApp/GlyphsApp.h>
+#import <GlyphsCore/GlyphsCore.h>
 
-@implementation ___FILEBASENAMEASIDENTIFIER___  {
-	NSViewController <GSGlyphEditViewControllerProtocol> *_editViewController;
-}
+@implementation ___FILEBASENAMEASIDENTIFIER___
+
+@synthesize controller = _editViewController;
 
 - (instancetype)init {
 	self = [super init];
@@ -90,14 +85,10 @@
 	
 	if (_editViewController) {
 		return _editViewController.graphicView.scale;
-	} else {
+	}
+	else {
 		return 1.0;
 	}
-}
-
-- (void)setController:(NSViewController <GSGlyphEditViewControllerProtocol>*)controller {
-	// Use [self controller]; as object for the current view controller.
-	_editViewController = controller;
 }
 
 @end

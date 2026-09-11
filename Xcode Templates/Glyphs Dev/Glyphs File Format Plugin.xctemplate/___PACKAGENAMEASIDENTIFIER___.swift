@@ -32,26 +32,26 @@ import Cocoa
 		}
 	}
 
-	func interfaceVersion() -> UInt {
-		// Distinguishes the API version the plugin was built for. Return 1.
+	// Distinguishes the API version the plugin was built for. Return 1.
+	var interfaceVersion: UInt {
 		return 1
 	}
 
-	func toolbarTitle() -> String {
+	var toolbarTitle: String {
 		// Return the name of the tool as it will appear in export dialog.
 		return "___PACKAGENAME___"
 	}
 
-	func toolbarIconName() -> String {
-		return "___FILEBASENAMEASIDENTIFIER___Icon"
+	var toolbarIconName: String {
+		return "asfefqbwetIcon"
 	}
 
-	func groupID() -> UInt {
+	var groupID: UInt {
 		// Position in the export panel. Higher numbers move it to the right.
 		return 10
 	}
 
-	func exportSettingsView() -> NSView {
+	var exportSettingsView: NSView {
 		return view
 	}
 
@@ -68,7 +68,7 @@ import Cocoa
 		// Write Font to destinationURL.
 	}
 
-	func exportFont(_ font: GSFont) {
+	func export(_ font: GSFont) {
 		// Exports a Font object.
 		// This function should ask the user for the place to save the store the font.
 		// Eventually errors have to be presented by the plugin. Use `font.parent?.presentError(error)`.

@@ -27,11 +27,6 @@ private var _toolBarIcon: NSImage?
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	// Distinguishes the API version the plugin was built for. Return 1.
-	func interfaceVersion() -> UInt {
-		return 1
-	}
-
 	func groupID() -> UInt {
 		// Return a number between 50 and 1000 to position the icon in the toolbar.
 		return 50
@@ -114,12 +109,14 @@ private var _toolBarIcon: NSImage?
 
 	func drawLayer(_ layer: GSLayer, at point: NSPoint, asActive active: Bool, attributes: [AnyHashable: Any]) {
 		// Draw anything for this particular layer.
-		editViewController?.graphicView.draw(layer, at: point, asActive: active, attributes: attributes)
+		editViewController?.graphicView.drawLayer(layer, at: point, asActive: active, attributes: attributes)
 	}
 
 	override func willActivate() {
 		// Called when the tool is selected by the user.
 	}
 
-	override func willDeactivate() {}
+	override func willDeactivate() {
+		// Called when a different tool is selected by the user.
+	}
 }

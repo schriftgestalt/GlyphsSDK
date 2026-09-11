@@ -7,7 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import <GlyphsCore/GlyphsPaletteProtocol.h>
+#import <GlyphsApp/GlyphsPaletteProtocol.h>
 
 @interface ___FILEBASENAMEASIDENTIFIER___ : NSViewController <GlyphsPalette>
 

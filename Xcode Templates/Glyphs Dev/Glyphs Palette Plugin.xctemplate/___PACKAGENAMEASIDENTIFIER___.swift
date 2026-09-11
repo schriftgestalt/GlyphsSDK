@@ -10,10 +10,12 @@ import Cocoa
 
 @objc class ___FILEBASENAMEASIDENTIFIER___: NSViewController, GlyphsPalette {
 
-	@MainActor weak var windowController: (NSWindowController & GSWindowControllerProtocol)?
+	@MainActor weak var windowController: (GSWindowController)?
 
 	// Distinguishes the API version the plugin was built for. Return 1.
-	let interfaceVersion: UInt = 1
+	var interfaceVersion: UInt {
+		return 1
+	}
 
 	required init?(coder: NSCoder) {
 		super.init(coder: coder)

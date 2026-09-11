@@ -7,7 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import <GlyphsCore/GlyphsReporterProtocol.h>
+#import <GlyphsApp/GlyphsReporterProtocol.h>
 
 @interface ___FILEBASENAMEASIDENTIFIER___ : NSObject <GlyphsReporter>
 

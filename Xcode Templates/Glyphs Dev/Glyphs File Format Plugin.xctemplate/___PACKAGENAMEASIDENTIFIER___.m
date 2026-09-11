@@ -7,7 +7,6 @@
 //
 
 #import "___FILEBASENAME___.h"
-#import <GlyphsCore/GlyphsFilterProtocol.h>
 #import <GlyphsCore/GSFont.h>
 
 @implementation ___FILEBASENAMEASIDENTIFIER___ {
@@ -55,13 +54,13 @@
 
 - (BOOL)writeFont:(GSFont *)Font error:(NSError **)error {
 	// Write Font to disk. You have to ask for the path yourself. This is called from the export dialog.
-	// Return YES on sucess, NO otherwise and add some infomation about the problem to 'error'). 
+	// Return YES on sucess, NO otherwise and add some information about the problem to 'error').
 	return NO;
 }
 
 - (BOOL)writeFont:(GSFont *)font toURL:(NSURL *)destinationURL error:(out NSError **)error {
 	// Write Font to DestinationURL.
-	// Return YES on sucess, NO otherwise and add some infomation about the problem to 'error').
+	// Return YES on success, NO otherwise and add some information about the problem to 'error').
 	return NO;
 }
 

@@ -46,7 +46,8 @@ import Cocoa
 		let fontMaster = value(forKey: "fontMaster") as? GSFontMaster
 		if let firstValueNumber = fontMaster?.userData(forKey: "theFirstValue") as? NSNumber {
 			_firstValue = CGFloat(firstValueNumber.floatValue)
-		} else {
+		}
+		else {
 			_firstValue = 15
 		}
 		firstValueField?.floatValue = Float(_firstValue)
@@ -93,7 +94,7 @@ import Cocoa
 		for k in 0..<shadowLayers.count {
 			let shadowLayer = shadowLayers[k]
 			let layer = layers[k]
-			layer.shapes = NSMutableArray(array: shadowLayer.shapes, copyItems: true) as? [GSShape]
+			layer.shapes = NSMutableArray(array: shadowLayer.shapes, copyItems: true) as? [GSShape] ?? []
 			layer.selection = NSMutableOrderedSet()
 			if shadowLayer.selection.count > 0 && checkSelection {
 				for i in 0..<shadowLayer.shapes.count {
