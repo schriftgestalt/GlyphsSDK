@@ -9,14 +9,11 @@ import sys
 import time
 import traceback
 from abc import ABC, abstractmethod
+from collections.abc import Callable, Iterator, MutableMapping, Sequence
 from typing import (
 	TYPE_CHECKING,
 	Any,
-	Callable,
 	Generic,
-	Iterator,
-	MutableMapping,
-	Sequence,
 	TypeVar,
 	cast,
 	overload,

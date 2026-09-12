@@ -10,12 +10,10 @@ $ mypy --ignore-missing-imports Path/To/Script/File.py
 
 import datetime
 from abc import ABC
+from collections.abc import Callable, Iterator, MutableMapping
 from typing import (
 	Any,
-	Callable,
 	Generic,
-	Iterator,
-	MutableMapping,
 	NamedTuple,
 	Self,
 	TypeVar,

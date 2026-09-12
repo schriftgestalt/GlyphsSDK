@@ -1,5 +1,6 @@
 
-from typing import Any, Callable, ParamSpec, TypeVar
+from collections.abc import Callable
+from typing import Any, ParamSpec, TypeVar
 
 from AppKit import NSBundle, NSObject
 

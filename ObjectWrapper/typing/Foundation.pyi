@@ -1,13 +1,11 @@
 
+from collections.abc import Iterable, Iterator, Sequence
 from typing import (
 	Any,
 	Generic,
-	Iterable,
-	Iterator,
 	Literal,
 	NamedTuple,
 	Self,
-	Sequence,
 	TypeVar,
 	overload,
 )

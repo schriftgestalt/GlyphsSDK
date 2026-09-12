@@ -2,7 +2,8 @@
 # For more details, see the vanilla documentation:
 # https://vanilla.robotools.dev/en/latest/
 
-from typing import Any, Callable, Sequence, TypedDict
+from collections.abc import Callable, Sequence
+from typing import Any, TypedDict
 
 from AppKit import NSButton, NSColor, NSFormatter, NSImage, NSScreen
 

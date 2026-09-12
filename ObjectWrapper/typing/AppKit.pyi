@@ -1,6 +1,7 @@
 # typings/AppKit.pyi
 
-from typing import Any, Mapping, Self, overload
+from collections.abc import Mapping
+from typing import Any, Self, overload
 
 from Foundation import (
 	NSURL,

@@ -1,6 +1,7 @@
 import copy
 import pathlib as Pathlib
-from typing import Any, Sequence
+from collections.abc import Sequence
+from typing import Any
 
 import pytest
 from Foundation import NSPoint  # type: ignore
