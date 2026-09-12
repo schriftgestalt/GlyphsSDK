@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # mypy: check_untyped_defs=True
 
 from __future__ import annotations
