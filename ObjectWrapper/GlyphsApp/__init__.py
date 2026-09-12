@@ -17,7 +17,6 @@ from typing import (
 	Callable,
 	Generic,
 	Iterator,
-	List,
 	MutableMapping,
 	Sequence,
 	Type,
@@ -607,7 +606,7 @@ class OrderedDictProxy(Generic[T], ABC):  # T is the type of items in the sequen
 	@overload
 	def __getitem__(self, key: str) -> T: ...
 
-	def __getitem__(self, key: int | str | slice) -> T | List[T]:
+	def __getitem__(self, key: int | str | slice) -> T | list[T]:
 		if isinstance(key, int):
 			idx = _validate_idx(cast(Sequence, self), key)
 			return self.getByIndex(idx)
@@ -677,7 +676,7 @@ class OrderedDictProxy(Generic[T], ABC):  # T is the type of items in the sequen
 			self.removeByKey(key)
 			return item
 
-	def keys(self) -> List[str]:
+	def keys(self) -> list[str]:
 		return [self.getKeyOf(v) for v in self.values()]
 
 	def items(self) -> Iterator[tuple[str, T]]:
@@ -740,7 +739,7 @@ class OrderedDictProxy(Generic[T], ABC):  # T is the type of items in the sequen
 	# —— Your subclass must override these seven methods ——
 	#
 	@abstractmethod
-	def values(self) -> List[T]:
+	def values(self) -> list[T]:
 		"""Return the ordered list of items."""
 		raise NotImplementedError
 
@@ -793,7 +792,7 @@ class OrderedDictProxy(Generic[T], ABC):  # T is the type of items in the sequen
 		"""Insert a new item at position `idx`."""
 		raise NotImplementedError
 
-	def extend(self, values: List[T]) -> None:
+	def extend(self, values: list[T]) -> None:
 		"""Extends the items."""
 		for value in values:
 			self.append(value)
@@ -947,7 +946,7 @@ class ListProxy(Generic[T], ABC):  # T is the type of items in the sequence
 		return f"<GlyphsApp.{self.__class__.__name__} at 0x{hex(id(self))} ({body})>"
 
 	@abstractmethod
-	def values(self) -> List[T]:
+	def values(self) -> list[T]:
 		"""Return the ordered list of items."""
 		raise NotImplementedError
 
@@ -1003,7 +1002,7 @@ class DictProxy(Generic[T], ABC):
 		"""Iterate over keys (standard dict behavior)."""
 		return iter(self.keys())
 
-	def keys(self) -> List[str]:
+	def keys(self) -> list[str]:
 		return [self.getKeyOf(v) for v in self.values()]
 
 	def items(self) -> Iterator[tuple[str, T]]:
@@ -1076,7 +1075,7 @@ class DictProxy(Generic[T], ABC):
 	#
 
 	@abstractmethod
-	def values(self) -> List[T]:
+	def values(self) -> list[T]:
 		"""Return the ordered list of items."""
 		raise NotImplementedError
 
@@ -1129,8 +1128,8 @@ GSProxyShapes.__iter__ = python_method(GSProxyShapes__iter__)  # type: ignore
 @overload
 def __GSProxyShapes__getitem__(self: GSProxyShapes, idx: int) -> GSShape: ...
 @overload
-def __GSProxyShapes__getitem__(self: GSProxyShapes, idx: slice) -> List[GSShape]: ...
-def __GSProxyShapes__getitem__(self: GSProxyShapes, idx: int | slice) -> GSShape | List[GSShape]:
+def __GSProxyShapes__getitem__(self: GSProxyShapes, idx: slice) -> list[GSShape]: ...
+def __GSProxyShapes__getitem__(self: GSProxyShapes, idx: int | slice) -> GSShape | list[GSShape]:
 	if isinstance(idx, slice):
 		# PyObjC sequence slicing might work directly or need manual implementation
 		indices = idx.indices(self.count())
@@ -1150,7 +1149,7 @@ add_type(GSProxyShapes, '__contains__', Callable[[GSProxyShapes, GSShape], bool]
 
 
 def ProxyShapes__str__(self: GSProxyShapes) -> str:
-	strings: List[str] = []
+	strings: list[str] = []
 	for currItem in self:
 		strings.append(str(currItem))
 	if len(strings) == 0:
@@ -1161,7 +1160,7 @@ def ProxyShapes__str__(self: GSProxyShapes) -> str:
 GSProxyShapes.__str__ = python_method(ProxyShapes__str__)  # type: ignore
 
 def ProxyShapes__repr__(self: GSProxyShapes) -> str:
-	strings: List[str] = []
+	strings: list[str] = []
 	for currItem in self:
 		strings.append(repr(currItem))
 	if len(strings) == 0:
@@ -1258,7 +1257,7 @@ The mothership. Everything starts here.
 
 
 GSApplication.documents = property(lambda self: AppDocumentProxy(self))  # type: ignore
-add_type(GSApplication, "documents", List['GSDocument'])
+add_type(GSApplication, "documents", list['GSDocument'])
 '''
 	.. attribute:: documents
 
@@ -1297,7 +1296,7 @@ add_type(GSApplication, "font", GSFont | None)
 
 
 GSApplication.fonts = property(lambda self: AppFontProxy(self))  # type: ignore
-add_type(GSApplication, "fonts", List[GSFont])  # Or List[GSFont]
+add_type(GSApplication, "fonts", list[GSFont])  # Or list[GSFont]
 '''
 	.. attribute:: fonts
 
@@ -1318,7 +1317,7 @@ add_type(GSApplication, "fonts", List[GSFont])  # Or List[GSFont]
 
 
 GSApplication.reporters = property(lambda self: GSCallbackHandler.reporterInstances().allValues())  # type: ignore
-add_type(GSApplication, "reporters", List[Any])  # List of reporter plugin instances
+add_type(GSApplication, "reporters", list[Any])  # List of reporter plugin instances
 '''
 	.. attribute:: reporters
 
@@ -1343,7 +1342,7 @@ add_type(GSApplication, "reporters", List[Any])  # List of reporter plugin insta
 
 
 GSApplication.activeReporters = property(lambda self: GSCallbackHandler.activeReporters())  # type: ignore
-add_type(GSApplication, "activeReporters", List[Any])  # List of active reporter instances
+add_type(GSApplication, "activeReporters", list[Any])  # List of active reporter instances
 '''
 	.. attribute:: activeReporters
 		List of activated reporter plug-ins.
@@ -1360,7 +1359,7 @@ add_type(GSApplication, "activeReporters", List[Any])  # List of active reporter
 
 
 GSApplication.filters = property(lambda self: list(GSFilterHandler.filterInstances()))  # type: ignore
-add_type(GSApplication, "filters", List[Any])  # List of filter plugin instances
+add_type(GSApplication, "filters", list[Any])  # List of filter plugin instances
 '''
 	.. attribute:: filters
 
@@ -1452,7 +1451,7 @@ def validateTuple(expectedLength: int, value: Any) -> tuple[float, ...]:
 		raise ValueError(f"Expected at least {expectedLength} items, not {len(value)}")
 
 	# Ensure all elements are numbers and convert to float
-	processed_value: List[float] = []
+	processed_value: list[float] = []
 	for v_item in value:
 		if not isinstance(v_item, (float, int)):
 			raise TypeError(f"Tuple elements must be float or int, not {type(v_item).__name__}")
@@ -1527,7 +1526,7 @@ add_type(GSApplication, "defaults", DefaultsProxy)
 
 
 def printtraceback() -> None:
-	code: List[str] = []
+	code: list[str] = []
 	for threadId, stack in sys._current_frames().items():
 		# code.append("\n# Thread: %s(%d)" % (id2name.get(threadId,""), threadId))
 		for filename, lineno, name, line in traceback.extract_stack(stack):
@@ -1798,7 +1797,7 @@ add_type(GSApplication, "languageScripts", dict[str, str])
 
 
 GSApplication.languageData = property(lambda self: GSGlyphsInfo.languageData())  # type: ignore
-add_type(GSApplication, "languageData", List[dict[str, Any]])
+add_type(GSApplication, "languageData", list[dict[str, Any]])
 '''
 	.. attribute:: languageData
 		A list of dictionaries with more detailed language informations.
@@ -1808,7 +1807,7 @@ add_type(GSApplication, "languageData", List[dict[str, Any]])
 
 
 GSApplication.unicodeRanges = property(lambda self: GSGlyphsInfo.unicodeRanges())  # type: ignore
-add_type(GSApplication, "unicodeRanges", List[str])
+add_type(GSApplication, "unicodeRanges", list[str])
 '''
 	.. attribute:: unicodeRanges
 		Names of unicode ranges.
@@ -1947,7 +1946,7 @@ class AppMenuProxy(Sequence[NSMenuItem]):
 			return menu_item
 		raise TypeError(f"Expected int or str, not {type(key).__name__}")
 
-	def values(self) -> List[NSMenuItem]:
+	def values(self) -> list[NSMenuItem]:
 		return NSApp.mainMenu().itemArray()
 
 
@@ -2132,7 +2131,7 @@ GSApplication.productionGlyphName = python_method(__GSApp_productionGlyphName__)
 '''
 
 
-def __GSApp_ligatureComponents__(self: GSApplication, name: str, font: GSFont | None = None) -> List[str] | None:
+def __GSApp_ligatureComponents__(self: GSApplication, name: str, font: GSFont | None = None) -> list[str] | None:
 	glyph_info_manager: GSGlyphsInfo
 	if font is not None:
 		glyph_info_manager = font.glyphsInfo()
@@ -2491,7 +2490,7 @@ def __GSApp_localize__(self: GSApplication, localization: str | dict[str, str]) 
 		return cast(str, localization)
 	elif isinstance(localization, dict):  # localization is dict[str, str]
 		# Ensure self.defaults["AppleLanguages"] returns a list of strings
-		apple_languages: List[str] = self.defaults.get("AppleLanguages", [])  # type: ignore
+		apple_languages: list[str] = self.defaults.get("AppleLanguages", [])  # type: ignore
 		for language in apple_languages:
 			if language in localization:
 				return localization[language]
@@ -2628,7 +2627,7 @@ class AppFontProxy(Sequence[GSFont], ABC):
 		idx = _validate_idx(cast(Sequence, self), idx)
 		return self.values().__getitem__(idx)
 
-	def values(self) -> List[GSFont]:
+	def values(self) -> list[GSFont]:
 		fonts = []
 		for doc in self._owner.fontDocuments():
 			fonts.append(doc.font)
@@ -3382,7 +3381,7 @@ class FontNumbersProxy(OrderedDictProxy[GSMetric]):
 	def insertAtIndex(self, idx: int, value: GSMetric) -> None:
 		self._owner.insertObject_inNumbersAtIndex_(value, idx)
 
-	def values(self) -> List[GSMetric]:
+	def values(self) -> list[GSMetric]:
 		return self._owner.pyobjc_instanceMethods.numbers()
 
 	def __len__(self) -> int:
@@ -3503,7 +3502,7 @@ class CustomParametersProxy(OrderedDictProxy[GSCustomParameter]):
 	def append(self, parameter: GSCustomParameter):
 		self._owner.addCustomParameter_(parameter)
 
-	def extend(self, parameters: List[GSCustomParameter]):
+	def extend(self, parameters: list[GSCustomParameter]):
 		for parameter in parameters:
 			self._owner.addCustomParameter_(parameter)
 
@@ -3516,7 +3515,7 @@ class CustomParametersProxy(OrderedDictProxy[GSCustomParameter]):
 	def __len__(self) -> int:
 		return self._owner.countOfCustomParameters()
 
-	def values(self) -> List[GSCustomParameter]:
+	def values(self) -> list[GSCustomParameter]:
 		return self._owner.pyobjc_instanceMethods.customParameters()
 
 	def setterMethod(self):
@@ -3553,7 +3552,7 @@ class FontClassesProxy(OrderedDictProxy[GSClass]):
 	def append(self, value: GSClass):
 		self._owner.addClass_(value)
 
-	def extend(self, classes: List[GSClass]):
+	def extend(self, classes: list[GSClass]):
 		for Class in classes:
 			self._owner.addClass_(Class)
 
@@ -3780,13 +3779,13 @@ class TempDataProxy(DictProxy):
 	def removeByKey(self, key: str) -> None:
 		self._owner.setTempData_forKey_(None, key)
 
-	def values(self) -> List[Any]:
+	def values(self) -> list[Any]:
 		tempData = self._owner.pyobjc_instanceMethods.tempData()
 		if tempData is not None:
 			return tempData.allValues()
 		return []
 
-	def keys(self) -> List[str]:
+	def keys(self) -> list[str]:
 		tempData = self._owner.pyobjc_instanceMethods.tempData()
 		if tempData is not None:
 			return tempData.allKeys()
@@ -4761,7 +4760,7 @@ GSFont.masters = property(
 	lambda self: FontFontMasterProxy(self),
 	lambda self, value: FontFontMasterProxy(self).setter(value)
 )
-add_type(GSFont, 'masters', List[GSFontMaster])
+add_type(GSFont, 'masters', list[GSFontMaster])
 
 '''
 	.. attribute:: masters
@@ -4776,7 +4775,7 @@ GSFont.instances = property(
 	lambda self: FontInstancesProxy(self),
 	lambda self, value: FontInstancesProxy(self).setter(value)
 )
-add_type(GSFont, 'instances', List[GSInstance])
+add_type(GSFont, 'instances', list[GSInstance])
 '''
 	.. attribute:: instances
 
@@ -4815,7 +4814,7 @@ GSFont.axes = property(
 	lambda self: FontAxesProxy(self),
 	lambda self, value: FontAxesProxy(self).setter(value)
 )
-add_type(GSFont, 'axes', List[GSAxis])
+add_type(GSFont, 'axes', list[GSAxis])
 '''
 	.. attribute:: axes
 
@@ -4879,7 +4878,7 @@ GSFont.metrics = property(
 	lambda self, values: FontMetricsProxy(self).setter(values)
 )
 
-add_type(GSFont, 'metrics', List[GSMetric])
+add_type(GSFont, 'metrics', list[GSMetric])
 '''
 	.. attribute:: metrics
 
@@ -4900,7 +4899,7 @@ GSFont.stems = property(
 	lambda self: FontStemsProxy(self),
 	lambda self, value: FontStemsProxy(self).setter(value)
 )
-add_type(GSFont, 'stems', List[GSMetric])
+add_type(GSFont, 'stems', list[GSMetric])
 '''
 	.. attribute:: stems
 
@@ -4923,7 +4922,7 @@ GSFont.numbers = property(
 	lambda self: FontNumbersProxy(self),
 	lambda self, value: FontNumbersProxy(self).setter(value)
 )
-add_type(GSFont, 'numbers', List[GSMetric])
+add_type(GSFont, 'numbers', list[GSMetric])
 '''
 	.. attribute:: numbers
 
@@ -4953,7 +4952,7 @@ GSFont.__getitem__ = python_method(__GSFont_getitem__)
 GSFont.glyphs = property(
 	lambda self: FontGlyphsProxy(self),
 	lambda self, value: FontGlyphsProxy(self).setter(value))
-add_type(GSFont, 'glyphs', List[GSGlyph] | dict[str, GSGlyph])
+add_type(GSFont, 'glyphs', list[GSGlyph] | dict[str, GSGlyph])
 
 
 GSInterpolationFontProxy.glyphs = property(
@@ -5016,7 +5015,7 @@ GSFont.classes = property(
 	lambda self: FontClassesProxy(self),
 	lambda self, value: FontClassesProxy(self).setter(value)
 )
-add_type(GSFont, 'classes', List[GSClass])
+add_type(GSFont, 'classes', list[GSClass])
 '''
 	.. attribute:: classes
 
@@ -5043,7 +5042,7 @@ GSFont.features = property(
 	lambda self: FontFeaturesProxy(self),
 	lambda self, value: FontFeaturesProxy(self).setter(value)
 )
-add_type(GSFont, 'features', List[GSFeature])
+add_type(GSFont, 'features', list[GSFeature])
 '''
 	.. attribute:: features
 
@@ -5070,7 +5069,7 @@ GSFont.featurePrefixes = property(
 	lambda self: FontFeaturePrefixesProxy(self),
 	lambda self, value: FontFeaturePrefixesProxy(self).setter(value)
 )
-add_type(GSFont, 'featurePrefixes', List[GSFeaturePrefix])
+add_type(GSFont, 'featurePrefixes', list[GSFeaturePrefix])
 '''
 	.. attribute:: featurePrefixes
 
@@ -7328,7 +7327,7 @@ GSInstance.axes = property(
 	lambda self: InternalAxesProxy(self),
 	lambda self, value: InternalAxesProxy(self).setter(value)
 )
-add_type(GSInstance, 'axes', List[float])
+add_type(GSInstance, 'axes', list[float])
 '''
 	.. attribute:: axes
 
@@ -7350,7 +7349,7 @@ GSInstance.internalAxesValues = property(
 	lambda self: InternalAxesProxy(self),
 	lambda self, value: InternalAxesProxy(self).setter(value)
 )
-add_type(GSInstance, 'internalAxesValues', List[float])
+add_type(GSInstance, 'internalAxesValues', list[float])
 '''
 	.. attribute:: internalAxesValues
 
@@ -7373,7 +7372,7 @@ GSInstance.externalAxesValues = property(
 	lambda self: ExternalAxesProxy(self),
 	lambda self, value: ExternalAxesProxy(self).setter(value)
 )
-add_type(GSInstance, 'externalAxesValues', List[float])
+add_type(GSInstance, 'externalAxesValues', list[float])
 '''
 	.. attribute:: externalAxesValues
 
@@ -10010,7 +10009,7 @@ GSGlyph.axes = property(
 	lambda self: FontAxesProxy(self),
 	lambda self, value: FontAxesProxy(self).setter(value)
 )
-add_type(GSGlyph, 'axes', List[GSAxis])
+add_type(GSGlyph, 'axes', list[GSAxis])
 '''
 	.. attribute:: axes
 
@@ -14880,7 +14879,7 @@ GSEditViewController.layers = property(
 	lambda self: TabLayersProxy(self),
 	lambda self, value: TabLayersProxy(self).setter(value)
 )
-add_type(GSEditViewController, "layers", List[GSLayer])
+add_type(GSEditViewController, "layers", list[GSLayer])
 '''
 	.. attribute:: layers
 
@@ -14902,7 +14901,7 @@ add_type(GSEditViewController, "layers", List[GSLayer])
 '''
 
 GSEditViewController.composedLayers = property(lambda self: TabLayersProxy(self).composedLayers())
-add_type(GSEditViewController, "composedLayers", List[GSLayer])
+add_type(GSEditViewController, "composedLayers", list[GSLayer])
 '''
 	.. attribute:: composedLayers
 		Similar to the above, but this list contains the :class:`GSLayer` objects after the OpenType features have been applied (see :class:`GSEditViewController.features`). Read-only.
@@ -16493,7 +16492,7 @@ def removeOverlap(paths: Sequence[GSPath]) -> NSMutableArray[GSPath] | None:
 '''
 
 
-def subtractPaths(paths: Sequence[GSPath], subtract: Sequence[GSPath]) -> List[GSPath] | None:
+def subtractPaths(paths: Sequence[GSPath], subtract: Sequence[GSPath]) -> list[GSPath] | None:
 
 	mutablePath: NSMutableArray
 	if isinstance(paths, LayerShapesProxy):
@@ -16510,7 +16509,7 @@ def subtractPaths(paths: Sequence[GSPath], subtract: Sequence[GSPath]) -> List[G
 	result = GSPathFinder.subtractPaths_from_error_(mutableSubtract, mutablePath, None)
 	if result[0] != 1:
 		return None
-	return cast(List, paths)
+	return cast(list, paths)
 
 
 '''
@@ -16525,7 +16524,7 @@ def subtractPaths(paths: Sequence[GSPath], subtract: Sequence[GSPath]) -> List[G
 '''
 
 
-def intersectPaths(paths: Sequence[GSPath], otherPaths: Sequence[GSPath]) -> List[GSPath] | None:
+def intersectPaths(paths: Sequence[GSPath], otherPaths: Sequence[GSPath]) -> list[GSPath] | None:
 	mutablePath: NSMutableArray
 	if isinstance(paths, LayerShapesProxy):
 		mutablePath = NSMutableArray.arrayWithArray_(paths.values())
@@ -16555,7 +16554,7 @@ def intersectPaths(paths: Sequence[GSPath], otherPaths: Sequence[GSPath]) -> Lis
 	:rtype: list
 '''
 
-def GetSaveFile(message: str | None = None, proposedFileName: str | None = None, filetypes: List[str] | None = None, filetype: str | None = None) -> str | None:
+def GetSaveFile(message: str | None = None, proposedFileName: str | None = None, filetypes: list[str] | None = None, filetype: str | None = None) -> str | None:
 	panel = NSSavePanel.savePanel().retain()
 	panel.setExtensionHidden_(False)
 	panel.setCanCreateDirectories_(True)

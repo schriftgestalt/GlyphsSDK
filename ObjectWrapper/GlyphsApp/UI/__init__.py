@@ -1,6 +1,6 @@
 from __future__ import absolute_import, annotations
 
-from typing import TYPE_CHECKING, Any, List
+from typing import TYPE_CHECKING, Any
 
 import objc
 from AppKit import (
@@ -409,9 +409,9 @@ class UITableview(NSTableView, protocols=[NSTableViewDelegate]):  # type: ignore
 
 
 def Table(
-	columns: List | None = None,
+	columns: list | None = None,
 	arrayController: NSArrayController | None = None,
-	content: List | None = None,
+	content: list | None = None,
 	frame: NSRect | None = None,
 	borderType=NSBezelBorder,
 	selectionCallback: Any = None,

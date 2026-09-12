@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import os
 import traceback
-from typing import TYPE_CHECKING, Any, List, cast
+from typing import TYPE_CHECKING, Any, cast
 
 import objc
 from AppKit import (
@@ -117,7 +117,7 @@ def pathForResource(resourceName: str, extension: str, path: str | None = None) 
 		raise ValueError("Please supply path")
 
 
-def setUpMenuHelper(menu: NSMenu, items: List[dict[str, Any]], defaultTarget: Any) -> None:
+def setUpMenuHelper(menu: NSMenu, items: list[dict[str, Any]], defaultTarget: Any) -> None:
 	if not isinstance(items, list):
 		return
 
@@ -575,7 +575,7 @@ class FilterWithDialog(GSFilterPlugin):
 			return None
 
 	@objc.typedSelector(b'v@:@@')
-	def processFont_withArguments_(self, font: GSFont, arguments: List[str]) -> None:
+	def processFont_withArguments_(self, font: GSFont, arguments: list[str]) -> None:
 		"""
 		Invoked when called as Custom Parameter in an instance at export.
 		The arguments come from the custom parameter in the instance settings.
@@ -634,7 +634,7 @@ class FilterWithDialog(GSFilterPlugin):
 				)
 			LogError(traceback.format_exc())
 
-	def processLayer_withArguments_(self, layer: GSLayer, arguments: List[str]) -> None:
+	def processLayer_withArguments_(self, layer: GSLayer, arguments: list[str]) -> None:
 		"""
 		Invoked when called as Custom Parameter in an instance to generate the Preview.
 		The arguments come from the custom parameter in the instance settings.
@@ -802,7 +802,7 @@ class FilterWithoutDialog(BaseFilterWithoutDialog):
 			return None
 
 	@objc.typedSelector(b'c32@0:8@16o^@24')
-	def runFilterWithLayers_error_(self, layers: List[GSLayer], error: NSError | None) -> tuple[bool, NSError | None]:
+	def runFilterWithLayers_error_(self, layers: list[GSLayer], error: NSError | None) -> tuple[bool, NSError | None]:
 		"""
 		Invoked when user triggers the filter through the Filter menu
 		from the font View
@@ -855,7 +855,7 @@ class FilterWithoutDialog(BaseFilterWithoutDialog):
 			return (False, ns_error)
 
 	@objc.typedSelector(b'v@:@@')
-	def processFont_withArguments_(self, font: GSFont, arguments: List[str]) -> None:
+	def processFont_withArguments_(self, font: GSFont, arguments: list[str]) -> None:
 		"""
 		Invoked when called as Custom Parameter in an instance at export.
 		The arguments come from the custom parameter in the instance settings.
@@ -1576,7 +1576,7 @@ class SelectTool(GSToolSelect):
 	def view(self) -> NSView | None:
 		return self.inspectorDialogView
 
-	def inspectorViewControllers(self) -> List[NSViewController]:
+	def inspectorViewControllers(self) -> list[NSViewController]:
 		viewControllers = objc.super(SelectTool, self).inspectorViewControllers()  # type: ignore
 		if viewControllers is None:
 			viewControllers = []
