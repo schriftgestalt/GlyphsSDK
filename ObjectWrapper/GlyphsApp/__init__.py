@@ -2893,8 +2893,7 @@ class FontAxesProxy(ListProxy[GSAxis]):
 class InternalAxesProxy(OrderedDictProxy[float]):
 
 	def getKeyOf(self, value: float) -> str:
-		NotImplementedError()
-		return ""
+		raise NotImplementedError
 
 	def getByIndex(self, idx: int) -> float | None:
 		if isinstance(self._owner, GSInstance) and self._owner.type == INSTANCETYPEVARIABLE:
@@ -2967,8 +2966,7 @@ class InternalAxesProxy(OrderedDictProxy[float]):
 class ExternalAxesProxy(OrderedDictProxy[float]):
 
 	def getKeyOf(self, value: float) -> str:
-		NotImplementedError()
-		return ""
+		raise NotImplementedError
 
 	def getByIndex(self, idx: int) -> float | None:
 		if isinstance(self._owner, GSInstance) and self._owner.type == INSTANCETYPEVARIABLE:
@@ -3147,8 +3145,7 @@ class FontMetricsProxy(OrderedDictProxy[GSMetric]):
 class MasterMetricsProxy(OrderedDictProxy[GSMetricStore]):
 
 	def getKeyOf(self, value: float) -> str:
-		NotImplementedError()
-		return ""
+		raise NotImplementedError
 
 	def _metricForKey(self, key):
 		if isinstance(key, int):
@@ -3264,8 +3261,7 @@ class FontStemsProxy(OrderedDictProxy[GSMetric]):
 class MasterStemsProxy(OrderedDictProxy[float]):
 
 	def getKeyOf(self, value: float) -> str:
-		NotImplementedError()
-		return ""
+		raise NotImplementedError
 
 	def _stemForKey(self, key):
 		if isinstance(key, int):
@@ -3393,8 +3389,7 @@ class FontNumbersProxy(OrderedDictProxy[GSMetric]):
 class MasterNumbersValuesProxy(OrderedDictProxy):
 
 	def getKeyOf(self, value: float) -> str:
-		NotImplementedError()
-		return ""
+		raise NotImplementedError
 
 	def _numForKey(self, key):
 		if isinstance(key, int):
@@ -3752,7 +3747,7 @@ class UserDataProxy(DictProxy):
 
 	def setter(self, values: dict):
 		if values is not None and not isinstance(values, (dict, NSDictionary, self.__class__)):
-			ValueError(f"{values} is not a dict")
+			raise ValueError(f"{values} is not a dict")
 		self._owner.setUserData_(values)
 
 class TempDataProxy(DictProxy):
@@ -3805,14 +3800,13 @@ class TempDataProxy(DictProxy):
 
 	def setter(self, values: dict):
 		if values is not None and not isinstance(values, (dict, NSDictionary, self.__class__)):
-			ValueError(f"{values} is not a dict")
+			raise ValueError(f"{values} is not a dict")
 		self._owner.setTempData_(values)
 
 class AttributesProxy(DictProxy):
 
 	def getKeyOf(self, value: Any) -> str:
-		NotImplementedError()
-		return ""
+		raise NotImplementedError
 
 	def getByKey(self, key: str) -> Any:
 		return self._owner.attributeForKey_(key)
@@ -4422,7 +4416,7 @@ class PathNodesProxy(ListProxy[GSNode]):
 			idx = _validate_idx(cast(Sequence, self), idx)
 		node = self._owner.nodeAtIndex_(idx)
 		if node is None:
-			IndexError(f"List index {idx} out of range {self.__len__()}")
+			raise IndexError(f"List index {idx} out of range {self.__len__()}")
 		return node
 
 	def setByIndex(self, idx: int, node: GSNode):
