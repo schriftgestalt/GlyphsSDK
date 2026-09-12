@@ -9,11 +9,58 @@ $ mypy --ignore-missing-imports Path/To/Script/File.py
 """
 
 import datetime
-from typing import Any, List, Dict, Optional, Union, Generic, TypeVar, Type, NamedTuple, Iterator, Tuple, overload, Self, MutableMapping, Callable, deprecated
-# from collections import OrderedDict
-from Foundation import NSString, NSMutableArray, NSRect, NSPoint, NSRange, NSAffineTransform, NSAffineTransformStruct, NSOrderedSet, NSDictionary, NSIndexPath
-from AppKit import NSObject, NSApplication, NSColor, NSBezierPath, NSPredicate, NSViewController, NSArrayController, NSError, NSView, NSStackView, NSImage, NSCursor, NSWindowController, NSDocument, NSTextStorage, NSEvent
 from abc import ABC
+from typing import (
+	Any,
+	Callable,
+	Dict,
+	Generic,
+	Iterator,
+	List,
+	MutableMapping,
+	NamedTuple,
+	Optional,
+	Self,
+	Tuple,
+	Type,
+	TypeVar,
+	Union,
+	deprecated,
+	overload,
+)
+
+from AppKit import (
+	NSApplication,
+	NSArrayController,
+	NSBezierPath,
+	NSColor,
+	NSCursor,
+	NSDocument,
+	NSError,
+	NSEvent,
+	NSImage,
+	NSObject,
+	NSPredicate,
+	NSStackView,
+	NSTextStorage,
+	NSView,
+	NSViewController,
+	NSWindowController,
+)
+
+# from collections import OrderedDict
+from Foundation import (
+	NSAffineTransform,
+	NSAffineTransformStruct,
+	NSDictionary,
+	NSIndexPath,
+	NSMutableArray,
+	NSOrderedSet,
+	NSPoint,
+	NSRange,
+	NSRect,
+	NSString,
+)
 
 F = TypeVar("F", bound=Callable[..., Any])
 

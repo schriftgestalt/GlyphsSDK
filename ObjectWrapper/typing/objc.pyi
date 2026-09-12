@@ -1,7 +1,7 @@
 
-from typing import Callable, Optional, Any, TypeVar, Tuple, ParamSpec
-from AppKit import NSObject, NSBundle
+from typing import Any, Callable, Optional, ParamSpec, Tuple, TypeVar
 
+from AppKit import NSBundle, NSObject
 
 def super(super_class: Any, obj: Any) -> NSObject: ...
 

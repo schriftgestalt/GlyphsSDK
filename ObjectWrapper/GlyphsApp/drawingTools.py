@@ -2,10 +2,38 @@
 # encoding: utf-8
 
 from __future__ import print_function
+
+from typing import List, Optional, Tuple
+
 # from typing import Any, List, Dict, Optional
-from AppKit import NSBezierPath, NSColor, NSFont, NSImage, NSGradient, NSColorSpace, NSLineJoinStyleMiter, NSLineJoinStyleRound, NSLineCapStyleButt, NSLineCapStyleRound, NSLineCapStyleSquare, NSFontAttributeName, NSForegroundColorAttributeName, NSGraphicsContext, NSCompositingOperationSourceOver, NSGradientDrawsBeforeStartingLocation, NSGradientDrawsAfterEndingLocation  # type: ignore
-from Foundation import NSMakeRect, NSAffineTransform, NSMakePoint, NSZeroRect, NSString, NSPoint, NSPointLike
-from typing import Optional, Tuple, List
+from AppKit import (  # type: ignore
+	NSBezierPath,
+	NSColor,
+	NSColorSpace,
+	NSCompositingOperationSourceOver,
+	NSFont,
+	NSFontAttributeName,
+	NSForegroundColorAttributeName,
+	NSGradient,
+	NSGradientDrawsAfterEndingLocation,
+	NSGradientDrawsBeforeStartingLocation,
+	NSGraphicsContext,
+	NSImage,
+	NSLineCapStyleButt,
+	NSLineCapStyleRound,
+	NSLineCapStyleSquare,
+	NSLineJoinStyleMiter,
+	NSLineJoinStyleRound,
+)
+from Foundation import (
+	NSAffineTransform,
+	NSMakePoint,
+	NSMakeRect,
+	NSPoint,
+	NSPointLike,
+	NSString,
+	NSZeroRect,
+)
 
 
 def save():

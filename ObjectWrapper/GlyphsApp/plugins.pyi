@@ -1,8 +1,9 @@
-from Foundation import NSPoint, NSString
-from AppKit import NSObject, NSError, NSView, NSMenu, NSColor, NSEvent, NSResponder
-from typing import Tuple, Any, Optional, Dict, List
-from GlyphsApp import GSFont, GSLayer, GSEditViewController, GSWindowController
+from typing import Any, Dict, List, Optional, Tuple
 
+from AppKit import NSColor, NSError, NSEvent, NSMenu, NSObject, NSResponder, NSView
+from Foundation import NSPoint, NSString
+
+from GlyphsApp import GSEditViewController, GSFont, GSLayer, GSWindowController
 
 class GSFilterPlugin(NSObject):
 	menuName: str

@@ -3,12 +3,13 @@
 __all__ = ["GlyphPreview"]
 
 import traceback
-from GlyphsApp import GSLayer
-from Foundation import NSAffineTransform
-from AppKit import NSView, NSColor, NSGraphicsContext, NSRectFill
-
-from vanilla.vanillaBase import VanillaBaseObject
 from typing import Tuple, cast
+
+from AppKit import NSColor, NSGraphicsContext, NSRectFill, NSView
+from Foundation import NSAffineTransform
+from vanilla.vanillaBase import VanillaBaseObject
+
+from GlyphsApp import GSLayer
 
 
 class GSGlyphPreviewView(NSView):

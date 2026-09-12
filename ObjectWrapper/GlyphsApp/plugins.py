@@ -1,39 +1,63 @@
 # encoding: utf-8
 
 from __future__ import annotations
+
 import os
 import traceback
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, cast
+
 import objc
-from objc import python_method
-from typing import Optional, List, Dict, Tuple, Any, TYPE_CHECKING, cast
-
-from Foundation import NSPoint, NSString, NSAttributedString, NSURL, NSClassFromString
-
 from AppKit import (
-	NSUserDefaults,
-	NSError,
-	NSLocalizedDescriptionKey,
-	NSLocalizedRecoverySuggestionErrorKey,
-	NSLocalizedString,
 	NSBundle,
 	NSColor,
-	NSNib,
-	NSMenu,
-	NSMenuItem,
-	NSView,
-	NSImage,
+	NSError,
+	NSEvent,
 	NSFont,
 	NSFontAttributeName,
 	NSForegroundColorAttributeName,
-	NSEvent,
+	NSImage,
+	NSLocalizedDescriptionKey,
+	NSLocalizedRecoverySuggestionErrorKey,
+	NSLocalizedString,
+	NSMenu,
+	NSMenuItem,
+	NSNib,
+	NSUserDefaults,
+	NSView,
 	NSViewController,
 )
+from Foundation import NSURL, NSAttributedString, NSClassFromString, NSPoint, NSString
+from objc import python_method
 
 if TYPE_CHECKING:
-	from . import Glyphs, GSFont, GSLayer, GSUserNotification, GSEditViewController, LogToConsole, LogError, ONSTATE, OFFSTATE, MIXEDSTATE, Message, objcObject, GSWindowController
-	from .plugins import GSToolPlugin, GSFilterPlugin, GSToolSelect, BaseFileFormatPlugin, BaseFilterWithoutDialog, BaseGeneralPlugin, BasePalettePlugin, BaseReporterPlugin, GSPaletteView
+	from . import (
+		MIXEDSTATE,
+		OFFSTATE,
+		ONSTATE,
+		Glyphs,
+		GSEditViewController,
+		GSFont,
+		GSLayer,
+		GSUserNotification,
+		GSWindowController,
+		LogError,
+		LogToConsole,
+		Message,
+		objcObject,
+	)
+	from .plugins import (
+		BaseFileFormatPlugin,
+		BaseFilterWithoutDialog,
+		BaseGeneralPlugin,
+		BasePalettePlugin,
+		BaseReporterPlugin,
+		GSFilterPlugin,
+		GSPaletteView,
+		GSToolPlugin,
+		GSToolSelect,
+	)
 else:
-	from GlyphsApp import GSEditViewController, Glyphs, LogError
+	from GlyphsApp import Glyphs, GSEditViewController, LogError
 	GSWindowController = objc.lookUpClass("GSWindowController")
 	GSToolPlugin = objc.lookUpClass("GSToolPlugin")
 	GSToolPlugin = objc.lookUpClass("GSToolPlugin")

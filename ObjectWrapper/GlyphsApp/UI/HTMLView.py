@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
+from typing import cast
+
+from AppKit import NSURLRequest
+from Foundation import NSURL
 from vanilla.vanillaBase import VanillaBaseObject
 from WebKit import WKWebView
-from Foundation import NSURL
-from AppKit import NSURLRequest
-from typing import cast
 
 __all__ = ["HTMLView"]
 

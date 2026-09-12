@@ -5,9 +5,11 @@ from __future__ import print_function
 __all__ = ["CanvasView"]
 
 import traceback
-from vanilla import Group
-from AppKit import NSView, NSColor, NSRectFill
 from typing import Any, Tuple, Type, cast
+
+from AppKit import NSColor, NSRectFill, NSView
+from vanilla import Group
+
 
 class CanvasView_view(NSView):
 

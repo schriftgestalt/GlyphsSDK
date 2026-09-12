@@ -1,8 +1,28 @@
 # typings/AppKit.pyi
 
-from typing import Any, List, Self, Tuple, overload, Type, Mapping
-from Foundation import NSObject, NSDictionary, NSArray, NSString, NSURL, NSAffineTransform, NSMutableAttributedString, NSData
-from Foundation import NSPointLike, NSPoint, NSRectLike, NSRect, NSRange, NSSizeLike, NSSize, NSLineCapStyle, NSLineJoinStyle, NSCompositingOperation, NSTextAlignment
+from typing import Any, List, Mapping, Self, Tuple, Type, overload
+
+from Foundation import (
+	NSURL,
+	NSAffineTransform,
+	NSArray,
+	NSCompositingOperation,
+	NSData,
+	NSDictionary,
+	NSLineCapStyle,
+	NSLineJoinStyle,
+	NSMutableAttributedString,
+	NSObject,
+	NSPoint,
+	NSPointLike,
+	NSRange,
+	NSRect,
+	NSRectLike,
+	NSSize,
+	NSSizeLike,
+	NSString,
+	NSTextAlignment,
+)
 from Quartz import CGContextRef
 
 def NSRectFill(rect: NSRectLike) -> None: ...

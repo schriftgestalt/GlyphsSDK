@@ -8,7 +8,8 @@ visible to the type checker.
 """
 
 from typing import Any
-from GlyphsApp import GSFont, GSLayer, GSApplication
+
+from GlyphsApp import GSApplication, GSFont, GSLayer
 
 Font: GSFont
 Layer: GSLayer

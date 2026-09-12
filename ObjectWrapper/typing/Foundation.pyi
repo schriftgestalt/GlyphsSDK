@@ -1,5 +1,20 @@
 
-from typing import NamedTuple, Any, Self, TypeVar, Generic, Iterator, Type, Tuple, Sequence, Iterable, overload, TypeAlias, Literal
+from typing import (
+	Any,
+	Generic,
+	Iterable,
+	Iterator,
+	Literal,
+	NamedTuple,
+	Self,
+	Sequence,
+	Tuple,
+	Type,
+	TypeAlias,
+	TypeVar,
+	overload,
+)
+
 from AppKit import NSBezierPath
 
 NSLineCapStyle = int

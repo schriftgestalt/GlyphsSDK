@@ -1,6 +1,6 @@
-from typing import Any, Tuple, Union, Optional, Callable
-from AppKit import NSControl
+from typing import Any, Callable, Optional, Tuple, Union
 
+from AppKit import NSControl
 
 # General Types
 PosSize = Union[Tuple[int | float, int | float, int | float, int | float], str]

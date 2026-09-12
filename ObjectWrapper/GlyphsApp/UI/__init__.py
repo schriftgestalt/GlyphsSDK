@@ -2,22 +2,53 @@
 
 from __future__ import absolute_import, annotations
 
-from .GlyphView import GlyphView
-from .CanvasView import CanvasView
-from .GlyphPreview import GlyphPreview
-from typing import Any, List, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, List
 
-from AppKit import NSWindow, NSPanel, NSButton, NSTextField, NSSearchField, NSComboBox, NSPopUpButton, NSImage, NSScrollView, NSTableView, NSTableColumn, NSArrayController, \
-	NSTitledWindowMask, NSClosableWindowMask, NSWindowStyleMaskResizable, NSUtilityWindowMask, NSBackingStoreBuffered, \
-	NSTextAlignmentNatural, NSControlSizeRegular, NSControlSizeSmall, NSLayoutConstraintOrientationHorizontal, NSLayoutConstraintOrientationVertical, \
-	NSControlStateValueOff, NSLayoutRelationGreaterThanOrEqual, NSLayoutRelationLessThanOrEqual, \
-	NSTableColumnUserResizingMask, NSBezelBorder, NSNoBorder, NSValueBinding, NSMenuItem
-
-from Foundation import NSRect, NSMakeRect, NSSelectorFromString, NSClassFromString  # type: ignore
 import objc
+from AppKit import (
+	NSArrayController,
+	NSBackingStoreBuffered,
+	NSBezelBorder,
+	NSButton,
+	NSClosableWindowMask,
+	NSComboBox,
+	NSControlSizeRegular,
+	NSControlSizeSmall,
+	NSControlStateValueOff,
+	NSImage,
+	NSLayoutConstraintOrientationHorizontal,
+	NSLayoutConstraintOrientationVertical,
+	NSLayoutRelationGreaterThanOrEqual,
+	NSLayoutRelationLessThanOrEqual,
+	NSMenuItem,
+	NSNoBorder,
+	NSPanel,
+	NSPopUpButton,
+	NSScrollView,
+	NSSearchField,
+	NSTableColumn,
+	NSTableColumnUserResizingMask,
+	NSTableView,
+	NSTextAlignmentNatural,
+	NSTextField,
+	NSTitledWindowMask,
+	NSUtilityWindowMask,
+	NSValueBinding,
+	NSWindow,
+	NSWindowStyleMaskResizable,
+)
+from Foundation import (  # type: ignore
+	NSClassFromString,
+	NSMakeRect,
+	NSRect,
+	NSSelectorFromString,
+)
 from objc import python_method
 
 from .. import callbackHelperClass
+from .CanvasView import CanvasView
+from .GlyphPreview import GlyphPreview
+from .GlyphView import GlyphView
 
 __all__ = ["GlyphView", "CanvasView", "GlyphPreview", "Window", "Panel", "Button", "Checkbox", "Label", "TextField", "SearchField", "ComboBox", "PopUpButton", "Table", "SteppingEditText", "autoLayout", "NSControlSizeSmall", "MenuItem"]
 

@@ -10,7 +10,10 @@
 ###############################################################################################
 
 
-import re, os, codecs
+import codecs
+import os
+import re
+
 
 def ReadFromFile(path):
 	"""
