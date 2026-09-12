@@ -46,7 +46,7 @@ from .CanvasView import CanvasView
 from .GlyphPreview import GlyphPreview
 from .GlyphView import GlyphView
 
-__all__ = ["GlyphView", "CanvasView", "GlyphPreview", "Window", "Panel", "Button", "Checkbox", "Label", "TextField", "SearchField", "ComboBox", "PopUpButton", "Table", "SteppingEditText", "autoLayout", "NSControlSizeSmall", "MenuItem"]
+__all__ = ["GlyphView", "CanvasView", "GlyphPreview", "Window", "Panel", "Button", "Checkbox", "Label", "TextField", "SearchField", "ComboBox", "PopUpButton", "Table", "SteppingEditText", "autoLayout", "NSControlSizeSmall", "MenuItem"]  # noqa: RUF022
 
 
 # stupid hack to allow code that doesn't expect NSButton.state to be a property (and access the value by `button.state()` (e.g. in vanilla)).
