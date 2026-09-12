@@ -98,7 +98,7 @@ class NSObject:
 	def removeObserver_forKeyPath_(self, observer: NSObject, keyPath: str | NSObject) -> None: ...
 
 
-T = TypeVar("T", bound="NSObject")
+T = TypeVar("T", bound=NSObject)
 KT = TypeVar("KT")
 VT = TypeVar("VT")
 
