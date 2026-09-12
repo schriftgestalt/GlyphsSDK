@@ -724,7 +724,7 @@ class OrderedDictProxy(ABC, Generic[T]):  # T is the type of items in the sequen
 		elif values is None:
 			method(NSMutableArray.array())
 		else:
-			raise TypeError("Cant set value of type %s" % type(values).__name__)
+			raise TypeError(f"Cant set value of type {type(values).__name__}")
 
 	def clear(self) -> None:
 		self.setter(None)
@@ -809,7 +809,7 @@ class ListProxy(ABC, Generic[T]):  # T is the type of items in the sequence
 
 	def insert(self, idx: int, value: T) -> None:
 		if not isinstance(idx, int):
-			raise TypeError(f"list indices must be integers or slices, not {type(idx).__name__}")
+			raise TypeError(f"List indices must be integers or slices, not {type(idx).__name__}")
 
 		idx = _validate_idx(cast(Sequence, self), idx, offset=1)
 		self.insertAtIndex(idx, value)
@@ -828,7 +828,7 @@ class ListProxy(ABC, Generic[T]):  # T is the type of items in the sequence
 				result.append(self.getByIndex(idx))
 			return result
 		else:
-			raise TypeError(f"list indices must be integers or slices, not {type(key).__name__}")
+			raise TypeError(f"List indices must be integers or slices, not {type(key).__name__}")
 
 	def __setitem__(self, key: int, value: T) -> None:
 		if isinstance(key, int):
@@ -859,7 +859,7 @@ class ListProxy(ABC, Generic[T]):  # T is the type of items in the sequence
 			for idx, new_value in zip(indices_to_replace, new_values):
 				self.setByIndex(idx, new_value)
 		else:
-			raise TypeError(f"list indices must be integers or slices, not {type(idx).__name__}")
+			raise TypeError(f"List indices must be integers or slices, not {type(idx).__name__}")
 
 	def __delitem__(self, idx: int | slice) -> None:
 		if isinstance(idx, int):
@@ -873,7 +873,7 @@ class ListProxy(ABC, Generic[T]):  # T is the type of items in the sequence
 			for jdx in indices_to_delete:
 				self.removeByIndex(jdx)
 		else:
-			raise TypeError(f"list indices must be integers or slices, not {type(idx).__name__}")
+			raise TypeError(f"List indices must be integers or slices, not {type(idx).__name__}")
 
 	def pop(self, key: int = -1) -> T:
 		if isinstance(key, int):
@@ -883,7 +883,7 @@ class ListProxy(ABC, Generic[T]):  # T is the type of items in the sequence
 			self.removeByIndex(idx)
 			return item
 		else:
-			raise TypeError(f"list indices must be integers or slices, not {type(idx).__name__}")
+			raise TypeError(f"List indices must be integers or slices, not {type(idx).__name__}")
 
 	def __contains__(self, key: Any) -> bool:
 		if isinstance(key, int):
@@ -909,7 +909,7 @@ class ListProxy(ABC, Generic[T]):  # T is the type of items in the sequence
 		elif values is None:
 			method(NSMutableArray.array())
 		else:
-			raise TypeError("Cant set value of type %s" % type(values).__name__)
+			raise TypeError(f"Cant set value of type {type(values).__name__}")
 
 	def remove(self, value: T) -> None:
 		"""Remove the first occurrence of value from the list.
@@ -1062,7 +1062,7 @@ class DictProxy(ABC, Generic[T]):
 		elif values is None:
 			method('NSMutableArray'.array())
 		else:
-			raise TypeError("Can't set value of type %s" % type(values).__name__)
+			raise TypeError(f"Can't set value of type {type(values).__name__}")
 
 	#
 	# —— Your subclass must override these methods ——
@@ -1130,7 +1130,7 @@ def __GSProxyShapes__getitem__(self: GSProxyShapes, idx: int | slice) -> GSShape
 		return [self.objectAtIndex_(i) for i in range(*indices)]
 	if idx < self.count():
 		return self.objectAtIndex_(idx)
-	raise IndexError("list index out of range")
+	raise IndexError("List index out of range")
 
 
 GSProxyShapes.__getitem__ = python_method(__GSProxyShapes__getitem__)  # type: ignore
@@ -1148,7 +1148,7 @@ def ProxyShapes__str__(self: GSProxyShapes) -> str:
 		strings.append(str(currItem))
 	if len(strings) == 0:
 		return "()"
-	return "(\n\t%s\n)" % (',\n\t'.join(strings))
+	return "(\n\t{}\n)".format(',\n\t'.join(strings))
 
 
 GSProxyShapes.__str__ = python_method(ProxyShapes__str__)  # type: ignore
@@ -1159,7 +1159,7 @@ def ProxyShapes__repr__(self: GSProxyShapes) -> str:
 		strings.append(repr(currItem))
 	if len(strings) == 0:
 		return "()"
-	return "(\n\t%s\n)" % (',\n\t'.join(strings))
+	return "(\n\t{}\n)".format(',\n\t'.join(strings))
 
 
 GSProxyShapes.__repr__ = python_method(ProxyShapes__repr__)  # type: ignore
@@ -1524,9 +1524,9 @@ def printtraceback() -> None:
 	for threadId, stack in sys._current_frames().items():
 		# code.append("\n# Thread: %s(%d)" % (id2name.get(threadId,""), threadId))
 		for filename, lineno, name, line in traceback.extract_stack(stack):
-			code.append('File: "%s", line %d, in %s' % (filename, lineno, name))
+			code.append(f'File: "{filename}", line {lineno}, in {name}')
 			if line:
-				code.append("  %s" % (line.strip()))
+				code.append(f"  {line.strip()}")
 	if len(code) > 1:
 		del (code[-1])
 	if len(code) > 1:
@@ -1616,7 +1616,7 @@ class BoolDefaultsProxy(DefaultsProxy):
 
 	def get(self, key: str, default: bool | None = None) -> bool | None:  # type: ignore
 		if not isString(key):
-			raise TypeError("defaults key must be str, not %s" % type(key).__name__)
+			raise TypeError(f"defaults key must be str, not {type(key).__name__}")
 		value: NSNumber = cast(NSNumber, NSUserDefaults.standardUserDefaults().objectForKey_(objcObject(key)))
 		if not value:
 			return default
@@ -2220,7 +2220,7 @@ class callbackHelperClass(NSObject):
 
 	def description(self):  # for debugging in Xcode
 		desc = objc.super(callbackHelperClass, self).description()
-		return "%s %s" % (desc, str(self.func))
+		return f"{desc} {self.func!s}"
 
 
 def __GSApp_addCallback__(self, target: Any | None = None, operation: str | None = None, callbackType: str | None = None, callee: Any | None = None, selector: Any | None = None):
@@ -2229,7 +2229,7 @@ def __GSApp_addCallback__(self, target: Any | None = None, operation: str | None
 		return
 
 	if not isinstance(callee, NSObject):
-		raise TypeError("Target must be a subclass of NSObject, not %s" % type(callee).__name__)
+		raise TypeError(f"Target must be a subclass of NSObject, not {type(callee).__name__}")
 
 	if callbackType in DrawLayerCallbacks or callbackType == CONTEXTMENUCALLBACK:
 
@@ -2272,7 +2272,7 @@ def __GSApp_addCallback__Old__(self, target: Any, operation: str):
 			if isinstance(target, objc.Class):  # type: ignore
 				GSCallbackHandler.addCallback_forOperation_(target, operation)
 			else:
-				raise TypeError("Target must be a (objc) class, not %s" % type(target).__name__)
+				raise TypeError(f"Target must be a (objc) class, not {type(target).__name__}")
 		# Other observers
 		elif operation in Observers:
 			# Add class to callbackTargets dict by the function name
@@ -2711,13 +2711,13 @@ class FontGlyphsProxy(OrderedDictProxy[GSGlyph]):
 
 	def setByIndex(self, idx: int, glyph: GSGlyph) -> None:
 		if not isinstance(glyph, GSGlyph):
-			raise TypeError("Cannot add %s, not a Glyph" % glyph)
+			raise TypeError(f"Cannot add {glyph}, not a Glyph")
 		self._owner.removeGlyph_(self._owner.glyphAtIndex_(idx))
 		self._owner.addGlyph_(glyph)
 
 	def setByKey(self, key: str, glyph: GSGlyph) -> None:
 		if not isinstance(glyph, GSGlyph):
-			raise TypeError("Cannot add %s, not a Glyph" % glyph)
+			raise TypeError(f"Cannot add {glyph}, not a Glyph")
 		self._owner.removeGlyph_(self._owner.glyphForName_(key))
 		if glyph.name != key:
 			glyph.name = key
@@ -2750,18 +2750,18 @@ class FontGlyphsProxy(OrderedDictProxy[GSGlyph]):
 
 	def append(self, glyph):
 		if not isinstance(glyph, GSGlyph):
-			raise TypeError("Cannot add %s, not a Glyph" % glyph)
+			raise TypeError(f"Cannot add {glyph}, not a Glyph")
 		if glyph.name not in self:
 			self._owner.addGlyph_(glyph)
 		else:
-			raise NameError('There is a glyph with the name \"%s\" already in the font.' % glyph.name)
+			raise NameError(f'There is a glyph with the name "{glyph.name}" already in the font.')
 
 	def extend(self, objects):
 		for glyph in objects:
 			if not isinstance(glyph, GSGlyph):
-				raise TypeError("Cannot add %s, not a Glyph" % glyph)
+				raise TypeError(f"Cannot add {glyph}, not a Glyph")
 			if glyph.name in self:
-				raise NameError('There is a glyph with the name \"%s\" already in the font.' % glyph.name)
+				raise NameError(f'There is a glyph with the name "{glyph.name}" already in the font.')
 		self._owner.addGlyphsFromArray_(list(objects))
 
 	def __len__(self) -> int:
@@ -2784,7 +2784,7 @@ class FontFontMasterProxy(OrderedDictProxy[GSFontMaster]):
 
 	def setByIndex(self, idx: int, fontMaster: GSFontMaster):
 		if not isinstance(fontMaster, GSFontMaster):
-			raise TypeError("Cannot add %s, not a FontMaster" % fontMaster)
+			raise TypeError(f"Cannot add {fontMaster}, not a FontMaster")
 		self._owner.replaceFontMasterAtIndex_withFontMaster_(idx, fontMaster)
 
 	def setByKey(self, key: str, fontMaster: GSFontMaster) -> None:
@@ -2813,7 +2813,7 @@ class FontFontMasterProxy(OrderedDictProxy[GSFontMaster]):
 
 	def append(self, fontMaster):
 		if not isinstance(fontMaster, GSFontMaster):
-			raise TypeError("Cannot add %s, not a FontMaster" % fontMaster)
+			raise TypeError(f"Cannot add {fontMaster}, not a FontMaster")
 		self._owner.addFontMaster_(fontMaster)
 
 	def remove(self, fontMaster):
@@ -2821,7 +2821,7 @@ class FontFontMasterProxy(OrderedDictProxy[GSFontMaster]):
 
 	def insertAtIndex(self, idx: int, fontMaster: GSFontMaster) -> None:
 		if not isinstance(fontMaster, GSFontMaster):
-			raise TypeError("Cannot add %s, not a FontMaster" % fontMaster)
+			raise TypeError(f"Cannot add {fontMaster}, not a FontMaster")
 		self._owner.insertFontMaster_atIndex_(fontMaster, idx)
 
 
@@ -3108,7 +3108,7 @@ class FontMetricsProxy(OrderedDictProxy[GSMetric]):
 		if metric is None:
 			metric = self._owner.metricForId_(key)
 		if metric is None:
-			raise KeyError("No metric for key %s" % key)
+			raise KeyError(f"No metric for key {key}")
 		return metric
 
 	def insertAtIndex(self, idx: int, value: GSMetric) -> None:
@@ -3119,7 +3119,7 @@ class FontMetricsProxy(OrderedDictProxy[GSMetric]):
 		self._owner.insertObject_inMetricsAtIndex_(value, idx)
 
 	def setByKey(self, key: str, value: Any) -> None:
-		raise TypeError("only accessible by integer index, not %s" % key)
+		raise TypeError(f"Only accessible by integer index, not {key}")
 
 	def removeByIndex(self, idx: int) -> None:
 		self._owner.removeObjectFromMetricsAtIndex_(idx)
@@ -3137,7 +3137,7 @@ class FontMetricsProxy(OrderedDictProxy[GSMetric]):
 
 	def append(self, value):
 		if not isinstance(value, GSMetric):
-			raise TypeError("only object of type GSMetric allowed, not %s" % type(value).__name__)
+			raise TypeError(f"Only object of type GSMetric allowed, not {type(value).__name__}")
 		self._owner.addStem_(value)
 
 	def setterMethod(self):
@@ -3160,13 +3160,13 @@ class MasterMetricsProxy(OrderedDictProxy[GSMetricStore]):
 			if metric is None:
 				metric = self._owner.font.metricForId_(key)
 		else:
-			raise TypeError("list indices must be integers or strings, not %s" % type(key).__name__)
+			raise TypeError(f"List indices must be integers or strings, not {type(key).__name__}")
 		return metric
 
 	def getByIndex(self, idx: int) -> GSMetricStore:
 		metric = self._metricForKey(idx)
 		if metric is None:
-			raise KeyError("No metric for %d" % idx)
+			raise KeyError(f"No metric for {idx}")
 		print("******", metric, type(metric))
 		return self._owner.valueForMetric_(metric)
 
@@ -3225,7 +3225,7 @@ class FontStemsProxy(OrderedDictProxy[GSMetric]):
 		if stem is None:
 			stem = self._owner.stemForId_(key)
 		if stem is None:
-			raise KeyError("No stem for key %s" % key)
+			raise KeyError(f"No stem for key {key}")
 		return stem
 
 	def insertAtIndex(self, idx: int, value: GSMetric) -> None:
@@ -3236,7 +3236,7 @@ class FontStemsProxy(OrderedDictProxy[GSMetric]):
 		self._owner.insertObject_inStemsAtIndex_(value, idx)
 
 	def setByKey(self, key: str, value: Any) -> None:
-		raise TypeError("only accessible by integer index, not %s" % key)
+		raise TypeError(f"Only accessible by integer index, not {key}")
 
 	def removeByIndex(self, idx: int) -> None:
 		self._owner.removeObjectFromStemsAtIndex_(idx)
@@ -3254,7 +3254,7 @@ class FontStemsProxy(OrderedDictProxy[GSMetric]):
 
 	def append(self, value):
 		if not isinstance(value, GSMetric):
-			raise TypeError("only object of type GSMetric allowed, not %s" % type(value).__name__)
+			raise TypeError(f"Only object of type GSMetric allowed, not {type(value).__name__}")
 		self._owner.addStem_(value)
 
 	def setterMethod(self):
@@ -3277,19 +3277,19 @@ class MasterStemsProxy(OrderedDictProxy[float]):
 			if stem is None:
 				stem = self._owner.font.stemForId_(key)
 		else:
-			raise TypeError("list indices must be integers or strings, not %s" % type(key).__name__)
+			raise TypeError(f"List indices must be integers or strings, not {type(key).__name__}")
 		return stem
 
 	def getByIndex(self, idx: int) -> float:
 		stem = self._stemForKey(idx)
 		if stem is None:
-			raise KeyError("No stem for %d" % idx)
+			raise KeyError(f"No stem for {idx}")
 		return self._owner.valueValueForStemId_(stem.id)
 
 	def getByKey(self, key: str) -> float:
 		stemValue = self._owner.valueValueForStemId_(key)
 		if stemValue is None:
-			raise KeyError("No stem for %s" % key)
+			raise KeyError(f"No stem for {key}")
 		return stemValue
 
 	def setByIndex(self, idx: int, value: float) -> None:
@@ -3345,9 +3345,9 @@ class FontNumbersProxy(OrderedDictProxy[GSMetric]):
 			if number is None:
 				number = self._owner.numberForId_(key)
 		else:
-			raise TypeError("keys must be integers or strings, not %s" % type(key).__name__)
+			raise TypeError(f"keys must be integers or strings, not {type(key).__name__}")
 		if number is None:
-			raise KeyError("No number for key %s" % key)
+			raise KeyError(f"No number for key {key}")
 		return number
 
 	def getByIndex(self, idx: int) -> GSMetric:
@@ -3363,7 +3363,7 @@ class FontNumbersProxy(OrderedDictProxy[GSMetric]):
 		self._owner.insertObject_inNumbersAtIndex_(value, idx)
 
 	def setByKey(self, key: str, value: GSMetric) -> None:
-		raise TypeError("only accessible by integer index, not %s" % key)
+		raise TypeError(f"Only accessible by integer index, not {key}")
 
 	def removeByIndex(self, idx: int) -> None:
 		self._owner.removeObjectFromNumbersAtIndex_(idx)
@@ -3383,7 +3383,7 @@ class FontNumbersProxy(OrderedDictProxy[GSMetric]):
 
 	def append(self, value):
 		if not isinstance(value, GSMetric):
-			raise TypeError("only object of type GSMetric allowed, not %s" % type(value).__name__)
+			raise TypeError(f"Only object of type GSMetric allowed, not {type(value).__name__}")
 		self._owner.addNumber_(value)
 
 	def setterMethod(self):
@@ -3406,13 +3406,13 @@ class MasterNumbersValuesProxy(OrderedDictProxy):
 			if num is None:
 				num = self._owner.font.numberForId_(key)
 		else:
-			raise TypeError("list indices must be integers or strings, not %s" % type(key).__name__)
+			raise TypeError(f"List indices must be integers or strings, not {type(key).__name__}")
 		return num
 
 	def getByIndex(self, idx: int) -> Any:
 		num = self._owner.font.objectInNumbersAtIndex_(idx)
 		if num is None:
-			raise KeyError("No number for %s" % idx)
+			raise KeyError(f"No number for {idx}")
 		return self._owner.numberValueValueForId_(num.id)
 
 	def getByKey(self, key: str) -> Any:
@@ -3421,7 +3421,7 @@ class MasterNumbersValuesProxy(OrderedDictProxy):
 	def setByIndex(self, idx: int, value: float) -> Any:
 		num = self._owner.font.objectInNumbersAtIndex_(idx)
 		if num is None:
-			raise KeyError("No number for %s" % idx)
+			raise KeyError(f"No number for {idx}")
 		return self._owner.setNumberValueValue_forId_(value, num.id)
 
 	def setByKey(self, key: str, value: float) -> Any:
@@ -3582,7 +3582,7 @@ class FontFeaturesProxy(OrderedDictProxy[GSFeature]):
 		self._owner.replaceObjectInFeaturesAtIndex_withObject_(idx, feature)
 
 	def setByKey(self, key: str, feature: GSFeature) -> None:
-		raise TypeError("keys must be integers, not %s" % type(key).__name__)
+		raise TypeError(f"keys must be integers, not {type(key).__name__}")
 
 	def insertAtIndex(self, idx: int, feature: GSFeature) -> None:
 		self._owner.insertObject_inFeaturesAtIndex_(feature, idx)
@@ -3595,7 +3595,7 @@ class FontFeaturesProxy(OrderedDictProxy[GSFeature]):
 		if feature is not None:
 			return self._owner.removeFeature_(feature)
 		else:
-			raise TypeError("keys must be integers or strings, not %s" % type(key).__name__)
+			raise TypeError(f"keys must be integers or strings, not {type(key).__name__}")
 
 	def __iter__(self):
 		for idx in range(self._owner.countOfFeatures()):
@@ -3651,7 +3651,7 @@ class FontFeaturePrefixesProxy(OrderedDictProxy[GSFeaturePrefix]):
 		self._owner.replaceObjectInFeaturePrefixesAtIndex_withObject_(idx, featurePrefix)
 
 	def setByKey(self, key: str, featurePrefix: GSFeaturePrefix):
-		raise TypeError("keys must be integers, not %s" % type(key).__name__)
+		raise TypeError(f"keys must be integers, not {type(key).__name__}")
 
 	def insertAtIndex(self, idx: int, featurePrefix: GSFeaturePrefix) -> None:
 		self._owner.insertObject_inFeaturePrefixesAtIndex_(featurePrefix, idx)
@@ -3752,7 +3752,7 @@ class UserDataProxy(DictProxy):
 
 	def setter(self, values: dict):
 		if values is not None and not isinstance(values, (dict, NSDictionary, self.__class__)):
-			ValueError("%s is not a dict" % values)
+			ValueError(f"{values} is not a dict")
 		self._owner.setUserData_(values)
 
 class TempDataProxy(DictProxy):
@@ -3805,7 +3805,7 @@ class TempDataProxy(DictProxy):
 
 	def setter(self, values: dict):
 		if values is not None and not isinstance(values, (dict, NSDictionary, self.__class__)):
-			ValueError("%s is not a dict" % values)
+			ValueError(f"{values} is not a dict")
 		self._owner.setTempData_(values)
 
 class AttributesProxy(DictProxy):
@@ -4002,7 +4002,7 @@ class GlyphLayerProxy(OrderedDictProxy[GSLayer]):
 			if key < 0:
 				key += count
 			if key >= count:
-				raise IndexError("list index %s out of range %s" % (key, count))
+				raise IndexError(f"List index {key} out of range {count}")
 			if key < self._owner.parent.countOfFontMasters():
 				FontMaster = self._owner.parent.fontMasterAtIndex_(key)
 				return self._owner.layerForId_(FontMaster.id)
@@ -4130,7 +4130,7 @@ class GlyphsTagsProxy(ListProxy[str]):
 
 	def _validate_value(self, tag):
 		if not isString(tag):
-			raise TypeError("“Tag” must be str, not %s" % type(tag).__name__)
+			raise TypeError(f"“Tag” must be str, not {type(tag).__name__}")
 
 
 class LayerGuidesProxy(ListProxy[GSGuide]):
@@ -4336,7 +4336,7 @@ class LayerShapesProxy(ListProxy[GSShape]):
 
 	def append(self, shape):
 		if not isinstance(shape, (GSPath, GSComponent)):
-			raise TypeError("only GSShape objects are accepted, not %s" % type(shape).__name__)
+			raise TypeError(f"Only GSShape objects are accepted, not {type(shape).__name__}")
 		self._owner.addShape_(shape)
 
 	def extend(self, shapes):
@@ -4355,7 +4355,7 @@ class LayerShapesProxy(ListProxy[GSShape]):
 	def insert(self, idx, shape):
 		idx = _validate_idx(cast(Sequence, self), idx, offset=1)
 		if not isinstance(shape, (GSPath, GSComponent)):
-			raise TypeError("only GSShape objects are accepted, not %s" % type(shape).__name__)
+			raise TypeError(f"Only GSShape objects are accepted, not {type(shape).__name__}")
 		self._owner.insertObject_inShapesAtIndex_(shape, idx)
 
 	def values(self):
@@ -4372,7 +4372,7 @@ class LayerSelectionProxy(ListProxy[GSElement]):
 
 	def getByIndex(self, idx: int) -> GSElement:
 		if self._owner.countOfSelection() == 0:
-			raise IndexError("Nothing selected (%d)" % idx)
+			raise IndexError(f"Nothing selected ({idx})")
 		return self._owner.pyobjc_instanceMethods.selection().objectAtIndex_(idx)
 
 	def setByIndex(self, idx: int, value: Any) -> None:
@@ -4422,7 +4422,7 @@ class PathNodesProxy(ListProxy[GSNode]):
 			idx = _validate_idx(cast(Sequence, self), idx)
 		node = self._owner.nodeAtIndex_(idx)
 		if node is None:
-			IndexError("list index %s out of range %s" % (idx, self.__len__()))
+			IndexError(f"List index {idx} out of range {self.__len__()}")
 		return node
 
 	def setByIndex(self, idx: int, node: GSNode):
@@ -4453,7 +4453,7 @@ class PathNodesProxy(ListProxy[GSNode]):
 	def index(self, node):
 		idx = self._owner.indexOfNode_(node)
 		if idx > 100000:
-			raise ValueError("%s is not in list" % node)
+			raise ValueError(f"{node} is not in list")
 		return idx
 
 	def __iter__(self):
@@ -4516,7 +4516,7 @@ class GradientColorsProxy(ListProxy[GSColorStop]):
 			idx = _validate_idx(cast(Sequence, self), idx, offset=1)
 			self._owner.insertObject_inColorsAtIndex_(color, idx)
 		else:
-			raise TypeError("list indices must be integers, not %s" % type(idx).__name__)
+			raise TypeError(f"List indices must be integers, not {type(idx).__name__}")
 
 	def __len__(self) -> int:
 		return self._owner.countOfColors()
@@ -4536,7 +4536,7 @@ class FontTabsProxy(ListProxy[GSEditViewController]):
 				idx = _validate_idx(cast(Sequence, self), idx)
 				return self._owner.parent.windowController().tabBarControl().tabItemAtIndex_(idx + 1)
 			else:
-				raise TypeError("list indices must be integers or slices, not %s" % type(idx).__name__)
+				raise TypeError(f"List indices must be integers or slices, not {type(idx).__name__}")
 		else:
 			raise Exception("The font is not connected to a document object")
 
@@ -4544,7 +4544,7 @@ class FontTabsProxy(ListProxy[GSEditViewController]):
 		if isinstance(idx, int):
 			raise (NotImplementedError)  # TODO
 		else:
-			raise TypeError("list indices must be integers, not %s" % type(idx).__name__)
+			raise TypeError(f"List indices must be integers, not {type(idx).__name__}")
 
 	def insertAtIndex(self, idx: int, tab: GSEditViewController) -> None:
 		self._owner.parent.windowController().tabBarControl().insertTabItem_atIndex_(tab, idx)
@@ -4702,7 +4702,7 @@ def __GSFont__new__(typ, *args, **kwargs):
 			Doc = GSDocument.alloc().initWithContentsOfURL_ofType_error_(URL, typeName, None)
 			if Doc is not None:
 				return Doc[0].font
-		raise Exception("Unable to open font: %s", path)
+		raise Exception(f"Unable to open font: {path}")
 	return GSFont.alloc().init()
 
 
@@ -4716,10 +4716,7 @@ GSFont.__init__ = python_method(__GSFont__init__)  # type: ignore
 
 
 def __GSFont__str__(self: GSFont) -> str:
-	return "<GSFont \"%s\" v%s.%s with %s masters and %s instances>" % (
-		self.familyName, self.versionMajor, self.versionMinor,
-		len(self.masters), len(self.instances)  # type: ignore
-	)
+	return f'<GSFont "{self.familyName}" v{self.versionMajor}.{self.versionMinor} with {len(self.masters)} masters and {len(self.instances)} instances>'
 GSFont.__str__ = python_method(__GSFont__str__)  # type: ignore
 
 
@@ -5372,7 +5369,7 @@ def __GSFont_set_date__(self, date):
 	elif isinstance(date, NSDate):
 		self.setDate_(date)
 	else:
-		raise TypeError("date must be a datetime object, NSDate object, int or float, not %s" % type(date).__name__)
+		raise TypeError(f"date must be a datetime object, NSDate object, int or float, not {type(date).__name__}")
 
 
 GSFont.date = property(
@@ -5701,7 +5698,7 @@ def __GSFont_getSelectedGlyphs__(self):
 
 def __GSFont_setSelectedGlyphs__(self, value):
 	if not isinstance(value, (list, tuple, NSArray)):
-		raise TypeError('Argument needs to be a list, not %s' % type(value).__name__)
+		raise TypeError(f'Argument needs to be a list, not {type(value).__name__}')
 	try:
 		self.parent.windowController().glyphsController().setSelectedObjects_(value)
 	except:
@@ -5891,7 +5888,7 @@ def __GSFont_setTool__(self, toolName):
 	if toolClass:
 		self.parent.windowController().setToolForClass_(toolClass)
 	else:
-		sys.stderr.write('No tool found by the name "%s"' % (toolName))
+		sys.stderr.write(f'No tool found by the name "{toolName}"')
 
 
 GSFont.tool = property(
@@ -6156,13 +6153,13 @@ def __GSFont_setKerningForPair__(self, FontMasterID: str, LeftKerningId: str, Ri
 		if glyph is not None:
 			LeftKerningId = glyph.id
 		else:
-			raise KeyError("Glyphs with name: %s not found" % LeftKerningId)
+			raise KeyError(f"Glyphs with name: {LeftKerningId} not found")
 	if not RightKerningId[0] == '@':
 		glyph = self.glyphs[RightKerningId]
 		if glyph is not None:
 			RightKerningId = glyph.id
 		else:
-			raise KeyError("Glyphs with name: %s not found" % RightKerningId)
+			raise KeyError(f"Glyphs with name: {RightKerningId} not found")
 	self.setKerningForFontMasterID_leftKey_rightKey_value_direction_(FontMasterID, LeftKerningId, RightKerningId, Value, direction)
 
 
@@ -6196,13 +6193,13 @@ def removeKerningForPair(self, fontMasterID: str, leftKerningId: str, rightKerni
 		if glyph is not None:
 			leftKerningId = glyph.id
 		else:
-			raise KeyError("Glyphs with name: %s not found" % leftKerningId)
+			raise KeyError(f"Glyphs with name: {leftKerningId} not found")
 	if not rightKerningId[0] == '@':
 		glyph = self.glyphs[rightKerningId]
 		if glyph is not None:
 			rightKerningId = glyph.id
 		else:
-			raise KeyError("Glyphs with name: %s not found" % rightKerningId)
+			raise KeyError(f"Glyphs with name: {rightKerningId} not found")
 	self.removeKerningForFontMasterID_leftKey_rightKey_direction_(fontMasterID, leftKerningId, rightKerningId, direction)
 
 
@@ -6542,7 +6539,7 @@ GSFontMaster.__init__ = python_method(__empty__init__)
 
 
 def __GSFontMaster__str__(self):
-	return "<GSFontMaster \"%s\" %s (%s)>" % (self.name, str(self.axes).replace("\n", "").replace("\t", ""), self.id)
+	return '<GSFontMaster "{}" {} ({})>'.format(self.name, str(self.axes).replace("\n", "").replace("\t", ""), self.id)
 
 
 GSFontMaster.__str__ = python_method(__GSFontMaster__str__)
@@ -7033,7 +7030,7 @@ GSAlignmentZone.__init__ = python_method(__GSAlignmentZone__init__)
 
 
 def __GSAlignmentZone__str__(self):
-	return "<GSAlignmentZone pos %s size %s>" % (self.position, self.size)
+	return f"<GSAlignmentZone pos {self.position} size {self.size}>"
 
 
 GSAlignmentZone.__str__ = python_method(__GSAlignmentZone__str__)
@@ -7258,7 +7255,7 @@ add_type(GSInstance, "type", int)
 
 def __GSInstance_setValueValidation__(self: GSInstance, key: str, value: Any, valuetype: type):
 	if not isinstance(value, valuetype):
-		raise TypeError("Type for {} should be {}, not {}".format(key, valuetype.__name__, type(value).__name__))
+		raise TypeError(f"Type for {key} should be {valuetype.__name__}, not {type(value).__name__}")
 	self.setValue_forKey_(value, key)
 
 
@@ -8224,7 +8221,7 @@ class _ExporterDelegate_(NSObject):
 	):
 		if isinstance(error, NSError):
 			string = error.localizedDescription()  # type: ignore
-			string = "Error in instance: %s: %s " % (title, string)
+			string = f"Error in instance: {title}: {string} "
 			if error.localizedRecoverySuggestion() and error.localizedRecoverySuggestion().length() > 0:  # type: ignore
 				string += error.localizedRecoverySuggestion()  # type: ignore
 			error = string
@@ -8249,7 +8246,7 @@ def __GSInstance_Export__(
 		format = TT
 
 	if format not in [CFF, TT, UFO]:
-		raise KeyError('The font format is not supported: %s (only \'OTF\' and \'TTF\')' % format)
+		raise KeyError(f'The font format is not supported: {format} (only \'OTF\' and \'TTF\')')
 
 	if self.type == INSTANCETYPEVARIABLE and format == UFO:
 		raise KeyError('Variable instances can only be exported as TTF')
@@ -8264,7 +8261,7 @@ def __GSInstance_Export__(
 			if container in [PLAIN, WOFF, WOFF2]:
 				containerList.append(container.lower())
 			else:
-				raise KeyError('The container format is not supported: %s (only \'WOFF\' \'WOFF2\' \'plain\')' % container)
+				raise KeyError(f"The container format is not supported: {container} (only 'WOFF' 'WOFF2' 'plain')")
 
 	if not containerList:
 		containerList = [PLAIN]
@@ -8330,7 +8327,7 @@ def __GSFont_Export__(
 	decomposeSmartStuff: bool = True
 ):
 	if format not in [OTF, WOFF, WOFF2, TTF, VARIABLE, UFO]:
-		raise KeyError('The font format is not supported: %s (only \'OTF\' and \'TTF\')' % format)
+		raise KeyError(f"The font format is not supported: {format} (only 'OTF' and 'TTF')")
 
 	if fontPath is None:
 		fontPath = Glyphs.defaults["OTFExportPath"]
@@ -8495,7 +8492,7 @@ GSCustomParameter.__init__ = python_method(__GSCustomParameter__init__)
 
 
 def __GSCustomParameter__str__(self):
-	return "<GSCustomParameter %s: %s>" % (self.name, self.value)
+	return f"<GSCustomParameter {self.name}: {self.value}>"
 
 
 GSCustomParameter.__str__ = python_method(__GSCustomParameter__str__)
@@ -8566,12 +8563,12 @@ def __GSCustomParameter_registerCustomType__(
 		assert dialogUIClass is None, "listUIClass and dialogUIClass can’t be set at the same time"
 		if isinstance(listUIClass, str):
 			listUIClass = objc.lookUpClass(listUIClass)
-		assert issubclass(cast(type, listUIClass), GSParameterValueViewController), "wrong class, got: %s" % type(listUIClass)
+		assert issubclass(cast(type, listUIClass), GSParameterValueViewController), f"wrong class, got: {type(listUIClass)}"
 		GSCustomParameterValueViewController.addClass_forParameter_(listUIClass, parameterName)
 	elif dialogUIClass:
 		if isinstance(dialogUIClass, str):
 			dialogUIClass = objc.lookUpClass(dialogUIClass)
-		assert issubclass(cast(type, dialogUIClass), GSPropertyDialogController), "wrong class, got: %s" % type(dialogUIClass)
+		assert issubclass(cast(type, dialogUIClass), GSPropertyDialogController), f"wrong class, got: {type(dialogUIClass)}"
 		GSCustomParameterValueViewController.addSheetController_forParameter_(dialogUIClass, parameterName)
 
 	if description:
@@ -8631,7 +8628,7 @@ GSClass.__init__ = python_method(__GSClass__init__)
 
 
 def __GSClass__str__(self):
-	return "<GSClass \"%s\">" % (self.name)
+	return f'<GSClass "{self.name}">'
 
 
 GSClass.__str__ = python_method(__GSClass__str__)
@@ -8753,7 +8750,7 @@ GSFeaturePrefix.__init__ = python_method(__GSClass__init__)
 
 
 def __GSFeaturePrefix__str__(self):
-	return "<GSFeaturePrefix \"%s\">" % (self.name)
+	return f'<GSFeaturePrefix "{self.name}">'
 
 
 GSFeaturePrefix.__str__ = python_method(__GSFeaturePrefix__str__)
@@ -8890,7 +8887,7 @@ GSFeature.__init__ = python_method(__GSFeature__init__)
 
 
 def __GSFeature__str__(self):
-	return "<GSFeature \"%s\">" % (self.name)
+	return f'<GSFeature "{self.name}">'
 
 
 GSFeature.__str__ = python_method(__GSFeature__str__)
@@ -9170,7 +9167,7 @@ GSGlyph.__init__ = python_method(__GSGlyph__init__)
 
 
 def __GSGlyph__str__(self):
-	return "<GSGlyph \"%s\" with %s layers>" % (self.name, len(self.layers))
+	return f'<GSGlyph "{self.name}" with {len(self.layers)} layers>'
 
 
 GSGlyph.__str__ = python_method(__GSGlyph__str__)
@@ -9271,7 +9268,7 @@ def GSGlyph_setName(self, name):
 	elif (self.parent and name not in self.parent.glyphs) or not self.parent:
 		self.setName_changeName_update_validate_(name, False, True, True)
 	else:
-		raise NameError('The glyph name \"%s\" already exists in the font.' % name)
+		raise NameError(f'The glyph name "{name}" already exists in the font.')
 
 
 GSGlyph.name = property(
@@ -9615,15 +9612,15 @@ def __GSGlyph_glyphDataEntryString__(self) -> str:
 		Unicode = ""
 	Decompose = self.layers[0].componentNamesText()
 	if Decompose is not None and len(Decompose) > 0:
-		Decompose = 'decompose="%s" ' % Decompose
+		Decompose = f'decompose="{Decompose}" '
 	else:
 		Decompose = ""
 	SubCategory = ""
 	if self.subCategory != "Other":
-		SubCategory = 'subCategory="%s" ' % self.subCategory
+		SubCategory = f'subCategory="{self.subCategory}" '
 	Anchors = self.layers[0].anchors.keys()
 	if Anchors is not None and len(Anchors) > 0:
-		Anchors = 'anchors="%s" ' % ", ".join(sorted(Anchors))
+		Anchors = f'anchors="{", ".join(sorted(Anchors))}" '
 	else:
 		Anchors = ""
 	GlyphInfo = self.glyphInfo
@@ -9631,7 +9628,7 @@ def __GSGlyph_glyphDataEntryString__(self) -> str:
 	if GlyphInfo is not None:
 		Accents = GlyphInfo.accents
 	if Accents is not None and len(Accents) > 0:
-		Accents = 'accents="%s" ' % ", ".join(sorted(Accents))
+		Accents = f'accents="{", ".join(sorted(Accents))}" '
 	else:
 		Accents = ""
 	Production = ""
@@ -9640,13 +9637,12 @@ def __GSGlyph_glyphDataEntryString__(self) -> str:
 	else:
 		Production = Glyphs.productionGlyphName(self.name)
 	if len(Production) > 0:
-		Production = 'production="%s" ' % Production
+		Production = f'production="{Production}" '
 	else:
 		Production = ""
 	if self.note is not None and len(self.note) > 0:
-		Production += ' altNames="%s" ' % self.note
-	return '	<glyph unicode="%s" name="%s" %scategory="%s" %sscript="%s" description="" %s%s%s/>' % (
-		Unicode, self.name, Decompose, self.category, SubCategory, self.script, Production, Anchors, Accents)
+		Production += f' altNames="{self.note}" '
+	return f'	<glyph unicode="{Unicode}" name="{self.name}" {Decompose}category="{self.category}" {SubCategory}script="{self.script}" description="" {Production}{Anchors}{Accents}/>'
 
 
 GSGlyph.glyphDataEntryString = python_method(__GSGlyph_glyphDataEntryString__)
@@ -11385,8 +11381,8 @@ def __GSControlLayer__str__(self):
 	elif char == 129:
 		name = "placeholder"
 	else:
-		name = GSGlyphsInfo.sharedManager().niceGlyphNameForName_("uni%.4X" % self.parent.unicodeChar())
-	return "<%s \"%s\">" % (self.className(), name)
+		name = GSGlyphsInfo.sharedManager().niceGlyphNameForName_(f"uni{self.parent.unicodeChar():04X}")
+	return f'<{self.className()} "{name}">'
 
 
 GSControlLayer.__str__ = python_method(__GSControlLayer__str__)
@@ -11471,7 +11467,7 @@ def __GSLayer__add__(self, summand: NSPoint | tuple | GSLayer):
 	elif isinstance(summand, GSLayer):
 		otherLayer: GSLayer = cast(GSLayer, summand)
 		if self.compareString() != otherLayer.compareString():
-			raise ValueError("Layers are not compatible: %s, %s" % (self.compareString(), otherLayer.compareString()))
+			raise ValueError(f"Layers are not compatible: {self.compareString()}, {otherLayer.compareString()}")
 		newLayer = self.copy()
 		newShapes = NSMutableArray.new()
 		for idx in range(len(otherLayer.shapes)):
@@ -11493,7 +11489,7 @@ def __GSLayer__add__(self, summand: NSPoint | tuple | GSLayer):
 		newLayer.width += otherLayer.width
 		return newLayer
 	else:
-		raise TypeError("unsupported operand type(s) for +: '%s' and '%s'" % (type(self).__name__, type(summand).__name__))
+		raise TypeError(f"Unsupported operand type(s) for +: '{type(self).__name__}' and '{type(summand).__name__}'")
 
 
 GSLayer.__add__ = python_method(__GSLayer__add__)
@@ -11507,7 +11503,7 @@ def __GSLayer__i_add__(self, summand: NSPoint | tuple | GSLayer):
 	elif isinstance(summand, GSLayer):
 		otherLayer: GSLayer = cast(GSLayer, summand)
 		if self.compareString() != otherLayer.compareString():
-			raise ValueError("Layers are not compatible: %s, %s" % (self.compareString(), otherLayer.compareString()))
+			raise ValueError(f"Layers are not compatible: {self.compareString()}, {otherLayer.compareString()}")
 		for idx in range(len(otherLayer.shapes)):
 			shape1 = self.shapes[idx]
 			shape2 = otherLayer.shapes[idx]
@@ -11522,7 +11518,7 @@ def __GSLayer__i_add__(self, summand: NSPoint | tuple | GSLayer):
 		self.width += otherLayer.width
 		return self
 	else:
-		raise TypeError("unsupported operand type(s) for +: '%s' and '%s'" % (type(self).__name__, type(summand).__name__))
+		raise TypeError(f"Unsupported operand type(s) for +: '{type(self).__name__}' and '{type(summand).__name__}'")
 
 
 GSLayer.__iadd__ = python_method(__GSLayer__add__)
@@ -11537,7 +11533,7 @@ def __GSLayer__sub__(self, summand: NSPoint | tuple | GSLayer):
 	elif isinstance(summand, GSLayer):
 		otherLayer: GSLayer = cast(GSLayer, summand)
 		if self.compareString() != otherLayer.compareString():
-			raise ValueError("Layers are not compatible: %s, %s" % (self.compareString(), otherLayer.compareString()))
+			raise ValueError(f"Layers are not compatible: {self.compareString()}, {otherLayer.compareString()}")
 		newLayer = self.copy()
 		newShapes = NSMutableArray.new()
 		for idx in range(len(otherLayer.shapes)):
@@ -11559,7 +11555,7 @@ def __GSLayer__sub__(self, summand: NSPoint | tuple | GSLayer):
 		newLayer.width += otherLayer.width
 		return newLayer
 	else:
-		raise TypeError("unsupported operand type(s) for +: '%s' and '%s'" % (type(self).__name__, type(summand).__name__))
+		raise TypeError(f"Unsupported operand type(s) for +: '{type(self).__name__}' and '{type(summand).__name__}'")
 
 
 GSLayer.__sub__ = python_method(__GSLayer__add__)
@@ -11573,7 +11569,7 @@ def __GSLayer__iadd__(self, summand: NSPoint | tuple | GSLayer):
 	elif isinstance(summand, GSLayer):
 		otherLayer: GSLayer = cast(GSLayer, summand)
 		if self.compareString() != otherLayer.compareString():
-			raise ValueError("Layers are not compatible: %s, %s" % (self.compareString(), otherLayer.compareString()))
+			raise ValueError(f"Layers are not compatible: {self.compareString()}, {otherLayer.compareString()}")
 		for idx in range(len(otherLayer.shapes)):
 			shape1 = self.shapes[idx]
 			shape2 = otherLayer.shapes[idx]
@@ -11588,7 +11584,7 @@ def __GSLayer__iadd__(self, summand: NSPoint | tuple | GSLayer):
 		self.width += otherLayer.width
 		return self
 	else:
-		raise TypeError("unsupported operand type(s) for +: '%s' and '%s'" % (type(self).__name__, type(summand).__name__))
+		raise TypeError(f"Unsupported operand type(s) for +: '{type(self).__name__}' and '{type(summand).__name__}'")
 
 
 GSLayer.__iadd__ = python_method(__GSLayer__iadd__)
@@ -11603,7 +11599,7 @@ def __GSLayer__mul__(self, factor: float):
 		newLayer.transform_checkForSelection_doComponents_(transform, False, True)
 		return newLayer
 	else:
-		raise TypeError("unsupported operand type(s) for *: '%s' and '%s'" % (type(self).__name__, type(factor).__name__))
+		raise TypeError(f"Unsupported operand type(s) for *: '{type(self).__name__}' and '{type(factor).__name__}'")
 
 
 GSLayer.__mul__ = python_method(__GSLayer__mul__)
@@ -11616,7 +11612,7 @@ def __GSLayer__imul__(self, factor: float):
 		self.transform_checkForSelection_doComponents_(transform, False, True)
 		return self
 	else:
-		raise TypeError("unsupported operand type(s) for *: '%s' and '%s'" % (type(self).__name__, type(factor).__name__))
+		raise TypeError(f"Unsupported operand type(s) for *: '{type(self).__name__}' and '{type(factor).__name__}'")
 
 
 GSLayer.__imul__ = python_method(__GSLayer__mul__)
@@ -11638,7 +11634,7 @@ def __GSPath__add__(self, summand: NSPoint | tuple | GSLayer):
 	elif isinstance(summand, GSPath):
 		otherPath: GSPath = cast(GSPath, summand)
 		if len(self.nodes) != len(otherPath.nodes) or self.closed != otherPath.closed:
-			raise ValueError("Paths are not compatible: %s, %s" % (len(self.nodes), len(otherPath.nodes)))
+			raise ValueError(f"Paths are not compatible: {len(self.nodes)}, {len(otherPath.nodes)}")
 		newPath = self.copy()
 		newNodes = NSMutableArray.new()
 		for idx in range(len(otherPath.nodes)):
@@ -11649,7 +11645,7 @@ def __GSPath__add__(self, summand: NSPoint | tuple | GSLayer):
 		newPath.nodes = newNodes
 		return newPath
 	else:
-		raise TypeError("unsupported operand type(s) for +: '%s' and '%s'" % (type(self).__name__, type(summand).__name__))
+		raise TypeError(f"Unsupported operand type(s) for +: '{type(self).__name__}' and '{type(summand).__name__}'")
 
 
 GSPath.__add__ = python_method(__GSPath__add__)
@@ -11666,13 +11662,13 @@ def __GSPath__i_add__(self, summand: NSPoint | tuple | GSLayer):
 		self.transform_(transform)
 	elif isinstance(summand, GSPath):
 		if len(self.nodes) != len(summand.nodes) or self.closed != summand.closed:
-			raise ValueError("Paths are not compatible: %s, %s" % (len(self.nodes), len(summand.nodes)))
+			raise ValueError(f"Paths are not compatible: {len(self.nodes)}, {len(summand.nodes)}")
 		for idx in range(len(summand.nodes)):
 			node1 = self.nodes[idx]
 			node2 = summand.nodes[idx]
 			node1 += node2
 	else:
-		raise TypeError("unsupported operand type(s) for +: '%s' and '%s'" % (type(self).__name__, type(summand).__name__))
+		raise TypeError(f"Unsupported operand type(s) for +: '{type(self).__name__}' and '{type(summand).__name__}'")
 	return self
 
 
@@ -11686,12 +11682,12 @@ def __GSNode__add__(self, summand):
 		return newNode
 	elif isinstance(summand, GSNode):
 		if self.type != summand.type:
-			raise ValueError("Nodes are not compatible: %s, %s" % (self.type, summand.type))
+			raise ValueError(f"Nodes are not compatible: {self.type}, {summand.type}")
 		newNode = self.copy()
 		newNode.position = addPoints(newNode.position, summand.position)
 		return newNode
 	else:
-		raise TypeError("unsupported operand type(s) for +: '%s' and '%s'" % (type(self).__name__, type(summand).__name__))
+		raise TypeError(f"Unsupported operand type(s) for +: '{type(self).__name__}' and '{type(summand).__name__}'")
 
 
 GSNode.__add__ = python_method(__GSNode__add__)
@@ -11702,10 +11698,10 @@ def __GSNode__i_add__(self, summand):
 		self.position = addPoints(self.position, summand)
 	elif isinstance(summand, GSNode):
 		if self.type != summand.type:
-			raise ValueError("Nodes are not compatible: %s, %s" % (self.type, summand.type))
+			raise ValueError(f"Nodes are not compatible: {self.type}, {summand.type}")
 		self.position = addPoints(self.position, summand.position)
 	else:
-		raise TypeError("unsupported operand type(s) for +: '%s' and '%s'" % (type(self).__name__, type(summand).__name__))
+		raise TypeError(f"Unsupported operand type(s) for +: '{type(self).__name__}' and '{type(summand).__name__}'")
 	return self
 
 
@@ -11719,14 +11715,14 @@ def __GSComponent__add__(self, summand):
 		return newComponent
 	elif isinstance(summand, GSComponent):
 		if self.component != summand.component:
-			raise ValueError("Components are not compatible: %s, %s" % (self, summand))
+			raise ValueError(f"Components are not compatible: {self}, {summand}")
 		newComponent = self.copy()
 		newComponent.position = addPoints(newComponent.position, summand.position)
 		newComponent.scale = addPoints(newComponent.scale, summand.scale)
 		newComponent.rotation = newComponent.rotation + summand.rotation
 		return newComponent
 	else:
-		raise TypeError("unsupported operand type(s) for +: '%s' and '%s'" % (type(self).__name__, type(summand).__name__))
+		raise TypeError(f"Unsupported operand type(s) for +: '{type(self).__name__}' and '{type(summand).__name__}'")
 
 
 GSComponent.__add__ = python_method(__GSComponent__add__)
@@ -11737,12 +11733,12 @@ def __GSComponent__i_add__(self, summand):
 		self.position = addPoints(self.position, summand)
 	elif isinstance(summand, GSComponent):
 		if self.component != summand.component:
-			raise ValueError("Components are not compatible: %s, %s" % (self, summand))
+			raise ValueError(f"Components are not compatible: {self}, {summand}")
 		self.position = addPoints(self.position, summand.position)
 		self.scale = addPoints(self.scale, summand.scale)
 		self.rotation = self.rotation + summand.rotation
 	else:
-		raise TypeError("unsupported operand type(s) for +: '%s' and '%s'" % (type(self).__name__, type(summand).__name__))
+		raise TypeError(f"Unsupported operand type(s) for +: '{type(self).__name__}' and '{type(summand).__name__}'")
 	return self
 
 
@@ -11756,12 +11752,12 @@ def __GSAnchor__add__(self, summand):
 		return newAnchor
 	elif isinstance(summand, GSAnchor):
 		if self.name != summand.name:
-			raise ValueError("Anchors are not compatible: %s, %s" % (self, summand))
+			raise ValueError(f"Anchors are not compatible: {self}, {summand}")
 		newAnchor = self.copy()
 		newAnchor.position = addPoints(newAnchor.position, summand.position)
 		return newAnchor
 	else:
-		raise TypeError("unsupported operand type(s) for +: '%s' and '%s'" % (type(self).__name__, type(summand).__name__))
+		raise TypeError(f"unsupported operand type(s) for +: '{type(self).__name__}' and '{type(summand).__name__}'")
 
 
 GSAnchor.__add__ = python_method(__GSAnchor__add__)
@@ -11772,10 +11768,10 @@ def __GSAnchor__i_add__(self, summand):
 		self.position = addPoints(self.position, summand)
 	elif isinstance(summand, GSAnchor):
 		if self.name != summand.name:
-			raise ValueError("Anchors are not compatible: %s, %s" % (self, summand))
+			raise ValueError(f"Anchors are not compatible: {self}, {summand}")
 		self.position = addPoints(self.position, summand.position)
 	else:
-		raise TypeError("unsupported operand type(s) for +: '%s' and '%s'" % (type(self).__name__, type(summand).__name__))
+		raise TypeError(f"Unsupported operand type(s) for +: '{type(self).__name__}' and '{type(summand).__name__}'")
 	return self
 
 
@@ -11840,7 +11836,7 @@ GSAnchor.__new__ = staticmethod(__GSObject__new__)
 
 
 def __GSAnchor__str__(self):
-	return "<GSAnchor \"%s\" x=%s y=%s>" % (self.name, self.position.x, self.position.y)
+	return f'<GSAnchor "{self.name}" x={self.position.x} y={self.position.y}>'
 
 
 GSAnchor.__str__ = python_method(__GSAnchor__str__)
@@ -12055,7 +12051,7 @@ GSComponent.__new__ = staticmethod(__GSObject__new__)
 
 
 def __GSComponent__str__(self):
-	return "<GSComponent \"%s\" x=%s y=%s>" % (self.componentName, self.position.x, self.position.y)
+	return f'<GSComponent "{self.componentName}" x={self.position.x} y={self.position.y}>'
 
 
 GSComponent.__str__ = python_method(__GSComponent__str__)
@@ -12604,7 +12600,7 @@ GSSmartComponentAxis.__init__ = python_method(__empty__init__)
 
 
 def __GSSmartComponentProperty__str__(self):
-	return "<GSSmartComponentAxis \"%s\">" % (self.name)
+	return f'<GSSmartComponentAxis "{self.name}">'
 
 
 GSSmartComponentAxis.__str__ = python_method(__GSSmartComponentProperty__str__)
@@ -12768,7 +12764,7 @@ GSPath.__init__ = python_method(__empty__init__)
 
 
 def __GSPath__str__(self):
-	return "<GSPath %s nodes>" % len(self.nodes)
+	return f"<GSPath {len(self.nodes)} nodes>"
 
 
 GSPath.__str__ = python_method(__GSPath__str__)
@@ -13626,7 +13622,7 @@ GSGuide.__new__ = staticmethod(__GSObject__new__)
 
 
 def __GSGuide__str__(self):
-	return "<GSGuide x=%s y=%s angle=%s>" % (self.position.x, self.position.y, self.angle)
+	return f"<GSGuide x={self.position.x} y={self.position.y} angle={self.angle}>"
 
 
 GSGuide.__str__ = python_method(__GSGuide__str__)
@@ -13817,7 +13813,7 @@ def __GSAnnotation__str__(self):
 		TypeName = "Plus"
 	elif (self.type == MINUS):
 		TypeName = "Minus"
-	return "<%s %s x=%s y=%s>" % (self.className(), TypeName, self.position.x, self.position.y)
+	return f"<{self.className()} {TypeName} x={self.position.x} y={self.position.y}>"
 
 
 GSAnnotation.__str__ = python_method(__GSAnnotation__str__)
@@ -14338,7 +14334,7 @@ GSBackgroundImage.__new__ = staticmethod(__GSObject__new__)
 
 
 def __GSBackgroundImage__str__(self):
-	return "<GSBackgroundImage '%s'>" % self.path
+	return f"<GSBackgroundImage '{self.path}'>"
 
 
 GSBackgroundImage.__str__ = python_method(__GSBackgroundImage__str__)
@@ -15127,7 +15123,7 @@ class TabSelectedFeaturesProxy(ListProxy[GSFeature]):
 				_hasFeature = True
 
 		if not _hasFeature:
-			LogError('Info: Feature "%s" not in font.\n' % (feature))
+			LogError(f'Info: Feature "{feature}" not in font.\n')
 		return _hasFeature
 
 	def append(self, feature):
@@ -15328,7 +15324,7 @@ GSGlyphInfo.__init__ = python_method(__empty__init__)
 
 
 def __GSGlyphInfo__str__(self):
-	return "<GSGlyphInfo '%s'>" % self.name
+	return f"<GSGlyphInfo '{self.name}'>"
 
 
 GSGlyphInfo.__str__ = python_method(__GSGlyphInfo__str__)
@@ -16269,7 +16265,7 @@ def __FTPointArray__getitem__(self, key):
 		for idx in range(start, stop, step):
 			result.append(self.pointAtIndex_(idx))
 		return result
-	raise IndexError("list index out of range")
+	raise IndexError("List index out of range")
 
 
 FTPointArray.__getitem__ = python_method(__FTPointArray__getitem__)
@@ -16278,7 +16274,7 @@ FTPointArray.__getitem__ = python_method(__FTPointArray__getitem__)
 def __FTPointArray__setitem__(self, point, idx):
 	if idx <= self.count():
 		return self.setPoint_atIndex_(point, idx)
-	raise IndexError("list index out of range")
+	raise IndexError("List index out of range")
 
 
 FTPointArray.__setitem__ = python_method(__FTPointArray__getitem__)
@@ -16287,7 +16283,7 @@ FTPointArray.__setitem__ = python_method(__FTPointArray__getitem__)
 def __FTPointArray__insert__(self, idx, point):
 	if idx <= self.count():
 		return self.insertPoint_atIndex_(point, idx)
-	raise IndexError("list index out of range")
+	raise IndexError("List index out of range")
 
 
 FTPointArray.insert = python_method(__FTPointArray__insert__)
@@ -16605,7 +16601,7 @@ def __Dict_removeObjectForKey__(self, key):
 		if key < 0:
 			key += len(self)
 			if key < 0:
-				raise IndexError("list index out of range")
+				raise IndexError("List index out of range")
 		self.removeObjectAtIndex_(key)
 		return
 	self.removeObjectForKey_(key)
@@ -16632,7 +16628,7 @@ GSNotifyingDictionary.__getitem__ = python_method(__Dict_getitem__)
 # 		if key < 0:
 # 			key += len(self)
 # 			if key < 0:
-# 				raise IndexError("list index out of range")
+# 				raise IndexError("List index out of range")
 # 		self.objectAtIndex_(key)
 # 		return
 # 	self.objectForKey_(key)
@@ -16820,11 +16816,11 @@ def LogToConsole(message, title=None):
 	if not title:
 		title = "<>"
 		try:
-			title = f.f_code.co_name + " (line %d)" % f.f_lineno
+			title = f.f_code.co_name + f" (line {f.f_lineno})"
 		except:
 			pass
 
-	myLog = "Log message from \"%s\":\n%s" % (title, message)
+	myLog = f'Log message from "{title}":\n{message}'
 	NSLog(myLog)
 
 
