@@ -2499,7 +2499,7 @@ def __GSApp_localize__(self: GSApplication, localization: str | dict[str, str]) 
 		if english_translation is not None:
 			return english_translation
 		if localization:  # If dict is not empty
-			return list(localization.values())[0]
+			return next(iter(localization.values()))
 		return ""  # Should not happen if localization is dict and not empty
 	return str(localization)  # Fallback if not str or dict (though types say it is)
 
