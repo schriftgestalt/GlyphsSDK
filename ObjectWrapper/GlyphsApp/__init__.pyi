@@ -18,7 +18,6 @@ from typing import (
 	MutableMapping,
 	NamedTuple,
 	Self,
-	Type,
 	TypeVar,
 	deprecated,
 	overload,
@@ -1131,8 +1130,8 @@ class GSCustomParameter(NSObject):
 		cls,
 		parameterName: str,
 		parameterType: str | None = None,
-		listUIClass: Type[GSParameterValueViewController] | str | None = None,
-		dialogUIClass: Type[GSPropertyDialogController] | str | None = None
+		listUIClass: type[GSParameterValueViewController] | str | None = None,
+		dialogUIClass: type[GSPropertyDialogController] | str | None = None
 	) -> None: ...
 
 

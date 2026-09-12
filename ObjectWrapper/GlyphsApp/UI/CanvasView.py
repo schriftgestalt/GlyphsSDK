@@ -1,7 +1,7 @@
 __all__ = ["CanvasView"]
 
 import traceback
-from typing import Any, Type, cast
+from typing import Any, cast
 
 from AppKit import NSColor, NSRectFill, NSView
 from vanilla import Group
@@ -67,7 +67,7 @@ class CanvasView(Group):
 	'''
 
 	version = "1.0"
-	nsViewClass: Type[NSView] = CanvasView_view
+	nsViewClass: type[NSView] = CanvasView_view
 
 	def __init__(self, posSize: tuple, delegate: Any, backgroundColor: NSColor | None = None):
 		self._setupView(self.nsViewClass, posSize)

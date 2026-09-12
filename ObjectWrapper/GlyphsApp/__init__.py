@@ -17,7 +17,6 @@ from typing import (
 	Iterator,
 	MutableMapping,
 	Sequence,
-	Type,
 	TypeVar,
 	cast,
 	overload,
@@ -155,7 +154,7 @@ if TYPE_CHECKING:
 		PreviewTextWindow,
 	)
 else:
-	GSFont: Type = objc.lookUpClass("GSFont")
+	GSFont: type = objc.lookUpClass("GSFont")
 	GSFontMaster = objc.lookUpClass("GSFontMaster")
 	GSAxis = objc.lookUpClass("GSAxis")
 	GSMetric = objc.lookUpClass("GSMetric")
@@ -170,7 +169,7 @@ else:
 	GSNode = objc.lookUpClass("GSNode")
 	GSPath = objc.lookUpClass("GSPath")
 	GSShapeClass = objc.lookUpClass("GSShape")
-	GSShape = cast(Type['GSShape'], GSShapeClass)
+	GSShape = cast(type['GSShape'], GSShapeClass)
 	GSAlignmentZone = objc.lookUpClass("GSAlignmentZone")
 	GSAnchor = objc.lookUpClass("GSAnchor")
 	GSAnnotation = objc.lookUpClass("GSAnnotation")
@@ -288,7 +287,7 @@ __all__ = [
 wrapperVersion: str = "4.0"
 
 
-def add_type(cls: Type[Any], name: str, typ: Any) -> None:
+def add_type(cls: type[Any], name: str, typ: Any) -> None:
 	if not hasattr(cls, '__annotations__'):
 		cls.__annotations__ = {}
 	cls.__annotations__[name] = typ
@@ -557,7 +556,7 @@ NSDictionary.__deepcopy__ = python_method(__GSObject__deepcopy__)  # type: ignor
 MGOrderedDictionary.__deepcopy__ = python_method(__GSObject__deepcopy__)  # type: ignore
 
 
-def __GSObject__new__(typ: Type[NSObject], *args: Any, **kwargs: Any) -> NSObject:
+def __GSObject__new__(typ: type[NSObject], *args: Any, **kwargs: Any) -> NSObject:
 	"""__new__(...)"""
 	return typ.alloc().init()
 
@@ -580,7 +579,7 @@ type OwnerType = GSFont | GSFontMaster | GSInstance
 class OrderedDictProxy(Generic[T], ABC):  # T is the type of items in the sequence/values in mapping
 
 	_owner: OwnerType
-	KEY_TYPE: Type = str
+	KEY_TYPE: type = str
 
 	def __init__(self, owner: OwnerType) -> None:
 		self._owner = owner
@@ -973,7 +972,7 @@ class DictProxy(Generic[T], ABC):
 	"""A proxy for dictionary-like objects where K is the key type and T is the value type."""
 
 	_owner: 'OwnerType'
-	KEY_TYPE: Type = str
+	KEY_TYPE: type = str
 
 	def __init__(self, owner: 'OwnerType') -> None:
 		self._owner = owner
@@ -1391,7 +1390,7 @@ add_type(GSApplication, "filters", list[Any])  # List of filter plugin instances
 
 		.. versionadded:: After 2.4.2
 '''
-STR_TYPES: tuple[Type[str], Type[objc.pyobjc_unicode]] = (str, objc.pyobjc_unicode)  # type: ignore
+STR_TYPES: tuple[type[str], type[objc.pyobjc_unicode]] = (str, objc.pyobjc_unicode)  # type: ignore
 
 def isString(string: Any) -> bool:
 	return isinstance(string, STR_TYPES)
@@ -1967,7 +1966,7 @@ add_type(GSApplication, "menu", AppMenuProxy)
 '''
 
 
-def __NSURL__new__(typ: Type[NSURL], *args: str, **kwargs: Any) -> NSURL:
+def __NSURL__new__(typ: type[NSURL], *args: str, **kwargs: Any) -> NSURL:
 	if len(args) > 0 and args[0] is not None:  # Assuming first arg is path if present
 		return typ.fileURLWithPath_(args[0])
 	return typ.new()
@@ -7260,7 +7259,7 @@ add_type(GSInstance, "type", int)
 '''
 
 
-def __GSInstance_setValueValidation__(self: GSInstance, key: str, value: Any, valuetype: Type):
+def __GSInstance_setValueValidation__(self: GSInstance, key: str, value: Any, valuetype: type):
 	if not isinstance(value, valuetype):
 		raise TypeError("Type for {} should be {}, not {}".format(key, valuetype.__name__, type(value).__name__))
 	self.setValue_forKey_(value, key)
@@ -8558,8 +8557,8 @@ def __GSCustomParameter_registerCustomType__(
 	cls,
 	parameterName: str,
 	parameterType: str | None = None,
-	listUIClass: Type[GSParameterValueViewController] | str | None = None,
-	dialogUIClass: Type[GSPropertyDialogController] | str | None = None,
+	listUIClass: type[GSParameterValueViewController] | str | None = None,
+	dialogUIClass: type[GSPropertyDialogController] | str | None = None,
 	description: str | None = None,
 ):
 	# print("__registerCustomType__", parameterName, parameterType, listUIClass, dialogUIClass, description)
@@ -8570,12 +8569,12 @@ def __GSCustomParameter_registerCustomType__(
 		assert dialogUIClass is None, "listUIClass and dialogUIClass can’t be set at the same time"
 		if isinstance(listUIClass, str):
 			listUIClass = objc.lookUpClass(listUIClass)
-		assert issubclass(cast(Type, listUIClass), GSParameterValueViewController), "wrong class, got: %s" % type(listUIClass)
+		assert issubclass(cast(type, listUIClass), GSParameterValueViewController), "wrong class, got: %s" % type(listUIClass)
 		GSCustomParameterValueViewController.addClass_forParameter_(listUIClass, parameterName)
 	elif dialogUIClass:
 		if isinstance(dialogUIClass, str):
 			dialogUIClass = objc.lookUpClass(dialogUIClass)
-		assert issubclass(cast(Type, dialogUIClass), GSPropertyDialogController), "wrong class, got: %s" % type(dialogUIClass)
+		assert issubclass(cast(type, dialogUIClass), GSPropertyDialogController), "wrong class, got: %s" % type(dialogUIClass)
 		GSCustomParameterValueViewController.addSheetController_forParameter_(dialogUIClass, parameterName)
 
 	if description:
@@ -11268,7 +11267,7 @@ GSLayer.endChanges = python_method(__GSLayer_EndChanges__)
 
 
 def __GSLayer_CutBetweenPoints__(self, point1: NSPoint, point2: NSPoint):
-	GlyphsToolKnifeCls: Type[GlyphsToolKnife] = NSClassFromString("GlyphsToolKnife")
+	GlyphsToolKnifeCls: type[GlyphsToolKnife] = NSClassFromString("GlyphsToolKnife")
 	GlyphsToolKnifeCls.cutPathsInLayer_forPoint_endPoint_(self, point1, point2)
 
 

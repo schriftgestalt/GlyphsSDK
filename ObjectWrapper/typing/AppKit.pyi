@@ -1,6 +1,6 @@
 # typings/AppKit.pyi
 
-from typing import Any, Mapping, Self, Type, overload
+from typing import Any, Mapping, Self, overload
 
 from Foundation import (
 	NSURL,
@@ -61,7 +61,7 @@ class NSEvent(NSObject):
 	def modifierFlags(self: "NSEvent") -> NSEventModifierFlags: ...  # type: ignore[override]
 	@classmethod
 	@overload
-	def modifierFlags(cls: Type["NSEvent"]) -> NSEventModifierFlags: ...
+	def modifierFlags(cls: type["NSEvent"]) -> NSEventModifierFlags: ...
 	def keyCode(self) -> int: ...
 	def clickCount(self) -> int: ...
 	def tabletPointingDeviceType(self) -> int: ...
