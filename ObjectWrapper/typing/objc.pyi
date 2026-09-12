@@ -1,5 +1,5 @@
 
-from typing import Any, Callable, Optional, ParamSpec, Tuple, TypeVar
+from typing import Any, Callable, ParamSpec, Tuple, TypeVar
 
 from AppKit import NSBundle, NSObject
 
@@ -21,8 +21,8 @@ class selector:
 	def __init__(
 		self,
 		func: Callable[..., Any],
-		selector: Optional[str] = None,
-		signature: Optional[bytes] = None,
+		selector: str | None = None,
+		signature: bytes | None = None,
 		isClassMethod: bool = False,
 	) -> None:
 		...

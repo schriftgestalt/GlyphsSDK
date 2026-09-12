@@ -20,12 +20,10 @@ from typing import (
 	Iterator,
 	List,
 	MutableMapping,
-	Optional,
 	Sequence,
 	Tuple,
 	Type,
 	TypeVar,
-	Union,
 	cast,
 	overload,
 )
@@ -548,7 +546,7 @@ def __empty__init__(self) -> None:
 	pass
 
 
-def __GSObject__copy__(self: NSObject, memo: Optional[Any] = None) -> Any:
+def __GSObject__copy__(self: NSObject, memo: Any | None = None) -> Any:
 	return self.copy()
 
 
@@ -556,7 +554,7 @@ NSObject.__copy__ = python_method(__GSObject__copy__)  # type: ignore
 NSObject.__deepcopy__ = python_method(__GSObject__copy__)  # type: ignore
 
 
-def __GSObject__deepcopy__(self: NSObject, memo: Optional[Any] = None) -> Any:  # Returns Self
+def __GSObject__deepcopy__(self: NSObject, memo: Any | None = None) -> Any:  # Returns Self
 	return self.deepMutableCopy()  # type: ignore
 
 NSArray.__deepcopy__ = python_method(__GSObject__deepcopy__)  # type: ignore
@@ -582,7 +580,7 @@ T = TypeVar('T')
 # K = TypeVar('K')  # Key type for mappings
 V = TypeVar('V')  # Value type for mappings (can be T for sequences)
 
-OwnerType = Union['GSFont', 'GSFontMaster', 'GSInstance']
+type OwnerType = GSFont | GSFontMaster | GSInstance
 
 class OrderedDictProxy(Generic[T], ABC):  # T is the type of items in the sequence/values in mapping
 
@@ -611,7 +609,7 @@ class OrderedDictProxy(Generic[T], ABC):  # T is the type of items in the sequen
 	@overload
 	def __getitem__(self, key: str) -> T: ...
 
-	def __getitem__(self, key: Union[int, str, slice]) -> Union[T, List[T]]:
+	def __getitem__(self, key: int | str | slice) -> T | List[T]:
 		if isinstance(key, int):
 			idx = _validate_idx(cast(Sequence, self), key)
 			return self.getByIndex(idx)
@@ -634,7 +632,7 @@ class OrderedDictProxy(Generic[T], ABC):  # T is the type of items in the sequen
 	@overload
 	def __setitem__(self, key: str, value: T) -> None: ...
 
-	def __setitem__(self, key: Union[int, str], value: T) -> None:
+	def __setitem__(self, key: int | str, value: T) -> None:
 		if isinstance(key, int):
 			idx = _validate_idx(cast(Sequence, self), key)
 			self.setByIndex(idx, value)
@@ -648,7 +646,7 @@ class OrderedDictProxy(Generic[T], ABC):  # T is the type of items in the sequen
 	@overload
 	def __delitem__(self, key: str) -> None: ...
 
-	def __delitem__(self, key: Union[int, str]) -> None:
+	def __delitem__(self, key: int | str) -> None:
 		if isinstance(key, int):
 			idx = _validate_idx(cast(Sequence, self), key)
 			self.removeByIndex(idx)
@@ -669,7 +667,7 @@ class OrderedDictProxy(Generic[T], ABC):  # T is the type of items in the sequen
 	@overload
 	def pop(self, key: str) -> T: ...
 
-	def pop(self, key: Union[int, str] = -1) -> T:
+	def pop(self, key: int | str = -1) -> T:
 		if isinstance(key, int):
 			idx = key if key != -1 else len(self) - 1
 			idx = _validate_idx(cast(Sequence, self), idx)
@@ -872,7 +870,7 @@ class ListProxy(Generic[T], ABC):  # T is the type of items in the sequence
 		else:
 			raise TypeError(f"list indices must be integers or slices, not {type(idx).__name__}")
 
-	def __delitem__(self, idx: Union[int, slice]) -> None:
+	def __delitem__(self, idx: int | slice) -> None:
 		if isinstance(idx, int):
 			idx = _validate_idx(cast(Sequence, self), idx)
 			self.removeByIndex(idx)
@@ -1014,7 +1012,7 @@ class DictProxy(Generic[T], ABC):
 		for v in self.values():
 			yield (self.getKeyOf(v), v)
 
-	def get(self, key: str, default: Any = None) -> Union[T, Any]:
+	def get(self, key: str, default: Any = None) -> T | Any:
 		if self.KEY_TYPE and not isinstance(key, self.KEY_TYPE):
 			raise TypeError(f"Key must be strings, not {type(key).__name__}")
 		try:
@@ -1030,7 +1028,7 @@ class DictProxy(Generic[T], ABC):
 		except (KeyError, TypeError):  # TypeError if key is not hashable or not of type str
 			return False
 
-	def pop(self, key: str, default: Any = None) -> Union[T, Any]:
+	def pop(self, key: str, default: Any = None) -> T | Any:
 		"""Remove and return the value for key, or default if not found."""
 		if self.KEY_TYPE and not isinstance(key, self.KEY_TYPE):
 			raise TypeError(f"Key must be strings, not {type(key).__name__}")
@@ -1134,7 +1132,7 @@ GSProxyShapes.__iter__ = python_method(GSProxyShapes__iter__)  # type: ignore
 def __GSProxyShapes__getitem__(self: GSProxyShapes, idx: int) -> GSShape: ...
 @overload
 def __GSProxyShapes__getitem__(self: GSProxyShapes, idx: slice) -> List[GSShape]: ...
-def __GSProxyShapes__getitem__(self: GSProxyShapes, idx: Union[int, slice]) -> Union[GSShape, List[GSShape]]:
+def __GSProxyShapes__getitem__(self: GSProxyShapes, idx: int | slice) -> GSShape | List[GSShape]:
 	if isinstance(idx, slice):
 		# PyObjC sequence slicing might work directly or need manual implementation
 		indices = idx.indices(self.count())
@@ -1248,7 +1246,7 @@ The mothership. Everything starts here.
 '''
 
 # GSApplication.currentDocument already handled by addConvenienceForClass or should be added with add_type
-# add_type(GSApplication, "currentDocument", Optional['GSDocument'])
+# add_type(GSApplication, "currentDocument", GSDocument | None)
 '''
 	.. attribute:: currentDocument
 		The active :class:`GSDocument` object or None.
@@ -1279,9 +1277,9 @@ def __GSApp__str__(self: GSApplication) -> str:
 GSApplication.__str__ = python_method(__GSApp__str__)  # type: ignore
 
 
-def __GSApp_currentFont__() -> Optional[GSFont]:
+def __GSApp_currentFont__() -> GSFont | None:
 	try:
-		doc: Optional[GSDocument] = NSApp().currentFontDocument()
+		doc: GSDocument | None = NSApp().currentFontDocument()
 		if doc:
 			return doc.font
 	except AttributeError:
@@ -1290,7 +1288,7 @@ def __GSApp_currentFont__() -> Optional[GSFont]:
 
 
 GSApplication.font = property(lambda self: __GSApp_currentFont__())  # type: ignore
-add_type(GSApplication, "font", Optional[GSFont])
+add_type(GSApplication, "font", GSFont | None)
 '''
 	.. attribute:: font
 
@@ -1426,10 +1424,10 @@ def objcObject(pyObject: Any) -> NSObject:
 		return NSNull.null()
 	return pyObject  # Assuming pyObject is already an NSObject or compatible
 
-def validatePoint(value: Union[Tuple[float, float], NSPoint]) -> Tuple[float, float]:
+def validatePoint(value: Tuple[float, float] | NSPoint) -> Tuple[float, float]:
 	return validateTuple(2, value)  # type: ignore
 
-def validateScale(value: Union[float, Tuple[float, ...]]) -> Tuple[float, float]:
+def validateScale(value: float | Tuple[float, ...]) -> Tuple[float, float]:
 	# Assuming validateTuple handles conversion from single float to tuple
 	v = validateTuple(1, value)  # type: ignore
 	if len(v) == 1:
@@ -1464,7 +1462,7 @@ def validateTuple(expectedLength: int, value: Any) -> Tuple[float, ...]:
 	return tuple(processed_value)
 
 
-def validateNumber(value: Any) -> Union[float, int]:
+def validateNumber(value: Any) -> float | int:
 	if value is None:
 		return 0
 	if not isinstance(value, (float, int)):
@@ -1615,7 +1613,7 @@ class BoolDefaultsProxy(DefaultsProxy):
 			raise TypeError(f"defaults key must be str, not {type(key).__name__}")
 		return NSUserDefaults.standardUserDefaults().boolForKey_(objcObject(key))
 
-	def __setitem__(self, key: str, value: Optional[bool]) -> None:
+	def __setitem__(self, key: str, value: bool | None) -> None:
 		if not isString(key):
 			raise TypeError(f"defaults key must be str, not {type(key).__name__}")
 		if value is None:  # Remove the key
@@ -1625,7 +1623,7 @@ class BoolDefaultsProxy(DefaultsProxy):
 		else:
 			raise TypeError(f"boolDefaults only accepts values of type bool or None, not {type(value).__name__}")
 
-	def get(self, key: str, default: Optional[bool] = None) -> Optional[bool]:  # type: ignore
+	def get(self, key: str, default: bool | None = None) -> bool | None:  # type: ignore
 		if not isString(key):
 			raise TypeError("defaults key must be str, not %s" % type(key).__name__)
 		value: NSNumber = cast(NSNumber, NSUserDefaults.standardUserDefaults().objectForKey_(objcObject(key)))
@@ -1649,20 +1647,20 @@ add_type(GSApplication, "boolDefaults", BoolDefaultsProxy)  # Or Dict[str, bool]
 
 
 class ColorDefaultsProxy(DefaultsProxy):
-	def __getitem__(self, key: str) -> Optional[NSColor]:  # colorForKey can return nil
+	def __getitem__(self, key: str) -> NSColor | None:  # colorForKey can return nil
 		if not isString(key):
 			raise TypeError(f"defaults key must be str, not {type(key).__name__}")
-		color_val: Optional[NSColor] = NSUserDefaults.standardUserDefaults().colorForKey_(objcObject(key))
+		color_val: NSColor | None = NSUserDefaults.standardUserDefaults().colorForKey_(objcObject(key))
 		if color_val is None:
 			raise KeyError(key)  # Or return None if that's preferred for missing keys
 		return color_val
 
 
-	def __setitem__(self, key: str, value: Optional[Union[NSColor, str]]) -> None:
+	def __setitem__(self, key: str, value: NSColor | str | None) -> None:
 		if not isString(key):
 			raise TypeError(f"defaults key must be str, not {type(key).__name__}")
 		if value is not None:
-			color_to_set: Optional[NSColor] = None
+			color_to_set: NSColor | None = None
 			if isString(value):  # value is str
 				color_to_set = NSColor.colorWithString_(cast(str, value))
 				if color_to_set is None:
@@ -1698,7 +1696,7 @@ class IntDefaultsProxy(DefaultsProxy):
 			raise TypeError(f"defaults key must be str, not {type(key).__name__}")
 		return NSUserDefaults.standardUserDefaults().integerForKey_(objcObject(key))
 
-	def __setitem__(self, key: str, value: Optional[Union[int, float]]) -> None:
+	def __setitem__(self, key: str, value: int | float | None) -> None:
 		if not isString(key):
 			raise TypeError(f"defaults key must be str, not {type(key).__name__}")
 		if value is None:
@@ -1708,7 +1706,7 @@ class IntDefaultsProxy(DefaultsProxy):
 		else:
 			raise TypeError(f"intDefaults only accepts values of type int, float or None, not {type(value).__name__}")
 
-	def get(self, key: str, default: Optional[Any] = None) -> Optional[int]:  # type: ignore
+	def get(self, key: str, default: Any | None = None) -> int | None:  # type: ignore
 		if not isString(key):
 			raise TypeError(f"defaults key must be str, not {type(key).__name__}")
 		obj: Any = NSUserDefaults.standardUserDefaults().objectForKey_(objcObject(key))
@@ -1737,7 +1735,7 @@ class FloatDefaultsProxy(DefaultsProxy):
 			raise TypeError(f"defaults key must be str, not {type(key).__name__}")
 		return NSUserDefaults.standardUserDefaults().doubleForKey_(objcObject(key))
 
-	def __setitem__(self, key: str, value: Optional[Union[int, float]]) -> None:
+	def __setitem__(self, key: str, value: int | float | None) -> None:
 		if not isString(key):
 			raise TypeError(f"defaults key must be str, not {type(key).__name__}")
 		if value is None:
@@ -1747,7 +1745,7 @@ class FloatDefaultsProxy(DefaultsProxy):
 		else:
 			raise TypeError(f"floatDefaults only accepts values of type float, int or None, not {type(value).__name__}")
 
-	def get(self, key: str, default: Optional[Any] = None) -> Optional[float]:  # type: ignore
+	def get(self, key: str, default: Any | None = None) -> float | None:  # type: ignore
 		if not isString(key):
 			raise TypeError(f"defaults key must be str, not {type(key).__name__}")
 		obj: Any = NSUserDefaults.standardUserDefaults().objectForKey_(objcObject(key))
@@ -1825,7 +1823,7 @@ def __GSApp_setUserDefaults__(self: GSApplication, key: str, value: Any) -> None
 	self.defaults[key] = value
 
 
-def NSStr(string: Optional[str]) -> Optional[NSString]:  # Allow None input
+def NSStr(string: str | None) -> NSString | None:  # Allow None input
 	if string:
 		return NSString.stringWithString_(string)
 	else:
@@ -1883,7 +1881,7 @@ add_type(GSApplication, "versionString", str)
 
 
 def GSFloatVersion(versionString: str) -> float:
-	m: Optional[re.Match] = re.match(r"(\d+)\.(\d+)", versionString)
+	m: re.Match | None = re.match(r"(\d+)\.(\d+)", versionString)
 	if m is None:
 		return 0.0  # Ensure float return
 	mainVersionString: str = m.group(1)
@@ -1939,13 +1937,13 @@ class AppMenuProxy(Sequence[NSMenuItem]):
 	@overload
 	def __getitem__(self, key: str) -> NSMenuItem: ...
 
-	def __getitem__(self, key: Union[int, str]) -> NSMenuItem:
+	def __getitem__(self, key: int | str) -> NSMenuItem:
 		if isinstance(key, int):
 			idx = _validate_idx(self, key)  # type: ignore # self is AppMenuProxy
 			return NSApp.mainMenu().itemAtIndex_(idx)
 		elif isString(key):  # Original uses isString
 			Tag: int = menuTagLookup[key]
-			menu_item: Optional[NSMenuItem] = NSApp.mainMenu().itemWithTag_(Tag)
+			menu_item: NSMenuItem | None = NSApp.mainMenu().itemWithTag_(Tag)
 			if menu_item is None:
 				raise KeyError(f"No menu item with tag for key: {key}")
 			return menu_item
@@ -1988,12 +1986,12 @@ NSURL.__new__ = staticmethod(__NSURL__new__)  # type: ignore
 '''
 
 
-def __GSApp_OpenFont__(self: GSApplication, path: str, showInterface: bool = True) -> Optional[GSFont]:
+def __GSApp_OpenFont__(self: GSApplication, path: str, showInterface: bool = True) -> GSFont | None:
 	URL: NSURL = NSURL.fileURLWithPath_(path)  # type: ignore # NSURL() call through __new__
 	doc_tuple = self.openDocumentWithContentsOfURL_display_(URL, showInterface)  # type: ignore
 	# This method in NSDocumentController can return (doc, error) or just doc
 	# Assuming it returns the document directly or nil if failed
-	doc: Optional[GSDocument]
+	doc: GSDocument | None
 	if isinstance(doc_tuple, tuple):  # As in (doc, wasAlreadyOpen) or (doc, error)
 		doc = doc_tuple[0]
 	else:
@@ -2004,7 +2002,7 @@ def __GSApp_OpenFont__(self: GSApplication, path: str, showInterface: bool = Tru
 	return None
 
 GSApplication.open = python_method(__GSApp_OpenFont__)
-# add_type(GSApplication, "open", Callable[[str, bool], Optional[GSFont]]) already implied
+# add_type(GSApplication, "open", Callable[[str, bool], GSFont | None]) already implied
 '''
 	.. function:: open(Path, [showInterface=True])
 
@@ -2047,11 +2045,11 @@ GSApplication.showGlyphInfoPanelWithSearchString = python_method(__showGlyphInfo
 '''
 
 
-def _glyphInfoForName(self: GSApplication, name: Union[str, int], font: Optional[GSFont] = None) -> Optional[GSGlyphInfo]:
+def _glyphInfoForName(self: GSApplication, name: str | int, font: GSFont | None = None) -> GSGlyphInfo | None:
 	if isinstance(name, int):  # If int, treat as unicode codepoint
 		return self.glyphInfoForUnicode(name, font=font)  # type: ignore
 
-	info: Optional[GSGlyphInfo]
+	info: GSGlyphInfo | None
 	if font is not None:
 		info = font.glyphsInfo().glyphInfoForName_(name)
 	else:
@@ -2070,14 +2068,14 @@ GSApplication.glyphInfoForName = python_method(_glyphInfoForName)  # type: ignor
 '''
 
 
-def _glyphInfoForUnicode(self: GSApplication, string_or_int: Union[str, int], font: Optional[GSFont] = None) -> Optional[GSGlyphInfo]:
+def _glyphInfoForUnicode(self: GSApplication, string_or_int: str | int, font: GSFont | None = None) -> GSGlyphInfo | None:
 	unicode_str: str
 	if isinstance(string_or_int, int):
 		unicode_str = f"{string_or_int:04X}"
 	else:
 		unicode_str = string_or_int
 
-	info: Optional[GSGlyphInfo]
+	info: GSGlyphInfo | None
 	if font is not None:
 		info = font.glyphsInfo().glyphInfoForUnicode_(unicode_str)
 	else:
@@ -2096,8 +2094,8 @@ GSApplication.glyphInfoForUnicode = python_method(_glyphInfoForUnicode)  # type:
 '''
 
 
-def __GSApp_niceGlyphName__(self: GSApplication, name: str, font: Optional[GSFont] = None) -> Optional[str]:
-	nice_name: Optional[str]
+def __GSApp_niceGlyphName__(self: GSApplication, name: str, font: GSFont | None = None) -> str | None:
+	nice_name: str | None
 	if font is not None:
 		nice_name = font.glyphsInfo().niceGlyphNameForName_(name)
 	else:
@@ -2116,8 +2114,8 @@ GSApplication.niceGlyphName = python_method(__GSApp_niceGlyphName__)  # type: ig
 '''
 
 
-def __GSApp_productionGlyphName__(self: GSApplication, name: str, font: Optional[GSFont] = None) -> Optional[str]:
-	prod_name: Optional[str]
+def __GSApp_productionGlyphName__(self: GSApplication, name: str, font: GSFont | None = None) -> str | None:
+	prod_name: str | None
 	if font is not None:
 		prod_name = font.glyphsInfo().productionGlyphNameForName_(name)
 	else:
@@ -2136,16 +2134,16 @@ GSApplication.productionGlyphName = python_method(__GSApp_productionGlyphName__)
 '''
 
 
-def __GSApp_ligatureComponents__(self: GSApplication, name: str, font: Optional[GSFont] = None) -> Optional[List[str]]:
+def __GSApp_ligatureComponents__(self: GSApplication, name: str, font: GSFont | None = None) -> List[str] | None:
 	glyph_info_manager: GSGlyphsInfo
 	if font is not None:
 		glyph_info_manager = font.glyphsInfo()
 	else:
 		glyph_info_manager = GSGlyphsInfo.sharedManager()
 
-	info: Optional[GSGlyphInfo] = glyph_info_manager.glyphInfoForName_(name)
+	info: GSGlyphInfo | None = glyph_info_manager.glyphInfoForName_(name)
 	if info:
-		componentInfos: Optional[NSArray] = info.components
+		componentInfos: NSArray | None = info.components
 		if componentInfos and componentInfos.count() > 0:
 			# valueForKey_ returns NSArray of names here
 			return list(componentInfos.valueForKey_("name"))  # type: ignore
@@ -2490,7 +2488,7 @@ GSApplication.showNotification = python_method(__GSApp_showNotification__)
 			Glyphs.showNotification('Export fonts', 'The export of the fonts was successful.')
 '''
 
-def __GSApp_localize__(self: GSApplication, localization: Union[str, Dict[str, str]]) -> str:
+def __GSApp_localize__(self: GSApplication, localization: str | Dict[str, str]) -> str:
 	if isString(localization):  # localization is str
 		return cast(str, localization)
 	elif isinstance(localization, dict):  # localization is Dict[str, str]
@@ -2505,7 +2503,7 @@ def __GSApp_localize__(self: GSApplication, localization: Union[str, Dict[str, s
 				return localization[primary_language]
 
 		# Fallback to 'en' or first item
-		english_translation: Optional[str] = localization.get("en")
+		english_translation: str | None = localization.get("en")
 		if english_translation is not None:
 			return english_translation
 		if localization:  # If dict is not empty
@@ -2540,7 +2538,7 @@ GSApplication.localize = python_method(__GSApp_localize__)
 '''
 
 
-def __GSApplication_activateReporter__(self: GSApplication, reporter: Union[NSObject, str]) -> None:
+def __GSApplication_activateReporter__(self: GSApplication, reporter: NSObject | str) -> None:
 	GSCallbackHandler.activateReporter_(reporter)
 
 
@@ -2555,7 +2553,7 @@ GSApplication.activateReporter = python_method(__GSApplication_activateReporter_
 '''
 
 
-def __GSApplication_deactivateReporter__(self: GSApplication, reporter: Union[NSObject, str]) -> None:
+def __GSApplication_deactivateReporter__(self: GSApplication, reporter: NSObject | str) -> None:
 	GSCallbackHandler.deactivateReporter_(reporter)
 
 
@@ -2606,7 +2604,7 @@ def ____PROXIES____(): pass
 class AppDocumentProxy(ListProxy[GSDocument]):
 	"""The list of documents."""
 
-	def __getitem__(self, idx) -> Optional[GSDocument]:
+	def __getitem__(self, idx) -> GSDocument | None:
 		idx = _validate_idx(cast(Sequence, self), idx)
 		return self.values().__getitem__(idx)
 
@@ -2628,7 +2626,7 @@ class AppFontProxy(Sequence[GSFont], ABC):
 	def __len__(self) -> int:
 		return self._owner.fontDocuments().count()
 
-	def __getitem__(self, idx) -> Optional[GSFont]:
+	def __getitem__(self, idx) -> GSFont | None:
 		idx = _validate_idx(cast(Sequence, self), idx)
 		return self.values().__getitem__(idx)
 
@@ -2688,7 +2686,7 @@ add_type(GSDocument, "filePath", str)
 
 		:type: str
 '''
-add_type(GSDocument, "filePath", Optional[str])
+add_type(GSDocument, "filePath", str | None)
 
 
 
@@ -2907,7 +2905,7 @@ class InternalAxesProxy(OrderedDictProxy[float]):
 		NotImplementedError()
 		return ""
 
-	def getByIndex(self, idx: int) -> Optional[float]:
+	def getByIndex(self, idx: int) -> float | None:
 		if isinstance(self._owner, GSInstance) and self._owner.type == INSTANCETYPEVARIABLE:
 			return None
 		axis = self._owner.font.axes[idx]
@@ -2915,7 +2913,7 @@ class InternalAxesProxy(OrderedDictProxy[float]):
 			return None
 		return self._owner.axisInternalValueValueForId_(axis.axisId)
 
-	def getByKey(self, key: str) -> Optional[float]:
+	def getByKey(self, key: str) -> float | None:
 		if isinstance(self._owner, GSInstance) and self._owner.type == INSTANCETYPEVARIABLE:
 			return None
 		return self._owner.axisInternalValueValueForId_(key)
@@ -2981,7 +2979,7 @@ class ExternalAxesProxy(OrderedDictProxy[float]):
 		NotImplementedError()
 		return ""
 
-	def getByIndex(self, idx: int) -> Optional[float]:
+	def getByIndex(self, idx: int) -> float | None:
 		if isinstance(self._owner, GSInstance) and self._owner.type == INSTANCETYPEVARIABLE:
 			return None
 		axis = self._owner.font.axes[idx]
@@ -2989,7 +2987,7 @@ class ExternalAxesProxy(OrderedDictProxy[float]):
 			return None
 		return self._owner.axisExternalValueValueForId_(axis.axisId)
 
-	def getByKey(self, key: str) -> Optional[float]:
+	def getByKey(self, key: str) -> float | None:
 		if isinstance(self._owner, GSInstance) and self._owner.type == INSTANCETYPEVARIABLE:
 			return None
 		return self._owner.axisExternalValueValueForId_(key)
@@ -3802,7 +3800,7 @@ class TempDataProxy(DictProxy):
 	def __contains__(self, item) -> bool:
 		return self._owner.tempDataForKey_(item) is not None
 
-	def get(self, key: str, default=None) -> Optional[Any]:
+	def get(self, key: str, default=None) -> Any | None:
 		value = self.__getitem__(key)
 		if value is None:
 			return default
@@ -4720,7 +4718,7 @@ def __GSFont__new__(typ, *args, **kwargs):
 GSFont.__new__ = staticmethod(__GSFont__new__)
 
 
-def __GSFont__init__(self, path: Optional[str] = None) -> None:
+def __GSFont__init__(self, path: str | None = None) -> None:
 	pass
 
 GSFont.__init__ = python_method(__GSFont__init__)  # type: ignore
@@ -4752,7 +4750,7 @@ def __GSFont__contains__(self, key):
 GSFont.__contains__ = python_method(__GSFont__contains__)
 
 GSFont.parent = property(lambda self: self.pyobjc_instanceMethods.parent())
-add_type(GSFont, "parent", Optional['GSDocument'])
+add_type(GSFont, "parent", GSDocument | None)
 '''
 	.. attribute:: parent
 
@@ -5990,7 +5988,7 @@ def _checkReturnValue(result):
 	return None
 
 
-def __GSFont__save__(self, path: Optional[str] = None, formatVersion: Optional[int] = None, makeCopy: Optional[bool] = False) -> None:
+def __GSFont__save__(self, path: str | None = None, formatVersion: int | None = None, makeCopy: bool | None = False) -> None:
 	if self.parent is not None and not makeCopy:  # save via NSDocument. Will change the file path of the doc
 		if path is None:
 			self.parent.saveDocument_(None)
@@ -6057,7 +6055,7 @@ GSFont.save = python_method(__GSFont__save__)
 '''
 
 
-def __GSFont__close__(self, ignoreChanges: Optional[bool] = True) -> None:
+def __GSFont__close__(self, ignoreChanges: bool | None = True) -> None:
 	if self.parent:
 		if ignoreChanges:
 			self.parent.close()
@@ -6101,12 +6099,12 @@ GSFont.show = python_method(__GSFont__show__)
 '''
 
 
-def __GSFont_kerningForPair__(self: GSFont, FontMasterID: str, LeftKerningId: str, RightKerningId: str, direction: int = GSLTR) -> Optional[float]:
+def __GSFont_kerningForPair__(self: GSFont, FontMasterID: str, LeftKerningId: str, RightKerningId: str, direction: int = GSLTR) -> float | None:
 	# ... implementation ...
 	# Convert LeftKerningId/RightKerningId from glyph name to ID if not a group key
 	actual_left_id: str
 	if not LeftKerningId.startswith('@'):
-		glyph_l: Optional[GSGlyph] = self.glyphs.get(LeftKerningId)  # type: ignore
+		glyph_l: GSGlyph | None = self.glyphs.get(LeftKerningId)  # type: ignore
 		if glyph_l is None:
 			raise KeyError(f"Glyph {LeftKerningId} not found")
 		actual_left_id = glyph_l.id  # type: ignore
@@ -6115,7 +6113,7 @@ def __GSFont_kerningForPair__(self: GSFont, FontMasterID: str, LeftKerningId: st
 
 	actual_right_id: str
 	if not RightKerningId.startswith('@'):
-		glyph_r: Optional[GSGlyph] = self.glyphs.get(RightKerningId)  # type: ignore
+		glyph_r: GSGlyph | None = self.glyphs.get(RightKerningId)  # type: ignore
 		if glyph_r is None:
 			raise KeyError(f"Glyph {RightKerningId} not found")
 		actual_right_id = glyph_r.id  # type: ignore
@@ -6161,7 +6159,7 @@ GSFont.kerningForPair = python_method(__GSFont_kerningForPair__)  # type: ignore
 '''
 
 
-def __GSFont_setKerningForPair__(self, FontMasterID: str, LeftKerningId: str, RightKerningId: str, Value: float, direction: Optional[int] = GSLTR):
+def __GSFont_setKerningForPair__(self, FontMasterID: str, LeftKerningId: str, RightKerningId: str, Value: float, direction: int | None = GSLTR):
 	if not LeftKerningId[0] == '@':
 		glyph = self.glyphs[LeftKerningId]
 		if glyph is not None:
@@ -6201,7 +6199,7 @@ GSFont.setKerningForPair = python_method(__GSFont_setKerningForPair__)
 '''
 
 
-def removeKerningForPair(self, fontMasterID: str, leftKerningId: str, rightKerningId: str, direction: Optional[int] = GSLTR):
+def removeKerningForPair(self, fontMasterID: str, leftKerningId: str, rightKerningId: str, direction: int | None = GSLTR):
 	if not leftKerningId[0] == '@':
 		glyph = self.glyphs[leftKerningId]
 		if glyph is not None:
@@ -6240,7 +6238,7 @@ GSFont.removeKerningForPair = python_method(removeKerningForPair)
 '''
 
 
-def __GSFont__addTab__(self, tabText: Optional[str] = "") -> Optional[GSEditViewController]:
+def __GSFont__addTab__(self, tabText: str | None = "") -> GSEditViewController | None:
 	if self.parent:
 		if isString(tabText):
 			return self.parent.windowController().addTabWithDisplayString_(tabText)
@@ -7127,7 +7125,7 @@ def GSInstance__new__(typ, *args, **kwargs):
 GSInstance.__new__ = staticmethod(GSInstance__new__)
 
 
-def __GSInstance__init__(self, type: Optional[int] = None):
+def __GSInstance__init__(self, type: int | None = None):
 	pass
 
 
@@ -8229,7 +8227,7 @@ class _ExporterDelegate_(NSObject):
 
 	def collectResult_instance_title_(
 		self,
-		error: Union[str, NSString, NSError],
+		error: str | NSString | NSError,
 		instancePath: str,
 		title: str,
 	):
@@ -8245,14 +8243,14 @@ class _ExporterDelegate_(NSObject):
 def __GSInstance_Export__(
 	self,
 	format: str = CFF,
-	fontPath: Optional[str] = None,
+	fontPath: str | None = None,
 	autoHint: bool = True,
 	removeOverlap: bool = True,
 	useSubroutines: bool = True,
 	useProductionNames: bool = True,
-	containers: Optional[list] = None,
+	containers: list | None = None,
 	decomposeSmartStuff: bool = True
-) -> Optional[str]:
+) -> str | None:
 
 	if format == OTF:
 		format = CFF
@@ -8330,14 +8328,14 @@ GSInstance.generate = python_method(__GSInstance_Export__)
 
 def __GSFont_Export__(
 	self,
-	format: Optional[str] = OTF,
-	instances: Optional[list[GSInstance]] = None,
-	fontPath: Optional[str] = None,
+	format: str | None = OTF,
+	instances: list[GSInstance] | None = None,
+	fontPath: str | None = None,
 	autoHint: bool = True,
-	removeOverlap: Optional[bool] = None,
+	removeOverlap: bool | None = None,
 	useSubroutines: bool = True,
 	useProductionNames: bool = True,
-	containers: Optional[bool] = None,
+	containers: bool | None = None,
 	decomposeSmartStuff: bool = True
 ):
 	if format not in [OTF, WOFF, WOFF2, TTF, VARIABLE, UFO]:
@@ -9169,7 +9167,7 @@ GSGlyph.__new__ = staticmethod(__GSObject__new__)
 GSGlyph.__new__.__name__ = "__new__"
 
 
-def __GSGlyph__init__(self, name: Optional[str] = None, autoName: Optional[bool] = True) -> None:
+def __GSGlyph__init__(self, name: str | None = None, autoName: bool | None = True) -> None:
 	if name and isString(name):
 		if not autoName:
 			self.setName_changeName_(name, autoName)
@@ -9187,7 +9185,7 @@ def __GSGlyph__str__(self):
 GSGlyph.__str__ = python_method(__GSGlyph__str__)
 
 
-def __GSGlyph__copy__(self: NSObject, memo: Optional[Any] = None) -> Any:
+def __GSGlyph__copy__(self: NSObject, memo: Any | None = None) -> Any:
 	glyph: GSGlyph = self.copy()
 	glyph.initLock()
 	return glyph
@@ -10104,7 +10102,7 @@ GSGlyph.endUndo = python_method(__GSGlyph_EndUndo__)
 '''
 
 
-def __GSGlyph_updateGlyphInfo__(self, changeName: Optional[bool] = True) -> None:
+def __GSGlyph_updateGlyphInfo__(self, changeName: bool | None = True) -> None:
 	if self.parent is not None:
 		self.parent.glyphsInfo().updateGlyphInfo_changeName_(self, changeName)
 	else:
@@ -10119,7 +10117,7 @@ GSGlyph.updateGlyphInfo = python_method(__GSGlyph_updateGlyphInfo__)
 '''
 
 
-def __GSGlyph_Duplicate__(self, name: Optional[str] = None) -> GSGlyph:
+def __GSGlyph_Duplicate__(self, name: str | None = None) -> GSGlyph:
 
 	newGlyph = self.copyWithOptions_(3)  # option: 1 (masters) + 2 (special) layers
 	if newGlyph.unicode:
@@ -11151,7 +11149,7 @@ GSLayer.smartComponentPoleMapping = property(__GSLayer_smartComponentPoleMapping
 '''
 
 
-def __GSLayer_RemoveOverlap__(self, checkSelection: Optional[bool] = False):
+def __GSLayer_RemoveOverlap__(self, checkSelection: bool | None = False):
 	self.removeOverlapCheckSelection_error_(checkSelection, None)
 
 
@@ -11169,7 +11167,7 @@ GSLayer.removeOverlap = python_method(__GSLayer_RemoveOverlap__)
 '''
 
 
-def Layer_addNodesAtExtremes(self, force: Optional[bool] = False, checkSelection: Optional[bool] = False):
+def Layer_addNodesAtExtremes(self, force: bool | None = False, checkSelection: bool | None = False):
 	self.addExtremePointsForce_checkSelection_(force, checkSelection)
 
 
@@ -11184,7 +11182,7 @@ GSLayer.addNodesAtExtremes = python_method(Layer_addNodesAtExtremes)
 '''
 
 
-def __GSLayer_applyTransform__(self, transformStruct: Union[tuple, NSAffineTransformStruct, NSAffineTransform]) -> None:
+def __GSLayer_applyTransform__(self, transformStruct: tuple | NSAffineTransformStruct | NSAffineTransform) -> None:
 	if isinstance(transformStruct, (NSAffineTransformStruct, list, tuple)):
 		transform = NSAffineTransform.transform()
 		transform.setTransformStruct_(transformStruct)
@@ -11221,7 +11219,7 @@ GSLayer.applyTransform = python_method(__GSLayer_applyTransform__)
 '''
 
 
-def __GSLayer_transform__(self, transform, selection: Optional[bool] = False, components: Optional[bool] = True):
+def __GSLayer_transform__(self, transform, selection: bool | None = False, components: bool | None = True):
 	self.transform_checkForSelection_doComponents_(transform, selection, components)
 
 
@@ -11309,7 +11307,7 @@ GSLayer.intersectionsBetweenPoints = python_method(__GSLayer_IntersectionsBetwee
 NSConcreteValue.x = property(lambda self: self.pointValue().x)  # type: ignore
 NSConcreteValue.y = property(lambda self: self.pointValue().y)  # type: ignore
 '''
-	.. function:: intersectionsBetweenPoints(Point1, Point2, components: Optional[bool] = False)
+	.. function:: intersectionsBetweenPoints(Point1, Point2, components: bool | None = False)
 
 		Return all intersection points between a measurement line and the paths in the layer. This is basically identical to the measurement tool in the UI.
 
@@ -11417,7 +11415,7 @@ def __GSControlLayer__placeholder__():
 GSControlLayer.placeholder = staticmethod(__GSControlLayer__placeholder__)
 
 
-def DrawLayerWithPen(self, pen, contours: Optional[bool] = True, components: Optional[bool] = True):
+def DrawLayerWithPen(self, pen, contours: bool | None = True, components: bool | None = True):
 	"""draw the object with a RoboFab segment pen"""
 	try:
 		pen.setWidth(self.width)
@@ -11444,7 +11442,7 @@ def DrawLayerWithPen(self, pen, contours: Optional[bool] = True, components: Opt
 GSLayer.draw = python_method(DrawLayerWithPen)
 
 
-def DrawPointsWithPen(self, pen, contours: Optional[bool] = True, components: Optional[bool] = True):
+def DrawPointsWithPen(self, pen, contours: bool | None = True, components: bool | None = True):
 	"""draw the object with a point pen"""
 	if contours:
 		for p in self.paths:
@@ -11837,7 +11835,7 @@ For details on how to access them, please see :attr:`GSLayer.anchors`
 '''
 
 
-def __GSAnchor__init__(self, name: Optional[str] = None, pt: Optional[NSPoint] = None, position: Optional[NSPoint] = None) -> None:
+def __GSAnchor__init__(self, name: str | None = None, pt: NSPoint | None = None, position: NSPoint | None = None) -> None:
 	if pt:
 		self.setPosition_(pt)
 	if position:
@@ -12040,7 +12038,7 @@ For details on how to access them, please see :attr:`GSLayer.components`
 '''
 
 
-def __GSComponent__init__(self, glyph: Optional[str | GSGlyph] = None, offset: Optional[NSPoint] = None, scale: Optional[NSPoint] = None, rotation: Optional[float] = None, transform: Optional[tuple] = None):
+def __GSComponent__init__(self, glyph: str | GSGlyph | None = None, offset: NSPoint | None = None, scale: NSPoint | None = None, rotation: float | None = None, transform: tuple | None = None):
 	"""
 	transformation: transform matrix as list of numbers
 	"""
@@ -12510,7 +12508,7 @@ GSComponent.applyTransform = python_method(__GSComponent_applyTransform__)
 '''
 
 
-def __GSComponent_decompose__(self, doAnchors: Optional[bool] = True, doHints: Optional[bool] = True):
+def __GSComponent_decompose__(self, doAnchors: bool | None = True, doHints: bool | None = True):
 	assert (self.parent is not None)
 	self.parent.decomposeComponent_doAnchors_doHints_(self, doAnchors, doHints)
 
@@ -13044,7 +13042,7 @@ def __GSPath__drawPoints__(self, pen):
 GSPath.drawPoints = python_method(__GSPath__drawPoints__)
 
 
-def __GSPath_addNodesAtExtremes__(self, force: Optional[bool] = False, checkSelection: Optional[bool] = False):
+def __GSPath_addNodesAtExtremes__(self, force: bool | None = False, checkSelection: bool | None = False):
 	self.addExtremes_checkSelection_(force, checkSelection)
 
 
@@ -13140,7 +13138,7 @@ For details on how to access them, please see :attr:`GSPath.nodes`
 '''
 
 
-def __GSNode__init__(self, pt: Optional[NSPoint] = None, type: Optional[int | str] = None, x: Optional[float] = None, y: Optional[float] = None, name: Optional[str] = None, pointType: Optional[int] = None) -> None:
+def __GSNode__init__(self, pt: NSPoint | None = None, type: int | str | None = None, x: float | None = None, y: float | None = None, name: str | None = None, pointType: int | None = None) -> None:
 	if type is None and pointType is not None:
 		type = pointType
 	if pt:
@@ -13800,7 +13798,7 @@ GSAnnotation.__new__ = staticmethod(__GSObject__new__)
 GSAnnotation.__new__.__name__ = "__new__"
 
 
-def __GSAnnotation__init__(self, pt: Optional[NSPoint] = None, type: Optional[int] = None, text: Optional[str] = None, angle: Optional[float] = None, width: Optional[int] = None):
+def __GSAnnotation__init__(self, pt: NSPoint | None = None, type: int | None = None, text: str | None = None, angle: float | None = None, width: int | None = None):
 	if pt:
 		self.setPosition_(pt)
 	if type:
@@ -14339,7 +14337,7 @@ For details on how to access it, please see :class:`GSLayer.backgroundImage`
 '''
 
 
-def __GSBackgroundImage__init__(self, path: Optional[str] = None):
+def __GSBackgroundImage__init__(self, path: str | None = None):
 	if path:
 		self.setImagePath_(path)
 
@@ -15994,7 +15992,7 @@ def __GSPathPen_curveTo__(self, off1, off2, pt):
 GSPathPen.curveTo = python_method(__GSPathPen_curveTo__)
 
 
-def __GSPathPen_addPoint__(self, pt, segmentType=None, smooth: Optional[bool] = False, name=None, identifier=None, **kwargs):
+def __GSPathPen_addPoint__(self, pt, segmentType=None, smooth: bool | None = False, name=None, identifier=None, **kwargs):
 	node = GSNode()
 	node.position = pt
 	path = self.currentPath()
@@ -16472,10 +16470,10 @@ def scalePoint(P: NSPoint, scalar: float) -> NSPoint:
 	:rtype: NSPoint
 '''
 
-def removeOverlap(paths: Sequence[GSPath]) -> Optional[NSMutableArray[GSPath]]:
+def removeOverlap(paths: Sequence[GSPath]) -> NSMutableArray[GSPath] | None:
 	mutable_paths: NSMutableArray = NSMutableArray.arrayWithArray_(cast(NSArray, paths))
 
-	result_tuple: Tuple[bool, Optional[NSError]] = GSPathFinder.removeOverlapPaths_error_(mutable_paths, None)
+	result_tuple: Tuple[bool, NSError | None] = GSPathFinder.removeOverlapPaths_error_(mutable_paths, None)
 
 	if result_tuple[0] != 1:
 		return None
@@ -16497,7 +16495,7 @@ def removeOverlap(paths: Sequence[GSPath]) -> Optional[NSMutableArray[GSPath]]:
 '''
 
 
-def subtractPaths(paths: Sequence[GSPath], subtract: Sequence[GSPath]) -> Optional[List[GSPath]]:
+def subtractPaths(paths: Sequence[GSPath], subtract: Sequence[GSPath]) -> List[GSPath] | None:
 
 	mutablePath: NSMutableArray
 	if isinstance(paths, LayerShapesProxy):
@@ -16529,7 +16527,7 @@ def subtractPaths(paths: Sequence[GSPath], subtract: Sequence[GSPath]) -> Option
 '''
 
 
-def intersectPaths(paths: Sequence[GSPath], otherPaths: Sequence[GSPath]) -> Optional[List[GSPath]]:
+def intersectPaths(paths: Sequence[GSPath], otherPaths: Sequence[GSPath]) -> List[GSPath] | None:
 	mutablePath: NSMutableArray
 	if isinstance(paths, LayerShapesProxy):
 		mutablePath = NSMutableArray.arrayWithArray_(paths.values())
@@ -16559,7 +16557,7 @@ def intersectPaths(paths: Sequence[GSPath], otherPaths: Sequence[GSPath]) -> Opt
 	:rtype: list
 '''
 
-def GetSaveFile(message: Optional[str] = None, proposedFileName: Optional[str] = None, filetypes: Optional[List[str]] = None, filetype: Optional[str] = None) -> str | None:
+def GetSaveFile(message: str | None = None, proposedFileName: str | None = None, filetypes: List[str] | None = None, filetype: str | None = None) -> str | None:
 	panel = NSSavePanel.savePanel().retain()
 	panel.setExtensionHidden_(False)
 	panel.setCanCreateDirectories_(True)

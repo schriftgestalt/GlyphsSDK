@@ -1,11 +1,11 @@
-from typing import Any, Callable, Optional, Tuple, Union
+from typing import Any, Callable, Tuple
 
 from AppKit import NSControl
 
 # General Types
-PosSize = Union[Tuple[int | float, int | float, int | float, int | float], str]
+type PosSize = Tuple[int | float, int | float, int | float, int | float] | str
 
-Size = Tuple[int, int]
+type Size = Tuple[int, int]
 
 
 class VanillaBaseObject:
@@ -35,4 +35,4 @@ class VanillaBaseControl(VanillaBaseObject):
 
     def get(self) -> Any: ...
 
-    def bind(self, key: str, callback: Optional[Callable[..., Any]]) -> None: ...
+    def bind(self, key: str, callback: Callable[..., Any] | None) -> None: ...

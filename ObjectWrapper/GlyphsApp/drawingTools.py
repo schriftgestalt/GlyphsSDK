@@ -1,7 +1,6 @@
 #!/usr/bin/env python
-from typing import List, Optional, Tuple
+from typing import List, Tuple
 
-# from typing import Any, List, Dict, Optional
 from AppKit import (  # type: ignore
 	NSBezierPath,
 	NSColor,
@@ -101,7 +100,7 @@ def closePath():
 		currentPath.closePath()
 
 
-def drawPath(path: Optional[NSBezierPath] = None):
+def drawPath(path: NSBezierPath | None = None):
 	# draws the path
 	if path is None:
 		path = currentPath
