@@ -7,8 +7,6 @@ script when pyright analyses it; this file makes those injected names
 visible to the type checker.
 """
 
-from typing import Any
-
 from GlyphsApp import GSApplication, GSFont, GSLayer
 
 Font: GSFont
