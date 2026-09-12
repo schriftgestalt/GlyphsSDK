@@ -12107,7 +12107,7 @@ def __GSTransformable_set_slant__(self, value):
 		self.setSlantHorizontal_(value[0])
 		self.setSlantVertical_(value[1])
 	else:
-		raise ValueError
+		raise TypeError
 
 
 GSTransformableElement.slant = property(
