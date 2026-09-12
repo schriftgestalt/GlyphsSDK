@@ -5849,7 +5849,7 @@ toolClassAbbreviations = {  # abbreviation : className
 	"TrueTypeTool": "GlyphsToolTrueTypeInstructor",
 }
 
-toolClassAbbreviationsReverse = dict((v, k) for k, v in toolClassAbbreviations.items())
+toolClassAbbreviationsReverse = {v: k for k, v in toolClassAbbreviations.items()}
 
 
 def __GSFont_tool__(self):
