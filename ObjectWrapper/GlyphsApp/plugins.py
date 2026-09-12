@@ -69,9 +69,9 @@ else:
 	BaseReporterPlugin = objc.lookUpClass("BaseReporterPlugin")
 	GSPaletteView = objc.lookUpClass("GSPaletteView")
 
-__all__ = [
+__all__ = [  # noqa: RUF022
 	"Glyphs", "FileFormatPlugin", "FilterWithDialog", "FilterWithoutDialog", "GeneralPlugin", "PalettePlugin", "ReporterPlugin", "SelectTool",
-	"GSFilterPlugin", "GSToolSelect", "BaseFileFormatPlugin", "BaseFilterWithoutDialog", "BaseGeneralPlugin", "BasePalettePlugin", "BasePalettePlugin", "BaseReporterPlugin",
+	"GSFilterPlugin", "GSToolSelect", "BaseFileFormatPlugin", "BaseFilterWithoutDialog", "BaseGeneralPlugin", "BasePalettePlugin", "BaseReporterPlugin",
 	"setUpMenuHelper"
 ]
 
