@@ -15,7 +15,6 @@ from typing import (
 	TYPE_CHECKING,
 	Any,
 	Callable,
-	Dict,
 	Generic,
 	Iterator,
 	List,
@@ -1553,7 +1552,7 @@ def __GSApp_registerDefault__(self: GSApplication, key: str, value: Any) -> None
 GSApplication.registerDefault = python_method(__GSApp_registerDefault__)  # type: ignore
 
 
-def __GSApp_registerDefaults__(self: GSApplication, defaults: Dict[str, Any]) -> None:
+def __GSApp_registerDefaults__(self: GSApplication, defaults: dict[str, Any]) -> None:
 	if defaults is not None:  # Should check isinstance(defaults, dict)
 		NSUserDefaults.standardUserDefaults().registerDefaults_(cast(NSDictionary, objcObject(defaults)))
 	else:
@@ -1632,7 +1631,7 @@ class BoolDefaultsProxy(DefaultsProxy):
 
 
 GSApplication.boolDefaults = property(lambda self: BoolDefaultsProxy())  # type: ignore
-add_type(GSApplication, "boolDefaults", BoolDefaultsProxy)  # Or Dict[str, bool] if viewed as a dict
+add_type(GSApplication, "boolDefaults", BoolDefaultsProxy)  # Or dict[str, bool] if viewed as a dict
 '''
 	.. attribute:: boolDefaults
 		Access to default settings cast to a bool.
@@ -1767,7 +1766,7 @@ add_type(GSApplication, "floatDefaults", FloatDefaultsProxy)
 
 
 GSApplication.scriptAbbreviations = property(lambda self: GSGlyphsInfo.script2Tag())  # type: ignore
-add_type(GSApplication, "scriptAbbreviations", Dict[str, str])
+add_type(GSApplication, "scriptAbbreviations", dict[str, str])
 '''
 	.. attribute:: scriptAbbreviations
 		A dictionary with script name to tag mapping, e.g., 'arabic': 'arab' or 'devanagari': 'dev2'
@@ -1780,7 +1779,7 @@ add_type(GSApplication, "scriptAbbreviations", Dict[str, str])
 '''
 
 GSApplication.scriptSuffixes = property(lambda self: GSGlyphsInfo.scriptSuffixes())  # type: ignore
-add_type(GSApplication, "scriptSuffixes", Dict[str, str])
+add_type(GSApplication, "scriptSuffixes", dict[str, str])
 '''
 	.. attribute:: scriptSuffixes
 		A dictionary with glyphs name suffixes for scripts and their respective script names, e.g., 'cy': 'cyrillic'
@@ -1789,7 +1788,7 @@ add_type(GSApplication, "scriptSuffixes", Dict[str, str])
 '''
 
 GSApplication.languageScripts = property(lambda self: GSGlyphsInfo.languageScripts())  # type: ignore
-add_type(GSApplication, "languageScripts", Dict[str, str])
+add_type(GSApplication, "languageScripts", dict[str, str])
 '''
 	.. attribute:: languageScripts
 		A dictionary with language tag to script tag mapping, e.g., 'ENG': 'latn'
@@ -1799,7 +1798,7 @@ add_type(GSApplication, "languageScripts", Dict[str, str])
 
 
 GSApplication.languageData = property(lambda self: GSGlyphsInfo.languageData())  # type: ignore
-add_type(GSApplication, "languageData", List[Dict[str, Any]])
+add_type(GSApplication, "languageData", List[dict[str, Any]])
 '''
 	.. attribute:: languageData
 		A list of dictionaries with more detailed language informations.
@@ -1908,7 +1907,7 @@ add_type(GSApplication, "buildNumber", float)
 '''
 
 
-menuTagLookup: Dict[str, int] = {
+menuTagLookup: dict[str, int] = {
 	APP_MENU: 1,
 	FILE_MENU: 3,
 	EDIT_MENU: 5,
@@ -2487,10 +2486,10 @@ GSApplication.showNotification = python_method(__GSApp_showNotification__)
 			Glyphs.showNotification('Export fonts', 'The export of the fonts was successful.')
 '''
 
-def __GSApp_localize__(self: GSApplication, localization: str | Dict[str, str]) -> str:
+def __GSApp_localize__(self: GSApplication, localization: str | dict[str, str]) -> str:
 	if isString(localization):  # localization is str
 		return cast(str, localization)
-	elif isinstance(localization, dict):  # localization is Dict[str, str]
+	elif isinstance(localization, dict):  # localization is dict[str, str]
 		# Ensure self.defaults["AppleLanguages"] returns a list of strings
 		apple_languages: List[str] = self.defaults.get("AppleLanguages", [])  # type: ignore
 		for language in apple_languages:
@@ -4954,7 +4953,7 @@ GSFont.__getitem__ = python_method(__GSFont_getitem__)
 GSFont.glyphs = property(
 	lambda self: FontGlyphsProxy(self),
 	lambda self, value: FontGlyphsProxy(self).setter(value))
-add_type(GSFont, 'glyphs', List[GSGlyph] | Dict[str, GSGlyph])
+add_type(GSFont, 'glyphs', List[GSGlyph] | dict[str, GSGlyph])
 
 
 GSInterpolationFontProxy.glyphs = property(
@@ -5108,7 +5107,7 @@ add_type(GSFont, 'copyright', str)
 '''
 
 GSFont.copyrights = property(lambda self: FontInfoPropertyProxy(self, "copyrights"))
-add_type(GSFont, 'copyrights', Dict[str, str])
+add_type(GSFont, 'copyrights', dict[str, str])
 '''
 	.. attribute:: copyrights
 
@@ -5138,7 +5137,7 @@ add_type(GSFont, 'license', str)
 '''
 
 GSFont.licenses = property(lambda self: FontInfoPropertyProxy(self, "licenses"))
-add_type(GSFont, 'licenses', Dict[str, str])
+add_type(GSFont, 'licenses', dict[str, str])
 '''
 	.. attribute:: licenses
 
@@ -5169,7 +5168,7 @@ add_type(GSFont, 'compatibleFullName', str)
 '''
 
 GSFont.compatibleFullNames = property(lambda self: FontInfoPropertyProxy(self, "compatibleFullNames"))
-add_type(GSFont, 'compatibleFullNames', Dict[str, str])
+add_type(GSFont, 'compatibleFullNames', dict[str, str])
 '''
 	.. attribute:: compatibleFullNames
 
@@ -5200,7 +5199,7 @@ add_type(GSFont, 'sampleText', str)
 '''
 
 GSFont.sampleTexts = property(lambda self: FontInfoPropertyProxy(self, "sampleTexts"))
-add_type(GSFont, 'sampleTexts', Dict[str, str])
+add_type(GSFont, 'sampleTexts', dict[str, str])
 '''
 	.. attribute:: sampleTexts
 

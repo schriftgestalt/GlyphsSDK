@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import os
 import traceback
-from typing import TYPE_CHECKING, Any, Dict, List, cast
+from typing import TYPE_CHECKING, Any, List, cast
 
 import objc
 from AppKit import (
@@ -117,7 +117,7 @@ def pathForResource(resourceName: str, extension: str, path: str | None = None) 
 		raise ValueError("Please supply path")
 
 
-def setUpMenuHelper(menu: NSMenu, items: List[Dict[str, Any]], defaultTarget: Any) -> None:
+def setUpMenuHelper(menu: NSMenu, items: List[dict[str, Any]], defaultTarget: Any) -> None:
 	if not isinstance(items, list):
 		return
 
@@ -821,7 +821,7 @@ class FilterWithoutDialog(BaseFilterWithoutDialog):
 			return (False, ns_error)
 
 	@objc.typedSelector(b'c40@0:8@16@24o^@32')
-	def runFilterWithLayer_options_error_(self, layer: GSLayer, options: Dict[str, Any] | None, error: NSError | None) -> tuple[bool, NSError | None]:
+	def runFilterWithLayer_options_error_(self, layer: GSLayer, options: dict[str, Any] | None, error: NSError | None) -> tuple[bool, NSError | None]:
 		"""
 		Required for compatibility with Glyphs version 702 or later.
 		Leave this as it is.
@@ -1239,7 +1239,7 @@ class ReporterPlugin(BaseReporterPlugin):
 			LogError(traceback.format_exc())
 			return 0
 
-	def drawForegroundForLayer_options_(self, layer: GSLayer, options: Dict[str, Any]) -> None:
+	def drawForegroundForLayer_options_(self, layer: GSLayer, options: dict[str, Any]) -> None:
 		"""
 		Whatever you draw here will be displayed IN FRONT OF the paths.
 		Setting a color:
@@ -1268,7 +1268,7 @@ class ReporterPlugin(BaseReporterPlugin):
 		except:
 			LogError(traceback.format_exc())
 
-	def drawForegroundWithOptions_(self, options: Dict[str, Any]) -> None:
+	def drawForegroundWithOptions_(self, options: dict[str, Any]) -> None:
 		"""
 		Whatever you draw here will be displayed IN FRONT OF the paths. The difference to drawForegroundForLayer_options_() is that you need to deal with the scaling and current layer yourself.
 
@@ -1288,7 +1288,7 @@ class ReporterPlugin(BaseReporterPlugin):
 		except:
 			LogError(traceback.format_exc())
 
-	def drawBackgroundForLayer_options_(self, layer: GSLayer, options: Dict[str, Any]) -> None:
+	def drawBackgroundForLayer_options_(self, layer: GSLayer, options: dict[str, Any]) -> None:
 		"""
 		Whatever you draw here will be displayed BEHIND the paths.
 		"""
@@ -1300,7 +1300,7 @@ class ReporterPlugin(BaseReporterPlugin):
 		except Exception as e:
 			self.performSelector_withObject_afterDelay_("raiseException:", e, 0.1)
 
-	def drawBackgroundWithOptions_(self, options: Dict[str, Any]) -> None:
+	def drawBackgroundWithOptions_(self, options: dict[str, Any]) -> None:
 		"""
 		Whatever you draw here will be displayed BEHIND the paths. The difference to drawBackgroundForLayer_options_() is that you need to deal with the scaling and current layer yourself.
 		"""
@@ -1312,7 +1312,7 @@ class ReporterPlugin(BaseReporterPlugin):
 		except Exception as e:
 			self.performSelector_withObject_afterDelay_("raiseException:", e, 0.1)
 
-	def drawBackgroundForInactiveLayer_options_(self, layer: GSLayer, options: Dict[str, Any]) -> None:
+	def drawBackgroundForInactiveLayer_options_(self, layer: GSLayer, options: dict[str, Any]) -> None:
 		"""
 		Whatever you draw here will be displayed behind the paths, but
 		- for inactive glyphs in the EDIT VIEW
@@ -1336,7 +1336,7 @@ class ReporterPlugin(BaseReporterPlugin):
 		except Exception as e:
 			self.performSelector_withObject_afterDelay_("raiseException:", e, 0.1)
 
-	def drawForegroundForInactiveLayer_options_(self, layer: GSLayer, options: Dict[str, Any]) -> None:
+	def drawForegroundForInactiveLayer_options_(self, layer: GSLayer, options: dict[str, Any]) -> None:
 		"""
 		Whatever you draw here will be displayed behind the paths, but
 		- for inactive glyphs in the EDIT VIEW
@@ -1737,7 +1737,7 @@ class SelectTool(GSToolSelect):
 		except:
 			LogError(traceback.format_exc())
 
-	def drawForegroundForLayer_options_(self, layer: GSLayer, options: Dict[str, Any]) -> None:
+	def drawForegroundForLayer_options_(self, layer: GSLayer, options: dict[str, Any]) -> None:
 		"""
 		Whatever you draw here will be displayed IN FRONT OF the paths.
 		Setting a color:
@@ -1764,7 +1764,7 @@ class SelectTool(GSToolSelect):
 		except:
 			LogError(traceback.format_exc())
 
-	def drawBackgroundForLayer_options_(self, layer: GSLayer, options: Dict[str, Any]) -> None:
+	def drawBackgroundForLayer_options_(self, layer: GSLayer, options: dict[str, Any]) -> None:
 		"""
 		Whatever you draw here will be displayed BEHIND the paths.
 		"""
