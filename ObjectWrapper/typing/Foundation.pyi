@@ -8,7 +8,6 @@ from typing import (
 	NamedTuple,
 	Self,
 	Sequence,
-	TypeAlias,
 	TypeVar,
 	overload,
 )
@@ -29,14 +28,14 @@ class NSPoint:
 	def __getitem__(self, key: int) -> float: ...
 	def __len__(self) -> int: ...
 
-NSPointLike: TypeAlias = "NSPoint | tuple[float, float]"
+type NSPointLike = NSPoint | tuple[float, float]
 
 class NSSize(NamedTuple):
 	"""A size (width & height)."""
 	width: float
 	height: float
 
-NSSizeLike: TypeAlias = "NSSize | tuple[float, float]"
+type NSSizeLike = NSSize | tuple[float, float]
 
 class NSRect:
 	"""A rectangle, defined by origin & size."""
@@ -50,7 +49,7 @@ class NSRect:
 	def __iter__(self) -> Iterator[NSPoint | NSSize]: ...
 	def __len__(self) -> int: ...
 
-NSRectLike: TypeAlias = "NSRect | tuple[NSPointLike, NSSizeLike]"
+type NSRectLike  = NSRect | tuple[NSPointLike, NSSizeLike]
 
 class NSRange(NamedTuple):
 	"""A range, defined by location & length."""
