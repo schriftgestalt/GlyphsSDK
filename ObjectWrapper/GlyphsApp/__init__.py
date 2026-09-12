@@ -14502,7 +14502,7 @@ GSBackgroundImage.transform = property(
 '''
 
 
-def __GSBackgroundImage_resetCrop(self: GSImage):
+def __GSBackgroundImage_resetCrop(self: "GSImage"):
 	self.crop = NSRect(NSPoint(0, 0), self.image.size())
 
 
