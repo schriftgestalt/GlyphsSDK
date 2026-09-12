@@ -33,9 +33,8 @@ if TYPE_CHECKING:
 	from . import Glyphs, GSFont, GSLayer, GSUserNotification, GSEditViewController, LogToConsole, LogError, ONSTATE, OFFSTATE, MIXEDSTATE, Message, objcObject, GSWindowController
 	from .plugins import GSToolPlugin, GSFilterPlugin, GSToolSelect, BaseFileFormatPlugin, BaseFilterWithoutDialog, BaseGeneralPlugin, BasePalettePlugin, BaseReporterPlugin, GSPaletteView
 else:
-	from GlyphsApp import GSEditViewController, Glyphs, LogError
+	from GlyphsApp import GSEditViewController, Glyphs, GSFont, GSLayer, LogError, LogToConsole, ONSTATE, OFFSTATE, MIXEDSTATE, Message, objcObject
 	GSWindowController = objc.lookUpClass("GSWindowController")
-	GSToolPlugin = objc.lookUpClass("GSToolPlugin")
 	GSToolPlugin = objc.lookUpClass("GSToolPlugin")
 	GSFilterPlugin = objc.lookUpClass("GSFilterPlugin")
 	GSToolSelect = objc.lookUpClass("GSToolSelect")
@@ -45,6 +44,7 @@ else:
 	BasePalettePlugin = objc.lookUpClass("BasePalettePlugin")
 	BaseReporterPlugin = objc.lookUpClass("BaseReporterPlugin")
 	GSPaletteView = objc.lookUpClass("GSPaletteView")
+	GSUserNotification = objc.lookUpClass("GSUserNotification")
 
 __all__ = [
 	"Glyphs", "FileFormatPlugin", "FilterWithDialog", "FilterWithoutDialog", "GeneralPlugin", "PalettePlugin", "ReporterPlugin", "SelectTool",
@@ -278,8 +278,7 @@ class FileFormatPlugin(BaseFileFormatPlugin):
 		- font: The font object to export
 		//- error: PyObjc-Requirement. It is required here in order to return the error object upon export failure. Ignore its existence here.
 
-		return (True, None) if the export was successful
-		return (False, NSError) if the export failed
+		returns nothing, needs to report the error itself.
 		"""
 		try:
 
@@ -293,7 +292,7 @@ class FileFormatPlugin(BaseFileFormatPlugin):
 				# Use Mac Notification Center
 				notification = GSUserNotification.new()
 				notification.title = self.title()
-				notification.informativeText = returnMessage
+				notification.message = returnMessage
 				if hasattr(self, "exportPath") and self.exportPath:
 					notification.userInfo = {"destinationPath": self.exportPath}
 					notification.actionButtonTitle = "Show"
@@ -345,7 +344,7 @@ class FileFormatPlugin(BaseFileFormatPlugin):
 				# Use Mac Notification Center
 				notification = GSUserNotification.new()
 				notification.title = self.title()
-				notification.informativeText = returnMessage
+				notification.message = returnMessage
 				notification.userInfo = {"destinationPath": destinationURL.path()}
 				notification.actionButtonTitle = "Show"
 				notification.deliver()

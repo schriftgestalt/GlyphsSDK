@@ -30,6 +30,7 @@ class intWrapper (int):
 	def __call__(self):
 		return self
 
+
 if TYPE_CHECKING:
 	from .classes import GSSteppingTextField  # type: ignore
 else:
@@ -141,6 +142,7 @@ def Checkbox(title="", frame=None, value=NSControlStateValueOff, action=None, ta
 	button.setControlSize_(sizeStyle)
 	return button
 
+
 objc.addConvenienceForClass(
 	"NSButton",
 	(
@@ -195,6 +197,7 @@ def TextField(text="", frame=None, alignment=NSTextAlignmentNatural, action=None
 	if formatter is not None:
 		TextField.cell().setFormatter_(formatter)
 	return textField
+
 
 objc.addConvenienceForClass(
 	"NSButton",
@@ -291,6 +294,7 @@ def PopUpButton(items=[], frame=None, action=None, target=None, callback=None, s
 def __NSPopUpButton__setitems__(self, items):
 	self.removeAllItems()
 	self.addItemsWithTitles_(items)
+
 
 objc.addConvenienceForClass(
 	"NSPopUpButton",
@@ -437,11 +441,13 @@ def NSWindow__add(self, view):
 	self.contentView().addSubview_(view)
 
 
-def NSWindow__open(self):
+def NSWindow__open(self, sender=None):
 	self.orderFront_(None)
 
-def NSWindow__close(self):
-	self.orderOut_(None)
+
+def NSWindow__close(self, sender=None):
+	self.orderOut_(sender)
+
 
 objc.addConvenienceForClass(
 	"NSWindow",
@@ -456,7 +462,7 @@ objc.addConvenienceForClass(
 		),
 		(
 			"close",
-			NSWindow.orderOut_
+			objc.python_method(NSWindow__close)
 		),
 		(
 			"makeKey",

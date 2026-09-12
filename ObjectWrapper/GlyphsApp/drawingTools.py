@@ -3,9 +3,12 @@
 
 from __future__ import print_function
 # from typing import Any, List, Dict, Optional
-from AppKit import NSBezierPath, NSColor, NSFont, NSImage, NSGradient, NSColorSpace, NSLineJoinStyleMiter, NSLineJoinStyleRound, NSLineCapStyleButt, NSLineCapStyleRound, NSLineCapStyleSquare, NSFontAttributeName, NSForegroundColorAttributeName, NSGraphicsContext, NSCompositingOperationSourceOver, NSGradientDrawsBeforeStartingLocation, NSGradientDrawsAfterEndingLocation  # type: ignore
-from Foundation import NSMakeRect, NSAffineTransform, NSMakePoint, NSZeroRect, NSString, NSPoint, NSPointLike
-from typing import Optional, Tuple, List
+from AppKit import NSBezierPath, NSColor, NSFont, NSImage, NSGradient, NSColorSpace, NSLineJoinStyleMiter, NSLineJoinStyleRound, NSLineCapStyleButt, NSLineCapStyleRound, NSLineCapStyleSquare, NSFontAttributeName, NSForegroundColorAttributeName, NSGraphicsContext, NSCompositingOperationSourceOver, NSGradientDrawsBeforeStartingLocation, NSGradientDrawsAfterEndingLocation
+from Foundation import NSMakeRect, NSAffineTransform, NSMakePoint, NSZeroRect, NSString, NSPoint
+from typing import Optional, Tuple, List, TYPE_CHECKING
+
+if TYPE_CHECKING:
+	from Foundation import NSPointLike
 
 
 def save():
