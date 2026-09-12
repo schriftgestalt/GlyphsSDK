@@ -1,7 +1,7 @@
 __all__ = ["GlyphPreview"]
 
 import traceback
-from typing import Tuple, cast
+from typing import cast
 
 from AppKit import NSColor, NSGraphicsContext, NSRectFill, NSView
 from Foundation import NSAffineTransform
@@ -90,7 +90,7 @@ class GlyphPreview(VanillaBaseObject):
 
 	nsGlyphPreviewClass = GSGlyphPreviewView
 
-	def __init__(self, posSize: Tuple, layer: GSLayer | None = None) -> None:
+	def __init__(self, posSize: tuple, layer: GSLayer | None = None) -> None:
 		self.mouseDownCallBack = None
 		self.mouseDoubleDownCallBack = None
 		self.mouseUpCallBack = None

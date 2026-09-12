@@ -1,6 +1,6 @@
 # typings/AppKit.pyi
 
-from typing import Any, List, Mapping, Self, Tuple, Type, overload
+from typing import Any, List, Mapping, Self, Type, overload
 
 from Foundation import (
 	NSURL,
@@ -91,7 +91,7 @@ class NSScreen(NSObject):
 
 class NSNib(NSObject):
 	def initWithNibNamed_bundle_(self, name: str, bundle: "NSBundle") -> Self: ...
-	def instantiateWithOwner_topLevelObjects_(self, owner: Any, topLevelObjects: Any | None = None) -> Tuple[bool, str]: ...
+	def instantiateWithOwner_topLevelObjects_(self, owner: Any, topLevelObjects: Any | None = None) -> tuple[bool, str]: ...
 
 
 class NSMenuItem(NSObject):
@@ -631,7 +631,7 @@ class NSTextStorage(NSMutableAttributedString):
 class NSWorkspace(NSObject):
 	@classmethod
 	def sharedWorkspace(cls) -> "NSWorkspace": ...
-	def typeOfFile_error_(self, absoluteFilePath: str, outError: NSError | None) -> Tuple[NSString | None, NSError]: ...
+	def typeOfFile_error_(self, absoluteFilePath: str, outError: NSError | None) -> tuple[NSString | None, NSError]: ...
 	def openURL_(self, url: NSURL) -> None: ...
 
 class NSBundle(NSObject):

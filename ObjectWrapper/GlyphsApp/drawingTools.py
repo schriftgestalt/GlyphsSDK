@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from typing import List, Tuple
+from typing import List
 
 from AppKit import (  # type: ignore
 	NSBezierPath,
@@ -44,7 +44,7 @@ def restore():
 currentPath: NSBezierPath | None = None
 currentFillColor: NSColor | None = NSColor.blackColor()
 currentStrokeColor: NSColor | None = None
-currentGradient: Tuple[str, NSPoint, NSPoint, List[Tuple], list] | None = None
+currentGradient: tuple[str, NSPoint, NSPoint, List[tuple], list] | None = None
 currentStrokeWidth: float | None = None
 currentFont: NSFont = NSFont.systemFontOfSize_(NSFont.systemFontSize())
 

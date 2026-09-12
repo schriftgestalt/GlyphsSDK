@@ -21,7 +21,6 @@ from typing import (
 	List,
 	MutableMapping,
 	Sequence,
-	Tuple,
 	Type,
 	TypeVar,
 	cast,
@@ -682,7 +681,7 @@ class OrderedDictProxy(Generic[T], ABC):  # T is the type of items in the sequen
 	def keys(self) -> List[str]:
 		return [self.getKeyOf(v) for v in self.values()]
 
-	def items(self) -> Iterator[Tuple[str, T]]:
+	def items(self) -> Iterator[tuple[str, T]]:
 		for v in self.values():
 			yield (self.getKeyOf(v), v)
 
@@ -1008,7 +1007,7 @@ class DictProxy(Generic[T], ABC):
 	def keys(self) -> List[str]:
 		return [self.getKeyOf(v) for v in self.values()]
 
-	def items(self) -> Iterator[Tuple[str, T]]:
+	def items(self) -> Iterator[tuple[str, T]]:
 		for v in self.values():
 			yield (self.getKeyOf(v), v)
 
@@ -1396,7 +1395,7 @@ add_type(GSApplication, "filters", List[Any])  # List of filter plugin instances
 
 		.. versionadded:: After 2.4.2
 '''
-STR_TYPES: Tuple[Type[str], Type[objc.pyobjc_unicode]] = (str, objc.pyobjc_unicode)  # type: ignore
+STR_TYPES: tuple[Type[str], Type[objc.pyobjc_unicode]] = (str, objc.pyobjc_unicode)  # type: ignore
 
 def isString(string: Any) -> bool:
 	return isinstance(string, STR_TYPES)
@@ -1424,10 +1423,10 @@ def objcObject(pyObject: Any) -> NSObject:
 		return NSNull.null()
 	return pyObject  # Assuming pyObject is already an NSObject or compatible
 
-def validatePoint(value: Tuple[float, float] | NSPoint) -> Tuple[float, float]:
+def validatePoint(value: tuple[float, float] | NSPoint) -> tuple[float, float]:
 	return validateTuple(2, value)  # type: ignore
 
-def validateScale(value: float | Tuple[float, ...]) -> Tuple[float, float]:
+def validateScale(value: float | tuple[float, ...]) -> tuple[float, float]:
 	# Assuming validateTuple handles conversion from single float to tuple
 	v = validateTuple(1, value)  # type: ignore
 	if len(v) == 1:
@@ -1437,7 +1436,7 @@ def validateScale(value: float | Tuple[float, ...]) -> Tuple[float, float]:
 	raise ValueError("Scale must be a number or a tuple of two numbers")
 
 
-def validateTuple(expectedLength: int, value: Any) -> Tuple[float, ...]:
+def validateTuple(expectedLength: int, value: Any) -> tuple[float, ...]:
 	if value is None:
 		if expectedLength == 2:
 			return (0.0, 0.0)
@@ -16327,7 +16326,7 @@ Methods
 	* :meth:`LogError`
 
 '''
-def divideCurve(P0: NSPoint, P1: NSPoint, P2: NSPoint, P3: NSPoint, t: float) -> Tuple[NSPoint, NSPoint, NSPoint, NSPoint, NSPoint, NSPoint, NSPoint]:
+def divideCurve(P0: NSPoint, P1: NSPoint, P2: NSPoint, P3: NSPoint, t: float) -> tuple[NSPoint, NSPoint, NSPoint, NSPoint, NSPoint, NSPoint, NSPoint]:
 	Q0x = P0[0] + ((P1[0] - P0[0]) * t)
 	Q0y = P0[1] + ((P1[1] - P0[1]) * t)
 	Q1x = P1[0] + ((P2[0] - P1[0]) * t)
@@ -16473,7 +16472,7 @@ def scalePoint(P: NSPoint, scalar: float) -> NSPoint:
 def removeOverlap(paths: Sequence[GSPath]) -> NSMutableArray[GSPath] | None:
 	mutable_paths: NSMutableArray = NSMutableArray.arrayWithArray_(cast(NSArray, paths))
 
-	result_tuple: Tuple[bool, NSError | None] = GSPathFinder.removeOverlapPaths_error_(mutable_paths, None)
+	result_tuple: tuple[bool, NSError | None] = GSPathFinder.removeOverlapPaths_error_(mutable_paths, None)
 
 	if result_tuple[0] != 1:
 		return None

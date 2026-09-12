@@ -1,5 +1,5 @@
 
-from typing import Any, Callable, ParamSpec, Tuple, TypeVar
+from typing import Any, Callable, ParamSpec, TypeVar
 
 from AppKit import NSBundle, NSObject
 
@@ -27,7 +27,7 @@ class selector:
 	) -> None:
 		...
 
-def addConvenienceForClass(className: str, values: Tuple) -> None: ...
+def addConvenienceForClass(className: str, values: tuple) -> None: ...
 
 def protocolNamed(name: str) -> Any: ...
 

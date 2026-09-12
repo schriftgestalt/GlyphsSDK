@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import os
 import traceback
-from typing import TYPE_CHECKING, Any, Dict, List, Tuple, cast
+from typing import TYPE_CHECKING, Any, Dict, List, cast
 
 import objc
 from AppKit import (
@@ -341,7 +341,7 @@ class FileFormatPlugin(BaseFileFormatPlugin):
 				})
 			font.parent.presentError_(error)
 
-	def exportFont_toURL_error_(self, font: GSFont, destinationURL: NSURL, error: Any) -> Tuple[bool, NSError | None]:
+	def exportFont_toURL_error_(self, font: GSFont, destinationURL: NSURL, error: Any) -> tuple[bool, NSError | None]:
 		"""
 		EXPORT dialog
 
@@ -404,7 +404,7 @@ class FileFormatPlugin(BaseFileFormatPlugin):
 ########################################################################
 
 	@objc.typedSelector(b'c32@:@@o^@')
-	def writeFont_toURL_error_(self, font: GSFont, URL: NSURL, error: Any) -> Tuple[bool, NSError | None]:
+	def writeFont_toURL_error_(self, font: GSFont, URL: NSURL, error: Any) -> tuple[bool, NSError | None]:
 		"""
 		SAVE FONT dialog
 
@@ -445,7 +445,7 @@ class FileFormatPlugin(BaseFileFormatPlugin):
 ########################################################################
 
 	@objc.typedSelector(b'@@:@@o^@')
-	def fontFromURL_ofType_error_(self, URL: NSURL, fonttype: Any, error: Any) -> Tuple[GSFont | None, NSError | None]:
+	def fontFromURL_ofType_error_(self, URL: NSURL, fonttype: Any, error: Any) -> tuple[GSFont | None, NSError | None]:
 		"""
 		Reads a Font object from the specified URL.
 
@@ -802,7 +802,7 @@ class FilterWithoutDialog(BaseFilterWithoutDialog):
 			return None
 
 	@objc.typedSelector(b'c32@0:8@16o^@24')
-	def runFilterWithLayers_error_(self, layers: List[GSLayer], error: NSError | None) -> Tuple[bool, NSError | None]:
+	def runFilterWithLayers_error_(self, layers: List[GSLayer], error: NSError | None) -> tuple[bool, NSError | None]:
 		"""
 		Invoked when user triggers the filter through the Filter menu
 		from the font View
@@ -821,7 +821,7 @@ class FilterWithoutDialog(BaseFilterWithoutDialog):
 			return (False, ns_error)
 
 	@objc.typedSelector(b'c40@0:8@16@24o^@32')
-	def runFilterWithLayer_options_error_(self, layer: GSLayer, options: Dict[str, Any] | None, error: NSError | None) -> Tuple[bool, NSError | None]:
+	def runFilterWithLayer_options_error_(self, layer: GSLayer, options: Dict[str, Any] | None, error: NSError | None) -> tuple[bool, NSError | None]:
 		"""
 		Required for compatibility with Glyphs version 702 or later.
 		Leave this as it is.
@@ -837,7 +837,7 @@ class FilterWithoutDialog(BaseFilterWithoutDialog):
 			return (False, ns_error)
 
 	@objc.typedSelector(b'c32@0:8@16o^@24')
-	def runFilterWithLayer_error_(self, layer: GSLayer, error: NSError | None) -> Tuple[bool, NSError | None]:
+	def runFilterWithLayer_error_(self, layer: GSLayer, error: NSError | None) -> tuple[bool, NSError | None]:
 		"""
 		Invoked when user triggers the filter through the Filter menu
 		and only one layer is selected.
