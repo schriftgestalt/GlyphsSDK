@@ -67,6 +67,7 @@ from Foundation import (
 	NSString,
 )
 from objc import python_method
+from typing_extensions import Self
 
 objc.addConvenienceForClass(
 	"GSApplication",
@@ -3945,7 +3946,7 @@ class LayersIterator(Iterator[GSLayer]):
 		self.curInd = 0
 		self._owner = owner
 
-	def __iter__(self) -> Iterator[GSLayer]:
+	def __iter__(self) -> Self:
 		return self
 
 	def __next__(self) -> GSLayer:
