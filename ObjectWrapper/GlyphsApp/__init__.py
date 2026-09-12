@@ -1687,7 +1687,7 @@ class IntDefaultsProxy(DefaultsProxy):
 			raise TypeError(f"defaults key must be str, not {type(key).__name__}")
 		return NSUserDefaults.standardUserDefaults().integerForKey_(objcObject(key))
 
-	def __setitem__(self, key: str, value: int | float | None) -> None:
+	def __setitem__(self, key: str, value: float | None) -> None:
 		if not isString(key):
 			raise TypeError(f"defaults key must be str, not {type(key).__name__}")
 		if value is None:
@@ -1726,7 +1726,7 @@ class FloatDefaultsProxy(DefaultsProxy):
 			raise TypeError(f"defaults key must be str, not {type(key).__name__}")
 		return NSUserDefaults.standardUserDefaults().doubleForKey_(objcObject(key))
 
-	def __setitem__(self, key: str, value: int | float | None) -> None:
+	def __setitem__(self, key: str, value: float | None) -> None:
 		if not isString(key):
 			raise TypeError(f"defaults key must be str, not {type(key).__name__}")
 		if value is None:
