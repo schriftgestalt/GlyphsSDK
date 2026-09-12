@@ -234,117 +234,95 @@ class List2:
 
     def getColumnIdentifiers(self) -> list[str]:
         """Return a list of column identifiers in display order."""
-        ...
 
     def appendColumn(self, columnDescription: ColumnDescription) -> None:
         """Append a column. The identifier must be unique for this table."""
-        ...
 
     def insertColumn(self, index: int, columnDescription: ColumnDescription) -> None:
         """
         Insert a column at *index*. Pass ``-1`` to append.
         The identifier must be unique for this table.
         """
-        ...
 
     def removeColumn(self, identifier: str) -> None:
         """
         Remove the column with *identifier*.
         Fails silently when the column does not exist.
         """
-        ...
 
     # ----- Native views -----
 
     def getNSTableView(self) -> Any:
         """Return the underlying ``NSTableView``."""
-        ...
 
     def getNSScrollView(self) -> Any:
         """Return the underlying ``NSScrollView``."""
-        ...
 
     # ----- State -----
 
     def enable(self, onOff: bool) -> None:
         """Enable or disable the control."""
-        ...
 
     def setShowFocusRing(self, value: bool) -> None:
         """Show or hide the focus ring."""
-        ...
 
     # ----- Data -----
 
     def set(self, items: Sequence[Any]) -> None:
         """Replace the current items with *items*."""
-        ...
 
     def get(self) -> list[Any]:
         """Return all items in their original (unsorted) order."""
-        ...
 
     def getArrangedIndexes(self) -> list[int]:
         """Return item indexes in the order they are currently displayed."""
-        ...
 
     def getArrangedItems(self) -> list[Any]:
         """Return items in the order they are currently displayed."""
-        ...
 
     def reloadData(self, indexes: Sequence[int] | None = None) -> None:
         """
         Refresh the visible cells.  Pass *indexes* to reload only specific
         items; omit (or pass ``None``) to reload everything.
         """
-        ...
 
     # ----- Selection -----
 
     def getSelectedItems(self) -> list[Any]:
         """Return the currently selected items."""
-        ...
 
     def setSelectedItems(self, items: Sequence[Any]) -> None:
         """
         Select *items* by object identity.
         Prefer ``setSelectedIndexes`` for large lists to avoid O(n) iteration.
         """
-        ...
 
     def getSelectedIndexes(self) -> list[int]:
         """Return the indexes (into the full item list) of selected rows."""
-        ...
 
     def setSelectedIndexes(self, indexes: Sequence[int]) -> None:
         """Select the items at *indexes* (indexes into the full item list)."""
-        ...
 
     def getEditedIndex(self) -> int | None:
         """
         Return the index of the row currently being edited.
         Only valid inside an ``editCallback``.
         """
-        ...
 
     def getEditedItem(self) -> Any:
         """
         Return the item of the row currently being edited.
         Only valid inside an ``editCallback``.
         """
-        ...
 
     def scrollToSelection(self) -> None:
         """Scroll so that the first selected row is visible."""
-        ...
 
     def scrollToIndex(self, row: int) -> None:
         """Scroll so that *row* is visible."""
-        ...
 
     def removeSelection(self) -> None:
         """Delete the selected items from the list."""
-        ...
 
     # ----- Contextual menu -----
 
@@ -353,13 +331,11 @@ class List2:
         Attach a static contextual menu built from *items*.
         Use ``menuCallback`` for a dynamic menu instead.
         """
-        ...
 
     # ----- Drag and drop -----
 
     def setDropSettings(self, settings: dict[str, Any]) -> None:
         """Configure drop behaviour. See the class docstring for valid keys."""
-        ...
 
 
 class CheckBoxList2Cell:
