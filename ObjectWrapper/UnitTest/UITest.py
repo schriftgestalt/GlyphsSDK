@@ -1,5 +1,4 @@
 # MenuTitle: Glyphs.app UI Tests
-# encoding: utf-8
 
 """
 UI-dependent tests.
@@ -8,17 +7,24 @@ These tests need the font opened in the Glyphs UI (documents, tabs, tools,
 selection, edit view). The plain object tests live in UnitTestKopie.py.
 """
 
-import pytest
-
-from GlyphsApp import Glyphs, GSFont, GSFeature, GSDocument, GSFontViewController
-from GlyphsApp import GSLTR, GSRTL, GSVertical, GSVerticalToRight
-
-from TestHelpers import assert_list
+import copy
 import os
 import sys
-import copy
 
+import pytest
 from Foundation import NSPoint, NSRect  # type: ignore
+from GlyphsApp import (
+	GSLTR,
+	GSRTL,
+	Glyphs,
+	GSDocument,
+	GSFeature,
+	GSFont,
+	GSFontViewController,
+	GSVertical,
+	GSVerticalToRight,
+)
+from TestHelpers import assert_list
 
 PathToTestFile = os.path.join(os.path.dirname(__file__), "Glyphs Unit Test Sans.glyphs")
 

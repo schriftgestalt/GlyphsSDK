@@ -1,7 +1,8 @@
 
-from typing import Callable, Optional, Any, TypeVar, Tuple, ParamSpec
-from AppKit import NSObject, NSBundle
+from collections.abc import Callable
+from typing import Any, ParamSpec, TypeVar
 
+from AppKit import NSBundle, NSObject
 
 def super(super_class: Any, obj: Any) -> NSObject: ...
 
@@ -21,13 +22,13 @@ class selector:
 	def __init__(
 		self,
 		func: Callable[..., Any],
-		selector: Optional[str] = None,
-		signature: Optional[bytes] = None,
+		selector: str | None = None,
+		signature: bytes | None = None,
 		isClassMethod: bool = False,
 	) -> None:
 		...
 
-def addConvenienceForClass(className: str, values: Tuple) -> None: ...
+def addConvenienceForClass(className: str, values: tuple) -> None: ...
 
 def protocolNamed(name: str) -> Any: ...
 
