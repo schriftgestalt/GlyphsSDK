@@ -1521,7 +1521,7 @@ add_type(GSApplication, "defaults", DefaultsProxy)
 
 def printtraceback() -> None:
 	code: list[str] = []
-	for threadId, stack in sys._current_frames().items():
+	for stack in sys._current_frames().values():
 		# code.append("\n# Thread: %s(%d)" % (id2name.get(threadId,""), threadId))
 		for filename, lineno, name, line in traceback.extract_stack(stack):
 			code.append(f'File: "{filename}", line {lineno}, in {name}')
@@ -2949,7 +2949,6 @@ class InternalAxesProxy(OrderedDictProxy[float]):
 	def _setterMethod(self, values):
 		if isinstance(self._owner, GSInstance) and self._owner.type == INSTANCETYPEVARIABLE:
 			return
-		idx = 0
 		if self._owner.font is None:
 			raise AttributeError("cannot set 'axesValues' if 'font' property is not set")
 		axesValues = {}
@@ -3030,12 +3029,10 @@ class ExternalAxesProxy(OrderedDictProxy[float]):
 	def _setterMethod(self, values):
 		if isinstance(self._owner, GSInstance) and self._owner.type == INSTANCETYPEVARIABLE:
 			return
-		idx = 0
 		if self._owner.font is None:
 			return
-		for axis in self._owner.font.axes:
+		for idx,  axis in enumerate(self._owner.font.axes):
 			self._owner.setAxisExternalValueValue_forId_(values[idx], axis.axisId)
-			idx += 1
 
 	def setterMethod(self):
 		return self._setterMethod
@@ -3194,14 +3191,12 @@ class MasterMetricsProxy(OrderedDictProxy[GSMetricStore]):
 		return self._owner.font.countOfMetrics()
 
 	def _setterMethod(self, values):
-		idx = 0
 		if self._owner.font is None:
 			return
 		if self.__len__() != len(values):
 			raise ValueError("Count of values doesn’t match metrics")
-		for metric in self._owner.font.metrics:
+		for idx, metric in enumerate(self._owner.font.metrics):
 			self._owner.setMetricValueValue_forId_(values[idx], metric.id)
-			idx += 1
 
 	def setterMethod(self):
 		return self._setterMethod
@@ -3312,14 +3307,12 @@ class MasterStemsProxy(OrderedDictProxy[float]):
 		return self._owner.font.countOfStems()
 
 	def _setterMethod(self, values):
-		idx = 0
 		if self._owner.font is None:
 			return
 		if self.__len__() != len(values):
 			raise ValueError("Count of values doesn’t match stems")
-		for stem in self._owner.font.stems:
+		for idx, stem in enumerate(self._owner.font.stems):
 			self._owner.setStemValueValue_forId_(values[idx], stem.id)
-			idx += 1
 
 	def setterMethod(self):
 		return self._setterMethod
@@ -3439,14 +3432,12 @@ class MasterNumbersValuesProxy(OrderedDictProxy):
 		return self._owner.font.countOfNumbers()
 
 	def _setterMethod(self, values):
-		idx = 0
 		if self._owner.font is None:
 			return
 		if self.__len__() != len(values):
 			raise ValueError("Count of values doesn’t match numbers")
-		for number in self._owner.font.numbers:
+		for idx, number in enumerate(self._owner.font.numbers):
 			self._owner.setNumberValueValue_forId_(values[idx], number.id)
-			idx += 1
 
 	def setterMethod(self):
 		return self._setterMethod
@@ -4073,8 +4064,7 @@ class GlyphLayerProxy(OrderedDictProxy[GSLayer]):
 		self._owner.setLayers_(newLayers)
 
 def __NSOrderedSet__iter__(self):
-	for each in self.array():
-		yield each
+	yield from self.array()
 
 
 objc.addConvenienceForClass(
@@ -4295,7 +4285,7 @@ class LayerAnchorsProxy(DictProxy[GSAnchor]):
 			for anchor in values:
 				newAnchors[anchor.name] = anchor
 		elif isinstance(values, (NSDictionary, dict)):
-			for (key, anchor) in values.items():
+			for anchor in values.values():
 				newAnchors[anchor.name] = anchor
 		elif values is None:
 			pass
@@ -11472,7 +11462,7 @@ def __GSLayer__add__(self, summand: NSPoint | tuple | GSLayer):
 
 		if len(self.anchors):
 			newAnchors = NSMutableDictionary.new()
-			for anchorName in self.anchors.keys():
+			for anchorName in self.anchors:
 				anchor1 = newLayer.anchors[anchorName]
 				anchor2 = otherLayer.anchors[anchorName]
 				newAnchor = anchor1 + anchor2
@@ -11503,7 +11493,7 @@ def __GSLayer__i_add__(self, summand: NSPoint | tuple | GSLayer):
 			shape1 += shape2
 
 		if len(self.anchors):
-			for anchorName in self.anchors.keys():
+			for anchorName in self.anchors:
 				anchor1 = self.anchors[anchorName]
 				anchor2 = otherLayer.anchors[anchorName]
 				anchor1 += anchor2
@@ -11538,7 +11528,7 @@ def __GSLayer__sub__(self, summand: NSPoint | tuple | GSLayer):
 
 		if len(self.anchors):
 			newAnchors = NSMutableDictionary.new()
-			for anchorName in self.anchors.keys():
+			for anchorName in self.anchors:
 				anchor1 = newLayer.anchors[anchorName]
 				anchor2 = otherLayer.anchors[anchorName]
 				newAnchor = anchor1 - anchor2
@@ -11569,7 +11559,7 @@ def __GSLayer__iadd__(self, summand: NSPoint | tuple | GSLayer):
 			shape1 += shape2
 
 		if len(self.anchors):
-			for anchorName in self.anchors.keys():
+			for anchorName in self.anchors:
 				anchor1 = self.anchors[anchorName]
 				anchor2 = otherLayer.anchors[anchorName]
 				anchor1 += anchor2
@@ -16631,8 +16621,7 @@ GSNotifyingDictionary.__getitem__ = python_method(__Dict_getitem__)
 def __Dict__iter__(self):
 	Values = self.values()
 	if Values is not None:
-		for element in Values:
-			yield element
+		yield from Values
 
 
 MGOrderedDictionary.__iter__ = python_method(__Dict__iter__)
