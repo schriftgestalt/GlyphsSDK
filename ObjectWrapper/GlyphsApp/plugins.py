@@ -85,7 +85,7 @@ def LogToConsole_AsClassExtension(self, message: str) -> None:
 
 
 def LogError_AsClassExtension(self, message: str) -> None:
-	LogError("Error in Plugin: %s: %s" % (self.__class__.__name__, message))  # from GlyphsApp.py
+	LogError(f"Error in Plugin: {self.__class__.__name__}: {message}")  # from GlyphsApp.py
 
 
 def LoadNib(self, nibname: str, path: str | None = None) -> None:
@@ -95,18 +95,18 @@ def LoadNib(self, nibname: str, path: str | None = None) -> None:
 			bundle = NSBundle.bundleWithPath_(bundlePath)
 			nib: NSNib = NSNib.alloc().initWithNibNamed_bundle_(nibname, bundle)
 			if not nib:
-				LogError("Error loading nib for Class: %s" % self.__class__.__name__)
+				LogError(f"Error loading nib for Class: {self.__class__.__name__}")
 
 			result = nib.instantiateWithOwner_topLevelObjects_(self, None)
 			if not bool(result[0]):
-				LogError("Error instantiating nib for Class: %s" % self.__class__.__name__)
+				LogError(f"Error instantiating nib for Class: {self.__class__.__name__}")
 			else:
 				self.topLevelObjects = result[1]
 		except:
 			LogError(traceback.format_exc())
 	else:
 		if not NSBundle.loadNibNamed_owner_(nibname, self):
-			LogError("Error loading %s.nib." % nibname)
+			LogError(f"Error loading {nibname}.nib.")
 
 
 def pathForResource(resourceName: str, extension: str, path: str | None = None) -> str | None:
@@ -155,7 +155,7 @@ def setUpMenuHelper(menu: NSMenu, items: list[dict[str, Any]], defaultTarget: An
 				if state == ONSTATE or state == OFFSTATE or state == MIXEDSTATE:
 					newMenuItem.setState_(entry["state"])
 				else:
-					LogToConsole("illegal state for menu item '%s'" % entry["name"], "setUpMenuHelper")
+					LogToConsole(f"illegal state for menu item '{entry['name']}'", "setUpMenuHelper")
 
 		if "target" in entry:
 			newMenuItem.setTarget_(entry["target"])
@@ -211,7 +211,7 @@ class FileFormatPlugin(BaseFileFormatPlugin):
 			# Using self.toolbarIconName instead of self.icon to
 			#   make sure registered NSImage name is unique
 			if self.toolbarIcon.name() is None:
-				self.toolbarIcon.setName_("%s%s" % (self.className(), self.icon or "ExportIcon"))
+				self.toolbarIcon.setName_(f"{self.className()}{self.icon or 'ExportIcon'}")
 		else:
 			print("Error loading icon", self.icon, "for plugin:", self)
 
@@ -630,8 +630,8 @@ class FilterWithDialog(GSFilterPlugin):
 			# Custom Parameter
 			if len(arguments) > 1:
 				Message(
-					title="Error in %s" % self.menuName,
-					message="There was an error in %s's filter() method when called through a Custom Parameter upon font export. Check your Macro window output." % self.menuName
+					title=f"Error in {self.menuName}",
+					message=f"There was an error in {self.menuName}'s filter() method when called through a Custom Parameter upon font export. Check your Macro window output."
 				)
 			LogError(traceback.format_exc())
 
@@ -643,7 +643,7 @@ class FilterWithDialog(GSFilterPlugin):
 		"""
 		try:
 			if not hasattr(self, 'filter'):
-				print("The filter: %s doesn’t fully support the plugin API. The method 'filter()' is missing" % self.menuName)
+				print(f"The filter: {self.menuName} doesn’t fully support the plugin API. The method 'filter()' is missing")
 				return
 
 			# customParameters delivered to filter()
@@ -669,8 +669,8 @@ class FilterWithDialog(GSFilterPlugin):
 			# Custom Parameter
 			if len(arguments) > 1:
 				Message(
-					title="Error in %s" % self.menuName,
-					message="There was an error in %s's filter() method when called through a Custom Parameter upon font export. Check your Macro window output." % self.menuName
+					title=f"Error in {self.menuName}",
+					message=f"There was an error in {self.menuName}'s filter() method when called through a Custom Parameter upon font export. Check your Macro window output."
 				)
 			LogError(traceback.format_exc())
 
@@ -906,8 +906,8 @@ class FilterWithoutDialog(BaseFilterWithoutDialog):
 			# Custom Parameter
 			if len(arguments) > 1:
 				Message(
-					title="Error in %s" % self.menuName,
-					message="There was an error in %s's filter() method when called through a Custom Parameter upon font export. Check your Macro window output." % self.menuName
+					title=f"Error in {self.menuName}",
+					message=f"There was an error in {self.menuName}'s filter() method when called through a Custom Parameter upon font export. Check your Macro window output."
 				)
 			LogError(traceback.format_exc())
 
@@ -1174,7 +1174,7 @@ class ReporterPlugin(BaseReporterPlugin):
 			self._inactiveLayerBackground = True
 		elif hasattr(self, 'inactiveLayers'):
 			if not self.hasWarned:
-				print("%s: the method 'inactiveLayers' has been deprecated. Please use 'inactiveLayerBackground'" % self.className())
+				print(f"{self.className()}: the method 'inactiveLayers' has been deprecated. Please use 'inactiveLayerBackground'")
 				self.hasWarned = True
 			self.inactiveLayerBackground = self.inactiveLayers  # type: ignore
 			self._inactiveLayerBackground = True
