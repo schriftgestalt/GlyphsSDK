@@ -219,7 +219,7 @@ else:
 	GSPropertyDialogController = objc.lookUpClass("GSPropertyDialogController")
 	GSParameterValueViewController = objc.lookUpClass("GSParameterValueViewController")
 	GSIconPreset = objc.lookUpClass("GSIconPreset")
-__all__ = [
+__all__ = [  # noqa: RUF022
 
 	"Glyphs", "GetFile",
 	"wrapperVersion",
