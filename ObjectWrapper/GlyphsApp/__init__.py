@@ -2953,10 +2953,9 @@ class InternalAxesProxy(OrderedDictProxy[float]):
 		if self._owner.font is None:
 			raise AttributeError("cannot set 'axesValues' if 'font' property is not set")
 		axesValues = {}
-		for axis in self._owner.font.axes:
+		for idx, axis in enumerate(self._owner.font.axes):
 			axisValue = GSMetricStore(values[idx])
 			axesValues[axis.axisId] = axisValue
-			idx += 1
 		self._owner.setAxesValues_(axesValues)
 
 	def setterMethod(self):
