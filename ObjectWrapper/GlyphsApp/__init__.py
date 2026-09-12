@@ -11782,7 +11782,7 @@ GSAnchor.__iadd__ = python_method(__GSAnchor__i_add__)
 ##################################################################################
 
 
-class ____GSAnchor____():
+class ____GSAnchor____:
 	""" Marker: Initialization """
 
 
