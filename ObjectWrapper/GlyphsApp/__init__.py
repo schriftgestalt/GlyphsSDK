@@ -704,7 +704,7 @@ class OrderedDictProxy(ABC, Generic[T]):  # T is the type of items in the sequen
 		return '(' + body + ')'
 
 	def __repr__(self) -> str:
-		body = ''.join(f'\t{repr(v)},\n' for v in self.values())
+		body = ''.join(f'\t{v!r},\n' for v in self.values())
 		if len(body) > 0:
 			body = "\n" + body
 		return f"<GlyphsApp.{self.__class__.__name__} at 0x{hex(id(self))} ({body})>"
@@ -934,7 +934,7 @@ class ListProxy(ABC, Generic[T]):  # T is the type of items in the sequence
 		return '(' + body + ')'
 
 	def __repr__(self) -> str:
-		body = ''.join(f'\t{repr(v)},\n' for v in self.values())
+		body = ''.join(f'\t{v!r},\n' for v in self.values())
 		if len(body) > 0:
 			body = "\n" + body
 		return f"<GlyphsApp.{self.__class__.__name__} at 0x{hex(id(self))} ({body})>"
