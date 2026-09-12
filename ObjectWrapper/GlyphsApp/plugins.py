@@ -25,21 +25,24 @@ from AppKit import (
 from Foundation import NSURL, NSAttributedString, NSClassFromString, NSPoint, NSString
 from objc import python_method
 
+from . import (
+	MIXEDSTATE,
+	OFFSTATE,
+	ONSTATE,
+	GSFont,
+	GSLayer,
+	GSUserNotification,
+	LogToConsole,
+	Message,
+	objcObject,
+)
+
 if TYPE_CHECKING:
 	from . import (
-		MIXEDSTATE,
-		OFFSTATE,
-		ONSTATE,
 		Glyphs,
 		GSEditViewController,
-		GSFont,
-		GSLayer,
-		GSUserNotification,
 		GSWindowController,
 		LogError,
-		LogToConsole,
-		Message,
-		objcObject,
 	)
 	from .plugins import (
 		BaseFileFormatPlugin,
