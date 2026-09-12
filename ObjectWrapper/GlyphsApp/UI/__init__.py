@@ -286,7 +286,9 @@ class UIComboBox(NSComboBox):
 		self._callVanillaCallback(notification)
 
 
-def ComboBox(items=[], frame=None, completes=True, continuous=False, action=None, target=None, callback=None, formatter=None, sizeStyle=NSControlSizeRegular):
+def ComboBox(items:list | None = None, frame=None, completes=True, continuous=False, action=None, target=None, callback=None, formatter=None, sizeStyle=NSControlSizeRegular):
+	if items is None:
+		items = []
 	if frame:
 		comboBox = UIComboBox.alloc().initWithFrame_(frame)
 	else:
@@ -304,7 +306,9 @@ def ComboBox(items=[], frame=None, completes=True, continuous=False, action=None
 	return comboBox
 
 
-def PopUpButton(items=[], frame=None, action=None, target=None, callback=None, sizeStyle=NSControlSizeRegular):
+def PopUpButton(items: list | None = None, frame=None, action=None, target=None, callback=None, sizeStyle=NSControlSizeRegular):
+	if items is None:
+		items = []
 	if frame is None:
 		frame = NSMakeRect(10, 10, 100, 20)
 	popUpButton = NSPopUpButton.alloc().initWithFrame_pullsDown_(frame, False)
