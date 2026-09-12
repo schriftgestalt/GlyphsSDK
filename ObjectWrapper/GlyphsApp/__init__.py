@@ -14813,7 +14813,7 @@ class TabLayersProxy(ABC, Generic[TypeVar('GSLayer')]):
 
 	def setter(self, layers):
 		if not isinstance(layers, (list, tuple, type(self), NSArray)):
-			raise ValueError
+			raise TypeError
 		if isinstance(layers, type(self)):
 			layers = layers.values()
 
@@ -14836,7 +14836,7 @@ class TabLayersProxy(ABC, Generic[TypeVar('GSLayer')]):
 				char = Font.characterForGlyph_(layer)
 				A = NSAttributedString.alloc().initWithString_(NSString.stringWithChar_(char))
 			else:
-				raise ValueError
+				raise TypeError
 			string.appendAttributedString_(A)
 		self._owner.graphicView().setStringValue_(string)
 
