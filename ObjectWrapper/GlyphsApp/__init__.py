@@ -573,7 +573,7 @@ V = TypeVar('V')  # Value type for mappings (can be T for sequences)
 
 type OwnerType = GSFont | GSFontMaster | GSInstance
 
-class OrderedDictProxy(Generic[T], ABC):  # T is the type of items in the sequence/values in mapping
+class OrderedDictProxy(ABC, Generic[T]):  # T is the type of items in the sequence/values in mapping
 
 	_owner: OwnerType
 	KEY_TYPE: type = str
@@ -792,7 +792,7 @@ class OrderedDictProxy(Generic[T], ABC):  # T is the type of items in the sequen
 			self.append(value)
 
 
-class ListProxy(Generic[T], ABC):  # T is the type of items in the sequence
+class ListProxy(ABC, Generic[T]):  # T is the type of items in the sequence
 	_owner: OwnerType
 
 	def __init__(self, owner: OwnerType) -> None:
@@ -965,7 +965,7 @@ class ListProxy(Generic[T], ABC):  # T is the type of items in the sequence
 		raise NotImplementedError
 
 
-class DictProxy(Generic[T], ABC):
+class DictProxy(ABC, Generic[T]):
 	"""A proxy for dictionary-like objects where K is the key type and T is the value type."""
 
 	_owner: 'OwnerType'
@@ -14796,7 +14796,7 @@ GSEditViewController.selectedLayers = property(lambda self: self.pyobjc_instance
 GSFontViewController.selectedLayers = property(lambda self: self.pyobjc_instanceMethods.selectedLayers())
 
 
-class TabLayersProxy(Generic[TypeVar('GSLayer')], ABC):
+class TabLayersProxy(ABC, Generic[TypeVar('GSLayer')]):
 
 	_owner: GSEditViewController
 

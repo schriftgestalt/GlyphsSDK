@@ -128,7 +128,7 @@ class NSDate(NSObject):
 	def initWithTimeIntervalSince1970_(self, interval: float) -> Self: ...
 
 
-class NSDictionary(Generic[KT, VT], NSObject):
+class NSDictionary(NSObject, Generic[KT, VT]):
 	@classmethod
 	def dictionary(cls) -> Self: ...
 	def keysForObject_(self, obj: Any) -> list: ...
@@ -149,7 +149,7 @@ class NSMutableDictionary(NSDictionary):
 
 S = TypeVar("S")
 
-class NSOrderedSet(Generic[S], Sequence[S]):
+class NSOrderedSet(Sequence[S], Generic[S]):
 	@overload
 	def __init__(self) -> None: ...
 	@overload
