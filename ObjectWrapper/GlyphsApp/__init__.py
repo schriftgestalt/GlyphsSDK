@@ -15083,10 +15083,10 @@ class TabSelectedFeaturesProxy(ListProxy[GSFeature]):
 		return self._owner.selectedFeatures()[idx]
 
 	def setByIndex(self, idx: int, value: Any) -> None:
-		NotImplementedError()
+		raise NotImplementedError
 
 	def insertAtIndex(self, idx: int, value: Any) -> None:
-		NotImplementedError()
+		raise NotImplementedError
 
 	def removeByIndex(self, idx: int) -> Any:
 		del self._owner.selectedFeatures()[idx]
