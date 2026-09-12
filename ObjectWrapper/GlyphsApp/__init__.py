@@ -2948,7 +2948,7 @@ class InternalAxesProxy(OrderedDictProxy[float]):
 
 	def _setterMethod(self, values):
 		if isinstance(self._owner, GSInstance) and self._owner.type == INSTANCETYPEVARIABLE:
-			return None
+			return
 		idx = 0
 		if self._owner.font is None:
 			raise AttributeError("cannot set 'axesValues' if 'font' property is not set")
@@ -2997,7 +2997,7 @@ class ExternalAxesProxy(OrderedDictProxy[float]):
 
 	def removeByIndex(self, idx: int) -> None:
 		if isinstance(self._owner, GSInstance) and self._owner.type == INSTANCETYPEVARIABLE:
-			return None
+			return
 		axis = self._owner.font.axes[idx]
 		if axis is None:
 			return
