@@ -2342,7 +2342,7 @@ def __GSApp_removeCallback__(self, target=None, operation=None, callbackType=Non
 		if operation is not None:
 			__GSApp_do__removeCallback__(self, target, operation)
 		else:
-			for operation in callbackOperationTargets.keys():
+			for operation in callbackOperationTargets:
 				__GSApp_do__removeCallback__(self, target, operation)
 		return
 
