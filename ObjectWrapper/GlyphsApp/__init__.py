@@ -6131,13 +6131,13 @@ GSFont.kerningForPair = python_method(__GSFont_kerningForPair__)  # type: ignore
 
 
 def __GSFont_setKerningForPair__(self, FontMasterID: str, LeftKerningId: str, RightKerningId: str, Value: float, direction: int | None = GSLTR):
-	if not LeftKerningId[0] == '@':
+	if LeftKerningId[0] != '@':
 		glyph = self.glyphs[LeftKerningId]
 		if glyph is not None:
 			LeftKerningId = glyph.id
 		else:
 			raise KeyError(f"Glyphs with name: {LeftKerningId} not found")
-	if not RightKerningId[0] == '@':
+	if RightKerningId[0] != '@':
 		glyph = self.glyphs[RightKerningId]
 		if glyph is not None:
 			RightKerningId = glyph.id
@@ -6171,13 +6171,13 @@ GSFont.setKerningForPair = python_method(__GSFont_setKerningForPair__)
 
 
 def removeKerningForPair(self, fontMasterID: str, leftKerningId: str, rightKerningId: str, direction: int | None = GSLTR):
-	if not leftKerningId[0] == '@':
+	if leftKerningId[0] != '@':
 		glyph = self.glyphs[leftKerningId]
 		if glyph is not None:
 			leftKerningId = glyph.id
 		else:
 			raise KeyError(f"Glyphs with name: {leftKerningId} not found")
-	if not rightKerningId[0] == '@':
+	if rightKerningId[0] != '@':
 		glyph = self.glyphs[rightKerningId]
 		if glyph is not None:
 			rightKerningId = glyph.id
