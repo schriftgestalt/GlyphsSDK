@@ -1,7 +1,5 @@
 # mypy: check_untyped_defs=True
 
-from __future__ import annotations
-
 import copy
 import datetime
 import math
