@@ -1,25 +1,52 @@
-# encoding: utf-8
+from typing import TYPE_CHECKING, Any
 
-from __future__ import absolute_import, annotations
-
-from .GlyphView import GlyphView
-from .CanvasView import CanvasView
-from .GlyphPreview import GlyphPreview
-from typing import Any, List, TYPE_CHECKING
-
-from AppKit import NSWindow, NSPanel, NSButton, NSTextField, NSSearchField, NSComboBox, NSPopUpButton, NSImage, NSScrollView, NSTableView, NSTableColumn, NSArrayController, \
-	NSTitledWindowMask, NSClosableWindowMask, NSWindowStyleMaskResizable, NSUtilityWindowMask, NSBackingStoreBuffered, \
-	NSTextAlignmentNatural, NSControlSizeRegular, NSControlSizeSmall, NSLayoutConstraintOrientationHorizontal, NSLayoutConstraintOrientationVertical, \
-	NSControlStateValueOff, NSLayoutRelationGreaterThanOrEqual, NSLayoutRelationLessThanOrEqual, \
-	NSTableColumnUserResizingMask, NSBezelBorder, NSNoBorder, NSValueBinding, NSMenuItem
-
-from Foundation import NSRect, NSMakeRect, NSSelectorFromString, NSClassFromString  # type: ignore
 import objc
+from AppKit import (
+	NSArrayController,
+	NSBackingStoreBuffered,
+	NSBezelBorder,
+	NSButton,
+	NSClosableWindowMask,
+	NSComboBox,
+	NSControlSizeRegular,
+	NSControlSizeSmall,
+	NSControlStateValueOff,
+	NSImage,
+	NSLayoutConstraintOrientationHorizontal,
+	NSLayoutConstraintOrientationVertical,
+	NSLayoutRelationGreaterThanOrEqual,
+	NSLayoutRelationLessThanOrEqual,
+	NSMenuItem,
+	NSNoBorder,
+	NSPanel,
+	NSPopUpButton,
+	NSScrollView,
+	NSSearchField,
+	NSTableColumn,
+	NSTableColumnUserResizingMask,
+	NSTableView,
+	NSTextAlignmentNatural,
+	NSTextField,
+	NSTitledWindowMask,
+	NSUtilityWindowMask,
+	NSValueBinding,
+	NSWindow,
+	NSWindowStyleMaskResizable,
+)
+from Foundation import (  # type: ignore
+	NSClassFromString,
+	NSMakeRect,
+	NSRect,
+	NSSelectorFromString,
+)
 from objc import python_method
 
 from .. import callbackHelperClass
+from .CanvasView import CanvasView
+from .GlyphPreview import GlyphPreview
+from .GlyphView import GlyphView
 
-__all__ = ["GlyphView", "CanvasView", "GlyphPreview", "Window", "Panel", "Button", "Checkbox", "Label", "TextField", "SearchField", "ComboBox", "PopUpButton", "Table", "SteppingEditText", "autoLayout", "NSControlSizeSmall", "MenuItem"]
+__all__ = ["GlyphView", "CanvasView", "GlyphPreview", "Window", "Panel", "Button", "Checkbox", "Label", "TextField", "SearchField", "ComboBox", "PopUpButton", "Table", "SteppingEditText", "autoLayout", "NSControlSizeSmall", "MenuItem"]  # noqa: RUF022
 
 
 # stupid hack to allow code that doesn't expect NSButton.state to be a property (and access the value by `button.state()` (e.g. in vanilla)).
@@ -29,6 +56,7 @@ class intWrapper (int):
 
 	def __call__(self):
 		return self
+
 
 if TYPE_CHECKING:
 	from .classes import GSSteppingTextField  # type: ignore
@@ -141,6 +169,7 @@ def Checkbox(title="", frame=None, value=NSControlStateValueOff, action=None, ta
 	button.setControlSize_(sizeStyle)
 	return button
 
+
 objc.addConvenienceForClass(
 	"NSButton",
 	(
@@ -195,6 +224,7 @@ def TextField(text="", frame=None, alignment=NSTextAlignmentNatural, action=None
 	if formatter is not None:
 		TextField.cell().setFormatter_(formatter)
 	return textField
+
 
 objc.addConvenienceForClass(
 	"NSButton",
@@ -259,7 +289,9 @@ class UIComboBox(NSComboBox):
 		self._callVanillaCallback(notification)
 
 
-def ComboBox(items=[], frame=None, completes=True, continuous=False, action=None, target=None, callback=None, formatter=None, sizeStyle=NSControlSizeRegular):
+def ComboBox(items:list | None = None, frame=None, completes=True, continuous=False, action=None, target=None, callback=None, formatter=None, sizeStyle=NSControlSizeRegular):
+	if items is None:
+		items = []
 	if frame:
 		comboBox = UIComboBox.alloc().initWithFrame_(frame)
 	else:
@@ -277,7 +309,9 @@ def ComboBox(items=[], frame=None, completes=True, continuous=False, action=None
 	return comboBox
 
 
-def PopUpButton(items=[], frame=None, action=None, target=None, callback=None, sizeStyle=NSControlSizeRegular):
+def PopUpButton(items: list | None = None, frame=None, action=None, target=None, callback=None, sizeStyle=NSControlSizeRegular):
+	if items is None:
+		items = []
 	if frame is None:
 		frame = NSMakeRect(10, 10, 100, 20)
 	popUpButton = NSPopUpButton.alloc().initWithFrame_pullsDown_(frame, False)
@@ -291,6 +325,7 @@ def PopUpButton(items=[], frame=None, action=None, target=None, callback=None, s
 def __NSPopUpButton__setitems__(self, items):
 	self.removeAllItems()
 	self.addItemsWithTitles_(items)
+
 
 objc.addConvenienceForClass(
 	"NSPopUpButton",
@@ -380,9 +415,9 @@ class UITableview(NSTableView, protocols=[NSTableViewDelegate]):  # type: ignore
 
 
 def Table(
-	columns: List | None = None,
+	columns: list | None = None,
 	arrayController: NSArrayController | None = None,
-	content: List | None = None,
+	content: list | None = None,
 	frame: NSRect | None = None,
 	borderType=NSBezelBorder,
 	selectionCallback: Any = None,
@@ -437,11 +472,13 @@ def NSWindow__add(self, view):
 	self.contentView().addSubview_(view)
 
 
-def NSWindow__open(self):
+def NSWindow__open(self, sender=None):
 	self.orderFront_(None)
 
-def NSWindow__close(self):
-	self.orderOut_(None)
+
+def NSWindow__close(self, sender=None):
+	self.orderOut_(sender)
+
 
 objc.addConvenienceForClass(
 	"NSWindow",
@@ -456,7 +493,7 @@ objc.addConvenienceForClass(
 		),
 		(
 			"close",
-			NSWindow.orderOut_
+			objc.python_method(NSWindow__close)
 		),
 		(
 			"makeKey",

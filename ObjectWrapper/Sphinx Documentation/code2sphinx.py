@@ -10,16 +10,17 @@
 ###############################################################################################
 
 
-import re, os, codecs
+import os
+import re
+
 
 def ReadFromFile(path):
 	"""
 	Return content of file
 	"""
 	if os.path.exists(path):
-		f = codecs.open(path, encoding='utf-8', mode='r')
-		text = f.read()
-		f.close()
+		with open(path, encoding='utf-8', mode='r') as f:
+			text = f.read()
 		return text
 	return ''
 
@@ -27,9 +28,8 @@ def WriteToFile(path, string):
 	"""
 	Write content to file
 	"""
-	f = codecs.open(path, 'w', "utf-8")
-	f.write(string)
-	f.close()
+	with open(path, 'w', encoding="utf-8") as f:
+		f.write(string)
 
 def Execute(command):
 	"""

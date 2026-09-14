@@ -1,11 +1,36 @@
 #!/usr/bin/env python
-# encoding: utf-8
+from typing import TYPE_CHECKING
 
-from __future__ import print_function
-# from typing import Any, List, Dict, Optional
-from AppKit import NSBezierPath, NSColor, NSFont, NSImage, NSGradient, NSColorSpace, NSLineJoinStyleMiter, NSLineJoinStyleRound, NSLineCapStyleButt, NSLineCapStyleRound, NSLineCapStyleSquare, NSFontAttributeName, NSForegroundColorAttributeName, NSGraphicsContext, NSCompositingOperationSourceOver, NSGradientDrawsBeforeStartingLocation, NSGradientDrawsAfterEndingLocation  # type: ignore
-from Foundation import NSMakeRect, NSAffineTransform, NSMakePoint, NSZeroRect, NSString, NSPoint, NSPointLike
-from typing import Optional, Tuple, List
+from AppKit import (  # type: ignore
+	NSBezierPath,
+	NSColor,
+	NSColorSpace,
+	NSCompositingOperationSourceOver,
+	NSFont,
+	NSFontAttributeName,
+	NSForegroundColorAttributeName,
+	NSGradient,
+	NSGradientDrawsAfterEndingLocation,
+	NSGradientDrawsBeforeStartingLocation,
+	NSGraphicsContext,
+	NSImage,
+	NSLineCapStyleButt,
+	NSLineCapStyleRound,
+	NSLineCapStyleSquare,
+	NSLineJoinStyleMiter,
+	NSLineJoinStyleRound,
+)
+from Foundation import (
+	NSAffineTransform,
+	NSMakePoint,
+	NSMakeRect,
+	NSPoint,
+	NSString,
+	NSZeroRect,
+)
+
+if TYPE_CHECKING:
+	from Foundation import NSPointLike
 
 
 def save():
@@ -21,7 +46,7 @@ def restore():
 currentPath: NSBezierPath | None = None
 currentFillColor: NSColor | None = NSColor.blackColor()
 currentStrokeColor: NSColor | None = None
-currentGradient: Tuple[str, NSPoint, NSPoint, List[Tuple], list] | None = None
+currentGradient: tuple[str, NSPoint, NSPoint, list[tuple], list] | None = None
 currentStrokeWidth: float | None = None
 currentFont: NSFont = NSFont.systemFontOfSize_(NSFont.systemFontSize())
 
@@ -53,19 +78,19 @@ def newPath():
 	currentPath = NSBezierPath.bezierPath()
 
 
-def moveTo(pt: NSPointLike):
+def moveTo(pt: "NSPointLike"):
 	# move to point
 	if currentPath is not None:
 		currentPath.moveToPoint_(NSMakePoint(pt[0], pt[1]))
 
 
-def lineTo(pt: NSPointLike):
+def lineTo(pt: "NSPointLike"):
 	# line to point
 	if currentPath is not None:
 		currentPath.lineToPoint_(NSMakePoint(pt[0], pt[1]))
 
 
-def curveTo(h1: NSPointLike, h2: NSPointLike, pt: NSPointLike):
+def curveTo(h1: "NSPointLike", h2: "NSPointLike", pt: "NSPointLike"):
 	# curve to point with bcps
 	if currentPath is not None:
 		currentPath.curveToPoint_controlPoint1_controlPoint2_(NSMakePoint(pt[0], pt[1]), NSMakePoint(h1[0], h1[1]), NSMakePoint(h2[0], h2[1]))
@@ -77,7 +102,7 @@ def closePath():
 		currentPath.closePath()
 
 
-def drawPath(path: Optional[NSBezierPath] = None):
+def drawPath(path: NSBezierPath | None = None):
 	# draws the path
 	if path is None:
 		path = currentPath
@@ -232,7 +257,7 @@ def fontSize(fontSize: float):
 	currentFont = NSFont.fontWithName_size_(currentFont.fontName(), fontSize)
 
 
-def text(textString: str, pt: NSPointLike):
+def text(textString: str, pt: "NSPointLike"):
 	# Draw a text on position "x", "y".
 	NSString.stringWithString_(textString).drawAtPoint_withAttributes_(NSMakePoint(pt[0], pt[1]), {
 		NSFontAttributeName: currentFont,
@@ -240,12 +265,12 @@ def text(textString: str, pt: NSPointLike):
 	})
 
 
-def image(image: NSImage, pt: NSPointLike, alpha: float = 1):
+def image(image: NSImage, pt: "NSPointLike", alpha: float = 1):
 	if isinstance(image, NSImage):
 		image.drawAtPoint_fromRect_operation_fraction_(NSMakePoint(pt[0], pt[1]), NSZeroRect, NSCompositingOperationSourceOver, alpha)
 
 
-def linearGradient(startPoint: NSPointLike, endPoint: NSPointLike, colors: list[NSColor] | None = None, locations: list | None = None):
+def linearGradient(startPoint: "NSPointLike", endPoint: "NSPointLike", colors: list[NSColor] | None = None, locations: list | None = None):
 	global currentGradient
 	global currentFillColor
 	if colors is None:
