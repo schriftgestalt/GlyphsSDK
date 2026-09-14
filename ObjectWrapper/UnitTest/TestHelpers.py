@@ -1,9 +1,12 @@
-import pytest
 import copy
-from Foundation import NSPoint  # type: ignore
-from GlyphsApp import DictProxy, ListProxy, OrderedDictProxy, MGOrderedDictionary
 import pathlib as Pathlib
-from typing import Sequence, Any
+from collections.abc import Sequence
+from typing import Any
+
+import pytest
+from Foundation import NSPoint  # type: ignore
+from GlyphsApp import DictProxy, ListProxy, MGOrderedDictionary, OrderedDictProxy
+
 
 def assert_read_only(obj, attr_name: str):
 	"""Assert that setting a read-only property raises AttributeError."""

@@ -1,13 +1,12 @@
-# -*- coding: utf-8 -*-
-
-from __future__ import print_function
-
 __all__ = ["GlyphView"]
 
 import traceback
+
+from AppKit import NSColor, NSRectFill, NSView
 from vanilla import Group
-from AppKit import NSView, NSColor, NSRectFill
+
 from GlyphsApp import GSLayer
+
 
 class GlyphView_view(NSView):
 	_layer: GSLayer | None
