@@ -2,10 +2,37 @@
 # encoding: utf-8
 
 from __future__ import print_function
+
+from typing import TYPE_CHECKING, List, Optional, Tuple
+
 # from typing import Any, List, Dict, Optional
-from AppKit import NSBezierPath, NSColor, NSFont, NSImage, NSGradient, NSColorSpace, NSLineJoinStyleMiter, NSLineJoinStyleRound, NSLineCapStyleButt, NSLineCapStyleRound, NSLineCapStyleSquare, NSFontAttributeName, NSForegroundColorAttributeName, NSGraphicsContext, NSCompositingOperationSourceOver, NSGradientDrawsBeforeStartingLocation, NSGradientDrawsAfterEndingLocation
-from Foundation import NSMakeRect, NSAffineTransform, NSMakePoint, NSZeroRect, NSString, NSPoint
-from typing import Optional, Tuple, List, TYPE_CHECKING
+from AppKit import (
+	NSBezierPath,
+	NSColor,
+	NSColorSpace,
+	NSCompositingOperationSourceOver,
+	NSFont,
+	NSFontAttributeName,
+	NSForegroundColorAttributeName,
+	NSGradient,
+	NSGradientDrawsAfterEndingLocation,
+	NSGradientDrawsBeforeStartingLocation,
+	NSGraphicsContext,
+	NSImage,
+	NSLineCapStyleButt,
+	NSLineCapStyleRound,
+	NSLineCapStyleSquare,
+	NSLineJoinStyleMiter,
+	NSLineJoinStyleRound,
+)
+from Foundation import (
+	NSAffineTransform,
+	NSMakePoint,
+	NSMakeRect,
+	NSPoint,
+	NSString,
+	NSZeroRect,
+)
 
 if TYPE_CHECKING:
 	from Foundation import NSPointLike

@@ -4,27 +4,37 @@
 
 from __future__ import annotations
 
-import objc
-import time
-import math
-import sys
-import os
-import re
-import traceback
-import threading
 import copy
 import datetime
 import functools
-
+import math
+import os
+import re
+import sys
+import threading
+import time
+import traceback
 from abc import ABC, abstractmethod
-from typing import TypeVar, Generic, Iterator, Union, Any, List, Tuple, Dict, Optional, cast, Type, MutableMapping, Sequence, TYPE_CHECKING, Callable, overload
-from objc import python_method
+from typing import (
+	TYPE_CHECKING,
+	Any,
+	Callable,
+	Dict,
+	Generic,
+	Iterator,
+	List,
+	MutableMapping,
+	Optional,
+	Sequence,
+	Tuple,
+	Type,
+	TypeVar,
+	Union,
+	cast,
+	overload,
+)
 
-
-from Foundation import NSPoint, NSRange, NSRect, NSSelectorFromString, NSMakeRange, NSMakePoint
-from Foundation import NSNumber, NSObject, NSArray, NSMutableArray, NSDictionary, NSMutableDictionary, NSString, NSAttributedString, NSMutableAttributedString, NSAffineTransform, NSAffineTransformStruct, NSDate, NSURL, NSIndexSet, NSClassFromString, NSNotFound, NSNull, NSConcreteValue, NSNotificationCenter
-
-
+import objc
 from AppKit import (
 	NSApp,
 	NSBundle,
@@ -37,13 +47,41 @@ from AppKit import (
 	NSLog,
 	NSMenu,
 	NSMenuItem,
-	NSSavePanel,
-	NSOpenPanel,
 	NSModalResponseOK,
+	NSOpenPanel,
+	NSSavePanel,
 	NSUserDefaults,
 	NSWorkspace,
 	# NSImage,
 )
+from Foundation import (
+	NSURL,
+	NSAffineTransform,
+	NSAffineTransformStruct,
+	NSArray,
+	NSAttributedString,
+	NSClassFromString,
+	NSConcreteValue,
+	NSDate,
+	NSDictionary,
+	NSIndexSet,
+	NSMakePoint,
+	NSMakeRange,
+	NSMutableArray,
+	NSMutableAttributedString,
+	NSMutableDictionary,
+	NSNotFound,
+	NSNotificationCenter,
+	NSNull,
+	NSNumber,
+	NSObject,
+	NSPoint,
+	NSRange,
+	NSRect,
+	NSSelectorFromString,
+	NSString,
+)
+from objc import python_method
 
 from ._functions import FUNCTIONS
 
@@ -58,7 +96,80 @@ objc.addConvenienceForClass(
 
 
 if TYPE_CHECKING:
-	from .classes import GSFont, GSFontMaster, GSAxis, GSMetric, GSValueStore, GSGlyph, GSGlyphInfo, GSGlyphsInfo, GSGuide, GSHint, GSInstance, GSLayer, GSNode, GSPath, GSShapeClass, GSShape, GSAlignmentZone, GSAnchor, GSAnnotation, GSApplication, GSImage, GSBackgroundImage, GSBackgroundLayer, GSClass, GSComponent, GSControlLayer, GSCustomParameter, GSDocument, GSProjectDocument, GSEditViewController, GSGlyphEditView, GSFontViewController, GSElement, GSGradient, GSColorStop, GSFeature, GSFeaturePrefix, GSProxyShapes, GSSubstitution, GSPartProperty, MGOrderedDictionary, GSNotifyingDictionary, GSPathFinder, GSPathPen, GSCallbackHandler, GSInterpolationFontProxy, GSFeatureGenerator, GSTTStem, GSMacroViewController, GSPathSegment, PreviewTextWindow, GSInfoValueLocalized, GSInfoValueSingle, GSInfoValue, GSMetricStore, GSGlyphReference, FTPointArray, GSSelectGlyphsDialogController, GSTransformableElement, GSHandle, GSUserNotification, GSFilterHandler, GSInfoProperty, GlyphsToolKnife, GSToolGroup, GSExportInstanceOperation, GSCustomParameterValueViewController, GSPropertyDialogController, GSParameterValueViewController, GSRoundCorner, GSIconPreset, GSNameParticle  # type: ignore
+	from .classes import (  # type: ignore
+		FTPointArray,
+		GlyphsToolKnife,
+		GSAlignmentZone,
+		GSAnchor,
+		GSAnnotation,
+		GSApplication,
+		GSAxis,
+		GSBackgroundImage,
+		GSBackgroundLayer,
+		GSCallbackHandler,
+		GSClass,
+		GSColorStop,
+		GSComponent,
+		GSControlLayer,
+		GSCustomParameter,
+		GSCustomParameterValueViewController,
+		GSDocument,
+		GSEditViewController,
+		GSElement,
+		GSExportInstanceOperation,
+		GSFeature,
+		GSFeatureGenerator,
+		GSFeaturePrefix,
+		GSFilterHandler,
+		GSFont,
+		GSFontMaster,
+		GSFontViewController,
+		GSGlyph,
+		GSGlyphEditView,
+		GSGlyphInfo,
+		GSGlyphReference,
+		GSGlyphsInfo,
+		GSGradient,
+		GSGuide,
+		GSHandle,
+		GSHint,
+		GSIconPreset,
+		GSImage,
+		GSInfoProperty,
+		GSInfoValue,
+		GSInfoValueLocalized,
+		GSInfoValueSingle,
+		GSInstance,
+		GSInterpolationFontProxy,
+		GSLayer,
+		GSMacroViewController,
+		GSMetric,
+		GSMetricStore,
+		GSNameParticle,
+		GSNode,
+		GSNotifyingDictionary,
+		GSParameterValueViewController,
+		GSPartProperty,
+		GSPath,
+		GSPathFinder,
+		GSPathPen,
+		GSPathSegment,
+		GSProjectDocument,
+		GSPropertyDialogController,
+		GSProxyShapes,
+		GSRoundCorner,
+		GSSelectGlyphsDialogController,
+		GSShape,
+		GSShapeClass,
+		GSSubstitution,
+		GSToolGroup,
+		GSTransformableElement,
+		GSTTStem,
+		GSUserNotification,
+		GSValueStore,
+		MGOrderedDictionary,
+		PreviewTextWindow,
+	)
 else:
 	GSFont: Type = objc.lookUpClass("GSFont")
 	GSFontMaster = objc.lookUpClass("GSFontMaster")

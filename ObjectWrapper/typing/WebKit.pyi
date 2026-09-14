@@ -1,4 +1,5 @@
 from AppKit import NSURLRequest
+
 class WKNavigation:
 	...
 class WKWebView:

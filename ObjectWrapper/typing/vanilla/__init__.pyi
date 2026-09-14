@@ -2,11 +2,11 @@
 # For more details, see the vanilla documentation:
 # https://vanilla.robotools.dev/en/latest/
 
-from typing import Any, Tuple, Optional, Callable, Sequence, TypedDict
-from AppKit import NSButton, NSColor, NSScreen, NSImage, NSFormatter
-from .vanillaBase import VanillaBaseObject, VanillaBaseControl, PosSize, Size
+from typing import Any, Callable, Optional, Sequence, Tuple, TypedDict
 
+from AppKit import NSButton, NSColor, NSFormatter, NSImage, NSScreen
 
+from .vanillaBase import PosSize, Size, VanillaBaseControl, VanillaBaseObject
 
 # Windows and Containers
 class Window(VanillaBaseObject):
