@@ -1,2 +1,2 @@
 from Foundation import *  # noqa
-from AppKit import *
+from AppKit import *  # noqa

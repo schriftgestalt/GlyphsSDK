@@ -939,3 +939,23 @@ NSGradientDrawsBeforeStartingLocation: int
 NSGradientDrawsAfterEndingLocation: int
 
 NSItalicFontMask: int
+
+NSNoImage: int
+NSImageOnly: int
+NSImageLeading: int
+NSImageTrailing: int
+NSImageLeft: int
+NSImageRight: int
+NSImageBelow: int
+NSImageAbove: int
+NSImageOverlaps: int
+
+NSStringPboardType: str
+NSPasteboardTypeString: str
+
+NSLineBreakByWordWrapping: int
+NSLineBreakByCharWrapping: int
+NSLineBreakByClipping: int
+NSLineBreakByTruncatingHead: int
+NSLineBreakByTruncatingTail: int
+NSLineBreakByTruncatingMiddle: int
