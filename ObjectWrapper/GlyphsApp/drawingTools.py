@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from typing import TYPE_CHECKING
 
 from AppKit import (  # type: ignore
 	NSBezierPath,
@@ -77,19 +78,19 @@ def newPath():
 	currentPath = NSBezierPath.bezierPath()
 
 
-def moveTo(pt: NSPointLike):
+def moveTo(pt: "NSPointLike"):
 	# move to point
 	if currentPath is not None:
 		currentPath.moveToPoint_(NSMakePoint(pt[0], pt[1]))
 
 
-def lineTo(pt: NSPointLike):
+def lineTo(pt: "NSPointLike"):
 	# line to point
 	if currentPath is not None:
 		currentPath.lineToPoint_(NSMakePoint(pt[0], pt[1]))
 
 
-def curveTo(h1: NSPointLike, h2: NSPointLike, pt: NSPointLike):
+def curveTo(h1: "NSPointLike", h2: "NSPointLike", pt: "NSPointLike"):
 	# curve to point with bcps
 	if currentPath is not None:
 		currentPath.curveToPoint_controlPoint1_controlPoint2_(NSMakePoint(pt[0], pt[1]), NSMakePoint(h1[0], h1[1]), NSMakePoint(h2[0], h2[1]))
@@ -256,7 +257,7 @@ def fontSize(fontSize: float):
 	currentFont = NSFont.fontWithName_size_(currentFont.fontName(), fontSize)
 
 
-def text(textString: str, pt: NSPointLike):
+def text(textString: str, pt: "NSPointLike"):
 	# Draw a text on position "x", "y".
 	NSString.stringWithString_(textString).drawAtPoint_withAttributes_(NSMakePoint(pt[0], pt[1]), {
 		NSFontAttributeName: currentFont,
@@ -264,12 +265,12 @@ def text(textString: str, pt: NSPointLike):
 	})
 
 
-def image(image: NSImage, pt: NSPointLike, alpha: float = 1):
+def image(image: NSImage, pt: "NSPointLike", alpha: float = 1):
 	if isinstance(image, NSImage):
 		image.drawAtPoint_fromRect_operation_fraction_(NSMakePoint(pt[0], pt[1]), NSZeroRect, NSCompositingOperationSourceOver, alpha)
 
 
-def linearGradient(startPoint: NSPointLike, endPoint: NSPointLike, colors: list[NSColor] | None = None, locations: list | None = None):
+def linearGradient(startPoint: "NSPointLike", endPoint: "NSPointLike", colors: list[NSColor] | None = None, locations: list | None = None):
 	global currentGradient
 	global currentFillColor
 	if colors is None:

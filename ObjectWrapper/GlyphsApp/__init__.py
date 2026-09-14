@@ -2,10 +2,12 @@
 
 import copy
 import datetime
+import functools
 import math
 import os
 import re
 import sys
+import threading
 import time
 import traceback
 from abc import ABC, abstractmethod
@@ -14,6 +16,7 @@ from typing import (
 	TYPE_CHECKING,
 	Any,
 	Generic,
+	Self,
 	TypeVar,
 	cast,
 	overload,
@@ -67,7 +70,6 @@ from Foundation import (
 	NSString,
 )
 from objc import python_method
-from typing_extensions import Self
 
 from ._functions import FUNCTIONS
 
@@ -542,7 +544,7 @@ Changes in the API
 These changes could possibly break your code, so you need to keep track of them. Please see :attr:`GSApplication.versionNumber` for how to check for the app version in your code. Really, read it. There’s a catch.
 '''
 
-def _install_object_new(cls: Type[NSObject]) -> None:
+def _install_object_new(cls: type[NSObject]) -> None:
 	objc.addConvenienceForClass(
 		cls.__name__,
 		(("__new__", staticmethod(__GSObject__new__)),),
@@ -604,13 +606,13 @@ class ProxyDisplay(ABC):
 		return '(' + body + ')'
 
 	def __repr__(self) -> str:
-		body = ''.join(f'\t{repr(v)},\n' for v in self.values())
+		body = ''.join(f'\t{v!r},\n' for v in self.values())
 		if len(body) > 0:
 			body = "\n" + body
 		return f"<GlyphsApp.{self.__class__.__name__} at {hex(id(self))} ({body})>"
 
 
-class OrderedDictProxy(ProxyDisplay, Generic[T], ABC):  # T is the type of items in the sequence/values in mapping
+class OrderedDictProxy(ProxyDisplay, ABC, Generic[T]):  # T is the type of items in the sequence/values in mapping
 
 	_owner: OwnerType
 	KEY_TYPE: type = str
@@ -817,7 +819,7 @@ class OrderedDictProxy(ProxyDisplay, Generic[T], ABC):  # T is the type of items
 			self.append(value)
 
 
-class ListProxy(ProxyDisplay, Generic[T], ABC):  # T is the type of items in the sequence
+class ListProxy(ProxyDisplay, ABC, Generic[T]):  # T is the type of items in the sequence
 	_owner: OwnerType
 
 	def __init__(self, owner: OwnerType) -> None:
@@ -1115,7 +1117,7 @@ class GSProxyShapesIterator:
 		self.proxy = proxy
 		self.n = 0
 
-	def __iter__(self) -> GSProxyShapesIterator:
+	def __iter__(self) -> "GSProxyShapesIterator":
 		return self
 
 	def __next__(self) -> GSShape:
@@ -3253,7 +3255,7 @@ class MasterMetricsProxy(OrderedDictProxy[GSMetricStore]):
 	def values(self):
 		return self._owner.pyobjc_instanceMethods.metrics()
 
-	def items(self) -> Iterator[Tuple[str, GSMetricStore]]:
+	def items(self) -> Iterator[tuple[str, GSMetricStore]]:
 		if self._owner.font is None:
 			return
 		for metric in self._owner.font.metrics:
@@ -3276,7 +3278,7 @@ class MasterMetricsProxy(OrderedDictProxy[GSMetricStore]):
 		return self._setterMethod
 
 
-class InstanceNameParticlesProxy(OrderedDictProxy[List[GSNameParticle]]):
+class InstanceNameParticlesProxy(OrderedDictProxy[list[GSNameParticle]]):
 	"""The name particles of an instance, keyed by GSAxis.axisId and ordered like font.axes."""
 
 	def _axes(self) -> list:
@@ -3297,33 +3299,33 @@ class InstanceNameParticlesProxy(OrderedDictProxy[List[GSNameParticle]]):
 		return dict(self._owner.pyobjc_instanceMethods.nameParticles() or {})
 
 	# keys come from the axes, so they stay ordered and complete
-	def keys(self) -> List[str]:
+	def keys(self) -> list[str]:
 		return [axis.axisId for axis in self._axes()]
 
-	def items(self) -> Iterator[Tuple[str, List[GSNameParticle]]]:
+	def items(self) -> Iterator[tuple[str, list[GSNameParticle]]]:
 		for key in self.keys():
 			yield (key, self.getByKey(key))
 
-	def getKeyOf(self, value: List[GSNameParticle]) -> str:
+	def getKeyOf(self, value: list[GSNameParticle]) -> str:
 		for key, particles in self._particles().items():
 			if list(particles) == list(value):
 				return key
-		raise ValueError("%s is not in the name particles" % value)
+		raise ValueError(f"{value} is not in the name particles")
 
-	def getByIndex(self, idx: int) -> List[GSNameParticle]:
+	def getByIndex(self, idx: int) -> list[GSNameParticle]:
 		return self.getByKey(self._axisIdForIndex(idx))
 
-	def getByKey(self, key: str) -> List[GSNameParticle]:
+	def getByKey(self, key: str) -> list[GSNameParticle]:
 		if key not in self.keys():
-			raise KeyError("No axis with id %s" % key)
+			raise KeyError(f"No axis with id {key}")
 		return list(self._particles().get(key) or [])
 
-	def setByIndex(self, idx: int, value: List[GSNameParticle]) -> None:
+	def setByIndex(self, idx: int, value: list[GSNameParticle]) -> None:
 		self.setByKey(self._axisIdForIndex(idx), value)
 
-	def setByKey(self, key: str, value: List[GSNameParticle]) -> None:
+	def setByKey(self, key: str, value: list[GSNameParticle]) -> None:
 		if key not in self.keys():
-			raise KeyError("No axis with id %s" % key)
+			raise KeyError(f"No axis with id {key}")
 		particles = self._particles()
 		particles[key] = list(value)
 		self._owner.setNameParticles_(particles)
@@ -3337,10 +3339,10 @@ class InstanceNameParticlesProxy(OrderedDictProxy[List[GSNameParticle]]):
 			del particles[key]
 			self._owner.setNameParticles_(particles)
 
-	def insertAtIndex(self, idx: int, value: List[GSNameParticle]) -> None:
+	def insertAtIndex(self, idx: int, value: list[GSNameParticle]) -> None:
 		raise TypeError("Can’t insert name particles. Add an axis on the font")
 
-	def values(self) -> List[List[GSNameParticle]]:
+	def values(self) -> list[list[GSNameParticle]]:
 		return [self.getByKey(key) for key in self.keys()]
 
 	def __len__(self) -> int:
@@ -3377,7 +3379,7 @@ class InstanceNameParticlesProxy(OrderedDictProxy[List[GSNameParticle]]):
 				raise ValueError("Count of values doesn’t match axes")
 			self._owner.setNameParticles_(dict(zip(keys, [list(v) for v in values])))
 		else:
-			raise TypeError("Cant set value of type %s" % type(values).__name__)
+			raise TypeError(f"Cant set value of type {type(values).__name__}")
 
 
 class FontStemsProxy(OrderedDictProxy[GSMetric]):
@@ -4092,33 +4094,33 @@ class SmartComponentValuesProxy(DictProxy[float]):
 	def setByKey(self, key: str, value: float):
 		self._owner.setPieceValue_forKey_(float(value), key)
 
-	def removeByKey(self, key: str):
+	def removeByKey(self, key: str) -> None:
 		pieceSettings = self._owner.pieceSettings()
 		if pieceSettings is not None:
 			del (pieceSettings[key])
 
-	def keys(self):
+	def keys(self) -> OwnerType | None:
 		pieceSettings = self._owner.pieceSettings()
 		if pieceSettings is not None and len(pieceSettings) > 0:
 			return pieceSettings.allKeys()
 		return None
 
-	def values(self):
+	def values(self) -> list[float] | None:
 		pieceSettings = self._owner.pieceSettings()
 		if pieceSettings is not None and len(pieceSettings) > 0:
 			return [float(v) for v in pieceSettings.allValues()]
 		return None
 
-	def __str__(self):
+	def __str__(self) -> str:
 		pieceSettings = self._owner.pieceSettings()
 		return str(pieceSettings)
 
-	def items(self):
+	def items(self) -> OwnerType:
 		return self._owner.pieceSettings().items()
 
-	def setter(self, values: dict):
+	def setter(self, values: dict) -> None:
 		if values is not None and not isinstance(values, (dict, NSDictionary, self.__class__)):
-			ValueError("%s is not a dict" % values)
+			raise ValueError(f"{values} is not a dict")
 		self._owner.setPieceSettings_(values)
 
 class LayersIterator(Iterator[GSLayer]):
@@ -8702,7 +8704,7 @@ GSInstance.addAsMaster = python_method(__GSInstance_AddInstanceAsMaster__)
 		.. versionadded:: 2.6.2
 '''
 
-def __GSInstance__fileName__(self, format: str = None) -> str:
+def __GSInstance__fileName__(self, format: str | None = None) -> str:
 	return self.fileName_error_(format, None)[0]
 
 
@@ -8760,7 +8762,7 @@ GSInstance.nameParticles = property(
 	lambda self: InstanceNameParticlesProxy(self),
 	lambda self, value: InstanceNameParticlesProxy(self).setter(value)
 )
-add_type(GSInstance, "nameParticles", Dict[str, List['GSNameParticle']])
+add_type(GSInstance, "nameParticles", dict[str, list['GSNameParticle']])
 '''
 	.. attribute:: nameParticles
 
@@ -8824,7 +8826,7 @@ GSNameParticle.names = property(
 	lambda self: NameParticleNamesProxy(self),
 	lambda self, value: NameParticleNamesProxy(self).setter(value)
 )
-add_type(GSNameParticle, "names", List['GSInfoValue'])
+add_type(GSNameParticle, "names", list['GSInfoValue'])
 '''
 	.. attribute:: names
 
@@ -8858,14 +8860,14 @@ add_type(GSNameParticle, "internal", float)
 
 		:type: float
 '''
-def __GSNameParticle_external__(self) -> Optional[float]:
+def __GSNameParticle_external__(self) -> float | None:
 	external = self.pyobjc_instanceMethods.external()
 	if external < NSNotFound:
 		return external
 	return None
 
 
-def __GSNameParticle_set_external__(self, value: Optional[float]) -> None:
+def __GSNameParticle_set_external__(self, value: float | None) -> None:
 	# NSNotFound is how the framework stores “no external coordinate”
 	self.setExternal_(NSNotFound if value is None else value)
 
@@ -8874,7 +8876,7 @@ GSNameParticle.external = property(
 	lambda self: __GSNameParticle_external__(self),
 	lambda self, value: __GSNameParticle_set_external__(self, value)
 )
-add_type(GSNameParticle, "external", Optional[float])
+add_type(GSNameParticle, "external", float | None)
 '''
 	.. attribute:: external
 

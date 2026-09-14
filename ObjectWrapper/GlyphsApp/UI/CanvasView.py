@@ -1,7 +1,7 @@
 __all__ = ["CanvasView"]
 
 import traceback
-from typing import Any, Tuple, Type, cast
+from typing import Any, cast
 
 from AppKit import NSColor, NSRectFill, NSView
 from vanilla import Group
