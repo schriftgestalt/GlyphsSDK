@@ -1,5 +1,4 @@
 # MenuTitle: Glyphs.app UI Tests
-# encoding: utf-8
 
 """
 UI-dependent tests.

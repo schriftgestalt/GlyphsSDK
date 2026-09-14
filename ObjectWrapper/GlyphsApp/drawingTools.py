@@ -1,12 +1,6 @@
 #!/usr/bin/env python
-# encoding: utf-8
 
-from __future__ import print_function
-
-from typing import TYPE_CHECKING, List, Optional, Tuple
-
-# from typing import Any, List, Dict, Optional
-from AppKit import (
+from AppKit import (  # type: ignore
 	NSBezierPath,
 	NSColor,
 	NSColorSpace,
@@ -51,7 +45,7 @@ def restore():
 currentPath: NSBezierPath | None = None
 currentFillColor: NSColor | None = NSColor.blackColor()
 currentStrokeColor: NSColor | None = None
-currentGradient: Tuple[str, NSPoint, NSPoint, List[Tuple], list] | None = None
+currentGradient: tuple[str, NSPoint, NSPoint, list[tuple], list] | None = None
 currentStrokeWidth: float | None = None
 currentFont: NSFont = NSFont.systemFontOfSize_(NSFont.systemFontSize())
 
@@ -107,7 +101,7 @@ def closePath():
 		currentPath.closePath()
 
 
-def drawPath(path: Optional[NSBezierPath] = None):
+def drawPath(path: NSBezierPath | None = None):
 	# draws the path
 	if path is None:
 		path = currentPath

@@ -1,7 +1,3 @@
-# -*- coding: utf-8 -*-
-
-from __future__ import print_function
-
 __all__ = ["CanvasView"]
 
 import traceback
@@ -71,9 +67,9 @@ class CanvasView(Group):
 	'''
 
 	version = "1.0"
-	nsViewClass: Type[NSView] = CanvasView_view
+	nsViewClass: type[NSView] = CanvasView_view
 
-	def __init__(self, posSize: Tuple, delegate: Any, backgroundColor: NSColor | None = None):
+	def __init__(self, posSize: tuple, delegate: Any, backgroundColor: NSColor | None = None):
 		self._setupView(self.nsViewClass, posSize)
 		self.delegate = delegate
 		view: CanvasView_view = cast(CanvasView_view, self._nsObject)

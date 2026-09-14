@@ -1,8 +1,4 @@
-# encoding: utf-8
-
-from __future__ import absolute_import, annotations
-
-from typing import TYPE_CHECKING, Any, List
+from typing import TYPE_CHECKING, Any
 
 import objc
 from AppKit import (
@@ -50,7 +46,7 @@ from .CanvasView import CanvasView
 from .GlyphPreview import GlyphPreview
 from .GlyphView import GlyphView
 
-__all__ = ["GlyphView", "CanvasView", "GlyphPreview", "Window", "Panel", "Button", "Checkbox", "Label", "TextField", "SearchField", "ComboBox", "PopUpButton", "Table", "SteppingEditText", "autoLayout", "NSControlSizeSmall", "MenuItem"]
+__all__ = ["GlyphView", "CanvasView", "GlyphPreview", "Window", "Panel", "Button", "Checkbox", "Label", "TextField", "SearchField", "ComboBox", "PopUpButton", "Table", "SteppingEditText", "autoLayout", "NSControlSizeSmall", "MenuItem"]  # noqa: RUF022
 
 
 # stupid hack to allow code that doesn't expect NSButton.state to be a property (and access the value by `button.state()` (e.g. in vanilla)).
@@ -293,7 +289,9 @@ class UIComboBox(NSComboBox):
 		self._callVanillaCallback(notification)
 
 
-def ComboBox(items=[], frame=None, completes=True, continuous=False, action=None, target=None, callback=None, formatter=None, sizeStyle=NSControlSizeRegular):
+def ComboBox(items:list | None = None, frame=None, completes=True, continuous=False, action=None, target=None, callback=None, formatter=None, sizeStyle=NSControlSizeRegular):
+	if items is None:
+		items = []
 	if frame:
 		comboBox = UIComboBox.alloc().initWithFrame_(frame)
 	else:
@@ -311,7 +309,9 @@ def ComboBox(items=[], frame=None, completes=True, continuous=False, action=None
 	return comboBox
 
 
-def PopUpButton(items=[], frame=None, action=None, target=None, callback=None, sizeStyle=NSControlSizeRegular):
+def PopUpButton(items: list | None = None, frame=None, action=None, target=None, callback=None, sizeStyle=NSControlSizeRegular):
+	if items is None:
+		items = []
 	if frame is None:
 		frame = NSMakeRect(10, 10, 100, 20)
 	popUpButton = NSPopUpButton.alloc().initWithFrame_pullsDown_(frame, False)
@@ -415,9 +415,9 @@ class UITableview(NSTableView, protocols=[NSTableViewDelegate]):  # type: ignore
 
 
 def Table(
-	columns: List | None = None,
+	columns: list | None = None,
 	arrayController: NSArrayController | None = None,
-	content: List | None = None,
+	content: list | None = None,
 	frame: NSRect | None = None,
 	borderType=NSBezelBorder,
 	selectionCallback: Any = None,
