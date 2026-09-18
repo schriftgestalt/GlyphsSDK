@@ -95,6 +95,8 @@ if TYPE_CHECKING:
 		GSBackgroundImage,
 		GSBackgroundLayer,
 		GSCallbackHandler,
+		GSPluginHandler,
+		GSScriptingHandler,
 		GSClass,
 		GSColorStop,
 		GSComponent,
@@ -229,6 +231,7 @@ else:
 	GSIconPreset = objc.lookUpClass("GSIconPreset")
 	GSNameParticle = objc.lookUpClass("GSNameParticle")
 	GSScriptingHandler = objc.lookUpClass("GSScriptingHandler")
+	GSPluginHandler = objc.lookUpClass("GSPluginHandler")
 
 __all__ = [  # noqa: RUF022
 
@@ -237,7 +240,7 @@ __all__ = [  # noqa: RUF022
 	"GSAlignmentZone", "GSAnchor", "GSAnnotation", "GSApplication", "GSBackgroundImage", "GSBackgroundLayer", "GSClass", "GSComponent", "GSControlLayer", "GSGlyphReference",
 	"GSCustomParameter", "GSDocument", "GSProjectDocument", "GSEditViewController", "GSFontViewController", "GSElement", "GSFeature", "GSFeaturePrefix", "GSFont", "GSFontMaster",
 	"GSGlyph", "GSGlyphInfo", "GSGlyphsInfo", "GSGuide", "GSHint", "GSInstance", "GSLayer", "GSNode", "GSPath", "GSShape", "GSSubstitution", "GSPartProperty", "GSAxis", "GSMetric", "GSMetricStore", "GSValueStore", "GSInfoValueLocalized", "GSInfoValueSingle", "GSInfoValue", "GSNotifyingDictionary", "GSGradient", "GSIconPreset", "GSNameParticle",
-	"GSPathFinder", "GSPathPen", "GSCallbackHandler", "GSFeatureGenerator", "GSTTStem", "GSPathSegment", "GSUserNotification",
+	"GSPathFinder", "GSPathPen", "GSCallbackHandler", "GSPluginHandler", "GSScriptingHandler", "GSFeatureGenerator", "GSTTStem", "GSPathSegment", "GSUserNotification",
 	# Constants
 	"MOVE", "LINE", "CURVE", "OFFCURVE", "QCURVE", "HOBBYCURVE", "GSMOVE", "GSLINE", "GSCURVE", "GSQCURVE", "GSOFFCURVE", "GSHOBBYCURVE", "GSRAPHNEWSPIRAL", "GSSHARP", "GSSMOOTH", "GSSUPERSMOOTH",
 	"FILL", "FILLCOLOR", "FILLPATTERNANGLE", "FILLPATTERNBLENDMODE", "FILLPATTERNFILE", "FILLPATTERNOFFSET", "FILLPATTERNSCALE", "STROKECOLOR", "STROKELINECAPEND", "STROKELINECAPSTART", "STROKELINEJOIN", "STROKEPOSITION", "STROKEWIDTH", "STROKEHEIGHT", "GRADIENT", "SHADOW", "INNERSHADOW", "MASK",
@@ -1402,6 +1405,17 @@ add_type(GSApplication, "filters", list[Any])  # List of filter plugin instances
 
 		.. versionadded:: After 2.4.2
 '''
+
+GSApplication.pluginInstances = property(lambda self: list(GSPluginHandler.sharedHandler().pluginInstances()))
+'''
+	.. attribute:: pluginInstances
+	
+		a list of all GlyphsPlugin instances
+	
+		.. versionadded:: After 4.2
+'''
+
+
 STR_TYPES: tuple[type[str], type[objc.pyobjc_unicode]] = (str, objc.pyobjc_unicode)  # type: ignore
 
 def isString(string: Any) -> bool:

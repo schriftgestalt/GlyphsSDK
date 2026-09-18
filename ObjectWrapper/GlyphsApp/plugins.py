@@ -1145,7 +1145,7 @@ class ReporterPlugin(BaseReporterPlugin):
 
 	_controller: GSEditViewController | None
 
-	def init(self: ReporterPlugin):
+	def init(self: 'ReporterPlugin') -> 'ReporterPlugin':
 		"""
 		Put any initializations you want to make here.
 		"""
