@@ -581,9 +581,10 @@ def __GSObject__new__(typ: type[NSObject], *args: Any, **kwargs: Any) -> NSObjec
 def _validate_idx(self: Sequence[Any], idx: int, offset: int = 0) -> int:
 	if not isinstance(idx, int):
 		raise TypeError(f"indices must be integers, not {type(idx).__name__}")
+	length = len(self)
 	if idx < 0:
-		idx += len(self)
-	if not (0 <= idx < len(self) + offset):
+		idx += length
+	if not (0 <= idx < length + offset):
 		raise IndexError(f"index {idx} out of range (size {len(self)})")
 	return idx
 
@@ -11866,17 +11867,20 @@ GSLayer.reinterpolate = python_method(Layer_replaceLayerWithInterpolation)
 '''
 
 
-def __GSControlLayer__new__(typ, *args, **kwargs):
-	if len(args) > 0:
-		return GSControlLayer.alloc().initWithChar_(args[0])
-	else:
-		return GSControlLayer.alloc().init()
+def __GSControlLayer__new__(typ: type[GSControlLayer], char: int | None = None) -> GSControlLayer:
+	if char is not None:
+		return typ.alloc().initWithChar_(char)
+	return typ.alloc().init()
 
 objc.addConvenienceForClass(
 	"GSControlLayer",
 	(("__new__", staticmethod(__GSControlLayer__new__)),),
 )
-GSControlLayer.__init__ = python_method(__empty__init__)
+
+def __GSControlLayer__init__(self: GSControlLayer, char: int | None = None) -> None:
+	pass
+
+GSControlLayer.__init__ = python_method(__GSControlLayer__init__)
 
 
 def __GSControlLayer__str__(self):

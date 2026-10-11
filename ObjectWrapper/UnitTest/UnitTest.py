@@ -2168,6 +2168,9 @@ def test_GSMetricStore():
 
 
 def test_GSControlLayer():
+	direct_newline_layer = GSControlLayer(10)
+	assert direct_newline_layer is not None
+	assert direct_newline_layer.parent.unicodeChar() == 10
 	newline_layer = GSControlLayer.newline()
 	assert newline_layer is not None
 	placeholder_layer = GSControlLayer.placeholder()
