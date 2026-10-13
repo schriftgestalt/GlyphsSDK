@@ -32,7 +32,7 @@
 				<key>FRAMEWORK_SEARCH_PATHS</key>
 				<string>"$(SYSTEM_APPS_DIR)/Glyphs 4.app/Contents/Frameworks"</string>
 				<key>OTHER_LDFLAGS</key>
-				<string>-framework GlyphsCore</string>
+				<string>-framework GlyphsCore -framework GlyphsApp -framework GlyphsKit</string>
 				<key>MACOSX_DEPLOYMENT_TARGET</key>
 				<string>12.0</string>
 			</dict>
