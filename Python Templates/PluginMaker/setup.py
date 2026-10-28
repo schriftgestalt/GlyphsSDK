@@ -1,9 +1,4 @@
-"""
-Script for building the example.
-
-Usage:
-	python setup.py py2app
-"""
+"""Build PluginMaker using the dependencies in the selected Python installation."""
 from setuptools import setup
 
 plist = dict(
@@ -11,8 +6,8 @@ plist = dict(
 )
 
 setup(
+	name="PluginMaker",
 	data_files=['MainMenu.nib'],
 	app=[dict(script="PluginMaker.py", plist=plist)],
-	install_requires=["pyobjc-framework-Cocoa"],
-	setup_requires=["py2app"],
+	options={"py2app": {"iconfile": "Icon.icns"}},
 )

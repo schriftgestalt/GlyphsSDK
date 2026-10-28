@@ -1,0 +1,4 @@
+# 0.28.10 fixes compatibility with setuptools 82 (pkg_resources removal).
+py2app>=0.28.10
+setuptools
+pyobjc-framework-Cocoa
