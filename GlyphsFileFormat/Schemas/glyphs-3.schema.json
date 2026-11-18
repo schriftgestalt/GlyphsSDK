@@ -8,6 +8,14 @@
 		"anchor": {
 			"type": "object",
 			"properties": {
+				"attr": {
+					"$ref": "#/$defs/attr",
+					"default": {},
+					"description": "The attributes of the anchor. Starting in version 4, this also holds the user data; before that, `userData` is a key of its own.",
+					"glyphsCondition": {
+						"minVersion": 3
+					}
+				},
 				"locked": {
 					"type": "integer",
 					"glyphsNumber": "bool",
@@ -765,7 +773,7 @@
 						"$ref": "#/$defs/metricStore"
 					},
 					"default": [],
-					"description": "The metric values of the master.",
+					"description": "The metric values of the master, in the same order as the font\u2019s `metrics` array.",
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -781,7 +789,7 @@
 						"glyphsNumber": "f64"
 					},
 					"default": [],
-					"description": "The number values of the master.",
+					"description": "The number values for this master, in the same order as the font\u2019s `numbers` array.",
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -804,7 +812,7 @@
 						"glyphsNumber": "f64"
 					},
 					"default": [],
-					"description": "The stem values of the master.",
+					"description": "The stem values for this master, in the same order as the font\u2019s `stems` array.",
 					"glyphsCondition": {
 						"minVersion": 3
 					}
@@ -2218,24 +2226,16 @@
 		},
 		"metric": {
 			"type": "object",
+			"description": "A font-wide definition for a metric such as an alignment zone or an italic angle.",
 			"properties": {
 				"filter": {
 					"type": "string",
-					"description": "The filter of the metric limiting the scope of the metric to a subset of glyphs."
-				},
-				"horizontal": {
-					"type": "integer",
-					"glyphsNumber": "bool",
-					"enum": [
-						0,
-						1
-					],
-					"default": false,
-					"description": "Whether the metric is a horizontal metric."
+					"description": "An NSPredicate format string selecting the glyphs to which this metric applies. When omitted, the metric has no glyph filter."
 				},
 				"name": {
 					"type": "string",
-					"description": "The name of the metric."
+					"default": "",
+					"description": "The descriptive name of the metric. It can label a custom metric or distinguish metrics of the same type."
 				},
 				"type": {
 					"enum": [
@@ -2251,11 +2251,60 @@
 						"italic slope"
 					],
 					"type": "string",
-					"description": "The type of the metric."
+					"description": "The built-in metric type. A custom metric has no built-in type. The streaming reader also recognizes built-in types in `name` for older files. `italic slope` is supported by Glyphs 4 and can be saved in file format versions 3 and 4."
 				}
 			},
 			"additionalProperties": false,
-			"glyphsType": "GSMetric"
+			"glyphsType": "GSMetric",
+			"glyphsCondition": {
+				"minVersion": 3
+			}
+		},
+		"metricNumber": {
+			"type": "object",
+			"description": "A font-wide definition for a named number, with a value in each master. Named numbers can be referenced in feature code.",
+			"properties": {
+				"name": {
+					"type": "string",
+					"default": "",
+					"description": "The name used to look up the number."
+				}
+			},
+			"additionalProperties": false,
+			"glyphsType": "GSMetric",
+			"glyphsCondition": {
+				"minVersion": 3
+			}
+		},
+		"metricStem": {
+			"type": "object",
+			"description": "A font-wide stem definition with a width in each master.",
+			"properties": {
+				"filter": {
+					"type": "string",
+					"description": "An NSPredicate format string selecting the glyphs to which this stem applies. When omitted, the stem has no glyph filter."
+				},
+				"horizontal": {
+					"type": "integer",
+					"glyphsNumber": "bool",
+					"enum": [
+						0,
+						1
+					],
+					"default": false,
+					"description": "Whether the stem runs horizontally. The default is a vertical stem."
+				},
+				"name": {
+					"type": "string",
+					"default": "",
+					"description": "The name of the stem."
+				}
+			},
+			"additionalProperties": false,
+			"glyphsType": "GSMetric",
+			"glyphsCondition": {
+				"minVersion": 3
+			}
 		},
 		"metricStore": {
 			"type": "object",
@@ -2264,17 +2313,20 @@
 					"type": "number",
 					"glyphsNumber": "f64",
 					"default": 0,
-					"description": "The overshoot of the metric value."
+					"description": "The overshoot of an alignment zone in font units. For `italic slope`, this is the rise of the slope."
 				},
 				"pos": {
 					"type": "number",
 					"glyphsNumber": "f64",
 					"default": 0,
-					"description": "The offset from the baseline of the metric value."
+					"description": "The position relative to the baseline in font units. For `italic angle`, this is the angle in degrees clockwise from the y-axis. For `italic slope`, this is the run of the slope."
 				}
 			},
 			"additionalProperties": false,
-			"glyphsType": "GSMetricStore"
+			"glyphsType": "GSMetricStore",
+			"glyphsCondition": {
+				"minVersion": 3
+			}
 		},
 		"node": {
 			"type": "array",
@@ -2883,7 +2935,7 @@
 				"$ref": "#/$defs/metric"
 			},
 			"default": [],
-			"description": "The metrics of the font.",
+			"description": "The font\u2019s metric definitions. Each master stores the corresponding values in `metricValues`.",
 			"glyphsCondition": {
 				"minVersion": 3
 			}
@@ -2904,10 +2956,10 @@
 		"numbers": {
 			"type": "array",
 			"items": {
-				"$ref": "#/$defs/metric"
+				"$ref": "#/$defs/metricNumber"
 			},
 			"default": [],
-			"description": "The numbers of the font.",
+			"description": "The font\u2019s named number definitions. Each master stores the corresponding values in `numberValues`.",
 			"glyphsCondition": {
 				"minVersion": 3
 			}
@@ -3027,10 +3079,10 @@
 		"stems": {
 			"type": "array",
 			"items": {
-				"$ref": "#/$defs/metric"
+				"$ref": "#/$defs/metricStem"
 			},
 			"default": [],
-			"description": "The stems of the font.",
+			"description": "The font\u2019s stem definitions. Each master stores the corresponding widths in `stemValues`.",
 			"glyphsCondition": {
 				"minVersion": 3
 			}

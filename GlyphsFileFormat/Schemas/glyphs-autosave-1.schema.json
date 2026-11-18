@@ -1578,66 +1578,6 @@
 				"maxVersion": 1
 			}
 		},
-		"metric": {
-			"type": "object",
-			"properties": {
-				"filter": {
-					"type": "string",
-					"description": "The filter of the metric limiting the scope of the metric to a subset of glyphs."
-				},
-				"horizontal": {
-					"enum": [
-						0,
-						"0",
-						1,
-						"1"
-					],
-					"default": false,
-					"description": "Whether the metric is a horizontal metric."
-				},
-				"name": {
-					"type": "string",
-					"description": "The name of the metric."
-				},
-				"type": {
-					"enum": [
-						"ascender",
-						"cap height",
-						"slant height",
-						"x-height",
-						"midHeight",
-						"bodyHeight",
-						"descender",
-						"baseline",
-						"italic angle",
-						"italic slope"
-					],
-					"type": "string",
-					"description": "The type of the metric."
-				}
-			},
-			"additionalProperties": false,
-			"glyphsType": "GSMetric"
-		},
-		"metricStore": {
-			"type": "object",
-			"properties": {
-				"over": {
-					"type": "number",
-					"glyphsNumber": "f64",
-					"default": 0,
-					"description": "The overshoot of the metric value."
-				},
-				"pos": {
-					"type": "number",
-					"glyphsNumber": "f64",
-					"default": 0,
-					"description": "The offset from the baseline of the metric value."
-				}
-			},
-			"additionalProperties": false,
-			"glyphsType": "GSMetricStore"
-		},
 		"node": {
 			"type": "string",
 			"examples": [
