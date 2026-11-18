@@ -125,11 +125,11 @@ Use the following JSON schemas to validate files.
 - <code><strong>kerningLTR</strong>: object = {}</code> – The left-to-right kerning of the font. See [`kerning`](#spec-glyphs-4-kerning).
 - <code><strong>kerningRTL</strong>: object = {}</code> – The right-to-left kerning of the font. See [`kerning`](#spec-glyphs-4-kerning).
 - <code><strong>kerningVertical</strong>: object = {}</code> – The vertical kerning of the font. See [`kerning`](#spec-glyphs-4-kerning).
-- <code><strong>metrics</strong>: array = []</code> – The metrics of the font.
+- <code><strong>metrics</strong>: array = []</code> – The font’s metric definitions. Each master stores the corresponding values in `metricValues`.
  See [`metric`](#spec-glyphs-4-metric) for items.
 - <code><strong>note</strong>: string</code> – The note about the font.
-- <code><strong>numbers</strong>: array = []</code> – The numbers of the font.
- See [`metric`](#spec-glyphs-4-metric) for items.
+- <code><strong>numbers</strong>: array = []</code> – The font’s named number definitions. Each master stores the corresponding values in `numberValues`.
+ See [`metricNumber`](#spec-glyphs-4-metricNumber) for items.
 - <code><strong>properties</strong>: array = []</code> – The properties of the font.
  See [`infoProperty`](#spec-glyphs-4-infoProperty) for items.
 - <code><strong>settings</strong>: object = {}</code>
@@ -147,8 +147,8 @@ Use the following JSON schemas to validate files.
     - <code><strong>snapToObjects</strong>: boolean = false</code> – Whether snapping is enabled in Edit View.
     - <code><strong>fontType</strong>: string = "default"</code> – The type of the font.
         - Possible values: `"default"`, `"variable"`, `"layerFont"`, `"iconSet"`.
-- <code><strong>stems</strong>: array = []</code> – The stems of the font.
- See [`metric`](#spec-glyphs-4-metric) for items.
+- <code><strong>stems</strong>: array = []</code> – The font’s stem definitions. Each master stores the corresponding widths in `stemValues`.
+ See [`metricStem`](#spec-glyphs-4-metricStem) for items.
 - <code><strong>unitsPerEm</strong>: integer</code> (`u32`) <img alt="required" src="https://img.shields.io/badge/required-204d7e" align="center"> – The number of coordinate units on the em square.
 - <code><strong>userData</strong>: object = {}</code> – Custom data associated with the font. See [`userData`](#spec-glyphs-4-userData).
 - <code><strong>versionMajor</strong>: integer</code> (`u32`) <img alt="required" src="https://img.shields.io/badge/required-204d7e" align="center"> – The major version number of the font.
@@ -265,14 +265,14 @@ Use the following JSON schemas to validate files.
  See [`guide`](#spec-glyphs-4-guide) for items.
     - <code><strong>iconName</strong>: string = "Regular"</code> – The name of the icon that represents the master. Generally omitted when equal to `Regular`, or equal to the default icon name of the master (`GSFontMaster.defaultIconName`). For a list of available names, consult `GSFontMaster.iconNames()`.
     - <code><strong>id</strong>: string</code> <img alt="required" src="https://img.shields.io/badge/required-204d7e" align="center"> – The unique identifier of the master.
-    - <code><strong>metricValues</strong>: array = []</code> – The metric values of the master.
+    - <code><strong>metricValues</strong>: array = []</code> – The metric values of the master, in the same order as the font’s `metrics` array.
  See [`metricStore`](#spec-glyphs-4-metricStore) for items.
     - <code><strong>name</strong>: string</code> – The name of the master. May be omitted in file format version 1 when equal to `Regular` or the default master name.
-    - <code><strong>numberValues</strong>: array = []</code> – The number values of the master.
+    - <code><strong>numberValues</strong>: array = []</code> – The number values for this master, in the same order as the font’s `numbers` array.
         - <code><strong>#</strong>: number</code> (`f64`)
     - <code><strong>properties</strong>: array = []</code> – The properties of the master.
  See [`infoProperty`](#spec-glyphs-4-infoProperty) for items.
-    - <code><strong>stemValues</strong>: array = []</code> – The stem values of the master.
+    - <code><strong>stemValues</strong>: array = []</code> – The stem values for this master, in the same order as the font’s `stems` array.
         - <code><strong>#</strong>: number</code> (`f64`)
     - <code><strong>tempData</strong>: object = {}</code> – Auto-save files only: Temporary data associated with the master. See [`userData`](#spec-glyphs-4-userData).
     - <code><strong>userData</strong>: object = {}</code> – Custom data associated with the master. See [`userData`](#spec-glyphs-4-userData).
@@ -525,15 +525,20 @@ Use the following JSON schemas to validate files.
     - Option. `4` <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – Align to axis: aligns the cap to the nearest coordinate axis.
     - Option. `5` <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – Align to x-axis: aligns the cap to the x-axis.
     - Option. `6` <img alt="new" src="https://img.shields.io/badge/new-1c6d37" align="center"> – Align to y-axis: aligns the cap to the y-axis.
-- <code><strong>metric</strong>: object</code><a name="spec-glyphs-4-metric"></a> – (`GSMetric`)
-    - <code><strong>filter</strong>: string</code> – The filter of the metric limiting the scope of the metric to a subset of glyphs.
-    - <code><strong>horizontal</strong>: boolean = false</code> – Whether the metric is a horizontal metric.
-    - <code><strong>name</strong>: string</code> – The name of the metric.
-    - <code><strong>type</strong>: string</code> – The type of the metric.
+- <code><strong>metric</strong>: object</code><a name="spec-glyphs-4-metric"></a> – (`GSMetric`) – A font-wide definition for a metric such as an alignment zone or an italic angle.
+    - <code><strong>filter</strong>: string</code> – An NSPredicate format string selecting the glyphs to which this metric applies. When omitted, the metric has no glyph filter.
+    - <code><strong>name</strong>: string = ""</code> – The descriptive name of the metric. It can label a custom metric or distinguish metrics of the same type.
+    - <code><strong>type</strong>: string</code> – The built-in metric type. A custom metric has no built-in type. The streaming reader also recognizes built-in types in `name` for older files. `italic slope` is supported by Glyphs 4 and can be saved in file format versions 3 and 4.
         - Possible values: `"ascender"`, `"cap height"`, `"slant height"`, `"x-height"`, `"midHeight"`, `"bodyHeight"`, `"descender"`, `"baseline"`, `"italic angle"`, `"italic slope"`.
+- <code><strong>metricNumber</strong>: object</code><a name="spec-glyphs-4-metricNumber"></a> – (`GSMetric`) – A font-wide definition for a named number, with a value in each master. Named numbers can be referenced in feature code.
+    - <code><strong>name</strong>: string = ""</code> – The name used to look up the number.
+- <code><strong>metricStem</strong>: object</code><a name="spec-glyphs-4-metricStem"></a> – (`GSMetric`) – A font-wide stem definition with a width in each master.
+    - <code><strong>filter</strong>: string</code> – An NSPredicate format string selecting the glyphs to which this stem applies. When omitted, the stem has no glyph filter.
+    - <code><strong>horizontal</strong>: boolean = false</code> – Whether the stem runs horizontally. The default is a vertical stem.
+    - <code><strong>name</strong>: string = ""</code> – The name of the stem.
 - <code><strong>metricStore</strong>: object</code><a name="spec-glyphs-4-metricStore"></a> – (`GSMetricStore`)
-    - <code><strong>over</strong>: number = 0</code> (`f64`) – The overshoot of the metric value.
-    - <code><strong>pos</strong>: number = 0</code> (`f64`) – The offset from the baseline of the metric value.
+    - <code><strong>over</strong>: number = 0</code> (`f64`) – The overshoot of an alignment zone in font units. For `italic slope`, this is the rise of the slope.
+    - <code><strong>pos</strong>: number = 0</code> (`f64`) – The position relative to the baseline in font units. For `italic angle`, this is the angle in degrees clockwise from the y-axis. For `italic slope`, this is the run of the slope.
 - <code><strong>node</strong>: array</code><a name="spec-glyphs-4-node"></a> – (`GSNode`)
  Tuple with 3–4 items.
     - <code><strong>#0</strong>: number</code> (`f64`) – The x-coordinate of the node.
@@ -663,6 +668,10 @@ Use the following JSON schemas to validate files.
 - <code><strong>userData</strong>: object</code><a name="spec-glyphs-4-userData"></a>
 
 ## Changes
+
+## 18. November 2026
+
+- Split `metric` schema into separate schemas that match their respective use cases.
 
 ### 17. July 2026
 

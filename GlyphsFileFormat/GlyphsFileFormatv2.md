@@ -1,4 +1,4 @@
-# Glyphs File Format, Version 2
+# Glyphs File Format, Version 1
 
 Glyphs saves its source files in a plain-text format.
 This way, files can be viewed and edited in any text editor.
@@ -9,7 +9,7 @@ This way, files can be viewed and edited in any text editor.
 - This format can be converted to JSON for validation against a JSON Schema.
 - The file contents are UTF-8 encoded.
 - In addition to the four core data types (dictionary, array, string, and data), Glyphs uses unquoted strings to represent numbers (integers, floats, and booleans).
-  Booleans are encoded as `1` or `"1"` (true) and `0` or `"0"` (false).
+  Booleans are encoded as `1` (true) and `0` (false). 
   Strings that look like numbers are always encoded in quotes.
 - Whitespace is restricted to ASCII spaces, line feeds, and horizontal tabs.
 - No comments (like `// ...` or `/* .... */`) are present.
@@ -357,16 +357,6 @@ Use the following JSON schemas to validate files.
         - Possible values: `0`, `"0"`, `1`, `"1"`.
     - <code><strong>width</strong>: number</code> (`f64`) <img alt="required" src="https://img.shields.io/badge/required-204d7e" align="center"> – The width of the layer.
 - <code><strong>legacyPosition</strong>: string</code><a name="spec-glyphs-1-legacyPosition"></a> Examples: `"{0, 50}"`, `"{-30.5, 600}"`.
-- <code><strong>metric</strong>: object</code><a name="spec-glyphs-1-metric"></a> – (`GSMetric`)
-    - <code><strong>filter</strong>: string</code> – The filter of the metric limiting the scope of the metric to a subset of glyphs.
-    - <code><strong>horizontal</strong> = false</code> – Whether the metric is a horizontal metric.
-        - Possible values: `0`, `"0"`, `1`, `"1"`.
-    - <code><strong>name</strong>: string</code> – The name of the metric.
-    - <code><strong>type</strong>: string</code> – The type of the metric.
-        - Possible values: `"ascender"`, `"cap height"`, `"slant height"`, `"x-height"`, `"midHeight"`, `"bodyHeight"`, `"descender"`, `"baseline"`, `"italic angle"`, `"italic slope"`.
-- <code><strong>metricStore</strong>: object</code><a name="spec-glyphs-1-metricStore"></a> – (`GSMetricStore`)
-    - <code><strong>over</strong>: number = 0</code> (`f64`) – The overshoot of the metric value.
-    - <code><strong>pos</strong>: number = 0</code> (`f64`) – The offset from the baseline of the metric value.
 - <code><strong>node</strong>: string</code><a name="spec-glyphs-1-node"></a> – (`GSNode`) Examples: `"0 0 MOVE"`, `"-50 100 LINE"`, `"100 100 CURVE SMOOTH"`, `"200 -60 OFFCURVE"`.
 - <code><strong>infoProperty</strong></code><a name="spec-glyphs-1-infoProperty"></a> – (`GSInfoProperty`) One of 2 options.
     - Option. `object`
